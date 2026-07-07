@@ -1,0 +1,620 @@
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 9; @symbol_classdef = [CatapultHooks,9,6,19]; @symbol_extends<0> = [GameHooks,9,28,37]; ]
+class CatapultHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiCatapultView %tmp.4 13 20 39 ];
+        %tmp.4 = getv ? :BitochiCatapultView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiCatapultDelegate %tmp.11 14 32 55 ];
+        %tmp.11 = getv ? :BitochiCatapultDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 56 57 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 60 67 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 68 78 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_18_47_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 19 8 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_18_47_39_4_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_18_47_39_4_stop" ]
+        %groundY.1 = local;
+        symbol [ groundY %groundY.1 19 12 19 ];
+        %tmp.1 = lgetv %cy;
+        symbol [ cy %tmp.1 19 22 24 ];
+        %tmp.2 = 14;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        lputv %groundY.1 %tmp.3;
+        symbol [ groundY %groundY.1 19 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 21 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 21 8 10 ];
+        symbol [ setColor %tmp.5 21 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0x8B5A2B;
+        symbol [ Graphics %tmp.7 21 30 38 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.8 21 39 56 ];
+        %tmp.8 = getv %tmp.7 :COLOR_TRANSPARENT;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 22 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 22 8 10 ];
+        symbol [ fillRectangle %tmp.10 22 11 24 ];
+        %tmp.10 = getv function %tmp.9 :fillRectangle;
+        %tmp.11 = lgetv %cx;
+        symbol [ cx %tmp.11 22 25 27 ];
+        %tmp.12 = 22;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = lgetv %groundY.1;
+        symbol [ groundY %tmp.14 22 34 41 ];
+        %tmp.15 = 4;
+        %tmp.16 = sub %tmp.14 %tmp.15;
+        %tmp.17 = 10;
+        %tmp.18 = 4;
+        invoke %tmp.9 %tmp.10(%tmp.13, %tmp.16, %tmp.17, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 23 8 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 23 8 10 ];
+        symbol [ setColor %tmp.20 23 11 19 ];
+        %tmp.20 = getv function %tmp.19 :setColor;
+        %tmp.21 = 0xA9713B;
+        symbol [ Graphics %tmp.22 23 30 38 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.23 23 39 56 ];
+        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 24 8 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 24 8 10 ];
+        symbol [ setPenWidth %tmp.25 24 11 22 ];
+        %tmp.25 = getv function %tmp.24 :setPenWidth;
+        %tmp.26 = 2;
+        invoke %tmp.24 %tmp.25(%tmp.26);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 25 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 25 8 10 ];
+        symbol [ drawLine %tmp.28 25 11 19 ];
+        %tmp.28 = getv function %tmp.27 :drawLine;
+        %tmp.29 = lgetv %cx;
+        symbol [ cx %tmp.29 25 20 22 ];
+        %tmp.30 = 20;
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %groundY.1;
+        symbol [ groundY %tmp.32 25 29 36 ];
+        %tmp.33 = 4;
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %cx;
+        symbol [ cx %tmp.35 25 42 44 ];
+        %tmp.36 = 12;
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %groundY.1;
+        symbol [ groundY %tmp.38 25 51 58 ];
+        %tmp.39 = 14;
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        invoke %tmp.27 %tmp.28(%tmp.31, %tmp.34, %tmp.37, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 26 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 26 8 10 ];
+        symbol [ setPenWidth %tmp.42 26 11 22 ];
+        %tmp.42 = getv function %tmp.41 :setPenWidth;
+        %tmp.43 = 1;
+        invoke %tmp.41 %tmp.42(%tmp.43);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 28 8 ]
+        %tmp.44 = lgetv %dc;
+        symbol [ dc %tmp.44 28 8 10 ];
+        symbol [ setColor %tmp.45 28 11 19 ];
+        %tmp.45 = getv function %tmp.44 :setColor;
+        %tmp.46 = 0x888888;
+        symbol [ Graphics %tmp.47 28 30 38 ];
+        %tmp.47 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.48 28 39 56 ];
+        %tmp.48 = getv %tmp.47 :COLOR_TRANSPARENT;
+        invoke %tmp.44 %tmp.45(%tmp.46, %tmp.48);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 29 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 29 8 10 ];
+        symbol [ fillCircle %tmp.50 29 11 21 ];
+        %tmp.50 = getv function %tmp.49 :fillCircle;
+        %tmp.51 = lgetv %cx;
+        symbol [ cx %tmp.51 29 22 24 ];
+        %tmp.52 = 4;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %cy;
+        symbol [ cy %tmp.54 29 30 32 ];
+        %tmp.55 = 10;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = 3;
+        invoke %tmp.49 %tmp.50(%tmp.53, %tmp.56, %tmp.57);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 30 8 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 30 8 10 ];
+        symbol [ setColor %tmp.59 30 11 19 ];
+        %tmp.59 = getv function %tmp.58 :setColor;
+        %tmp.60 = 0x555555;
+        symbol [ Graphics %tmp.61 30 30 38 ];
+        %tmp.61 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.62 30 39 56 ];
+        %tmp.62 = getv %tmp.61 :COLOR_TRANSPARENT;
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.62);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 31 8 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 31 8 10 ];
+        symbol [ fillCircle %tmp.64 31 11 21 ];
+        %tmp.64 = getv function %tmp.63 :fillCircle;
+        %tmp.65 = lgetv %cx;
+        symbol [ cx %tmp.65 31 22 24 ];
+        %tmp.66 = 12;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        %tmp.68 = lgetv %cy;
+        symbol [ cy %tmp.68 31 31 33 ];
+        %tmp.69 = 4;
+        %tmp.70 = sub %tmp.68 %tmp.69;
+        %tmp.71 = 2;
+        invoke %tmp.63 %tmp.64(%tmp.67, %tmp.70, %tmp.71);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 32 8 ]
+        %tmp.72 = lgetv %dc;
+        symbol [ dc %tmp.72 32 8 10 ];
+        symbol [ fillCircle %tmp.73 32 11 21 ];
+        %tmp.73 = getv function %tmp.72 :fillCircle;
+        %tmp.74 = lgetv %cx;
+        symbol [ cx %tmp.74 32 22 24 ];
+        %tmp.75 = 4;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %cy;
+        symbol [ cy %tmp.77 32 30 32 ];
+        %tmp.78 = 10;
+        %tmp.79 = sub %tmp.77 %tmp.78;
+        %tmp.80 = 2;
+        invoke %tmp.72 %tmp.73(%tmp.76, %tmp.79, %tmp.80);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 34 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 34 8 10 ];
+        symbol [ setColor %tmp.82 34 11 19 ];
+        %tmp.82 = getv function %tmp.81 :setColor;
+        %tmp.83 = 0x99AABB;
+        symbol [ Graphics %tmp.84 34 30 38 ];
+        %tmp.84 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.85 34 39 56 ];
+        %tmp.85 = getv %tmp.84 :COLOR_TRANSPARENT;
+        invoke %tmp.81 %tmp.82(%tmp.83, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 35 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 35 8 10 ];
+        symbol [ fillRectangle %tmp.87 35 11 24 ];
+        %tmp.87 = getv function %tmp.86 :fillRectangle;
+        %tmp.88 = lgetv %cx;
+        symbol [ cx %tmp.88 35 25 27 ];
+        %tmp.89 = 12;
+        %tmp.90 = add %tmp.88 %tmp.89;
+        %tmp.91 = lgetv %groundY.1;
+        symbol [ groundY %tmp.91 35 34 41 ];
+        %tmp.92 = 12;
+        %tmp.93 = sub %tmp.91 %tmp.92;
+        %tmp.94 = 12;
+        %tmp.95 = 12;
+        invoke %tmp.86 %tmp.87(%tmp.90, %tmp.93, %tmp.94, %tmp.95);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 36 8 ]
+        %tmp.96 = lgetv %dc;
+        symbol [ dc %tmp.96 36 8 10 ];
+        symbol [ fillRectangle %tmp.97 36 11 24 ];
+        %tmp.97 = getv function %tmp.96 :fillRectangle;
+        %tmp.98 = lgetv %cx;
+        symbol [ cx %tmp.98 36 25 27 ];
+        %tmp.99 = 12;
+        %tmp.100 = add %tmp.98 %tmp.99;
+        %tmp.101 = lgetv %groundY.1;
+        symbol [ groundY %tmp.101 36 34 41 ];
+        %tmp.102 = 15;
+        %tmp.103 = sub %tmp.101 %tmp.102;
+        %tmp.104 = 3;
+        %tmp.105 = 4;
+        invoke %tmp.96 %tmp.97(%tmp.100, %tmp.103, %tmp.104, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 37 8 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 37 8 10 ];
+        symbol [ fillRectangle %tmp.107 37 11 24 ];
+        %tmp.107 = getv function %tmp.106 :fillRectangle;
+        %tmp.108 = lgetv %cx;
+        symbol [ cx %tmp.108 37 25 27 ];
+        %tmp.109 = 17;
+        %tmp.110 = add %tmp.108 %tmp.109;
+        %tmp.111 = lgetv %groundY.1;
+        symbol [ groundY %tmp.111 37 34 41 ];
+        %tmp.112 = 15;
+        %tmp.113 = sub %tmp.111 %tmp.112;
+        %tmp.114 = 3;
+        %tmp.115 = 4;
+        invoke %tmp.106 %tmp.107(%tmp.110, %tmp.113, %tmp.114, %tmp.115);
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 38 8 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 38 8 10 ];
+        symbol [ fillRectangle %tmp.117 38 11 24 ];
+        %tmp.117 = getv function %tmp.116 :fillRectangle;
+        %tmp.118 = lgetv %cx;
+        symbol [ cx %tmp.118 38 25 27 ];
+        %tmp.119 = 22;
+        %tmp.120 = add %tmp.118 %tmp.119;
+        %tmp.121 = lgetv %groundY.1;
+        symbol [ groundY %tmp.121 38 34 41 ];
+        %tmp.122 = 15;
+        %tmp.123 = sub %tmp.121 %tmp.122;
+        %tmp.124 = 2;
+        %tmp.125 = 4;
+        invoke %tmp.116 %tmp.117(%tmp.120, %tmp.123, %tmp.124, %tmp.125);
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_18_47_39_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 42; @symbol_functiondef = [lbVariant,42,13,22]; @symbol_return<0> = [Lang,42,28,32]; @symbol_return<1> = [String,42,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 43 8 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 43 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "normal";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 43 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 44 12 13 ];
+        %tmp.11 = 1;
+        lputv %d.2 %tmp.11;
+        symbol [ d %d.2 44 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_12_48_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 46 16 17 ];
+        symbol [ Application %tmp.12 46 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 46 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 46 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "cat_diff";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_stmt:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_16_47_59_begin:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_16_47_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 47 16 17 ];
+        symbol [ Lang %tmp.18 47 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 47 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_44_47_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 47 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_44_47_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_16_47_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_44_47_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_44_47_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_54_47_59_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 47 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = 2;
+        %tmp.29 = lte %tmp.27 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_54_47_59_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_16_47_59_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_54_47_59_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_54_47_59_end];
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_true:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_62_47_71_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 47 64 ]
+        %tmp.31 = lgetv %v.3;
+        symbol [ v %tmp.31 47 68 69 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        lputv %d.2 %tmp.32;
+        symbol [ d %d.2 47 64 65 ];
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_62_47_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_47_12_47_71_if_end:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_catch:
+        %tmp.33 = exception;
+        push %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_48_10_48_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 48 17 18 ];
+        %tmp.34 = dup %tmp.33;
+        lputv %e.4 %tmp.34;
+        symbol [ e %e.4 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally;
+        throw %tmp.33;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_45_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 49 8 ]
+        %tmp.35 = lgetv %names.1;
+        symbol [ names %tmp.35 49 15 20 ];
+        %tmp.36 = lgetv %d.2;
+        symbol [ d %tmp.36 49 21 22 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_42_40_50_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 52; @symbol_functiondef = [footerText,52,13,23]; @symbol_return<0> = [Lang,52,29,33]; @symbol_return<1> = [String,52,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_52_49_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 53 8 ]
+        try @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_beginTry @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_endTry @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_catch @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_beginTry:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_12_58_8_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 54 12 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_12_58_8_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_12_58_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 54 16 17 ];
+        symbol [ Application %tmp.1 54 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 54 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 54 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "catBest";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 54 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 55 12 ]
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_stmt:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_16_55_57_begin:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_16_55_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 55 16 17 ];
+        symbol [ Lang %tmp.7 55 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 55 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_44_55_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 55 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_44_55_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_16_55_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_44_55_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_44_55_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_53_55_57_true:
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 55 53 54 ];
+        %tmp.16 = as %tmp.15 { (Lang.Number) };
+        %tmp.17 = 99;
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_53_55_57_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_16_55_57_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_53_55_57_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_53_55_57_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_true:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_61_57_12_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 56 16 ]
+        %tmp.20 = "BEST ";
+        %tmp.21 = lgetv %v.1;
+        symbol [ v %tmp.21 56 33 34 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        symbol [ format %tmp.23 56 35 41 ];
+        %tmp.23 = getv function %tmp.22 :format;
+        %tmp.24 = "%d";
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        %tmp.26 = add %tmp.20 %tmp.25;
+        %tmp.27 = " SHOTS";
+        %tmp.28 = add %tmp.26 %tmp.27;
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_61_57_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_55_12_57_12_if_end:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_12_58_8_stop:
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_catch:
+        %tmp.29 = exception;
+        push %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 58 10 ]
+        [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_catch" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_58_10_58_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 58 17 18 ];
+        %tmp.30 = dup %tmp.29;
+        lputv %e.2 %tmp.30;
+        symbol [ e %e.2 58 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_end;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_58_10_58_21_end:
+        try @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_catch @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally;
+        throw %tmp.29;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_53_8_58_21_end:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 59 8 ]
+        %tmp.31 = null;
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_52_49_60_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 63; @symbol_functiondef = [buildCatapultMenu,63,9,26]; @symbol_return<0> = [Lang,63,32,36]; @symbol_return<1> = [Array,63,37,42]; ]
+function buildCatapultMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_start:
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 64 4 ]
+    [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 64 8 11 ];
+    symbol [ MenuConfig %tmp.4 64 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 65 9 15 const ];
+    %tmp.8 = "catapult";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 66 9 15 const ];
+    %tmp.13 = "CATAPULT";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 67 9 13 const ];
+    %tmp.18 = 0xFFAA33;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 68 9 11 const ];
+    %tmp.23 = 0x0A1428;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 69 9 15 const ];
+    %tmp.28 = 0x14263E;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 70 9 15 const ];
+    %tmp.33 = 0x44BB22;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 71 9 16 const ];
+    %tmp.38 = "CATAPULT";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 72 9 14 const ];
+    symbol [ CatapultHooks %tmp.46 72 24 37 ];
+    %tmp.46 = getv ? :CatapultHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 73 9 16 const ];
+    %tmp.51 = newa 1;
+    symbol [ GmOption %tmp.55 74 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "cat_diff";
+    %tmp.57 = "Difficulty";
+    %tmp.58 = newa 3;
+    %tmp.59 = "EASY";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "NORMAL";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "HARD";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = 1;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
+    %tmp.69 = dup %tmp.51;
+    %tmp.70 = aputv %tmp.69 0 %tmp.52;
+    %tmp.71 = dup %tmp.48;
+    %tmp.72 = aputv %tmp.71 %tmp.50 %tmp.70;
+    %tmp.1 = newc %tmp.4 (%tmp.72);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 64 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 77 4 ]
+    [ "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_start" "_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 77 8 9 ];
+    symbol [ GameMenuView %tmp.76 77 16 28 ];
+    %tmp.76 = getv ? :GameMenuView;
+    %tmp.77 = lgetv %cfg.1;
+    symbol [ cfg %tmp.77 77 29 32 ];
+    %tmp.73 = newc %tmp.76 (%tmp.77);
+    lputv %v.2 %tmp.73;
+    symbol [ v %v.2 77 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc" 78 4 ]
+    %tmp.78 = newa 2;
+    %tmp.79 = lgetv %v.2;
+    symbol [ v %tmp.79 78 12 13 ];
+    %tmp.80 = dup %tmp.78;
+    %tmp.81 = aputv %tmp.80 0 %tmp.79;
+    symbol [ GameMenuDelegate %tmp.85 78 19 35 ];
+    %tmp.85 = getv ? :GameMenuDelegate;
+    %tmp.86 = lgetv %v.2;
+    symbol [ v %tmp.86 78 36 37 ];
+    %tmp.82 = newc %tmp.85 (%tmp.86);
+    %tmp.87 = dup %tmp.81;
+    %tmp.88 = aputv %tmp.87 1 %tmp.82;
+    ret %tmp.88;
+_Users_kkorolczuk_work_garmin_catapult_source_CatapultMenu_mc_63_43_79_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/catapult/source/CatapultMenu.mc"; @line = 4; ]
+<init> {
+}

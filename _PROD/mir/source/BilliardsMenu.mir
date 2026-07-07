@@ -1,0 +1,529 @@
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 9; @symbol_classdef = [BilliardsHooks,9,6,20]; @symbol_extends<0> = [GameHooks,9,29,38]; ]
+class BilliardsHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BilliardView %tmp.4 13 20 32 ];
+        %tmp.4 = getv ? :BilliardView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BilliardDelegate %tmp.11 14 32 48 ];
+        %tmp.11 = getv ? :BilliardDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 49 50 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 53 60 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 61 71 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 19; @symbol_functiondef = [drawArt,19,13,20]; @symbol_param<0> = [dc,19,21,23]; @symbol_param<1> = [cx,19,25,27]; @symbol_param<2> = [cy,19,29,31]; @symbol_param<3> = [w,19,33,34]; @symbol_param<4> = [h,19,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_19_47_29_4_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 21 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 21 8 10 ];
+        symbol [ setColor %tmp.2 21 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xFFFFFF;
+        symbol [ Graphics %tmp.4 21 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 21 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 21 59 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 21 59 61 ];
+        symbol [ fillCircle %tmp.7 21 62 72 ];
+        %tmp.7 = getv function %tmp.6 :fillCircle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 21 73 75 ];
+        %tmp.9 = 26;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 21 82 84 ];
+        %tmp.12 = 5;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.11, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 23 8 ]
+        %tmp.13 = self;
+        symbol [ _ball %tmp.14 23 8 13 ];
+        %tmp.14 = getv function %tmp.13 :_ball;
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 23 14 16 ];
+        %tmp.16 = lgetv %cx;
+        symbol [ cx %tmp.16 23 18 20 ];
+        %tmp.17 = 4;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %cy;
+        symbol [ cy %tmp.19 23 26 28 ];
+        %tmp.20 = 0xFFDD00;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.18, %tmp.19, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 24 8 ]
+        %tmp.21 = self;
+        symbol [ _ball %tmp.22 24 8 13 ];
+        %tmp.22 = getv function %tmp.21 :_ball;
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 24 14 16 ];
+        %tmp.24 = lgetv %cx;
+        symbol [ cx %tmp.24 24 18 20 ];
+        %tmp.25 = 6;
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = lgetv %cy;
+        symbol [ cy %tmp.27 24 26 28 ];
+        %tmp.28 = 6;
+        %tmp.29 = sub %tmp.27 %tmp.28;
+        %tmp.30 = 0xDD2222;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.26, %tmp.29, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 25 8 ]
+        %tmp.31 = self;
+        symbol [ _ball %tmp.32 25 8 13 ];
+        %tmp.32 = getv function %tmp.31 :_ball;
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 25 14 16 ];
+        %tmp.34 = lgetv %cx;
+        symbol [ cx %tmp.34 25 18 20 ];
+        %tmp.35 = 6;
+        %tmp.36 = add %tmp.34 %tmp.35;
+        %tmp.37 = lgetv %cy;
+        symbol [ cy %tmp.37 25 26 28 ];
+        %tmp.38 = 6;
+        %tmp.39 = add %tmp.37 %tmp.38;
+        %tmp.40 = 0x2255DD;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.36, %tmp.39, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 26 8 ]
+        %tmp.41 = self;
+        symbol [ _ball %tmp.42 26 8 13 ];
+        %tmp.42 = getv function %tmp.41 :_ball;
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 26 14 16 ];
+        %tmp.44 = lgetv %cx;
+        symbol [ cx %tmp.44 26 18 20 ];
+        %tmp.45 = 16;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %cy;
+        symbol [ cy %tmp.47 26 27 29 ];
+        %tmp.48 = 12;
+        %tmp.49 = sub %tmp.47 %tmp.48;
+        %tmp.50 = 0x111111;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.46, %tmp.49, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 27 8 ]
+        %tmp.51 = self;
+        symbol [ _ball %tmp.52 27 8 13 ];
+        %tmp.52 = getv function %tmp.51 :_ball;
+        %tmp.53 = lgetv %dc;
+        symbol [ dc %tmp.53 27 14 16 ];
+        %tmp.54 = lgetv %cx;
+        symbol [ cx %tmp.54 27 18 20 ];
+        %tmp.55 = 16;
+        %tmp.56 = add %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %cy;
+        symbol [ cy %tmp.57 27 27 29 ];
+        %tmp.58 = 0xFF7700;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.56, %tmp.57, %tmp.58);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 28 8 ]
+        %tmp.59 = self;
+        symbol [ _ball %tmp.60 28 8 13 ];
+        %tmp.60 = getv function %tmp.59 :_ball;
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 28 14 16 ];
+        %tmp.62 = lgetv %cx;
+        symbol [ cx %tmp.62 28 18 20 ];
+        %tmp.63 = 16;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        %tmp.65 = lgetv %cy;
+        symbol [ cy %tmp.65 28 27 29 ];
+        %tmp.66 = 12;
+        %tmp.67 = add %tmp.65 %tmp.66;
+        %tmp.68 = 0x228833;
+        invoke %tmp.59 %tmp.60(%tmp.61, %tmp.64, %tmp.67, %tmp.68);
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_19_47_29_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 31; @symbol_functiondef = [_ball,31,20,25]; @symbol_param<0> = [dc,31,26,28]; @symbol_param<1> = [x,31,30,31]; @symbol_param<2> = [y,31,33,34]; @symbol_param<3> = [col,31,36,39]; ]
+    protected
+    function _ball(dc, x, y, col) as Void {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_31_49_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 32 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 32 8 10 ];
+        symbol [ setColor %tmp.2 32 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = lgetv %col;
+        symbol [ col %tmp.3 32 20 23 ];
+        symbol [ Graphics %tmp.4 32 25 33 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 32 34 51 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 32 54 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 32 54 56 ];
+        symbol [ fillCircle %tmp.7 32 57 67 ];
+        %tmp.7 = getv function %tmp.6 :fillCircle;
+        %tmp.8 = lgetv %x;
+        symbol [ x %tmp.8 32 68 69 ];
+        %tmp.9 = lgetv %y;
+        symbol [ y %tmp.9 32 71 72 ];
+        %tmp.10 = 5;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9, %tmp.10);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 33 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 33 8 10 ];
+        symbol [ setColor %tmp.12 33 11 19 ];
+        %tmp.12 = getv function %tmp.11 :setColor;
+        %tmp.13 = 0xFFFFFF;
+        symbol [ Graphics %tmp.14 33 30 38 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.15 33 39 56 ];
+        %tmp.15 = getv %tmp.14 :COLOR_TRANSPARENT;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 33 59 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 33 59 61 ];
+        symbol [ fillCircle %tmp.17 33 62 72 ];
+        %tmp.17 = getv function %tmp.16 :fillCircle;
+        %tmp.18 = lgetv %x;
+        symbol [ x %tmp.18 33 73 74 ];
+        %tmp.19 = 1;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %y;
+        symbol [ y %tmp.21 33 80 81 ];
+        %tmp.22 = 1;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = 1;
+        invoke %tmp.16 %tmp.17(%tmp.20, %tmp.23, %tmp.24);
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_31_49_34_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 37; @symbol_functiondef = [lbVariant,37,13,22]; @symbol_return<0> = [Lang,37,28,32]; @symbol_return<1> = [String,37,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_37_40_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_37_40_48_4_start" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_37_40_48_4_stop" ]
+        %gt.1 = local;
+        symbol [ gt %gt.1 38 12 14 ];
+        %tmp.1 = 1;
+        lputv %gt.1 %tmp.1;
+        symbol [ gt %gt.1 38 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 39 8 ]
+        try @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_beginTry @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_endTry @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_catch @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_beginTry:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_12_42_8_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 40 12 ]
+        [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_12_42_8_start" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_12_42_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 40 16 17 ];
+        symbol [ Application %tmp.2 40 20 31 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.3 40 32 39 ];
+        %tmp.3 = getv %tmp.2 :Storage;
+        symbol [ getValue %tmp.4 40 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "billGT";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.2 %tmp.6;
+        symbol [ v %v.2 40 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 41 12 ]
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_12_41_52_if_stmt:
+        %tmp.7 = lgetv %v.2;
+        symbol [ v %tmp.7 41 16 17 ];
+        symbol [ Lang %tmp.8 41 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 41 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_12_41_52_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_12_41_52_if_true:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_42_41_52_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 41 44 ]
+        %tmp.11 = lgetv %v.2;
+        symbol [ v %tmp.11 41 49 50 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        lputv %gt.1 %tmp.12;
+        symbol [ gt %gt.1 41 44 46 ];
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_42_41_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_12_41_52_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_41_12_41_52_if_end:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_12_42_8_stop:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_catch:
+        %tmp.13 = exception;
+        push %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 42 10 ]
+        [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_catch" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_42_10_42_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 42 17 18 ];
+        %tmp.14 = dup %tmp.13;
+        lputv %e.3 %tmp.14;
+        symbol [ e %e.3 42 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_42_10_42_21_end:
+        try @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_catch @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_42_10_42_21_end @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_42_10_42_21_end @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally;
+        throw %tmp.13;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_39_8_42_21_end:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_8_43_40_if_stmt:
+        %tmp.15 = lgetv %gt.1;
+        symbol [ gt %tmp.15 43 12 14 ];
+        %tmp.16 = 0;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_8_43_40_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_8_43_40_if_true:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_21_43_40_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 43 23 ]
+        %tmp.18 = "3-ball";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_21_43_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_8_43_40_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_43_8_43_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_8_44_40_if_stmt:
+        %tmp.19 = lgetv %gt.1;
+        symbol [ gt %tmp.19 44 12 14 ];
+        %tmp.20 = 2;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_8_44_40_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_8_44_40_if_true:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_21_44_40_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 44 23 ]
+        %tmp.22 = "8-ball";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_21_44_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_8_44_40_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_44_8_44_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_8_45_41_if_stmt:
+        %tmp.23 = lgetv %gt.1;
+        symbol [ gt %tmp.23 45 12 14 ];
+        %tmp.24 = 3;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_8_45_41_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_8_45_41_if_true:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_21_45_41_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 45 23 ]
+        %tmp.26 = "snooker";
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_21_45_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_8_45_41_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_45_8_45_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_8_46_44_if_stmt:
+        %tmp.27 = lgetv %gt.1;
+        symbol [ gt %tmp.27 46 12 14 ];
+        %tmp.28 = 4;
+        %tmp.29 = eq %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_8_46_44_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_8_46_44_if_true:
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_21_46_44_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 46 23 ]
+        %tmp.30 = "timeattack";
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_21_46_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_8_46_44_if_end;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_46_8_46_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 47 8 ]
+        %tmp.31 = "9-ball";
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_37_40_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 50; @symbol_functiondef = [footerText,50,13,23]; @symbol_return<0> = [Lang,50,29,33]; @symbol_return<1> = [String,50,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_50_49_50_64_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 50 51 ]
+        %tmp.1 = null;
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_50_49_50_64_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 53; @symbol_functiondef = [buildBilliardsMenu,53,9,27]; @symbol_return<0> = [Lang,53,33,37]; @symbol_return<1> = [Array,53,38,43]; ]
+function buildBilliardsMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_start:
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 54 4 ]
+    [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_start" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 54 8 11 ];
+    symbol [ MenuConfig %tmp.4 54 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 55 9 15 const ];
+    %tmp.8 = "billiards";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 56 9 15 const ];
+    %tmp.13 = "BILLIARDS";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 57 9 13 const ];
+    %tmp.18 = 0xFFFFFF;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 58 9 11 const ];
+    %tmp.23 = 0x0A1A0A;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 59 9 15 const ];
+    %tmp.28 = 0x0C3010;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 60 9 15 const ];
+    %tmp.33 = 0x66FFAA;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 61 9 16 const ];
+    %tmp.38 = "BILLIARDS";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 62 9 14 const ];
+    symbol [ BilliardsHooks %tmp.46 62 24 38 ];
+    %tmp.46 = getv ? :BilliardsHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 63 9 16 const ];
+    %tmp.51 = newa 3;
+    symbol [ GmOption %tmp.55 65 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "billGT";
+    %tmp.57 = "Mode";
+    %tmp.58 = newa 5;
+    %tmp.59 = "3-BALL";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "9-BALL";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "8-BALL";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = "SNOOKER";
+    %tmp.69 = dup %tmp.67;
+    %tmp.70 = aputv %tmp.69 3 %tmp.68;
+    %tmp.71 = "TIME ATK";
+    %tmp.72 = dup %tmp.70;
+    %tmp.73 = aputv %tmp.72 4 %tmp.71;
+    %tmp.74 = 1;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.73, %tmp.74);
+    %tmp.75 = dup %tmp.51;
+    %tmp.76 = aputv %tmp.75 0 %tmp.52;
+    symbol [ GmOption %tmp.80 67 16 24 ];
+    %tmp.80 = getv ? :GmOption;
+    %tmp.81 = "bill_vs";
+    %tmp.82 = "Players";
+    %tmp.83 = newa 2;
+    %tmp.84 = "P vs AI";
+    %tmp.85 = dup %tmp.83;
+    %tmp.86 = aputv %tmp.85 0 %tmp.84;
+    %tmp.87 = "P vs P";
+    %tmp.88 = dup %tmp.86;
+    %tmp.89 = aputv %tmp.88 1 %tmp.87;
+    %tmp.90 = 0;
+    %tmp.77 = newc %tmp.80 (%tmp.81, %tmp.82, %tmp.89, %tmp.90);
+    %tmp.91 = dup %tmp.76;
+    %tmp.92 = aputv %tmp.91 1 %tmp.77;
+    symbol [ GmOption %tmp.96 68 16 24 ];
+    %tmp.96 = getv ? :GmOption;
+    %tmp.97 = "billDiff";
+    %tmp.98 = "Difficulty";
+    %tmp.99 = newa 3;
+    %tmp.100 = "EASY";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 0 %tmp.100;
+    %tmp.103 = "MEDIUM";
+    %tmp.104 = dup %tmp.102;
+    %tmp.105 = aputv %tmp.104 1 %tmp.103;
+    %tmp.106 = "HARD";
+    %tmp.107 = dup %tmp.105;
+    %tmp.108 = aputv %tmp.107 2 %tmp.106;
+    %tmp.109 = 1;
+    %tmp.93 = newc %tmp.96 (%tmp.97, %tmp.98, %tmp.108, %tmp.109);
+    %tmp.110 = dup %tmp.92;
+    %tmp.111 = aputv %tmp.110 2 %tmp.93;
+    %tmp.112 = dup %tmp.48;
+    %tmp.113 = aputv %tmp.112 %tmp.50 %tmp.111;
+    %tmp.1 = newc %tmp.4 (%tmp.113);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 54 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 71 4 ]
+    [ "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_start" "_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 71 8 9 ];
+    symbol [ GameMenuView %tmp.117 71 16 28 ];
+    %tmp.117 = getv ? :GameMenuView;
+    %tmp.118 = lgetv %cfg.1;
+    symbol [ cfg %tmp.118 71 29 32 ];
+    %tmp.114 = newc %tmp.117 (%tmp.118);
+    lputv %v.2 %tmp.114;
+    symbol [ v %v.2 71 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc" 72 4 ]
+    %tmp.119 = newa 2;
+    %tmp.120 = lgetv %v.2;
+    symbol [ v %tmp.120 72 12 13 ];
+    %tmp.121 = dup %tmp.119;
+    %tmp.122 = aputv %tmp.121 0 %tmp.120;
+    symbol [ GameMenuDelegate %tmp.126 72 19 35 ];
+    %tmp.126 = getv ? :GameMenuDelegate;
+    %tmp.127 = lgetv %v.2;
+    symbol [ v %tmp.127 72 36 37 ];
+    %tmp.123 = newc %tmp.126 (%tmp.127);
+    %tmp.128 = dup %tmp.122;
+    %tmp.129 = aputv %tmp.128 1 %tmp.123;
+    ret %tmp.129;
+_Users_kkorolczuk_work_garmin_billiards_source_BilliardsMenu_mc_53_44_73_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/billiards/source/BilliardsMenu.mc"; @line = 4; ]
+<init> {
+}

@@ -535,52 +535,21 @@ class MainView extends WatchUi.View {
     }
 
     hidden function _drawOver(dc) {
-        var bw = _ctrl.screenW * 74 / 100; if (bw < 168) { bw = 168; }
-        var bh = _ctrl.screenH * 48 / 100; if (bh < 148) { bh = 148; }
-        var bx = (_ctrl.screenW - bw) / 2;
-        var by = (_ctrl.screenH - bh) / 2;
         var borderC = _ctrl.hasNewCoinsRecord() ? 0xFFCC22 : 0xFF4466;
-        dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(borderC, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        var cx = _ctrl.screenW / 2;
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 5, Graphics.FONT_SMALL,
-                    "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 27, Graphics.FONT_XTINY,
-                    "Height " + _ctrl.heightMetres().format("%d") + "m",
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Height " + _ctrl.heightMetres().format("%d") + "m", 0xFFFFFF] ];
         if (_ctrl.score > 0 && _ctrl.score == _ctrl.hi) {
-            dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 43, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x44FFAA]);
         } else if (_ctrl.hi > 0) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 43, Graphics.FONT_XTINY,
-                        "Best " + (_ctrl.hi / 6).format("%d") + "m",
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + (_ctrl.hi / 6).format("%d") + "m", 0xFFCC22]);
         }
-        // Coins collected this run + lifetime total.
-        dc.setColor(0xFFD400, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx - 44, by + 62, 5);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx - 36, by + 56, Graphics.FONT_XTINY,
-                    _ctrl.coinsRun.format("%d") + " coins this run",
-                    Graphics.TEXT_JUSTIFY_LEFT);
-        dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 76, Graphics.FONT_XTINY,
-                    _ctrl.lifeCoins.format("%d") + " lifetime",
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        lines.add([_ctrl.coinsRun.format("%d") + " coins this run", 0xFFFFFF]);
+        lines.add([_ctrl.lifeCoins.format("%d") + " lifetime", 0x99AABB]);
         if (_ctrl.hasNewCoinsRecord()) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 92, Graphics.FONT_XTINY,
-                        "*** BEST HAUL EVER! ***", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["*** BEST HAUL EVER! ***", 0xFFCC22]);
         }
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap = replay  ESC = menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _ctrl.screenW, _ctrl.screenH,
+                          "SPLAT!", 0xFF4466, lines,
+                          "Tap = replay  ESC = menu", borderC);
     }
 
     // ── Input intents (called from InputHandler) ────────────────────

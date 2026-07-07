@@ -52,16 +52,31 @@ class GyroInput {
             _calX = ax; _calY = ay; _cal = true;
         }
         var sc;
-        if      (_sens == SS_SENS_LOW)  { sc = 0.0024; }
-        else if (_sens == SS_SENS_HIGH) { sc = 0.0058; }
-        else                             { sc = 0.0040; }
+        if      (_sens == SS_SENS_LOW)  { sc = 0.0026; }
+        else if (_sens == SS_SENS_HIGH) { sc = 0.0060; }
+        else                             { sc = 0.0042; }
         var dx = ax - _calX;
         var dy = ay - _calY;
-        // Dead zone — ignore noise jitter under ~40 mg.
-        if (dx > -40 && dx < 40) { dx = 0; }
-        if (dy > -40 && dy < 40) { dy = 0; }
+        // Small dead zone with a SMOOTH edge (subtract the zone instead of
+        // snapping to zero) so the scope eases in with no jump — key to the
+        // fluid tracking feel. ~18 mg is enough to reject resting jitter.
+        var DZ = 18;
+        if (dx > -DZ && dx < DZ) { dx = 0; } else { dx = (dx > 0) ? dx - DZ : dx + DZ; }
+        if (dy > -DZ && dy < DZ) { dy = 0; } else { dy = (dy > 0) ? dy - DZ : dy + DZ; }
         var ty =  dx.toFloat() * sc;
-        var tp = -dy.toFloat() * sc;
+        // Pitch gets a higher gain than yaw: the comfortable vertical wrist
+        // range is smaller, so a natural tilt must be enough to swing the
+        // scope all the way down onto ground-level hostiles.
+        //
+        // SIGN: this is the WORLD-MOVES / reticle-centred model, where a low
+        // hostile (pitch > 0, sitting below centre) is brought up to the fixed
+        // reticle by a POSITIVE gazePitch. Archery is the opposite model (the
+        // reticle itself moves, needing a negative aimPitch to go down), so it
+        // uses -dy. Here we must use +dy: tilting the wrist DOWN then raises
+        // gazePitch and the low targets rise to the crosshair — i.e. "aim down"
+        // finally works. The previous -dy inverted this and made down aiming
+        // impossible no matter how the target band was tuned.
+        var tp = dy.toFloat() * sc * 1.6;
 
         // Symmetric ease-out amplification: precise near the horizon,
         // easy to swing to the extremes in EITHER direction. Applied

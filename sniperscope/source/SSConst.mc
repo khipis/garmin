@@ -68,6 +68,21 @@ const SS_SCOPE_PCT       = 92;   // %% of min dim used for scope opening
 const SS_FOV             = 240;  // pixels per radian (tighter than SC — feels zoomed in)
 const SS_WORLD_YAW       = 1.6;  // ±yaw range player can scan
 const SS_WORLD_PITCH     = 0.9;  // ±pitch range
+// World pitch of the ground line. The scenery horizon is drawn at this
+// pitch and projected through the SAME gaze (and full FOV) as the
+// targets, so the ground and the hostiles pan in perfect lockstep — a
+// target of pitch p stays a FIXED distance (p − SS_GROUND_PITCH)·FOV
+// below the horizon at every aim angle, so it never lifts off the
+// ground / floats when you swing the scope down.
+//
+// Kept BELOW the whole target pitch band (targets spawn in roughly
+// [-0.24 .. +0.30]) so every hostile renders below the horizon and
+// stays grounded, while the band still straddles the resting gaze —
+// some targets sit near/above centre (easy) and some require a natural
+// downward tilt (the "lower" ones). An all-positive band made EVERY
+// target demand a sustained down-tilt, which read as "can't aim down".
+// The sniper is effectively overlooking a field from slightly above.
+const SS_GROUND_PITCH    = -0.28;
 
 // ── Breathing (sway) ──────────────────────────────────────────
 // Two superimposed slow sines (different periods) — looks more

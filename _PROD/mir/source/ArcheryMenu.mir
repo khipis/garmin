@@ -1,0 +1,650 @@
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 13; @symbol_classdef = [ArcheryHooks,13,6,18]; @symbol_extends<0> = [GameHooks,13,27,36]; ]
+class ArcheryHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_23_47_41_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 24 8 10 ];
+        symbol [ setColor %tmp.2 24 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xE0C054;
+        symbol [ Graphics %tmp.4 24 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 24 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 25 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 25 8 10 ];
+        symbol [ fillCircle %tmp.7 25 11 21 ];
+        %tmp.7 = getv function %tmp.6 :fillCircle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 25 22 24 ];
+        %tmp.9 = lgetv %cy;
+        symbol [ cy %tmp.9 25 26 28 ];
+        %tmp.10 = 12;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9, %tmp.10);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 26 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 26 8 10 ];
+        symbol [ setColor %tmp.12 26 11 19 ];
+        %tmp.12 = getv function %tmp.11 :setColor;
+        %tmp.13 = 0xC03030;
+        symbol [ Graphics %tmp.14 26 30 38 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.15 26 39 56 ];
+        %tmp.15 = getv %tmp.14 :COLOR_TRANSPARENT;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 27 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 27 8 10 ];
+        symbol [ fillCircle %tmp.17 27 11 21 ];
+        %tmp.17 = getv function %tmp.16 :fillCircle;
+        %tmp.18 = lgetv %cx;
+        symbol [ cx %tmp.18 27 22 24 ];
+        %tmp.19 = lgetv %cy;
+        symbol [ cy %tmp.19 27 26 28 ];
+        %tmp.20 = 8;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 28 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 28 8 10 ];
+        symbol [ setColor %tmp.22 28 11 19 ];
+        %tmp.22 = getv function %tmp.21 :setColor;
+        %tmp.23 = 0xF4F0E0;
+        symbol [ Graphics %tmp.24 28 30 38 ];
+        %tmp.24 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.25 28 39 56 ];
+        %tmp.25 = getv %tmp.24 :COLOR_TRANSPARENT;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 29 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 29 8 10 ];
+        symbol [ fillCircle %tmp.27 29 11 21 ];
+        %tmp.27 = getv function %tmp.26 :fillCircle;
+        %tmp.28 = lgetv %cx;
+        symbol [ cx %tmp.28 29 22 24 ];
+        %tmp.29 = lgetv %cy;
+        symbol [ cy %tmp.29 29 26 28 ];
+        %tmp.30 = 4;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.29, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 30 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 30 8 10 ];
+        symbol [ setColor %tmp.32 30 11 19 ];
+        %tmp.32 = getv function %tmp.31 :setColor;
+        %tmp.33 = 0xC03030;
+        symbol [ Graphics %tmp.34 30 30 38 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.35 30 39 56 ];
+        %tmp.35 = getv %tmp.34 :COLOR_TRANSPARENT;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 31 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 31 8 10 ];
+        symbol [ fillCircle %tmp.37 31 11 21 ];
+        %tmp.37 = getv function %tmp.36 :fillCircle;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 31 22 24 ];
+        %tmp.39 = lgetv %cy;
+        symbol [ cy %tmp.39 31 26 28 ];
+        %tmp.40 = 2;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.39, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 33 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 33 8 10 ];
+        symbol [ setColor %tmp.42 33 11 19 ];
+        %tmp.42 = getv function %tmp.41 :setColor;
+        %tmp.43 = 0xA86430;
+        symbol [ Graphics %tmp.44 33 30 38 ];
+        %tmp.44 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.45 33 39 56 ];
+        %tmp.45 = getv %tmp.44 :COLOR_TRANSPARENT;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 34 8 ]
+        %tmp.46 = lgetv %dc;
+        symbol [ dc %tmp.46 34 8 10 ];
+        symbol [ setPenWidth %tmp.47 34 11 22 ];
+        %tmp.47 = getv function %tmp.46 :setPenWidth;
+        %tmp.48 = 2;
+        invoke %tmp.46 %tmp.47(%tmp.48);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 35 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 35 8 10 ];
+        symbol [ drawLine %tmp.50 35 11 19 ];
+        %tmp.50 = getv function %tmp.49 :drawLine;
+        %tmp.51 = lgetv %cx;
+        symbol [ cx %tmp.51 35 20 22 ];
+        %tmp.52 = 28;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %cy;
+        symbol [ cy %tmp.54 35 29 31 ];
+        %tmp.55 = 18;
+        %tmp.56 = add %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %cx;
+        symbol [ cx %tmp.57 35 38 40 ];
+        %tmp.58 = lgetv %cy;
+        symbol [ cy %tmp.58 35 42 44 ];
+        invoke %tmp.49 %tmp.50(%tmp.53, %tmp.56, %tmp.57, %tmp.58);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 36 8 ]
+        %tmp.59 = lgetv %dc;
+        symbol [ dc %tmp.59 36 8 10 ];
+        symbol [ setPenWidth %tmp.60 36 11 22 ];
+        %tmp.60 = getv function %tmp.59 :setPenWidth;
+        %tmp.61 = 1;
+        invoke %tmp.59 %tmp.60(%tmp.61);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 37 8 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 37 8 10 ];
+        symbol [ setColor %tmp.63 37 11 19 ];
+        %tmp.63 = getv function %tmp.62 :setColor;
+        %tmp.64 = 0xE8E8E8;
+        symbol [ Graphics %tmp.65 37 30 38 ];
+        %tmp.65 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.66 37 39 56 ];
+        %tmp.66 = getv %tmp.65 :COLOR_TRANSPARENT;
+        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.66);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 38 8 ]
+        %tmp.67 = lgetv %dc;
+        symbol [ dc %tmp.67 38 8 10 ];
+        symbol [ fillPolygon %tmp.68 38 11 22 ];
+        %tmp.68 = getv function %tmp.67 :fillPolygon;
+        %tmp.69 = newa 3;
+        %tmp.70 = newa 2;
+        %tmp.71 = lgetv %cx;
+        symbol [ cx %tmp.71 38 25 27 ];
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 0 %tmp.71;
+        %tmp.74 = lgetv %cy;
+        symbol [ cy %tmp.74 38 29 31 ];
+        %tmp.75 = dup %tmp.73;
+        %tmp.76 = aputv %tmp.75 1 %tmp.74;
+        %tmp.77 = dup %tmp.69;
+        %tmp.78 = aputv %tmp.77 0 %tmp.76;
+        %tmp.79 = newa 2;
+        %tmp.80 = lgetv %cx;
+        symbol [ cx %tmp.80 38 35 37 ];
+        %tmp.81 = 6;
+        %tmp.82 = sub %tmp.80 %tmp.81;
+        %tmp.83 = dup %tmp.79;
+        %tmp.84 = aputv %tmp.83 0 %tmp.82;
+        %tmp.85 = lgetv %cy;
+        symbol [ cy %tmp.85 38 43 45 ];
+        %tmp.86 = 1;
+        %tmp.87 = add %tmp.85 %tmp.86;
+        %tmp.88 = dup %tmp.84;
+        %tmp.89 = aputv %tmp.88 1 %tmp.87;
+        %tmp.90 = dup %tmp.78;
+        %tmp.91 = aputv %tmp.90 1 %tmp.89;
+        %tmp.92 = newa 2;
+        %tmp.93 = lgetv %cx;
+        symbol [ cx %tmp.93 38 53 55 ];
+        %tmp.94 = 3;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = dup %tmp.92;
+        %tmp.97 = aputv %tmp.96 0 %tmp.95;
+        %tmp.98 = lgetv %cy;
+        symbol [ cy %tmp.98 38 61 63 ];
+        %tmp.99 = 6;
+        %tmp.100 = add %tmp.98 %tmp.99;
+        %tmp.101 = dup %tmp.97;
+        %tmp.102 = aputv %tmp.101 1 %tmp.100;
+        %tmp.103 = dup %tmp.91;
+        %tmp.104 = aputv %tmp.103 2 %tmp.102;
+        invoke %tmp.67 %tmp.68(%tmp.104);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 39 8 ]
+        %tmp.105 = lgetv %dc;
+        symbol [ dc %tmp.105 39 8 10 ];
+        symbol [ setColor %tmp.106 39 11 19 ];
+        %tmp.106 = getv function %tmp.105 :setColor;
+        %tmp.107 = 0xD03020;
+        symbol [ Graphics %tmp.108 39 30 38 ];
+        %tmp.108 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.109 39 39 56 ];
+        %tmp.109 = getv %tmp.108 :COLOR_TRANSPARENT;
+        invoke %tmp.105 %tmp.106(%tmp.107, %tmp.109);
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 40 8 ]
+        %tmp.110 = lgetv %dc;
+        symbol [ dc %tmp.110 40 8 10 ];
+        symbol [ fillPolygon %tmp.111 40 11 22 ];
+        %tmp.111 = getv function %tmp.110 :fillPolygon;
+        %tmp.112 = newa 3;
+        %tmp.113 = newa 2;
+        %tmp.114 = lgetv %cx;
+        symbol [ cx %tmp.114 40 25 27 ];
+        %tmp.115 = 28;
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        %tmp.117 = dup %tmp.113;
+        %tmp.118 = aputv %tmp.117 0 %tmp.116;
+        %tmp.119 = lgetv %cy;
+        symbol [ cy %tmp.119 40 34 36 ];
+        %tmp.120 = 18;
+        %tmp.121 = add %tmp.119 %tmp.120;
+        %tmp.122 = dup %tmp.118;
+        %tmp.123 = aputv %tmp.122 1 %tmp.121;
+        %tmp.124 = dup %tmp.112;
+        %tmp.125 = aputv %tmp.124 0 %tmp.123;
+        %tmp.126 = newa 2;
+        %tmp.127 = lgetv %cx;
+        symbol [ cx %tmp.127 40 45 47 ];
+        %tmp.128 = 24;
+        %tmp.129 = sub %tmp.127 %tmp.128;
+        %tmp.130 = dup %tmp.126;
+        %tmp.131 = aputv %tmp.130 0 %tmp.129;
+        %tmp.132 = lgetv %cy;
+        symbol [ cy %tmp.132 40 54 56 ];
+        %tmp.133 = 12;
+        %tmp.134 = add %tmp.132 %tmp.133;
+        %tmp.135 = dup %tmp.131;
+        %tmp.136 = aputv %tmp.135 1 %tmp.134;
+        %tmp.137 = dup %tmp.125;
+        %tmp.138 = aputv %tmp.137 1 %tmp.136;
+        %tmp.139 = newa 2;
+        %tmp.140 = lgetv %cx;
+        symbol [ cx %tmp.140 40 65 67 ];
+        %tmp.141 = 22;
+        %tmp.142 = sub %tmp.140 %tmp.141;
+        %tmp.143 = dup %tmp.139;
+        %tmp.144 = aputv %tmp.143 0 %tmp.142;
+        %tmp.145 = lgetv %cy;
+        symbol [ cy %tmp.145 40 74 76 ];
+        %tmp.146 = 20;
+        %tmp.147 = add %tmp.145 %tmp.146;
+        %tmp.148 = dup %tmp.144;
+        %tmp.149 = aputv %tmp.148 1 %tmp.147;
+        %tmp.150 = dup %tmp.138;
+        %tmp.151 = aputv %tmp.150 2 %tmp.149;
+        invoke %tmp.110 %tmp.111(%tmp.151);
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_23_47_41_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 44; @symbol_functiondef = [lbVariant,44,13,22]; @symbol_return<0> = [Lang,44,28,32]; @symbol_return<1> = [String,44,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_44_40_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_44_40_53_4_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_44_40_53_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 45 12 13 ];
+        %tmp.1 = 1;
+        lputv %d.1 %tmp.1;
+        symbol [ d %d.1 45 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 46 8 ]
+        try @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_beginTry @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_endTry @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_beginTry:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_12_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 47 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_12_49_8_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_12_49_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 47 16 17 ];
+        symbol [ Application %tmp.2 47 20 31 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.3 47 32 39 ];
+        %tmp.3 = getv %tmp.2 :Storage;
+        symbol [ getValue %tmp.4 47 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "ar_diff";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.2 %tmp.6;
+        symbol [ v %v.2 47 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 48 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_12_48_51_if_stmt:
+        %tmp.7 = lgetv %v.2;
+        symbol [ v %tmp.7 48 16 17 ];
+        symbol [ Lang %tmp.8 48 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 48 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_12_48_51_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_12_48_51_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_42_48_51_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 48 44 ]
+        %tmp.11 = lgetv %v.2;
+        symbol [ v %tmp.11 48 48 49 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        lputv %d.1 %tmp.12;
+        symbol [ d %d.1 48 44 45 ];
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_42_48_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_12_48_51_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_48_12_48_51_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_12_49_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_catch:
+        %tmp.13 = exception;
+        push %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 49 10 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_catch" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_49_10_49_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 49 17 18 ];
+        %tmp.14 = dup %tmp.13;
+        lputv %e.3 %tmp.14;
+        symbol [ e %e.3 49 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_49_10_49_21_end:
+        try @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally;
+        throw %tmp.13;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_46_8_49_21_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_8_50_37_if_stmt:
+        %tmp.15 = lgetv %d.1;
+        symbol [ d %tmp.15 50 12 13 ];
+        %tmp.16 = 0;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_8_50_37_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_8_50_37_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_20_50_37_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 50 22 ]
+        %tmp.18 = "Easy";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_20_50_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_8_50_37_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_50_8_50_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 51 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_8_51_37_if_stmt:
+        %tmp.19 = lgetv %d.1;
+        symbol [ d %tmp.19 51 12 13 ];
+        %tmp.20 = 2;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_8_51_37_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_8_51_37_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_20_51_37_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 51 22 ]
+        %tmp.22 = "Hard";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_20_51_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_8_51_37_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_51_8_51_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 52 8 ]
+        %tmp.23 = "Norm";
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_44_40_53_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 55; @symbol_functiondef = [footerText,55,13,23]; @symbol_return<0> = [Lang,55,29,33]; @symbol_return<1> = [String,55,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_55_49_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 56 8 ]
+        try @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_beginTry @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_endTry @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_catch @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_beginTry:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_12_59_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 57 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_12_59_8_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_12_59_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 57 16 17 ];
+        symbol [ Application %tmp.1 57 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 57 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 57 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "ar_best";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 57 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 58 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_16_58_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 58 16 17 ];
+        symbol [ Lang %tmp.7 58 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 58 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_44_58_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 58 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_44_58_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_16_58_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_44_58_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_44_58_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_51_58_86_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 58 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 58 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 58 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_51_58_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_58_12_58_86_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_12_59_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 59 10 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_catch" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_59_10_59_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 59 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 59 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_end;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_59_10_59_21_end:
+        try @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_catch @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_59_10_59_21_end @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_59_10_59_21_end @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_56_8_59_21_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 60 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_55_49_61_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 64; @symbol_functiondef = [buildArcheryMenu,64,9,25]; @symbol_return<0> = [Lang,64,31,35]; @symbol_return<1> = [Array,64,36,41]; ]
+function buildArcheryMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 65 4 ]
+    [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 65 8 11 ];
+    symbol [ MenuConfig %tmp.4 65 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 66 9 15 const ];
+    %tmp.8 = "archery";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 67 9 15 const ];
+    %tmp.13 = "ARCHERY";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 68 9 15 const ];
+    %tmp.18 = "TOURNAMENT";
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 69 9 13 const ];
+    %tmp.23 = 0xE6B45A;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :col2;
+    symbol [ col2 %tmp.27 70 9 13 const ];
+    %tmp.28 = 0xC09030;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :bg;
+    symbol [ bg %tmp.32 71 9 11 const ];
+    %tmp.33 = 0x2B1E2E;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :circle;
+    symbol [ circle %tmp.37 72 9 15 const ];
+    %tmp.38 = 0x241826;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :accent;
+    symbol [ accent %tmp.42 73 9 15 const ];
+    %tmp.43 = 0xE0B040;
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :lbTitle;
+    symbol [ lbTitle %tmp.47 74 9 16 const ];
+    %tmp.48 = "ARCHERY";
+    %tmp.49 = dup %tmp.45;
+    %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
+    %tmp.52 = const :hooks;
+    symbol [ hooks %tmp.52 75 9 14 const ];
+    symbol [ ArcheryHooks %tmp.56 75 24 36 ];
+    %tmp.56 = getv ? :ArcheryHooks;
+    %tmp.53 = newc %tmp.56 ();
+    %tmp.57 = dup %tmp.50;
+    %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
+    %tmp.60 = const :options;
+    symbol [ options %tmp.60 76 9 16 const ];
+    %tmp.61 = newa 2;
+    symbol [ GmOption %tmp.65 77 16 24 ];
+    %tmp.65 = getv ? :GmOption;
+    %tmp.66 = "ar_sens";
+    %tmp.67 = "Sensitivity";
+    %tmp.68 = newa 3;
+    %tmp.69 = "LOW";
+    %tmp.70 = dup %tmp.68;
+    %tmp.71 = aputv %tmp.70 0 %tmp.69;
+    %tmp.72 = "NORM";
+    %tmp.73 = dup %tmp.71;
+    %tmp.74 = aputv %tmp.73 1 %tmp.72;
+    %tmp.75 = "HIGH";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 2 %tmp.75;
+    %tmp.78 = 1;
+    %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.77, %tmp.78);
+    %tmp.79 = dup %tmp.61;
+    %tmp.80 = aputv %tmp.79 0 %tmp.62;
+    symbol [ GmOption %tmp.84 78 16 24 ];
+    %tmp.84 = getv ? :GmOption;
+    %tmp.85 = "ar_diff";
+    %tmp.86 = "Difficulty";
+    %tmp.87 = newa 3;
+    %tmp.88 = "EASY";
+    %tmp.89 = dup %tmp.87;
+    %tmp.90 = aputv %tmp.89 0 %tmp.88;
+    %tmp.91 = "NORM";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 1 %tmp.91;
+    %tmp.94 = "HARD";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 2 %tmp.94;
+    %tmp.97 = 1;
+    %tmp.81 = newc %tmp.84 (%tmp.85, %tmp.86, %tmp.96, %tmp.97);
+    %tmp.98 = dup %tmp.80;
+    %tmp.99 = aputv %tmp.98 1 %tmp.81;
+    %tmp.100 = dup %tmp.58;
+    %tmp.101 = aputv %tmp.100 %tmp.60 %tmp.99;
+    %tmp.1 = newc %tmp.4 (%tmp.101);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 65 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 81 4 ]
+    [ "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_start" "_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 81 8 9 ];
+    symbol [ GameMenuView %tmp.105 81 16 28 ];
+    %tmp.105 = getv ? :GameMenuView;
+    %tmp.106 = lgetv %cfg.1;
+    symbol [ cfg %tmp.106 81 29 32 ];
+    %tmp.102 = newc %tmp.105 (%tmp.106);
+    lputv %v.2 %tmp.102;
+    symbol [ v %v.2 81 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc" 82 4 ]
+    %tmp.107 = newa 2;
+    %tmp.108 = lgetv %v.2;
+    symbol [ v %tmp.108 82 12 13 ];
+    %tmp.109 = dup %tmp.107;
+    %tmp.110 = aputv %tmp.109 0 %tmp.108;
+    symbol [ GameMenuDelegate %tmp.114 82 19 35 ];
+    %tmp.114 = getv ? :GameMenuDelegate;
+    %tmp.115 = lgetv %v.2;
+    symbol [ v %tmp.115 82 36 37 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    %tmp.116 = dup %tmp.110;
+    %tmp.117 = aputv %tmp.116 1 %tmp.111;
+    ret %tmp.117;
+_Users_kkorolczuk_work_garmin_archery_source_ArcheryMenu_mc_64_42_83_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/ArcheryMenu.mc"; @line = 8; ]
+<init> {
+}

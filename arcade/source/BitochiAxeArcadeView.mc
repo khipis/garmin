@@ -1126,30 +1126,14 @@ class BitochiAxeArcadeView extends WatchUi.View {
     }
 
     hidden function drawGameOver(dc) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_cx - _w * 38 / 100, _cy + _logR + 12, _w * 76 / 100, _h * 42 / 100);
-        dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_cx - _w * 38 / 100, _cy + _logR + 12, _w * 76 / 100, _h * 42 / 100);
-
-        var ty = _cy + _logR + 16;
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, ty, Graphics.FONT_SMALL, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        ty += 20;
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, ty, Graphics.FONT_XTINY, "Score: " + _score + "  Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
-        ty += 14;
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, ty, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
-        ty += 14;
+        var lines = [
+            ["Score: " + _score + "  Lv" + _level, 0xFFFFFF],
+            ["Best: " + _bestScore, 0xFFCC44]
+        ];
         if (_combo > 4) {
-            dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, ty, Graphics.FONT_XTINY, "Best combo: " + _combo, Graphics.TEXT_JUSTIFY_CENTER);
-            ty += 14;
+            lines.add(["Best combo: " + _combo, 0x88AACC]);
         }
-        if (_tick % 10 < 5) {
-            dc.setColor(0xDD8833, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, ty, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        GameOverCard.draw(dc, _w, _h, "GAME OVER", 0xFF4444, lines, "Tap to retry", 0x333344);
     }
 
     hidden function drawMenu(dc) {

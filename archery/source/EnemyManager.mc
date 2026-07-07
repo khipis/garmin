@@ -231,11 +231,13 @@ class EnemyManager {
         }
         type[i] = t;
 
-        // Place around player's forward arc.  yaw ∈ [−0.9, 0.9],
-        // pitch ∈ [−0.2, 0.15] (enemies stand on the ground).
-        yaw[i]   = (_randf() - 0.5) * 1.6;
+        // Place around the player's forward arc, all BELOW the horizon so
+        // they stand on the ground and never float:
+        //   yaw   ∈ [−0.6, 0.6]  — fits on-screen at any watch size
+        //   pitch ∈ [ 0.03, 0.27] — strictly positive → always on the ground
+        yaw[i]   = (_randf() - 0.5) * 1.2;
         pyaw[i]  = yaw[i];
-        pitch[i] = (_randf() - 0.5) * 0.30 - 0.05;
+        pitch[i] = _randf() * 0.24 + 0.03;
 
         if (t == AR_ET_RIDER) {
             // Slightly slower strafe — combined with the narrower
@@ -248,7 +250,7 @@ class EnemyManager {
         } else if (t == AR_ET_ARCHER) {
             dist[i] = 140;
             yaw[i]  = 0.0; pyaw[i] = 0.0;
-            pitch[i] = -0.08;
+            pitch[i] = 0.10;
             fireT[i] = 40;
         } else if (t == AR_ET_SHIELD) {
             dist[i] = 130 + _rand(50);

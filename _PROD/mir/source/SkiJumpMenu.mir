@@ -1,0 +1,816 @@
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 9; @symbol_classdef = [SkiJumpHooks,9,6,18]; @symbol_extends<0> = [GameHooks,9,27,36]; ]
+class SkiJumpHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 10; @position = 15; @symbol_vardef = [_venueNames,10,15,26]; ]
+    protected
+    var _venueNames;
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 12; @symbol_functiondef = [initialize,12,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_12_26_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 13 8 ]
+        symbol [ GameHooks %tmp.2 13 8 17 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 13 18 28 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 14 8 ]
+        %tmp.4 = newa 4;
+        %tmp.5 = "Zakopane";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 0 %tmp.5;
+        %tmp.8 = "Innsbruck";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 1 %tmp.8;
+        %tmp.11 = "Oberstdorf";
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 2 %tmp.11;
+        %tmp.14 = "Vikersund";
+        %tmp.15 = dup %tmp.13;
+        %tmp.16 = aputv %tmp.15 3 %tmp.14;
+        symbol [ _venueNames ? 14 8 19 ];
+        putv self :_venueNames %tmp.16;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_12_26_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ BitochiJumpView %tmp.4 18 20 35 ];
+        %tmp.4 = getv ? :BitochiJumpView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ BitochiJumpDelegate %tmp.11 19 32 51 ];
+        %tmp.11 = getv ? :BitochiJumpDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 52 53 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 56 63 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 64 74 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 25 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 25 8 10 ];
+        symbol [ setColor %tmp.2 25 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xEAF2F8;
+        symbol [ Graphics %tmp.4 25 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 25 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 26 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 26 8 10 ];
+        symbol [ fillPolygon %tmp.7 26 11 22 ];
+        %tmp.7 = getv function %tmp.6 :fillPolygon;
+        %tmp.8 = newa 4;
+        %tmp.9 = newa 2;
+        %tmp.10 = lgetv %cx;
+        symbol [ cx %tmp.10 26 25 27 ];
+        %tmp.11 = 36;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        %tmp.13 = dup %tmp.9;
+        %tmp.14 = aputv %tmp.13 0 %tmp.12;
+        %tmp.15 = lgetv %cy;
+        symbol [ cy %tmp.15 26 34 36 ];
+        %tmp.16 = 16;
+        %tmp.17 = sub %tmp.15 %tmp.16;
+        %tmp.18 = dup %tmp.14;
+        %tmp.19 = aputv %tmp.18 1 %tmp.17;
+        %tmp.20 = dup %tmp.8;
+        %tmp.21 = aputv %tmp.20 0 %tmp.19;
+        %tmp.22 = newa 2;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 26 45 47 ];
+        %tmp.24 = 4;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = dup %tmp.22;
+        %tmp.27 = aputv %tmp.26 0 %tmp.25;
+        %tmp.28 = lgetv %cy;
+        symbol [ cy %tmp.28 26 53 55 ];
+        %tmp.29 = 4;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        %tmp.31 = dup %tmp.27;
+        %tmp.32 = aputv %tmp.31 1 %tmp.30;
+        %tmp.33 = dup %tmp.21;
+        %tmp.34 = aputv %tmp.33 1 %tmp.32;
+        %tmp.35 = newa 2;
+        %tmp.36 = lgetv %cx;
+        symbol [ cx %tmp.36 26 63 65 ];
+        %tmp.37 = 4;
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        %tmp.39 = dup %tmp.35;
+        %tmp.40 = aputv %tmp.39 0 %tmp.38;
+        %tmp.41 = lgetv %cy;
+        symbol [ cy %tmp.41 26 71 73 ];
+        %tmp.42 = 18;
+        %tmp.43 = add %tmp.41 %tmp.42;
+        %tmp.44 = dup %tmp.40;
+        %tmp.45 = aputv %tmp.44 1 %tmp.43;
+        %tmp.46 = dup %tmp.34;
+        %tmp.47 = aputv %tmp.46 2 %tmp.45;
+        %tmp.48 = newa 2;
+        %tmp.49 = lgetv %cx;
+        symbol [ cx %tmp.49 26 82 84 ];
+        %tmp.50 = 36;
+        %tmp.51 = sub %tmp.49 %tmp.50;
+        %tmp.52 = dup %tmp.48;
+        %tmp.53 = aputv %tmp.52 0 %tmp.51;
+        %tmp.54 = lgetv %cy;
+        symbol [ cy %tmp.54 26 91 93 ];
+        %tmp.55 = 18;
+        %tmp.56 = add %tmp.54 %tmp.55;
+        %tmp.57 = dup %tmp.53;
+        %tmp.58 = aputv %tmp.57 1 %tmp.56;
+        %tmp.59 = dup %tmp.47;
+        %tmp.60 = aputv %tmp.59 3 %tmp.58;
+        invoke %tmp.6 %tmp.7(%tmp.60);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 27 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 27 8 10 ];
+        symbol [ setColor %tmp.62 27 11 19 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = 0xBBCEDC;
+        symbol [ Graphics %tmp.64 27 30 38 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 27 39 56 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 28 8 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 28 8 10 ];
+        symbol [ drawLine %tmp.67 28 11 19 ];
+        %tmp.67 = getv function %tmp.66 :drawLine;
+        %tmp.68 = lgetv %cx;
+        symbol [ cx %tmp.68 28 20 22 ];
+        %tmp.69 = 36;
+        %tmp.70 = sub %tmp.68 %tmp.69;
+        %tmp.71 = lgetv %cy;
+        symbol [ cy %tmp.71 28 29 31 ];
+        %tmp.72 = 16;
+        %tmp.73 = sub %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %cx;
+        symbol [ cx %tmp.74 28 38 40 ];
+        %tmp.75 = 4;
+        %tmp.76 = sub %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %cy;
+        symbol [ cy %tmp.77 28 46 48 ];
+        %tmp.78 = 4;
+        %tmp.79 = add %tmp.77 %tmp.78;
+        invoke %tmp.66 %tmp.67(%tmp.70, %tmp.73, %tmp.76, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 30 8 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 30 8 10 ];
+        symbol [ setColor %tmp.81 30 11 19 ];
+        %tmp.81 = getv function %tmp.80 :setColor;
+        %tmp.82 = 0xDCE8F0;
+        symbol [ Graphics %tmp.83 30 30 38 ];
+        %tmp.83 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.84 30 39 56 ];
+        %tmp.84 = getv %tmp.83 :COLOR_TRANSPARENT;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 31 8 ]
+        %tmp.85 = lgetv %dc;
+        symbol [ dc %tmp.85 31 8 10 ];
+        symbol [ fillPolygon %tmp.86 31 11 22 ];
+        %tmp.86 = getv function %tmp.85 :fillPolygon;
+        %tmp.87 = newa 4;
+        %tmp.88 = newa 2;
+        %tmp.89 = lgetv %cx;
+        symbol [ cx %tmp.89 31 25 27 ];
+        %tmp.90 = 4;
+        %tmp.91 = sub %tmp.89 %tmp.90;
+        %tmp.92 = dup %tmp.88;
+        %tmp.93 = aputv %tmp.92 0 %tmp.91;
+        %tmp.94 = lgetv %cy;
+        symbol [ cy %tmp.94 31 33 35 ];
+        %tmp.95 = 4;
+        %tmp.96 = add %tmp.94 %tmp.95;
+        %tmp.97 = dup %tmp.93;
+        %tmp.98 = aputv %tmp.97 1 %tmp.96;
+        %tmp.99 = dup %tmp.87;
+        %tmp.100 = aputv %tmp.99 0 %tmp.98;
+        %tmp.101 = newa 2;
+        %tmp.102 = lgetv %cx;
+        symbol [ cx %tmp.102 31 43 45 ];
+        %tmp.103 = 38;
+        %tmp.104 = add %tmp.102 %tmp.103;
+        %tmp.105 = dup %tmp.101;
+        %tmp.106 = aputv %tmp.105 0 %tmp.104;
+        %tmp.107 = lgetv %cy;
+        symbol [ cy %tmp.107 31 52 54 ];
+        %tmp.108 = 18;
+        %tmp.109 = add %tmp.107 %tmp.108;
+        %tmp.110 = dup %tmp.106;
+        %tmp.111 = aputv %tmp.110 1 %tmp.109;
+        %tmp.112 = dup %tmp.100;
+        %tmp.113 = aputv %tmp.112 1 %tmp.111;
+        %tmp.114 = newa 2;
+        %tmp.115 = lgetv %cx;
+        symbol [ cx %tmp.115 31 63 65 ];
+        %tmp.116 = 38;
+        %tmp.117 = add %tmp.115 %tmp.116;
+        %tmp.118 = dup %tmp.114;
+        %tmp.119 = aputv %tmp.118 0 %tmp.117;
+        %tmp.120 = lgetv %cy;
+        symbol [ cy %tmp.120 31 72 74 ];
+        %tmp.121 = 20;
+        %tmp.122 = add %tmp.120 %tmp.121;
+        %tmp.123 = dup %tmp.119;
+        %tmp.124 = aputv %tmp.123 1 %tmp.122;
+        %tmp.125 = dup %tmp.113;
+        %tmp.126 = aputv %tmp.125 2 %tmp.124;
+        %tmp.127 = newa 2;
+        %tmp.128 = lgetv %cx;
+        symbol [ cx %tmp.128 31 83 85 ];
+        %tmp.129 = 4;
+        %tmp.130 = sub %tmp.128 %tmp.129;
+        %tmp.131 = dup %tmp.127;
+        %tmp.132 = aputv %tmp.131 0 %tmp.130;
+        %tmp.133 = lgetv %cy;
+        symbol [ cy %tmp.133 31 91 93 ];
+        %tmp.134 = 18;
+        %tmp.135 = add %tmp.133 %tmp.134;
+        %tmp.136 = dup %tmp.132;
+        %tmp.137 = aputv %tmp.136 1 %tmp.135;
+        %tmp.138 = dup %tmp.126;
+        %tmp.139 = aputv %tmp.138 3 %tmp.137;
+        invoke %tmp.85 %tmp.86(%tmp.139);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 33 8 ]
+        %tmp.140 = lgetv %dc;
+        symbol [ dc %tmp.140 33 8 10 ];
+        symbol [ setColor %tmp.141 33 11 19 ];
+        %tmp.141 = getv function %tmp.140 :setColor;
+        %tmp.142 = 0xFF3333;
+        symbol [ Graphics %tmp.143 33 30 38 ];
+        %tmp.143 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.144 33 39 56 ];
+        %tmp.144 = getv %tmp.143 :COLOR_TRANSPARENT;
+        invoke %tmp.140 %tmp.141(%tmp.142, %tmp.144);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 33 59 ]
+        %tmp.145 = lgetv %dc;
+        symbol [ dc %tmp.145 33 59 61 ];
+        symbol [ fillRectangle %tmp.146 33 62 75 ];
+        %tmp.146 = getv function %tmp.145 :fillRectangle;
+        %tmp.147 = lgetv %cx;
+        symbol [ cx %tmp.147 33 76 78 ];
+        %tmp.148 = 14;
+        %tmp.149 = add %tmp.147 %tmp.148;
+        %tmp.150 = lgetv %cy;
+        symbol [ cy %tmp.150 33 85 87 ];
+        %tmp.151 = 9;
+        %tmp.152 = add %tmp.150 %tmp.151;
+        %tmp.153 = 2;
+        %tmp.154 = 6;
+        invoke %tmp.145 %tmp.146(%tmp.149, %tmp.152, %tmp.153, %tmp.154);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 34 8 ]
+        %tmp.155 = lgetv %dc;
+        symbol [ dc %tmp.155 34 8 10 ];
+        symbol [ setColor %tmp.156 34 11 19 ];
+        %tmp.156 = getv function %tmp.155 :setColor;
+        %tmp.157 = 0x33CC33;
+        symbol [ Graphics %tmp.158 34 30 38 ];
+        %tmp.158 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.159 34 39 56 ];
+        %tmp.159 = getv %tmp.158 :COLOR_TRANSPARENT;
+        invoke %tmp.155 %tmp.156(%tmp.157, %tmp.159);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 34 59 ]
+        %tmp.160 = lgetv %dc;
+        symbol [ dc %tmp.160 34 59 61 ];
+        symbol [ fillRectangle %tmp.161 34 62 75 ];
+        %tmp.161 = getv function %tmp.160 :fillRectangle;
+        %tmp.162 = lgetv %cx;
+        symbol [ cx %tmp.162 34 76 78 ];
+        %tmp.163 = 26;
+        %tmp.164 = add %tmp.162 %tmp.163;
+        %tmp.165 = lgetv %cy;
+        symbol [ cy %tmp.165 34 85 87 ];
+        %tmp.166 = 12;
+        %tmp.167 = add %tmp.165 %tmp.166;
+        %tmp.168 = 2;
+        %tmp.169 = 6;
+        invoke %tmp.160 %tmp.161(%tmp.164, %tmp.167, %tmp.168, %tmp.169);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_stop" ]
+        %jx.1 = local;
+        symbol [ jx %jx.1 36 12 14 ];
+        %tmp.170 = lgetv %cx;
+        symbol [ cx %tmp.170 36 17 19 ];
+        %tmp.171 = 2;
+        %tmp.172 = add %tmp.170 %tmp.171;
+        lputv %jx.1 %tmp.172;
+        symbol [ jx %jx.1 36 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 36 25 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_stop" ]
+        %jy.2 = local;
+        symbol [ jy %jy.2 36 29 31 ];
+        %tmp.173 = lgetv %cy;
+        symbol [ cy %tmp.173 36 34 36 ];
+        %tmp.174 = 8;
+        %tmp.175 = sub %tmp.173 %tmp.174;
+        lputv %jy.2 %tmp.175;
+        symbol [ jy %jy.2 36 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 37 8 ]
+        %tmp.176 = lgetv %dc;
+        symbol [ dc %tmp.176 37 8 10 ];
+        symbol [ setColor %tmp.177 37 11 19 ];
+        %tmp.177 = getv function %tmp.176 :setColor;
+        %tmp.178 = 0x333344;
+        symbol [ Graphics %tmp.179 37 30 38 ];
+        %tmp.179 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.180 37 39 56 ];
+        %tmp.180 = getv %tmp.179 :COLOR_TRANSPARENT;
+        invoke %tmp.176 %tmp.177(%tmp.178, %tmp.180);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 38 8 ]
+        %tmp.181 = lgetv %dc;
+        symbol [ dc %tmp.181 38 8 10 ];
+        symbol [ drawLine %tmp.182 38 11 19 ];
+        %tmp.182 = getv function %tmp.181 :drawLine;
+        %tmp.183 = lgetv %jx.1;
+        symbol [ jx %tmp.183 38 20 22 ];
+        %tmp.184 = 3;
+        %tmp.185 = sub %tmp.183 %tmp.184;
+        %tmp.186 = lgetv %jy.2;
+        symbol [ jy %tmp.186 38 28 30 ];
+        %tmp.187 = 3;
+        %tmp.188 = add %tmp.186 %tmp.187;
+        %tmp.189 = lgetv %jx.1;
+        symbol [ jx %tmp.189 38 36 38 ];
+        %tmp.190 = 12;
+        %tmp.191 = add %tmp.189 %tmp.190;
+        %tmp.192 = lgetv %jy.2;
+        symbol [ jy %tmp.192 38 45 47 ];
+        %tmp.193 = 4;
+        %tmp.194 = sub %tmp.192 %tmp.193;
+        invoke %tmp.181 %tmp.182(%tmp.185, %tmp.188, %tmp.191, %tmp.194);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 39 8 ]
+        %tmp.195 = lgetv %dc;
+        symbol [ dc %tmp.195 39 8 10 ];
+        symbol [ drawLine %tmp.196 39 11 19 ];
+        %tmp.196 = getv function %tmp.195 :drawLine;
+        %tmp.197 = lgetv %jx.1;
+        symbol [ jx %tmp.197 39 20 22 ];
+        %tmp.198 = 3;
+        %tmp.199 = sub %tmp.197 %tmp.198;
+        %tmp.200 = lgetv %jy.2;
+        symbol [ jy %tmp.200 39 28 30 ];
+        %tmp.201 = 3;
+        %tmp.202 = add %tmp.200 %tmp.201;
+        %tmp.203 = lgetv %jx.1;
+        symbol [ jx %tmp.203 39 36 38 ];
+        %tmp.204 = 12;
+        %tmp.205 = add %tmp.203 %tmp.204;
+        %tmp.206 = lgetv %jy.2;
+        symbol [ jy %tmp.206 39 45 47 ];
+        %tmp.207 = 6;
+        %tmp.208 = add %tmp.206 %tmp.207;
+        invoke %tmp.195 %tmp.196(%tmp.199, %tmp.202, %tmp.205, %tmp.208);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 40 8 ]
+        %tmp.209 = lgetv %dc;
+        symbol [ dc %tmp.209 40 8 10 ];
+        symbol [ setColor %tmp.210 40 11 19 ];
+        %tmp.210 = getv function %tmp.209 :setColor;
+        %tmp.211 = 0x2266DD;
+        symbol [ Graphics %tmp.212 40 30 38 ];
+        %tmp.212 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.213 40 39 56 ];
+        %tmp.213 = getv %tmp.212 :COLOR_TRANSPARENT;
+        invoke %tmp.209 %tmp.210(%tmp.211, %tmp.213);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 41 8 ]
+        %tmp.214 = lgetv %dc;
+        symbol [ dc %tmp.214 41 8 10 ];
+        symbol [ fillRectangle %tmp.215 41 11 24 ];
+        %tmp.215 = getv function %tmp.214 :fillRectangle;
+        %tmp.216 = lgetv %jx.1;
+        symbol [ jx %tmp.216 41 25 27 ];
+        %tmp.217 = 3;
+        %tmp.218 = sub %tmp.216 %tmp.217;
+        %tmp.219 = lgetv %jy.2;
+        symbol [ jy %tmp.219 41 33 35 ];
+        %tmp.220 = 5;
+        %tmp.221 = 5;
+        invoke %tmp.214 %tmp.215(%tmp.218, %tmp.219, %tmp.220, %tmp.221);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 42 8 ]
+        %tmp.222 = lgetv %dc;
+        symbol [ dc %tmp.222 42 8 10 ];
+        symbol [ setColor %tmp.223 42 11 19 ];
+        %tmp.223 = getv function %tmp.222 :setColor;
+        %tmp.224 = 0xDDAA77;
+        symbol [ Graphics %tmp.225 42 30 38 ];
+        %tmp.225 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.226 42 39 56 ];
+        %tmp.226 = getv %tmp.225 :COLOR_TRANSPARENT;
+        invoke %tmp.222 %tmp.223(%tmp.224, %tmp.226);
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 43 8 ]
+        %tmp.227 = lgetv %dc;
+        symbol [ dc %tmp.227 43 8 10 ];
+        symbol [ fillCircle %tmp.228 43 11 21 ];
+        %tmp.228 = getv function %tmp.227 :fillCircle;
+        %tmp.229 = lgetv %jx.1;
+        symbol [ jx %tmp.229 43 22 24 ];
+        %tmp.230 = 1;
+        %tmp.231 = add %tmp.229 %tmp.230;
+        %tmp.232 = lgetv %jy.2;
+        symbol [ jy %tmp.232 43 30 32 ];
+        %tmp.233 = 2;
+        %tmp.234 = sub %tmp.232 %tmp.233;
+        %tmp.235 = 2;
+        invoke %tmp.227 %tmp.228(%tmp.231, %tmp.234, %tmp.235);
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_23_47_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 48; @symbol_functiondef = [lbVariant,48,13,22]; @symbol_return<0> = [Lang,48,28,32]; @symbol_return<1> = [String,48,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_stop" ]
+        %bv.1 = local;
+        symbol [ bv %bv.1 49 12 14 ];
+        %tmp.1 = 3;
+        lputv %bv.1 %tmp.1;
+        symbol [ bv %bv.1 49 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 49 20 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_stop" ]
+        %bvD.2 = local;
+        symbol [ bvD %bvD.2 49 24 27 ];
+        %tmp.2 = 0.0;
+        lputv %bvD.2 %tmp.2;
+        symbol [ bvD %bvD.2 49 24 27 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 50 8 ]
+        for @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_test @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_incr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_begin" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 50 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.3 %tmp.3;
+        symbol [ i %i.3 50 17 18 ];
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_test:
+        %tmp.4 = lgetv %i.3;
+        symbol [ i %tmp.4 50 24 25 ];
+        %tmp.5 = 4;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_begin:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_36_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 51 12 ]
+        try @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_beginTry @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_endTry @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_catch @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_beginTry:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_16_54_12_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 52 16 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_16_54_12_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_16_54_12_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 52 20 21 ];
+        symbol [ Application %tmp.7 52 24 35 ];
+        %tmp.7 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.8 52 36 43 ];
+        %tmp.8 = getv %tmp.7 :Storage;
+        symbol [ getValue %tmp.9 52 44 52 ];
+        %tmp.9 = getv function %tmp.8 :getValue;
+        %tmp.10 = "jumpBest";
+        %tmp.11 = lgetv %i.3;
+        symbol [ i %tmp.11 52 66 67 ];
+        %tmp.12 = add %tmp.10 %tmp.11;
+        %tmp.13 = invoke %tmp.8 %tmp.9(%tmp.12);
+        lputv %v.4 %tmp.13;
+        symbol [ v %v.4 52 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 53 16 ]
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_stmt:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_20_53_37_begin:
+        %tmp.14 = lgetv %v.4;
+        symbol [ v %tmp.14 53 20 21 ];
+        %tmp.15 = null;
+        %tmp.16 = ne %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_33_53_37_true:
+        %tmp.17 = lgetv %v.4;
+        symbol [ v %tmp.17 53 33 34 ];
+        %tmp.18 = as %tmp.17 { (!Null) };
+        %tmp.19 = lgetv %bvD.2;
+        symbol [ bvD %tmp.19 53 37 40 ];
+        %tmp.20 = gt %tmp.18 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_33_53_37_end:
+        %tmp.21 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_20_53_37_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_33_53_37_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_33_53_37_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_true:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_42_53_61_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 53 44 ]
+        %tmp.22 = lgetv %v.4;
+        symbol [ v %tmp.22 53 50 51 ];
+        %tmp.23 = as %tmp.22 { (!Null) };
+        lputv %bvD.2 %tmp.23;
+        symbol [ bvD %bvD.2 53 44 47 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 53 53 ]
+        %tmp.24 = lgetv %i.3;
+        symbol [ i %tmp.24 53 58 59 ];
+        lputv %bv.1 %tmp.24;
+        symbol [ bv %bv.1 53 53 55 ];
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_42_53_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_53_16_53_61_if_end:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_16_54_12_stop:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally;
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_catch:
+        %tmp.25 = exception;
+        push %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 54 14 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_catch" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_54_14_54_25_end" ]
+        %e.5 = local;
+        symbol [ e %e.5 54 21 22 ];
+        %tmp.26 = dup %tmp.25;
+        lputv %e.5 %tmp.26;
+        symbol [ e %e.5 54 21 22 ];
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_54_14_54_25_end:
+        try @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_catch @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_54_14_54_25_end @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_54_14_54_25_end @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally;
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally;
+        throw %tmp.25;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_51_12_54_25_end:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_36_55_8_stop:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 50 ]
+        %tmp.29 = lgetv %i.3;
+        symbol [ i %tmp.29 50 31 32 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %i.3 %tmp.30;
+        symbol [ i %i.3 50 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_test;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_50_8_55_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 56 8 ]
+        symbol [ _venueNames %tmp.32 56 15 26 ];
+        %tmp.32 = getv ? :_venueNames;
+        %tmp.33 = lgetv %bv.1;
+        symbol [ bv %tmp.33 56 27 29 ];
+        %tmp.34 = agetv %tmp.32 %tmp.33;
+        ret %tmp.34;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_48_40_57_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 59; @symbol_functiondef = [footerText,59,13,23]; @symbol_return<0> = [Lang,59,29,33]; @symbol_return<1> = [String,59,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_59_49_65_4_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 60 8 ]
+        try @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_beginTry @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_endTry @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_catch @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_beginTry:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_12_63_8_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 61 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_12_63_8_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_12_63_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 61 16 17 ];
+        symbol [ Application %tmp.1 61 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 61 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 61 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "jumpBest";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 61 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 62 12 ]
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_stmt:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_16_62_33_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 62 16 17 ];
+        %tmp.7 = null;
+        %tmp.8 = ne %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_29_62_33_true:
+        %tmp.9 = lgetv %v.1;
+        symbol [ v %tmp.9 62 29 30 ];
+        %tmp.10 = as %tmp.9 { (!Null) };
+        %tmp.11 = 0;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_29_62_33_end:
+        %tmp.13 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_16_62_33_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_29_62_33_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_29_62_33_end];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_true:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_36_62_88_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 62 38 ]
+        %tmp.14 = "BEST ";
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 62 55 56 ];
+        %tmp.16 = as %tmp.15 { (!Null) };
+        symbol [ toNumber %tmp.17 62 57 65 ];
+        %tmp.17 = getv function %tmp.16 :toNumber;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        symbol [ format %tmp.19 62 68 74 ];
+        %tmp.19 = getv function %tmp.18 :format;
+        %tmp.20 = "%d";
+        %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+        %tmp.22 = add %tmp.14 %tmp.21;
+        %tmp.23 = "m";
+        %tmp.24 = add %tmp.22 %tmp.23;
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_36_62_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_62_12_62_88_if_end:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_12_63_8_stop:
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_catch:
+        %tmp.25 = exception;
+        push %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 63 10 ]
+        [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_catch" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_63_10_63_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 63 17 18 ];
+        %tmp.26 = dup %tmp.25;
+        lputv %e.2 %tmp.26;
+        symbol [ e %e.2 63 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_end;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_63_10_63_21_end:
+        try @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_catch @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_63_10_63_21_end @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_63_10_63_21_end @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally;
+        throw %tmp.25;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_60_8_63_21_end:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 64 8 ]
+        %tmp.27 = null;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_59_49_65_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 68; @symbol_functiondef = [buildSkiJumpMenu,68,9,25]; @symbol_return<0> = [Lang,68,31,35]; @symbol_return<1> = [Array,68,36,41]; ]
+function buildSkiJumpMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_start:
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 69 4 ]
+    [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 69 8 11 ];
+    symbol [ MenuConfig %tmp.4 69 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 10;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 70 9 15 const ];
+    %tmp.8 = "skijump";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 71 9 15 const ];
+    %tmp.13 = "SKI JUMP";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 72 9 15 const ];
+    %tmp.18 = null;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 73 9 13 const ];
+    %tmp.23 = 0xFFFFFF;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :bg;
+    symbol [ bg %tmp.27 74 9 11 const ];
+    %tmp.28 = 0x0A1420;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :circle;
+    symbol [ circle %tmp.32 75 9 15 const ];
+    %tmp.33 = 0x0E1C2E;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :accent;
+    symbol [ accent %tmp.37 76 9 15 const ];
+    %tmp.38 = 0x44AAFF;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :lbTitle;
+    symbol [ lbTitle %tmp.42 77 9 16 const ];
+    %tmp.43 = "SKI JUMP";
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :hooks;
+    symbol [ hooks %tmp.47 78 9 14 const ];
+    symbol [ SkiJumpHooks %tmp.51 78 24 36 ];
+    %tmp.51 = getv ? :SkiJumpHooks;
+    %tmp.48 = newc %tmp.51 ();
+    %tmp.52 = dup %tmp.45;
+    %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
+    %tmp.55 = const :options;
+    symbol [ options %tmp.55 79 9 16 const ];
+    %tmp.56 = newa 2;
+    symbol [ GmOption %tmp.60 80 16 24 ];
+    %tmp.60 = getv ? :GmOption;
+    %tmp.61 = "sjJumper";
+    %tmp.62 = "Jumper";
+    %tmp.63 = newa 6;
+    %tmp.64 = "STOCH";
+    %tmp.65 = dup %tmp.63;
+    %tmp.66 = aputv %tmp.65 0 %tmp.64;
+    %tmp.67 = "KRAFT";
+    %tmp.68 = dup %tmp.66;
+    %tmp.69 = aputv %tmp.68 1 %tmp.67;
+    %tmp.70 = "LINDVIK";
+    %tmp.71 = dup %tmp.69;
+    %tmp.72 = aputv %tmp.71 2 %tmp.70;
+    %tmp.73 = "KOBAYAS";
+    %tmp.74 = dup %tmp.72;
+    %tmp.75 = aputv %tmp.74 3 %tmp.73;
+    %tmp.76 = "PREVC";
+    %tmp.77 = dup %tmp.75;
+    %tmp.78 = aputv %tmp.77 4 %tmp.76;
+    %tmp.79 = "GRANERUD";
+    %tmp.80 = dup %tmp.78;
+    %tmp.81 = aputv %tmp.80 5 %tmp.79;
+    %tmp.82 = 0;
+    %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.81, %tmp.82);
+    %tmp.83 = dup %tmp.56;
+    %tmp.84 = aputv %tmp.83 0 %tmp.57;
+    symbol [ GmOption %tmp.88 81 16 24 ];
+    %tmp.88 = getv ? :GmOption;
+    %tmp.89 = "sjDiff";
+    %tmp.90 = "Difficulty";
+    %tmp.91 = newa 3;
+    %tmp.92 = "EASY";
+    %tmp.93 = dup %tmp.91;
+    %tmp.94 = aputv %tmp.93 0 %tmp.92;
+    %tmp.95 = "MID";
+    %tmp.96 = dup %tmp.94;
+    %tmp.97 = aputv %tmp.96 1 %tmp.95;
+    %tmp.98 = "HARD";
+    %tmp.99 = dup %tmp.97;
+    %tmp.100 = aputv %tmp.99 2 %tmp.98;
+    %tmp.101 = 2;
+    %tmp.85 = newc %tmp.88 (%tmp.89, %tmp.90, %tmp.100, %tmp.101);
+    %tmp.102 = dup %tmp.84;
+    %tmp.103 = aputv %tmp.102 1 %tmp.85;
+    %tmp.104 = dup %tmp.53;
+    %tmp.105 = aputv %tmp.104 %tmp.55 %tmp.103;
+    %tmp.1 = newc %tmp.4 (%tmp.105);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 69 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 84 4 ]
+    [ "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_start" "_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 84 8 9 ];
+    symbol [ GameMenuView %tmp.109 84 16 28 ];
+    %tmp.109 = getv ? :GameMenuView;
+    %tmp.110 = lgetv %cfg.1;
+    symbol [ cfg %tmp.110 84 29 32 ];
+    %tmp.106 = newc %tmp.109 (%tmp.110);
+    lputv %v.2 %tmp.106;
+    symbol [ v %v.2 84 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc" 85 4 ]
+    %tmp.111 = newa 2;
+    %tmp.112 = lgetv %v.2;
+    symbol [ v %tmp.112 85 12 13 ];
+    %tmp.113 = dup %tmp.111;
+    %tmp.114 = aputv %tmp.113 0 %tmp.112;
+    symbol [ GameMenuDelegate %tmp.118 85 19 35 ];
+    %tmp.118 = getv ? :GameMenuDelegate;
+    %tmp.119 = lgetv %v.2;
+    symbol [ v %tmp.119 85 36 37 ];
+    %tmp.115 = newc %tmp.118 (%tmp.119);
+    %tmp.120 = dup %tmp.114;
+    %tmp.121 = aputv %tmp.120 1 %tmp.115;
+    ret %tmp.121;
+_Users_kkorolczuk_work_garmin_skijump_source_SkiJumpMenu_mc_68_42_86_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/skijump/source/SkiJumpMenu.mc"; @line = 4; ]
+<init> {
+}

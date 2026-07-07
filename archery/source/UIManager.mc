@@ -89,7 +89,8 @@ class UIManager {
     // looking up/down.
     static function drawSky(dc, ctrl, ox, oy) {
         var sw = ctrl.sw; var sh = ctrl.sh;
-        var horizon = sh / 2 + (ctrl.gyro.aimPitch * AR_FOV).toNumber() + oy;
+        // Static world: the horizon is fixed, only the crosshair moves.
+        var horizon = ctrl.horizonY + oy;
         // Sky.
         dc.setColor(0x2B1E2E, 0x2B1E2E); dc.clear();
         // Bands.
@@ -102,11 +103,9 @@ class UIManager {
         dc.fillRectangle(0, b2, sw, sh);
         dc.setColor(0xC4642A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, b3 - 2, sw, 4);
-        // Sun blob — fixed angular position so it pans with gyro.
-        var sunYaw   = -0.5;
-        var sunPitch = -0.18;
-        var sunX = ctrl.cx + ((sunYaw   - ctrl.gyro.aimYaw)   * AR_FOV).toNumber() + ox;
-        var sunY = ctrl.cy + ((sunPitch - ctrl.gyro.aimPitch) * AR_FOV).toNumber() + oy;
+        // Sun blob — fixed position in the static sky.
+        var sunX = ctrl.cx - (sw * 26 / 100) + ox;
+        var sunY = horizon - (sh * 24 / 100);
         dc.setColor(0xF2A446, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(sunX, sunY, 18);
         dc.setColor(0xFFD060, Graphics.COLOR_TRANSPARENT);
@@ -117,9 +116,9 @@ class UIManager {
 
     // ── DISTANT CASTLE SILHOUETTE ───────────────────────────
     static function drawCastle(dc, ctrl, ox, oy) {
-        var horizon = ctrl.sh / 2 + (ctrl.gyro.aimPitch * AR_FOV).toNumber() + oy;
-        // Castle anchored at yaw 0.4 so it rolls with the player's view.
-        var anchorX = ctrl.cx + ((0.4 - ctrl.gyro.aimYaw) * AR_FOV).toNumber() + ox;
+        var horizon = ctrl.horizonY + oy;
+        // Castle at a fixed spot on the static skyline.
+        var anchorX = ctrl.cx + (ctrl.sw * 22 / 100) + ox;
         dc.setColor(0x10141A, Graphics.COLOR_TRANSPARENT);
         // Curtain wall.
         dc.fillRectangle(anchorX - 38, horizon - 14, 76, 14);
@@ -139,7 +138,7 @@ class UIManager {
                         [anchorX + 29, horizon - 44]]);
 
         // Second castle on the LEFT for environmental variety.
-        var leftX = ctrl.cx + ((-0.6 - ctrl.gyro.aimYaw) * AR_FOV).toNumber() + ox;
+        var leftX = ctrl.cx - (ctrl.sw * 30 / 100) + ox;
         dc.setColor(0x0E1218, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(leftX - 28, horizon - 10, 56, 10);
         dc.fillRectangle(leftX - 24, horizon - 22, 10, 22);
@@ -149,7 +148,7 @@ class UIManager {
     // ── GROUND ──────────────────────────────────────────────
     static function drawGround(dc, ctrl, ox, oy) {
         var sw = ctrl.sw; var sh = ctrl.sh;
-        var horizon = sh / 2 + (ctrl.gyro.aimPitch * AR_FOV).toNumber() + oy;
+        var horizon = ctrl.horizonY + oy;
         if (horizon < 0) { horizon = 0; }
         if (horizon > sh) { horizon = sh; }
         dc.setColor(0x183014, Graphics.COLOR_TRANSPARENT);
@@ -157,7 +156,7 @@ class UIManager {
         // Grass tufts.
         dc.setColor(0x265A1E, Graphics.COLOR_TRANSPARENT);
         var step = 14;
-        var phase = (ctrl.gyro.aimYaw * 30).toNumber();
+        var phase = 0;
         for (var x = -8; x < sw + 8; x = x + step) {
             var jx = x + (phase % step);
             var jy = (x & 7) * 1;
@@ -175,17 +174,14 @@ class UIManager {
     // and pushed away from screen centre — exactly what looking
     // through a scope does.
     static function drawEnemies(dc, ctrl, ox, oy) {
-        var cx = ctrl.cx; var cy = ctrl.cy;
-        var zoom10 = 100 + ctrl.bow.draw * 40 / 100;   // 100..140
         for (var i = 0; i < AR_MAX_ENEMIES; i++) {
             if (ctrl.enemies.live[i] == 0) { continue; }
-            var ex0 = ctrl.enemies.sx[i];
-            var ey0 = ctrl.enemies.sy[i];
-            var sz0 = ctrl.enemies.sz[i];
-            // Apply scope-zoom around screen centre.
-            var ex = cx + ((ex0 - cx) * zoom10) / 100 + ox;
-            var ey = cy + ((ey0 - cy) * zoom10) / 100 + oy;
-            var sz = (sz0 * zoom10) / 100;
+            // Enemies render exactly where the hit-test reads them (their
+            // projected screen cell) so the crosshair lands true — no
+            // scope-zoom displacement between what you see and what you hit.
+            var ex = ctrl.enemies.sx[i] + ox;
+            var ey = ctrl.enemies.sy[i] + oy;
+            var sz = ctrl.enemies.sz[i];
             if (sz < 6)  { sz = 6;  }
             if (sz > 56) { sz = 56; }
             var t  = ctrl.enemies.type[i];
@@ -559,10 +555,9 @@ class UIManager {
         // Arrow nocked while drawing.
         if (ctrl.bow.drawing != 0 || draw > 0) {
             var aLen = sw * 18 / 100;
-            // Aim direction towards (cx, cy) from grip — for visual
-            // we just draw it pointing toward crosshair.
-            var dx = (ctrl.cx - cx).toFloat();
-            var dy = (ctrl.cy - grip).toFloat();
+            // Aim direction from the grip toward the live crosshair.
+            var dx = (ctrl.retX - cx).toFloat();
+            var dy = (ctrl.retY - grip).toFloat();
             var d = Math.sqrt(dx * dx + dy * dy);
             if (d < 0.01) { d = 1.0; }
             var ux = dx / d; var uy = dy / d;
@@ -582,7 +577,9 @@ class UIManager {
     static function drawCrosshair(dc, ctrl) {
         if (ctrl.state == AR_INTERMISSION) { return; }
         if (ctrl.hitFocusT > 0) { return; }  // hide during cinematic
-        var cx = ctrl.cx; var cy = ctrl.cy;
+        // The crosshair is the thing that moves — draw it at the live
+        // aim pixel, not at screen centre.
+        var cx = ctrl.retX; var cy = ctrl.retY;
         // Zoom: full draw shrinks crosshair so it feels "tighter".
         var pull = ctrl.bow.draw;
         var armLen = 8 - pull / 20;

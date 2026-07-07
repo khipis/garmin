@@ -34,14 +34,16 @@ class MainView extends WatchUi.View {
     hidden var _sw;
     hidden var _sh;
     hidden var _cellPx;
-    hidden var _bx;
+    hidden var _bx;         // draw origin (may include transient shake offset)
     hidden var _by;
+    hidden var _bx0;        // stable hit-test origin (never shaken)
+    hidden var _by0;
 
     function initialize() {
         View.initialize();
         _ctrl = new GameController();
         _timer = null;
-        _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0;
+        _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0; _bx0 = 0; _by0 = 0;
     }
 
     function onShow() {
@@ -70,6 +72,9 @@ class MainView extends WatchUi.View {
         if (_ctrl.state == GS_MENU) { _ctrl.startGame(); }
 
         _layoutBoard();
+        // Shake only perturbs the DRAW origin. Hit-testing keeps using the
+        // stable base (_bx0/_by0) so a tap during a match cascade still maps
+        // to the gem the finger is actually over.
         if (_ctrl.shakeT > 0) {
             var amt = 2 + (_ctrl.shakeT / 5);
             if (amt > 5) { amt = 5; }
@@ -120,7 +125,13 @@ class MainView extends WatchUi.View {
         var boardH = _cellPx * grid.rows;
         _bx = (_sw - boardW) / 2;
         _by = topPad + (maxH - boardH) / 2;
+        _bx0 = _bx;   // stable copy for hit-testing (shake never touches these)
+        _by0 = _by;
     }
+
+    // Board cell size in px — the input layer derives its swipe threshold
+    // from this so the same physical flick reads correctly on every watch.
+    function cellSize() { return _cellPx; }
 
     // ── Menu geometry (shared by render + hit-test) ───────────────────
     // Space-aware: the row height is derived from the space available
@@ -452,9 +463,9 @@ class MainView extends WatchUi.View {
             dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
             var hint;
             if (_ctrl.selR < 0) {
-                hint = "swipe gem = move";
+                hint = "tap gem = select";
             } else {
-                hint = "tap next gem = swap";
+                hint = "swipe = move it";
             }
             dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
                         hint, Graphics.TEXT_JUSTIFY_CENTER);
@@ -463,18 +474,6 @@ class MainView extends WatchUi.View {
 
     // ── Game-over overlay ────────────────────────────────────────────
     hidden function _drawOver(dc) {
-        var hasStats = (_ctrl.bestChainRun >= 2 || _ctrl.bombsPopped > 0);
-        var bw = _sw * 64 / 100; if (bw < 150) { bw = 150; }
-        var bh = _sh * (hasStats ? 48 : 34) / 100; if (bh < (hasStats ? 118 : 100)) { bh = hasStats ? 118 : 100; }
-        var bx = (_sw - bw) / 2;
-        var by = (_sh - bh) / 2;
-        dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-
-        var cx = _sw / 2;
-
         // Title line (mode-specific)
         var title;
         if (_ctrl.gameMode == GM_TIME) {
@@ -484,47 +483,25 @@ class MainView extends WatchUi.View {
         } else {
             title = "MOVES: 0";
         }
-        dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    title, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Score " + _ctrl.score.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Score " + _ctrl.score.format("%d"), 0xFFFFFF] ];
 
         var best = _ctrl.currentBest();
         if (_ctrl.score > 0 && _ctrl.score == best) {
-            dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x44FF66]);
         } else if (best > 0) {
-            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
-                        "Best " + best.format("%d"),
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + best.format("%d"), 0x88AABB]);
         }
 
-        if (hasStats) {
-            var statsY = by + 64;
-            if (_ctrl.bestChainRun >= 2) {
-                dc.setColor(0x66DDFF, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx, statsY, Graphics.FONT_XTINY,
-                            "Best chain x" + _ctrl.bestChainRun.format("%d"),
-                            Graphics.TEXT_JUSTIFY_CENTER);
-                statsY = statsY + 15;
-            }
-            if (_ctrl.bombsPopped > 0) {
-                dc.setColor(0xFF9922, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx, statsY, Graphics.FONT_XTINY,
-                            "Bombs popped " + _ctrl.bombsPopped.format("%d"),
-                            Graphics.TEXT_JUSTIFY_CENTER);
-            }
+        if (_ctrl.bestChainRun >= 2) {
+            lines.add(["Best chain x" + _ctrl.bestChainRun.format("%d"), 0x66DDFF]);
+        }
+        if (_ctrl.bombsPopped > 0) {
+            lines.add(["Bombs popped " + _ctrl.bombsPopped.format("%d"), 0xFF9922]);
         }
 
-        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Any key for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _sw, _sh, title, 0xFFCC22, lines,
+                          "Any key for menu", 0xFFCC22);
     }
 
     // ── Input intents ────────────────────────────────────────────────
@@ -574,9 +551,15 @@ class MainView extends WatchUi.View {
         _ctrl.beginSwap(r, c, tr, tc);
     }
 
-    // Tap-pick on a known board cell (used by the drag pipeline when a
-    // gesture ends without enough travel to count as a swipe).
-    function pickCell(r, c) { _ctrl.tapCell(r, c); }
+    // Select a known board cell — the touched gem lights up instantly.
+    function selectCell(r, c) { _ctrl.selectCell(r, c); }
+
+    // Move the selected gem one cell in (dr,dc) — the swipe gesture.
+    function swipeMove(dr, dc) { _ctrl.swipeSelected(dr, dc); }
+
+    // Move the selected gem; if none is selected, grab the gem the swipe
+    // started on (fr,fc). This is the primary drag-driven swipe path.
+    function swipeMoveFrom(dr, dc, fr, fc) { _ctrl.swipeSelectedFrom(dr, dc, fr, fc); }
 
     // Live drag-preview passthroughs (touch feedback).
     function startDrag(r, c)      { _ctrl.startDrag(r, c); }
@@ -606,9 +589,9 @@ class MainView extends WatchUi.View {
     // or null if the point is outside the grid. Used by drag-to-cursor.
     function cellAt(x, y) {
         if (_cellPx <= 0) { return null; }
-        if (x < _bx || y < _by) { return null; }
-        var col = (x - _bx) / _cellPx;
-        var row = (y - _by) / _cellPx;
+        if (x < _bx0 || y < _by0) { return null; }
+        var col = (x - _bx0) / _cellPx;
+        var row = (y - _by0) / _cellPx;
         if (col < 0 || col >= _ctrl.grid.cols) { return null; }
         if (row < 0 || row >= _ctrl.grid.rows) { return null; }
         return [row, col];
@@ -637,13 +620,10 @@ class MainView extends WatchUi.View {
             return;   // tap missed all rows
         }
         if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); return; }
-        // Play: tap moves cursor to the tapped cell
-        if (_cellPx <= 0) { return; }
-        if (x < _bx || y < _by) { return; }
-        var c = (x - _bx) / _cellPx;
-        var r = (y - _by) / _cellPx;
-        if (c < 0 || c >= _ctrl.grid.cols) { return; }
-        if (r < 0 || r >= _ctrl.grid.rows) { return; }
-        _ctrl.tapCell(r, c);
+        // Play: tapping a gem SELECTS it — highlight lands exactly where the
+        // finger touched. Moving is done with a swipe on the selected gem.
+        var rc = cellAt(x, y);
+        if (rc == null) { return; }
+        _ctrl.selectCell(rc[0], rc[1]);
     }
 }

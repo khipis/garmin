@@ -1,0 +1,688 @@
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 9; @symbol_classdef = [ParachuteHooks,9,6,20]; @symbol_extends<0> = [GameHooks,9,29,38]; ]
+class ParachuteHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiParachuteView %tmp.4 13 20 40 ];
+        %tmp.4 = getv ? :BitochiParachuteView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiParachuteDelegate %tmp.11 14 32 56 ];
+        %tmp.11 = getv ? :BitochiParachuteDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 57 58 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 61 68 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 69 79 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_18_47_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 20 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 20 8 10 ];
+        symbol [ setColor %tmp.2 20 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xCC1133;
+        symbol [ Graphics %tmp.4 20 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 20 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 21 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 21 8 10 ];
+        symbol [ fillPolygon %tmp.7 21 11 22 ];
+        %tmp.7 = getv function %tmp.6 :fillPolygon;
+        %tmp.8 = newa 6;
+        %tmp.9 = newa 2;
+        %tmp.10 = lgetv %cx;
+        symbol [ cx %tmp.10 21 25 27 ];
+        %tmp.11 = 17;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        %tmp.13 = dup %tmp.9;
+        %tmp.14 = aputv %tmp.13 0 %tmp.12;
+        %tmp.15 = lgetv %cy;
+        symbol [ cy %tmp.15 21 34 36 ];
+        %tmp.16 = 2;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.18 = dup %tmp.14;
+        %tmp.19 = aputv %tmp.18 1 %tmp.17;
+        %tmp.20 = dup %tmp.8;
+        %tmp.21 = aputv %tmp.20 0 %tmp.19;
+        %tmp.22 = newa 2;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 21 44 46 ];
+        %tmp.24 = 11;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = dup %tmp.22;
+        %tmp.27 = aputv %tmp.26 0 %tmp.25;
+        %tmp.28 = lgetv %cy;
+        symbol [ cy %tmp.28 21 53 55 ];
+        %tmp.29 = 9;
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        %tmp.31 = dup %tmp.27;
+        %tmp.32 = aputv %tmp.31 1 %tmp.30;
+        %tmp.33 = dup %tmp.21;
+        %tmp.34 = aputv %tmp.33 1 %tmp.32;
+        %tmp.35 = newa 2;
+        %tmp.36 = lgetv %cx;
+        symbol [ cx %tmp.36 21 63 65 ];
+        %tmp.37 = 4;
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        %tmp.39 = dup %tmp.35;
+        %tmp.40 = aputv %tmp.39 0 %tmp.38;
+        %tmp.41 = lgetv %cy;
+        symbol [ cy %tmp.41 21 71 73 ];
+        %tmp.42 = 13;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        %tmp.44 = dup %tmp.40;
+        %tmp.45 = aputv %tmp.44 1 %tmp.43;
+        %tmp.46 = dup %tmp.34;
+        %tmp.47 = aputv %tmp.46 2 %tmp.45;
+        %tmp.48 = newa 2;
+        %tmp.49 = lgetv %cx;
+        symbol [ cx %tmp.49 21 82 84 ];
+        %tmp.50 = 4;
+        %tmp.51 = add %tmp.49 %tmp.50;
+        %tmp.52 = dup %tmp.48;
+        %tmp.53 = aputv %tmp.52 0 %tmp.51;
+        %tmp.54 = lgetv %cy;
+        symbol [ cy %tmp.54 21 90 92 ];
+        %tmp.55 = 13;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = dup %tmp.53;
+        %tmp.58 = aputv %tmp.57 1 %tmp.56;
+        %tmp.59 = dup %tmp.47;
+        %tmp.60 = aputv %tmp.59 3 %tmp.58;
+        %tmp.61 = newa 2;
+        %tmp.62 = lgetv %cx;
+        symbol [ cx %tmp.62 21 101 103 ];
+        %tmp.63 = 11;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        %tmp.65 = dup %tmp.61;
+        %tmp.66 = aputv %tmp.65 0 %tmp.64;
+        %tmp.67 = lgetv %cy;
+        symbol [ cy %tmp.67 21 110 112 ];
+        %tmp.68 = 9;
+        %tmp.69 = sub %tmp.67 %tmp.68;
+        %tmp.70 = dup %tmp.66;
+        %tmp.71 = aputv %tmp.70 1 %tmp.69;
+        %tmp.72 = dup %tmp.60;
+        %tmp.73 = aputv %tmp.72 4 %tmp.71;
+        %tmp.74 = newa 2;
+        %tmp.75 = lgetv %cx;
+        symbol [ cx %tmp.75 21 120 122 ];
+        %tmp.76 = 17;
+        %tmp.77 = add %tmp.75 %tmp.76;
+        %tmp.78 = dup %tmp.74;
+        %tmp.79 = aputv %tmp.78 0 %tmp.77;
+        %tmp.80 = lgetv %cy;
+        symbol [ cy %tmp.80 21 129 131 ];
+        %tmp.81 = 2;
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = dup %tmp.79;
+        %tmp.84 = aputv %tmp.83 1 %tmp.82;
+        %tmp.85 = dup %tmp.73;
+        %tmp.86 = aputv %tmp.85 5 %tmp.84;
+        invoke %tmp.6 %tmp.7(%tmp.86);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 22 8 ]
+        %tmp.87 = lgetv %dc;
+        symbol [ dc %tmp.87 22 8 10 ];
+        symbol [ setColor %tmp.88 22 11 19 ];
+        %tmp.88 = getv function %tmp.87 :setColor;
+        %tmp.89 = 0xFF3355;
+        symbol [ Graphics %tmp.90 22 30 38 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.91 22 39 56 ];
+        %tmp.91 = getv %tmp.90 :COLOR_TRANSPARENT;
+        invoke %tmp.87 %tmp.88(%tmp.89, %tmp.91);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 23 8 ]
+        %tmp.92 = lgetv %dc;
+        symbol [ dc %tmp.92 23 8 10 ];
+        symbol [ fillPolygon %tmp.93 23 11 22 ];
+        %tmp.93 = getv function %tmp.92 :fillPolygon;
+        %tmp.94 = newa 4;
+        %tmp.95 = newa 2;
+        %tmp.96 = lgetv %cx;
+        symbol [ cx %tmp.96 23 25 27 ];
+        %tmp.97 = 10;
+        %tmp.98 = sub %tmp.96 %tmp.97;
+        %tmp.99 = dup %tmp.95;
+        %tmp.100 = aputv %tmp.99 0 %tmp.98;
+        %tmp.101 = lgetv %cy;
+        symbol [ cy %tmp.101 23 34 36 ];
+        %tmp.102 = dup %tmp.100;
+        %tmp.103 = aputv %tmp.102 1 %tmp.101;
+        %tmp.104 = dup %tmp.94;
+        %tmp.105 = aputv %tmp.104 0 %tmp.103;
+        %tmp.106 = newa 2;
+        %tmp.107 = lgetv %cx;
+        symbol [ cx %tmp.107 23 40 42 ];
+        %tmp.108 = 6;
+        %tmp.109 = sub %tmp.107 %tmp.108;
+        %tmp.110 = dup %tmp.106;
+        %tmp.111 = aputv %tmp.110 0 %tmp.109;
+        %tmp.112 = lgetv %cy;
+        symbol [ cy %tmp.112 23 48 50 ];
+        %tmp.113 = 9;
+        %tmp.114 = sub %tmp.112 %tmp.113;
+        %tmp.115 = dup %tmp.111;
+        %tmp.116 = aputv %tmp.115 1 %tmp.114;
+        %tmp.117 = dup %tmp.105;
+        %tmp.118 = aputv %tmp.117 1 %tmp.116;
+        %tmp.119 = newa 2;
+        %tmp.120 = lgetv %cx;
+        symbol [ cx %tmp.120 23 58 60 ];
+        %tmp.121 = dup %tmp.119;
+        %tmp.122 = aputv %tmp.121 0 %tmp.120;
+        %tmp.123 = lgetv %cy;
+        symbol [ cy %tmp.123 23 62 64 ];
+        %tmp.124 = 11;
+        %tmp.125 = sub %tmp.123 %tmp.124;
+        %tmp.126 = dup %tmp.122;
+        %tmp.127 = aputv %tmp.126 1 %tmp.125;
+        %tmp.128 = dup %tmp.118;
+        %tmp.129 = aputv %tmp.128 2 %tmp.127;
+        %tmp.130 = newa 2;
+        %tmp.131 = lgetv %cx;
+        symbol [ cx %tmp.131 23 73 75 ];
+        %tmp.132 = 2;
+        %tmp.133 = sub %tmp.131 %tmp.132;
+        %tmp.134 = dup %tmp.130;
+        %tmp.135 = aputv %tmp.134 0 %tmp.133;
+        %tmp.136 = lgetv %cy;
+        symbol [ cy %tmp.136 23 81 83 ];
+        %tmp.137 = dup %tmp.135;
+        %tmp.138 = aputv %tmp.137 1 %tmp.136;
+        %tmp.139 = dup %tmp.129;
+        %tmp.140 = aputv %tmp.139 3 %tmp.138;
+        invoke %tmp.92 %tmp.93(%tmp.140);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 25 8 ]
+        %tmp.141 = lgetv %dc;
+        symbol [ dc %tmp.141 25 8 10 ];
+        symbol [ setColor %tmp.142 25 11 19 ];
+        %tmp.142 = getv function %tmp.141 :setColor;
+        %tmp.143 = 0xDDDDDD;
+        symbol [ Graphics %tmp.144 25 30 38 ];
+        %tmp.144 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.145 25 39 56 ];
+        %tmp.145 = getv %tmp.144 :COLOR_TRANSPARENT;
+        invoke %tmp.141 %tmp.142(%tmp.143, %tmp.145);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 26 8 ]
+        %tmp.146 = lgetv %dc;
+        symbol [ dc %tmp.146 26 8 10 ];
+        symbol [ drawLine %tmp.147 26 11 19 ];
+        %tmp.147 = getv function %tmp.146 :drawLine;
+        %tmp.148 = lgetv %cx;
+        symbol [ cx %tmp.148 26 20 22 ];
+        %tmp.149 = 15;
+        %tmp.150 = sub %tmp.148 %tmp.149;
+        %tmp.151 = lgetv %cy;
+        symbol [ cy %tmp.151 26 29 31 ];
+        %tmp.152 = 2;
+        %tmp.153 = add %tmp.151 %tmp.152;
+        %tmp.154 = lgetv %cx;
+        symbol [ cx %tmp.154 26 37 39 ];
+        %tmp.155 = 2;
+        %tmp.156 = sub %tmp.154 %tmp.155;
+        %tmp.157 = lgetv %cy;
+        symbol [ cy %tmp.157 26 45 47 ];
+        %tmp.158 = 12;
+        %tmp.159 = add %tmp.157 %tmp.158;
+        invoke %tmp.146 %tmp.147(%tmp.150, %tmp.153, %tmp.156, %tmp.159);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 27 8 ]
+        %tmp.160 = lgetv %dc;
+        symbol [ dc %tmp.160 27 8 10 ];
+        symbol [ drawLine %tmp.161 27 11 19 ];
+        %tmp.161 = getv function %tmp.160 :drawLine;
+        %tmp.162 = lgetv %cx;
+        symbol [ cx %tmp.162 27 20 22 ];
+        %tmp.163 = 15;
+        %tmp.164 = add %tmp.162 %tmp.163;
+        %tmp.165 = lgetv %cy;
+        symbol [ cy %tmp.165 27 29 31 ];
+        %tmp.166 = 2;
+        %tmp.167 = add %tmp.165 %tmp.166;
+        %tmp.168 = lgetv %cx;
+        symbol [ cx %tmp.168 27 37 39 ];
+        %tmp.169 = 2;
+        %tmp.170 = add %tmp.168 %tmp.169;
+        %tmp.171 = lgetv %cy;
+        symbol [ cy %tmp.171 27 45 47 ];
+        %tmp.172 = 12;
+        %tmp.173 = add %tmp.171 %tmp.172;
+        invoke %tmp.160 %tmp.161(%tmp.164, %tmp.167, %tmp.170, %tmp.173);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 28 8 ]
+        %tmp.174 = lgetv %dc;
+        symbol [ dc %tmp.174 28 8 10 ];
+        symbol [ drawLine %tmp.175 28 11 19 ];
+        %tmp.175 = getv function %tmp.174 :drawLine;
+        %tmp.176 = lgetv %cx;
+        symbol [ cx %tmp.176 28 20 22 ];
+        %tmp.177 = lgetv %cy;
+        symbol [ cy %tmp.177 28 24 26 ];
+        %tmp.178 = lgetv %cx;
+        symbol [ cx %tmp.178 28 28 30 ];
+        %tmp.179 = lgetv %cy;
+        symbol [ cy %tmp.179 28 32 34 ];
+        %tmp.180 = 11;
+        %tmp.181 = add %tmp.179 %tmp.180;
+        invoke %tmp.174 %tmp.175(%tmp.176, %tmp.177, %tmp.178, %tmp.181);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 30 8 ]
+        %tmp.182 = lgetv %dc;
+        symbol [ dc %tmp.182 30 8 10 ];
+        symbol [ setColor %tmp.183 30 11 19 ];
+        %tmp.183 = getv function %tmp.182 :setColor;
+        %tmp.184 = 0xFFCC88;
+        symbol [ Graphics %tmp.185 30 30 38 ];
+        %tmp.185 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.186 30 39 56 ];
+        %tmp.186 = getv %tmp.185 :COLOR_TRANSPARENT;
+        invoke %tmp.182 %tmp.183(%tmp.184, %tmp.186);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 30 59 ]
+        %tmp.187 = lgetv %dc;
+        symbol [ dc %tmp.187 30 59 61 ];
+        symbol [ fillCircle %tmp.188 30 62 72 ];
+        %tmp.188 = getv function %tmp.187 :fillCircle;
+        %tmp.189 = lgetv %cx;
+        symbol [ cx %tmp.189 30 73 75 ];
+        %tmp.190 = lgetv %cy;
+        symbol [ cy %tmp.190 30 77 79 ];
+        %tmp.191 = 12;
+        %tmp.192 = add %tmp.190 %tmp.191;
+        %tmp.193 = 3;
+        invoke %tmp.187 %tmp.188(%tmp.189, %tmp.192, %tmp.193);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 31 8 ]
+        %tmp.194 = lgetv %dc;
+        symbol [ dc %tmp.194 31 8 10 ];
+        symbol [ setColor %tmp.195 31 11 19 ];
+        %tmp.195 = getv function %tmp.194 :setColor;
+        %tmp.196 = 0x2244AA;
+        symbol [ Graphics %tmp.197 31 30 38 ];
+        %tmp.197 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.198 31 39 56 ];
+        %tmp.198 = getv %tmp.197 :COLOR_TRANSPARENT;
+        invoke %tmp.194 %tmp.195(%tmp.196, %tmp.198);
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 31 59 ]
+        %tmp.199 = lgetv %dc;
+        symbol [ dc %tmp.199 31 59 61 ];
+        symbol [ fillRectangle %tmp.200 31 62 75 ];
+        %tmp.200 = getv function %tmp.199 :fillRectangle;
+        %tmp.201 = lgetv %cx;
+        symbol [ cx %tmp.201 31 76 78 ];
+        %tmp.202 = 3;
+        %tmp.203 = sub %tmp.201 %tmp.202;
+        %tmp.204 = lgetv %cy;
+        symbol [ cy %tmp.204 31 84 86 ];
+        %tmp.205 = 15;
+        %tmp.206 = add %tmp.204 %tmp.205;
+        %tmp.207 = 6;
+        %tmp.208 = 6;
+        invoke %tmp.199 %tmp.200(%tmp.203, %tmp.206, %tmp.207, %tmp.208);
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_18_47_32_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 35; @symbol_functiondef = [lbVariant,35,13,22]; @symbol_return<0> = [Lang,35,28,32]; @symbol_return<1> = [String,35,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 36 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "calm";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "breezy";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "gusty";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 36 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 37 12 13 ];
+        %tmp.11 = 1;
+        lputv %d.2 %tmp.11;
+        symbol [ d %d.2 37 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 38 8 ]
+        try @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_beginTry @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_endTry @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_catch @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_beginTry:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_12_41_8_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 39 12 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_12_41_8_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_12_41_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 39 16 17 ];
+        symbol [ Application %tmp.12 39 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 39 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 39 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "pc_wind";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 39 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 40 12 ]
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_stmt:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_16_40_59_begin:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_16_40_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 40 16 17 ];
+        symbol [ Lang %tmp.18 40 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 40 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_44_40_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 40 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_44_40_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_16_40_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_44_40_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_44_40_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_54_40_59_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 40 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = 2;
+        %tmp.29 = lte %tmp.27 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_54_40_59_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_16_40_59_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_54_40_59_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_54_40_59_end];
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_62_40_71_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 40 64 ]
+        %tmp.31 = lgetv %v.3;
+        symbol [ v %tmp.31 40 68 69 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        lputv %d.2 %tmp.32;
+        symbol [ d %d.2 40 64 65 ];
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_62_40_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_40_12_40_71_if_end:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_12_41_8_stop:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_catch:
+        %tmp.33 = exception;
+        push %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 41 10 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_catch" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_41_10_41_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 41 17 18 ];
+        %tmp.34 = dup %tmp.33;
+        lputv %e.4 %tmp.34;
+        symbol [ e %e.4 41 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_41_10_41_21_end:
+        try @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_catch @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_41_10_41_21_end @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_41_10_41_21_end @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally;
+        throw %tmp.33;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_38_8_41_21_end:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 42 8 ]
+        %tmp.35 = lgetv %names.1;
+        symbol [ names %tmp.35 42 15 20 ];
+        %tmp.36 = lgetv %d.2;
+        symbol [ d %tmp.36 42 21 22 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_35_40_43_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 45; @symbol_functiondef = [footerText,45,13,23]; @symbol_return<0> = [Lang,45,29,33]; @symbol_return<1> = [String,45,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_45_49_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 46 8 ]
+        try @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_beginTry @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_endTry @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_beginTry:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_12_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 47 12 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_12_49_8_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_12_49_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 47 16 17 ];
+        symbol [ Application %tmp.1 47 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 47 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 47 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "paraBest";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 47 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 48 12 ]
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_stmt:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_16_48_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 48 16 17 ];
+        symbol [ Lang %tmp.7 48 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 48 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_44_48_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 48 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_44_48_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_16_48_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_44_48_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_44_48_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_51_48_86_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 48 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 48 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 48 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_51_48_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_48_12_48_86_if_end:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_12_49_8_stop:
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 49 10 ]
+        [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_catch" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_49_10_49_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 49 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 49 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_49_10_49_21_end:
+        try @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_46_8_49_21_end:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 50 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_45_49_51_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 54; @symbol_functiondef = [buildParachuteMenu,54,9,27]; @symbol_return<0> = [Lang,54,33,37]; @symbol_return<1> = [Array,54,38,43]; ]
+function buildParachuteMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 55 4 ]
+    [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 55 8 11 ];
+    symbol [ MenuConfig %tmp.4 55 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 10;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 56 9 15 const ];
+    %tmp.8 = "parachute";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 57 9 15 const ];
+    %tmp.13 = "PARACHUTE";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 58 9 15 const ];
+    %tmp.18 = null;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 59 9 13 const ];
+    %tmp.23 = 0xFFFFFF;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :bg;
+    symbol [ bg %tmp.27 60 9 11 const ];
+    %tmp.28 = 0x0A1530;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :circle;
+    symbol [ circle %tmp.32 61 9 15 const ];
+    %tmp.33 = 0x0A1E3A;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :accent;
+    symbol [ accent %tmp.37 62 9 15 const ];
+    %tmp.38 = 0x44CCFF;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :lbTitle;
+    symbol [ lbTitle %tmp.42 63 9 16 const ];
+    %tmp.43 = "PARACHUTE";
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :hooks;
+    symbol [ hooks %tmp.47 64 9 14 const ];
+    symbol [ ParachuteHooks %tmp.51 64 24 38 ];
+    %tmp.51 = getv ? :ParachuteHooks;
+    %tmp.48 = newc %tmp.51 ();
+    %tmp.52 = dup %tmp.45;
+    %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
+    %tmp.55 = const :options;
+    symbol [ options %tmp.55 65 9 16 const ];
+    %tmp.56 = newa 1;
+    symbol [ GmOption %tmp.60 66 16 24 ];
+    %tmp.60 = getv ? :GmOption;
+    %tmp.61 = "pc_wind";
+    %tmp.62 = "Wind";
+    %tmp.63 = newa 3;
+    %tmp.64 = "CALM";
+    %tmp.65 = dup %tmp.63;
+    %tmp.66 = aputv %tmp.65 0 %tmp.64;
+    %tmp.67 = "BREEZY";
+    %tmp.68 = dup %tmp.66;
+    %tmp.69 = aputv %tmp.68 1 %tmp.67;
+    %tmp.70 = "GUSTY";
+    %tmp.71 = dup %tmp.69;
+    %tmp.72 = aputv %tmp.71 2 %tmp.70;
+    %tmp.73 = 1;
+    %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
+    %tmp.74 = dup %tmp.56;
+    %tmp.75 = aputv %tmp.74 0 %tmp.57;
+    %tmp.76 = dup %tmp.53;
+    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
+    %tmp.1 = newc %tmp.4 (%tmp.77);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 55 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 69 4 ]
+    [ "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_start" "_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 69 8 9 ];
+    symbol [ GameMenuView %tmp.81 69 16 28 ];
+    %tmp.81 = getv ? :GameMenuView;
+    %tmp.82 = lgetv %cfg.1;
+    symbol [ cfg %tmp.82 69 29 32 ];
+    %tmp.78 = newc %tmp.81 (%tmp.82);
+    lputv %v.2 %tmp.78;
+    symbol [ v %v.2 69 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc" 70 4 ]
+    %tmp.83 = newa 2;
+    %tmp.84 = lgetv %v.2;
+    symbol [ v %tmp.84 70 12 13 ];
+    %tmp.85 = dup %tmp.83;
+    %tmp.86 = aputv %tmp.85 0 %tmp.84;
+    symbol [ GameMenuDelegate %tmp.90 70 19 35 ];
+    %tmp.90 = getv ? :GameMenuDelegate;
+    %tmp.91 = lgetv %v.2;
+    symbol [ v %tmp.91 70 36 37 ];
+    %tmp.87 = newc %tmp.90 (%tmp.91);
+    %tmp.92 = dup %tmp.86;
+    %tmp.93 = aputv %tmp.92 1 %tmp.87;
+    ret %tmp.93;
+_Users_kkorolczuk_work_garmin_parachute_source_ParachuteMenu_mc_54_44_71_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/parachute/source/ParachuteMenu.mc"; @line = 4; ]
+<init> {
+}

@@ -602,39 +602,17 @@ class MainView extends WatchUi.View {
 
     // ── Game-over overlay ────────────────────────────────────────────
     hidden function _drawOver(dc) {
-        var bw = _sw * 68 / 100; if (bw < 150) { bw = 150; }
-        var bh = _sh * 38 / 100; if (bh < 110) { bh = 110; }
-        var bx = (_sw - bw) / 2;
-        var by = (_sh - bh) / 2;
-        dc.setColor(0x050814, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 10);
-        dc.setColor(0xFF2244, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 10);
-        dc.drawRoundedRectangle(bx + 1, by + 1, bw - 2, bh - 2, 9);
-        var cx = _sw / 2;
-        dc.setColor(0xFF2244, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "MISS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Score " + _ctrl.score.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
-                    "Height " + _ctrl.tower.height().format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [
+            ["Score " + _ctrl.score.format("%d"), 0xFFFFFF],
+            ["Height " + _ctrl.tower.height().format("%d"), 0xFFFFFF]
+        ];
         if (_ctrl.score > 0 && _ctrl.score == _ctrl.hi) {
-            dc.setColor(0x22FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 62, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x22FF88]);
         } else if (_ctrl.hi > 0) {
-            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 62, Graphics.FONT_XTINY,
-                        "Best " + _ctrl.hi.format("%d"),
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + _ctrl.hi.format("%d"), 0x88AABB]);
         }
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _sw, _sh, "MISS", 0xFF2244, lines,
+                          "Tap to restart", 0xFF2244);
     }
 
     // ── Input intents ────────────────────────────────────────────────

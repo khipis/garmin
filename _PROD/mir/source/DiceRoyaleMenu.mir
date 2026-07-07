@@ -1,0 +1,535 @@
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 13; @symbol_classdef = [DiceRoyaleHooks,13,6,21]; @symbol_extends<0> = [GameHooks,13,30,39]; ]
+class DiceRoyaleHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_23_47_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 24 8 10 ];
+        symbol [ setColor %tmp.2 24 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xF0E8D0;
+        symbol [ Graphics %tmp.4 24 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 24 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 25 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 25 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.7 25 11 31 ];
+        %tmp.7 = getv function %tmp.6 :fillRoundedRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 25 32 34 ];
+        %tmp.9 = 12;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 25 41 43 ];
+        %tmp.12 = 12;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 24;
+        %tmp.15 = 24;
+        %tmp.16 = 5;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15, %tmp.16);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 26 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 26 8 10 ];
+        symbol [ setColor %tmp.18 26 11 19 ];
+        %tmp.18 = getv function %tmp.17 :setColor;
+        %tmp.19 = 0xC08030;
+        symbol [ Graphics %tmp.20 26 30 38 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.21 26 39 56 ];
+        %tmp.21 = getv %tmp.20 :COLOR_TRANSPARENT;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.21);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 27 8 ]
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 27 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.23 27 11 31 ];
+        %tmp.23 = getv function %tmp.22 :drawRoundedRectangle;
+        %tmp.24 = lgetv %cx;
+        symbol [ cx %tmp.24 27 32 34 ];
+        %tmp.25 = 12;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        %tmp.27 = lgetv %cy;
+        symbol [ cy %tmp.27 27 41 43 ];
+        %tmp.28 = 12;
+        %tmp.29 = sub %tmp.27 %tmp.28;
+        %tmp.30 = 24;
+        %tmp.31 = 24;
+        %tmp.32 = 5;
+        invoke %tmp.22 %tmp.23(%tmp.26, %tmp.29, %tmp.30, %tmp.31, %tmp.32);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 28 8 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 28 8 10 ];
+        symbol [ setColor %tmp.34 28 11 19 ];
+        %tmp.34 = getv function %tmp.33 :setColor;
+        %tmp.35 = 0x22160A;
+        symbol [ Graphics %tmp.36 28 30 38 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.37 28 39 56 ];
+        %tmp.37 = getv %tmp.36 :COLOR_TRANSPARENT;
+        invoke %tmp.33 %tmp.34(%tmp.35, %tmp.37);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 29 8 ]
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 29 8 10 ];
+        symbol [ fillCircle %tmp.39 29 11 21 ];
+        %tmp.39 = getv function %tmp.38 :fillCircle;
+        %tmp.40 = lgetv %cx;
+        symbol [ cx %tmp.40 29 22 24 ];
+        %tmp.41 = 6;
+        %tmp.42 = sub %tmp.40 %tmp.41;
+        %tmp.43 = lgetv %cy;
+        symbol [ cy %tmp.43 29 30 32 ];
+        %tmp.44 = 6;
+        %tmp.45 = sub %tmp.43 %tmp.44;
+        %tmp.46 = 2;
+        invoke %tmp.38 %tmp.39(%tmp.42, %tmp.45, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 30 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 30 8 10 ];
+        symbol [ fillCircle %tmp.48 30 11 21 ];
+        %tmp.48 = getv function %tmp.47 :fillCircle;
+        %tmp.49 = lgetv %cx;
+        symbol [ cx %tmp.49 30 22 24 ];
+        %tmp.50 = 6;
+        %tmp.51 = add %tmp.49 %tmp.50;
+        %tmp.52 = lgetv %cy;
+        symbol [ cy %tmp.52 30 30 32 ];
+        %tmp.53 = 6;
+        %tmp.54 = sub %tmp.52 %tmp.53;
+        %tmp.55 = 2;
+        invoke %tmp.47 %tmp.48(%tmp.51, %tmp.54, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 31 8 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 31 8 10 ];
+        symbol [ fillCircle %tmp.57 31 11 21 ];
+        %tmp.57 = getv function %tmp.56 :fillCircle;
+        %tmp.58 = lgetv %cx;
+        symbol [ cx %tmp.58 31 22 24 ];
+        %tmp.59 = lgetv %cy;
+        symbol [ cy %tmp.59 31 30 32 ];
+        %tmp.60 = 2;
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 32 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 32 8 10 ];
+        symbol [ fillCircle %tmp.62 32 11 21 ];
+        %tmp.62 = getv function %tmp.61 :fillCircle;
+        %tmp.63 = lgetv %cx;
+        symbol [ cx %tmp.63 32 22 24 ];
+        %tmp.64 = 6;
+        %tmp.65 = sub %tmp.63 %tmp.64;
+        %tmp.66 = lgetv %cy;
+        symbol [ cy %tmp.66 32 30 32 ];
+        %tmp.67 = 6;
+        %tmp.68 = add %tmp.66 %tmp.67;
+        %tmp.69 = 2;
+        invoke %tmp.61 %tmp.62(%tmp.65, %tmp.68, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 33 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 33 8 10 ];
+        symbol [ fillCircle %tmp.71 33 11 21 ];
+        %tmp.71 = getv function %tmp.70 :fillCircle;
+        %tmp.72 = lgetv %cx;
+        symbol [ cx %tmp.72 33 22 24 ];
+        %tmp.73 = 6;
+        %tmp.74 = add %tmp.72 %tmp.73;
+        %tmp.75 = lgetv %cy;
+        symbol [ cy %tmp.75 33 30 32 ];
+        %tmp.76 = 6;
+        %tmp.77 = add %tmp.75 %tmp.76;
+        %tmp.78 = 2;
+        invoke %tmp.70 %tmp.71(%tmp.74, %tmp.77, %tmp.78);
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_23_47_34_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 37; @symbol_functiondef = [lbVariant,37,13,22]; @symbol_return<0> = [Lang,37,28,32]; @symbol_return<1> = [String,37,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_37_40_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_37_40_46_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_37_40_46_4_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 38 12 13 ];
+        %tmp.1 = 0;
+        lputv %m.1 %tmp.1;
+        symbol [ m %m.1 38 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 39 8 ]
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_beginTry @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_endTry @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_beginTry:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_12_42_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 40 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_12_42_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_12_42_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 40 16 17 ];
+        symbol [ Application %tmp.2 40 20 31 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.3 40 32 39 ];
+        %tmp.3 = getv %tmp.2 :Storage;
+        symbol [ getValue %tmp.4 40 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "dr_mode";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.2 %tmp.6;
+        symbol [ v %v.2 40 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 41 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_12_41_51_if_stmt:
+        %tmp.7 = lgetv %v.2;
+        symbol [ v %tmp.7 41 16 17 ];
+        symbol [ Lang %tmp.8 41 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 41 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_12_41_51_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_12_41_51_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_42_41_51_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 41 44 ]
+        %tmp.11 = lgetv %v.2;
+        symbol [ v %tmp.11 41 48 49 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        lputv %m.1 %tmp.12;
+        symbol [ m %m.1 41 44 45 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_42_41_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_12_41_51_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_41_12_41_51_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_12_42_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_catch:
+        %tmp.13 = exception;
+        push %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 42 10 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_catch" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_42_10_42_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 42 17 18 ];
+        %tmp.14 = dup %tmp.13;
+        lputv %e.3 %tmp.14;
+        symbol [ e %e.3 42 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_42_10_42_21_end:
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_42_10_42_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_42_10_42_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally;
+        throw %tmp.13;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_39_8_42_21_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_8_43_38_if_stmt:
+        %tmp.15 = lgetv %m.1;
+        symbol [ m %tmp.15 43 12 13 ];
+        %tmp.16 = 1;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_8_43_38_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_8_43_38_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_20_43_38_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 43 22 ]
+        %tmp.18 = "quick";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_20_43_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_8_43_38_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_43_8_43_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_8_44_38_if_stmt:
+        %tmp.19 = lgetv %m.1;
+        symbol [ m %tmp.19 44 12 13 ];
+        %tmp.20 = 2;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_8_44_38_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_8_44_38_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_20_44_38_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 44 22 ]
+        %tmp.22 = "daily";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_20_44_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_8_44_38_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_44_8_44_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 45 8 ]
+        %tmp.23 = "classic";
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_37_40_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 48; @symbol_functiondef = [footerText,48,13,23]; @symbol_return<0> = [Lang,48,29,33]; @symbol_return<1> = [String,48,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_48_49_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 49 8 ]
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_beginTry @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_endTry @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_beginTry:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_12_52_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 50 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_12_52_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_12_52_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 50 16 17 ];
+        symbol [ Application %tmp.1 50 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 50 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 50 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "dr_best_classic";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 50 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 51 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_16_51_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 51 16 17 ];
+        symbol [ Lang %tmp.7 51 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 51 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_44_51_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 51 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_44_51_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_16_51_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_44_51_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_44_51_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_51_51_86_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 51 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 51 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 51 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_51_51_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_51_12_51_86_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_12_52_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 52 10 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_catch" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_52_10_52_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 52 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 52 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_52_10_52_21_end:
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_52_10_52_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_52_10_52_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_49_8_52_21_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 53 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_48_49_54_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 57; @symbol_functiondef = [buildDiceRoyaleMenu,57,9,28]; @symbol_return<0> = [Lang,57,34,38]; @symbol_return<1> = [Array,57,39,44]; ]
+function buildDiceRoyaleMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 58 4 ]
+    [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 58 8 11 ];
+    symbol [ MenuConfig %tmp.4 58 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 59 9 15 const ];
+    %tmp.8 = "diceroyale";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 60 9 15 const ];
+    %tmp.13 = "DICE";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 61 9 15 const ];
+    %tmp.18 = "ROYALE";
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 62 9 13 const ];
+    %tmp.23 = 0xFFCC44;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :col2;
+    symbol [ col2 %tmp.27 63 9 13 const ];
+    %tmp.28 = 0xFF6644;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :bg;
+    symbol [ bg %tmp.32 64 9 11 const ];
+    %tmp.33 = 0x000308;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :circle;
+    symbol [ circle %tmp.37 65 9 15 const ];
+    %tmp.38 = 0x081025;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :accent;
+    symbol [ accent %tmp.42 66 9 15 const ];
+    %tmp.43 = 0xFFEE66;
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :lbTitle;
+    symbol [ lbTitle %tmp.47 67 9 16 const ];
+    %tmp.48 = "DICE ROYALE";
+    %tmp.49 = dup %tmp.45;
+    %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
+    %tmp.52 = const :hooks;
+    symbol [ hooks %tmp.52 68 9 14 const ];
+    symbol [ DiceRoyaleHooks %tmp.56 68 24 39 ];
+    %tmp.56 = getv ? :DiceRoyaleHooks;
+    %tmp.53 = newc %tmp.56 ();
+    %tmp.57 = dup %tmp.50;
+    %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
+    %tmp.60 = const :options;
+    symbol [ options %tmp.60 69 9 16 const ];
+    %tmp.61 = newa 2;
+    symbol [ GmOption %tmp.65 70 16 24 ];
+    %tmp.65 = getv ? :GmOption;
+    %tmp.66 = "dr_mode";
+    %tmp.67 = "Mode";
+    %tmp.68 = newa 3;
+    %tmp.69 = "CLASSIC";
+    %tmp.70 = dup %tmp.68;
+    %tmp.71 = aputv %tmp.70 0 %tmp.69;
+    %tmp.72 = "QUICK";
+    %tmp.73 = dup %tmp.71;
+    %tmp.74 = aputv %tmp.73 1 %tmp.72;
+    %tmp.75 = "DAILY";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 2 %tmp.75;
+    %tmp.78 = 0;
+    %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.77, %tmp.78);
+    %tmp.79 = dup %tmp.61;
+    %tmp.80 = aputv %tmp.79 0 %tmp.62;
+    symbol [ GmOption %tmp.84 71 16 24 ];
+    %tmp.84 = getv ? :GmOption;
+    %tmp.85 = "dr_rerolls";
+    %tmp.86 = "Rerolls";
+    %tmp.87 = newa 3;
+    %tmp.88 = "1";
+    %tmp.89 = dup %tmp.87;
+    %tmp.90 = aputv %tmp.89 0 %tmp.88;
+    %tmp.91 = "2";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 1 %tmp.91;
+    %tmp.94 = "3";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 2 %tmp.94;
+    %tmp.97 = 1;
+    %tmp.81 = newc %tmp.84 (%tmp.85, %tmp.86, %tmp.96, %tmp.97);
+    %tmp.98 = dup %tmp.80;
+    %tmp.99 = aputv %tmp.98 1 %tmp.81;
+    %tmp.100 = dup %tmp.58;
+    %tmp.101 = aputv %tmp.100 %tmp.60 %tmp.99;
+    %tmp.1 = newc %tmp.4 (%tmp.101);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 58 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 74 4 ]
+    [ "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 74 8 9 ];
+    symbol [ GameMenuView %tmp.105 74 16 28 ];
+    %tmp.105 = getv ? :GameMenuView;
+    %tmp.106 = lgetv %cfg.1;
+    symbol [ cfg %tmp.106 74 29 32 ];
+    %tmp.102 = newc %tmp.105 (%tmp.106);
+    lputv %v.2 %tmp.102;
+    symbol [ v %v.2 74 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc" 75 4 ]
+    %tmp.107 = newa 2;
+    %tmp.108 = lgetv %v.2;
+    symbol [ v %tmp.108 75 12 13 ];
+    %tmp.109 = dup %tmp.107;
+    %tmp.110 = aputv %tmp.109 0 %tmp.108;
+    symbol [ GameMenuDelegate %tmp.114 75 19 35 ];
+    %tmp.114 = getv ? :GameMenuDelegate;
+    %tmp.115 = lgetv %v.2;
+    symbol [ v %tmp.115 75 36 37 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    %tmp.116 = dup %tmp.110;
+    %tmp.117 = aputv %tmp.116 1 %tmp.111;
+    ret %tmp.117;
+_Users_kkorolczuk_work_garmin_diceroyale_source_DiceRoyaleMenu_mc_57_45_76_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/DiceRoyaleMenu.mc"; @line = 8; ]
+<init> {
+}

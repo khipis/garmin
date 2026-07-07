@@ -133,35 +133,16 @@ class UIManager {
 
     // ── Game-over overlay — quick freeze + instant-restart hint ─────
     static function drawOver(dc, ctrl, sw, sh) {
-        var bw = sw * 64 / 100; if (bw < 150) { bw = 150; }
-        var bh = sh * 34 / 100; if (bh < 104) { bh = 104; }
-        var bx = (sw - bw) / 2;
-        var by = (sh - bh) / 2;
-        dc.setColor(0x140A0A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-
-        var cx = sw / 2;
         var title = (ctrl.deathReason == "TIMEOUT") ? "TOO SLOW!" : "TIMBERRR!";
-        dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL, title, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Score " + ctrl.scoreSys.score.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
-
+        var lines = [
+            ["Score " + ctrl.scoreSys.score.format("%d"), 0xFFFFFF]
+        ];
         if (ctrl.hasNewBest()) {
-            dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 46, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x44FF66]);
         } else if (ctrl.scoreSys.hi > 0) {
-            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
-                        "Best " + ctrl.scoreSys.hi.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + ctrl.scoreSys.hi.format("%d"), 0x88AABB]);
         }
-
-        dc.setColor(0xEECCAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "tap = again  BACK = menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, sw, sh, title, 0xFF6633,
+            lines, "tap = again  BACK = menu", 0xFF6633);
     }
 }

@@ -207,29 +207,13 @@ class UIManager {
     }
 
     static function drawResult(dc, sw, sh, won, ctrl) {
-        var bw = sw * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = sh * 42 / 100; if (bh < 120) { bh = 120; }
-        var bx = (sw - bw) / 2;
-        var by = (sh - bh) / 2;
-        var cx = sw / 2;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(won ? 0xFFE100 : 0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    won ? "CLEARED!" : "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 38, Graphics.FONT_XTINY,
-                    "Score " + ctrl.score.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 56, Graphics.FONT_XTINY,
-                    "Level " + ctrl.level.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 74, Graphics.FONT_XTINY,
-                    "Best  " + ctrl.bestScore.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap = replay", Graphics.TEXT_JUSTIFY_CENTER);
+        var titleColor = won ? 0xFFE100 : 0xFF4466;
+        var lines = [
+            ["Score " + ctrl.score.format("%d"), 0xFFFFFF],
+            ["Level " + ctrl.level.format("%d"), 0xFFFFFF],
+            ["Best  " + ctrl.bestScore.format("%d"), 0xFFFFFF]
+        ];
+        GameOverCard.draw(dc, sw, sh, won ? "CLEARED!" : "GAME OVER",
+                          titleColor, lines, "Tap = replay", titleColor);
     }
 }

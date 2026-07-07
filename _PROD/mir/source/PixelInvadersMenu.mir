@@ -1,0 +1,599 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 13; @symbol_classdef = [PixelInvadersHooks,13,6,24]; @symbol_extends<0> = [GameHooks,13,33,42]; ]
+class PixelInvadersHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_23_47_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 24 8 10 ];
+        symbol [ setColor %tmp.2 24 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x55FF55;
+        symbol [ Graphics %tmp.4 24 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 24 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 25 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 25 8 10 ];
+        symbol [ fillRectangle %tmp.7 25 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 25 25 27 ];
+        %tmp.9 = 11;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 25 34 36 ];
+        %tmp.12 = 6;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 22;
+        %tmp.15 = 9;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 26 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 26 8 10 ];
+        symbol [ fillRectangle %tmp.17 26 11 24 ];
+        %tmp.17 = getv function %tmp.16 :fillRectangle;
+        %tmp.18 = lgetv %cx;
+        symbol [ cx %tmp.18 26 25 27 ];
+        %tmp.19 = 13;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %cy;
+        symbol [ cy %tmp.21 26 34 36 ];
+        %tmp.22 = 2;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = 3;
+        %tmp.25 = 5;
+        invoke %tmp.16 %tmp.17(%tmp.20, %tmp.23, %tmp.24, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 27 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 27 8 10 ];
+        symbol [ fillRectangle %tmp.27 27 11 24 ];
+        %tmp.27 = getv function %tmp.26 :fillRectangle;
+        %tmp.28 = lgetv %cx;
+        symbol [ cx %tmp.28 27 25 27 ];
+        %tmp.29 = 10;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %cy;
+        symbol [ cy %tmp.31 27 34 36 ];
+        %tmp.32 = 2;
+        %tmp.33 = sub %tmp.31 %tmp.32;
+        %tmp.34 = 3;
+        %tmp.35 = 5;
+        invoke %tmp.26 %tmp.27(%tmp.30, %tmp.33, %tmp.34, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 28 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 28 8 10 ];
+        symbol [ setColor %tmp.37 28 11 19 ];
+        %tmp.37 = getv function %tmp.36 :setColor;
+        %tmp.38 = 0x000510;
+        symbol [ Graphics %tmp.39 28 30 38 ];
+        %tmp.39 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.40 28 39 56 ];
+        %tmp.40 = getv %tmp.39 :COLOR_TRANSPARENT;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 29 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 29 8 10 ];
+        symbol [ fillRectangle %tmp.42 29 11 24 ];
+        %tmp.42 = getv function %tmp.41 :fillRectangle;
+        %tmp.43 = lgetv %cx;
+        symbol [ cx %tmp.43 29 25 27 ];
+        %tmp.44 = 6;
+        %tmp.45 = sub %tmp.43 %tmp.44;
+        %tmp.46 = lgetv %cy;
+        symbol [ cy %tmp.46 29 33 35 ];
+        %tmp.47 = 3;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = 3;
+        %tmp.50 = 3;
+        invoke %tmp.41 %tmp.42(%tmp.45, %tmp.48, %tmp.49, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 30 8 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 30 8 10 ];
+        symbol [ fillRectangle %tmp.52 30 11 24 ];
+        %tmp.52 = getv function %tmp.51 :fillRectangle;
+        %tmp.53 = lgetv %cx;
+        symbol [ cx %tmp.53 30 25 27 ];
+        %tmp.54 = 3;
+        %tmp.55 = add %tmp.53 %tmp.54;
+        %tmp.56 = lgetv %cy;
+        symbol [ cy %tmp.56 30 33 35 ];
+        %tmp.57 = 3;
+        %tmp.58 = sub %tmp.56 %tmp.57;
+        %tmp.59 = 3;
+        %tmp.60 = 3;
+        invoke %tmp.51 %tmp.52(%tmp.55, %tmp.58, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 31 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 31 8 10 ];
+        symbol [ setColor %tmp.62 31 11 19 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = 0x55FF55;
+        symbol [ Graphics %tmp.64 31 30 38 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 31 39 56 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 32 8 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 32 8 10 ];
+        symbol [ fillRectangle %tmp.67 32 11 24 ];
+        %tmp.67 = getv function %tmp.66 :fillRectangle;
+        %tmp.68 = lgetv %cx;
+        symbol [ cx %tmp.68 32 25 27 ];
+        %tmp.69 = 9;
+        %tmp.70 = sub %tmp.68 %tmp.69;
+        %tmp.71 = lgetv %cy;
+        symbol [ cy %tmp.71 32 33 35 ];
+        %tmp.72 = 4;
+        %tmp.73 = add %tmp.71 %tmp.72;
+        %tmp.74 = 3;
+        %tmp.75 = 3;
+        invoke %tmp.66 %tmp.67(%tmp.70, %tmp.73, %tmp.74, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 33 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 33 8 10 ];
+        symbol [ fillRectangle %tmp.77 33 11 24 ];
+        %tmp.77 = getv function %tmp.76 :fillRectangle;
+        %tmp.78 = lgetv %cx;
+        symbol [ cx %tmp.78 33 25 27 ];
+        %tmp.79 = 6;
+        %tmp.80 = add %tmp.78 %tmp.79;
+        %tmp.81 = lgetv %cy;
+        symbol [ cy %tmp.81 33 33 35 ];
+        %tmp.82 = 4;
+        %tmp.83 = add %tmp.81 %tmp.82;
+        %tmp.84 = 3;
+        %tmp.85 = 3;
+        invoke %tmp.76 %tmp.77(%tmp.80, %tmp.83, %tmp.84, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 34 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 34 8 10 ];
+        symbol [ setColor %tmp.87 34 11 19 ];
+        %tmp.87 = getv function %tmp.86 :setColor;
+        %tmp.88 = 0x55FFAA;
+        symbol [ Graphics %tmp.89 34 30 38 ];
+        %tmp.89 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.90 34 39 56 ];
+        %tmp.90 = getv %tmp.89 :COLOR_TRANSPARENT;
+        invoke %tmp.86 %tmp.87(%tmp.88, %tmp.90);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 35 8 ]
+        %tmp.91 = lgetv %dc;
+        symbol [ dc %tmp.91 35 8 10 ];
+        symbol [ fillRectangle %tmp.92 35 11 24 ];
+        %tmp.92 = getv function %tmp.91 :fillRectangle;
+        %tmp.93 = lgetv %cx;
+        symbol [ cx %tmp.93 35 25 27 ];
+        %tmp.94 = 8;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %cy;
+        symbol [ cy %tmp.96 35 33 35 ];
+        %tmp.97 = 12;
+        %tmp.98 = add %tmp.96 %tmp.97;
+        %tmp.99 = 16;
+        %tmp.100 = 4;
+        invoke %tmp.91 %tmp.92(%tmp.95, %tmp.98, %tmp.99, %tmp.100);
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 36 8 ]
+        %tmp.101 = lgetv %dc;
+        symbol [ dc %tmp.101 36 8 10 ];
+        symbol [ fillRectangle %tmp.102 36 11 24 ];
+        %tmp.102 = getv function %tmp.101 :fillRectangle;
+        %tmp.103 = lgetv %cx;
+        symbol [ cx %tmp.103 36 25 27 ];
+        %tmp.104 = 1;
+        %tmp.105 = sub %tmp.103 %tmp.104;
+        %tmp.106 = lgetv %cy;
+        symbol [ cy %tmp.106 36 33 35 ];
+        %tmp.107 = 9;
+        %tmp.108 = add %tmp.106 %tmp.107;
+        %tmp.109 = 3;
+        %tmp.110 = 3;
+        invoke %tmp.101 %tmp.102(%tmp.105, %tmp.108, %tmp.109, %tmp.110);
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_23_47_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 40; @symbol_functiondef = [lbVariant,40,13,22]; @symbol_return<0> = [Lang,40,28,32]; @symbol_return<1> = [String,40,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_40_40_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_40_40_49_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_40_40_49_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 41 12 13 ];
+        symbol [ PI_DIFF_NORMAL %tmp.2 41 16 30 ];
+        %tmp.2 = getv ? :PI_DIFF_NORMAL;
+        lputv %d.1 %tmp.2;
+        symbol [ d %d.1 41 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 42 8 ]
+        try @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_beginTry @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_endTry @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_catch @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_beginTry:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_12_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 43 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_12_45_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_12_45_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 43 16 17 ];
+        symbol [ Application %tmp.3 43 20 31 ];
+        %tmp.3 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.4 43 32 39 ];
+        %tmp.4 = getv %tmp.3 :Storage;
+        symbol [ getValue %tmp.5 43 40 48 ];
+        %tmp.5 = getv function %tmp.4 :getValue;
+        symbol [ PI_DIFF_KEY %tmp.7 43 49 60 ];
+        %tmp.7 = getv ? :PI_DIFF_KEY;
+        %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.7);
+        lputv %v.2 %tmp.8;
+        symbol [ v %v.2 43 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 44 12 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_12_44_51_if_stmt:
+        %tmp.9 = lgetv %v.2;
+        symbol [ v %tmp.9 44 16 17 ];
+        symbol [ Lang %tmp.10 44 29 33 ];
+        %tmp.10 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.11 44 34 40 ];
+        %tmp.11 = getv %tmp.10 :Number;
+        %tmp.12 = isa %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_12_44_51_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_12_44_51_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_42_44_51_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 44 44 ]
+        %tmp.13 = lgetv %v.2;
+        symbol [ v %tmp.13 44 48 49 ];
+        %tmp.14 = as %tmp.13 { (Lang.Number) };
+        lputv %d.1 %tmp.14;
+        symbol [ d %d.1 44 44 45 ];
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_42_44_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_12_44_51_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_44_12_44_51_if_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_12_45_8_stop:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_catch:
+        %tmp.15 = exception;
+        push %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 45 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_catch" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_45_10_45_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 45 17 18 ];
+        %tmp.16 = dup %tmp.15;
+        lputv %e.3 %tmp.16;
+        symbol [ e %e.3 45 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_45_10_45_21_end:
+        try @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_catch @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_45_10_45_21_end @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_45_10_45_21_end @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally;
+        throw %tmp.15;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_42_8_45_21_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_8_46_48_if_stmt:
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 46 12 13 ];
+        symbol [ PI_DIFF_EASY %tmp.19 46 17 29 ];
+        %tmp.19 = getv ? :PI_DIFF_EASY;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_8_46_48_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_8_46_48_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_31_46_48_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 46 33 ]
+        %tmp.21 = "Easy";
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_31_46_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_8_46_48_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_46_8_46_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_8_47_48_if_stmt:
+        %tmp.22 = lgetv %d.1;
+        symbol [ d %tmp.22 47 12 13 ];
+        symbol [ PI_DIFF_HARD %tmp.24 47 17 29 ];
+        %tmp.24 = getv ? :PI_DIFF_HARD;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_8_47_48_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_8_47_48_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_31_47_48_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 47 33 ]
+        %tmp.26 = "Hard";
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_31_47_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_8_47_48_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_47_8_47_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 48 8 ]
+        %tmp.27 = "Normal";
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_40_40_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 51; @symbol_functiondef = [footerText,51,13,23]; @symbol_return<0> = [Lang,51,29,33]; @symbol_return<1> = [String,51,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_51_49_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 52 8 ]
+        try @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_beginTry @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_endTry @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_catch @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_beginTry:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_12_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 53 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_12_55_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_12_55_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 53 16 17 ];
+        symbol [ Application %tmp.1 53 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 53 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 53 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        symbol [ PI_BEST_KEY %tmp.5 53 49 60 ];
+        %tmp.5 = getv ? :PI_BEST_KEY;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %v.1 %tmp.6;
+        symbol [ v %v.1 53 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_stmt:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_16_54_48_begin:
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 54 16 17 ];
+        symbol [ Lang %tmp.8 54 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 54 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_44_54_48_true:
+        %tmp.11 = lgetv %v.1;
+        symbol [ v %tmp.11 54 44 45 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        %tmp.13 = 0;
+        %tmp.14 = gt %tmp.12 %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_44_54_48_end:
+        %tmp.15 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_16_54_48_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_44_54_48_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_44_54_48_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_51_54_86_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 54 53 ]
+        %tmp.16 = "BEST ";
+        %tmp.17 = lgetv %v.1;
+        symbol [ v %tmp.17 54 70 71 ];
+        %tmp.18 = as %tmp.17 { (Lang.Number) };
+        symbol [ format %tmp.19 54 72 78 ];
+        %tmp.19 = getv function %tmp.18 :format;
+        %tmp.20 = "%d";
+        %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+        %tmp.22 = add %tmp.16 %tmp.21;
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_51_54_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_54_12_54_86_if_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_12_55_8_stop:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_catch:
+        %tmp.23 = exception;
+        push %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 55 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_catch" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_55_10_55_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 55 17 18 ];
+        %tmp.24 = dup %tmp.23;
+        lputv %e.2 %tmp.24;
+        symbol [ e %e.2 55 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_55_10_55_21_end:
+        try @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_catch @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_55_10_55_21_end @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_55_10_55_21_end @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally;
+        throw %tmp.23;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_52_8_55_21_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 56 8 ]
+        %tmp.25 = null;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_51_49_57_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 61; @symbol_functiondef = [buildPixelInvadersMenu,61,9,31]; @symbol_return<0> = [Lang,61,37,41]; @symbol_return<1> = [Array,61,42,47]; ]
+function buildPixelInvadersMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 62 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 62 8 11 ];
+    symbol [ MenuConfig %tmp.4 62 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 63 9 15 const ];
+    symbol [ PI_LB_GAME_ID %tmp.9 63 20 33 ];
+    %tmp.9 = getv ? :PI_LB_GAME_ID;
+    %tmp.10 = dup %tmp.5;
+    %tmp.11 = aputv %tmp.10 %tmp.7 %tmp.9;
+    %tmp.13 = const :title1;
+    symbol [ title1 %tmp.13 64 9 15 const ];
+    %tmp.14 = "PIXEL";
+    %tmp.15 = dup %tmp.11;
+    %tmp.16 = aputv %tmp.15 %tmp.13 %tmp.14;
+    %tmp.18 = const :title2;
+    symbol [ title2 %tmp.18 65 9 15 const ];
+    %tmp.19 = "INVADERS";
+    %tmp.20 = dup %tmp.16;
+    %tmp.21 = aputv %tmp.20 %tmp.18 %tmp.19;
+    %tmp.23 = const :col1;
+    symbol [ col1 %tmp.23 66 9 13 const ];
+    %tmp.24 = 0x55FF55;
+    %tmp.25 = dup %tmp.21;
+    %tmp.26 = aputv %tmp.25 %tmp.23 %tmp.24;
+    %tmp.28 = const :col2;
+    symbol [ col2 %tmp.28 67 9 13 const ];
+    %tmp.29 = 0xFF5555;
+    %tmp.30 = dup %tmp.26;
+    %tmp.31 = aputv %tmp.30 %tmp.28 %tmp.29;
+    %tmp.33 = const :bg;
+    symbol [ bg %tmp.33 68 9 11 const ];
+    %tmp.34 = 0x000308;
+    %tmp.35 = dup %tmp.31;
+    %tmp.36 = aputv %tmp.35 %tmp.33 %tmp.34;
+    %tmp.38 = const :circle;
+    symbol [ circle %tmp.38 69 9 15 const ];
+    %tmp.39 = 0x06121E;
+    %tmp.40 = dup %tmp.36;
+    %tmp.41 = aputv %tmp.40 %tmp.38 %tmp.39;
+    %tmp.43 = const :accent;
+    symbol [ accent %tmp.43 70 9 15 const ];
+    %tmp.44 = 0x55FF55;
+    %tmp.45 = dup %tmp.41;
+    %tmp.46 = aputv %tmp.45 %tmp.43 %tmp.44;
+    %tmp.48 = const :lbTitle;
+    symbol [ lbTitle %tmp.48 71 9 16 const ];
+    %tmp.49 = "PIXEL INVADERS";
+    %tmp.50 = dup %tmp.46;
+    %tmp.51 = aputv %tmp.50 %tmp.48 %tmp.49;
+    %tmp.53 = const :hooks;
+    symbol [ hooks %tmp.53 72 9 14 const ];
+    symbol [ PixelInvadersHooks %tmp.57 72 24 42 ];
+    %tmp.57 = getv ? :PixelInvadersHooks;
+    %tmp.54 = newc %tmp.57 ();
+    %tmp.58 = dup %tmp.51;
+    %tmp.59 = aputv %tmp.58 %tmp.53 %tmp.54;
+    %tmp.61 = const :options;
+    symbol [ options %tmp.61 73 9 16 const ];
+    %tmp.62 = newa 2;
+    symbol [ GmOption %tmp.66 74 16 24 ];
+    %tmp.66 = getv ? :GmOption;
+    symbol [ PI_DIFF_KEY %tmp.68 74 25 36 ];
+    %tmp.68 = getv ? :PI_DIFF_KEY;
+    %tmp.69 = "Difficulty";
+    %tmp.70 = newa 3;
+    %tmp.71 = "EASY";
+    %tmp.72 = dup %tmp.70;
+    %tmp.73 = aputv %tmp.72 0 %tmp.71;
+    %tmp.74 = "NORMAL";
+    %tmp.75 = dup %tmp.73;
+    %tmp.76 = aputv %tmp.75 1 %tmp.74;
+    %tmp.77 = "HARD";
+    %tmp.78 = dup %tmp.76;
+    %tmp.79 = aputv %tmp.78 2 %tmp.77;
+    %tmp.80 = 1;
+    %tmp.63 = newc %tmp.66 (%tmp.68, %tmp.69, %tmp.79, %tmp.80);
+    %tmp.81 = dup %tmp.62;
+    %tmp.82 = aputv %tmp.81 0 %tmp.63;
+    symbol [ GmOption %tmp.86 75 16 24 ];
+    %tmp.86 = getv ? :GmOption;
+    symbol [ PI_LIVES_KEY %tmp.88 75 25 37 ];
+    %tmp.88 = getv ? :PI_LIVES_KEY;
+    %tmp.89 = "Lives";
+    %tmp.90 = newa 5;
+    %tmp.91 = "1";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 0 %tmp.91;
+    %tmp.94 = "2";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 1 %tmp.94;
+    %tmp.97 = "3";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 2 %tmp.97;
+    %tmp.100 = "4";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 3 %tmp.100;
+    %tmp.103 = "5";
+    %tmp.104 = dup %tmp.102;
+    %tmp.105 = aputv %tmp.104 4 %tmp.103;
+    %tmp.106 = 2;
+    %tmp.83 = newc %tmp.86 (%tmp.88, %tmp.89, %tmp.105, %tmp.106);
+    %tmp.107 = dup %tmp.82;
+    %tmp.108 = aputv %tmp.107 1 %tmp.83;
+    %tmp.109 = dup %tmp.59;
+    %tmp.110 = aputv %tmp.109 %tmp.61 %tmp.108;
+    %tmp.1 = newc %tmp.4 (%tmp.110);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 62 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 78 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 78 8 9 ];
+    symbol [ GameMenuView %tmp.114 78 16 28 ];
+    %tmp.114 = getv ? :GameMenuView;
+    %tmp.115 = lgetv %cfg.1;
+    symbol [ cfg %tmp.115 78 29 32 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    lputv %v.2 %tmp.111;
+    symbol [ v %v.2 78 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 79 4 ]
+    %tmp.116 = newa 2;
+    %tmp.117 = lgetv %v.2;
+    symbol [ v %tmp.117 79 12 13 ];
+    %tmp.118 = dup %tmp.116;
+    %tmp.119 = aputv %tmp.118 0 %tmp.117;
+    symbol [ GameMenuDelegate %tmp.123 79 19 35 ];
+    %tmp.123 = getv ? :GameMenuDelegate;
+    %tmp.124 = lgetv %v.2;
+    symbol [ v %tmp.124 79 36 37 ];
+    %tmp.120 = newc %tmp.123 (%tmp.124);
+    %tmp.125 = dup %tmp.119;
+    %tmp.126 = aputv %tmp.125 1 %tmp.120;
+    ret %tmp.126;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 8; ]
+<init> {
+}

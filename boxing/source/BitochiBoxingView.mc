@@ -1310,38 +1310,24 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     hidden function drawWin(dc) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 22 / 100, _w, _h * 60 / 100);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_LARGE, "YOU WIN!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_XTINY, "Hits " + _totalHits + " Counters " + _perfectHits, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_maxCombo >= 3) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "Combo x" + _maxCombo, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_SMALL, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 20 < 10) ? 0x44FF44 : 0x22AA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap: next round", Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [
+            ["Round " + _round, 0xFFFFFF],
+            ["Hits " + _totalHits + " Counters " + _perfectHits, 0x88CCFF]
+        ];
+        if (_maxCombo >= 3) { lines.add(["Combo x" + _maxCombo, 0xFFAA22]); }
+        lines.add(["" + _score, 0xFFFFFF]);
+        GameOverCard.draw(dc, _w, _h, "YOU WIN!", 0xFFDD44, lines, "Tap: next round", 0xFFDD44);
     }
 
     hidden function drawLose(dc) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 22 / 100, _w, _h * 60 / 100);
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_LARGE, "DEFEATED", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_XTINY, "Hits " + _totalHits + " Score " + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestScore > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, "Best " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_bestRound > 0) { dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, "Best Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor((_tick % 20 < 10) ? 0xFF8844 : 0xBB6622, Graphics.COLOR_TRANSPARENT);
-        if (!_rematchUsed) {
-            dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap: REMATCH!", Graphics.TEXT_JUSTIFY_CENTER);
-        } else {
-            dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var lines = [
+            ["Round " + _round, 0xAABBCC],
+            ["Hits " + _totalHits + " Score " + _score, 0x88CCFF]
+        ];
+        if (_bestScore > 0) { lines.add(["Best " + _bestScore, 0xFFCC44]); }
+        if (_bestRound > 0) { lines.add(["Best Round " + _bestRound, 0x8899AA]); }
+        var footer = (!_rematchUsed) ? "Tap: REMATCH!" : "Tap to play again";
+        GameOverCard.draw(dc, _w, _h, "DEFEATED", 0xFF4444, lines, footer, 0xFF4444);
     }
 
     hidden function drawChampion(dc) {

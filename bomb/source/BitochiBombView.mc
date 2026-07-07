@@ -1771,38 +1771,16 @@ class BitochiBombView extends WatchUi.View {
             dc.fillCircle((i * 53 + 17 + _resultTick) % _w, (i * 41 + 11) % _h, 2);
         }
 
-        var flash = (_resultTick % 6 < 3) ? 0xFF2222 : 0xCC0000;
-        dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 10 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 26 / 100, Graphics.FONT_LARGE, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFF5555, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 40 / 100, Graphics.FONT_XTINY, "TOTAL KILLS " + _totalKills, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFFAA66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 47 / 100, Graphics.FONT_XTINY, "DAMAGE " + _totalDamage, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 54 / 100, Graphics.FONT_XTINY, "WAVE " + _wave, Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_chainMax > 0) {
-            dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 61 / 100, Graphics.FONT_XTINY, "CHAIN x" + _chainMax, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        if (_maxCombo > 2) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 68 / 100, Graphics.FONT_XTINY, "STREAK x" + _maxCombo, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 76 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_resultTick > 30) {
-            dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var lines = [
+            ["" + _score, 0xFFFFFF],
+            ["TOTAL KILLS " + _totalKills, 0xFF5555],
+            ["DAMAGE " + _totalDamage, 0xFFAA66],
+            ["WAVE " + _wave, 0x88AACC]
+        ];
+        if (_chainMax > 0) { lines.add(["CHAIN x" + _chainMax, 0xFF8822]); }
+        if (_maxCombo > 2) { lines.add(["STREAK x" + _maxCombo, 0xFFCC44]); }
+        lines.add(["BEST " + _bestScore, 0x556677]);
+        var footer = (_resultTick > 30) ? "Tap to retry" : "";
+        GameOverCard.draw(dc, _w, _h, "GAME OVER", 0xFF2222, lines, footer, 0xFF2222);
     }
 }

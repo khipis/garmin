@@ -1,0 +1,616 @@
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 9; @symbol_classdef = [BombHooks,9,6,15]; @symbol_extends<0> = [GameHooks,9,24,33]; ]
+class BombHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiBombView %tmp.4 13 20 35 ];
+        %tmp.4 = getv ? :BitochiBombView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiBombDelegate %tmp.11 14 32 51 ];
+        %tmp.11 = getv ? :BitochiBombDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 52 53 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 56 63 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 64 74 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 19; @symbol_functiondef = [drawArt,19,13,20]; @symbol_param<0> = [dc,19,21,23]; @symbol_param<1> = [cx,19,25,27]; @symbol_param<2> = [cy,19,29,31]; @symbol_param<3> = [w,19,33,34]; @symbol_param<4> = [h,19,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 20 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_stop" ]
+        %px.1 = local;
+        symbol [ px %px.1 20 12 14 ];
+        %tmp.1 = lgetv %cx;
+        symbol [ cx %tmp.1 20 17 19 ];
+        %tmp.2 = 8;
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        lputv %px.1 %tmp.3;
+        symbol [ px %px.1 20 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 20 25 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_stop" ]
+        %py.2 = local;
+        symbol [ py %py.2 20 29 31 ];
+        %tmp.4 = lgetv %cy;
+        symbol [ cy %tmp.4 20 34 36 ];
+        %tmp.5 = 12;
+        %tmp.6 = sub %tmp.4 %tmp.5;
+        lputv %py.2 %tmp.6;
+        symbol [ py %py.2 20 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 22 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 22 8 10 ];
+        symbol [ setColor %tmp.8 22 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0x445566;
+        symbol [ Graphics %tmp.10 22 30 38 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 22 39 56 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 23 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 23 8 10 ];
+        symbol [ fillRectangle %tmp.13 23 11 24 ];
+        %tmp.13 = getv function %tmp.12 :fillRectangle;
+        %tmp.14 = lgetv %px.1;
+        symbol [ px %tmp.14 23 25 27 ];
+        %tmp.15 = 14;
+        %tmp.16 = sub %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %py.2;
+        symbol [ py %tmp.17 23 34 36 ];
+        %tmp.18 = 1;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        %tmp.20 = 28;
+        %tmp.21 = 3;
+        invoke %tmp.12 %tmp.13(%tmp.16, %tmp.19, %tmp.20, %tmp.21);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 24 8 ]
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 24 8 10 ];
+        symbol [ setColor %tmp.23 24 11 19 ];
+        %tmp.23 = getv function %tmp.22 :setColor;
+        %tmp.24 = 0x3A4A5A;
+        symbol [ Graphics %tmp.25 24 30 38 ];
+        %tmp.25 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.26 24 39 56 ];
+        %tmp.26 = getv %tmp.25 :COLOR_TRANSPARENT;
+        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 25 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 25 8 10 ];
+        symbol [ fillRectangle %tmp.28 25 11 24 ];
+        %tmp.28 = getv function %tmp.27 :fillRectangle;
+        %tmp.29 = lgetv %px.1;
+        symbol [ px %tmp.29 25 25 27 ];
+        %tmp.30 = 8;
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %py.2;
+        symbol [ py %tmp.32 25 33 35 ];
+        %tmp.33 = 3;
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        %tmp.35 = 18;
+        %tmp.36 = 6;
+        invoke %tmp.27 %tmp.28(%tmp.31, %tmp.34, %tmp.35, %tmp.36);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 26 8 ]
+        %tmp.37 = lgetv %dc;
+        symbol [ dc %tmp.37 26 8 10 ];
+        symbol [ setColor %tmp.38 26 11 19 ];
+        %tmp.38 = getv function %tmp.37 :setColor;
+        %tmp.39 = 0x88BBDD;
+        symbol [ Graphics %tmp.40 26 30 38 ];
+        %tmp.40 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.41 26 39 56 ];
+        %tmp.41 = getv %tmp.40 :COLOR_TRANSPARENT;
+        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.41);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 27 8 ]
+        %tmp.42 = lgetv %dc;
+        symbol [ dc %tmp.42 27 8 10 ];
+        symbol [ fillCircle %tmp.43 27 11 21 ];
+        %tmp.43 = getv function %tmp.42 :fillCircle;
+        %tmp.44 = lgetv %px.1;
+        symbol [ px %tmp.44 27 22 24 ];
+        %tmp.45 = 7;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %py.2;
+        symbol [ py %tmp.47 27 30 32 ];
+        %tmp.48 = 1;
+        %tmp.49 = sub %tmp.47 %tmp.48;
+        %tmp.50 = 2;
+        invoke %tmp.42 %tmp.43(%tmp.46, %tmp.49, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 29 8 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 29 8 10 ];
+        symbol [ setColor %tmp.52 29 11 19 ];
+        %tmp.52 = getv function %tmp.51 :setColor;
+        %tmp.53 = 0x111111;
+        symbol [ Graphics %tmp.54 29 30 38 ];
+        %tmp.54 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.55 29 39 56 ];
+        %tmp.55 = getv %tmp.54 :COLOR_TRANSPARENT;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 30 8 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 30 8 10 ];
+        symbol [ fillCircle %tmp.57 30 11 21 ];
+        %tmp.57 = getv function %tmp.56 :fillCircle;
+        %tmp.58 = lgetv %cx;
+        symbol [ cx %tmp.58 30 22 24 ];
+        %tmp.59 = 2;
+        %tmp.60 = add %tmp.58 %tmp.59;
+        %tmp.61 = lgetv %cy;
+        symbol [ cy %tmp.61 30 30 32 ];
+        %tmp.62 = 2;
+        %tmp.63 = add %tmp.61 %tmp.62;
+        %tmp.64 = 3;
+        invoke %tmp.56 %tmp.57(%tmp.60, %tmp.63, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 31 8 ]
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 31 8 10 ];
+        symbol [ setColor %tmp.66 31 11 19 ];
+        %tmp.66 = getv function %tmp.65 :setColor;
+        %tmp.67 = 0x555555;
+        symbol [ Graphics %tmp.68 31 30 38 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.69 31 39 56 ];
+        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 32 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 32 8 10 ];
+        symbol [ fillRectangle %tmp.71 32 11 24 ];
+        %tmp.71 = getv function %tmp.70 :fillRectangle;
+        %tmp.72 = lgetv %cx;
+        symbol [ cx %tmp.72 32 25 27 ];
+        %tmp.73 = 1;
+        %tmp.74 = add %tmp.72 %tmp.73;
+        %tmp.75 = lgetv %cy;
+        symbol [ cy %tmp.75 32 33 35 ];
+        %tmp.76 = 3;
+        %tmp.77 = sub %tmp.75 %tmp.76;
+        %tmp.78 = 3;
+        %tmp.79 = 2;
+        invoke %tmp.70 %tmp.71(%tmp.74, %tmp.77, %tmp.78, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 34 8 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 34 8 10 ];
+        symbol [ setColor %tmp.81 34 11 19 ];
+        %tmp.81 = getv function %tmp.80 :setColor;
+        %tmp.82 = 0xFF6622;
+        symbol [ Graphics %tmp.83 34 30 38 ];
+        %tmp.83 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.84 34 39 56 ];
+        %tmp.84 = getv %tmp.83 :COLOR_TRANSPARENT;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 34 59 ]
+        %tmp.85 = lgetv %dc;
+        symbol [ dc %tmp.85 34 59 61 ];
+        symbol [ fillCircle %tmp.86 34 62 72 ];
+        %tmp.86 = getv function %tmp.85 :fillCircle;
+        %tmp.87 = lgetv %cx;
+        symbol [ cx %tmp.87 34 73 75 ];
+        %tmp.88 = 14;
+        %tmp.89 = add %tmp.87 %tmp.88;
+        %tmp.90 = lgetv %cy;
+        symbol [ cy %tmp.90 34 82 84 ];
+        %tmp.91 = 12;
+        %tmp.92 = add %tmp.90 %tmp.91;
+        %tmp.93 = 6;
+        invoke %tmp.85 %tmp.86(%tmp.89, %tmp.92, %tmp.93);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 35 8 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 35 8 10 ];
+        symbol [ setColor %tmp.95 35 11 19 ];
+        %tmp.95 = getv function %tmp.94 :setColor;
+        %tmp.96 = 0xFFAA22;
+        symbol [ Graphics %tmp.97 35 30 38 ];
+        %tmp.97 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.98 35 39 56 ];
+        %tmp.98 = getv %tmp.97 :COLOR_TRANSPARENT;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.98);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 35 59 ]
+        %tmp.99 = lgetv %dc;
+        symbol [ dc %tmp.99 35 59 61 ];
+        symbol [ fillCircle %tmp.100 35 62 72 ];
+        %tmp.100 = getv function %tmp.99 :fillCircle;
+        %tmp.101 = lgetv %cx;
+        symbol [ cx %tmp.101 35 73 75 ];
+        %tmp.102 = 14;
+        %tmp.103 = add %tmp.101 %tmp.102;
+        %tmp.104 = lgetv %cy;
+        symbol [ cy %tmp.104 35 82 84 ];
+        %tmp.105 = 12;
+        %tmp.106 = add %tmp.104 %tmp.105;
+        %tmp.107 = 4;
+        invoke %tmp.99 %tmp.100(%tmp.103, %tmp.106, %tmp.107);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 36 8 ]
+        %tmp.108 = lgetv %dc;
+        symbol [ dc %tmp.108 36 8 10 ];
+        symbol [ setColor %tmp.109 36 11 19 ];
+        %tmp.109 = getv function %tmp.108 :setColor;
+        %tmp.110 = 0xFFFF66;
+        symbol [ Graphics %tmp.111 36 30 38 ];
+        %tmp.111 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.112 36 39 56 ];
+        %tmp.112 = getv %tmp.111 :COLOR_TRANSPARENT;
+        invoke %tmp.108 %tmp.109(%tmp.110, %tmp.112);
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 36 59 ]
+        %tmp.113 = lgetv %dc;
+        symbol [ dc %tmp.113 36 59 61 ];
+        symbol [ fillCircle %tmp.114 36 62 72 ];
+        %tmp.114 = getv function %tmp.113 :fillCircle;
+        %tmp.115 = lgetv %cx;
+        symbol [ cx %tmp.115 36 73 75 ];
+        %tmp.116 = 14;
+        %tmp.117 = add %tmp.115 %tmp.116;
+        %tmp.118 = lgetv %cy;
+        symbol [ cy %tmp.118 36 82 84 ];
+        %tmp.119 = 12;
+        %tmp.120 = add %tmp.118 %tmp.119;
+        %tmp.121 = 2;
+        invoke %tmp.113 %tmp.114(%tmp.117, %tmp.120, %tmp.121);
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_19_47_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 40; @symbol_functiondef = [lbVariant,40,13,22]; @symbol_return<0> = [Lang,40,28,32]; @symbol_return<1> = [String,40,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 41 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "normal";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 41 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_stop" ]
+        %i.2 = local;
+        symbol [ i %i.2 42 12 13 ];
+        %tmp.11 = 1;
+        lputv %i.2 %tmp.11;
+        symbol [ i %i.2 42 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 43 8 ]
+        try @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_beginTry @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_endTry @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_catch @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_beginTry:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_12_46_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 44 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_12_46_8_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_12_46_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 44 16 17 ];
+        symbol [ Application %tmp.12 44 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 44 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 44 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "bomb_diff";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 44 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 45 12 ]
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_stmt:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_16_45_69_begin:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_16_45_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 45 16 17 ];
+        symbol [ Lang %tmp.18 45 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 45 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_44_45_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 45 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_44_45_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_16_45_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_44_45_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_44_45_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_54_45_69_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 45 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = lgetv %names.1;
+        symbol [ names %tmp.28 45 58 63 ];
+        symbol [ size %tmp.29 45 64 68 ];
+        %tmp.29 = getv function %tmp.28 :size;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        %tmp.31 = lt %tmp.27 %tmp.30;
+        push %tmp.31;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_54_45_69_end:
+        %tmp.32 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_16_45_69_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_54_45_69_true] [%tmp.32 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_54_45_69_end];
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_true:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_72_45_81_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 45 74 ]
+        %tmp.33 = lgetv %v.3;
+        symbol [ v %tmp.33 45 78 79 ];
+        %tmp.34 = as %tmp.33 { (Lang.Number) };
+        lputv %i.2 %tmp.34;
+        symbol [ i %i.2 45 74 75 ];
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_72_45_81_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_45_12_45_81_if_end:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_12_46_8_stop:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_catch:
+        %tmp.35 = exception;
+        push %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 46 10 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_catch" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_46_10_46_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 46 17 18 ];
+        %tmp.36 = dup %tmp.35;
+        lputv %e.4 %tmp.36;
+        symbol [ e %e.4 46 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_46_10_46_21_end:
+        try @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_catch @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_46_10_46_21_end @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_46_10_46_21_end @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally;
+        throw %tmp.35;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_43_8_46_21_end:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 47 8 ]
+        %tmp.37 = lgetv %names.1;
+        symbol [ names %tmp.37 47 15 20 ];
+        %tmp.38 = lgetv %i.2;
+        symbol [ i %tmp.38 47 21 22 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_40_40_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 50; @symbol_functiondef = [footerText,50,13,23]; @symbol_return<0> = [Lang,50,29,33]; @symbol_return<1> = [String,50,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_50_49_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 51 8 ]
+        try @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_beginTry @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_endTry @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_catch @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_beginTry:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_12_54_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 52 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_12_54_8_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_12_54_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 52 16 17 ];
+        symbol [ Application %tmp.1 52 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 52 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 52 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "bombBest";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 52 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 53 12 ]
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_stmt:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_16_53_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 53 16 17 ];
+        symbol [ Lang %tmp.7 53 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 53 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_44_53_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 53 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_44_53_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_16_53_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_44_53_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_44_53_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_true:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_51_53_86_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 53 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 53 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 53 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_51_53_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_53_12_53_86_if_end:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_12_54_8_stop:
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 54 10 ]
+        [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_catch" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_54_10_54_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 54 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 54 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_end;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_54_10_54_21_end:
+        try @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_catch @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_54_10_54_21_end @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_54_10_54_21_end @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_51_8_54_21_end:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 55 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_50_49_56_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 59; @symbol_functiondef = [buildBombMenu,59,9,22]; @symbol_return<0> = [Lang,59,28,32]; @symbol_return<1> = [Array,59,33,38]; ]
+function buildBombMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_start:
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 60 4 ]
+    [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 60 8 11 ];
+    symbol [ MenuConfig %tmp.4 60 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 61 9 15 const ];
+    %tmp.8 = "bomb";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 62 9 15 const ];
+    %tmp.13 = "BOMB";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 63 9 13 const ];
+    %tmp.18 = 0xFF4422;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 64 9 11 const ];
+    %tmp.23 = 0x080818;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 65 9 15 const ];
+    %tmp.28 = 0x101A2E;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 66 9 15 const ];
+    %tmp.33 = 0xFF8833;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 67 9 16 const ];
+    %tmp.38 = "BOMB";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 68 9 14 const ];
+    symbol [ BombHooks %tmp.46 68 24 33 ];
+    %tmp.46 = getv ? :BombHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 69 9 16 const ];
+    %tmp.51 = newa 1;
+    symbol [ GmOption %tmp.55 70 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "bomb_diff";
+    %tmp.57 = "Difficulty";
+    %tmp.58 = newa 3;
+    %tmp.59 = "EASY";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "NORMAL";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "HARD";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = 1;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
+    %tmp.69 = dup %tmp.51;
+    %tmp.70 = aputv %tmp.69 0 %tmp.52;
+    %tmp.71 = dup %tmp.48;
+    %tmp.72 = aputv %tmp.71 %tmp.50 %tmp.70;
+    %tmp.1 = newc %tmp.4 (%tmp.72);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 60 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 73 4 ]
+    [ "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_start" "_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 73 8 9 ];
+    symbol [ GameMenuView %tmp.76 73 16 28 ];
+    %tmp.76 = getv ? :GameMenuView;
+    %tmp.77 = lgetv %cfg.1;
+    symbol [ cfg %tmp.77 73 29 32 ];
+    %tmp.73 = newc %tmp.76 (%tmp.77);
+    lputv %v.2 %tmp.73;
+    symbol [ v %v.2 73 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc" 74 4 ]
+    %tmp.78 = newa 2;
+    %tmp.79 = lgetv %v.2;
+    symbol [ v %tmp.79 74 12 13 ];
+    %tmp.80 = dup %tmp.78;
+    %tmp.81 = aputv %tmp.80 0 %tmp.79;
+    symbol [ GameMenuDelegate %tmp.85 74 19 35 ];
+    %tmp.85 = getv ? :GameMenuDelegate;
+    %tmp.86 = lgetv %v.2;
+    symbol [ v %tmp.86 74 36 37 ];
+    %tmp.82 = newc %tmp.85 (%tmp.86);
+    %tmp.87 = dup %tmp.81;
+    %tmp.88 = aputv %tmp.87 1 %tmp.82;
+    ret %tmp.88;
+_Users_kkorolczuk_work_garmin_bomb_source_BombMenu_mc_59_39_75_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/bomb/source/BombMenu.mc"; @line = 4; ]
+<init> {
+}

@@ -1,0 +1,490 @@
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 9; @symbol_classdef = [MinigolfHooks,9,6,19]; @symbol_extends<0> = [GameHooks,9,28,37]; ]
+class MinigolfHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiMinigolfView %tmp.4 13 20 39 ];
+        %tmp.4 = getv ? :BitochiMinigolfView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiMinigolfDelegate %tmp.11 14 32 55 ];
+        %tmp.11 = getv ? :BitochiMinigolfDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 56 57 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 60 67 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 68 78 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_18_47_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 19 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 19 8 10 ];
+        symbol [ setColor %tmp.2 19 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x1A6030;
+        symbol [ Graphics %tmp.4 19 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 19 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 20 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 20 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.7 20 11 31 ];
+        %tmp.7 = getv function %tmp.6 :fillRoundedRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 20 32 34 ];
+        %tmp.9 = 38;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 20 41 43 ];
+        %tmp.12 = 10;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 76;
+        %tmp.15 = 26;
+        %tmp.16 = 6;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15, %tmp.16);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 22 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 22 8 10 ];
+        symbol [ setColor %tmp.18 22 11 19 ];
+        %tmp.18 = getv function %tmp.17 :setColor;
+        %tmp.19 = 0x050A04;
+        symbol [ Graphics %tmp.20 22 30 38 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.21 22 39 56 ];
+        %tmp.21 = getv %tmp.20 :COLOR_TRANSPARENT;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.21);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 22 59 ]
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 22 59 61 ];
+        symbol [ fillCircle %tmp.23 22 62 72 ];
+        %tmp.23 = getv function %tmp.22 :fillCircle;
+        %tmp.24 = lgetv %cx;
+        symbol [ cx %tmp.24 22 73 75 ];
+        %tmp.25 = 20;
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = lgetv %cy;
+        symbol [ cy %tmp.27 22 82 84 ];
+        %tmp.28 = 6;
+        %tmp.29 = add %tmp.27 %tmp.28;
+        %tmp.30 = 5;
+        invoke %tmp.22 %tmp.23(%tmp.26, %tmp.29, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 24 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 24 8 10 ];
+        symbol [ setColor %tmp.32 24 11 19 ];
+        %tmp.32 = getv function %tmp.31 :setColor;
+        %tmp.33 = 0x886633;
+        symbol [ Graphics %tmp.34 24 30 38 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.35 24 39 56 ];
+        %tmp.35 = getv %tmp.34 :COLOR_TRANSPARENT;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 24 59 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 24 59 61 ];
+        symbol [ drawLine %tmp.37 24 62 70 ];
+        %tmp.37 = getv function %tmp.36 :drawLine;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 24 71 73 ];
+        %tmp.39 = 20;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %cy;
+        symbol [ cy %tmp.41 24 80 82 ];
+        %tmp.42 = 6;
+        %tmp.43 = add %tmp.41 %tmp.42;
+        %tmp.44 = lgetv %cx;
+        symbol [ cx %tmp.44 24 88 90 ];
+        %tmp.45 = 20;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %cy;
+        symbol [ cy %tmp.47 24 97 99 ];
+        %tmp.48 = 14;
+        %tmp.49 = sub %tmp.47 %tmp.48;
+        invoke %tmp.36 %tmp.37(%tmp.40, %tmp.43, %tmp.46, %tmp.49);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 25 8 ]
+        %tmp.50 = lgetv %dc;
+        symbol [ dc %tmp.50 25 8 10 ];
+        symbol [ setColor %tmp.51 25 11 19 ];
+        %tmp.51 = getv function %tmp.50 :setColor;
+        %tmp.52 = 0xFF3311;
+        symbol [ Graphics %tmp.53 25 30 38 ];
+        %tmp.53 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.54 25 39 56 ];
+        %tmp.54 = getv %tmp.53 :COLOR_TRANSPARENT;
+        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.54);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 25 59 ]
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 25 59 61 ];
+        symbol [ fillRectangle %tmp.56 25 62 75 ];
+        %tmp.56 = getv function %tmp.55 :fillRectangle;
+        %tmp.57 = lgetv %cx;
+        symbol [ cx %tmp.57 25 76 78 ];
+        %tmp.58 = 20;
+        %tmp.59 = add %tmp.57 %tmp.58;
+        %tmp.60 = lgetv %cy;
+        symbol [ cy %tmp.60 25 85 87 ];
+        %tmp.61 = 14;
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        %tmp.63 = 12;
+        %tmp.64 = 8;
+        invoke %tmp.55 %tmp.56(%tmp.59, %tmp.62, %tmp.63, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 27 8 ]
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 27 8 10 ];
+        symbol [ setColor %tmp.66 27 11 19 ];
+        %tmp.66 = getv function %tmp.65 :setColor;
+        %tmp.67 = 0x000000;
+        symbol [ Graphics %tmp.68 27 30 38 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.69 27 39 56 ];
+        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 27 59 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 27 59 61 ];
+        symbol [ fillCircle %tmp.71 27 62 72 ];
+        %tmp.71 = getv function %tmp.70 :fillCircle;
+        %tmp.72 = lgetv %cx;
+        symbol [ cx %tmp.72 27 73 75 ];
+        %tmp.73 = 18;
+        %tmp.74 = sub %tmp.72 %tmp.73;
+        %tmp.75 = lgetv %cy;
+        symbol [ cy %tmp.75 27 82 84 ];
+        %tmp.76 = 9;
+        %tmp.77 = add %tmp.75 %tmp.76;
+        %tmp.78 = 5;
+        invoke %tmp.70 %tmp.71(%tmp.74, %tmp.77, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 28 8 ]
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 28 8 10 ];
+        symbol [ setColor %tmp.80 28 11 19 ];
+        %tmp.80 = getv function %tmp.79 :setColor;
+        %tmp.81 = 0xF8F8F8;
+        symbol [ Graphics %tmp.82 28 30 38 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.83 28 39 56 ];
+        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.83);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 28 59 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 28 59 61 ];
+        symbol [ fillCircle %tmp.85 28 62 72 ];
+        %tmp.85 = getv function %tmp.84 :fillCircle;
+        %tmp.86 = lgetv %cx;
+        symbol [ cx %tmp.86 28 73 75 ];
+        %tmp.87 = 19;
+        %tmp.88 = sub %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %cy;
+        symbol [ cy %tmp.89 28 82 84 ];
+        %tmp.90 = 8;
+        %tmp.91 = add %tmp.89 %tmp.90;
+        %tmp.92 = 5;
+        invoke %tmp.84 %tmp.85(%tmp.88, %tmp.91, %tmp.92);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 29 8 ]
+        %tmp.93 = lgetv %dc;
+        symbol [ dc %tmp.93 29 8 10 ];
+        symbol [ setColor %tmp.94 29 11 19 ];
+        %tmp.94 = getv function %tmp.93 :setColor;
+        %tmp.95 = 0xFFFFFF;
+        symbol [ Graphics %tmp.96 29 30 38 ];
+        %tmp.96 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.97 29 39 56 ];
+        %tmp.97 = getv %tmp.96 :COLOR_TRANSPARENT;
+        invoke %tmp.93 %tmp.94(%tmp.95, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 29 59 ]
+        %tmp.98 = lgetv %dc;
+        symbol [ dc %tmp.98 29 59 61 ];
+        symbol [ fillCircle %tmp.99 29 62 72 ];
+        %tmp.99 = getv function %tmp.98 :fillCircle;
+        %tmp.100 = lgetv %cx;
+        symbol [ cx %tmp.100 29 73 75 ];
+        %tmp.101 = 21;
+        %tmp.102 = sub %tmp.100 %tmp.101;
+        %tmp.103 = lgetv %cy;
+        symbol [ cy %tmp.103 29 82 84 ];
+        %tmp.104 = 6;
+        %tmp.105 = add %tmp.103 %tmp.104;
+        %tmp.106 = 2;
+        invoke %tmp.98 %tmp.99(%tmp.102, %tmp.105, %tmp.106);
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_18_47_30_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 33; @symbol_functiondef = [lbVariant,33,13,22]; @symbol_return<0> = [Lang,33,28,32]; @symbol_return<1> = [String,33,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 34 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 34 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "normal";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 34 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 35 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 35 12 13 ];
+        %tmp.11 = 1;
+        lputv %d.2 %tmp.11;
+        symbol [ d %d.2 35 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 36 8 ]
+        try @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_beginTry @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_endTry @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_catch @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_beginTry:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_12_39_8_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 37 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_12_39_8_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_12_39_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 37 16 17 ];
+        symbol [ Application %tmp.12 37 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 37 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 37 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "golf_diff";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 37 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 38 12 ]
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_stmt:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_16_38_59_begin:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_16_38_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 38 16 17 ];
+        symbol [ Lang %tmp.18 38 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 38 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_44_38_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 38 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_44_38_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_16_38_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_44_38_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_44_38_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_54_38_59_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 38 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = 2;
+        %tmp.29 = lte %tmp.27 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_54_38_59_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_16_38_59_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_54_38_59_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_54_38_59_end];
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_true:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_62_38_71_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 38 64 ]
+        %tmp.31 = lgetv %v.3;
+        symbol [ v %tmp.31 38 68 69 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        lputv %d.2 %tmp.32;
+        symbol [ d %d.2 38 64 65 ];
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_62_38_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_38_12_38_71_if_end:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_12_39_8_stop:
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_catch:
+        %tmp.33 = exception;
+        push %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 39 10 ]
+        [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_catch" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_39_10_39_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 39 17 18 ];
+        %tmp.34 = dup %tmp.33;
+        lputv %e.4 %tmp.34;
+        symbol [ e %e.4 39 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_end;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_39_10_39_21_end:
+        try @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_catch @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_39_10_39_21_end @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_39_10_39_21_end @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally;
+        throw %tmp.33;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_36_8_39_21_end:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 40 8 ]
+        %tmp.35 = lgetv %names.1;
+        symbol [ names %tmp.35 40 15 20 ];
+        %tmp.36 = lgetv %d.2;
+        symbol [ d %tmp.36 40 21 22 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_33_40_41_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 44; @symbol_functiondef = [buildMinigolfMenu,44,9,26]; @symbol_return<0> = [Lang,44,32,36]; @symbol_return<1> = [Array,44,37,42]; ]
+function buildMinigolfMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_start:
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 45 4 ]
+    [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 45 8 11 ];
+    symbol [ MenuConfig %tmp.4 45 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 10;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 46 9 15 const ];
+    %tmp.8 = "minigolf";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 47 9 15 const ];
+    %tmp.13 = "MINIGOLF";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 48 9 15 const ];
+    %tmp.18 = null;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 49 9 13 const ];
+    %tmp.23 = 0x44FF88;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :bg;
+    symbol [ bg %tmp.27 50 9 11 const ];
+    %tmp.28 = 0x0A1A08;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :circle;
+    symbol [ circle %tmp.32 51 9 15 const ];
+    %tmp.33 = 0x144820;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :accent;
+    symbol [ accent %tmp.37 52 9 15 const ];
+    %tmp.38 = 0x44FF88;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :lbTitle;
+    symbol [ lbTitle %tmp.42 53 9 16 const ];
+    %tmp.43 = "MINIGOLF";
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :hooks;
+    symbol [ hooks %tmp.47 54 9 14 const ];
+    symbol [ MinigolfHooks %tmp.51 54 24 37 ];
+    %tmp.51 = getv ? :MinigolfHooks;
+    %tmp.48 = newc %tmp.51 ();
+    %tmp.52 = dup %tmp.45;
+    %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
+    %tmp.55 = const :options;
+    symbol [ options %tmp.55 55 9 16 const ];
+    %tmp.56 = newa 1;
+    symbol [ GmOption %tmp.60 56 16 24 ];
+    %tmp.60 = getv ? :GmOption;
+    %tmp.61 = "golf_diff";
+    %tmp.62 = "Difficulty";
+    %tmp.63 = newa 3;
+    %tmp.64 = "EASY";
+    %tmp.65 = dup %tmp.63;
+    %tmp.66 = aputv %tmp.65 0 %tmp.64;
+    %tmp.67 = "NORMAL";
+    %tmp.68 = dup %tmp.66;
+    %tmp.69 = aputv %tmp.68 1 %tmp.67;
+    %tmp.70 = "HARD";
+    %tmp.71 = dup %tmp.69;
+    %tmp.72 = aputv %tmp.71 2 %tmp.70;
+    %tmp.73 = 1;
+    %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
+    %tmp.74 = dup %tmp.56;
+    %tmp.75 = aputv %tmp.74 0 %tmp.57;
+    %tmp.76 = dup %tmp.53;
+    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
+    %tmp.1 = newc %tmp.4 (%tmp.77);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 45 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 59 4 ]
+    [ "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_start" "_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 59 8 9 ];
+    symbol [ GameMenuView %tmp.81 59 16 28 ];
+    %tmp.81 = getv ? :GameMenuView;
+    %tmp.82 = lgetv %cfg.1;
+    symbol [ cfg %tmp.82 59 29 32 ];
+    %tmp.78 = newc %tmp.81 (%tmp.82);
+    lputv %v.2 %tmp.78;
+    symbol [ v %v.2 59 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc" 60 4 ]
+    %tmp.83 = newa 2;
+    %tmp.84 = lgetv %v.2;
+    symbol [ v %tmp.84 60 12 13 ];
+    %tmp.85 = dup %tmp.83;
+    %tmp.86 = aputv %tmp.85 0 %tmp.84;
+    symbol [ GameMenuDelegate %tmp.90 60 19 35 ];
+    %tmp.90 = getv ? :GameMenuDelegate;
+    %tmp.91 = lgetv %v.2;
+    symbol [ v %tmp.91 60 36 37 ];
+    %tmp.87 = newc %tmp.90 (%tmp.91);
+    %tmp.92 = dup %tmp.86;
+    %tmp.93 = aputv %tmp.92 1 %tmp.87;
+    ret %tmp.93;
+_Users_kkorolczuk_work_garmin_minigolf_source_MinigolfMenu_mc_44_43_61_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/minigolf/source/MinigolfMenu.mc"; @line = 4; ]
+<init> {
+}

@@ -385,6 +385,56 @@ class BitochiCheckersView extends WatchUi.View {
         return true;
     }
 
+    // Board square size in px — the input layer derives its swipe threshold
+    // from this so the same physical flick reads correctly on every watch.
+    function cellSize() { return _sq; }
+
+    // Board cell (row,col) → screen top-left pixel. Mirrors the doTap inverse
+    // mapping so hit-testing and rendering stay in lockstep for both
+    // orientations (light or dark pieces at the bottom).
+    hidden function cellScreen(row, col) {
+        var scRow; var scCol;
+        if (_playerIsWhite) { scRow = 7 - row; scCol = col; }
+        else                { scRow = row;     scCol = 7 - col; }
+        return [_ox + scCol * _sq, _oy + scRow * _sq];
+    }
+
+    // Flick-to-move: with a piece selected, a swipe picks the legal diagonal
+    // destination whose on-screen direction best matches the flick and plays
+    // it. Judged in SCREEN space so it's correct for both orientations. This
+    // maps beautifully to checkers — a diagonal flick IS the move. Taps remain
+    // the exact-target option; this is the quick gesture (same feel as gemmatch).
+    function flickMove(dx, dy) {
+        if (_gs != GS_PLAY) { return; }
+        if (!isPlayerTurn()) { return; }
+        if (_selRow < 0 || _validDsts.size() == 0) { return; }
+        var mag = Math.sqrt(dx * dx + dy * dy);
+        if (mag < 1) { return; }
+        var ndx = dx / mag; var ndy = dy / mag;
+        var s0  = cellScreen(_selRow, _selCol);
+        var sx0 = s0[0] + _sq / 2.0; var sy0 = s0[1] + _sq / 2.0;
+        var bestIdx = -1; var bestAlign = -2.0; var bestDist = 0.0;
+        for (var i = 0; i < _validDsts.size(); i++) {
+            var mv = _validDsts[i];
+            var t  = cellScreen(mv[0], mv[1]);
+            var vx = (t[0] + _sq / 2.0) - sx0;
+            var vy = (t[1] + _sq / 2.0) - sy0;
+            var vm = Math.sqrt(vx * vx + vy * vy);
+            if (vm < 1) { continue; }
+            var align = (vx * ndx + vy * ndy) / vm;   // cos angle, [-1..1]
+            var better = false;
+            if (align > bestAlign + 0.05) { better = true; }
+            else if (align > bestAlign - 0.05 && bestIdx >= 0 && vm < bestDist) { better = true; }
+            if (better) { bestAlign = align; bestDist = vm; bestIdx = i; }
+        }
+        // Require the flick to point roughly at the target (within ~70°).
+        if (bestIdx >= 0 && bestAlign >= 0.35) {
+            var chosen = _validDsts[bestIdx];
+            _curRow = chosen[0]; _curCol = chosen[1];
+            applyPlayerMove(chosen);
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     //  GAME FLOW
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1519,15 +1569,7 @@ class BitochiCheckersView extends WatchUi.View {
     }
 
     hidden function drawEndOverlay(dc, msg, clr) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w / 2 - 64, _h / 2 - 24, 128, 48, 8);
-        dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w / 2 - 64, _h / 2 - 24, 128, 48, 8);
-        dc.drawText(_w / 2, _h / 2 - 20, Graphics.FONT_MEDIUM, msg, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_tick % 8 < 5) {
-            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h / 2 + 8, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        GameOverCard.draw(dc, _w, _h, msg, clr, [], "Tap for menu", clr);
     }
 
 }

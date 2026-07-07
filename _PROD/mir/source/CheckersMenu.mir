@@ -1,0 +1,652 @@
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 9; @symbol_classdef = [CheckersHooks,9,6,19]; @symbol_extends<0> = [GameHooks,9,28,37]; ]
+class CheckersHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiCheckersView %tmp.4 13 20 39 ];
+        %tmp.4 = getv ? :BitochiCheckersView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiCheckersDelegate %tmp.11 14 32 55 ];
+        %tmp.11 = getv ? :BitochiCheckersDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 56 57 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 60 67 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 68 78 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 19 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_stop" ]
+        %sq.1 = local;
+        symbol [ sq %sq.1 19 12 14 ];
+        %tmp.1 = 7;
+        lputv %sq.1 %tmp.1;
+        symbol [ sq %sq.1 19 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 20 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_stop" ]
+        %n.2 = local;
+        symbol [ n %n.2 20 12 13 ];
+        %tmp.2 = 4;
+        lputv %n.2 %tmp.2;
+        symbol [ n %n.2 20 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 21 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_stop" ]
+        %x0.3 = local;
+        symbol [ x0 %x0.3 21 12 14 ];
+        %tmp.3 = lgetv %cx;
+        symbol [ cx %tmp.3 21 17 19 ];
+        %tmp.4 = lgetv %n.2;
+        symbol [ n %tmp.4 21 23 24 ];
+        %tmp.5 = lgetv %sq.1;
+        symbol [ sq %tmp.5 21 27 29 ];
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = 2;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        %tmp.9 = sub %tmp.3 %tmp.8;
+        lputv %x0.3 %tmp.9;
+        symbol [ x0 %x0.3 21 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 22 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_stop" ]
+        %y0.4 = local;
+        symbol [ y0 %y0.4 22 12 14 ];
+        %tmp.10 = lgetv %cy;
+        symbol [ cy %tmp.10 22 17 19 ];
+        %tmp.11 = lgetv %n.2;
+        symbol [ n %tmp.11 22 23 24 ];
+        %tmp.12 = lgetv %sq.1;
+        symbol [ sq %tmp.12 22 27 29 ];
+        %tmp.13 = mul %tmp.11 %tmp.12;
+        %tmp.14 = 2;
+        %tmp.15 = div %tmp.13 %tmp.14;
+        %tmp.16 = sub %tmp.10 %tmp.15;
+        lputv %y0.4 %tmp.16;
+        symbol [ y0 %y0.4 22 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 23 8 ]
+        for @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_test @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_incr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_begin" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_end" ]
+        %r.5 = local;
+        symbol [ r %r.5 23 17 18 ];
+        %tmp.17 = 0;
+        lputv %r.5 %tmp.17;
+        symbol [ r %r.5 23 17 18 ];
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_test:
+        %tmp.18 = lgetv %r.5;
+        symbol [ r %tmp.18 23 24 25 ];
+        %tmp.19 = lgetv %n.2;
+        symbol [ n %tmp.19 23 28 29 ];
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_begin:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_36_29_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 24 12 ]
+        for @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_test @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_incr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_begin" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_end" ]
+        %c.6 = local;
+        symbol [ c %c.6 24 21 22 ];
+        %tmp.21 = 0;
+        lputv %c.6 %tmp.21;
+        symbol [ c %c.6 24 21 22 ];
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_test:
+        %tmp.22 = lgetv %c.6;
+        symbol [ c %tmp.22 24 28 29 ];
+        %tmp.23 = lgetv %n.2;
+        symbol [ n %tmp.23 24 32 33 ];
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_begin:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_40_28_12_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 25 16 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_40_28_12_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_40_28_12_stop" ]
+        %dark.7 = local;
+        symbol [ dark %dark.7 25 20 24 ];
+        %tmp.25 = lgetv %r.5;
+        symbol [ r %tmp.25 25 29 30 ];
+        %tmp.26 = lgetv %c.6;
+        symbol [ c %tmp.26 25 33 34 ];
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = 2;
+        %tmp.29 = mod %tmp.27 %tmp.28;
+        %tmp.30 = 1;
+        %tmp.31 = eq %tmp.29 %tmp.30;
+        lputv %dark.7 %tmp.31;
+        symbol [ dark %dark.7 25 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 26 16 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 26 16 18 ];
+        symbol [ setColor %tmp.33 26 19 27 ];
+        %tmp.33 = getv function %tmp.32 :setColor;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_begin:
+        %tmp.34 = lgetv %dark.7;
+        symbol [ dark %tmp.34 26 28 32 ];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_else_false;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_true:
+        %tmp.35 = 0x3A2416;
+        push %tmp.35;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_else_false:
+        %tmp.36 = 0xC8B084;
+        push %tmp.36;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_end:
+        %tmp.37 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_else_false] [%tmp.37 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_26_28_26_46_end];
+        symbol [ Graphics %tmp.38 26 56 64 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.39 26 65 82 ];
+        %tmp.39 = getv %tmp.38 :COLOR_TRANSPARENT;
+        invoke %tmp.32 %tmp.33(%tmp.37, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 27 16 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 27 16 18 ];
+        symbol [ fillRectangle %tmp.41 27 19 32 ];
+        %tmp.41 = getv function %tmp.40 :fillRectangle;
+        %tmp.42 = lgetv %x0.3;
+        symbol [ x0 %tmp.42 27 33 35 ];
+        %tmp.43 = lgetv %c.6;
+        symbol [ c %tmp.43 27 38 39 ];
+        %tmp.44 = lgetv %sq.1;
+        symbol [ sq %tmp.44 27 42 44 ];
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        %tmp.46 = add %tmp.42 %tmp.45;
+        %tmp.47 = lgetv %y0.4;
+        symbol [ y0 %tmp.47 27 46 48 ];
+        %tmp.48 = lgetv %r.5;
+        symbol [ r %tmp.48 27 51 52 ];
+        %tmp.49 = lgetv %sq.1;
+        symbol [ sq %tmp.49 27 55 57 ];
+        %tmp.50 = mul %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.47 %tmp.50;
+        %tmp.52 = lgetv %sq.1;
+        symbol [ sq %tmp.52 27 59 61 ];
+        %tmp.53 = lgetv %sq.1;
+        symbol [ sq %tmp.53 27 63 65 ];
+        invoke %tmp.40 %tmp.41(%tmp.46, %tmp.51, %tmp.52, %tmp.53);
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_40_28_12_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 24 ]
+        %tmp.56 = lgetv %c.6;
+        symbol [ c %tmp.56 24 35 36 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %c.6 %tmp.57;
+        symbol [ c %c.6 24 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_test;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_24_12_28_12_for_end:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_36_29_8_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 23 ]
+        %tmp.60 = lgetv %r.5;
+        symbol [ r %tmp.60 23 31 32 ];
+        %tmp.61 = add %tmp.60 1;
+        lputv %r.5 %tmp.61;
+        symbol [ r %r.5 23 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_test;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_23_8_29_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 31 8 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 31 8 10 ];
+        symbol [ setColor %tmp.63 31 11 19 ];
+        %tmp.63 = getv function %tmp.62 :setColor;
+        %tmp.64 = 0x4A1808;
+        symbol [ Graphics %tmp.65 31 30 38 ];
+        %tmp.65 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.66 31 39 56 ];
+        %tmp.66 = getv %tmp.65 :COLOR_TRANSPARENT;
+        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.66);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 32 8 ]
+        %tmp.67 = lgetv %dc;
+        symbol [ dc %tmp.67 32 8 10 ];
+        symbol [ fillCircle %tmp.68 32 11 21 ];
+        %tmp.68 = getv function %tmp.67 :fillCircle;
+        %tmp.69 = lgetv %x0.3;
+        symbol [ x0 %tmp.69 32 22 24 ];
+        %tmp.70 = lgetv %sq.1;
+        symbol [ sq %tmp.70 32 27 29 ];
+        %tmp.71 = 2;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = add %tmp.69 %tmp.72;
+        %tmp.74 = lgetv %y0.4;
+        symbol [ y0 %tmp.74 32 35 37 ];
+        %tmp.75 = 3;
+        %tmp.76 = lgetv %sq.1;
+        symbol [ sq %tmp.76 32 44 46 ];
+        %tmp.77 = mul %tmp.75 %tmp.76;
+        %tmp.78 = add %tmp.74 %tmp.77;
+        %tmp.79 = lgetv %sq.1;
+        symbol [ sq %tmp.79 32 49 51 ];
+        %tmp.80 = 2;
+        %tmp.81 = div %tmp.79 %tmp.80;
+        %tmp.82 = add %tmp.78 %tmp.81;
+        %tmp.83 = lgetv %sq.1;
+        symbol [ sq %tmp.83 32 57 59 ];
+        %tmp.84 = 2;
+        %tmp.85 = div %tmp.83 %tmp.84;
+        invoke %tmp.67 %tmp.68(%tmp.73, %tmp.82, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 33 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 33 8 10 ];
+        symbol [ setColor %tmp.87 33 11 19 ];
+        %tmp.87 = getv function %tmp.86 :setColor;
+        %tmp.88 = 0xF8F0D0;
+        symbol [ Graphics %tmp.89 33 30 38 ];
+        %tmp.89 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.90 33 39 56 ];
+        %tmp.90 = getv %tmp.89 :COLOR_TRANSPARENT;
+        invoke %tmp.86 %tmp.87(%tmp.88, %tmp.90);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 34 8 ]
+        %tmp.91 = lgetv %dc;
+        symbol [ dc %tmp.91 34 8 10 ];
+        symbol [ fillCircle %tmp.92 34 11 21 ];
+        %tmp.92 = getv function %tmp.91 :fillCircle;
+        %tmp.93 = lgetv %x0.3;
+        symbol [ x0 %tmp.93 34 22 24 ];
+        %tmp.94 = 2;
+        %tmp.95 = lgetv %sq.1;
+        symbol [ sq %tmp.95 34 31 33 ];
+        %tmp.96 = mul %tmp.94 %tmp.95;
+        %tmp.97 = add %tmp.93 %tmp.96;
+        %tmp.98 = lgetv %sq.1;
+        symbol [ sq %tmp.98 34 36 38 ];
+        %tmp.99 = 2;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        %tmp.101 = add %tmp.97 %tmp.100;
+        %tmp.102 = lgetv %y0.4;
+        symbol [ y0 %tmp.102 34 44 46 ];
+        %tmp.103 = lgetv %sq.1;
+        symbol [ sq %tmp.103 34 49 51 ];
+        %tmp.104 = 2;
+        %tmp.105 = div %tmp.103 %tmp.104;
+        %tmp.106 = add %tmp.102 %tmp.105;
+        %tmp.107 = lgetv %sq.1;
+        symbol [ sq %tmp.107 34 57 59 ];
+        %tmp.108 = 2;
+        %tmp.109 = div %tmp.107 %tmp.108;
+        invoke %tmp.91 %tmp.92(%tmp.101, %tmp.106, %tmp.109);
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_18_47_35_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 38; @symbol_functiondef = [lbVariant,38,13,22]; @symbol_return<0> = [Lang,38,28,32]; @symbol_return<1> = [String,38,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_38_40_45_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_38_40_45_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_38_40_45_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 39 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "medium";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 39 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 40 8 ]
+        try @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_beginTry @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_endTry @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_catch @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_beginTry:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_12_43_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 41 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_12_43_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_12_43_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 41 16 17 ];
+        symbol [ Application %tmp.11 41 20 31 ];
+        %tmp.11 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.12 41 32 39 ];
+        %tmp.12 = getv %tmp.11 :Storage;
+        symbol [ getValue %tmp.13 41 40 48 ];
+        %tmp.13 = getv function %tmp.12 :getValue;
+        %tmp.14 = "checkers_diff";
+        %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+        lputv %v.2 %tmp.15;
+        symbol [ v %v.2 41 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 42 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_16_42_58_begin:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_16_42_49_begin:
+        %tmp.16 = lgetv %v.2;
+        symbol [ v %tmp.16 42 16 17 ];
+        symbol [ Lang %tmp.17 42 29 33 ];
+        %tmp.17 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.18 42 34 40 ];
+        %tmp.18 = getv %tmp.17 :Number;
+        %tmp.19 = isa %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_44_42_49_true:
+        %tmp.20 = lgetv %v.2;
+        symbol [ v %tmp.20 42 44 45 ];
+        %tmp.21 = as %tmp.20 { (Lang.Number) };
+        %tmp.22 = 0;
+        %tmp.23 = gte %tmp.21 %tmp.22;
+        push %tmp.23;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_44_42_49_end:
+        %tmp.24 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_16_42_49_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_44_42_49_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_44_42_49_end];
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_54_42_58_true:
+        %tmp.25 = lgetv %v.2;
+        symbol [ v %tmp.25 42 54 55 ];
+        %tmp.26 = as %tmp.25 { (Lang.Number) };
+        %tmp.27 = 3;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_54_42_58_end:
+        %tmp.29 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_16_42_58_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_54_42_58_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_54_42_58_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_61_42_80_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 42 63 ]
+        %tmp.30 = lgetv %names.1;
+        symbol [ names %tmp.30 42 70 75 ];
+        %tmp.31 = lgetv %v.2;
+        symbol [ v %tmp.31 42 76 77 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        %tmp.33 = agetv %tmp.30 %tmp.32;
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_61_42_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_42_12_42_80_if_end:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_12_43_8_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_catch:
+        %tmp.34 = exception;
+        push %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 43 10 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_catch" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_43_10_43_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 43 17 18 ];
+        %tmp.35 = dup %tmp.34;
+        lputv %e.3 %tmp.35;
+        symbol [ e %e.3 43 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_43_10_43_21_end:
+        try @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_catch @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_43_10_43_21_end @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_43_10_43_21_end @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally;
+        throw %tmp.34;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_40_8_43_21_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 44 8 ]
+        %tmp.36 = "medium";
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_38_40_45_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 47; @symbol_functiondef = [footerText,47,13,23]; @symbol_return<0> = [Lang,47,29,33]; @symbol_return<1> = [String,47,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_47_49_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 48 8 ]
+        try @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_beginTry @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_endTry @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_catch @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_beginTry:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_12_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 49 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_12_51_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_12_51_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 49 16 17 ];
+        symbol [ Application %tmp.1 49 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 49 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 49 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "checkers_streak";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 49 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 50 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_16_50_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 50 16 17 ];
+        symbol [ Lang %tmp.7 50 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 50 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_44_50_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 50 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_44_50_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_16_50_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_44_50_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_44_50_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_51_50_88_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 50 53 ]
+        %tmp.15 = "STREAK ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 50 72 73 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 50 74 80 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_51_50_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_50_12_50_88_if_end:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_12_51_8_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 51 10 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_catch" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_51_10_51_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 51 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 51 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_end;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_51_10_51_21_end:
+        try @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_catch @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_51_10_51_21_end @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_51_10_51_21_end @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_48_8_51_21_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 52 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_47_49_53_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 56; @symbol_functiondef = [buildCheckersMenu,56,9,26]; @symbol_return<0> = [Lang,56,32,36]; @symbol_return<1> = [Array,56,37,42]; ]
+function buildCheckersMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 57 4 ]
+    [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 57 8 11 ];
+    symbol [ MenuConfig %tmp.4 57 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 58 9 15 const ];
+    %tmp.8 = "checkers";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 59 9 15 const ];
+    %tmp.13 = "CHECKERS";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 60 9 13 const ];
+    %tmp.18 = 0xFF6633;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 61 9 11 const ];
+    %tmp.23 = 0x080808;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 62 9 15 const ];
+    %tmp.28 = 0x111111;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 63 9 15 const ];
+    %tmp.33 = 0xFF8833;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 64 9 16 const ];
+    %tmp.38 = "CHECKERS";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 65 9 14 const ];
+    symbol [ CheckersHooks %tmp.46 65 24 37 ];
+    %tmp.46 = getv ? :CheckersHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 66 9 16 const ];
+    %tmp.51 = newa 3;
+    symbol [ GmOption %tmp.55 67 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "checkers_color";
+    %tmp.57 = "Color";
+    %tmp.58 = newa 2;
+    %tmp.59 = "LIGHT";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "DARK";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = 0;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.64, %tmp.65);
+    %tmp.66 = dup %tmp.51;
+    %tmp.67 = aputv %tmp.66 0 %tmp.52;
+    symbol [ GmOption %tmp.71 68 16 24 ];
+    %tmp.71 = getv ? :GmOption;
+    %tmp.72 = "checkers_diff";
+    %tmp.73 = "Difficulty";
+    %tmp.74 = newa 3;
+    %tmp.75 = "EASY";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 0 %tmp.75;
+    %tmp.78 = "NORMAL";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 1 %tmp.78;
+    %tmp.81 = "HARD";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 2 %tmp.81;
+    %tmp.84 = 1;
+    %tmp.68 = newc %tmp.71 (%tmp.72, %tmp.73, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.67;
+    %tmp.86 = aputv %tmp.85 1 %tmp.68;
+    symbol [ GmOption %tmp.90 69 16 24 ];
+    %tmp.90 = getv ? :GmOption;
+    %tmp.91 = "checkers_mode";
+    %tmp.92 = "Mode";
+    %tmp.93 = newa 3;
+    %tmp.94 = "P vs AI";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 0 %tmp.94;
+    %tmp.97 = "P vs P";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 1 %tmp.97;
+    %tmp.100 = "AI vs AI";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 2 %tmp.100;
+    %tmp.103 = 0;
+    %tmp.87 = newc %tmp.90 (%tmp.91, %tmp.92, %tmp.102, %tmp.103);
+    %tmp.104 = dup %tmp.86;
+    %tmp.105 = aputv %tmp.104 2 %tmp.87;
+    %tmp.106 = dup %tmp.48;
+    %tmp.107 = aputv %tmp.106 %tmp.50 %tmp.105;
+    %tmp.1 = newc %tmp.4 (%tmp.107);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 57 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 72 4 ]
+    [ "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_start" "_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 72 8 9 ];
+    symbol [ GameMenuView %tmp.111 72 16 28 ];
+    %tmp.111 = getv ? :GameMenuView;
+    %tmp.112 = lgetv %cfg.1;
+    symbol [ cfg %tmp.112 72 29 32 ];
+    %tmp.108 = newc %tmp.111 (%tmp.112);
+    lputv %v.2 %tmp.108;
+    symbol [ v %v.2 72 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc" 73 4 ]
+    %tmp.113 = newa 2;
+    %tmp.114 = lgetv %v.2;
+    symbol [ v %tmp.114 73 12 13 ];
+    %tmp.115 = dup %tmp.113;
+    %tmp.116 = aputv %tmp.115 0 %tmp.114;
+    symbol [ GameMenuDelegate %tmp.120 73 19 35 ];
+    %tmp.120 = getv ? :GameMenuDelegate;
+    %tmp.121 = lgetv %v.2;
+    symbol [ v %tmp.121 73 36 37 ];
+    %tmp.117 = newc %tmp.120 (%tmp.121);
+    %tmp.122 = dup %tmp.116;
+    %tmp.123 = aputv %tmp.122 1 %tmp.117;
+    ret %tmp.123;
+_Users_kkorolczuk_work_garmin_checkers_source_CheckersMenu_mc_56_43_74_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/CheckersMenu.mc"; @line = 4; ]
+<init> {
+}

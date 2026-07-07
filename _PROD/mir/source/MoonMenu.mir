@@ -1,0 +1,767 @@
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 9; @symbol_classdef = [MoonHooks,9,6,15]; @symbol_extends<0> = [GameHooks,9,24,33]; ]
+class MoonHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiMoonView %tmp.4 13 20 35 ];
+        %tmp.4 = getv ? :BitochiMoonView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiMoonDelegate %tmp.11 14 32 51 ];
+        %tmp.11 = getv ? :BitochiMoonDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 52 53 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 56 63 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 64 74 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 20 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 20 8 10 ];
+        symbol [ setColor %tmp.2 20 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xFFFFFF;
+        symbol [ Graphics %tmp.4 20 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 20 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 21 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 21 8 10 ];
+        symbol [ fillRectangle %tmp.7 21 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 21 25 27 ];
+        %tmp.9 = 34;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 21 34 36 ];
+        %tmp.12 = 14;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 2;
+        %tmp.15 = 2;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 22 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 22 8 10 ];
+        symbol [ fillRectangle %tmp.17 22 11 24 ];
+        %tmp.17 = getv function %tmp.16 :fillRectangle;
+        %tmp.18 = lgetv %cx;
+        symbol [ cx %tmp.18 22 25 27 ];
+        %tmp.19 = 28;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %cy;
+        symbol [ cy %tmp.21 22 34 36 ];
+        %tmp.22 = 10;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = 2;
+        %tmp.25 = 2;
+        invoke %tmp.16 %tmp.17(%tmp.20, %tmp.23, %tmp.24, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 23 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 23 8 10 ];
+        symbol [ fillRectangle %tmp.27 23 11 24 ];
+        %tmp.27 = getv function %tmp.26 :fillRectangle;
+        %tmp.28 = lgetv %cx;
+        symbol [ cx %tmp.28 23 25 27 ];
+        %tmp.29 = 10;
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %cy;
+        symbol [ cy %tmp.31 23 34 36 ];
+        %tmp.32 = 16;
+        %tmp.33 = sub %tmp.31 %tmp.32;
+        %tmp.34 = 1;
+        %tmp.35 = 1;
+        invoke %tmp.26 %tmp.27(%tmp.30, %tmp.33, %tmp.34, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 24 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 24 8 10 ];
+        symbol [ fillRectangle %tmp.37 24 11 24 ];
+        %tmp.37 = getv function %tmp.36 :fillRectangle;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 24 25 27 ];
+        %tmp.39 = 12;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %cy;
+        symbol [ cy %tmp.41 24 34 36 ];
+        %tmp.42 = 2;
+        %tmp.43 = add %tmp.41 %tmp.42;
+        %tmp.44 = 1;
+        %tmp.45 = 1;
+        invoke %tmp.36 %tmp.37(%tmp.40, %tmp.43, %tmp.44, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 26 8 ]
+        %tmp.46 = lgetv %dc;
+        symbol [ dc %tmp.46 26 8 10 ];
+        symbol [ setColor %tmp.47 26 11 19 ];
+        %tmp.47 = getv function %tmp.46 :setColor;
+        %tmp.48 = 0x556655;
+        symbol [ Graphics %tmp.49 26 30 38 ];
+        %tmp.49 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.50 26 39 56 ];
+        %tmp.50 = getv %tmp.49 :COLOR_TRANSPARENT;
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 26 59 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 26 59 61 ];
+        symbol [ fillRectangle %tmp.52 26 62 75 ];
+        %tmp.52 = getv function %tmp.51 :fillRectangle;
+        %tmp.53 = lgetv %cx;
+        symbol [ cx %tmp.53 26 76 78 ];
+        %tmp.54 = 16;
+        %tmp.55 = sub %tmp.53 %tmp.54;
+        %tmp.56 = lgetv %cy;
+        symbol [ cy %tmp.56 26 85 87 ];
+        %tmp.57 = 14;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        %tmp.59 = 34;
+        %tmp.60 = 4;
+        invoke %tmp.51 %tmp.52(%tmp.55, %tmp.58, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 27 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 27 8 10 ];
+        symbol [ setColor %tmp.62 27 11 19 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = 0x88FF88;
+        symbol [ Graphics %tmp.64 27 30 38 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 27 39 56 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 27 59 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 27 59 61 ];
+        symbol [ drawLine %tmp.67 27 62 70 ];
+        %tmp.67 = getv function %tmp.66 :drawLine;
+        %tmp.68 = lgetv %cx;
+        symbol [ cx %tmp.68 27 71 73 ];
+        %tmp.69 = 16;
+        %tmp.70 = sub %tmp.68 %tmp.69;
+        %tmp.71 = lgetv %cy;
+        symbol [ cy %tmp.71 27 80 82 ];
+        %tmp.72 = 14;
+        %tmp.73 = add %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %cx;
+        symbol [ cx %tmp.74 27 89 91 ];
+        %tmp.75 = 18;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %cy;
+        symbol [ cy %tmp.77 27 98 100 ];
+        %tmp.78 = 14;
+        %tmp.79 = add %tmp.77 %tmp.78;
+        invoke %tmp.66 %tmp.67(%tmp.70, %tmp.73, %tmp.76, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 28 8 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 28 8 10 ];
+        symbol [ setColor %tmp.81 28 11 19 ];
+        %tmp.81 = getv function %tmp.80 :setColor;
+        %tmp.82 = 0xFFDD22;
+        symbol [ Graphics %tmp.83 28 30 38 ];
+        %tmp.83 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.84 28 39 56 ];
+        %tmp.84 = getv %tmp.83 :COLOR_TRANSPARENT;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 29 8 ]
+        %tmp.85 = lgetv %dc;
+        symbol [ dc %tmp.85 29 8 10 ];
+        symbol [ drawLine %tmp.86 29 11 19 ];
+        %tmp.86 = getv function %tmp.85 :drawLine;
+        %tmp.87 = lgetv %cx;
+        symbol [ cx %tmp.87 29 20 22 ];
+        %tmp.88 = 16;
+        %tmp.89 = sub %tmp.87 %tmp.88;
+        %tmp.90 = lgetv %cy;
+        symbol [ cy %tmp.90 29 29 31 ];
+        %tmp.91 = 8;
+        %tmp.92 = add %tmp.90 %tmp.91;
+        %tmp.93 = lgetv %cx;
+        symbol [ cx %tmp.93 29 37 39 ];
+        %tmp.94 = 16;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %cy;
+        symbol [ cy %tmp.96 29 46 48 ];
+        %tmp.97 = 14;
+        %tmp.98 = add %tmp.96 %tmp.97;
+        invoke %tmp.85 %tmp.86(%tmp.89, %tmp.92, %tmp.95, %tmp.98);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 30 8 ]
+        %tmp.99 = lgetv %dc;
+        symbol [ dc %tmp.99 30 8 10 ];
+        symbol [ drawLine %tmp.100 30 11 19 ];
+        %tmp.100 = getv function %tmp.99 :drawLine;
+        %tmp.101 = lgetv %cx;
+        symbol [ cx %tmp.101 30 20 22 ];
+        %tmp.102 = 18;
+        %tmp.103 = add %tmp.101 %tmp.102;
+        %tmp.104 = lgetv %cy;
+        symbol [ cy %tmp.104 30 29 31 ];
+        %tmp.105 = 8;
+        %tmp.106 = add %tmp.104 %tmp.105;
+        %tmp.107 = lgetv %cx;
+        symbol [ cx %tmp.107 30 37 39 ];
+        %tmp.108 = 18;
+        %tmp.109 = add %tmp.107 %tmp.108;
+        %tmp.110 = lgetv %cy;
+        symbol [ cy %tmp.110 30 46 48 ];
+        %tmp.111 = 14;
+        %tmp.112 = add %tmp.110 %tmp.111;
+        invoke %tmp.99 %tmp.100(%tmp.103, %tmp.106, %tmp.109, %tmp.112);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_stop" ]
+        %lx.1 = local;
+        symbol [ lx %lx.1 32 12 14 ];
+        %tmp.113 = lgetv %cx;
+        symbol [ cx %tmp.113 32 17 19 ];
+        lputv %lx.1 %tmp.113;
+        symbol [ lx %lx.1 32 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 32 21 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_stop" ]
+        %ly.2 = local;
+        symbol [ ly %ly.2 32 25 27 ];
+        %tmp.114 = lgetv %cy;
+        symbol [ cy %tmp.114 32 30 32 ];
+        %tmp.115 = 8;
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        lputv %ly.2 %tmp.116;
+        symbol [ ly %ly.2 32 25 27 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 33 8 ]
+        %tmp.117 = lgetv %dc;
+        symbol [ dc %tmp.117 33 8 10 ];
+        symbol [ setColor %tmp.118 33 11 19 ];
+        %tmp.118 = getv function %tmp.117 :setColor;
+        %tmp.119 = 0xCCDDEE;
+        symbol [ Graphics %tmp.120 33 30 38 ];
+        %tmp.120 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.121 33 39 56 ];
+        %tmp.121 = getv %tmp.120 :COLOR_TRANSPARENT;
+        invoke %tmp.117 %tmp.118(%tmp.119, %tmp.121);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 33 59 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 33 59 61 ];
+        symbol [ fillRectangle %tmp.123 33 62 75 ];
+        %tmp.123 = getv function %tmp.122 :fillRectangle;
+        %tmp.124 = lgetv %lx.1;
+        symbol [ lx %tmp.124 33 76 78 ];
+        %tmp.125 = 7;
+        %tmp.126 = sub %tmp.124 %tmp.125;
+        %tmp.127 = lgetv %ly.2;
+        symbol [ ly %tmp.127 33 84 86 ];
+        %tmp.128 = 14;
+        %tmp.129 = 8;
+        invoke %tmp.122 %tmp.123(%tmp.126, %tmp.127, %tmp.128, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 34 8 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 34 8 10 ];
+        symbol [ setColor %tmp.131 34 11 19 ];
+        %tmp.131 = getv function %tmp.130 :setColor;
+        %tmp.132 = 0x1144AA;
+        symbol [ Graphics %tmp.133 34 30 38 ];
+        %tmp.133 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.134 34 39 56 ];
+        %tmp.134 = getv %tmp.133 :COLOR_TRANSPARENT;
+        invoke %tmp.130 %tmp.131(%tmp.132, %tmp.134);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 34 59 ]
+        %tmp.135 = lgetv %dc;
+        symbol [ dc %tmp.135 34 59 61 ];
+        symbol [ fillRectangle %tmp.136 34 62 75 ];
+        %tmp.136 = getv function %tmp.135 :fillRectangle;
+        %tmp.137 = lgetv %lx.1;
+        symbol [ lx %tmp.137 34 76 78 ];
+        %tmp.138 = 3;
+        %tmp.139 = sub %tmp.137 %tmp.138;
+        %tmp.140 = lgetv %ly.2;
+        symbol [ ly %tmp.140 34 84 86 ];
+        %tmp.141 = 1;
+        %tmp.142 = add %tmp.140 %tmp.141;
+        %tmp.143 = 6;
+        %tmp.144 = 5;
+        invoke %tmp.135 %tmp.136(%tmp.139, %tmp.142, %tmp.143, %tmp.144);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 35 8 ]
+        %tmp.145 = lgetv %dc;
+        symbol [ dc %tmp.145 35 8 10 ];
+        symbol [ setColor %tmp.146 35 11 19 ];
+        %tmp.146 = getv function %tmp.145 :setColor;
+        %tmp.147 = 0xBBCCDD;
+        symbol [ Graphics %tmp.148 35 30 38 ];
+        %tmp.148 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.149 35 39 56 ];
+        %tmp.149 = getv %tmp.148 :COLOR_TRANSPARENT;
+        invoke %tmp.145 %tmp.146(%tmp.147, %tmp.149);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 36 8 ]
+        %tmp.150 = lgetv %dc;
+        symbol [ dc %tmp.150 36 8 10 ];
+        symbol [ drawLine %tmp.151 36 11 19 ];
+        %tmp.151 = getv function %tmp.150 :drawLine;
+        %tmp.152 = lgetv %lx.1;
+        symbol [ lx %tmp.152 36 20 22 ];
+        %tmp.153 = 5;
+        %tmp.154 = sub %tmp.152 %tmp.153;
+        %tmp.155 = lgetv %ly.2;
+        symbol [ ly %tmp.155 36 28 30 ];
+        %tmp.156 = 8;
+        %tmp.157 = add %tmp.155 %tmp.156;
+        %tmp.158 = lgetv %lx.1;
+        symbol [ lx %tmp.158 36 36 38 ];
+        %tmp.159 = 10;
+        %tmp.160 = sub %tmp.158 %tmp.159;
+        %tmp.161 = lgetv %ly.2;
+        symbol [ ly %tmp.161 36 45 47 ];
+        %tmp.162 = 14;
+        %tmp.163 = add %tmp.161 %tmp.162;
+        invoke %tmp.150 %tmp.151(%tmp.154, %tmp.157, %tmp.160, %tmp.163);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 37 8 ]
+        %tmp.164 = lgetv %dc;
+        symbol [ dc %tmp.164 37 8 10 ];
+        symbol [ drawLine %tmp.165 37 11 19 ];
+        %tmp.165 = getv function %tmp.164 :drawLine;
+        %tmp.166 = lgetv %lx.1;
+        symbol [ lx %tmp.166 37 20 22 ];
+        %tmp.167 = 5;
+        %tmp.168 = add %tmp.166 %tmp.167;
+        %tmp.169 = lgetv %ly.2;
+        symbol [ ly %tmp.169 37 28 30 ];
+        %tmp.170 = 8;
+        %tmp.171 = add %tmp.169 %tmp.170;
+        %tmp.172 = lgetv %lx.1;
+        symbol [ lx %tmp.172 37 36 38 ];
+        %tmp.173 = 10;
+        %tmp.174 = add %tmp.172 %tmp.173;
+        %tmp.175 = lgetv %ly.2;
+        symbol [ ly %tmp.175 37 45 47 ];
+        %tmp.176 = 14;
+        %tmp.177 = add %tmp.175 %tmp.176;
+        invoke %tmp.164 %tmp.165(%tmp.168, %tmp.171, %tmp.174, %tmp.177);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 38 8 ]
+        %tmp.178 = lgetv %dc;
+        symbol [ dc %tmp.178 38 8 10 ];
+        symbol [ setColor %tmp.179 38 11 19 ];
+        %tmp.179 = getv function %tmp.178 :setColor;
+        %tmp.180 = 0xFF6600;
+        symbol [ Graphics %tmp.181 38 30 38 ];
+        %tmp.181 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.182 38 39 56 ];
+        %tmp.182 = getv %tmp.181 :COLOR_TRANSPARENT;
+        invoke %tmp.178 %tmp.179(%tmp.180, %tmp.182);
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 39 8 ]
+        %tmp.183 = lgetv %dc;
+        symbol [ dc %tmp.183 39 8 10 ];
+        symbol [ fillPolygon %tmp.184 39 11 22 ];
+        %tmp.184 = getv function %tmp.183 :fillPolygon;
+        %tmp.185 = newa 3;
+        %tmp.186 = newa 2;
+        %tmp.187 = lgetv %lx.1;
+        symbol [ lx %tmp.187 39 25 27 ];
+        %tmp.188 = 3;
+        %tmp.189 = sub %tmp.187 %tmp.188;
+        %tmp.190 = dup %tmp.186;
+        %tmp.191 = aputv %tmp.190 0 %tmp.189;
+        %tmp.192 = lgetv %ly.2;
+        symbol [ ly %tmp.192 39 33 35 ];
+        %tmp.193 = 8;
+        %tmp.194 = add %tmp.192 %tmp.193;
+        %tmp.195 = dup %tmp.191;
+        %tmp.196 = aputv %tmp.195 1 %tmp.194;
+        %tmp.197 = dup %tmp.185;
+        %tmp.198 = aputv %tmp.197 0 %tmp.196;
+        %tmp.199 = newa 2;
+        %tmp.200 = lgetv %lx.1;
+        symbol [ lx %tmp.200 39 43 45 ];
+        %tmp.201 = 3;
+        %tmp.202 = add %tmp.200 %tmp.201;
+        %tmp.203 = dup %tmp.199;
+        %tmp.204 = aputv %tmp.203 0 %tmp.202;
+        %tmp.205 = lgetv %ly.2;
+        symbol [ ly %tmp.205 39 51 53 ];
+        %tmp.206 = 8;
+        %tmp.207 = add %tmp.205 %tmp.206;
+        %tmp.208 = dup %tmp.204;
+        %tmp.209 = aputv %tmp.208 1 %tmp.207;
+        %tmp.210 = dup %tmp.198;
+        %tmp.211 = aputv %tmp.210 1 %tmp.209;
+        %tmp.212 = newa 2;
+        %tmp.213 = lgetv %lx.1;
+        symbol [ lx %tmp.213 39 61 63 ];
+        %tmp.214 = dup %tmp.212;
+        %tmp.215 = aputv %tmp.214 0 %tmp.213;
+        %tmp.216 = lgetv %ly.2;
+        symbol [ ly %tmp.216 39 65 67 ];
+        %tmp.217 = 13;
+        %tmp.218 = add %tmp.216 %tmp.217;
+        %tmp.219 = dup %tmp.215;
+        %tmp.220 = aputv %tmp.219 1 %tmp.218;
+        %tmp.221 = dup %tmp.211;
+        %tmp.222 = aputv %tmp.221 2 %tmp.220;
+        invoke %tmp.183 %tmp.184(%tmp.222);
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_18_47_40_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 43; @symbol_functiondef = [lbVariant,43,13,22]; @symbol_return<0> = [Lang,43,28,32]; @symbol_return<1> = [String,43,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 44 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "normal";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 44 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 45 12 13 ];
+        %tmp.11 = 1;
+        lputv %d.2 %tmp.11;
+        symbol [ d %d.2 45 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 46 8 ]
+        try @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_beginTry @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_endTry @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_beginTry:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_12_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 47 12 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_12_49_8_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_12_49_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 47 16 17 ];
+        symbol [ Application %tmp.12 47 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 47 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 47 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "moon_diff";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 47 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 48 12 ]
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_stmt:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_16_48_59_begin:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_16_48_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 48 16 17 ];
+        symbol [ Lang %tmp.18 48 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 48 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_44_48_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 48 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_44_48_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_16_48_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_44_48_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_44_48_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_54_48_59_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 48 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = 2;
+        %tmp.29 = lte %tmp.27 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_54_48_59_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_16_48_59_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_54_48_59_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_54_48_59_end];
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_true:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_62_48_71_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 48 64 ]
+        %tmp.31 = lgetv %v.3;
+        symbol [ v %tmp.31 48 68 69 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        lputv %d.2 %tmp.32;
+        symbol [ d %d.2 48 64 65 ];
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_62_48_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_48_12_48_71_if_end:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_12_49_8_stop:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_catch:
+        %tmp.33 = exception;
+        push %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 49 10 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_catch" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_49_10_49_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 49 17 18 ];
+        %tmp.34 = dup %tmp.33;
+        lputv %e.4 %tmp.34;
+        symbol [ e %e.4 49 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_49_10_49_21_end:
+        try @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_catch @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally;
+        throw %tmp.33;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_46_8_49_21_end:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 50 8 ]
+        %tmp.35 = lgetv %names.1;
+        symbol [ names %tmp.35 50 15 20 ];
+        %tmp.36 = lgetv %d.2;
+        symbol [ d %tmp.36 50 21 22 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_43_40_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 53; @symbol_functiondef = [footerText,53,13,23]; @symbol_return<0> = [Lang,53,29,33]; @symbol_return<1> = [String,53,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_53_49_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 54 8 ]
+        try @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_beginTry @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_endTry @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_catch @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_beginTry:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_12_57_8_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 55 12 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_12_57_8_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_12_57_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 55 16 17 ];
+        symbol [ Application %tmp.1 55 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 55 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 55 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "moonBest";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 55 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 56 12 ]
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_stmt:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_16_56_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 56 16 17 ];
+        symbol [ Lang %tmp.7 56 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 56 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_44_56_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 56 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_44_56_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_16_56_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_44_56_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_44_56_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_true:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_51_56_89_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 56 53 ]
+        %tmp.15 = "BEST LV ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 56 73 74 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 56 75 81 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_51_56_89_stop:
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_56_12_56_89_if_end:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_12_57_8_stop:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 57 10 ]
+        [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_catch" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_57_10_57_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 57 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 57 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_end;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_57_10_57_21_end:
+        try @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_catch @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_57_10_57_21_end @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_57_10_57_21_end @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_54_8_57_21_end:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 58 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_53_49_59_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 62; @symbol_functiondef = [buildMoonMenu,62,9,22]; @symbol_return<0> = [Lang,62,28,32]; @symbol_return<1> = [Array,62,33,38]; ]
+function buildMoonMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start:
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 63 4 ]
+    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 63 8 11 ];
+    symbol [ MenuConfig %tmp.4 63 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 64 9 15 const ];
+    %tmp.8 = "moon";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 65 9 15 const ];
+    %tmp.13 = "MOON";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 66 9 15 const ];
+    %tmp.18 = "LANDER";
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 67 9 13 const ];
+    %tmp.23 = 0xFFDD22;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :col2;
+    symbol [ col2 %tmp.27 68 9 13 const ];
+    %tmp.28 = 0x88CCEE;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :bg;
+    symbol [ bg %tmp.32 69 9 11 const ];
+    %tmp.33 = 0x000814;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :circle;
+    symbol [ circle %tmp.37 70 9 15 const ];
+    %tmp.38 = 0x030A14;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :accent;
+    symbol [ accent %tmp.42 71 9 15 const ];
+    %tmp.43 = 0x4AFF8A;
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :lbTitle;
+    symbol [ lbTitle %tmp.47 72 9 16 const ];
+    %tmp.48 = "MOON LANDER";
+    %tmp.49 = dup %tmp.45;
+    %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
+    %tmp.52 = const :hooks;
+    symbol [ hooks %tmp.52 73 9 14 const ];
+    symbol [ MoonHooks %tmp.56 73 24 33 ];
+    %tmp.56 = getv ? :MoonHooks;
+    %tmp.53 = newc %tmp.56 ();
+    %tmp.57 = dup %tmp.50;
+    %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
+    %tmp.60 = const :options;
+    symbol [ options %tmp.60 74 9 16 const ];
+    %tmp.61 = newa 1;
+    symbol [ GmOption %tmp.65 75 16 24 ];
+    %tmp.65 = getv ? :GmOption;
+    %tmp.66 = "moon_diff";
+    %tmp.67 = "Difficulty";
+    %tmp.68 = newa 3;
+    %tmp.69 = "EASY";
+    %tmp.70 = dup %tmp.68;
+    %tmp.71 = aputv %tmp.70 0 %tmp.69;
+    %tmp.72 = "NORMAL";
+    %tmp.73 = dup %tmp.71;
+    %tmp.74 = aputv %tmp.73 1 %tmp.72;
+    %tmp.75 = "HARD";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 2 %tmp.75;
+    %tmp.78 = 1;
+    %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.77, %tmp.78);
+    %tmp.79 = dup %tmp.61;
+    %tmp.80 = aputv %tmp.79 0 %tmp.62;
+    %tmp.81 = dup %tmp.58;
+    %tmp.82 = aputv %tmp.81 %tmp.60 %tmp.80;
+    %tmp.1 = newc %tmp.4 (%tmp.82);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 63 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 78 4 ]
+    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 78 8 9 ];
+    symbol [ GameMenuView %tmp.86 78 16 28 ];
+    %tmp.86 = getv ? :GameMenuView;
+    %tmp.87 = lgetv %cfg.1;
+    symbol [ cfg %tmp.87 78 29 32 ];
+    %tmp.83 = newc %tmp.86 (%tmp.87);
+    lputv %v.2 %tmp.83;
+    symbol [ v %v.2 78 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 79 4 ]
+    %tmp.88 = newa 2;
+    %tmp.89 = lgetv %v.2;
+    symbol [ v %tmp.89 79 12 13 ];
+    %tmp.90 = dup %tmp.88;
+    %tmp.91 = aputv %tmp.90 0 %tmp.89;
+    symbol [ GameMenuDelegate %tmp.95 79 19 35 ];
+    %tmp.95 = getv ? :GameMenuDelegate;
+    %tmp.96 = lgetv %v.2;
+    symbol [ v %tmp.96 79 36 37 ];
+    %tmp.92 = newc %tmp.95 (%tmp.96);
+    %tmp.97 = dup %tmp.91;
+    %tmp.98 = aputv %tmp.97 1 %tmp.92;
+    ret %tmp.98;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 4; ]
+<init> {
+}

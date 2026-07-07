@@ -739,30 +739,21 @@ class BitochiBricksView extends WatchUi.View {
 
     hidden function drawWin(dc) {
         dc.setColor(0x081420, 0x081420); dc.clear();
-        dc.setColor((_resultTick % 6 < 3) ? 0x44FF88 : 0x22CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_LARGE, "CLEARED!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_MEDIUM, "Level " + (_level - 1), Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_SMALL, _score + " pts", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_resultTick > 22) {
-            dc.setColor((_resultTick % 8 < 4) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 78 / 100, Graphics.FONT_XTINY, "Tap for level " + _level, Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var lines = [
+            ["Level " + (_level - 1), 0xFFCC44],
+            [_score + " pts", 0xAABBCC]
+        ];
+        var footer = (_resultTick > 22) ? "Tap for level " + _level : "";
+        GameOverCard.draw(dc, _w, _h, "CLEARED!", 0x44FF88, lines, footer, 0x44FF88);
     }
 
     hidden function drawOver(dc) {
         dc.setColor(0x10080A, 0x10080A); dc.clear();
-        dc.setColor((_resultTick % 6 < 3) ? 0xFF3333 : 0xCC1111, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_LARGE, "GAME", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 36 / 100, Graphics.FONT_LARGE, "OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_SMALL, _score + " pts", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_resultTick > 22) {
-            dc.setColor((_resultTick % 8 < 4) ? 0xFF8844 : 0xDD6622, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var lines = [
+            [_score + " pts", 0xFFCC44],
+            ["Best: " + _bestScore, 0x556677]
+        ];
+        var footer = (_resultTick > 22) ? "Tap to retry" : "";
+        GameOverCard.draw(dc, _w, _h, "GAME OVER", 0xFF3333, lines, footer, 0xFF3333);
     }
 }

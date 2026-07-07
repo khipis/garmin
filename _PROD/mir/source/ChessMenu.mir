@@ -1,0 +1,732 @@
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 9; @symbol_classdef = [ChessHooks,9,6,16]; @symbol_extends<0> = [GameHooks,9,25,34]; ]
+class ChessHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiChessView %tmp.4 13 20 36 ];
+        %tmp.4 = getv ? :BitochiChessView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiChessDelegate %tmp.11 14 32 52 ];
+        %tmp.11 = getv ? :BitochiChessDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 53 54 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 57 64 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 65 75 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 19; @symbol_functiondef = [drawArt,19,13,20]; @symbol_param<0> = [dc,19,21,23]; @symbol_param<1> = [cx,19,25,27]; @symbol_param<2> = [cy,19,29,31]; @symbol_param<3> = [w,19,33,34]; @symbol_param<4> = [h,19,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 20 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %sq.1 = local;
+        symbol [ sq %sq.1 20 12 14 ];
+        %tmp.1 = 7;
+        lputv %sq.1 %tmp.1;
+        symbol [ sq %sq.1 20 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 21 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %n.2 = local;
+        symbol [ n %n.2 21 12 13 ];
+        %tmp.2 = 4;
+        lputv %n.2 %tmp.2;
+        symbol [ n %n.2 21 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 22 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %x0.3 = local;
+        symbol [ x0 %x0.3 22 12 14 ];
+        %tmp.3 = lgetv %cx;
+        symbol [ cx %tmp.3 22 17 19 ];
+        %tmp.4 = lgetv %n.2;
+        symbol [ n %tmp.4 22 23 24 ];
+        %tmp.5 = lgetv %sq.1;
+        symbol [ sq %tmp.5 22 27 29 ];
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = 2;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        %tmp.9 = sub %tmp.3 %tmp.8;
+        lputv %x0.3 %tmp.9;
+        symbol [ x0 %x0.3 22 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 23 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %y0.4 = local;
+        symbol [ y0 %y0.4 23 12 14 ];
+        %tmp.10 = lgetv %cy;
+        symbol [ cy %tmp.10 23 17 19 ];
+        %tmp.11 = lgetv %n.2;
+        symbol [ n %tmp.11 23 23 24 ];
+        %tmp.12 = lgetv %sq.1;
+        symbol [ sq %tmp.12 23 27 29 ];
+        %tmp.13 = mul %tmp.11 %tmp.12;
+        %tmp.14 = 2;
+        %tmp.15 = div %tmp.13 %tmp.14;
+        %tmp.16 = sub %tmp.10 %tmp.15;
+        lputv %y0.4 %tmp.16;
+        symbol [ y0 %y0.4 23 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 24 8 ]
+        for @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_test @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_incr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_begin" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_end" ]
+        %r.5 = local;
+        symbol [ r %r.5 24 17 18 ];
+        %tmp.17 = 0;
+        lputv %r.5 %tmp.17;
+        symbol [ r %r.5 24 17 18 ];
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_test:
+        %tmp.18 = lgetv %r.5;
+        symbol [ r %tmp.18 24 24 25 ];
+        %tmp.19 = lgetv %n.2;
+        symbol [ n %tmp.19 24 28 29 ];
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_begin:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_36_30_8_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 25 12 ]
+        for @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_test @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_incr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_begin" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_end" ]
+        %c.6 = local;
+        symbol [ c %c.6 25 21 22 ];
+        %tmp.21 = 0;
+        lputv %c.6 %tmp.21;
+        symbol [ c %c.6 25 21 22 ];
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_test:
+        %tmp.22 = lgetv %c.6;
+        symbol [ c %tmp.22 25 28 29 ];
+        %tmp.23 = lgetv %n.2;
+        symbol [ n %tmp.23 25 32 33 ];
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_begin:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_40_29_12_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 26 16 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_40_29_12_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_40_29_12_stop" ]
+        %dark.7 = local;
+        symbol [ dark %dark.7 26 20 24 ];
+        %tmp.25 = lgetv %r.5;
+        symbol [ r %tmp.25 26 29 30 ];
+        %tmp.26 = lgetv %c.6;
+        symbol [ c %tmp.26 26 33 34 ];
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = 2;
+        %tmp.29 = mod %tmp.27 %tmp.28;
+        %tmp.30 = 1;
+        %tmp.31 = eq %tmp.29 %tmp.30;
+        lputv %dark.7 %tmp.31;
+        symbol [ dark %dark.7 26 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 27 16 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 27 16 18 ];
+        symbol [ setColor %tmp.33 27 19 27 ];
+        %tmp.33 = getv function %tmp.32 :setColor;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_begin:
+        %tmp.34 = lgetv %dark.7;
+        symbol [ dark %tmp.34 27 28 32 ];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_else_false;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_true:
+        %tmp.35 = 0x5A3A1E;
+        push %tmp.35;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_else_false:
+        %tmp.36 = 0xD9C29A;
+        push %tmp.36;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_end:
+        %tmp.37 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_else_false] [%tmp.37 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_27_28_27_46_end];
+        symbol [ Graphics %tmp.38 27 56 64 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.39 27 65 82 ];
+        %tmp.39 = getv %tmp.38 :COLOR_TRANSPARENT;
+        invoke %tmp.32 %tmp.33(%tmp.37, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 28 16 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 28 16 18 ];
+        symbol [ fillRectangle %tmp.41 28 19 32 ];
+        %tmp.41 = getv function %tmp.40 :fillRectangle;
+        %tmp.42 = lgetv %x0.3;
+        symbol [ x0 %tmp.42 28 33 35 ];
+        %tmp.43 = lgetv %c.6;
+        symbol [ c %tmp.43 28 38 39 ];
+        %tmp.44 = lgetv %sq.1;
+        symbol [ sq %tmp.44 28 42 44 ];
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        %tmp.46 = add %tmp.42 %tmp.45;
+        %tmp.47 = lgetv %y0.4;
+        symbol [ y0 %tmp.47 28 46 48 ];
+        %tmp.48 = lgetv %r.5;
+        symbol [ r %tmp.48 28 51 52 ];
+        %tmp.49 = lgetv %sq.1;
+        symbol [ sq %tmp.49 28 55 57 ];
+        %tmp.50 = mul %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.47 %tmp.50;
+        %tmp.52 = lgetv %sq.1;
+        symbol [ sq %tmp.52 28 59 61 ];
+        %tmp.53 = lgetv %sq.1;
+        symbol [ sq %tmp.53 28 63 65 ];
+        invoke %tmp.40 %tmp.41(%tmp.46, %tmp.51, %tmp.52, %tmp.53);
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_40_29_12_stop:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 25 ]
+        %tmp.56 = lgetv %c.6;
+        symbol [ c %tmp.56 25 35 36 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %c.6 %tmp.57;
+        symbol [ c %c.6 25 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_test;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_25_12_29_12_for_end:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_36_30_8_stop:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 24 ]
+        %tmp.60 = lgetv %r.5;
+        symbol [ r %tmp.60 24 31 32 ];
+        %tmp.61 = add %tmp.60 1;
+        lputv %r.5 %tmp.61;
+        symbol [ r %r.5 24 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_test;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_24_8_30_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %wx.8 = local;
+        symbol [ wx %wx.8 32 12 14 ];
+        %tmp.62 = lgetv %x0.3;
+        symbol [ x0 %tmp.62 32 17 19 ];
+        %tmp.63 = 2;
+        %tmp.64 = lgetv %sq.1;
+        symbol [ sq %tmp.64 32 26 28 ];
+        %tmp.65 = mul %tmp.63 %tmp.64;
+        %tmp.66 = add %tmp.62 %tmp.65;
+        %tmp.67 = lgetv %sq.1;
+        symbol [ sq %tmp.67 32 31 33 ];
+        %tmp.68 = 2;
+        %tmp.69 = div %tmp.67 %tmp.68;
+        %tmp.70 = add %tmp.66 %tmp.69;
+        lputv %wx.8 %tmp.70;
+        symbol [ wx %wx.8 32 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 33 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %wy.9 = local;
+        symbol [ wy %wy.9 33 12 14 ];
+        %tmp.71 = lgetv %y0.4;
+        symbol [ y0 %tmp.71 33 17 19 ];
+        %tmp.72 = lgetv %sq.1;
+        symbol [ sq %tmp.72 33 22 24 ];
+        %tmp.73 = 2;
+        %tmp.74 = div %tmp.72 %tmp.73;
+        %tmp.75 = add %tmp.71 %tmp.74;
+        lputv %wy.9 %tmp.75;
+        symbol [ wy %wy.9 33 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 34 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 34 8 10 ];
+        symbol [ setColor %tmp.77 34 11 19 ];
+        %tmp.77 = getv function %tmp.76 :setColor;
+        %tmp.78 = 0xFAF4E8;
+        symbol [ Graphics %tmp.79 34 30 38 ];
+        %tmp.79 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.80 34 39 56 ];
+        %tmp.80 = getv %tmp.79 :COLOR_TRANSPARENT;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.80);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 35 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 35 8 10 ];
+        symbol [ fillCircle %tmp.82 35 11 21 ];
+        %tmp.82 = getv function %tmp.81 :fillCircle;
+        %tmp.83 = lgetv %wx.8;
+        symbol [ wx %tmp.83 35 22 24 ];
+        %tmp.84 = lgetv %wy.9;
+        symbol [ wy %tmp.84 35 26 28 ];
+        %tmp.85 = 1;
+        %tmp.86 = sub %tmp.84 %tmp.85;
+        %tmp.87 = 2;
+        invoke %tmp.81 %tmp.82(%tmp.83, %tmp.86, %tmp.87);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 36 8 ]
+        %tmp.88 = lgetv %dc;
+        symbol [ dc %tmp.88 36 8 10 ];
+        symbol [ fillRectangle %tmp.89 36 11 24 ];
+        %tmp.89 = getv function %tmp.88 :fillRectangle;
+        %tmp.90 = lgetv %wx.8;
+        symbol [ wx %tmp.90 36 25 27 ];
+        %tmp.91 = 2;
+        %tmp.92 = sub %tmp.90 %tmp.91;
+        %tmp.93 = lgetv %wy.9;
+        symbol [ wy %tmp.93 36 33 35 ];
+        %tmp.94 = 1;
+        %tmp.95 = add %tmp.93 %tmp.94;
+        %tmp.96 = 4;
+        %tmp.97 = 3;
+        invoke %tmp.88 %tmp.89(%tmp.92, %tmp.95, %tmp.96, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %bx.10 = local;
+        symbol [ bx %bx.10 37 12 14 ];
+        %tmp.98 = lgetv %x0.3;
+        symbol [ x0 %tmp.98 37 17 19 ];
+        %tmp.99 = lgetv %sq.1;
+        symbol [ sq %tmp.99 37 22 24 ];
+        %tmp.100 = 2;
+        %tmp.101 = div %tmp.99 %tmp.100;
+        %tmp.102 = add %tmp.98 %tmp.101;
+        lputv %bx.10 %tmp.102;
+        symbol [ bx %bx.10 37 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop" ]
+        %by.11 = local;
+        symbol [ by %by.11 38 12 14 ];
+        %tmp.103 = lgetv %y0.4;
+        symbol [ y0 %tmp.103 38 17 19 ];
+        %tmp.104 = 3;
+        %tmp.105 = lgetv %sq.1;
+        symbol [ sq %tmp.105 38 26 28 ];
+        %tmp.106 = mul %tmp.104 %tmp.105;
+        %tmp.107 = add %tmp.103 %tmp.106;
+        %tmp.108 = lgetv %sq.1;
+        symbol [ sq %tmp.108 38 31 33 ];
+        %tmp.109 = 2;
+        %tmp.110 = div %tmp.108 %tmp.109;
+        %tmp.111 = add %tmp.107 %tmp.110;
+        lputv %by.11 %tmp.111;
+        symbol [ by %by.11 38 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 39 8 ]
+        %tmp.112 = lgetv %dc;
+        symbol [ dc %tmp.112 39 8 10 ];
+        symbol [ setColor %tmp.113 39 11 19 ];
+        %tmp.113 = getv function %tmp.112 :setColor;
+        %tmp.114 = 0x1A0A04;
+        symbol [ Graphics %tmp.115 39 30 38 ];
+        %tmp.115 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.116 39 39 56 ];
+        %tmp.116 = getv %tmp.115 :COLOR_TRANSPARENT;
+        invoke %tmp.112 %tmp.113(%tmp.114, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 40 8 ]
+        %tmp.117 = lgetv %dc;
+        symbol [ dc %tmp.117 40 8 10 ];
+        symbol [ fillCircle %tmp.118 40 11 21 ];
+        %tmp.118 = getv function %tmp.117 :fillCircle;
+        %tmp.119 = lgetv %bx.10;
+        symbol [ bx %tmp.119 40 22 24 ];
+        %tmp.120 = lgetv %by.11;
+        symbol [ by %tmp.120 40 26 28 ];
+        %tmp.121 = 1;
+        %tmp.122 = sub %tmp.120 %tmp.121;
+        %tmp.123 = 2;
+        invoke %tmp.117 %tmp.118(%tmp.119, %tmp.122, %tmp.123);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 41 8 ]
+        %tmp.124 = lgetv %dc;
+        symbol [ dc %tmp.124 41 8 10 ];
+        symbol [ fillRectangle %tmp.125 41 11 24 ];
+        %tmp.125 = getv function %tmp.124 :fillRectangle;
+        %tmp.126 = lgetv %bx.10;
+        symbol [ bx %tmp.126 41 25 27 ];
+        %tmp.127 = 2;
+        %tmp.128 = sub %tmp.126 %tmp.127;
+        %tmp.129 = lgetv %by.11;
+        symbol [ by %tmp.129 41 33 35 ];
+        %tmp.130 = 1;
+        %tmp.131 = add %tmp.129 %tmp.130;
+        %tmp.132 = 4;
+        %tmp.133 = 3;
+        invoke %tmp.124 %tmp.125(%tmp.128, %tmp.131, %tmp.132, %tmp.133);
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 42 8 ]
+        %tmp.134 = lgetv %dc;
+        symbol [ dc %tmp.134 42 8 10 ];
+        symbol [ drawLine %tmp.135 42 11 19 ];
+        %tmp.135 = getv function %tmp.134 :drawLine;
+        %tmp.136 = lgetv %bx.10;
+        symbol [ bx %tmp.136 42 20 22 ];
+        %tmp.137 = lgetv %by.11;
+        symbol [ by %tmp.137 42 24 26 ];
+        %tmp.138 = 5;
+        %tmp.139 = sub %tmp.137 %tmp.138;
+        %tmp.140 = lgetv %bx.10;
+        symbol [ bx %tmp.140 42 32 34 ];
+        %tmp.141 = lgetv %by.11;
+        symbol [ by %tmp.141 42 36 38 ];
+        %tmp.142 = 2;
+        %tmp.143 = sub %tmp.141 %tmp.142;
+        invoke %tmp.134 %tmp.135(%tmp.136, %tmp.139, %tmp.140, %tmp.143);
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_19_47_43_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 46; @symbol_functiondef = [lbVariant,46,13,22]; @symbol_return<0> = [Lang,46,28,32]; @symbol_return<1> = [String,46,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_46_40_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_46_40_53_4_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_46_40_53_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 47 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "easy";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "medium";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "hard";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 47 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 48 8 ]
+        try @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_beginTry @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_endTry @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_catch @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_beginTry:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_12_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 49 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_12_51_8_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_12_51_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 49 16 17 ];
+        symbol [ Application %tmp.11 49 20 31 ];
+        %tmp.11 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.12 49 32 39 ];
+        %tmp.12 = getv %tmp.11 :Storage;
+        symbol [ getValue %tmp.13 49 40 48 ];
+        %tmp.13 = getv function %tmp.12 :getValue;
+        %tmp.14 = "chess_diff";
+        %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+        lputv %v.2 %tmp.15;
+        symbol [ v %v.2 49 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 50 12 ]
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_stmt:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_16_50_58_begin:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_16_50_49_begin:
+        %tmp.16 = lgetv %v.2;
+        symbol [ v %tmp.16 50 16 17 ];
+        symbol [ Lang %tmp.17 50 29 33 ];
+        %tmp.17 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.18 50 34 40 ];
+        %tmp.18 = getv %tmp.17 :Number;
+        %tmp.19 = isa %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_44_50_49_true:
+        %tmp.20 = lgetv %v.2;
+        symbol [ v %tmp.20 50 44 45 ];
+        %tmp.21 = as %tmp.20 { (Lang.Number) };
+        %tmp.22 = 0;
+        %tmp.23 = gte %tmp.21 %tmp.22;
+        push %tmp.23;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_44_50_49_end:
+        %tmp.24 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_16_50_49_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_44_50_49_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_44_50_49_end];
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_54_50_58_true:
+        %tmp.25 = lgetv %v.2;
+        symbol [ v %tmp.25 50 54 55 ];
+        %tmp.26 = as %tmp.25 { (Lang.Number) };
+        %tmp.27 = 3;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_54_50_58_end:
+        %tmp.29 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_16_50_58_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_54_50_58_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_54_50_58_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_61_50_80_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 50 63 ]
+        %tmp.30 = lgetv %names.1;
+        symbol [ names %tmp.30 50 70 75 ];
+        %tmp.31 = lgetv %v.2;
+        symbol [ v %tmp.31 50 76 77 ];
+        %tmp.32 = as %tmp.31 { (Lang.Number) };
+        %tmp.33 = agetv %tmp.30 %tmp.32;
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_61_50_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_50_12_50_80_if_end:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_12_51_8_stop:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_catch:
+        %tmp.34 = exception;
+        push %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 51 10 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_catch" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_51_10_51_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 51 17 18 ];
+        %tmp.35 = dup %tmp.34;
+        lputv %e.3 %tmp.35;
+        symbol [ e %e.3 51 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_51_10_51_21_end:
+        try @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_catch @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_51_10_51_21_end @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_51_10_51_21_end @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally;
+        throw %tmp.34;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_48_8_51_21_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 52 8 ]
+        %tmp.36 = "medium";
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_46_40_53_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 55; @symbol_functiondef = [footerText,55,13,23]; @symbol_return<0> = [Lang,55,29,33]; @symbol_return<1> = [String,55,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_55_49_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 56 8 ]
+        try @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_beginTry @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_endTry @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_catch @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_beginTry:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_12_59_8_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 57 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_12_59_8_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_12_59_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 57 16 17 ];
+        symbol [ Application %tmp.1 57 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 57 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 57 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "chess_streak";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 57 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 58 12 ]
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_stmt:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_16_58_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 58 16 17 ];
+        symbol [ Lang %tmp.7 58 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 58 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_44_58_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 58 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_44_58_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_16_58_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_44_58_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_44_58_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_51_58_88_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 58 53 ]
+        %tmp.15 = "STREAK ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 58 72 73 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 58 74 80 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_51_58_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_58_12_58_88_if_end:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_12_59_8_stop:
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 59 10 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_catch" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_59_10_59_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 59 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 59 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_end;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_59_10_59_21_end:
+        try @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_catch @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_59_10_59_21_end @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_59_10_59_21_end @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_56_8_59_21_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 60 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_55_49_61_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 64; @symbol_functiondef = [buildChessMenu,64,9,23]; @symbol_return<0> = [Lang,64,29,33]; @symbol_return<1> = [Array,64,34,39]; ]
+function buildChessMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 65 4 ]
+    [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 65 8 11 ];
+    symbol [ MenuConfig %tmp.4 65 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 66 9 15 const ];
+    %tmp.8 = "chess";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 67 9 15 const ];
+    %tmp.13 = "CHESS";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 68 9 13 const ];
+    %tmp.18 = 0xF0C070;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 69 9 11 const ];
+    %tmp.23 = 0x0A0806;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 70 9 15 const ];
+    %tmp.28 = 0x161008;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 71 9 15 const ];
+    %tmp.33 = 0xF0C070;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 72 9 16 const ];
+    %tmp.38 = "CHESS";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 73 9 14 const ];
+    symbol [ ChessHooks %tmp.46 73 24 34 ];
+    %tmp.46 = getv ? :ChessHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 74 9 16 const ];
+    %tmp.51 = newa 3;
+    symbol [ GmOption %tmp.55 75 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "chess_color";
+    %tmp.57 = "Color";
+    %tmp.58 = newa 2;
+    %tmp.59 = "WHITE";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "BLACK";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = 0;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.64, %tmp.65);
+    %tmp.66 = dup %tmp.51;
+    %tmp.67 = aputv %tmp.66 0 %tmp.52;
+    symbol [ GmOption %tmp.71 76 16 24 ];
+    %tmp.71 = getv ? :GmOption;
+    %tmp.72 = "chess_diff";
+    %tmp.73 = "Difficulty";
+    %tmp.74 = newa 3;
+    %tmp.75 = "EASY";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 0 %tmp.75;
+    %tmp.78 = "NORMAL";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 1 %tmp.78;
+    %tmp.81 = "HARD";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 2 %tmp.81;
+    %tmp.84 = 1;
+    %tmp.68 = newc %tmp.71 (%tmp.72, %tmp.73, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.67;
+    %tmp.86 = aputv %tmp.85 1 %tmp.68;
+    symbol [ GmOption %tmp.90 77 16 24 ];
+    %tmp.90 = getv ? :GmOption;
+    %tmp.91 = "chess_mode";
+    %tmp.92 = "Mode";
+    %tmp.93 = newa 3;
+    %tmp.94 = "P vs AI";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 0 %tmp.94;
+    %tmp.97 = "P vs P";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 1 %tmp.97;
+    %tmp.100 = "AI vs AI";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 2 %tmp.100;
+    %tmp.103 = 0;
+    %tmp.87 = newc %tmp.90 (%tmp.91, %tmp.92, %tmp.102, %tmp.103);
+    %tmp.104 = dup %tmp.86;
+    %tmp.105 = aputv %tmp.104 2 %tmp.87;
+    %tmp.106 = dup %tmp.48;
+    %tmp.107 = aputv %tmp.106 %tmp.50 %tmp.105;
+    %tmp.1 = newc %tmp.4 (%tmp.107);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 65 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 80 4 ]
+    [ "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_start" "_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 80 8 9 ];
+    symbol [ GameMenuView %tmp.111 80 16 28 ];
+    %tmp.111 = getv ? :GameMenuView;
+    %tmp.112 = lgetv %cfg.1;
+    symbol [ cfg %tmp.112 80 29 32 ];
+    %tmp.108 = newc %tmp.111 (%tmp.112);
+    lputv %v.2 %tmp.108;
+    symbol [ v %v.2 80 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc" 81 4 ]
+    %tmp.113 = newa 2;
+    %tmp.114 = lgetv %v.2;
+    symbol [ v %tmp.114 81 12 13 ];
+    %tmp.115 = dup %tmp.113;
+    %tmp.116 = aputv %tmp.115 0 %tmp.114;
+    symbol [ GameMenuDelegate %tmp.120 81 19 35 ];
+    %tmp.120 = getv ? :GameMenuDelegate;
+    %tmp.121 = lgetv %v.2;
+    symbol [ v %tmp.121 81 36 37 ];
+    %tmp.117 = newc %tmp.120 (%tmp.121);
+    %tmp.122 = dup %tmp.116;
+    %tmp.123 = aputv %tmp.122 1 %tmp.117;
+    ret %tmp.123;
+_Users_kkorolczuk_work_garmin_chess_source_ChessMenu_mc_64_40_82_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/ChessMenu.mc"; @line = 4; ]
+<init> {
+}

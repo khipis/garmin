@@ -1,0 +1,637 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 13; @symbol_classdef = [PinballProHooks,13,6,21]; @symbol_extends<0> = [GameHooks,13,30,39]; ]
+class PinballProHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 18; @symbol_functiondef = [startGame,18,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 19 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 19 12 13 ];
+        symbol [ MainView %tmp.4 19 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 19 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 20 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 20 12 13 ];
+        symbol [ InputHandler %tmp.8 20 20 32 ];
+        %tmp.8 = getv ? :InputHandler;
+        %tmp.9 = lgetv %v.1;
+        symbol [ v %tmp.9 20 33 34 ];
+        %tmp.5 = newc %tmp.8 (%tmp.9);
+        lputv %d.2 %tmp.5;
+        symbol [ d %d.2 20 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 21 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 21 8 9 ];
+        symbol [ setDelegate %tmp.11 21 10 21 ];
+        %tmp.11 = getv function %tmp.10 :setDelegate;
+        %tmp.12 = lgetv %d.2;
+        symbol [ d %tmp.12 21 22 23 ];
+        invoke %tmp.10 %tmp.11(%tmp.12);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 22 8 ]
+        symbol [ WatchUi %tmp.13 22 8 15 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.14 22 16 24 ];
+        %tmp.14 = getv function %tmp.13 :pushView;
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 22 25 26 ];
+        %tmp.16 = lgetv %d.2;
+        symbol [ d %tmp.16 22 28 29 ];
+        symbol [ WatchUi %tmp.17 22 31 38 ];
+        %tmp.17 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.18 22 39 49 ];
+        %tmp.18 = getv %tmp.17 :SLIDE_LEFT;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.18);
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_18_33_23_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 26; @symbol_functiondef = [drawArt,26,13,20]; @symbol_param<0> = [dc,26,21,23]; @symbol_param<1> = [cx,26,25,27]; @symbol_param<2> = [cy,26,29,31]; @symbol_param<3> = [w,26,33,34]; @symbol_param<4> = [h,26,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_26_47_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 27 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 27 8 10 ];
+        symbol [ setColor %tmp.2 27 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xFF3344;
+        symbol [ Graphics %tmp.4 27 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 27 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 28 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 28 8 10 ];
+        symbol [ fillCircle %tmp.7 28 11 21 ];
+        %tmp.7 = getv function %tmp.6 :fillCircle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 28 22 24 ];
+        %tmp.9 = 24;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 28 31 33 ];
+        %tmp.12 = 6;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.11, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 29 8 ]
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 29 8 10 ];
+        symbol [ setColor %tmp.14 29 11 19 ];
+        %tmp.14 = getv function %tmp.13 :setColor;
+        %tmp.15 = 0xFFCC22;
+        symbol [ Graphics %tmp.16 29 30 38 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.17 29 39 56 ];
+        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 30 8 ]
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 30 8 10 ];
+        symbol [ fillCircle %tmp.19 30 11 21 ];
+        %tmp.19 = getv function %tmp.18 :fillCircle;
+        %tmp.20 = lgetv %cx;
+        symbol [ cx %tmp.20 30 22 24 ];
+        %tmp.21 = lgetv %cy;
+        symbol [ cy %tmp.21 30 26 28 ];
+        %tmp.22 = 6;
+        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 31 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 31 8 10 ];
+        symbol [ setColor %tmp.24 31 11 19 ];
+        %tmp.24 = getv function %tmp.23 :setColor;
+        %tmp.25 = 0x44FF66;
+        symbol [ Graphics %tmp.26 31 30 38 ];
+        %tmp.26 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.27 31 39 56 ];
+        %tmp.27 = getv %tmp.26 :COLOR_TRANSPARENT;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.27);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 32 8 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 32 8 10 ];
+        symbol [ fillCircle %tmp.29 32 11 21 ];
+        %tmp.29 = getv function %tmp.28 :fillCircle;
+        %tmp.30 = lgetv %cx;
+        symbol [ cx %tmp.30 32 22 24 ];
+        %tmp.31 = 24;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %cy;
+        symbol [ cy %tmp.33 32 31 33 ];
+        %tmp.34 = 6;
+        invoke %tmp.28 %tmp.29(%tmp.32, %tmp.33, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 33 8 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 33 8 10 ];
+        symbol [ setColor %tmp.36 33 11 19 ];
+        %tmp.36 = getv function %tmp.35 :setColor;
+        %tmp.37 = 0xCCCCDD;
+        symbol [ Graphics %tmp.38 33 30 38 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.39 33 39 56 ];
+        %tmp.39 = getv %tmp.38 :COLOR_TRANSPARENT;
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 34 8 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 34 8 10 ];
+        symbol [ fillCircle %tmp.41 34 11 21 ];
+        %tmp.41 = getv function %tmp.40 :fillCircle;
+        %tmp.42 = lgetv %cx;
+        symbol [ cx %tmp.42 34 22 24 ];
+        %tmp.43 = 12;
+        %tmp.44 = sub %tmp.42 %tmp.43;
+        %tmp.45 = lgetv %cy;
+        symbol [ cy %tmp.45 34 31 33 ];
+        %tmp.46 = 12;
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = 3;
+        invoke %tmp.40 %tmp.41(%tmp.44, %tmp.47, %tmp.48);
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_26_47_35_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 39; @symbol_functiondef = [lbVariant,39,13,22]; @symbol_return<0> = [Lang,39,28,32]; @symbol_return<1> = [String,39,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_39_40_41_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 40 8 ]
+        symbol [ TableLibrary %tmp.2 40 15 27 ];
+        %tmp.2 = getv ? :TableLibrary;
+        symbol [ NAMES %tmp.3 40 28 33 ];
+        %tmp.3 = getv %tmp.2 :NAMES;
+        %tmp.4 = self;
+        symbol [ _table %tmp.5 40 34 40 ];
+        %tmp.5 = getv function %tmp.4 :_table;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = agetv %tmp.3 %tmp.6;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_39_40_41_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 44; @symbol_functiondef = [footerText,44,13,23]; @symbol_return<0> = [Lang,44,29,33]; @symbol_return<1> = [String,44,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_44_49_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_12_48_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 46 16 17 ];
+        symbol [ Application %tmp.1 46 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 46 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 46 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "hi";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_stmt:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_16_47_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 47 16 17 ];
+        symbol [ Lang %tmp.7 47 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 47 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_44_47_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 47 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_44_47_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_16_47_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_44_47_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_44_47_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_51_47_79_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 47 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = self;
+        symbol [ _fmt %tmp.17 47 70 74 ];
+        %tmp.17 = getv function %tmp.16 :_fmt;
+        %tmp.18 = lgetv %v.1;
+        symbol [ v %tmp.18 47 75 76 ];
+        %tmp.19 = as %tmp.18 { (Lang.Number) };
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_51_47_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_47_12_47_79_if_end:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_48_10_48_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 48 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_45_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 49 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_44_49_50_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 52; @symbol_functiondef = [_table,52,20,26]; ]
+    protected
+    function _table() {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_52_29_58_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 53 8 ]
+        try @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_beginTry @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_endTry @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_catch @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_beginTry:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_12_56_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 54 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_12_56_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_12_56_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 54 16 17 ];
+        symbol [ Application %tmp.1 54 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 54 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 54 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "table";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 54 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 55 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_stmt:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_16_55_71_begin:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_16_55_49_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 55 16 17 ];
+        symbol [ Lang %tmp.7 55 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 55 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_44_55_49_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 55 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gte %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_44_55_49_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_16_55_49_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_44_55_49_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_44_55_49_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_54_55_71_true:
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 55 54 55 ];
+        %tmp.16 = as %tmp.15 { (Lang.Number) };
+        symbol [ TableLibrary %tmp.18 55 58 70 ];
+        %tmp.18 = getv ? :TableLibrary;
+        symbol [ COUNT %tmp.19 55 71 76 ];
+        %tmp.19 = getv %tmp.18 :COUNT;
+        %tmp.20 = lt %tmp.16 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_54_55_71_end:
+        %tmp.21 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_16_55_71_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_54_55_71_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_54_55_71_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_78_55_90_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 55 80 ]
+        %tmp.22 = lgetv %v.1;
+        symbol [ v %tmp.22 55 87 88 ];
+        %tmp.23 = as %tmp.22 { (Lang.Number) };
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_78_55_90_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_55_12_55_90_if_end:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_12_56_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_catch:
+        %tmp.24 = exception;
+        push %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 56 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_catch" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_56_10_56_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 56 17 18 ];
+        %tmp.25 = dup %tmp.24;
+        lputv %e.2 %tmp.25;
+        symbol [ e %e.2 56 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_56_10_56_21_end:
+        try @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_catch @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_56_10_56_21_end @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_56_10_56_21_end @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally;
+        throw %tmp.24;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_53_8_56_21_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 57 8 ]
+        %tmp.26 = 0;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_52_29_58_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 61; @symbol_functiondef = [_fmt,61,20,24]; @symbol_param<0> = [n,61,25,26]; ]
+    protected
+    function _fmt(n) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 62 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_stop" ]
+        %s.1 = local;
+        symbol [ s %s.1 62 12 13 ];
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 62 16 17 ];
+        symbol [ format %tmp.2 62 18 24 ];
+        %tmp.2 = getv function %tmp.1 :format;
+        %tmp.3 = "%d";
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %s.1 %tmp.4;
+        symbol [ s %s.1 62 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 63 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_stop" ]
+        %len.2 = local;
+        symbol [ len %len.2 63 12 15 ];
+        %tmp.5 = lgetv %s.1;
+        symbol [ s %tmp.5 63 18 19 ];
+        symbol [ length %tmp.6 63 20 26 ];
+        %tmp.6 = getv function %tmp.5 :length;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        lputv %len.2 %tmp.7;
+        symbol [ len %len.2 63 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 64 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_8_64_34_if_stmt:
+        %tmp.8 = lgetv %len.2;
+        symbol [ len %tmp.8 64 12 15 ];
+        %tmp.9 = 3;
+        %tmp.10 = lte %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_8_64_34_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_8_64_34_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_22_64_34_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 64 24 ]
+        %tmp.11 = lgetv %s.1;
+        symbol [ s %tmp.11 64 31 32 ];
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_22_64_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_8_64_34_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_64_8_64_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_stop" ]
+        %out.3 = local;
+        symbol [ out %out.3 65 12 15 ];
+        %tmp.12 = "";
+        lputv %out.3 %tmp.12;
+        symbol [ out %out.3 65 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 66 8 ]
+        for @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_test @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_incr @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_begin" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 66 17 18 ];
+        %tmp.13 = 0;
+        lputv %i.4 %tmp.13;
+        symbol [ i %i.4 66 17 18 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_test:
+        %tmp.14 = lgetv %i.4;
+        symbol [ i %tmp.14 66 24 25 ];
+        %tmp.15 = lgetv %len.2;
+        symbol [ len %tmp.15 66 28 31 ];
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_begin:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_38_69_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 67 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_stmt:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_16_67_42_begin:
+        %tmp.17 = lgetv %i.4;
+        symbol [ i %tmp.17 67 16 17 ];
+        %tmp.18 = 0;
+        %tmp.19 = gt %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_25_67_42_true:
+        %tmp.20 = lgetv %len.2;
+        symbol [ len %tmp.20 67 26 29 ];
+        %tmp.21 = lgetv %i.4;
+        symbol [ i %tmp.21 67 32 33 ];
+        %tmp.22 = sub %tmp.20 %tmp.21;
+        %tmp.23 = 3;
+        %tmp.24 = mod %tmp.22 %tmp.23;
+        %tmp.25 = 0;
+        %tmp.26 = eq %tmp.24 %tmp.25;
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_25_67_42_end:
+        %tmp.27 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_16_67_42_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_25_67_42_true] [%tmp.27 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_25_67_42_end];
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_45_67_64_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 67 47 ]
+        %tmp.28 = lgetv %out.3;
+        symbol [ out %tmp.28 67 53 56 ];
+        %tmp.29 = ",";
+        %tmp.30 = add %tmp.28 %tmp.29;
+        lputv %out.3 %tmp.30;
+        symbol [ out %out.3 67 47 50 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_45_67_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_67_12_67_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 68 12 ]
+        %tmp.31 = lgetv %out.3;
+        symbol [ out %tmp.31 68 18 21 ];
+        %tmp.32 = lgetv %s.1;
+        symbol [ s %tmp.32 68 24 25 ];
+        symbol [ substring %tmp.33 68 26 35 ];
+        %tmp.33 = getv function %tmp.32 :substring;
+        %tmp.34 = lgetv %i.4;
+        symbol [ i %tmp.34 68 36 37 ];
+        %tmp.35 = lgetv %i.4;
+        symbol [ i %tmp.35 68 39 40 ];
+        %tmp.36 = 1;
+        %tmp.37 = add %tmp.35 %tmp.36;
+        %tmp.38 = invoke %tmp.32 %tmp.33(%tmp.34, %tmp.37);
+        %tmp.39 = add %tmp.31 %tmp.38;
+        lputv %out.3 %tmp.39;
+        symbol [ out %out.3 68 12 15 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_38_69_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 66 ]
+        %tmp.42 = lgetv %i.4;
+        symbol [ i %tmp.42 66 33 34 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %i.4 %tmp.43;
+        symbol [ i %i.4 66 33 34 ];
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_test;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_66_8_69_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 70 8 ]
+        %tmp.44 = lgetv %out.3;
+        symbol [ out %tmp.44 70 15 18 ];
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_61_28_71_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 75; @symbol_functiondef = [buildPinballProMenu,75,9,28]; @symbol_return<0> = [Lang,75,34,38]; @symbol_return<1> = [Array,75,39,44]; ]
+function buildPinballProMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 76 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 76 8 11 ];
+    symbol [ MenuConfig %tmp.4 76 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 77 9 15 const ];
+    %tmp.8 = "pinballpro";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 78 9 15 const ];
+    %tmp.13 = "PINBALL";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 79 9 15 const ];
+    %tmp.18 = "PRO";
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 80 9 13 const ];
+    %tmp.23 = 0xFF3344;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :col2;
+    symbol [ col2 %tmp.27 81 9 13 const ];
+    %tmp.28 = 0x44CCFF;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :bg;
+    symbol [ bg %tmp.32 82 9 11 const ];
+    %tmp.33 = 0x080808;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :circle;
+    symbol [ circle %tmp.37 83 9 15 const ];
+    %tmp.38 = 0x101418;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :accent;
+    symbol [ accent %tmp.42 84 9 15 const ];
+    %tmp.43 = 0x44BB22;
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :lbTitle;
+    symbol [ lbTitle %tmp.47 85 9 16 const ];
+    %tmp.48 = "PINBALL PRO";
+    %tmp.49 = dup %tmp.45;
+    %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
+    %tmp.52 = const :hooks;
+    symbol [ hooks %tmp.52 86 9 14 const ];
+    symbol [ PinballProHooks %tmp.56 86 24 39 ];
+    %tmp.56 = getv ? :PinballProHooks;
+    %tmp.53 = newc %tmp.56 ();
+    %tmp.57 = dup %tmp.50;
+    %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
+    %tmp.60 = const :options;
+    symbol [ options %tmp.60 87 9 16 const ];
+    %tmp.61 = newa 1;
+    symbol [ GmOption %tmp.65 88 16 24 ];
+    %tmp.65 = getv ? :GmOption;
+    %tmp.66 = "table";
+    %tmp.67 = "Table";
+    %tmp.68 = newa 5;
+    %tmp.69 = "CLASSIC";
+    %tmp.70 = dup %tmp.68;
+    %tmp.71 = aputv %tmp.70 0 %tmp.69;
+    %tmp.72 = "NOVA";
+    %tmp.73 = dup %tmp.71;
+    %tmp.74 = aputv %tmp.73 1 %tmp.72;
+    %tmp.75 = "DERBY";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 2 %tmp.75;
+    %tmp.78 = "STINGER";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 3 %tmp.78;
+    %tmp.81 = "ECLIPSE";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 4 %tmp.81;
+    %tmp.84 = 0;
+    %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.61;
+    %tmp.86 = aputv %tmp.85 0 %tmp.62;
+    %tmp.87 = dup %tmp.58;
+    %tmp.88 = aputv %tmp.87 %tmp.60 %tmp.86;
+    %tmp.1 = newc %tmp.4 (%tmp.88);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 76 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 92 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 92 8 9 ];
+    symbol [ GameMenuView %tmp.92 92 16 28 ];
+    %tmp.92 = getv ? :GameMenuView;
+    %tmp.93 = lgetv %cfg.1;
+    symbol [ cfg %tmp.93 92 29 32 ];
+    %tmp.89 = newc %tmp.92 (%tmp.93);
+    lputv %v.2 %tmp.89;
+    symbol [ v %v.2 92 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc" 93 4 ]
+    %tmp.94 = newa 2;
+    %tmp.95 = lgetv %v.2;
+    symbol [ v %tmp.95 93 12 13 ];
+    %tmp.96 = dup %tmp.94;
+    %tmp.97 = aputv %tmp.96 0 %tmp.95;
+    symbol [ GameMenuDelegate %tmp.101 93 19 35 ];
+    %tmp.101 = getv ? :GameMenuDelegate;
+    %tmp.102 = lgetv %v.2;
+    symbol [ v %tmp.102 93 36 37 ];
+    %tmp.98 = newc %tmp.101 (%tmp.102);
+    %tmp.103 = dup %tmp.97;
+    %tmp.104 = aputv %tmp.103 1 %tmp.98;
+    ret %tmp.104;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PinballProMenu_mc_75_45_94_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PinballProMenu.mc"; @line = 8; ]
+<init> {
+}

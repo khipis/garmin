@@ -157,27 +157,14 @@ class MainView extends WatchUi.View {
 
     // ── Game over ───────────────────────────────────────────────────
     hidden function _drawOver(dc) {
-        var bw = _ctrl.screenW * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = _ctrl.screenH * 40 / 100; if (bh < 120) { bh = 120; }
-        var bx = (_ctrl.screenW - bw) / 2;
-        var by = (_ctrl.screenH - bh) / 2;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
         var playerWon = _ctrl.scoreP > _ctrl.scoreCpu;
-        dc.setColor(playerWon ? 0x00FF88 : 0xFF44AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        var cx = _ctrl.screenW / 2;
-        dc.setColor(playerWon ? 0x00FF88 : 0xFF44AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    playerWon ? "YOU WIN!" : "CPU WINS",
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 36, Graphics.FONT_MEDIUM,
-                    _ctrl.scoreP.format("%d") + " - " + _ctrl.scoreCpu.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        var titleColor = playerWon ? 0x00FF88 : 0xFF44AA;
+        var lines = [
+            [_ctrl.scoreP.format("%d") + " - " + _ctrl.scoreCpu.format("%d"), 0xFFFFFF]
+        ];
+        GameOverCard.draw(dc, _ctrl.screenW, _ctrl.screenH,
+            playerWon ? "YOU WIN!" : "CPU WINS", titleColor,
+            lines, "Tap for menu", titleColor);
     }
 
     // ── Input intents ───────────────────────────────────────────────

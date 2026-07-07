@@ -1280,47 +1280,20 @@ class DinosaurView extends WatchUi.View {
     }
 
     hidden function _drawOver(dc) {
-        var cx = _sw / 2;
-        var bw = _sw * 42 / 100;
-        var bh = _sh * 27 / 100;
-        if (bw < 122) { bw = 122; }
-        if (bh < 84)  { bh = 84; }
-        var bx = cx - bw / 2;
-        var by = _sh * 31 / 100;
-
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 8);
-        dc.setColor(0x2c2c2c, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 8);
-
-        dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 5, Graphics.FONT_XTINY,  "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 21, Graphics.FONT_XTINY, _score.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
-
+        var lines = [ [_score.format("%05d"), 0x888888] ];
         if (_flash > 0) {
-            dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 37, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0xFFCC00]);
         } else {
-            dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 37, Graphics.FONT_XTINY,
-                "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["best " + _hiScore.format("%05d"), 0x444444]);
         }
-
         if (_coinsTotal > 0 || _bestCombo > 0) {
-            dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 53, Graphics.FONT_XTINY,
-                "coins " + _coinsTotal + " · combo x" + _bestCombo, Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["coins " + _coinsTotal + " · combo x" + _bestCombo, 0xFFD54A]);
         }
-
-        // hint toward next phase
-        var hintY = by + 69;
         if (_phase == 0) {
-            dc.setColor(0x30B348, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, hintY, Graphics.FONT_XTINY, "reach 300 for x2 jump!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["reach 300 for x2 jump!", 0x30B348]);
         } else if (_phase == 1) {
-            dc.setColor(0x4488CC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, hintY, Graphics.FONT_XTINY, "reach 1500 for duck!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["reach 1500 for duck!", 0x4488CC]);
         }
+        GameOverCard.draw(dc, _sw, _sh, "GAME OVER", 0xCC3333, lines, "", 0x2c2c2c);
     }
 }

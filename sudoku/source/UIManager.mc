@@ -265,59 +265,20 @@ class UIManager {
     }
 
     function drawComplete(dc, ctrl) {
-        var w = dc.getWidth(); var h = dc.getHeight();
-        var bw = w * 60 / 100; if (bw < 140) { bw = 140; }
-        var bh = h * 32 / 100; if (bh < 96)  { bh = 96;  }
-        var bx = (w - bw) / 2;
-        var by = (h - bh) / 2;
-        dc.setColor(0x041204, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-
-        var cx = w / 2;
-        dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "SOLVED!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 28, Graphics.FONT_XTINY,
-                    "Time " + ctrl.fmtMs(ctrl.lastTimeMs),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Time " + ctrl.fmtMs(ctrl.lastTimeMs), 0xFFFFFF] ];
         if (ctrl.bestMs > 0 && ctrl.lastTimeMs == ctrl.bestMs) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 44, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0xFFCC44]);
         } else if (ctrl.bestMs > 0) {
-            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 44, Graphics.FONT_XTINY,
-                        "Best " + ctrl.fmtMs(ctrl.bestMs),
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + ctrl.fmtMs(ctrl.bestMs), 0x88AABB]);
         }
-        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Any key for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, dc.getWidth(), dc.getHeight(), "SOLVED!", 0x44FF66,
+                          lines, "Any key for menu", 0x44FF66);
     }
 
     function drawFailed(dc, ctrl) {
-        var w = dc.getWidth(); var h = dc.getHeight();
-        var bw = w * 60 / 100; if (bw < 140) { bw = 140; }
-        var bh = h * 28 / 100; if (bh < 86)  { bh = 86;  }
-        var bx = (w - bw) / 2;
-        var by = (h - bh) / 2;
-        dc.setColor(0x120404, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        var cx = w / 2;
-        dc.setColor(0xFF6666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "INVALID", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Check conflicts", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Any key to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Check conflicts", 0xCCCCCC] ];
+        GameOverCard.draw(dc, dc.getWidth(), dc.getHeight(), "INVALID", 0xFF6666,
+                          lines, "Any key to retry", 0xFF4444);
     }
 
     // ── Font picker — smaller font for the dense 9x9 grid ────────────

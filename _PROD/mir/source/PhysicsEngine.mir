@@ -1,1572 +1,401 @@
-[ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 24; @symbol_classdef = [PhysicsEngine,24,6,19]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Math,14,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; @symbol_classdef = [PhysicsEngine,16,6,19]; ]
 class PhysicsEngine {
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 25; @position = 8; @symbol_vardef = [bx,25,8,10]; ]
-    var bx;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 26; @position = 8; @symbol_vardef = [by,26,8,10]; ]
-    var by;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 27; @position = 8; @symbol_vardef = [vx,27,8,10]; ]
-    var vx;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 28; @position = 8; @symbol_vardef = [vy,28,8,10]; ]
-    var vy;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 29; @position = 8; @symbol_vardef = [ballR,29,8,13]; ]
-    var ballR;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 31; @position = 8; @symbol_vardef = [friction,31,8,16]; ]
-    var friction;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 32; @position = 8; @symbol_vardef = [maxSpeed,32,8,16]; ]
-    var maxSpeed;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 33; @position = 8; @symbol_vardef = [accelScale,33,8,18]; ]
-    var accelScale;
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 35; @symbol_functiondef = [initialize,35,13,23]; ]
-    function initialize() as Void {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_35_26_42_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 36 8 ]
-        %tmp.1 = 0.0;
-        symbol [ bx ? 36 8 10 ];
-        putv self :bx %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 36 18 ]
-        %tmp.2 = 0.0;
-        symbol [ by ? 36 18 20 ];
-        putv self :by %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 37 8 ]
-        %tmp.3 = 0.0;
-        symbol [ vx ? 37 8 10 ];
-        putv self :vx %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 37 18 ]
-        %tmp.4 = 0.0;
-        symbol [ vy ? 37 18 20 ];
-        putv self :vy %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 38 8 ]
-        %tmp.5 = 0.25;
-        symbol [ ballR ? 38 8 13 ];
-        putv self :ballR %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 39 8 ]
-        %tmp.6 = 0.87;
-        symbol [ friction ? 39 8 16 ];
-        putv self :friction %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 40 8 ]
-        %tmp.7 = 0.26;
-        symbol [ maxSpeed ? 40 8 16 ];
-        putv self :maxSpeed %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 41 8 ]
-        %tmp.8 = 0.00030;
-        symbol [ accelScale ? 41 8 18 ];
-        putv self :accelScale %tmp.8;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_35_26_42_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 44; @symbol_functiondef = [setBiome,44,13,21]; @symbol_param<0> = [biome,44,22,27]; ]
-    function setBiome(biome) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_44_29_56_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 45 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_stmt:
-        %tmp.1 = lgetv %biome;
-        symbol [ biome %tmp.1 45 12 17 ];
-        symbol [ GM_BIOME_ICE %tmp.3 45 21 33 ];
-        %tmp.3 = getv ? :GM_BIOME_ICE;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_35_47_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 46 12 ]
-        %tmp.5 = 0.97;
-        symbol [ friction ? 46 12 20 ];
-        putv self :friction %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 46 29 ]
-        %tmp.6 = 0.36;
-        symbol [ maxSpeed ? 46 29 37 ];
-        putv self :maxSpeed %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 46 46 ]
-        %tmp.7 = 0.00025;
-        symbol [ accelScale ? 46 46 56 ];
-        putv self :accelScale %tmp.7;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_35_47_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 47 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_stmt:
-        %tmp.8 = lgetv %biome;
-        symbol [ biome %tmp.8 47 19 24 ];
-        symbol [ GM_BIOME_TRAP %tmp.10 47 28 41 ];
-        %tmp.10 = getv ? :GM_BIOME_TRAP;
-        %tmp.11 = eq %tmp.8 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_43_49_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 48 12 ]
-        %tmp.12 = 0.86;
-        symbol [ friction ? 48 12 20 ];
-        putv self :friction %tmp.12;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 48 29 ]
-        %tmp.13 = 0.26;
-        symbol [ maxSpeed ? 48 29 37 ];
-        putv self :maxSpeed %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 48 46 ]
-        %tmp.14 = 0.00032;
-        symbol [ accelScale ? 48 46 56 ];
-        putv self :accelScale %tmp.14;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_43_49_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 49 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_stmt:
-        %tmp.15 = lgetv %biome;
-        symbol [ biome %tmp.15 49 19 24 ];
-        symbol [ GM_BIOME_SPEED %tmp.17 49 28 42 ];
-        %tmp.17 = getv ? :GM_BIOME_SPEED;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_44_51_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 50 12 ]
-        %tmp.19 = 0.82;
-        symbol [ friction ? 50 12 20 ];
-        putv self :friction %tmp.19;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 50 29 ]
-        %tmp.20 = 0.44;
-        symbol [ maxSpeed ? 50 29 37 ];
-        putv self :maxSpeed %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 50 46 ]
-        %tmp.21 = 0.00050;
-        symbol [ accelScale ? 50 46 56 ];
-        putv self :accelScale %tmp.21;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_44_51_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 51 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_stmt:
-        %tmp.22 = lgetv %biome;
-        symbol [ biome %tmp.22 51 19 24 ];
-        symbol [ GM_BIOME_CHAOS %tmp.24 51 28 42 ];
-        %tmp.24 = getv ? :GM_BIOME_CHAOS;
-        %tmp.25 = eq %tmp.22 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_else_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_44_53_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 52 12 ]
-        %tmp.26 = 0.89;
-        symbol [ friction ? 52 12 20 ];
-        putv self :friction %tmp.26;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 52 29 ]
-        %tmp.27 = 0.32;
-        symbol [ maxSpeed ? 52 29 37 ];
-        putv self :maxSpeed %tmp.27;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 52 46 ]
-        %tmp.28 = 0.00038;
-        symbol [ accelScale ? 52 46 56 ];
-        putv self :accelScale %tmp.28;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_44_53_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_else_false:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_53_15_55_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 54 12 ]
-        %tmp.29 = 0.87;
-        symbol [ friction ? 54 12 20 ];
-        putv self :friction %tmp.29;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 54 29 ]
-        %tmp.30 = 0.26;
-        symbol [ maxSpeed ? 54 29 37 ];
-        putv self :maxSpeed %tmp.30;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 54 46 ]
-        %tmp.31 = 0.00030;
-        symbol [ accelScale ? 54 46 56 ];
-        putv self :accelScale %tmp.31;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_53_15_55_8_stop:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_51_15_55_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_49_15_55_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_47_15_55_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_45_8_55_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_44_29_56_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 59; @symbol_functiondef = [place,59,13,18]; @symbol_param<0> = [cellCol,59,19,26]; @symbol_param<1> = [cellRow,59,28,35]; ]
-    function place(cellCol, cellRow) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_59_37_63_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 60 8 ]
-        %tmp.1 = lgetv %cellCol;
-        symbol [ cellCol %tmp.1 60 13 20 ];
-        symbol [ toFloat %tmp.2 60 21 28 ];
-        %tmp.2 = getv function %tmp.1 :toFloat;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        %tmp.4 = 0.5;
-        %tmp.5 = add %tmp.3 %tmp.4;
-        symbol [ bx ? 60 8 10 ];
-        putv self :bx %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 61 8 ]
-        %tmp.6 = lgetv %cellRow;
-        symbol [ cellRow %tmp.6 61 13 20 ];
-        symbol [ toFloat %tmp.7 61 21 28 ];
-        %tmp.7 = getv function %tmp.6 :toFloat;
-        %tmp.8 = invoke %tmp.6 %tmp.7();
-        %tmp.9 = 0.5;
-        %tmp.10 = add %tmp.8 %tmp.9;
-        symbol [ by ? 61 8 10 ];
-        putv self :by %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 62 8 ]
-        %tmp.11 = 0.0;
-        symbol [ vx ? 62 8 10 ];
-        putv self :vx %tmp.11;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 62 18 ]
-        %tmp.12 = 0.0;
-        symbol [ vy ? 62 18 20 ];
-        putv self :vy %tmp.12;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_59_37_63_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 68; @symbol_functiondef = [applyAccel,68,13,23]; @symbol_param<0> = [ax,68,24,26]; @symbol_param<1> = [ay,68,28,30]; ]
-    function applyAccel(ax, ay) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_68_32_75_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 69 8 ]
-        symbol [ vx %tmp.2 69 13 15 ];
-        %tmp.2 = getv ? :vx;
-        %tmp.3 = lgetv %ax;
-        symbol [ ax %tmp.3 69 18 20 ];
-        symbol [ accelScale %tmp.5 69 23 33 ];
-        %tmp.5 = getv ? :accelScale;
-        %tmp.6 = mul %tmp.3 %tmp.5;
-        %tmp.7 = add %tmp.2 %tmp.6;
-        symbol [ vx ? 69 8 10 ];
-        putv self :vx %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 70 8 ]
-        symbol [ vy %tmp.9 70 13 15 ];
-        %tmp.9 = getv ? :vy;
-        %tmp.10 = lgetv %ay;
-        symbol [ ay %tmp.10 70 18 20 ];
-        symbol [ accelScale %tmp.12 70 23 33 ];
-        %tmp.12 = getv ? :accelScale;
-        %tmp.13 = mul %tmp.10 %tmp.12;
-        %tmp.14 = sub %tmp.9 %tmp.13;
-        symbol [ vy ? 70 8 10 ];
-        putv self :vy %tmp.14;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 71 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_8_71_46_if_stmt:
-        symbol [ vx %tmp.16 71 12 14 ];
-        %tmp.16 = getv ? :vx;
-        symbol [ maxSpeed %tmp.18 71 18 26 ];
-        %tmp.18 = getv ? :maxSpeed;
-        %tmp.19 = gt %tmp.16 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_8_71_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_8_71_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_28_71_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 71 30 ]
-        symbol [ maxSpeed %tmp.21 71 36 44 ];
-        %tmp.21 = getv ? :maxSpeed;
-        symbol [ vx ? 71 30 32 ];
-        putv self :vx %tmp.21;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_28_71_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_8_71_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_71_8_71_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 72 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_8_72_46_if_stmt:
-        symbol [ vx %tmp.23 72 12 14 ];
-        %tmp.23 = getv ? :vx;
-        symbol [ maxSpeed %tmp.25 72 18 26 ];
-        %tmp.25 = getv ? :maxSpeed;
-        %tmp.26 = sub 0 %tmp.25;
-        %tmp.27 = lt %tmp.23 %tmp.26;
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_8_72_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_8_72_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_28_72_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 72 30 ]
-        symbol [ maxSpeed %tmp.29 72 36 44 ];
-        %tmp.29 = getv ? :maxSpeed;
-        %tmp.30 = sub 0 %tmp.29;
-        symbol [ vx ? 72 30 32 ];
-        putv self :vx %tmp.30;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_28_72_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_8_72_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_72_8_72_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 73 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_8_73_46_if_stmt:
-        symbol [ vy %tmp.32 73 12 14 ];
-        %tmp.32 = getv ? :vy;
-        symbol [ maxSpeed %tmp.34 73 18 26 ];
-        %tmp.34 = getv ? :maxSpeed;
-        %tmp.35 = gt %tmp.32 %tmp.34;
-        bf %tmp.35 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_8_73_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_8_73_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_28_73_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 73 30 ]
-        symbol [ maxSpeed %tmp.37 73 36 44 ];
-        %tmp.37 = getv ? :maxSpeed;
-        symbol [ vy ? 73 30 32 ];
-        putv self :vy %tmp.37;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_28_73_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_8_73_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_73_8_73_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 74 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_8_74_46_if_stmt:
-        symbol [ vy %tmp.39 74 12 14 ];
-        %tmp.39 = getv ? :vy;
-        symbol [ maxSpeed %tmp.41 74 18 26 ];
-        %tmp.41 = getv ? :maxSpeed;
-        %tmp.42 = sub 0 %tmp.41;
-        %tmp.43 = lt %tmp.39 %tmp.42;
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_8_74_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_8_74_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_28_74_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 74 30 ]
-        symbol [ maxSpeed %tmp.45 74 36 44 ];
-        %tmp.45 = getv ? :maxSpeed;
-        %tmp.46 = sub 0 %tmp.45;
-        symbol [ vy ? 74 30 32 ];
-        putv self :vy %tmp.46;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_28_74_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_8_74_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_74_8_74_46_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_68_32_75_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 78; @symbol_functiondef = [applyButtonAccel,78,13,29]; @symbol_param<0> = [ax,78,30,32]; @symbol_param<1> = [ay,78,34,36]; ]
-    function applyButtonAccel(ax, ay) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_78_38_85_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 79 8 ]
-        symbol [ vx %tmp.2 79 13 15 ];
-        %tmp.2 = getv ? :vx;
-        %tmp.3 = lgetv %ax;
-        symbol [ ax %tmp.3 79 18 20 ];
-        %tmp.4 = add %tmp.2 %tmp.3;
-        symbol [ vx ? 79 8 10 ];
-        putv self :vx %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 80 8 ]
-        symbol [ vy %tmp.6 80 13 15 ];
-        %tmp.6 = getv ? :vy;
-        %tmp.7 = lgetv %ay;
-        symbol [ ay %tmp.7 80 18 20 ];
-        %tmp.8 = add %tmp.6 %tmp.7;
-        symbol [ vy ? 80 8 10 ];
-        putv self :vy %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 81 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_8_81_46_if_stmt:
-        symbol [ vx %tmp.10 81 12 14 ];
-        %tmp.10 = getv ? :vx;
-        symbol [ maxSpeed %tmp.12 81 18 26 ];
-        %tmp.12 = getv ? :maxSpeed;
-        %tmp.13 = gt %tmp.10 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_8_81_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_8_81_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_28_81_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 81 30 ]
-        symbol [ maxSpeed %tmp.15 81 36 44 ];
-        %tmp.15 = getv ? :maxSpeed;
-        symbol [ vx ? 81 30 32 ];
-        putv self :vx %tmp.15;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_28_81_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_8_81_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_81_8_81_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 82 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_8_82_46_if_stmt:
-        symbol [ vx %tmp.17 82 12 14 ];
-        %tmp.17 = getv ? :vx;
-        symbol [ maxSpeed %tmp.19 82 18 26 ];
-        %tmp.19 = getv ? :maxSpeed;
-        %tmp.20 = sub 0 %tmp.19;
-        %tmp.21 = lt %tmp.17 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_8_82_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_8_82_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_28_82_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 82 30 ]
-        symbol [ maxSpeed %tmp.23 82 36 44 ];
-        %tmp.23 = getv ? :maxSpeed;
-        %tmp.24 = sub 0 %tmp.23;
-        symbol [ vx ? 82 30 32 ];
-        putv self :vx %tmp.24;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_28_82_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_8_82_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_82_8_82_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 83 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_8_83_46_if_stmt:
-        symbol [ vy %tmp.26 83 12 14 ];
-        %tmp.26 = getv ? :vy;
-        symbol [ maxSpeed %tmp.28 83 18 26 ];
-        %tmp.28 = getv ? :maxSpeed;
-        %tmp.29 = gt %tmp.26 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_8_83_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_8_83_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_28_83_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 83 30 ]
-        symbol [ maxSpeed %tmp.31 83 36 44 ];
-        %tmp.31 = getv ? :maxSpeed;
-        symbol [ vy ? 83 30 32 ];
-        putv self :vy %tmp.31;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_28_83_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_8_83_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_83_8_83_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_8_84_46_if_stmt:
-        symbol [ vy %tmp.33 84 12 14 ];
-        %tmp.33 = getv ? :vy;
-        symbol [ maxSpeed %tmp.35 84 18 26 ];
-        %tmp.35 = getv ? :maxSpeed;
-        %tmp.36 = sub 0 %tmp.35;
-        %tmp.37 = lt %tmp.33 %tmp.36;
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_8_84_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_8_84_46_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_28_84_46_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 84 30 ]
-        symbol [ maxSpeed %tmp.39 84 36 44 ];
-        %tmp.39 = getv ? :maxSpeed;
-        %tmp.40 = sub 0 %tmp.39;
-        symbol [ vy ? 84 30 32 ];
-        putv self :vy %tmp.40;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_28_84_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_8_84_46_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_84_8_84_46_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_78_38_85_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 88; @symbol_functiondef = [applyTile,88,13,22]; @symbol_param<0> = [extra,88,23,28]; ]
-    function applyTile(extra) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_88_30_99_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 89 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_stmt:
-        %tmp.1 = lgetv %extra;
-        symbol [ extra %tmp.1 89 12 17 ];
-        symbol [ GM_TILE_SLOW %tmp.3 89 21 33 ];
-        %tmp.3 = getv ? :GM_TILE_SLOW;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_35_91_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 90 12 ]
-        symbol [ vx %tmp.6 90 17 19 ];
-        %tmp.6 = getv ? :vx;
-        %tmp.7 = 0.5;
-        %tmp.8 = mul %tmp.6 %tmp.7;
-        symbol [ vx ? 90 12 14 ];
-        putv self :vx %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 90 27 ]
-        symbol [ vy %tmp.10 90 32 34 ];
-        %tmp.10 = getv ? :vy;
-        %tmp.11 = 0.5;
-        %tmp.12 = mul %tmp.10 %tmp.11;
-        symbol [ vy ? 90 27 29 ];
-        putv self :vy %tmp.12;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_35_91_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 91 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_15_98_8_if_stmt:
-        %tmp.13 = lgetv %extra;
-        symbol [ extra %tmp.13 91 19 24 ];
-        symbol [ GM_TILE_BOOST %tmp.15 91 28 41 ];
-        %tmp.15 = getv ? :GM_TILE_BOOST;
-        %tmp.16 = eq %tmp.13 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_15_98_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_15_98_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_43_98_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 92 12 ]
-        symbol [ vx %tmp.18 92 17 19 ];
-        %tmp.18 = getv ? :vx;
-        %tmp.19 = 1.4;
-        %tmp.20 = mul %tmp.18 %tmp.19;
-        symbol [ vx ? 92 12 14 ];
-        putv self :vx %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 92 27 ]
-        symbol [ vy %tmp.22 92 32 34 ];
-        %tmp.22 = getv ? :vy;
-        %tmp.23 = 1.4;
-        %tmp.24 = mul %tmp.22 %tmp.23;
-        symbol [ vy ? 92 27 29 ];
-        putv self :vy %tmp.24;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 93 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_43_98_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_43_98_8_stop" ]
-        %ms15.1 = local;
-        symbol [ ms15 %ms15.1 93 16 20 ];
-        symbol [ maxSpeed %tmp.26 93 23 31 ];
-        %tmp.26 = getv ? :maxSpeed;
-        %tmp.27 = 1.5;
-        %tmp.28 = mul %tmp.26 %tmp.27;
-        lputv %ms15.1 %tmp.28;
-        symbol [ ms15 %ms15.1 93 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 94 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_12_94_42_if_stmt:
-        symbol [ vx %tmp.30 94 16 18 ];
-        %tmp.30 = getv ? :vx;
-        %tmp.31 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.31 94 22 26 ];
-        %tmp.32 = gt %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_12_94_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_12_94_42_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_28_94_42_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 94 30 ]
-        %tmp.33 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.33 94 36 40 ];
-        symbol [ vx ? 94 30 32 ];
-        putv self :vx %tmp.33;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_28_94_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_12_94_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_94_12_94_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 95 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_12_95_42_if_stmt:
-        symbol [ vx %tmp.35 95 16 18 ];
-        %tmp.35 = getv ? :vx;
-        %tmp.36 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.36 95 22 26 ];
-        %tmp.37 = sub 0 %tmp.36;
-        %tmp.38 = lt %tmp.35 %tmp.37;
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_12_95_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_12_95_42_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_28_95_42_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 95 30 ]
-        %tmp.39 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.39 95 36 40 ];
-        %tmp.40 = sub 0 %tmp.39;
-        symbol [ vx ? 95 30 32 ];
-        putv self :vx %tmp.40;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_28_95_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_12_95_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_95_12_95_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 96 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_12_96_42_if_stmt:
-        symbol [ vy %tmp.42 96 16 18 ];
-        %tmp.42 = getv ? :vy;
-        %tmp.43 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.43 96 22 26 ];
-        %tmp.44 = gt %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_12_96_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_12_96_42_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_28_96_42_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 96 30 ]
-        %tmp.45 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.45 96 36 40 ];
-        symbol [ vy ? 96 30 32 ];
-        putv self :vy %tmp.45;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_28_96_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_12_96_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_96_12_96_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 97 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_12_97_42_if_stmt:
-        symbol [ vy %tmp.47 97 16 18 ];
-        %tmp.47 = getv ? :vy;
-        %tmp.48 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.48 97 22 26 ];
-        %tmp.49 = sub 0 %tmp.48;
-        %tmp.50 = lt %tmp.47 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_12_97_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_12_97_42_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_28_97_42_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 97 30 ]
-        %tmp.51 = lgetv %ms15.1;
-        symbol [ ms15 %tmp.51 97 36 40 ];
-        %tmp.52 = sub 0 %tmp.51;
-        symbol [ vy ? 97 30 32 ];
-        putv self :vy %tmp.52;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_28_97_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_12_97_42_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_97_12_97_42_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_43_98_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_15_98_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_91_15_98_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_89_8_98_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_88_30_99_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 102; @symbol_functiondef = [step,102,13,17]; @symbol_param<0> = [walls,102,18,23]; @symbol_param<1> = [n,102,25,26]; ]
-    function step(walls, n) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 103 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_stop" ]
-        %nbx.1 = local;
-        symbol [ nbx %nbx.1 103 12 15 ];
-        symbol [ bx %tmp.2 103 18 20 ];
-        %tmp.2 = getv ? :bx;
-        symbol [ vx %tmp.4 103 23 25 ];
-        %tmp.4 = getv ? :vx;
-        %tmp.5 = add %tmp.2 %tmp.4;
-        lputv %nbx.1 %tmp.5;
-        symbol [ nbx %nbx.1 103 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 104 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_stop" ]
-        %nby.2 = local;
-        symbol [ nby %nby.2 104 12 15 ];
-        symbol [ by %tmp.7 104 18 20 ];
-        %tmp.7 = getv ? :by;
-        symbol [ vy %tmp.9 104 23 25 ];
-        %tmp.9 = getv ? :vy;
-        %tmp.10 = add %tmp.7 %tmp.9;
-        lputv %nby.2 %tmp.10;
-        symbol [ nby %nby.2 104 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 106 8 ]
-        %tmp.11 = self;
-        symbol [ _resolveX %tmp.12 106 14 23 ];
-        %tmp.12 = getv function %tmp.11 :_resolveX;
-        %tmp.13 = lgetv %walls;
-        symbol [ walls %tmp.13 106 24 29 ];
-        %tmp.14 = lgetv %n;
-        symbol [ n %tmp.14 106 31 32 ];
-        %tmp.15 = lgetv %nbx.1;
-        symbol [ nbx %tmp.15 106 34 37 ];
-        %tmp.16 = lgetv %nby.2;
-        symbol [ nby %tmp.16 106 39 42 ];
-        %tmp.17 = invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14, %tmp.15, %tmp.16);
-        lputv %nbx.1 %tmp.17;
-        symbol [ nbx %nbx.1 106 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 107 8 ]
-        %tmp.18 = self;
-        symbol [ _resolveY %tmp.19 107 14 23 ];
-        %tmp.19 = getv function %tmp.18 :_resolveY;
-        %tmp.20 = lgetv %walls;
-        symbol [ walls %tmp.20 107 24 29 ];
-        %tmp.21 = lgetv %n;
-        symbol [ n %tmp.21 107 31 32 ];
-        %tmp.22 = lgetv %nbx.1;
-        symbol [ nbx %tmp.22 107 34 37 ];
-        %tmp.23 = lgetv %nby.2;
-        symbol [ nby %tmp.23 107 39 42 ];
-        %tmp.24 = invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22, %tmp.23);
-        lputv %nby.2 %tmp.24;
-        symbol [ nby %nby.2 107 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 111 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_stop" ]
-        %lo.3 = local;
-        symbol [ lo %lo.3 111 12 14 ];
-        symbol [ ballR %tmp.26 111 17 22 ];
-        %tmp.26 = getv ? :ballR;
-        %tmp.27 = 0.01;
-        %tmp.28 = add %tmp.26 %tmp.27;
-        lputv %lo.3 %tmp.28;
-        symbol [ lo %lo.3 111 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 112 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_stop" ]
-        %hi.4 = local;
-        symbol [ hi %hi.4 112 12 14 ];
-        %tmp.29 = lgetv %n;
-        symbol [ n %tmp.29 112 17 18 ];
-        symbol [ toFloat %tmp.30 112 19 26 ];
-        %tmp.30 = getv function %tmp.29 :toFloat;
-        %tmp.31 = invoke %tmp.29 %tmp.30();
-        symbol [ ballR %tmp.33 112 31 36 ];
-        %tmp.33 = getv ? :ballR;
-        %tmp.34 = sub %tmp.31 %tmp.33;
-        %tmp.35 = 0.01;
-        %tmp.36 = sub %tmp.34 %tmp.35;
-        lputv %hi.4 %tmp.36;
-        symbol [ hi %hi.4 112 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 113 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_8_113_44_if_stmt:
-        %tmp.37 = lgetv %nbx.1;
-        symbol [ nbx %tmp.37 113 12 15 ];
-        %tmp.38 = lgetv %lo.3;
-        symbol [ lo %tmp.38 113 18 20 ];
-        %tmp.39 = lt %tmp.37 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_8_113_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_8_113_44_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_22_113_44_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 113 24 ]
-        %tmp.40 = lgetv %lo.3;
-        symbol [ lo %tmp.40 113 30 32 ];
-        lputv %nbx.1 %tmp.40;
-        symbol [ nbx %nbx.1 113 24 27 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 113 34 ]
-        %tmp.41 = 0.0;
-        symbol [ vx ? 113 34 36 ];
-        putv self :vx %tmp.41;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_22_113_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_8_113_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_113_8_113_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 114 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_8_114_44_if_stmt:
-        %tmp.42 = lgetv %nbx.1;
-        symbol [ nbx %tmp.42 114 12 15 ];
-        %tmp.43 = lgetv %hi.4;
-        symbol [ hi %tmp.43 114 18 20 ];
-        %tmp.44 = gt %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_8_114_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_8_114_44_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_22_114_44_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 114 24 ]
-        %tmp.45 = lgetv %hi.4;
-        symbol [ hi %tmp.45 114 30 32 ];
-        lputv %nbx.1 %tmp.45;
-        symbol [ nbx %nbx.1 114 24 27 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 114 34 ]
-        %tmp.46 = 0.0;
-        symbol [ vx ? 114 34 36 ];
-        putv self :vx %tmp.46;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_22_114_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_8_114_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_114_8_114_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 115 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_8_115_44_if_stmt:
-        %tmp.47 = lgetv %nby.2;
-        symbol [ nby %tmp.47 115 12 15 ];
-        %tmp.48 = lgetv %lo.3;
-        symbol [ lo %tmp.48 115 18 20 ];
-        %tmp.49 = lt %tmp.47 %tmp.48;
-        bf %tmp.49 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_8_115_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_8_115_44_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_22_115_44_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 115 24 ]
-        %tmp.50 = lgetv %lo.3;
-        symbol [ lo %tmp.50 115 30 32 ];
-        lputv %nby.2 %tmp.50;
-        symbol [ nby %nby.2 115 24 27 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 115 34 ]
-        %tmp.51 = 0.0;
-        symbol [ vy ? 115 34 36 ];
-        putv self :vy %tmp.51;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_22_115_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_8_115_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_115_8_115_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 116 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_8_116_44_if_stmt:
-        %tmp.52 = lgetv %nby.2;
-        symbol [ nby %tmp.52 116 12 15 ];
-        %tmp.53 = lgetv %hi.4;
-        symbol [ hi %tmp.53 116 18 20 ];
-        %tmp.54 = gt %tmp.52 %tmp.53;
-        bf %tmp.54 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_8_116_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_8_116_44_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_22_116_44_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 116 24 ]
-        %tmp.55 = lgetv %hi.4;
-        symbol [ hi %tmp.55 116 30 32 ];
-        lputv %nby.2 %tmp.55;
-        symbol [ nby %nby.2 116 24 27 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 116 34 ]
-        %tmp.56 = 0.0;
-        symbol [ vy ? 116 34 36 ];
-        putv self :vy %tmp.56;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_22_116_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_8_116_44_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_116_8_116_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 118 8 ]
-        %tmp.57 = lgetv %nbx.1;
-        symbol [ nbx %tmp.57 118 13 16 ];
-        symbol [ bx ? 118 8 10 ];
-        putv self :bx %tmp.57;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 118 18 ]
-        %tmp.58 = lgetv %nby.2;
-        symbol [ nby %tmp.58 118 23 26 ];
-        symbol [ by ? 118 18 20 ];
-        putv self :by %tmp.58;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 120 8 ]
-        symbol [ vx %tmp.60 120 13 15 ];
-        %tmp.60 = getv ? :vx;
-        symbol [ friction %tmp.62 120 18 26 ];
-        %tmp.62 = getv ? :friction;
-        %tmp.63 = mul %tmp.60 %tmp.62;
-        symbol [ vx ? 120 8 10 ];
-        putv self :vx %tmp.63;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 121 8 ]
-        symbol [ vy %tmp.65 121 13 15 ];
-        %tmp.65 = getv ? :vy;
-        symbol [ friction %tmp.67 121 18 26 ];
-        %tmp.67 = getv ? :friction;
-        %tmp.68 = mul %tmp.65 %tmp.67;
-        symbol [ vy ? 121 8 10 ];
-        putv self :vy %tmp.68;
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 122 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_12_122_32_begin:
-        symbol [ vx %tmp.70 122 12 14 ];
-        %tmp.70 = getv ? :vx;
-        %tmp.71 = 0.002;
-        %tmp.72 = lt %tmp.70 %tmp.71;
-        bf %tmp.72 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_26_122_32_true:
-        symbol [ vx %tmp.74 122 26 28 ];
-        %tmp.74 = getv ? :vx;
-        %tmp.75 = -0.002;
-        %tmp.76 = gt %tmp.74 %tmp.75;
-        push %tmp.76;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_26_122_32_end:
-        %tmp.77 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_12_122_32_begin] [%tmp.76 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_26_122_32_true] [%tmp.77 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_26_122_32_end];
-        bf %tmp.77 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_39_122_51_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 122 41 ]
-        %tmp.78 = 0.0;
-        symbol [ vx ? 122 41 43 ];
-        putv self :vx %tmp.78;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_39_122_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_122_8_122_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 123 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_12_123_32_begin:
-        symbol [ vy %tmp.80 123 12 14 ];
-        %tmp.80 = getv ? :vy;
-        %tmp.81 = 0.002;
-        %tmp.82 = lt %tmp.80 %tmp.81;
-        bf %tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_26_123_32_true:
-        symbol [ vy %tmp.84 123 26 28 ];
-        %tmp.84 = getv ? :vy;
-        %tmp.85 = -0.002;
-        %tmp.86 = gt %tmp.84 %tmp.85;
-        push %tmp.86;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_26_123_32_end:
-        %tmp.87 = phi [%tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_12_123_32_begin] [%tmp.86 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_26_123_32_true] [%tmp.87 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_26_123_32_end];
-        bf %tmp.87 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_39_123_51_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 123 41 ]
-        %tmp.88 = 0.0;
-        symbol [ vy ? 123 41 43 ];
-        putv self :vy %tmp.88;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_39_123_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_123_8_123_51_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_102_28_124_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 127; @symbol_functiondef = [_resolveX,127,20,29]; @symbol_param<0> = [walls,127,30,35]; @symbol_param<1> = [n,127,37,38]; @symbol_param<2> = [nbx,127,40,43]; @symbol_param<3> = [nby,127,45,48]; ]
-    protected
-    function _resolveX(walls, n, nbx, nby) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_127_50_152_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 128 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_127_50_152_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_127_50_152_4_stop" ]
-        %row.1 = local;
-        symbol [ row %row.1 128 12 15 ];
-        symbol [ by %tmp.2 128 18 20 ];
-        %tmp.2 = getv ? :by;
-        symbol [ toNumber %tmp.3 128 21 29 ];
-        %tmp.3 = getv function %tmp.2 :toNumber;
-        %tmp.4 = invoke %tmp.2 %tmp.3();
-        lputv %row.1 %tmp.4;
-        symbol [ row %row.1 128 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 129 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_8_129_32_if_stmt:
-        %tmp.5 = lgetv %row.1;
-        symbol [ row %tmp.5 129 12 15 ];
-        %tmp.6 = 0;
-        %tmp.7 = lt %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_8_129_32_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_8_129_32_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_21_129_32_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 129 23 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 20; @symbol_functiondef = [step,20,20,24]; @symbol_param<0> = [x,20,25,26]; @symbol_param<1> = [y,20,28,29]; @symbol_param<2> = [vx,20,31,33]; @symbol_param<3> = [vy,20,35,37]; @symbol_param<4> = [sw,20,39,41]; @symbol_param<5> = [sh,20,43,45]; ]
+    static
+    function step(x, y, vx, vy, sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 21 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop" ]
+        %nx.1 = local;
+        symbol [ nx %nx.1 21 12 14 ];
+        %tmp.1 = lgetv %x;
+        symbol [ x %tmp.1 21 17 18 ];
+        %tmp.2 = lgetv %vx;
+        symbol [ vx %tmp.2 21 21 23 ];
+        %tmp.3 = add %tmp.1 %tmp.2;
+        lputv %nx.1 %tmp.3;
+        symbol [ nx %nx.1 21 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 22 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop" ]
+        %ny.2 = local;
+        symbol [ ny %ny.2 22 12 14 ];
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 22 17 18 ];
+        %tmp.5 = lgetv %vy;
+        symbol [ vy %tmp.5 22 21 23 ];
+        %tmp.6 = add %tmp.4 %tmp.5;
+        lputv %ny.2 %tmp.6;
+        symbol [ ny %ny.2 22 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 23 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_stmt:
+        %tmp.7 = lgetv %nx.1;
+        symbol [ nx %tmp.7 23 12 14 ];
         %tmp.8 = 0;
-        lputv %row.1 %tmp.8;
-        symbol [ row %row.1 129 23 26 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_21_129_32_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_8_129_32_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_129_8_129_32_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 130 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_8_130_37_if_stmt:
-        %tmp.9 = lgetv %row.1;
-        symbol [ row %tmp.9 130 12 15 ];
-        %tmp.10 = lgetv %n;
-        symbol [ n %tmp.10 130 19 20 ];
-        %tmp.11 = gte %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_8_130_37_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_8_130_37_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_22_130_37_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 130 24 ]
-        %tmp.12 = lgetv %n;
-        symbol [ n %tmp.12 130 30 31 ];
-        %tmp.13 = 1;
-        %tmp.14 = sub %tmp.12 %tmp.13;
-        lputv %row.1 %tmp.14;
-        symbol [ row %row.1 130 24 27 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_22_130_37_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_8_130_37_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_130_8_130_37_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 132 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_stmt:
-        symbol [ vx %tmp.16 132 12 14 ];
-        %tmp.16 = getv ? :vx;
-        %tmp.17 = 0.0;
-        %tmp.18 = gt %tmp.16 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 133 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_stop" ]
-        %oldC.2 = local;
-        symbol [ oldC %oldC.2 133 16 20 ];
-        symbol [ bx %tmp.20 133 24 26 ];
-        %tmp.20 = getv ? :bx;
-        symbol [ ballR %tmp.22 133 32 37 ];
-        %tmp.22 = getv ? :ballR;
-        %tmp.23 = add %tmp.20 %tmp.22;
-        symbol [ toNumber %tmp.24 133 39 47 ];
-        %tmp.24 = getv function %tmp.23 :toNumber;
-        %tmp.25 = invoke %tmp.23 %tmp.24();
-        lputv %oldC.2 %tmp.25;
-        symbol [ oldC %oldC.2 133 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 134 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_stop" ]
-        %newC.3 = local;
-        symbol [ newC %newC.3 134 16 20 ];
-        %tmp.26 = lgetv %nbx;
-        symbol [ nbx %tmp.26 134 24 27 ];
-        symbol [ ballR %tmp.28 134 32 37 ];
-        %tmp.28 = getv ? :ballR;
-        %tmp.29 = add %tmp.26 %tmp.28;
-        symbol [ toNumber %tmp.30 134 39 47 ];
-        %tmp.30 = getv function %tmp.29 :toNumber;
-        %tmp.31 = invoke %tmp.29 %tmp.30();
-        lputv %newC.3 %tmp.31;
-        symbol [ newC %newC.3 134 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 135 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_16_135_38_begin:
-        %tmp.32 = lgetv %newC.3;
-        symbol [ newC %tmp.32 135 16 20 ];
-        %tmp.33 = lgetv %oldC.2;
-        symbol [ oldC %tmp.33 135 23 27 ];
-        %tmp.34 = gt %tmp.32 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_31_135_38_true:
-        %tmp.35 = lgetv %oldC.2;
-        symbol [ oldC %tmp.35 135 31 35 ];
-        %tmp.36 = lgetv %n;
-        symbol [ n %tmp.36 135 38 39 ];
-        %tmp.37 = lt %tmp.35 %tmp.36;
-        push %tmp.37;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_31_135_38_end:
-        %tmp.38 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_16_135_38_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_31_135_38_true] [%tmp.38 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_31_135_38_end];
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_41_140_12_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 136 16 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_16_139_16_if_stmt:
-        %tmp.39 = lgetv %walls;
-        symbol [ walls %tmp.39 136 21 26 ];
-        %tmp.40 = lgetv %row.1;
-        symbol [ row %tmp.40 136 27 30 ];
-        %tmp.41 = lgetv %n;
-        symbol [ n %tmp.41 136 31 32 ];
-        %tmp.42 = mul %tmp.40 %tmp.41;
-        %tmp.43 = lgetv %oldC.2;
-        symbol [ oldC %tmp.43 136 35 39 ];
-        %tmp.44 = add %tmp.42 %tmp.43;
-        %tmp.45 = agetv %tmp.39 %tmp.44;
-        symbol [ GM_WALL_E %tmp.47 136 43 52 ];
-        %tmp.47 = getv ? :GM_WALL_E;
-        %tmp.48 = bitand %tmp.45 %tmp.47;
-        %tmp.49 = 0;
-        %tmp.50 = ne %tmp.48 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_16_139_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_16_139_16_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_60_139_16_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 137 20 ]
-        %tmp.51 = lgetv %newC.3;
-        symbol [ newC %tmp.51 137 26 30 ];
-        symbol [ toFloat %tmp.52 137 31 38 ];
-        %tmp.52 = getv function %tmp.51 :toFloat;
-        %tmp.53 = invoke %tmp.51 %tmp.52();
-        symbol [ ballR %tmp.55 137 43 48 ];
-        %tmp.55 = getv ? :ballR;
-        %tmp.56 = sub %tmp.53 %tmp.55;
-        %tmp.57 = 0.01;
-        %tmp.58 = sub %tmp.56 %tmp.57;
-        lputv %nbx %tmp.58;
-        symbol [ nbx %nbx 137 20 23 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 138 20 ]
-        %tmp.59 = 0.0;
-        symbol [ vx ? 138 20 22 ];
-        putv self :vx %tmp.59;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_60_139_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_16_139_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_136_16_139_16_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_41_140_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_135_12_140_12_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_22_141_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 141 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_15_150_8_if_stmt:
-        symbol [ vx %tmp.61 141 19 21 ];
-        %tmp.61 = getv ? :vx;
-        %tmp.62 = 0.0;
-        %tmp.63 = lt %tmp.61 %tmp.62;
-        bf %tmp.63 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_15_150_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_15_150_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 142 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_stop" ]
-        %oldC.4 = local;
-        symbol [ oldC %oldC.4 142 16 20 ];
-        symbol [ bx %tmp.65 142 24 26 ];
-        %tmp.65 = getv ? :bx;
-        symbol [ ballR %tmp.67 142 32 37 ];
-        %tmp.67 = getv ? :ballR;
-        %tmp.68 = sub %tmp.65 %tmp.67;
-        symbol [ toNumber %tmp.69 142 39 47 ];
-        %tmp.69 = getv function %tmp.68 :toNumber;
-        %tmp.70 = invoke %tmp.68 %tmp.69();
-        lputv %oldC.4 %tmp.70;
-        symbol [ oldC %oldC.4 142 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 143 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_stop" ]
-        %newC.5 = local;
-        symbol [ newC %newC.5 143 16 20 ];
-        %tmp.71 = lgetv %nbx;
-        symbol [ nbx %tmp.71 143 24 27 ];
-        symbol [ ballR %tmp.73 143 32 37 ];
-        %tmp.73 = getv ? :ballR;
-        %tmp.74 = sub %tmp.71 %tmp.73;
-        symbol [ toNumber %tmp.75 143 39 47 ];
-        %tmp.75 = getv function %tmp.74 :toNumber;
-        %tmp.76 = invoke %tmp.74 %tmp.75();
-        lputv %newC.5 %tmp.76;
-        symbol [ newC %newC.5 143 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 144 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_16_144_51_begin:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_16_144_39_begin:
-        %tmp.77 = lgetv %newC.5;
-        symbol [ newC %tmp.77 144 16 20 ];
-        %tmp.78 = lgetv %oldC.4;
-        symbol [ oldC %tmp.78 144 23 27 ];
-        %tmp.79 = lt %tmp.77 %tmp.78;
-        bf %tmp.79 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_31_144_39_true:
-        %tmp.80 = lgetv %oldC.4;
-        symbol [ oldC %tmp.80 144 31 35 ];
-        %tmp.81 = 0;
-        %tmp.82 = gte %tmp.80 %tmp.81;
-        push %tmp.82;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_31_144_39_end:
-        %tmp.83 = phi [%tmp.79 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_16_144_39_begin] [%tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_31_144_39_true] [%tmp.83 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_31_144_39_end];
-        bf %tmp.83 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_44_144_51_true:
-        %tmp.84 = lgetv %oldC.4;
-        symbol [ oldC %tmp.84 144 44 48 ];
-        %tmp.85 = lgetv %n;
-        symbol [ n %tmp.85 144 51 52 ];
-        %tmp.86 = lt %tmp.84 %tmp.85;
-        push %tmp.86;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_44_144_51_end:
-        %tmp.87 = phi [%tmp.83 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_16_144_51_begin] [%tmp.86 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_44_144_51_true] [%tmp.87 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_44_144_51_end];
-        bf %tmp.87 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_54_149_12_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 145 16 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_16_148_16_if_stmt:
-        %tmp.88 = lgetv %walls;
-        symbol [ walls %tmp.88 145 21 26 ];
-        %tmp.89 = lgetv %row.1;
-        symbol [ row %tmp.89 145 27 30 ];
-        %tmp.90 = lgetv %n;
-        symbol [ n %tmp.90 145 31 32 ];
-        %tmp.91 = mul %tmp.89 %tmp.90;
-        %tmp.92 = lgetv %oldC.4;
-        symbol [ oldC %tmp.92 145 35 39 ];
-        %tmp.93 = add %tmp.91 %tmp.92;
-        %tmp.94 = agetv %tmp.88 %tmp.93;
-        symbol [ GM_WALL_W %tmp.96 145 43 52 ];
-        %tmp.96 = getv ? :GM_WALL_W;
-        %tmp.97 = bitand %tmp.94 %tmp.96;
-        %tmp.98 = 0;
-        %tmp.99 = ne %tmp.97 %tmp.98;
-        bf %tmp.99 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_16_148_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_16_148_16_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_60_148_16_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 146 20 ]
-        %tmp.100 = lgetv %oldC.4;
-        symbol [ oldC %tmp.100 146 26 30 ];
-        symbol [ toFloat %tmp.101 146 31 38 ];
-        %tmp.101 = getv function %tmp.100 :toFloat;
-        %tmp.102 = invoke %tmp.100 %tmp.101();
-        symbol [ ballR %tmp.104 146 43 48 ];
-        %tmp.104 = getv ? :ballR;
-        %tmp.105 = add %tmp.102 %tmp.104;
-        %tmp.106 = 0.01;
-        %tmp.107 = add %tmp.105 %tmp.106;
-        lputv %nbx %tmp.107;
-        symbol [ nbx %nbx 146 20 23 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 147 20 ]
-        %tmp.108 = 0.0;
-        symbol [ vx ? 147 20 22 ];
-        putv self :vx %tmp.108;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_60_148_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_16_148_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_145_16_148_16_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_54_149_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_144_12_149_12_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_29_150_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_15_150_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_141_15_150_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_132_8_150_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 151 8 ]
-        %tmp.109 = lgetv %nbx;
-        symbol [ nbx %tmp.109 151 15 18 ];
-        ret %tmp.109;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_127_50_152_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 155; @symbol_functiondef = [_resolveY,155,20,29]; @symbol_param<0> = [walls,155,30,35]; @symbol_param<1> = [n,155,37,38]; @symbol_param<2> = [nbx,155,40,43]; @symbol_param<3> = [nby,155,45,48]; ]
-    protected
-    function _resolveY(walls, n, nbx, nby) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_155_50_180_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 156 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_155_50_180_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_155_50_180_4_stop" ]
-        %col.1 = local;
-        symbol [ col %col.1 156 12 15 ];
-        %tmp.1 = lgetv %nbx;
-        symbol [ nbx %tmp.1 156 18 21 ];
-        symbol [ toNumber %tmp.2 156 22 30 ];
-        %tmp.2 = getv function %tmp.1 :toNumber;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        lputv %col.1 %tmp.3;
-        symbol [ col %col.1 156 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 157 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_8_157_32_if_stmt:
-        %tmp.4 = lgetv %col.1;
-        symbol [ col %tmp.4 157 12 15 ];
-        %tmp.5 = 0;
-        %tmp.6 = lt %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_8_157_32_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_8_157_32_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_21_157_32_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 157 23 ]
-        %tmp.7 = 0;
-        lputv %col.1 %tmp.7;
-        symbol [ col %col.1 157 23 26 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_21_157_32_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_8_157_32_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_157_8_157_32_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 158 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_8_158_37_if_stmt:
-        %tmp.8 = lgetv %col.1;
-        symbol [ col %tmp.8 158 12 15 ];
-        %tmp.9 = lgetv %n;
-        symbol [ n %tmp.9 158 19 20 ];
-        %tmp.10 = gte %tmp.8 %tmp.9;
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_8_158_37_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_8_158_37_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_22_158_37_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 158 24 ]
-        %tmp.11 = lgetv %n;
-        symbol [ n %tmp.11 158 30 31 ];
-        %tmp.12 = 1;
-        %tmp.13 = sub %tmp.11 %tmp.12;
-        lputv %col.1 %tmp.13;
-        symbol [ col %col.1 158 24 27 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_22_158_37_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_8_158_37_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_158_8_158_37_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 160 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_stmt:
-        symbol [ vy %tmp.15 160 12 14 ];
-        %tmp.15 = getv ? :vy;
-        %tmp.16 = 0.0;
-        %tmp.17 = gt %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_false;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 161 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_stop" ]
-        %oldR.2 = local;
-        symbol [ oldR %oldR.2 161 16 20 ];
-        symbol [ by %tmp.19 161 24 26 ];
-        %tmp.19 = getv ? :by;
-        symbol [ ballR %tmp.21 161 32 37 ];
-        %tmp.21 = getv ? :ballR;
-        %tmp.22 = add %tmp.19 %tmp.21;
-        symbol [ toNumber %tmp.23 161 39 47 ];
-        %tmp.23 = getv function %tmp.22 :toNumber;
-        %tmp.24 = invoke %tmp.22 %tmp.23();
-        lputv %oldR.2 %tmp.24;
-        symbol [ oldR %oldR.2 161 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 162 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_stop" ]
-        %newR.3 = local;
-        symbol [ newR %newR.3 162 16 20 ];
-        %tmp.25 = lgetv %nby;
-        symbol [ nby %tmp.25 162 24 27 ];
-        symbol [ ballR %tmp.27 162 32 37 ];
-        %tmp.27 = getv ? :ballR;
-        %tmp.28 = add %tmp.25 %tmp.27;
-        symbol [ toNumber %tmp.29 162 39 47 ];
-        %tmp.29 = getv function %tmp.28 :toNumber;
-        %tmp.30 = invoke %tmp.28 %tmp.29();
-        lputv %newR.3 %tmp.30;
-        symbol [ newR %newR.3 162 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 163 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_16_163_38_begin:
-        %tmp.31 = lgetv %newR.3;
-        symbol [ newR %tmp.31 163 16 20 ];
-        %tmp.32 = lgetv %oldR.2;
-        symbol [ oldR %tmp.32 163 23 27 ];
-        %tmp.33 = gt %tmp.31 %tmp.32;
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_31_163_38_true:
-        %tmp.34 = lgetv %oldR.2;
-        symbol [ oldR %tmp.34 163 31 35 ];
-        %tmp.35 = lgetv %n;
-        symbol [ n %tmp.35 163 38 39 ];
-        %tmp.36 = lt %tmp.34 %tmp.35;
-        push %tmp.36;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_31_163_38_end:
-        %tmp.37 = phi [%tmp.33 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_16_163_38_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_31_163_38_true] [%tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_31_163_38_end];
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_41_168_12_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 164 16 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_16_167_16_if_stmt:
-        %tmp.38 = lgetv %walls;
-        symbol [ walls %tmp.38 164 21 26 ];
-        %tmp.39 = lgetv %oldR.2;
-        symbol [ oldR %tmp.39 164 27 31 ];
-        %tmp.40 = lgetv %n;
-        symbol [ n %tmp.40 164 32 33 ];
-        %tmp.41 = mul %tmp.39 %tmp.40;
-        %tmp.42 = lgetv %col.1;
-        symbol [ col %tmp.42 164 36 39 ];
-        %tmp.43 = add %tmp.41 %tmp.42;
-        %tmp.44 = agetv %tmp.38 %tmp.43;
-        symbol [ GM_WALL_S %tmp.46 164 43 52 ];
-        %tmp.46 = getv ? :GM_WALL_S;
-        %tmp.47 = bitand %tmp.44 %tmp.46;
-        %tmp.48 = 0;
-        %tmp.49 = ne %tmp.47 %tmp.48;
-        bf %tmp.49 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_16_167_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_16_167_16_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_60_167_16_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 165 20 ]
-        %tmp.50 = lgetv %newR.3;
-        symbol [ newR %tmp.50 165 26 30 ];
-        symbol [ toFloat %tmp.51 165 31 38 ];
-        %tmp.51 = getv function %tmp.50 :toFloat;
-        %tmp.52 = invoke %tmp.50 %tmp.51();
-        symbol [ ballR %tmp.54 165 43 48 ];
-        %tmp.54 = getv ? :ballR;
-        %tmp.55 = sub %tmp.52 %tmp.54;
-        %tmp.56 = 0.01;
-        %tmp.57 = sub %tmp.55 %tmp.56;
-        lputv %nby %tmp.57;
-        symbol [ nby %nby 165 20 23 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 166 20 ]
-        %tmp.58 = 0.0;
-        symbol [ vy ? 166 20 22 ];
-        putv self :vy %tmp.58;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_60_167_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_16_167_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_164_16_167_16_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_41_168_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_163_12_168_12_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_22_169_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 169 15 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_15_178_8_if_stmt:
-        symbol [ vy %tmp.60 169 19 21 ];
-        %tmp.60 = getv ? :vy;
-        %tmp.61 = 0.0;
-        %tmp.62 = lt %tmp.60 %tmp.61;
-        bf %tmp.62 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_15_178_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_15_178_8_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 170 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_stop" ]
-        %oldR.4 = local;
-        symbol [ oldR %oldR.4 170 16 20 ];
-        symbol [ by %tmp.64 170 24 26 ];
-        %tmp.64 = getv ? :by;
-        symbol [ ballR %tmp.66 170 32 37 ];
-        %tmp.66 = getv ? :ballR;
-        %tmp.67 = sub %tmp.64 %tmp.66;
-        symbol [ toNumber %tmp.68 170 39 47 ];
-        %tmp.68 = getv function %tmp.67 :toNumber;
-        %tmp.69 = invoke %tmp.67 %tmp.68();
-        lputv %oldR.4 %tmp.69;
-        symbol [ oldR %oldR.4 170 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 171 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_stop" ]
-        %newR.5 = local;
-        symbol [ newR %newR.5 171 16 20 ];
-        %tmp.70 = lgetv %nby;
-        symbol [ nby %tmp.70 171 24 27 ];
-        symbol [ ballR %tmp.72 171 32 37 ];
-        %tmp.72 = getv ? :ballR;
-        %tmp.73 = sub %tmp.70 %tmp.72;
-        symbol [ toNumber %tmp.74 171 39 47 ];
-        %tmp.74 = getv function %tmp.73 :toNumber;
-        %tmp.75 = invoke %tmp.73 %tmp.74();
-        lputv %newR.5 %tmp.75;
-        symbol [ newR %newR.5 171 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 172 12 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_stmt:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_16_172_51_begin:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_16_172_39_begin:
-        %tmp.76 = lgetv %newR.5;
-        symbol [ newR %tmp.76 172 16 20 ];
-        %tmp.77 = lgetv %oldR.4;
-        symbol [ oldR %tmp.77 172 23 27 ];
-        %tmp.78 = lt %tmp.76 %tmp.77;
-        bf %tmp.78 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_31_172_39_true:
-        %tmp.79 = lgetv %oldR.4;
-        symbol [ oldR %tmp.79 172 31 35 ];
-        %tmp.80 = 0;
-        %tmp.81 = gte %tmp.79 %tmp.80;
-        push %tmp.81;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_31_172_39_end:
-        %tmp.82 = phi [%tmp.78 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_16_172_39_begin] [%tmp.81 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_31_172_39_true] [%tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_31_172_39_end];
-        bf %tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_44_172_51_true:
-        %tmp.83 = lgetv %oldR.4;
-        symbol [ oldR %tmp.83 172 44 48 ];
-        %tmp.84 = lgetv %n;
-        symbol [ n %tmp.84 172 51 52 ];
-        %tmp.85 = lt %tmp.83 %tmp.84;
-        push %tmp.85;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_44_172_51_end:
-        %tmp.86 = phi [%tmp.82 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_16_172_51_begin] [%tmp.85 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_44_172_51_true] [%tmp.86 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_44_172_51_end];
-        bf %tmp.86 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_54_177_12_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 173 16 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_16_176_16_if_stmt:
-        %tmp.87 = lgetv %walls;
-        symbol [ walls %tmp.87 173 21 26 ];
-        %tmp.88 = lgetv %oldR.4;
-        symbol [ oldR %tmp.88 173 27 31 ];
-        %tmp.89 = lgetv %n;
-        symbol [ n %tmp.89 173 32 33 ];
-        %tmp.90 = mul %tmp.88 %tmp.89;
-        %tmp.91 = lgetv %col.1;
-        symbol [ col %tmp.91 173 36 39 ];
-        %tmp.92 = add %tmp.90 %tmp.91;
-        %tmp.93 = agetv %tmp.87 %tmp.92;
-        symbol [ GM_WALL_N %tmp.95 173 43 52 ];
-        %tmp.95 = getv ? :GM_WALL_N;
-        %tmp.96 = bitand %tmp.93 %tmp.95;
-        %tmp.97 = 0;
-        %tmp.98 = ne %tmp.96 %tmp.97;
-        bf %tmp.98 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_16_176_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_16_176_16_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_60_176_16_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 174 20 ]
-        %tmp.99 = lgetv %oldR.4;
-        symbol [ oldR %tmp.99 174 26 30 ];
-        symbol [ toFloat %tmp.100 174 31 38 ];
-        %tmp.100 = getv function %tmp.99 :toFloat;
-        %tmp.101 = invoke %tmp.99 %tmp.100();
-        symbol [ ballR %tmp.103 174 43 48 ];
-        %tmp.103 = getv ? :ballR;
-        %tmp.104 = add %tmp.101 %tmp.103;
-        %tmp.105 = 0.01;
-        %tmp.106 = add %tmp.104 %tmp.105;
-        lputv %nby %tmp.106;
-        symbol [ nby %nby 174 20 23 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 175 20 ]
-        %tmp.107 = 0.0;
-        symbol [ vy ? 175 20 22 ];
-        putv self :vy %tmp.107;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_60_176_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_16_176_16_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_173_16_176_16_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_54_177_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_172_12_177_12_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_29_178_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_15_178_8_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_169_15_178_8_if_end:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_160_8_178_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 179 8 ]
-        %tmp.108 = lgetv %nby;
-        symbol [ nby %tmp.108 179 15 18 ];
-        ret %tmp.108;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_155_50_180_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 183; @symbol_functiondef = [curCell,183,13,20]; @symbol_param<0> = [n,183,21,22]; ]
-    function curCell(n) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 184 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 184 12 13 ];
-        symbol [ by %tmp.2 184 16 18 ];
-        %tmp.2 = getv ? :by;
-        symbol [ toNumber %tmp.3 184 19 27 ];
-        %tmp.3 = getv function %tmp.2 :toNumber;
-        %tmp.4 = invoke %tmp.2 %tmp.3();
-        lputv %r.1 %tmp.4;
-        symbol [ r %r.1 184 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 185 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_stop" ]
-        %c.2 = local;
-        symbol [ c %c.2 185 12 13 ];
-        symbol [ bx %tmp.6 185 16 18 ];
-        %tmp.6 = getv ? :bx;
-        symbol [ toNumber %tmp.7 185 19 27 ];
-        %tmp.7 = getv function %tmp.6 :toNumber;
-        %tmp.8 = invoke %tmp.6 %tmp.7();
-        lputv %c.2 %tmp.8;
-        symbol [ c %c.2 185 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 186 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_8_186_28_if_stmt:
-        %tmp.9 = lgetv %r.1;
-        symbol [ r %tmp.9 186 12 13 ];
-        %tmp.10 = 0;
-        %tmp.11 = lt %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_8_186_28_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_8_186_28_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_19_186_28_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 186 21 ]
-        %tmp.12 = 0;
-        lputv %r.1 %tmp.12;
-        symbol [ r %r.1 186 21 22 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_19_186_28_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_8_186_28_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_8_186_28_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 186 30 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_30_186_55_if_stmt:
-        %tmp.13 = lgetv %r.1;
-        symbol [ r %tmp.13 186 34 35 ];
-        %tmp.14 = lgetv %n;
-        symbol [ n %tmp.14 186 39 40 ];
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_false;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_27_23_43_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 23 29 ]
+        %tmp.10 = lgetv %nx.1;
+        symbol [ nx %tmp.10 23 34 36 ];
+        %tmp.11 = lgetv %sw;
+        symbol [ sw %tmp.11 23 39 41 ];
+        %tmp.12 = add %tmp.10 %tmp.11;
+        lputv %nx.1 %tmp.12;
+        symbol [ nx %nx.1 23 29 31 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_27_23_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_false:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 24 13 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_stmt:
+        %tmp.13 = lgetv %nx.1;
+        symbol [ nx %tmp.13 24 17 19 ];
+        %tmp.14 = lgetv %sw;
+        symbol [ sw %tmp.14 24 23 25 ];
         %tmp.15 = gte %tmp.13 %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_30_186_55_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_30_186_55_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_42_186_55_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 186 44 ]
-        %tmp.16 = lgetv %n;
-        symbol [ n %tmp.16 186 48 49 ];
-        %tmp.17 = 1;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_27_24_43_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 24 29 ]
+        %tmp.16 = lgetv %nx.1;
+        symbol [ nx %tmp.16 24 34 36 ];
+        %tmp.17 = lgetv %sw;
+        symbol [ sw %tmp.17 24 39 41 ];
         %tmp.18 = sub %tmp.16 %tmp.17;
-        lputv %r.1 %tmp.18;
-        symbol [ r %r.1 186 44 45 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_42_186_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_30_186_55_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_186_30_186_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 187 8 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_8_187_28_if_stmt:
-        %tmp.19 = lgetv %c.2;
-        symbol [ c %tmp.19 187 12 13 ];
+        lputv %nx.1 %tmp.18;
+        symbol [ nx %nx.1 24 29 31 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_27_24_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 25 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_stmt:
+        %tmp.19 = lgetv %ny.2;
+        symbol [ ny %tmp.19 25 12 14 ];
         %tmp.20 = 0;
         %tmp.21 = lt %tmp.19 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_8_187_28_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_8_187_28_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_19_187_28_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 187 21 ]
-        %tmp.22 = 0;
-        lputv %c.2 %tmp.22;
-        symbol [ c %c.2 187 21 22 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_19_187_28_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_8_187_28_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_8_187_28_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 187 30 ]
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_30_187_55_if_stmt:
-        %tmp.23 = lgetv %c.2;
-        symbol [ c %tmp.23 187 34 35 ];
-        %tmp.24 = lgetv %n;
-        symbol [ n %tmp.24 187 39 40 ];
-        %tmp.25 = gte %tmp.23 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_30_187_55_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_30_187_55_if_true:
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_42_187_55_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 187 44 ]
-        %tmp.26 = lgetv %n;
-        symbol [ n %tmp.26 187 48 49 ];
-        %tmp.27 = 1;
-        %tmp.28 = sub %tmp.26 %tmp.27;
-        lputv %c.2 %tmp.28;
-        symbol [ c %c.2 187 44 45 ];
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_42_187_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_30_187_55_if_end;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_187_30_187_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 188 8 ]
-        %tmp.29 = lgetv %r.1;
-        symbol [ r %tmp.29 188 15 16 ];
-        %tmp.30 = lgetv %n;
-        symbol [ n %tmp.30 188 19 20 ];
-        %tmp.31 = mul %tmp.29 %tmp.30;
-        %tmp.32 = lgetv %c.2;
-        symbol [ c %tmp.32 188 23 24 ];
-        %tmp.33 = add %tmp.31 %tmp.32;
-        ret %tmp.33;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_183_24_189_4_stop:
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_false;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_27_25_43_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 25 29 ]
+        %tmp.22 = lgetv %ny.2;
+        symbol [ ny %tmp.22 25 34 36 ];
+        %tmp.23 = lgetv %sh;
+        symbol [ sh %tmp.23 25 39 41 ];
+        %tmp.24 = add %tmp.22 %tmp.23;
+        lputv %ny.2 %tmp.24;
+        symbol [ ny %ny.2 25 29 31 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_27_25_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_false:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 26 13 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_stmt:
+        %tmp.25 = lgetv %ny.2;
+        symbol [ ny %tmp.25 26 17 19 ];
+        %tmp.26 = lgetv %sh;
+        symbol [ sh %tmp.26 26 23 25 ];
+        %tmp.27 = gte %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_27_26_43_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 26 29 ]
+        %tmp.28 = lgetv %ny.2;
+        symbol [ ny %tmp.28 26 34 36 ];
+        %tmp.29 = lgetv %sh;
+        symbol [ sh %tmp.29 26 39 41 ];
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        lputv %ny.2 %tmp.30;
+        symbol [ ny %ny.2 26 29 31 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_27_26_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 27 8 ]
+        %tmp.31 = newa 2;
+        %tmp.32 = lgetv %nx.1;
+        symbol [ nx %tmp.32 27 16 18 ];
+        %tmp.33 = dup %tmp.31;
+        %tmp.34 = aputv %tmp.33 0 %tmp.32;
+        %tmp.35 = lgetv %ny.2;
+        symbol [ ny %tmp.35 27 20 22 ];
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 1 %tmp.35;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 193; @symbol_functiondef = [atCell,193,13,19]; @symbol_param<0> = [cellIdx,193,20,27]; @symbol_param<1> = [n,193,29,30]; ]
-    function atCell(cellIdx, n) {
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start:
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 194 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 194 12 13 ];
-        %tmp.1 = lgetv %cellIdx;
-        symbol [ cellIdx %tmp.1 194 17 24 ];
-        %tmp.2 = lgetv %n;
-        symbol [ n %tmp.2 194 27 28 ];
-        %tmp.3 = div %tmp.1 %tmp.2;
-        lputv %r.1 %tmp.3;
-        symbol [ r %r.1 194 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 195 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %c.2 = local;
-        symbol [ c %c.2 195 12 13 ];
-        %tmp.4 = lgetv %cellIdx;
-        symbol [ cellIdx %tmp.4 195 17 24 ];
-        %tmp.5 = lgetv %n;
-        symbol [ n %tmp.5 195 27 28 ];
-        %tmp.6 = mod %tmp.4 %tmp.5;
-        lputv %c.2 %tmp.6;
-        symbol [ c %c.2 195 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 196 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %cx.3 = local;
-        symbol [ cx %cx.3 196 12 14 ];
-        %tmp.7 = lgetv %c.2;
-        symbol [ c %tmp.7 196 17 18 ];
-        symbol [ toFloat %tmp.8 196 19 26 ];
-        %tmp.8 = getv function %tmp.7 :toFloat;
-        %tmp.9 = invoke %tmp.7 %tmp.8();
-        %tmp.10 = 0.5;
-        %tmp.11 = add %tmp.9 %tmp.10;
-        lputv %cx.3 %tmp.11;
-        symbol [ cx %cx.3 196 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 197 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %cy.4 = local;
-        symbol [ cy %cy.4 197 12 14 ];
-        %tmp.12 = lgetv %r.1;
-        symbol [ r %tmp.12 197 17 18 ];
-        symbol [ toFloat %tmp.13 197 19 26 ];
-        %tmp.13 = getv function %tmp.12 :toFloat;
-        %tmp.14 = invoke %tmp.12 %tmp.13();
-        %tmp.15 = 0.5;
-        %tmp.16 = add %tmp.14 %tmp.15;
-        lputv %cy.4 %tmp.16;
-        symbol [ cy %cy.4 197 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 198 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %dx.5 = local;
-        symbol [ dx %dx.5 198 12 14 ];
-        symbol [ bx %tmp.18 198 17 19 ];
-        %tmp.18 = getv ? :bx;
-        %tmp.19 = lgetv %cx.3;
-        symbol [ cx %tmp.19 198 22 24 ];
-        %tmp.20 = sub %tmp.18 %tmp.19;
-        lputv %dx.5 %tmp.20;
-        symbol [ dx %dx.5 198 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 198 26 ]
-        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop" ]
-        %dy.6 = local;
-        symbol [ dy %dy.6 198 30 32 ];
-        symbol [ by %tmp.22 198 35 37 ];
-        %tmp.22 = getv ? :by;
-        %tmp.23 = lgetv %cy.4;
-        symbol [ cy %tmp.23 198 40 42 ];
-        %tmp.24 = sub %tmp.22 %tmp.23;
-        lputv %dy.6 %tmp.24;
-        symbol [ dy %dy.6 198 30 32 ];
-[ "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc" 199 8 ]
-        %tmp.25 = lgetv %dx.5;
-        symbol [ dx %tmp.25 199 16 18 ];
-        %tmp.26 = lgetv %dx.5;
-        symbol [ dx %tmp.26 199 19 21 ];
-        %tmp.27 = mul %tmp.25 %tmp.26;
-        %tmp.28 = lgetv %dy.6;
-        symbol [ dy %tmp.28 199 24 26 ];
-        %tmp.29 = lgetv %dy.6;
-        symbol [ dy %tmp.29 199 27 29 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 31; @symbol_functiondef = [capV,31,20,24]; @symbol_param<0> = [vx,31,25,27]; @symbol_param<1> = [vy,31,29,31]; @symbol_param<2> = [maxMag,31,33,39]; ]
+    static
+    function capV(vx, vy, maxMag) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
+        %v2.1 = local;
+        symbol [ v2 %v2.1 32 12 14 ];
+        %tmp.1 = lgetv %vx;
+        symbol [ vx %tmp.1 32 17 19 ];
+        %tmp.2 = lgetv %vx;
+        symbol [ vx %tmp.2 32 22 24 ];
+        %tmp.3 = mul %tmp.1 %tmp.2;
+        %tmp.4 = lgetv %vy;
+        symbol [ vy %tmp.4 32 27 29 ];
+        %tmp.5 = lgetv %vy;
+        symbol [ vy %tmp.5 32 32 34 ];
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = add %tmp.3 %tmp.6;
+        lputv %v2.1 %tmp.7;
+        symbol [ v2 %v2.1 32 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 33 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
+        %m2.2 = local;
+        symbol [ m2 %m2.2 33 12 14 ];
+        %tmp.8 = lgetv %maxMag;
+        symbol [ maxMag %tmp.8 33 17 23 ];
+        %tmp.9 = lgetv %maxMag;
+        symbol [ maxMag %tmp.9 33 26 32 ];
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        lputv %m2.2 %tmp.10;
+        symbol [ m2 %m2.2 33 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_stmt:
+        %tmp.11 = lgetv %v2.1;
+        symbol [ v2 %tmp.11 34 12 14 ];
+        %tmp.12 = lgetv %m2.2;
+        symbol [ m2 %tmp.12 34 18 20 ];
+        %tmp.13 = lte %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_22_34_41_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 34 24 ]
+        %tmp.14 = newa 2;
+        %tmp.15 = lgetv %vx;
+        symbol [ vx %tmp.15 34 32 34 ];
+        %tmp.16 = dup %tmp.14;
+        %tmp.17 = aputv %tmp.16 0 %tmp.15;
+        %tmp.18 = lgetv %vy;
+        symbol [ vy %tmp.18 34 36 38 ];
+        %tmp.19 = dup %tmp.17;
+        %tmp.20 = aputv %tmp.19 1 %tmp.18;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_22_34_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 35 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
+        %inv.3 = local;
+        symbol [ inv %inv.3 35 12 15 ];
+        %tmp.21 = lgetv %maxMag;
+        symbol [ maxMag %tmp.21 35 18 24 ];
+        symbol [ Math %tmp.22 35 27 31 ];
+        %tmp.22 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.23 35 32 36 ];
+        %tmp.23 = getv function %tmp.22 :sqrt;
+        %tmp.24 = lgetv %v2.1;
+        symbol [ v2 %tmp.24 35 37 39 ];
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        %tmp.26 = div %tmp.21 %tmp.25;
+        lputv %inv.3 %tmp.26;
+        symbol [ inv %inv.3 35 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 36 8 ]
+        %tmp.27 = newa 2;
+        %tmp.28 = lgetv %vx;
+        symbol [ vx %tmp.28 36 16 18 ];
+        %tmp.29 = lgetv %inv.3;
+        symbol [ inv %tmp.29 36 21 24 ];
         %tmp.30 = mul %tmp.28 %tmp.29;
-        %tmp.31 = add %tmp.27 %tmp.30;
-        %tmp.32 = 0.25;
-        %tmp.33 = lt %tmp.31 %tmp.32;
-        ret %tmp.33;
-_Users_kkorolczuk_work_garmin_gyromaze_source_PhysicsEngine_mc_193_32_200_4_stop:
+        %tmp.31 = dup %tmp.27;
+        %tmp.32 = aputv %tmp.31 0 %tmp.30;
+        %tmp.33 = lgetv %vy;
+        symbol [ vy %tmp.33 36 26 28 ];
+        %tmp.34 = lgetv %inv.3;
+        symbol [ inv %tmp.34 36 31 34 ];
+        %tmp.35 = mul %tmp.33 %tmp.34;
+        %tmp.36 = dup %tmp.32;
+        %tmp.37 = aputv %tmp.36 1 %tmp.35;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 40; @symbol_functiondef = [distSq,40,20,26]; @symbol_param<0> = [x1,40,27,29]; @symbol_param<1> = [y1,40,31,33]; @symbol_param<2> = [x2,40,35,37]; @symbol_param<3> = [y2,40,39,41]; @symbol_param<4> = [sw,40,43,45]; @symbol_param<5> = [sh,40,47,49]; ]
+    static
+    function distSq(x1, y1, x2, y2, sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 41 12 14 ];
+        %tmp.1 = lgetv %x1;
+        symbol [ x1 %tmp.1 41 17 19 ];
+        %tmp.2 = lgetv %x2;
+        symbol [ x2 %tmp.2 41 22 24 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        lputv %dx.1 %tmp.3;
+        symbol [ dx %dx.1 41 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 26 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_stmt:
+        %tmp.4 = lgetv %dx.1;
+        symbol [ dx %tmp.4 41 30 32 ];
+        %tmp.5 = 0;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_38_41_50_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 40 ]
+        %tmp.7 = lgetv %dx.1;
+        symbol [ dx %tmp.7 41 46 48 ];
+        %tmp.8 = sub 0 %tmp.7;
+        lputv %dx.1 %tmp.8;
+        symbol [ dx %dx.1 41 40 42 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_38_41_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 42 12 14 ];
+        %tmp.9 = lgetv %y1;
+        symbol [ y1 %tmp.9 42 17 19 ];
+        %tmp.10 = lgetv %y2;
+        symbol [ y2 %tmp.10 42 22 24 ];
+        %tmp.11 = sub %tmp.9 %tmp.10;
+        lputv %dy.2 %tmp.11;
+        symbol [ dy %dy.2 42 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 26 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_stmt:
+        %tmp.12 = lgetv %dy.2;
+        symbol [ dy %tmp.12 42 30 32 ];
+        %tmp.13 = 0;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_38_42_50_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 40 ]
+        %tmp.15 = lgetv %dy.2;
+        symbol [ dy %tmp.15 42 46 48 ];
+        %tmp.16 = sub 0 %tmp.15;
+        lputv %dy.2 %tmp.16;
+        symbol [ dy %dy.2 42 40 42 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_38_42_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_stmt:
+        %tmp.17 = lgetv %dx.1;
+        symbol [ dx %tmp.17 43 12 14 ];
+        %tmp.18 = lgetv %sw;
+        symbol [ sw %tmp.18 43 17 19 ];
+        %tmp.19 = 2;
+        %tmp.20 = div %tmp.18 %tmp.19;
+        %tmp.21 = gt %tmp.17 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_25_43_41_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 43 27 ]
+        %tmp.22 = lgetv %sw;
+        symbol [ sw %tmp.22 43 32 34 ];
+        %tmp.23 = lgetv %dx.1;
+        symbol [ dx %tmp.23 43 37 39 ];
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        lputv %dx.1 %tmp.24;
+        symbol [ dx %dx.1 43 27 29 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_25_43_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_stmt:
+        %tmp.25 = lgetv %dy.2;
+        symbol [ dy %tmp.25 44 12 14 ];
+        %tmp.26 = lgetv %sh;
+        symbol [ sh %tmp.26 44 17 19 ];
+        %tmp.27 = 2;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        %tmp.29 = gt %tmp.25 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_25_44_41_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 44 27 ]
+        %tmp.30 = lgetv %sh;
+        symbol [ sh %tmp.30 44 32 34 ];
+        %tmp.31 = lgetv %dy.2;
+        symbol [ dy %tmp.31 44 37 39 ];
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        lputv %dy.2 %tmp.32;
+        symbol [ dy %dy.2 44 27 29 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_25_44_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 45 8 ]
+        %tmp.33 = lgetv %dx.1;
+        symbol [ dx %tmp.33 45 15 17 ];
+        %tmp.34 = lgetv %dx.1;
+        symbol [ dx %tmp.34 45 20 22 ];
+        %tmp.35 = mul %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %dy.2;
+        symbol [ dy %tmp.36 45 25 27 ];
+        %tmp.37 = lgetv %dy.2;
+        symbol [ dy %tmp.37 45 30 32 ];
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        %tmp.39 = add %tmp.35 %tmp.38;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 49; @symbol_functiondef = [circlesHit,49,20,30]; @symbol_param<0> = [cx1,49,31,34]; @symbol_param<1> = [cy1,49,36,39]; @symbol_param<2> = [r1,49,41,43]; @symbol_param<3> = [cx2,49,45,48]; @symbol_param<4> = [cy2,49,50,53]; @symbol_param<5> = [r2,49,55,57]; @symbol_param<6> = [sw,49,59,61]; @symbol_param<7> = [sh,49,63,65]; ]
+    static
+    function circlesHit(cx1, cy1, r1, cx2, cy2, r2, sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 50 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop" ]
+        %d2.1 = local;
+        symbol [ d2 %d2.1 50 12 14 ];
+        %tmp.1 = self;
+        symbol [ distSq %tmp.2 50 17 23 ];
+        %tmp.2 = getv function %tmp.1 :distSq;
+        %tmp.3 = lgetv %cx1;
+        symbol [ cx1 %tmp.3 50 24 27 ];
+        %tmp.4 = lgetv %cy1;
+        symbol [ cy1 %tmp.4 50 29 32 ];
+        %tmp.5 = lgetv %cx2;
+        symbol [ cx2 %tmp.5 50 34 37 ];
+        %tmp.6 = lgetv %cy2;
+        symbol [ cy2 %tmp.6 50 39 42 ];
+        %tmp.7 = lgetv %sw;
+        symbol [ sw %tmp.7 50 44 46 ];
+        %tmp.8 = lgetv %sh;
+        symbol [ sh %tmp.8 50 48 50 ];
+        %tmp.9 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5, %tmp.6, %tmp.7, %tmp.8);
+        lputv %d2.1 %tmp.9;
+        symbol [ d2 %d2.1 50 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 51 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop" ]
+        %rs.2 = local;
+        symbol [ rs %rs.2 51 12 14 ];
+        %tmp.10 = lgetv %r1;
+        symbol [ r1 %tmp.10 51 17 19 ];
+        %tmp.11 = lgetv %r2;
+        symbol [ r2 %tmp.11 51 22 24 ];
+        %tmp.12 = add %tmp.10 %tmp.11;
+        lputv %rs.2 %tmp.12;
+        symbol [ rs %rs.2 51 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 52 8 ]
+        %tmp.13 = lgetv %d2.1;
+        symbol [ d2 %tmp.13 52 15 17 ];
+        %tmp.14 = lgetv %rs.2;
+        symbol [ rs %tmp.14 52 21 23 ];
+        %tmp.15 = lgetv %rs.2;
+        symbol [ rs %tmp.15 52 26 28 ];
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        %tmp.17 = lt %tmp.13 %tmp.16;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/PhysicsEngine.mc"; @line = 24; ]
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 14; ]
 <init> {
 }

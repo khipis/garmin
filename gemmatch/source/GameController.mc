@@ -146,6 +146,12 @@ class GameController {
     var animMarks;
     var fallFrom;      // Int[rows*cols] — per-cell source row during ANIM_FALL
 
+    // Pending swap — a flick made WHILE the board is still cascading is stored
+    // here and fired the instant the animation settles, so a gesture is never
+    // silently dropped just because the previous match is still resolving.
+    var pendActive;
+    var pendR; var pendC; var pendDR; var pendDC;
+
     function initialize() {
         state    = GS_MENU;
         grid     = new GridManager();
@@ -192,6 +198,9 @@ class GameController {
         animGem1 = 0; animGem2 = 0;
         animMarks = null;
         fallFrom  = new [grid.rows * grid.cols];
+
+        pendActive = false;
+        pendR = -1; pendC = -1; pendDR = 0; pendDC = 0;
 
         // Restore last-used settings
         var gm = _load("gm_mode"); if (gm >= 0 && gm < 3)            { gameMode = gm; }
@@ -356,6 +365,9 @@ class GameController {
                 _afterFall();
             }
         }
+        // The board just went idle — fire any flick the player queued while it
+        // was still resolving, so gestures feel instant and never get eaten.
+        if (animState == ANIM_NONE) { _flushPending(); }
         if (shakeT > 0)   { shakeT = shakeT - 1; }
         if (boomT > 0)    { boomT = boomT - 50; if (boomT < 0) { boomT = 0; } }
         if (chainPopT > 0){ chainPopT = chainPopT - 50; if (chainPopT < 0) { chainPopT = 0; } }
@@ -530,6 +542,77 @@ class GameController {
         curR = r1; curC = c1;
         selR = -1; selC = -1;
         dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
+    }
+
+    // ── Unified touch model ──────────────────────────────────────────
+    // Tap = SELECT the touched gem (instant highlight, exactly where the
+    // finger landed). Swipe = move the SELECTED gem one cell in the swipe
+    // direction. These two entry points are all the touch layer needs.
+
+    // Select the gem at (r,c): the highlight snaps onto it immediately.
+    // Selection is allowed EVEN WHILE the board is animating — the highlight
+    // must always land on the gem the player just tapped, never wait for a
+    // cascade to finish (that "swallowed" tap was the long-standing bug). Only
+    // the actual swap is gated to idle; picking is instant. A fresh tap also
+    // supersedes any queued flick.
+    function selectCell(r, c) {
+        if (state != GS_PLAY) { return; }
+        if (r < 0 || r >= grid.rows || c < 0 || c >= grid.cols) { return; }
+        curR = r; curC = c;
+        selR = r; selC = c;
+        pendActive = false;
+    }
+
+    // Move the currently-selected gem one step in (dr,dc). Falls back to the
+    // cursor gem when nothing is explicitly selected (e.g. a bare swipe).
+    function swipeSelected(dr, dc) {
+        swipeSelectedFrom(dr, dc, -1, -1);
+    }
+
+    // Move the SELECTED gem one step in (dr,dc). When nothing is selected the
+    // gem the swipe STARTED on (fr,fc) is grabbed instead, so a direct swipe on
+    // a gem still works. The selection ALWAYS wins when present — that is what
+    // makes "tap to pick, then swipe to move it" behave predictably.
+    function swipeSelectedFrom(dr, dc, fr, fc) {
+        if (state != GS_PLAY) { return; }
+        var r; var c;
+        if (selR >= 0) {
+            r = selR; c = selC;
+        } else if (fr >= 0 && fr < grid.rows && fc >= 0 && fc < grid.cols) {
+            r = fr; c = fc;
+        } else {
+            r = curR; c = curC;
+        }
+        var tr = r + dr;
+        var tc = c + dc;
+        if (tr < 0 || tr >= grid.rows || tc < 0 || tc >= grid.cols) {
+            invalidFlash = 12;   // swiping off the board — nudge feedback
+            return;
+        }
+        // Board still resolving a previous cascade: queue this flick and fire
+        // it the moment the board settles (see _flushPending). This is what
+        // makes gestures feel instant instead of "sometimes ignored".
+        if (animState != ANIM_NONE) {
+            pendActive = true;
+            pendR = r; pendC = c; pendDR = dr; pendDC = dc;
+            return;
+        }
+        selR = -1; selC = -1;
+        beginSwap(r, c, tr, tc);
+    }
+
+    // Fire a queued flick once the board is idle. Re-validates bounds against
+    // the (possibly reshuffled) settled board and drops it if no longer sane.
+    hidden function _flushPending() {
+        if (!pendActive) { return; }
+        pendActive = false;
+        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
+        var tr = pendR + pendDR;
+        var tc = pendC + pendDC;
+        if (pendR < 0 || pendR >= grid.rows || pendC < 0 || pendC >= grid.cols) { return; }
+        if (tr < 0 || tr >= grid.rows || tc < 0 || tc >= grid.cols) { return; }
+        selR = -1; selC = -1;
+        beginSwap(pendR, pendC, tr, tc);
     }
 
     // ── Live drag preview (touch) ────────────────────────────────────

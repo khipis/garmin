@@ -45,7 +45,10 @@ class ScopeRenderer {
     // chimneys/antennas/water towers + a parapet ledge underfoot).
     static function drawScene(dc, ctrl, ox, oy) {
         var w = ctrl.sw; var h = ctrl.sh;
-        var horizonY = ctrl.cy + (ctrl.aim.aimPitch * SS_FOV * 0.45).toNumber() + oy;
+        // Horizon locked to the target projection: same gaze, same full
+        // FOV. This is what keeps the hostiles planted on the ground when
+        // the scope swings up/down (no more targets floating in mid-air).
+        var horizonY = ctrl.cy + ((SS_GROUND_PITCH - ctrl.aim.gazePitch) * SS_FOV).toNumber() + oy;
         if (horizonY < h * 20 / 100) { horizonY = h * 20 / 100; }
         if (horizonY > h * 80 / 100) { horizonY = h * 80 / 100; }
 

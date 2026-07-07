@@ -15,694 +15,874 @@ class SpawnManager {
     [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 13; @position = 15; @symbol_vardef = [_phase,13,15,21]; ]
     protected
     var _phase;
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 15; @symbol_functiondef = [initialize,15,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 16; @position = 15; @symbol_vardef = [_diff,16,15,20]; ]
+    protected
+    var _diff;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 18; @symbol_functiondef = [initialize,18,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_15_26_15_37_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 15 28 ]
-        %tmp.1 = self;
-        symbol [ reset %tmp.2 15 28 33 ];
-        %tmp.2 = getv function %tmp.1 :reset;
-        invoke %tmp.1 %tmp.2();
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_15_26_15_37_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_18_26_18_48_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 18 28 ]
+        %tmp.1 = 1;
+        symbol [ _diff ? 18 28 33 ];
+        putv self :_diff %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 18 39 ]
+        %tmp.2 = self;
+        symbol [ reset %tmp.3 18 39 44 ];
+        %tmp.3 = getv function %tmp.2 :reset;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_18_26_18_48_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 17; @symbol_functiondef = [reset,17,13,18]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 20; @symbol_functiondef = [reset,20,13,18]; ]
     function reset() {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_17_21_20_4_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 18 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_20_21_23_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 21 8 ]
         %tmp.1 = 90;
-        symbol [ _nextSpawn ? 18 8 18 ];
+        symbol [ _nextSpawn ? 21 8 18 ];
         putv self :_nextSpawn %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 19 8 ]
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 22 8 ]
         %tmp.2 = 0;
-        symbol [ _phase ? 19 8 14 ];
+        symbol [ _phase ? 22 8 14 ];
         putv self :_phase %tmp.2;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_17_21_20_4_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_20_21_23_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 22; @symbol_functiondef = [getPhase,22,13,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 25; @symbol_functiondef = [setDifficulty,25,13,26]; @symbol_param<0> = [d,25,27,28]; ]
+    function setDifficulty(d) {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_30_25_69_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 25 32 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_36_25_51_begin:
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 25 36 37 ];
+        %tmp.2 = 0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_46_25_51_true:
+        %tmp.4 = lgetv %d;
+        symbol [ d %tmp.4 25 46 47 ];
+        %tmp.5 = 2;
+        %tmp.6 = lte %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_46_25_51_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_36_25_51_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_46_25_51_true] [%tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_46_25_51_end];
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_54_25_67_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 25 56 ]
+        %tmp.8 = lgetv %d;
+        symbol [ d %tmp.8 25 64 65 ];
+        symbol [ _diff ? 25 56 61 ];
+        putv self :_diff %tmp.8;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_54_25_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_32_25_67_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_25_30_25_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 27; @symbol_functiondef = [getPhase,27,13,21]; ]
     function getPhase() {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_22_24_22_41_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 22 26 ]
-        symbol [ _phase %tmp.2 22 33 39 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_27_24_27_41_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 27 26 ]
+        symbol [ _phase %tmp.2 27 33 39 ];
         %tmp.2 = getv ? :_phase;
         ret %tmp.2;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_22_24_22_41_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_27_24_27_41_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 26; @symbol_functiondef = [update,26,13,19]; @symbol_param<0> = [score,26,20,25]; @symbol_param<1> = [pool,26,27,31]; @symbol_param<2> = [edgeRadius,26,33,43]; @symbol_param<3> = [playerAngle,26,45,56]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 31; @symbol_functiondef = [update,31,13,19]; @symbol_param<0> = [score,31,20,25]; @symbol_param<1> = [pool,31,27,31]; @symbol_param<2> = [edgeRadius,31,33,43]; @symbol_param<3> = [playerAngle,31,45,56]; ]
     function update(score, pool, edgeRadius, playerAngle) {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_26_58_37_4_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 27 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 32 8 ]
         %tmp.1 = self;
-        symbol [ _scoreToPhase %tmp.2 27 17 30 ];
+        symbol [ _scoreToPhase %tmp.2 32 17 30 ];
         %tmp.2 = getv function %tmp.1 :_scoreToPhase;
         %tmp.3 = lgetv %score;
-        symbol [ score %tmp.3 27 31 36 ];
+        symbol [ score %tmp.3 32 31 36 ];
         %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
-        symbol [ _phase ? 27 8 14 ];
+        symbol [ _phase ? 32 8 14 ];
         putv self :_phase %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 28 8 ]
-        symbol [ _nextSpawn %tmp.6 28 21 31 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 33 8 ]
+        symbol [ _nextSpawn %tmp.6 33 21 31 ];
         %tmp.6 = getv ? :_nextSpawn;
         %tmp.7 = 1;
         %tmp.8 = sub %tmp.6 %tmp.7;
-        symbol [ _nextSpawn ? 28 8 18 ];
+        symbol [ _nextSpawn ? 33 8 18 ];
         putv self :_nextSpawn %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 29 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_8_29_38_if_stmt:
-        symbol [ _nextSpawn %tmp.10 29 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_8_34_38_if_stmt:
+        symbol [ _nextSpawn %tmp.10 34 12 22 ];
         %tmp.10 = getv ? :_nextSpawn;
         %tmp.11 = 0;
         %tmp.12 = gt %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_8_29_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_8_29_38_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_28_29_38_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 29 30 ]
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_8_34_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_8_34_38_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_28_34_38_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 34 30 ]
         ret ?;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_28_29_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_8_29_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_29_8_29_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 31 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_28_34_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_8_34_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_34_8_34_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 36 8 ]
         %tmp.13 = self;
-        symbol [ _doSpawn %tmp.14 31 8 16 ];
+        symbol [ _doSpawn %tmp.14 36 8 16 ];
         %tmp.14 = getv function %tmp.13 :_doSpawn;
         %tmp.15 = lgetv %score;
-        symbol [ score %tmp.15 31 17 22 ];
+        symbol [ score %tmp.15 36 17 22 ];
         %tmp.16 = lgetv %pool;
-        symbol [ pool %tmp.16 31 24 28 ];
+        symbol [ pool %tmp.16 36 24 28 ];
         %tmp.17 = lgetv %edgeRadius;
-        symbol [ edgeRadius %tmp.17 31 30 40 ];
+        symbol [ edgeRadius %tmp.17 36 30 40 ];
         %tmp.18 = lgetv %playerAngle;
-        symbol [ playerAngle %tmp.18 31 42 53 ];
+        symbol [ playerAngle %tmp.18 36 42 53 ];
         invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.17, %tmp.18);
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 34 8 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_26_58_37_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_26_58_37_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_stop" ]
         %iv.1 = local;
-        symbol [ iv %iv.1 34 12 14 ];
+        symbol [ iv %iv.1 40 12 14 ];
         %tmp.19 = 110;
         %tmp.20 = lgetv %score;
-        symbol [ score %tmp.20 34 23 28 ];
+        symbol [ score %tmp.20 40 23 28 ];
         %tmp.21 = 28;
         %tmp.22 = div %tmp.20 %tmp.21;
         %tmp.23 = sub %tmp.19 %tmp.22;
         lputv %iv.1 %tmp.23;
-        symbol [ iv %iv.1 34 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 35 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_8_35_32_if_stmt:
+        symbol [ iv %iv.1 40 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_32_if_stmt:
         %tmp.24 = lgetv %iv.1;
-        symbol [ iv %tmp.24 35 12 14 ];
+        symbol [ iv %tmp.24 41 12 14 ];
         %tmp.25 = 32;
         %tmp.26 = lt %tmp.24 %tmp.25;
-        bf %tmp.26 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_8_35_32_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_8_35_32_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_21_35_32_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 35 23 ]
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_32_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_32_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_21_41_32_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 41 23 ]
         %tmp.27 = 32;
         lputv %iv.1 %tmp.27;
-        symbol [ iv %iv.1 35 23 25 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_21_35_32_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_8_35_32_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_35_8_35_32_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 36 8 ]
-        %tmp.28 = lgetv %iv.1;
-        symbol [ iv %tmp.28 36 21 23 ];
-        symbol [ Math %tmp.29 36 26 30 ];
-        %tmp.29 = getm $.Toybox.Math;
-        symbol [ rand %tmp.30 36 31 35 ];
-        %tmp.30 = getv function %tmp.29 :rand;
-        %tmp.31 = invoke %tmp.29 %tmp.30();
-        %tmp.32 = 28;
-        %tmp.33 = mod %tmp.31 %tmp.32;
-        %tmp.34 = add %tmp.28 %tmp.33;
-        symbol [ _nextSpawn ? 36 8 18 ];
-        putv self :_nextSpawn %tmp.34;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_26_58_37_4_stop:
+        symbol [ iv %iv.1 41 23 25 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_21_41_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_32_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_stop" ]
+        %ivMul.2 = local;
+        symbol [ ivMul %ivMul.2 42 12 17 ];
+        %tmp.28 = newa 3;
+        %tmp.29 = 138;
+        %tmp.30 = dup %tmp.28;
+        %tmp.31 = aputv %tmp.30 0 %tmp.29;
+        %tmp.32 = 100;
+        %tmp.33 = dup %tmp.31;
+        %tmp.34 = aputv %tmp.33 1 %tmp.32;
+        %tmp.35 = 72;
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 2 %tmp.35;
+        symbol [ _diff %tmp.39 42 35 40 ];
+        %tmp.39 = getv ? :_diff;
+        %tmp.40 = agetv %tmp.37 %tmp.39;
+        lputv %ivMul.2 %tmp.40;
+        symbol [ ivMul %ivMul.2 42 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 43 8 ]
+        %tmp.41 = lgetv %iv.1;
+        symbol [ iv %tmp.41 43 13 15 ];
+        %tmp.42 = lgetv %ivMul.2;
+        symbol [ ivMul %tmp.42 43 18 23 ];
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = 100;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        lputv %iv.1 %tmp.45;
+        symbol [ iv %iv.1 43 8 10 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_8_44_32_if_stmt:
+        %tmp.46 = lgetv %iv.1;
+        symbol [ iv %tmp.46 44 12 14 ];
+        %tmp.47 = 22;
+        %tmp.48 = lt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_8_44_32_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_8_44_32_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_21_44_32_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 44 23 ]
+        %tmp.49 = 22;
+        lputv %iv.1 %tmp.49;
+        symbol [ iv %iv.1 44 23 25 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_21_44_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_8_44_32_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_44_8_44_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 45 8 ]
+        %tmp.50 = lgetv %iv.1;
+        symbol [ iv %tmp.50 45 21 23 ];
+        symbol [ Math %tmp.51 45 26 30 ];
+        %tmp.51 = getm $.Toybox.Math;
+        symbol [ rand %tmp.52 45 31 35 ];
+        %tmp.52 = getv function %tmp.51 :rand;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        %tmp.54 = 28;
+        %tmp.55 = mod %tmp.53 %tmp.54;
+        %tmp.56 = add %tmp.50 %tmp.55;
+        symbol [ _nextSpawn ? 45 8 18 ];
+        putv self :_nextSpawn %tmp.56;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_31_58_46_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 39; @symbol_functiondef = [_scoreToPhase,39,20,33]; @symbol_param<0> = [score,39,34,39]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 48; @symbol_functiondef = [_scoreToPhase,48,20,33]; @symbol_param<0> = [score,48,34,39]; ]
     protected
     function _scoreToPhase(score) {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_39_41_44_4_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 40 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_8_40_38_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_48_41_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_8_49_38_if_stmt:
         %tmp.1 = lgetv %score;
-        symbol [ score %tmp.1 40 12 17 ];
+        symbol [ score %tmp.1 49 12 17 ];
         %tmp.2 = 200;
         %tmp.3 = lt %tmp.1 %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_8_40_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_8_40_38_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_26_40_38_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 40 28 ]
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_8_49_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_8_49_38_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_26_49_38_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 49 28 ]
         %tmp.4 = 0;
         ret %tmp.4;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_26_40_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_8_40_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_40_8_40_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 41 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_38_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_26_49_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_8_49_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_49_8_49_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_50_38_if_stmt:
         %tmp.5 = lgetv %score;
-        symbol [ score %tmp.5 41 12 17 ];
+        symbol [ score %tmp.5 50 12 17 ];
         %tmp.6 = 600;
         %tmp.7 = lt %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_38_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_26_41_38_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 41 28 ]
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_50_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_50_38_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_26_50_38_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 50 28 ]
         %tmp.8 = 1;
         ret %tmp.8;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_26_41_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_41_8_41_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 42 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_8_42_38_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_26_50_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_50_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_50_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 51 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_8_51_38_if_stmt:
         %tmp.9 = lgetv %score;
-        symbol [ score %tmp.9 42 12 17 ];
+        symbol [ score %tmp.9 51 12 17 ];
         %tmp.10 = 1200;
         %tmp.11 = lt %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_8_42_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_8_42_38_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_26_42_38_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 42 28 ]
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_8_51_38_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_26_51_38_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 51 28 ]
         %tmp.12 = 2;
         ret %tmp.12;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_26_42_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_8_42_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_42_8_42_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_26_51_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_51_8_51_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 52 8 ]
         %tmp.13 = 3;
         ret %tmp.13;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_39_41_44_4_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_48_41_53_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 46; @symbol_functiondef = [_doSpawn,46,20,28]; @symbol_param<0> = [score,46,29,34]; @symbol_param<1> = [pool,46,36,40]; @symbol_param<2> = [edgeRadius,46,42,52]; @symbol_param<3> = [playerAngle,46,54,65]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 55; @symbol_functiondef = [_doSpawn,55,20,28]; @symbol_param<0> = [score,55,29,34]; @symbol_param<1> = [pool,55,36,40]; @symbol_param<2> = [edgeRadius,55,42,52]; @symbol_param<3> = [playerAngle,55,54,65]; ]
     protected
     function _doSpawn(score, pool, edgeRadius, playerAngle) {
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 47 8 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_stop" ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_stop" ]
         %type.1 = local;
-        symbol [ type %type.1 47 12 16 ];
-        symbol [ ET_BULLET %tmp.2 47 19 28 ];
+        symbol [ type %type.1 56 12 16 ];
+        symbol [ ET_BULLET %tmp.2 56 19 28 ];
         %tmp.2 = getv ? :ET_BULLET;
         lputv %type.1 %tmp.2;
-        symbol [ type %type.1 47 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 48 8 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_stop" ]
+        symbol [ type %type.1 56 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_stop" ]
         %r.2 = local;
-        symbol [ r %r.2 48 12 13 ];
-        symbol [ Math %tmp.3 48 19 23 ];
+        symbol [ r %r.2 57 12 13 ];
+        symbol [ Math %tmp.3 57 19 23 ];
         %tmp.3 = getm $.Toybox.Math;
-        symbol [ rand %tmp.4 48 24 28 ];
+        symbol [ rand %tmp.4 57 24 28 ];
         %tmp.4 = getv function %tmp.3 :rand;
         %tmp.5 = invoke %tmp.3 %tmp.4();
         %tmp.6 = 100;
         %tmp.7 = mod %tmp.5 %tmp.6;
         lputv %r.2 %tmp.7;
-        symbol [ r %r.2 48 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 50 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_stmt:
-        symbol [ _phase %tmp.9 50 12 18 ];
+        symbol [ r %r.2 57 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_stmt:
+        symbol [ _phase %tmp.9 59 12 18 ];
         %tmp.9 = getv ? :_phase;
         %tmp.10 = 0;
         %tmp.11 = eq %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_25_52_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 51 12 ]
-        symbol [ ET_BULLET %tmp.13 51 19 28 ];
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_25_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 60 12 ]
+        symbol [ ET_BULLET %tmp.13 60 19 28 ];
         %tmp.13 = getv ? :ET_BULLET;
         lputv %type.1 %tmp.13;
-        symbol [ type %type.1 51 12 16 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_25_52_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 52 15 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_stmt:
-        symbol [ _phase %tmp.15 52 19 25 ];
+        symbol [ type %type.1 60 12 16 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_25_61_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 61 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_stmt:
+        symbol [ _phase %tmp.15 61 19 25 ];
         %tmp.15 = getv ? :_phase;
         %tmp.16 = 1;
         %tmp.17 = eq %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_32_56_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 53 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_stmt:
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_32_65_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 62 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_stmt:
         %tmp.18 = lgetv %r.2;
-        symbol [ r %tmp.18 53 21 22 ];
+        symbol [ r %tmp.18 62 21 22 ];
         %tmp.19 = 55;
         %tmp.20 = lt %tmp.18 %tmp.19;
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_29_53_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 53 31 ]
-        symbol [ ET_BULLET %tmp.22 53 38 47 ];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_29_62_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 62 31 ]
+        symbol [ ET_BULLET %tmp.22 62 38 47 ];
         %tmp.22 = getv ? :ET_BULLET;
         lputv %type.1 %tmp.22;
-        symbol [ type %type.1 53 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_29_53_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 54 17 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_stmt:
+        symbol [ type %type.1 62 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_29_62_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 63 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_stmt:
         %tmp.23 = lgetv %r.2;
-        symbol [ r %tmp.23 54 21 22 ];
+        symbol [ r %tmp.23 63 21 22 ];
         %tmp.24 = 82;
         %tmp.25 = lt %tmp.23 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_29_54_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 54 31 ]
-        symbol [ ET_ARCWALL %tmp.27 54 38 48 ];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_29_63_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 63 31 ]
+        symbol [ ET_ARCWALL %tmp.27 63 38 48 ];
         %tmp.27 = getv ? :ET_ARCWALL;
         lputv %type.1 %tmp.27;
-        symbol [ type %type.1 54 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_29_54_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_else_false:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_29_55_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 55 31 ]
-        symbol [ ET_LASER %tmp.29 55 38 46 ];
+        symbol [ type %type.1 63 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_29_63_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_29_64_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 64 31 ]
+        symbol [ ET_LASER %tmp.29 64 38 46 ];
         %tmp.29 = getv ? :ET_LASER;
         lputv %type.1 %tmp.29;
-        symbol [ type %type.1 55 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_29_55_50_stop:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_54_17_55_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_53_12_55_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_32_56_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 56 15 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_stmt:
-        symbol [ _phase %tmp.31 56 19 25 ];
+        symbol [ type %type.1 64 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_29_64_50_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_64_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_64_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_32_65_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 65 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_stmt:
+        symbol [ _phase %tmp.31 65 19 25 ];
         %tmp.31 = getv ? :_phase;
         %tmp.32 = 2;
         %tmp.33 = eq %tmp.31 %tmp.32;
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_32_61_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 57 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_stmt:
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_32_70_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 66 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_stmt:
         %tmp.34 = lgetv %r.2;
-        symbol [ r %tmp.34 57 21 22 ];
+        symbol [ r %tmp.34 66 21 22 ];
         %tmp.35 = 38;
         %tmp.36 = lt %tmp.34 %tmp.35;
-        bf %tmp.36 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_29_57_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 57 31 ]
-        symbol [ ET_BULLET %tmp.38 57 38 47 ];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_29_66_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 66 31 ]
+        symbol [ ET_BULLET %tmp.38 66 38 47 ];
         %tmp.38 = getv ? :ET_BULLET;
         lputv %type.1 %tmp.38;
-        symbol [ type %type.1 57 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_29_57_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 58 17 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_stmt:
+        symbol [ type %type.1 66 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_29_66_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 67 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_stmt:
         %tmp.39 = lgetv %r.2;
-        symbol [ r %tmp.39 58 21 22 ];
+        symbol [ r %tmp.39 67 21 22 ];
         %tmp.40 = 58;
         %tmp.41 = lt %tmp.39 %tmp.40;
-        bf %tmp.41 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_29_58_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 58 31 ]
-        symbol [ ET_ARCWALL %tmp.43 58 38 48 ];
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_29_67_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 67 31 ]
+        symbol [ ET_ARCWALL %tmp.43 67 38 48 ];
         %tmp.43 = getv ? :ET_ARCWALL;
         lputv %type.1 %tmp.43;
-        symbol [ type %type.1 58 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_29_58_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 59 17 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_stmt:
+        symbol [ type %type.1 67 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_29_67_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 68 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_stmt:
         %tmp.44 = lgetv %r.2;
-        symbol [ r %tmp.44 59 21 22 ];
+        symbol [ r %tmp.44 68 21 22 ];
         %tmp.45 = 78;
         %tmp.46 = lt %tmp.44 %tmp.45;
-        bf %tmp.46 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_29_59_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 59 31 ]
-        symbol [ ET_LASER %tmp.48 59 38 46 ];
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_29_68_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 68 31 ]
+        symbol [ ET_LASER %tmp.48 68 38 46 ];
         %tmp.48 = getv ? :ET_LASER;
         lputv %type.1 %tmp.48;
-        symbol [ type %type.1 59 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_29_59_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_else_false:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_60_29_60_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 60 31 ]
-        symbol [ ET_RING %tmp.50 60 38 45 ];
+        symbol [ type %type.1 68 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_29_68_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_69_29_69_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 69 31 ]
+        symbol [ ET_RING %tmp.50 69 38 45 ];
         %tmp.50 = getv ? :ET_RING;
         lputv %type.1 %tmp.50;
-        symbol [ type %type.1 60 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_60_29_60_50_stop:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_17_60_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_58_17_60_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_57_12_60_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_32_61_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_else_false:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_66_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 62 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_stmt:
+        symbol [ type %type.1 69 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_69_29_69_50_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_68_17_69_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_67_17_69_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_66_12_69_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_32_70_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_15_75_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 71 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_stmt:
         %tmp.51 = lgetv %r.2;
-        symbol [ r %tmp.51 62 21 22 ];
+        symbol [ r %tmp.51 71 21 22 ];
         %tmp.52 = 25;
         %tmp.53 = lt %tmp.51 %tmp.52;
-        bf %tmp.53 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_29_62_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 62 31 ]
-        symbol [ ET_BULLET %tmp.55 62 38 47 ];
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_29_71_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 71 31 ]
+        symbol [ ET_BULLET %tmp.55 71 38 47 ];
         %tmp.55 = getv ? :ET_BULLET;
         lputv %type.1 %tmp.55;
-        symbol [ type %type.1 62 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_29_62_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 63 17 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_stmt:
+        symbol [ type %type.1 71 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_29_71_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 72 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_stmt:
         %tmp.56 = lgetv %r.2;
-        symbol [ r %tmp.56 63 21 22 ];
+        symbol [ r %tmp.56 72 21 22 ];
         %tmp.57 = 48;
         %tmp.58 = lt %tmp.56 %tmp.57;
-        bf %tmp.58 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_29_63_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 63 31 ]
-        symbol [ ET_ARCWALL %tmp.60 63 38 48 ];
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_29_72_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 72 31 ]
+        symbol [ ET_ARCWALL %tmp.60 72 38 48 ];
         %tmp.60 = getv ? :ET_ARCWALL;
         lputv %type.1 %tmp.60;
-        symbol [ type %type.1 63 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_29_63_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 64 17 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_stmt:
+        symbol [ type %type.1 72 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_29_72_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 73 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_stmt:
         %tmp.61 = lgetv %r.2;
-        symbol [ r %tmp.61 64 21 22 ];
+        symbol [ r %tmp.61 73 21 22 ];
         %tmp.62 = 72;
         %tmp.63 = lt %tmp.61 %tmp.62;
-        bf %tmp.63 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_29_64_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 64 31 ]
-        symbol [ ET_LASER %tmp.65 64 38 46 ];
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_29_73_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 73 31 ]
+        symbol [ ET_LASER %tmp.65 73 38 46 ];
         %tmp.65 = getv ? :ET_LASER;
         lputv %type.1 %tmp.65;
-        symbol [ type %type.1 64 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_29_64_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_else_false:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_29_65_50_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 65 31 ]
-        symbol [ ET_RING %tmp.67 65 38 45 ];
+        symbol [ type %type.1 73 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_29_73_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_74_29_74_50_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 74 31 ]
+        symbol [ ET_RING %tmp.67 74 38 45 ];
         %tmp.67 = getv ? :ET_RING;
         lputv %type.1 %tmp.67;
-        symbol [ type %type.1 65 31 35 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_29_65_50_stop:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_64_17_65_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_63_17_65_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_62_12_65_50_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_66_8_stop:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_56_15_66_8_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_52_15_66_8_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_50_8_66_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 69 8 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_stop" ]
+        symbol [ type %type.1 74 31 35 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_74_29_74_50_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_73_17_74_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_17_74_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_71_12_74_50_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_15_75_8_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_65_15_75_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_61_15_75_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_59_8_75_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_stop" ]
         %spd.3 = local;
-        symbol [ spd %spd.3 69 12 15 ];
+        symbol [ spd %spd.3 79 12 15 ];
         %tmp.68 = 2;
         %tmp.69 = lgetv %score;
-        symbol [ score %tmp.69 69 22 27 ];
+        symbol [ score %tmp.69 79 22 27 ];
         %tmp.70 = 400;
         %tmp.71 = div %tmp.69 %tmp.70;
         %tmp.72 = add %tmp.68 %tmp.71;
         lputv %spd.3 %tmp.72;
-        symbol [ spd %spd.3 69 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 70 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_8_70_32_if_stmt:
-        %tmp.73 = lgetv %spd.3;
-        symbol [ spd %tmp.73 70 12 15 ];
-        %tmp.74 = 5;
-        %tmp.75 = gt %tmp.73 %tmp.74;
-        bf %tmp.75 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_8_70_32_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_8_70_32_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_21_70_32_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 70 23 ]
-        %tmp.76 = 5;
-        lputv %spd.3 %tmp.76;
-        symbol [ spd %spd.3 70 23 26 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_21_70_32_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_8_70_32_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_70_8_70_32_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 72 8 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_stmt:
-        %tmp.77 = lgetv %type.1;
-        symbol [ type %tmp.77 72 12 16 ];
-        symbol [ ET_BULLET %tmp.79 72 20 29 ];
-        %tmp.79 = getv ? :ET_BULLET;
-        %tmp.80 = eq %tmp.77 %tmp.79;
-        bf %tmp.80 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_31_75_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 73 12 ]
-        %tmp.81 = lgetv %pool;
-        symbol [ pool %tmp.81 73 12 16 ];
-        symbol [ spawn %tmp.82 73 17 22 ];
-        %tmp.82 = getv function %tmp.81 :spawn;
-        symbol [ ET_BULLET %tmp.84 73 23 32 ];
-        %tmp.84 = getv ? :ET_BULLET;
-        symbol [ Math %tmp.85 73 34 38 ];
-        %tmp.85 = getm $.Toybox.Math;
-        symbol [ rand %tmp.86 73 39 43 ];
-        %tmp.86 = getv function %tmp.85 :rand;
-        %tmp.87 = invoke %tmp.85 %tmp.86();
-        %tmp.88 = 360;
-        %tmp.89 = mod %tmp.87 %tmp.88;
-        %tmp.90 = 12;
-        %tmp.91 = lgetv %spd.3;
-        symbol [ spd %tmp.91 73 57 60 ];
-        %tmp.92 = 0;
-        invoke %tmp.81 %tmp.82(%tmp.84, %tmp.89, %tmp.90, %tmp.91, %tmp.92);
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_31_75_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 75 15 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_stmt:
-        %tmp.93 = lgetv %type.1;
-        symbol [ type %tmp.93 75 19 23 ];
-        symbol [ ET_ARCWALL %tmp.95 75 27 37 ];
-        %tmp.95 = getv ? :ET_ARCWALL;
-        %tmp.96 = eq %tmp.93 %tmp.95;
-        bf %tmp.96 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_39_81_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 77 12 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_39_81_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_39_81_8_stop" ]
-        %gapHalf.4 = local;
-        symbol [ gapHalf %gapHalf.4 77 16 23 ];
-        %tmp.97 = 44;
-        %tmp.98 = lgetv %score;
-        symbol [ score %tmp.98 77 31 36 ];
-        %tmp.99 = 60;
-        %tmp.100 = div %tmp.98 %tmp.99;
-        %tmp.101 = sub %tmp.97 %tmp.100;
-        lputv %gapHalf.4 %tmp.101;
-        symbol [ gapHalf %gapHalf.4 77 16 23 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 78 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_12_78_46_if_stmt:
-        %tmp.102 = lgetv %gapHalf.4;
-        symbol [ gapHalf %tmp.102 78 16 23 ];
-        %tmp.103 = 22;
-        %tmp.104 = lt %tmp.102 %tmp.103;
-        bf %tmp.104 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_12_78_46_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_12_78_46_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_30_78_46_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 78 32 ]
-        %tmp.105 = 22;
-        lputv %gapHalf.4 %tmp.105;
-        symbol [ gapHalf %gapHalf.4 78 32 39 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_30_78_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_12_78_46_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_78_12_78_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 79 12 ]
-        %tmp.106 = lgetv %pool;
-        symbol [ pool %tmp.106 79 12 16 ];
-        symbol [ spawn %tmp.107 79 17 22 ];
-        %tmp.107 = getv function %tmp.106 :spawn;
-        symbol [ ET_ARCWALL %tmp.109 79 23 33 ];
-        %tmp.109 = getv ? :ET_ARCWALL;
-        symbol [ Math %tmp.110 79 35 39 ];
-        %tmp.110 = getm $.Toybox.Math;
-        symbol [ rand %tmp.111 79 40 44 ];
-        %tmp.111 = getv function %tmp.110 :rand;
-        %tmp.112 = invoke %tmp.110 %tmp.111();
-        %tmp.113 = 360;
-        %tmp.114 = mod %tmp.112 %tmp.113;
-        %tmp.115 = 12;
-        %tmp.116 = lgetv %spd.3;
-        symbol [ spd %tmp.116 79 58 61 ];
-        %tmp.117 = lgetv %gapHalf.4;
-        symbol [ gapHalf %tmp.117 79 63 70 ];
-        invoke %tmp.106 %tmp.107(%tmp.109, %tmp.114, %tmp.115, %tmp.116, %tmp.117);
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_39_81_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 81 15 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_stmt:
-        %tmp.118 = lgetv %type.1;
-        symbol [ type %tmp.118 81 19 23 ];
-        symbol [ ET_LASER %tmp.120 81 27 35 ];
-        %tmp.120 = getv ? :ET_LASER;
-        %tmp.121 = eq %tmp.118 %tmp.120;
-        bf %tmp.121 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_start:
+        symbol [ spd %spd.3 79 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_stmt:
+        symbol [ _diff %tmp.74 80 12 17 ];
+        %tmp.74 = getv ? :_diff;
+        %tmp.75 = 0;
+        %tmp.76 = eq %tmp.74 %tmp.75;
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_24_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 81 12 ]
+        %tmp.77 = lgetv %spd.3;
+        symbol [ spd %tmp.77 81 18 21 ];
+        %tmp.78 = 80;
+        %tmp.79 = mul %tmp.77 %tmp.78;
+        %tmp.80 = 100;
+        %tmp.81 = div %tmp.79 %tmp.80;
+        lputv %spd.3 %tmp.81;
+        symbol [ spd %spd.3 81 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 82 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_12_82_36_if_stmt:
+        %tmp.82 = lgetv %spd.3;
+        symbol [ spd %tmp.82 82 16 19 ];
+        %tmp.83 = 1;
+        %tmp.84 = lt %tmp.82 %tmp.83;
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_12_82_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_12_82_36_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_25_82_36_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 82 27 ]
+        %tmp.85 = 1;
+        lputv %spd.3 %tmp.85;
+        symbol [ spd %spd.3 82 27 30 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_25_82_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_12_82_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_82_12_82_36_if_end:
 [ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 83 12 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_stop" ]
-        %laserAng.5 = local;
-        symbol [ laserAng %laserAng.5 83 16 24 ];
-        %tmp.122 = lgetv %playerAngle;
-        symbol [ playerAngle %tmp.122 83 28 39 ];
-        %tmp.123 = 150;
-        %tmp.124 = add %tmp.122 %tmp.123;
-        symbol [ Math %tmp.125 83 48 52 ];
-        %tmp.125 = getm $.Toybox.Math;
-        symbol [ rand %tmp.126 83 53 57 ];
-        %tmp.126 = getv function %tmp.125 :rand;
-        %tmp.127 = invoke %tmp.125 %tmp.126();
-        %tmp.128 = 60;
-        %tmp.129 = mod %tmp.127 %tmp.128;
-        %tmp.130 = add %tmp.124 %tmp.129;
-        %tmp.131 = 360;
-        %tmp.132 = mod %tmp.130 %tmp.131;
-        lputv %laserAng.5 %tmp.132;
-        symbol [ laserAng %laserAng.5 83 16 24 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 84 12 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_stop" ]
-        %lspd.6 = local;
-        symbol [ lspd %lspd.6 84 16 20 ];
-        %tmp.133 = 1;
-        %tmp.134 = lgetv %score;
-        symbol [ score %tmp.134 84 31 36 ];
-        %tmp.135 = 700;
-        %tmp.136 = div %tmp.134 %tmp.135;
-        %tmp.137 = add %tmp.133 %tmp.136;
-        lputv %lspd.6 %tmp.137;
-        symbol [ lspd %lspd.6 84 16 20 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_12_83_36_if_stmt:
+        %tmp.86 = lgetv %spd.3;
+        symbol [ spd %tmp.86 83 16 19 ];
+        %tmp.87 = 4;
+        %tmp.88 = gt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_12_83_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_12_83_36_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_25_83_36_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 83 27 ]
+        %tmp.89 = 4;
+        lputv %spd.3 %tmp.89;
+        symbol [ spd %spd.3 83 27 30 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_25_83_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_12_83_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_83_12_83_36_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_24_84_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 84 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_stmt:
+        symbol [ _diff %tmp.91 84 19 24 ];
+        %tmp.91 = getv ? :_diff;
+        %tmp.92 = 2;
+        %tmp.93 = eq %tmp.91 %tmp.92;
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_31_87_8_start:
 [ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 85 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_12_85_38_if_stmt:
-        %tmp.138 = lgetv %lspd.6;
-        symbol [ lspd %tmp.138 85 16 20 ];
-        %tmp.139 = 3;
-        %tmp.140 = gt %tmp.138 %tmp.139;
-        bf %tmp.140 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_12_85_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_12_85_38_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_26_85_38_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 85 28 ]
-        %tmp.141 = 3;
-        lputv %lspd.6 %tmp.141;
-        symbol [ lspd %lspd.6 85 28 32 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_26_85_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_12_85_38_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_85_12_85_38_if_end:
+        %tmp.94 = lgetv %spd.3;
+        symbol [ spd %tmp.94 85 18 21 ];
+        %tmp.95 = 130;
+        %tmp.96 = mul %tmp.94 %tmp.95;
+        %tmp.97 = 100;
+        %tmp.98 = div %tmp.96 %tmp.97;
+        %tmp.99 = 1;
+        %tmp.100 = add %tmp.98 %tmp.99;
+        lputv %spd.3 %tmp.100;
+        symbol [ spd %spd.3 85 12 15 ];
 [ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 86 12 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_stop" ]
-        %dir.7 = local;
-        symbol [ dir %dir.7 86 16 19 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_begin:
-        symbol [ Math %tmp.142 86 23 27 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_12_86_36_if_stmt:
+        %tmp.101 = lgetv %spd.3;
+        symbol [ spd %tmp.101 86 16 19 ];
+        %tmp.102 = 7;
+        %tmp.103 = gt %tmp.101 %tmp.102;
+        bf %tmp.103 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_12_86_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_12_86_36_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_25_86_36_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 86 27 ]
+        %tmp.104 = 7;
+        lputv %spd.3 %tmp.104;
+        symbol [ spd %spd.3 86 27 30 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_25_86_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_12_86_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_12_86_36_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_31_87_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_87_15_89_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 88 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_12_88_36_if_stmt:
+        %tmp.105 = lgetv %spd.3;
+        symbol [ spd %tmp.105 88 16 19 ];
+        %tmp.106 = 5;
+        %tmp.107 = gt %tmp.105 %tmp.106;
+        bf %tmp.107 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_12_88_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_12_88_36_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_25_88_36_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 88 27 ]
+        %tmp.108 = 5;
+        lputv %spd.3 %tmp.108;
+        symbol [ spd %spd.3 88 27 30 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_25_88_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_12_88_36_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_88_12_88_36_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_87_15_89_8_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_84_15_89_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_80_8_89_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_stmt:
+        %tmp.109 = lgetv %type.1;
+        symbol [ type %tmp.109 91 12 16 ];
+        symbol [ ET_BULLET %tmp.111 91 20 29 ];
+        %tmp.111 = getv ? :ET_BULLET;
+        %tmp.112 = eq %tmp.109 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_31_94_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 92 12 ]
+        %tmp.113 = lgetv %pool;
+        symbol [ pool %tmp.113 92 12 16 ];
+        symbol [ spawn %tmp.114 92 17 22 ];
+        %tmp.114 = getv function %tmp.113 :spawn;
+        symbol [ ET_BULLET %tmp.116 92 23 32 ];
+        %tmp.116 = getv ? :ET_BULLET;
+        symbol [ Math %tmp.117 92 34 38 ];
+        %tmp.117 = getm $.Toybox.Math;
+        symbol [ rand %tmp.118 92 39 43 ];
+        %tmp.118 = getv function %tmp.117 :rand;
+        %tmp.119 = invoke %tmp.117 %tmp.118();
+        %tmp.120 = 360;
+        %tmp.121 = mod %tmp.119 %tmp.120;
+        %tmp.122 = 12;
+        %tmp.123 = lgetv %spd.3;
+        symbol [ spd %tmp.123 92 57 60 ];
+        %tmp.124 = 0;
+        invoke %tmp.113 %tmp.114(%tmp.116, %tmp.121, %tmp.122, %tmp.123, %tmp.124);
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_31_94_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 94 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_stmt:
+        %tmp.125 = lgetv %type.1;
+        symbol [ type %tmp.125 94 19 23 ];
+        symbol [ ET_ARCWALL %tmp.127 94 27 37 ];
+        %tmp.127 = getv ? :ET_ARCWALL;
+        %tmp.128 = eq %tmp.125 %tmp.127;
+        bf %tmp.128 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_39_100_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 96 12 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_39_100_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_39_100_8_stop" ]
+        %gapHalf.4 = local;
+        symbol [ gapHalf %gapHalf.4 96 16 23 ];
+        %tmp.129 = 44;
+        %tmp.130 = lgetv %score;
+        symbol [ score %tmp.130 96 31 36 ];
+        %tmp.131 = 60;
+        %tmp.132 = div %tmp.130 %tmp.131;
+        %tmp.133 = sub %tmp.129 %tmp.132;
+        lputv %gapHalf.4 %tmp.133;
+        symbol [ gapHalf %gapHalf.4 96 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 97 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_12_97_46_if_stmt:
+        %tmp.134 = lgetv %gapHalf.4;
+        symbol [ gapHalf %tmp.134 97 16 23 ];
+        %tmp.135 = 22;
+        %tmp.136 = lt %tmp.134 %tmp.135;
+        bf %tmp.136 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_12_97_46_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_12_97_46_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_30_97_46_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 97 32 ]
+        %tmp.137 = 22;
+        lputv %gapHalf.4 %tmp.137;
+        symbol [ gapHalf %gapHalf.4 97 32 39 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_30_97_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_12_97_46_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_97_12_97_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 98 12 ]
+        %tmp.138 = lgetv %pool;
+        symbol [ pool %tmp.138 98 12 16 ];
+        symbol [ spawn %tmp.139 98 17 22 ];
+        %tmp.139 = getv function %tmp.138 :spawn;
+        symbol [ ET_ARCWALL %tmp.141 98 23 33 ];
+        %tmp.141 = getv ? :ET_ARCWALL;
+        symbol [ Math %tmp.142 98 35 39 ];
         %tmp.142 = getm $.Toybox.Math;
-        symbol [ rand %tmp.143 86 28 32 ];
+        symbol [ rand %tmp.143 98 40 44 ];
         %tmp.143 = getv function %tmp.142 :rand;
         %tmp.144 = invoke %tmp.142 %tmp.143();
-        %tmp.145 = 2;
+        %tmp.145 = 360;
         %tmp.146 = mod %tmp.144 %tmp.145;
-        %tmp.147 = 0;
-        %tmp.148 = eq %tmp.146 %tmp.147;
-        bf %tmp.148 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_else_false;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_true:
-        %tmp.149 = 1;
-        push %tmp.149;
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_else_false:
-        %tmp.150 = -1;
-        push %tmp.150;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_end:
-        %tmp.151 = phi [%tmp.148 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_begin] [%tmp.149 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_true] [%tmp.150 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_else_false] [%tmp.151 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_86_22_86_52_end];
-        lputv %dir.7 %tmp.151;
-        symbol [ dir %dir.7 86 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 87 12 ]
-        %tmp.152 = lgetv %pool;
-        symbol [ pool %tmp.152 87 12 16 ];
-        symbol [ spawn %tmp.153 87 17 22 ];
-        %tmp.153 = getv function %tmp.152 :spawn;
-        symbol [ ET_LASER %tmp.155 87 23 31 ];
-        %tmp.155 = getv ? :ET_LASER;
-        %tmp.156 = lgetv %laserAng.5;
-        symbol [ laserAng %tmp.156 87 33 41 ];
-        %tmp.157 = 300;
-        %tmp.158 = lgetv %lspd.6;
-        symbol [ lspd %tmp.158 87 48 52 ];
-        %tmp.159 = lgetv %dir.7;
-        symbol [ dir %tmp.159 87 54 57 ];
-        invoke %tmp.152 %tmp.153(%tmp.155, %tmp.156, %tmp.157, %tmp.158, %tmp.159);
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_37_89_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_else_false:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_89_15_93_8_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 90 12 ]
-        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_89_15_93_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_89_15_93_8_stop" ]
+        %tmp.147 = 12;
+        %tmp.148 = lgetv %spd.3;
+        symbol [ spd %tmp.148 98 58 61 ];
+        %tmp.149 = lgetv %gapHalf.4;
+        symbol [ gapHalf %tmp.149 98 63 70 ];
+        invoke %tmp.138 %tmp.139(%tmp.141, %tmp.146, %tmp.147, %tmp.148, %tmp.149);
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_39_100_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 100 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_stmt:
+        %tmp.150 = lgetv %type.1;
+        symbol [ type %tmp.150 100 19 23 ];
+        symbol [ ET_LASER %tmp.152 100 27 35 ];
+        %tmp.152 = getv ? :ET_LASER;
+        %tmp.153 = eq %tmp.150 %tmp.152;
+        bf %tmp.153 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 102 12 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_stop" ]
+        %laserAng.5 = local;
+        symbol [ laserAng %laserAng.5 102 16 24 ];
+        %tmp.154 = lgetv %playerAngle;
+        symbol [ playerAngle %tmp.154 102 28 39 ];
+        %tmp.155 = 150;
+        %tmp.156 = add %tmp.154 %tmp.155;
+        symbol [ Math %tmp.157 102 48 52 ];
+        %tmp.157 = getm $.Toybox.Math;
+        symbol [ rand %tmp.158 102 53 57 ];
+        %tmp.158 = getv function %tmp.157 :rand;
+        %tmp.159 = invoke %tmp.157 %tmp.158();
+        %tmp.160 = 60;
+        %tmp.161 = mod %tmp.159 %tmp.160;
+        %tmp.162 = add %tmp.156 %tmp.161;
+        %tmp.163 = 360;
+        %tmp.164 = mod %tmp.162 %tmp.163;
+        lputv %laserAng.5 %tmp.164;
+        symbol [ laserAng %laserAng.5 102 16 24 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 103 12 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_stop" ]
+        %lspd.6 = local;
+        symbol [ lspd %lspd.6 103 16 20 ];
+        %tmp.165 = 1;
+        %tmp.166 = lgetv %score;
+        symbol [ score %tmp.166 103 31 36 ];
+        %tmp.167 = 700;
+        %tmp.168 = div %tmp.166 %tmp.167;
+        %tmp.169 = add %tmp.165 %tmp.168;
+        lputv %lspd.6 %tmp.169;
+        symbol [ lspd %lspd.6 103 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 104 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_12_104_38_if_stmt:
+        %tmp.170 = lgetv %lspd.6;
+        symbol [ lspd %tmp.170 104 16 20 ];
+        %tmp.171 = 3;
+        %tmp.172 = gt %tmp.170 %tmp.171;
+        bf %tmp.172 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_12_104_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_12_104_38_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_26_104_38_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 104 28 ]
+        %tmp.173 = 3;
+        lputv %lspd.6 %tmp.173;
+        symbol [ lspd %lspd.6 104 28 32 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_26_104_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_12_104_38_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_104_12_104_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 105 12 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_stop" ]
+        %dir.7 = local;
+        symbol [ dir %dir.7 105 16 19 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_begin:
+        symbol [ Math %tmp.174 105 23 27 ];
+        %tmp.174 = getm $.Toybox.Math;
+        symbol [ rand %tmp.175 105 28 32 ];
+        %tmp.175 = getv function %tmp.174 :rand;
+        %tmp.176 = invoke %tmp.174 %tmp.175();
+        %tmp.177 = 2;
+        %tmp.178 = mod %tmp.176 %tmp.177;
+        %tmp.179 = 0;
+        %tmp.180 = eq %tmp.178 %tmp.179;
+        bf %tmp.180 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_true:
+        %tmp.181 = 1;
+        push %tmp.181;
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_else_false:
+        %tmp.182 = -1;
+        push %tmp.182;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_end:
+        %tmp.183 = phi [%tmp.180 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_begin] [%tmp.181 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_true] [%tmp.182 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_else_false] [%tmp.183 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_105_22_105_52_end];
+        lputv %dir.7 %tmp.183;
+        symbol [ dir %dir.7 105 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 106 12 ]
+        %tmp.184 = lgetv %pool;
+        symbol [ pool %tmp.184 106 12 16 ];
+        symbol [ spawn %tmp.185 106 17 22 ];
+        %tmp.185 = getv function %tmp.184 :spawn;
+        symbol [ ET_LASER %tmp.187 106 23 31 ];
+        %tmp.187 = getv ? :ET_LASER;
+        %tmp.188 = lgetv %laserAng.5;
+        symbol [ laserAng %tmp.188 106 33 41 ];
+        %tmp.189 = 300;
+        %tmp.190 = lgetv %lspd.6;
+        symbol [ lspd %tmp.190 106 48 52 ];
+        %tmp.191 = lgetv %dir.7;
+        symbol [ dir %tmp.191 106 54 57 ];
+        invoke %tmp.184 %tmp.185(%tmp.187, %tmp.188, %tmp.189, %tmp.190, %tmp.191);
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_37_108_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_108_15_112_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 109 12 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_108_15_112_8_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_108_15_112_8_stop" ]
         %rgHalf.8 = local;
-        symbol [ rgHalf %rgHalf.8 90 16 22 ];
-        %tmp.160 = 42;
-        %tmp.161 = lgetv %score;
-        symbol [ score %tmp.161 90 30 35 ];
-        %tmp.162 = 65;
-        %tmp.163 = div %tmp.161 %tmp.162;
-        %tmp.164 = sub %tmp.160 %tmp.163;
-        lputv %rgHalf.8 %tmp.164;
-        symbol [ rgHalf %rgHalf.8 90 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 91 12 ]
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_12_91_44_if_stmt:
-        %tmp.165 = lgetv %rgHalf.8;
-        symbol [ rgHalf %tmp.165 91 16 22 ];
-        %tmp.166 = 20;
-        %tmp.167 = lt %tmp.165 %tmp.166;
-        bf %tmp.167 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_12_91_44_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_12_91_44_if_true:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_29_91_44_start:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 91 31 ]
-        %tmp.168 = 20;
-        lputv %rgHalf.8 %tmp.168;
-        symbol [ rgHalf %rgHalf.8 91 31 37 ];
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_29_91_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_12_91_44_if_end;
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_12_91_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 92 12 ]
-        %tmp.169 = lgetv %pool;
-        symbol [ pool %tmp.169 92 12 16 ];
-        symbol [ spawn %tmp.170 92 17 22 ];
-        %tmp.170 = getv function %tmp.169 :spawn;
-        symbol [ ET_RING %tmp.172 92 23 30 ];
-        %tmp.172 = getv ? :ET_RING;
-        symbol [ Math %tmp.173 92 32 36 ];
-        %tmp.173 = getm $.Toybox.Math;
-        symbol [ rand %tmp.174 92 37 41 ];
-        %tmp.174 = getv function %tmp.173 :rand;
-        %tmp.175 = invoke %tmp.173 %tmp.174();
-        %tmp.176 = 360;
-        %tmp.177 = mod %tmp.175 %tmp.176;
-        %tmp.178 = 12;
-        %tmp.179 = lgetv %spd.3;
-        symbol [ spd %tmp.179 92 55 58 ];
-        %tmp.180 = lgetv %rgHalf.8;
-        symbol [ rgHalf %tmp.180 92 60 66 ];
-        invoke %tmp.169 %tmp.170(%tmp.172, %tmp.177, %tmp.178, %tmp.179, %tmp.180);
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_89_15_93_8_stop:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_81_15_93_8_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_75_15_93_8_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_72_8_93_8_if_end:
-_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_46_67_94_4_stop:
+        symbol [ rgHalf %rgHalf.8 109 16 22 ];
+        %tmp.192 = 42;
+        %tmp.193 = lgetv %score;
+        symbol [ score %tmp.193 109 30 35 ];
+        %tmp.194 = 65;
+        %tmp.195 = div %tmp.193 %tmp.194;
+        %tmp.196 = sub %tmp.192 %tmp.195;
+        lputv %rgHalf.8 %tmp.196;
+        symbol [ rgHalf %rgHalf.8 109 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 110 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_12_110_44_if_stmt:
+        %tmp.197 = lgetv %rgHalf.8;
+        symbol [ rgHalf %tmp.197 110 16 22 ];
+        %tmp.198 = 20;
+        %tmp.199 = lt %tmp.197 %tmp.198;
+        bf %tmp.199 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_12_110_44_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_12_110_44_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_29_110_44_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 110 31 ]
+        %tmp.200 = 20;
+        lputv %rgHalf.8 %tmp.200;
+        symbol [ rgHalf %rgHalf.8 110 31 37 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_29_110_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_12_110_44_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_110_12_110_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc" 111 12 ]
+        %tmp.201 = lgetv %pool;
+        symbol [ pool %tmp.201 111 12 16 ];
+        symbol [ spawn %tmp.202 111 17 22 ];
+        %tmp.202 = getv function %tmp.201 :spawn;
+        symbol [ ET_RING %tmp.204 111 23 30 ];
+        %tmp.204 = getv ? :ET_RING;
+        symbol [ Math %tmp.205 111 32 36 ];
+        %tmp.205 = getm $.Toybox.Math;
+        symbol [ rand %tmp.206 111 37 41 ];
+        %tmp.206 = getv function %tmp.205 :rand;
+        %tmp.207 = invoke %tmp.205 %tmp.206();
+        %tmp.208 = 360;
+        %tmp.209 = mod %tmp.207 %tmp.208;
+        %tmp.210 = 12;
+        %tmp.211 = lgetv %spd.3;
+        symbol [ spd %tmp.211 111 55 58 ];
+        %tmp.212 = lgetv %rgHalf.8;
+        symbol [ rgHalf %tmp.212 111 60 66 ];
+        invoke %tmp.201 %tmp.202(%tmp.204, %tmp.209, %tmp.210, %tmp.211, %tmp.212);
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_108_15_112_8_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_100_15_112_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_94_15_112_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_91_8_112_8_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_SpawnManager_mc_55_67_113_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/SpawnManager.mc"; @line = 1; ]

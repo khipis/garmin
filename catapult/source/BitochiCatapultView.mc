@@ -2365,35 +2365,22 @@ class BitochiCatapultView extends WatchUi.View {
         dc.clear();
 
         var cleared = _enemyHp <= 0;
-        var flash = (_resultTick % 8 < 4);
+        var title;
+        var titleC;
+        if (cleared) { title = "VICTORY!"; titleC = 0x44FF88; }
+        else { title = "DEFEATED"; titleC = 0xFF6644; }
+        var lines = [
+            ["Score: " + _score, 0xFFCC44],
+            ["+" + _roundGold + " gold", 0xFFDD44],
+            ["Total: " + _gold + " gold", 0xFFAA22]
+        ];
         if (cleared) {
-            dc.setColor(flash ? 0x44FF88 : 0x22CC66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_MEDIUM, "VICTORY!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add([_enemyName + " down! " + _totalShots + " shots", 0x44FF88]);
+            if (_totalShots <= _bestShots) { lines.add(["NEW RECORD!", 0xFFFF44]); }
         } else {
-            dc.setColor(flash ? 0xFF6644 : 0xCC4422, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_MEDIUM, "DEFEATED", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add([_enemyName + " HP: " + _enemyHp, 0xFF6644]);
         }
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 28 / 100, Graphics.FONT_SMALL, "Score: " + _score, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 42 / 100, Graphics.FONT_XTINY, "+" + _roundGold + " gold", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 50 / 100, Graphics.FONT_XTINY, "Total: " + _gold + " gold", Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (cleared) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 60 / 100, Graphics.FONT_XTINY, _enemyName + " down! " + _totalShots + " shots", Graphics.TEXT_JUSTIFY_CENTER);
-            if (_totalShots <= _bestShots) {
-                dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_XTINY, "NEW RECORD!", Graphics.TEXT_JUSTIFY_CENTER);
-            }
-        } else {
-            dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 60 / 100, Graphics.FONT_XTINY, _enemyName + " HP: " + _enemyHp, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 82 / 100, Graphics.FONT_XTINY, "Press to continue", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, w, h, title, titleC, lines, "Press to continue", titleC);
     }
 
     // Scrollable — 9 purchasable items + a "NEXT ROUND" row no longer all fit
@@ -2493,26 +2480,19 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(0x0A0A1A, 0x0A0A1A);
         dc.clear();
 
-        var flash = (_resultTick % 10 < 5);
-        dc.setColor(flash ? 0xFFFFFF : 0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_MEDIUM, _beatGame ? "YOU WIN!" : "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_MEDIUM, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
         var grade;
         if (_score >= 12000) { grade = "LEGENDARY!"; }
         else if (_score >= 8000) { grade = "MASTER!"; }
         else if (_score >= 5000) { grade = "GREAT!"; }
         else if (_score >= 2500) { grade = "GOOD"; }
         else { grade = "TRY AGAIN"; }
-        dc.setColor(0x44FFCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_SMALL, grade, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_XTINY, "Rounds: " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFF8866, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 71 / 100, Graphics.FONT_XTINY, "Damage: " + _matchDamage, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "Shots fired: " + _matchShotsFired, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, "Press to restart", Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [
+            ["" + _score, 0xFFCC44],
+            [grade, 0x44FFCC],
+            ["Rounds: " + _round, 0xAABBCC],
+            ["Damage: " + _matchDamage, 0xFF8866],
+            ["Shots fired: " + _matchShotsFired, 0x88CCFF]
+        ];
+        GameOverCard.draw(dc, w, h, _beatGame ? "YOU WIN!" : "GAME OVER", 0xFFFFFF, lines, "Press to restart", 0xFFFFFF);
     }
 }

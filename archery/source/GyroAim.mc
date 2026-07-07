@@ -55,36 +55,39 @@ class GyroAim {
         if (!_calibrated) {
             _calX = ax; _calY = ay; _calibrated = true;
         }
+        // Small dead zone with a SMOOTH edge (subtract the zone rather
+        // than snapping to 0) so the aim eases in with no jump — this is
+        // what makes fine tracking feel fluid instead of steppy.
+        var DZ = 16;
         var dx = ax - _calX;
         var dy = ay - _calY;
-        if (dx > -30 && dx < 30) { dx = 0; }
-        if (dy > -30 && dy < 30) { dy = 0; }
+        if (dx > -DZ && dx < DZ) { dx = 0; } else { dx = (dx > 0) ? dx - DZ : dx + DZ; }
+        if (dy > -DZ && dy < DZ) { dy = 0; } else { dy = (dy > 0) ? dy - DZ : dy + DZ; }
 
-        // Scale (rad / milli-g).
-        // Reduced from earlier values — the original felt too twitchy on
-        // a typical wrist motion. HIGH now matches the old NORMAL so users
-        // who prefer the snappier feel can still select it.
+        // Scale (rad / milli-g). Pitch gets a higher gain than yaw because
+        // the comfortable wrist range in the vertical axis is smaller — so
+        // enemies on the ground are reachable with a natural, small tilt.
         var sc;
-        if      (_sens == AR_SENS_LOW)  { sc = 0.0032; }
-        else if (_sens == AR_SENS_HIGH) { sc = 0.0062; }
-        else                             { sc = 0.0045; }
+        if      (_sens == AR_SENS_LOW)  { sc = 0.0034; }
+        else if (_sens == AR_SENS_HIGH) { sc = 0.0068; }
+        else                             { sc = 0.0050; }
         var ty =  dx.toFloat() * sc;
-        var tp = -dy.toFloat() * sc;
+        var tp = -dy.toFloat() * sc * 1.7;   // vertical gain boost
 
-        // Wrists rotate backward (look-DOWN) less comfortably than
-        // forward, so amplify the down half of pitch past a small
-        // dead zone.  Small tilts still give fine control near the
-        // horizon; larger tilts reach further below.
-        if (tp > 0.15) { tp = 0.15 + (tp - 0.15) * 1.7; }
+        // SYMMETRIC ease-out: 1:1 near the horizon for fine control, then
+        // amplify travel past a small linear zone EQUALLY up and down. No
+        // direction is privileged, so "aim down" is exactly as reachable as
+        // "aim up" regardless of the accelerometer axis polarity.
+        ty = _ease(ty);
+        tp = _ease(tp);
 
-        // Asymmetric clamp: more room looking DOWN so enemies on
-        // the ground are always reachable.
-        var limU = 1.2;
-        var limD = 1.8;
+        // Symmetric, generous clamp — both directions reach well past the
+        // enemy band so no target on the ground is ever out of reach.
+        var lim = 1.6;
         if (ty >  1.4) { ty =  1.4; }
         if (ty < -1.4) { ty = -1.4; }
-        if (tp >  limD) { tp =  limD; }
-        if (tp < -limU) { tp = -limU; }
+        if (tp >  lim) { tp =  lim; }
+        if (tp < -lim) { tp = -lim; }
 
         // Bow tension jitter — only when actively drawing.
         if (tension > 0.0) {
@@ -102,6 +105,15 @@ class GyroAim {
         else                             { a = 0.20; }
         aimYaw   = aimYaw   + (_tYaw   - aimYaw)   * a;
         aimPitch = aimPitch + (_tPitch - aimPitch) * a;
+    }
+
+    // Symmetric ease-out response curve about the calibrated centre.
+    hidden function _ease(v) {
+        var lin = 0.16;   // 1:1 fine-control zone (radians)
+        var k   = 1.8;    // amplification of travel beyond the linear zone
+        if (v >  lin) { return  lin + (v - lin) * k; }
+        if (v < -lin) { return -lin + (v + lin) * k; }
+        return v;
     }
 
     hidden function _randf() {

@@ -17,26 +17,31 @@
 //       other play: clear selection → menu
 //       menu/over: pop view
 //
-// Touch (GS_PLAY) — grab-and-slide model (v4). The gem you TOUCH is the
-// gem that moves — always, on every firmware. On touch-down the gem is
-// grabbed (instant highlight); sliding the finger toward a neighbour
-// slides the gem there.
+// Touch (GS_PLAY) — grab-and-flick (v7):
 //
-//   touch-down on a gem   → grab it: cursor + highlight snap onto it now.
-//   slide into a neighbour→ swap the grabbed gem into that neighbour the
-//                           instant the finger crosses the cell border
-//                           (also fires on lift-off past a small threshold).
-//   quick flick           → onSwipe swaps the grabbed gem in the flick
-//                           direction (covers firmwares that only report
-//                           the gesture as a swipe, never as a drag).
-//   tap (no slide)        → pick the gem; tapping an adjacent gem then
-//                           swaps the two (button-free two-tap fallback).
+//   TAP on a gem        → that gem is SELECTED exactly where the finger lands.
+//   FLICK / SWIPE       → the currently SELECTED gem moves one cell in the
+//                         swipe direction: left→left, right→right, up→up,
+//                         down→down. If nothing is selected yet, the gem under
+//                         the start of the swipe is used.
+//   LIFT without moving → resolves as a TAP and selects the touched gem.
 //
-// Robustness: the grabbed cell is captured at touch-down (_startR/_startC)
-// and reused by every resolution path — cross-cell during drag, lift-off
-// threshold, and onSwipe — so the touched gem is never confused with the
-// cursor gem. _committed stops a single gesture swapping twice; _justSwiped
-// suppresses the trailing onTap/onSwipe a firmware may tack on after a drag.
+// The whole gesture is driven by the drag stream (START/CONT/STOP). onTap and
+// onSwipe are treated as REDUNDANT fallbacks:
+//   • onTap → selectCell — idempotent, so if it fires alongside a drag it just
+//     re-selects the same gem (harmless). This is why taps are NEVER gated.
+//   • onSwipe → move the selected gem — this MUST be de-duped against a drag
+//     swipe, so a short "_swipeGuardMs" window (set ONLY when a drag swipe
+//     commits) swallows the trailing onSwipe/onTap echo of that same flick.
+//
+// DRAG_TYPE_START deliberately does NOT change selection: a swipe that begins
+// on some other cell must still move the gem the player previously selected,
+// instead of "randomly" replacing selection with the cell under the finger.
+// Because the guard is armed only by swipes — never by taps — a burst of quick
+// taps can never swallow one another.
+//
+// A gesture becomes a SWIPE once the finger travels past _swipeMin() px, a
+// threshold scaled to the board cell size so a deliberate tap never trips it.
 //
 // Touch (GS_MENU / GS_OVER):
 //   Tap → activate / confirm.
@@ -55,22 +60,21 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // Drag tracking state.
     hidden var _dragStartX;
     hidden var _dragStartY;
-    hidden var _startR;         // board cell the gesture started on (grabbed gem)
+    hidden var _startR;         // board cell the gesture started (was grabbed) on
     hidden var _startC;
-    hidden var _downMs;         // timer at touch-down (guards stale grab reuse)
-    hidden var _dragMoved;
-    hidden var _committed;      // this gesture already fired a swap
-    hidden var _justSwiped;     // true after a drag-swap; suppresses the trailing onTap/onSwipe
+    hidden var _committed;      // this drag already fired its swipe
+
+    // Timestamp (ms) of the last DRAG-DRIVEN SWIPE. A firmware often tacks a
+    // stray onSwipe/onTap onto the end of the drag stream — anything landing
+    // within this short window is that echo and is ignored. Crucially this is
+    // armed ONLY by swipes, so quick successive TAPS never gate each other.
+    hidden var _swipeGuardMs;
 
     // Phantom-back guard.
     hidden var _lastGestureMs;
 
-    // Deadzone before a gesture counts as movement (px). Small = snappy.
-    hidden const _DRAG_DEAD_PX  = 6;
-    // Minimum finger travel to treat lift-off as a swipe (px). Kept small so
-    // a "light" flick on a gem is enough even if the finger never fully
-    // crosses into the neighbour cell.
-    hidden const _SWIPE_MIN_PX  = 12;
+    // Fallback swipe threshold (px) when the board cell size isn't known yet.
+    hidden const _SWIPE_MIN_FALLBACK = 18;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
@@ -79,11 +83,25 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _dragStartY    = -1;
         _startR        = -1;
         _startC        = -1;
-        _downMs        = 0;
-        _dragMoved     = false;
         _committed     = false;
-        _justSwiped    = false;
+        _swipeGuardMs  = 0;
         _lastGestureMs = 0;
+    }
+
+    // A flick counts as a SWIPE once travel passes ~55% of a cell (min 18px),
+    // so a deliberate tap — even a slightly sloppy one — never trips a swap.
+    hidden function _swipeMin() {
+        var cp = _v.cellSize();
+        if (cp == null || cp <= 0) { return _SWIPE_MIN_FALLBACK; }
+        var t = cp * 55 / 100;
+        return (t < _SWIPE_MIN_FALLBACK) ? _SWIPE_MIN_FALLBACK : t;
+    }
+
+    // True if a drag-swipe just fired and this onSwipe/onTap is its echo.
+    hidden function _inSwipeGuard() {
+        if (_swipeGuardMs == 0) { return false; }
+        var dt = System.getTimer() - _swipeGuardMs;
+        return (dt >= 0 && dt < 320);
     }
 
     hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
@@ -118,16 +136,21 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    // ── Touch ────────────────────────────────────────────────────────
+    // ── Touch (grab-and-flick) ────────────────────────────────────────
 
-    // onSwipe: quick-flick path. Fires on firmwares that report a fast
-    // gesture as a swipe rather than a full drag. Always acts on the gem the
-    // finger started on (captured at touch-down), so the touched gem moves —
-    // not the cursor gem. _justSwiped consumes the spurious onSwipe some
-    // firmwares tack on right after an onDrag already resolved the gesture.
+    // Map a swipe/flick vector to a unit board direction (dominant axis).
+    hidden function _dirFromVec(dx, dy) {
+        var adx = (dx < 0) ? -dx : dx;
+        var ady = (dy < 0) ? -dy : dy;
+        if (adx >= ady) { return [0, (dx > 0) ? 1 : -1]; }
+        return [(dy > 0) ? 1 : -1, 0];
+    }
+
     function onSwipe(evt) {
         _markGesture();
-        if (_justSwiped) { _justSwiped = false; return true; }
+        // A drag swipe already handled this flick — ignore its echo. (Taps
+        // never arm the guard, so this can't swallow a genuine tap.)
+        if (_inSwipeGuard()) { return true; }
         var d  = evt.getDirection();
         var dr = 0;
         var dc = 0;
@@ -136,20 +159,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         else if (d == WatchUi.SWIPE_LEFT)  { dc = -1; }
         else if (d == WatchUi.SWIPE_RIGHT) { dc =  1; }
         else { return true; }
-
-        // Use the grabbed gem only if the touch-down that set it belongs to
-        // this same gesture (recent). Otherwise it'd be a stale cell from an
-        // earlier gesture, so fall back to the picked/cursor gem.
-        var fresh = (_startR >= 0) &&
-                    ((System.getTimer() - _downMs) >= 0) &&
-                    ((System.getTimer() - _downMs) < 700);
-        if (fresh) {
-            _v.swapFrom(_startR, _startC, dr, dc);   // grabbed gem
-        } else {
-            _v.handleSwipeSwap(dr, dc);              // no fresh touch-down
-        }
-        _startR = -1; _startC = -1;
-        _v.cancelDrag();
+        // Move the grabbed gem (falls back to the selection / cursor when this
+        // firmware emits onSwipe without a preceding onDrag START).
+        _v.swipeMoveFrom(dr, dc, _startR, _startC);
         WatchUi.requestUpdate();
         return true;
     }
@@ -164,58 +176,25 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         if (t == WatchUi.DRAG_TYPE_START) {
             _dragStartX = px;
             _dragStartY = py;
-            _dragMoved  = false;
             _committed  = false;
-            _justSwiped = false;
-            // Grab the gem under the finger immediately: cursor + highlight
-            // snap onto it now, before any movement.
-            _downMs = System.getTimer();
+            // Record the cell under the finger, but do not select it yet. We
+            // only know this was a TAP when STOP arrives without crossing the
+            // swipe threshold. This keeps swipes bound to the already selected
+            // gem instead of unexpectedly jumping to the finger-start cell.
             var rc0 = _v.cellAt(px, py);
             if (rc0 != null) {
-                _startR = rc0[0];
-                _startC = rc0[1];
-                _v.startDrag(rc0[0], rc0[1]);
-                WatchUi.requestUpdate();
+                _startR = rc0[0]; _startC = rc0[1];
             } else {
-                _startR = -1;
-                _startC = -1;
+                _startR = -1; _startC = -1;
             }
             return true;
         }
 
         if (t == WatchUi.DRAG_TYPE_CONTINUE) {
-            if (_dragStartX < 0 || _committed || _startR < 0) { return true; }
-            var cdx  = px - _dragStartX;
-            var cdy  = py - _dragStartY;
-            var acdx = (cdx < 0) ? -cdx : cdx;
-            var acdy = (cdy < 0) ? -cdy : cdy;
-            if (acdx >= _DRAG_DEAD_PX || acdy >= _DRAG_DEAD_PX) { _dragMoved = true; }
-            if (!_dragMoved) { return true; }
-
-            // Preview: highlight the neighbour the current slide points at.
-            var pdr = 0;
-            var pdc = 0;
-            if (acdx >= acdy) { pdc = (cdx > 0) ? 1 : -1; }
-            else              { pdr = (cdy > 0) ? 1 : -1; }
-            _v.updateDragDir(pdr, pdc);
-
-            // Commit the swap the moment the finger crosses fully into an
-            // adjacent cell — one step toward the cell now under the finger.
-            var rc = _v.cellAt(px, py);
-            if (rc != null && (rc[0] != _startR || rc[1] != _startC)) {
-                var ddr  = rc[0] - _startR;
-                var ddc  = rc[1] - _startC;
-                var addr = (ddr < 0) ? -ddr : ddr;
-                var addc = (ddc < 0) ? -ddc : ddc;
-                var sdr  = 0;
-                var sdc  = 0;
-                if (addc >= addr) { sdc = (ddc > 0) ? 1 : -1; }
-                else              { sdr = (ddr > 0) ? 1 : -1; }
-                _committed  = true;
-                _justSwiped = true;
-                _v.swapFrom(_startR, _startC, sdr, sdc);
-            }
-            WatchUi.requestUpdate();
+            if (_dragStartX < 0 || _committed) { return true; }
+            var cdx = px - _dragStartX;
+            var cdy = py - _dragStartY;
+            _maybeSwipe(cdx, cdy);
             return true;
         }
 
@@ -226,48 +205,45 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragStartX = -1;
             _dragStartY = -1;
             _markGesture();
-            if (_committed) { return true; }   // already swapped mid-slide
-
-            var adx = (dx < 0) ? -dx : dx;
-            var ady = (dy < 0) ? -dy : dy;
-
-            // Lift-off past the swipe threshold → swap the grabbed gem in the
-            // dominant-axis direction, even if the finger never fully crossed
-            // into the neighbour cell (covers short, light flicks).
-            if ((adx >= _SWIPE_MIN_PX || ady >= _SWIPE_MIN_PX) && _startR >= 0) {
-                _committed  = true;
-                _justSwiped = true;
-                if (adx >= ady) {
-                    _v.swapFrom(_startR, _startC, 0, (dx > 0) ? 1 : -1);
-                } else {
-                    _v.swapFrom(_startR, _startC, (dy > 0) ? 1 : -1, 0);
+            // Resolve as a swipe if it crossed the threshold. If not, this is
+            // a plain tap from firmware that reports taps as START/STOP instead
+            // of onTap, so select the exact start cell.
+            if (!_committed) {
+                _maybeSwipe(dx, dy);
+                if (!_committed && _startR >= 0) {
+                    _v.selectCell(_startR, _startC);
+                    WatchUi.requestUpdate();
                 }
-                WatchUi.requestUpdate();
-                return true;
             }
-
-            // Barely moved → a tap-pick on the grabbed gem. (Some firmwares
-            // won't also emit onTap after a drag, so resolve it here;
-            // _justSwiped guards a duplicate onTap.)
-            _v.cancelDrag();
-            if (_startR >= 0) {
-                _justSwiped = true;
-                _v.pickCell(_startR, _startC);
-                WatchUi.requestUpdate();
-            }
+            _startR = -1; _startC = -1;
             return true;
         }
 
         return true;
     }
 
+    // Fire the grabbed gem's move if the finger has travelled far enough for a
+    // swipe. Arms the swipe-guard so the trailing onSwipe/onTap echo is dropped.
+    hidden function _maybeSwipe(dx, dy) {
+        var adx = (dx < 0) ? -dx : dx;
+        var ady = (dy < 0) ? -dy : dy;
+        var minPx = _swipeMin();
+        if (adx < minPx && ady < minPx) { return; }
+        var pd = _dirFromVec(dx, dy);
+        _committed    = true;
+        _swipeGuardMs = System.getTimer();
+        _v.swipeMoveFrom(pd[0], pd[1], _startR, _startC);
+        WatchUi.requestUpdate();
+    }
+
     function onTap(evt) {
         _markGesture();
-        // Swallow the ghost tap that fires right after a drag resolved things.
-        if (_justSwiped) { _justSwiped = false; return true; }
+        // Only a swipe echo is gated here; genuine taps are always honoured so
+        // rapid taps on different gems each land where the finger touched.
+        if (_inSwipeGuard()) { return true; }
         var xy = evt.getCoordinates();
         if (xy == null) { return true; }
-        _v.handleTap(xy[0], xy[1]);
+        _v.handleTap(xy[0], xy[1]);       // selects the tapped gem in play
         WatchUi.requestUpdate();
         return true;
     }

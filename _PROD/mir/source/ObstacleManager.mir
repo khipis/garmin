@@ -70,892 +70,936 @@ class ObstacleManager {
     var spawnX;
     [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 44; @position = 8; @symbol_vardef = [spacing,44,8,15]; ]
     var spacing;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 46; @symbol_functiondef = [initialize,46,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 47; @position = 8; @symbol_vardef = [gapBias,47,8,15]; ]
+    var gapBias;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 49; @symbol_functiondef = [initialize,49,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_46_26_55_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 47 8 ]
-        symbol [ MAX_PIPES %tmp.3 47 21 30 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_49_26_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 50 8 ]
+        symbol [ MAX_PIPES %tmp.3 50 21 30 ];
         %tmp.3 = getv ? :MAX_PIPES;
         %tmp.1 = newa %tmp.3;
-        symbol [ pipes ? 47 8 13 ];
+        symbol [ pipes ? 50 8 13 ];
         putv self :pipes %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 48 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_end" ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 51 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_end" ]
         %i.1 = local;
-        symbol [ i %i.1 48 17 18 ];
+        symbol [ i %i.1 51 17 18 ];
         %tmp.4 = 0;
         lputv %i.1 %tmp.4;
-        symbol [ i %i.1 48 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_test:
+        symbol [ i %i.1 51 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_test:
         %tmp.5 = lgetv %i.1;
-        symbol [ i %tmp.5 48 24 25 ];
-        symbol [ MAX_PIPES %tmp.7 48 28 37 ];
+        symbol [ i %tmp.5 51 24 25 ];
+        symbol [ MAX_PIPES %tmp.7 51 28 37 ];
         %tmp.7 = getv ? :MAX_PIPES;
         %tmp.8 = lt %tmp.5 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_44_48_69_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 48 46 ]
-        symbol [ pipes %tmp.9 48 46 51 ];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_44_51_69_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 51 46 ]
+        symbol [ pipes %tmp.9 51 46 51 ];
         %tmp.9 = getv self :pipes;
-        symbol [ Pipe %tmp.13 48 61 65 ];
+        symbol [ Pipe %tmp.13 51 61 65 ];
         %tmp.13 = getv ? :Pipe;
         %tmp.10 = newc %tmp.13 ();
         %tmp.14 = lgetv %i.1;
-        symbol [ i %tmp.14 48 52 53 ];
+        symbol [ i %tmp.14 51 52 53 ];
         aputv %tmp.9 %tmp.14 %tmp.10;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_44_48_69_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 48 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_44_51_69_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 51 ]
         %tmp.17 = lgetv %i.1;
-        symbol [ i %tmp.17 48 39 40 ];
+        symbol [ i %tmp.17 51 39 40 ];
         %tmp.18 = add %tmp.17 1;
         lputv %i.1 %tmp.18;
-        symbol [ i %i.1 48 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_48_8_48_69_for_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 49 8 ]
-        %tmp.19 = 240;
-        symbol [ screenW ? 49 8 15 ];
-        putv self :screenW %tmp.19;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 50 8 ]
-        %tmp.20 = 0;
-        symbol [ ceilY ? 50 8 13 ];
-        putv self :ceilY %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 51 8 ]
-        %tmp.21 = 240;
-        symbol [ floorY ? 51 8 14 ];
-        putv self :floorY %tmp.21;
+        symbol [ i %i.1 51 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_51_8_51_69_for_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 52 8 ]
-        %tmp.22 = 22;
-        symbol [ pipeWidth ? 52 8 17 ];
-        putv self :pipeWidth %tmp.22;
+        %tmp.19 = 240;
+        symbol [ screenW ? 52 8 15 ];
+        putv self :screenW %tmp.19;
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 53 8 ]
-        %tmp.23 = 240;
-        symbol [ spawnX ? 53 8 14 ];
-        putv self :spawnX %tmp.23;
+        %tmp.20 = 0;
+        symbol [ ceilY ? 53 8 13 ];
+        putv self :ceilY %tmp.20;
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 54 8 ]
+        %tmp.21 = 240;
+        symbol [ floorY ? 54 8 14 ];
+        putv self :floorY %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 55 8 ]
+        %tmp.22 = 22;
+        symbol [ pipeWidth ? 55 8 17 ];
+        putv self :pipeWidth %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 56 8 ]
+        %tmp.23 = 240;
+        symbol [ spawnX ? 56 8 14 ];
+        putv self :spawnX %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 57 8 ]
         %tmp.24 = 110;
-        symbol [ spacing ? 54 8 15 ];
+        symbol [ spacing ? 57 8 15 ];
         putv self :spacing %tmp.24;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_46_26_55_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 57; @symbol_functiondef = [setBounds,57,13,22]; @symbol_param<0> = [w,57,23,24]; @symbol_param<1> = [top,57,26,29]; @symbol_param<2> = [bottom,57,31,37]; @symbol_param<3> = [pipeW,57,39,44]; ]
-    function setBounds(w, top, bottom, pipeW) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_57_46_65_4_start:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 58 8 ]
+        %tmp.25 = 0;
+        symbol [ gapBias ? 58 8 15 ];
+        putv self :gapBias %tmp.25;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_49_26_59_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 61; @symbol_functiondef = [setGapBias,61,13,23]; @symbol_param<0> = [b,61,24,25]; ]
+    function setGapBias(b) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_61_27_61_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 61 29 ]
+        %tmp.1 = lgetv %b;
+        symbol [ b %tmp.1 61 39 40 ];
+        symbol [ gapBias ? 61 29 36 ];
+        putv self :gapBias %tmp.1;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_61_27_61_42_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 63; @symbol_functiondef = [setBounds,63,13,22]; @symbol_param<0> = [w,63,23,24]; @symbol_param<1> = [top,63,26,29]; @symbol_param<2> = [bottom,63,31,37]; @symbol_param<3> = [pipeW,63,39,44]; ]
+    function setBounds(w, top, bottom, pipeW) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_63_46_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 64 8 ]
         %tmp.1 = lgetv %w;
-        symbol [ w %tmp.1 58 20 21 ];
-        symbol [ screenW ? 58 8 15 ];
+        symbol [ w %tmp.1 64 20 21 ];
+        symbol [ screenW ? 64 8 15 ];
         putv self :screenW %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 59 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 65 8 ]
         %tmp.2 = lgetv %top;
-        symbol [ top %tmp.2 59 20 23 ];
-        symbol [ ceilY ? 59 8 13 ];
+        symbol [ top %tmp.2 65 20 23 ];
+        symbol [ ceilY ? 65 8 13 ];
         putv self :ceilY %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 60 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 66 8 ]
         %tmp.3 = lgetv %bottom;
-        symbol [ bottom %tmp.3 60 20 26 ];
-        symbol [ floorY ? 60 8 14 ];
+        symbol [ bottom %tmp.3 66 20 26 ];
+        symbol [ floorY ? 66 8 14 ];
         putv self :floorY %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 61 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 67 8 ]
         %tmp.4 = lgetv %pipeW;
-        symbol [ pipeW %tmp.4 61 20 25 ];
-        symbol [ pipeWidth ? 61 8 17 ];
+        symbol [ pipeW %tmp.4 67 20 25 ];
+        symbol [ pipeWidth ? 67 8 17 ];
         putv self :pipeWidth %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 63 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 69 8 ]
         %tmp.5 = lgetv %w;
-        symbol [ w %tmp.5 63 21 22 ];
+        symbol [ w %tmp.5 69 21 22 ];
         %tmp.6 = 56;
         %tmp.7 = mul %tmp.5 %tmp.6;
         %tmp.8 = 100;
         %tmp.9 = div %tmp.7 %tmp.8;
-        symbol [ spacing ? 63 8 15 ];
+        symbol [ spacing ? 69 8 15 ];
         putv self :spacing %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 64 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_8_64_44_if_stmt:
-        symbol [ spacing %tmp.11 64 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_70_44_if_stmt:
+        symbol [ spacing %tmp.11 70 12 19 ];
         %tmp.11 = getv ? :spacing;
         %tmp.12 = 90;
         %tmp.13 = lt %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_8_64_44_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_8_64_44_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_27_64_44_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 64 29 ]
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_70_44_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_70_44_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_27_70_44_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 70 29 ]
         %tmp.14 = 90;
-        symbol [ spacing ? 64 29 36 ];
+        symbol [ spacing ? 70 29 36 ];
         putv self :spacing %tmp.14;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_27_64_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_8_64_44_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_64_8_64_44_if_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_57_46_65_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_27_70_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_70_44_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_70_44_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_63_46_71_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 67; @symbol_functiondef = [reset,67,13,18]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 73; @symbol_functiondef = [reset,73,13,18]; ]
     function reset() {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_67_21_74_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 70 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_end" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_73_21_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 76 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_end" ]
         %i.1 = local;
-        symbol [ i %i.1 70 17 18 ];
+        symbol [ i %i.1 76 17 18 ];
         %tmp.1 = 0;
         lputv %i.1 %tmp.1;
-        symbol [ i %i.1 70 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_test:
+        symbol [ i %i.1 76 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_test:
         %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 70 24 25 ];
-        symbol [ MAX_PIPES %tmp.4 70 28 37 ];
+        symbol [ i %tmp.2 76 24 25 ];
+        symbol [ MAX_PIPES %tmp.4 76 28 37 ];
         %tmp.4 = getv ? :MAX_PIPES;
         %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_44_73_8_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 71 12 ]
-        symbol [ pipes %tmp.6 71 12 17 ];
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_44_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 77 12 ]
+        symbol [ pipes %tmp.6 77 12 17 ];
         %tmp.6 = getv self :pipes;
         %tmp.7 = lgetv %i.1;
-        symbol [ i %tmp.7 71 18 19 ];
+        symbol [ i %tmp.7 77 18 19 ];
         %tmp.8 = agetv %tmp.6 %tmp.7;
-        symbol [ screenW %tmp.10 71 25 32 ];
+        symbol [ screenW %tmp.10 77 25 32 ];
         %tmp.10 = getv ? :screenW;
         %tmp.11 = 10000;
         %tmp.12 = add %tmp.10 %tmp.11;
-        symbol [ x ? 71 21 22 ];
+        symbol [ x ? 77 21 22 ];
         putv %tmp.8 :x %tmp.12;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 72 12 ]
-        symbol [ pipes %tmp.13 72 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 78 12 ]
+        symbol [ pipes %tmp.13 78 12 17 ];
         %tmp.13 = getv self :pipes;
         %tmp.14 = lgetv %i.1;
-        symbol [ i %tmp.14 72 18 19 ];
+        symbol [ i %tmp.14 78 18 19 ];
         %tmp.15 = agetv %tmp.13 %tmp.14;
         %tmp.16 = 0;
-        symbol [ scored ? 72 21 27 ];
+        symbol [ scored ? 78 21 27 ];
         putv %tmp.15 :scored %tmp.16;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_44_73_8_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 70 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_44_79_8_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 76 ]
         %tmp.19 = lgetv %i.1;
-        symbol [ i %tmp.19 70 39 40 ];
+        symbol [ i %tmp.19 76 39 40 ];
         %tmp.20 = add %tmp.19 1;
         lputv %i.1 %tmp.20;
-        symbol [ i %i.1 70 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_70_8_73_8_for_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_67_21_74_4_stop:
+        symbol [ i %i.1 76 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_76_8_79_8_for_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_73_21_80_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 77; @symbol_functiondef = [prime,77,13,18]; @symbol_param<0> = [curGap,77,19,25]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 83; @symbol_functiondef = [prime,83,13,18]; @symbol_param<0> = [curGap,83,19,25]; ]
     function prime(curGap) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_77_27_85_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 78 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_77_27_85_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_77_27_85_4_stop" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_83_27_91_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_83_27_91_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_83_27_91_4_stop" ]
         %x.1 = local;
-        symbol [ x %x.1 78 12 13 ];
-        symbol [ screenW %tmp.2 78 16 23 ];
+        symbol [ x %x.1 84 12 13 ];
+        symbol [ screenW %tmp.2 84 16 23 ];
         %tmp.2 = getv ? :screenW;
         %tmp.3 = 30;
         %tmp.4 = add %tmp.2 %tmp.3;
         lputv %x.1 %tmp.4;
-        symbol [ x %x.1 78 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 79 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_end" ]
+        symbol [ x %x.1 84 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 85 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 79 17 18 ];
+        symbol [ i %i.2 85 17 18 ];
         %tmp.5 = 0;
         lputv %i.2 %tmp.5;
-        symbol [ i %i.2 79 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_test:
+        symbol [ i %i.2 85 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_test:
         %tmp.6 = lgetv %i.2;
-        symbol [ i %tmp.6 79 24 25 ];
+        symbol [ i %tmp.6 85 24 25 ];
         %tmp.7 = 3;
         %tmp.8 = lt %tmp.6 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_36_82_8_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 80 12 ]
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_36_88_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 86 12 ]
         %tmp.9 = self;
-        symbol [ _setupPipe %tmp.10 80 12 22 ];
+        symbol [ _setupPipe %tmp.10 86 12 22 ];
         %tmp.10 = getv function %tmp.9 :_setupPipe;
-        symbol [ pipes %tmp.12 80 23 28 ];
+        symbol [ pipes %tmp.12 86 23 28 ];
         %tmp.12 = getv ? :pipes;
         %tmp.13 = lgetv %i.2;
-        symbol [ i %tmp.13 80 29 30 ];
+        symbol [ i %tmp.13 86 29 30 ];
         %tmp.14 = agetv %tmp.12 %tmp.13;
         %tmp.15 = lgetv %x.1;
-        symbol [ x %tmp.15 80 33 34 ];
+        symbol [ x %tmp.15 86 33 34 ];
         %tmp.16 = lgetv %curGap;
-        symbol [ curGap %tmp.16 80 36 42 ];
+        symbol [ curGap %tmp.16 86 36 42 ];
         invoke %tmp.9 %tmp.10(%tmp.14, %tmp.15, %tmp.16);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 81 12 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 87 12 ]
         %tmp.17 = lgetv %x.1;
-        symbol [ x %tmp.17 81 16 17 ];
-        symbol [ spacing %tmp.19 81 20 27 ];
+        symbol [ x %tmp.17 87 16 17 ];
+        symbol [ spacing %tmp.19 87 20 27 ];
         %tmp.19 = getv ? :spacing;
         %tmp.20 = add %tmp.17 %tmp.19;
         lputv %x.1 %tmp.20;
-        symbol [ x %x.1 81 12 13 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_36_82_8_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 79 ]
+        symbol [ x %x.1 87 12 13 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_36_88_8_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 85 ]
         %tmp.23 = lgetv %i.2;
-        symbol [ i %tmp.23 79 31 32 ];
+        symbol [ i %tmp.23 85 31 32 ];
         %tmp.24 = add %tmp.23 1;
         lputv %i.2 %tmp.24;
-        symbol [ i %i.2 79 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_79_8_82_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 84 8 ]
+        symbol [ i %i.2 85 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_85_8_88_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 90 8 ]
         %tmp.25 = self;
-        symbol [ _setupPipe %tmp.26 84 8 18 ];
+        symbol [ _setupPipe %tmp.26 90 8 18 ];
         %tmp.26 = getv function %tmp.25 :_setupPipe;
-        symbol [ pipes %tmp.28 84 19 24 ];
+        symbol [ pipes %tmp.28 90 19 24 ];
         %tmp.28 = getv ? :pipes;
         %tmp.29 = 3;
         %tmp.30 = agetv %tmp.28 %tmp.29;
         %tmp.31 = lgetv %x.1;
-        symbol [ x %tmp.31 84 29 30 ];
-        symbol [ spacing %tmp.33 84 33 40 ];
+        symbol [ x %tmp.31 90 29 30 ];
+        symbol [ spacing %tmp.33 90 33 40 ];
         %tmp.33 = getv ? :spacing;
         %tmp.34 = add %tmp.31 %tmp.33;
         %tmp.35 = lgetv %curGap;
-        symbol [ curGap %tmp.35 84 42 48 ];
+        symbol [ curGap %tmp.35 90 42 48 ];
         invoke %tmp.25 %tmp.26(%tmp.30, %tmp.34, %tmp.35);
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_77_27_85_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_83_27_91_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 87; @symbol_functiondef = [_setupPipe,87,20,30]; @symbol_param<0> = [p,87,31,32]; @symbol_param<1> = [x,87,34,35]; @symbol_param<2> = [gapH,87,37,41]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 93; @symbol_functiondef = [_setupPipe,93,20,30]; @symbol_param<0> = [p,93,31,32]; @symbol_param<1> = [x,93,34,35]; @symbol_param<2> = [gapH,93,37,41]; ]
     protected
     function _setupPipe(p, x, gapH) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 94 8 ]
         %tmp.1 = lgetv %p;
-        symbol [ p %tmp.1 88 8 9 ];
+        symbol [ p %tmp.1 94 8 9 ];
         %tmp.2 = lgetv %x;
-        symbol [ x %tmp.2 88 20 21 ];
-        symbol [ x ? 88 10 11 ];
+        symbol [ x %tmp.2 94 20 21 ];
+        symbol [ x ? 94 10 11 ];
         putv %tmp.1 :x %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 89 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 95 8 ]
         %tmp.3 = lgetv %p;
-        symbol [ p %tmp.3 89 8 9 ];
-        symbol [ pipeWidth %tmp.5 89 20 29 ];
+        symbol [ p %tmp.3 95 8 9 ];
+        symbol [ pipeWidth %tmp.5 95 20 29 ];
         %tmp.5 = getv ? :pipeWidth;
-        symbol [ w ? 89 10 11 ];
+        symbol [ w ? 95 10 11 ];
         putv %tmp.3 :w %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 90 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 96 8 ]
         %tmp.6 = lgetv %p;
-        symbol [ p %tmp.6 90 8 9 ];
+        symbol [ p %tmp.6 96 8 9 ];
         %tmp.7 = 0;
-        symbol [ scored ? 90 10 16 ];
+        symbol [ scored ? 96 10 16 ];
         putv %tmp.6 :scored %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 91 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_stop" ]
         %minTop.1 = local;
-        symbol [ minTop %minTop.1 91 12 18 ];
-        symbol [ ceilY %tmp.9 91 21 26 ];
+        symbol [ minTop %minTop.1 97 12 18 ];
+        symbol [ ceilY %tmp.9 97 21 26 ];
         %tmp.9 = getv ? :ceilY;
         %tmp.10 = 16;
         %tmp.11 = add %tmp.9 %tmp.10;
         lputv %minTop.1 %tmp.11;
-        symbol [ minTop %minTop.1 91 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 92 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_stop" ]
+        symbol [ minTop %minTop.1 97 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_stop" ]
         %maxTop.2 = local;
-        symbol [ maxTop %maxTop.2 92 12 18 ];
-        symbol [ floorY %tmp.13 92 21 27 ];
+        symbol [ maxTop %maxTop.2 98 12 18 ];
+        symbol [ floorY %tmp.13 98 21 27 ];
         %tmp.13 = getv ? :floorY;
         %tmp.14 = lgetv %gapH;
-        symbol [ gapH %tmp.14 92 30 34 ];
+        symbol [ gapH %tmp.14 98 30 34 ];
         %tmp.15 = sub %tmp.13 %tmp.14;
         %tmp.16 = 16;
         %tmp.17 = sub %tmp.15 %tmp.16;
         lputv %maxTop.2 %tmp.17;
-        symbol [ maxTop %maxTop.2 92 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 93 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_8_93_52_if_stmt:
+        symbol [ maxTop %maxTop.2 98 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_8_99_52_if_stmt:
         %tmp.18 = lgetv %maxTop.2;
-        symbol [ maxTop %tmp.18 93 12 18 ];
+        symbol [ maxTop %tmp.18 99 12 18 ];
         %tmp.19 = lgetv %minTop.1;
-        symbol [ minTop %tmp.19 93 21 27 ];
+        symbol [ minTop %tmp.19 99 21 27 ];
         %tmp.20 = lt %tmp.18 %tmp.19;
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_8_93_52_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_8_93_52_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_29_93_52_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 93 31 ]
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_8_99_52_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_8_99_52_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_29_99_52_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 99 31 ]
         %tmp.21 = lgetv %minTop.1;
-        symbol [ minTop %tmp.21 93 40 46 ];
+        symbol [ minTop %tmp.21 99 40 46 ];
         %tmp.22 = 1;
         %tmp.23 = add %tmp.21 %tmp.22;
         lputv %maxTop.2 %tmp.23;
-        symbol [ maxTop %maxTop.2 93 31 37 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_29_93_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_8_93_52_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_8_93_52_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 94 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_stop" ]
+        symbol [ maxTop %maxTop.2 99 31 37 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_29_99_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_8_99_52_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_99_8_99_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 100 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_stop" ]
         %gT.3 = local;
-        symbol [ gT %gT.3 94 12 14 ];
+        symbol [ gT %gT.3 100 12 14 ];
         %tmp.24 = lgetv %minTop.1;
-        symbol [ minTop %tmp.24 94 20 26 ];
-        symbol [ Math %tmp.25 94 30 34 ];
+        symbol [ minTop %tmp.24 100 20 26 ];
+        symbol [ Math %tmp.25 100 30 34 ];
         %tmp.25 = getm $.Toybox.Math;
-        symbol [ rand %tmp.26 94 35 39 ];
+        symbol [ rand %tmp.26 100 35 39 ];
         %tmp.26 = getv function %tmp.25 :rand;
         %tmp.27 = invoke %tmp.25 %tmp.26();
         %tmp.28 = lgetv %maxTop.2;
-        symbol [ maxTop %tmp.28 94 45 51 ];
+        symbol [ maxTop %tmp.28 100 45 51 ];
         %tmp.29 = lgetv %minTop.1;
-        symbol [ minTop %tmp.29 94 54 60 ];
+        symbol [ minTop %tmp.29 100 54 60 ];
         %tmp.30 = sub %tmp.28 %tmp.29;
         %tmp.31 = mod %tmp.27 %tmp.30;
         %tmp.32 = add %tmp.24 %tmp.31;
         lputv %gT.3 %tmp.32;
-        symbol [ gT %gT.3 94 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 95 8 ]
+        symbol [ gT %gT.3 100 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 101 8 ]
         %tmp.33 = lgetv %p;
-        symbol [ p %tmp.33 95 8 9 ];
+        symbol [ p %tmp.33 101 8 9 ];
         %tmp.34 = lgetv %gT.3;
-        symbol [ gT %tmp.34 95 20 22 ];
-        symbol [ gapTopY ? 95 10 17 ];
+        symbol [ gT %tmp.34 101 20 22 ];
+        symbol [ gapTopY ? 101 10 17 ];
         putv %tmp.33 :gapTopY %tmp.34;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 96 8 ]
-        %tmp.35 = lgetv %p;
-        symbol [ p %tmp.35 96 8 9 ];
-        %tmp.36 = lgetv %gT.3;
-        symbol [ gT %tmp.36 96 20 22 ];
-        %tmp.37 = lgetv %gapH;
-        symbol [ gapH %tmp.37 96 25 29 ];
-        %tmp.38 = add %tmp.36 %tmp.37;
-        symbol [ gapBotY ? 96 10 17 ];
-        putv %tmp.35 :gapBotY %tmp.38;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_87_43_97_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 101; @symbol_functiondef = [gapForScore,101,13,24]; @symbol_param<0> = [score,101,25,30]; @symbol_param<1> = [scaleNum,101,32,40]; @symbol_param<2> = [scaleDen,101,42,50]; ]
-    function gapForScore(score, scaleNum, scaleDen) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_101_52_106_4_start:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 102 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_101_52_106_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_101_52_106_4_stop" ]
-        %g.1 = local;
-        symbol [ g %g.1 102 12 13 ];
-        symbol [ Physics %tmp.2 102 16 23 ];
-        %tmp.2 = getv ? :Physics;
-        symbol [ GAP_BASE %tmp.3 102 24 32 ];
-        %tmp.3 = getv %tmp.2 :GAP_BASE;
-        %tmp.4 = lgetv %score;
-        symbol [ score %tmp.4 102 37 42 ];
-        %tmp.5 = 5;
-        %tmp.6 = div %tmp.4 %tmp.5;
-        symbol [ Physics %tmp.8 102 50 57 ];
-        %tmp.8 = getv ? :Physics;
-        symbol [ GAP_SHRINK %tmp.9 102 58 68 ];
-        %tmp.9 = getv %tmp.8 :GAP_SHRINK;
-        %tmp.10 = mul %tmp.6 %tmp.9;
-        symbol [ toNumber %tmp.11 102 70 78 ];
-        %tmp.11 = getv function %tmp.10 :toNumber;
-        %tmp.12 = invoke %tmp.10 %tmp.11();
-        %tmp.13 = sub %tmp.3 %tmp.12;
-        lputv %g.1 %tmp.13;
-        symbol [ g %g.1 102 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 103 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_8_103_56_if_stmt:
-        %tmp.14 = lgetv %g.1;
-        symbol [ g %tmp.14 103 12 13 ];
-        symbol [ Physics %tmp.16 103 16 23 ];
-        %tmp.16 = getv ? :Physics;
-        symbol [ GAP_MIN %tmp.17 103 24 31 ];
-        %tmp.17 = getv %tmp.16 :GAP_MIN;
-        %tmp.18 = lt %tmp.14 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_8_103_56_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_8_103_56_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_33_103_56_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 103 35 ]
-        symbol [ Physics %tmp.20 103 39 46 ];
-        %tmp.20 = getv ? :Physics;
-        symbol [ GAP_MIN %tmp.21 103 47 54 ];
-        %tmp.21 = getv %tmp.20 :GAP_MIN;
-        lputv %g.1 %tmp.21;
-        symbol [ g %g.1 103 35 36 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_33_103_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_8_103_56_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_103_8_103_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 105 8 ]
-        %tmp.22 = lgetv %g.1;
-        symbol [ g %tmp.22 105 16 17 ];
-        %tmp.23 = lgetv %scaleNum;
-        symbol [ scaleNum %tmp.23 105 20 28 ];
-        %tmp.24 = mul %tmp.22 %tmp.23;
-        %tmp.25 = lgetv %scaleDen;
-        symbol [ scaleDen %tmp.25 105 32 40 ];
-        %tmp.26 = div %tmp.24 %tmp.25;
-        ret %tmp.26;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_101_52_106_4_stop:
+        %tmp.35 = lgetv %p;
+        symbol [ p %tmp.35 102 8 9 ];
+        %tmp.36 = lgetv %gT.3;
+        symbol [ gT %tmp.36 102 20 22 ];
+        %tmp.37 = lgetv %gapH;
+        symbol [ gapH %tmp.37 102 25 29 ];
+        %tmp.38 = add %tmp.36 %tmp.37;
+        symbol [ gapBotY ? 102 10 17 ];
+        putv %tmp.35 :gapBotY %tmp.38;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_93_43_103_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 109; @symbol_functiondef = [scrollForScore,109,13,27]; @symbol_param<0> = [score,109,28,33]; ]
-    function scrollForScore(score) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_109_35_113_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 110 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_109_35_113_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_109_35_113_4_stop" ]
-        %s.1 = local;
-        symbol [ s %s.1 110 12 13 ];
-        symbol [ Physics %tmp.2 110 16 23 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 107; @symbol_functiondef = [gapForScore,107,13,24]; @symbol_param<0> = [score,107,25,30]; @symbol_param<1> = [scaleNum,107,32,40]; @symbol_param<2> = [scaleDen,107,42,50]; ]
+    function gapForScore(score, scaleNum, scaleDen) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 108 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_stop" ]
+        %g.1 = local;
+        symbol [ g %g.1 108 12 13 ];
+        symbol [ Physics %tmp.2 108 16 23 ];
         %tmp.2 = getv ? :Physics;
-        symbol [ BASE_SCROLL %tmp.3 110 24 35 ];
+        symbol [ GAP_BASE %tmp.3 108 24 32 ];
+        %tmp.3 = getv %tmp.2 :GAP_BASE;
+        symbol [ gapBias %tmp.5 108 35 42 ];
+        %tmp.5 = getv ? :gapBias;
+        %tmp.6 = add %tmp.3 %tmp.5;
+        %tmp.7 = lgetv %score;
+        symbol [ score %tmp.7 108 47 52 ];
+        %tmp.8 = 5;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        symbol [ Physics %tmp.11 108 60 67 ];
+        %tmp.11 = getv ? :Physics;
+        symbol [ GAP_SHRINK %tmp.12 108 68 78 ];
+        %tmp.12 = getv %tmp.11 :GAP_SHRINK;
+        %tmp.13 = mul %tmp.9 %tmp.12;
+        symbol [ toNumber %tmp.14 108 80 88 ];
+        %tmp.14 = getv function %tmp.13 :toNumber;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = sub %tmp.6 %tmp.15;
+        lputv %g.1 %tmp.16;
+        symbol [ g %g.1 108 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 109 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_stop" ]
+        %minG.2 = local;
+        symbol [ minG %minG.2 109 12 16 ];
+        symbol [ Physics %tmp.18 109 19 26 ];
+        %tmp.18 = getv ? :Physics;
+        symbol [ GAP_MIN %tmp.19 109 27 34 ];
+        %tmp.19 = getv %tmp.18 :GAP_MIN;
+        symbol [ gapBias %tmp.21 109 37 44 ];
+        %tmp.21 = getv ? :gapBias;
+        %tmp.22 = add %tmp.19 %tmp.21;
+        lputv %minG.2 %tmp.22;
+        symbol [ minG %minG.2 109 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 110 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_8_110_36_if_stmt:
+        %tmp.23 = lgetv %minG.2;
+        symbol [ minG %tmp.23 110 12 16 ];
+        %tmp.24 = 40;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_8_110_36_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_8_110_36_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_23_110_36_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 110 25 ]
+        %tmp.26 = 40;
+        lputv %minG.2 %tmp.26;
+        symbol [ minG %minG.2 110 25 29 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_23_110_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_8_110_36_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_110_8_110_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 111 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_34_if_stmt:
+        %tmp.27 = lgetv %g.1;
+        symbol [ g %tmp.27 111 12 13 ];
+        %tmp.28 = lgetv %minG.2;
+        symbol [ minG %tmp.28 111 16 20 ];
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_34_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_34_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_22_111_34_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 111 24 ]
+        %tmp.30 = lgetv %minG.2;
+        symbol [ minG %tmp.30 111 28 32 ];
+        lputv %g.1 %tmp.30;
+        symbol [ g %g.1 111 24 25 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_22_111_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_34_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 113 8 ]
+        %tmp.31 = lgetv %g.1;
+        symbol [ g %tmp.31 113 16 17 ];
+        %tmp.32 = lgetv %scaleNum;
+        symbol [ scaleNum %tmp.32 113 20 28 ];
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %scaleDen;
+        symbol [ scaleDen %tmp.34 113 32 40 ];
+        %tmp.35 = div %tmp.33 %tmp.34;
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_107_52_114_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 117; @symbol_functiondef = [scrollForScore,117,13,27]; @symbol_param<0> = [score,117,28,33]; ]
+    function scrollForScore(score) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_117_35_121_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 118 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_117_35_121_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_117_35_121_4_stop" ]
+        %s.1 = local;
+        symbol [ s %s.1 118 12 13 ];
+        symbol [ Physics %tmp.2 118 16 23 ];
+        %tmp.2 = getv ? :Physics;
+        symbol [ BASE_SCROLL %tmp.3 118 24 35 ];
         %tmp.3 = getv %tmp.2 :BASE_SCROLL;
         %tmp.4 = lgetv %score;
-        symbol [ score %tmp.4 110 38 43 ];
-        symbol [ Physics %tmp.6 110 46 53 ];
+        symbol [ score %tmp.4 118 38 43 ];
+        symbol [ Physics %tmp.6 118 46 53 ];
         %tmp.6 = getv ? :Physics;
-        symbol [ SCROLL_GAIN %tmp.7 110 54 65 ];
+        symbol [ SCROLL_GAIN %tmp.7 118 54 65 ];
         %tmp.7 = getv %tmp.6 :SCROLL_GAIN;
         %tmp.8 = mul %tmp.4 %tmp.7;
         %tmp.9 = add %tmp.3 %tmp.8;
         lputv %s.1 %tmp.9;
-        symbol [ s %s.1 110 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 111 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_62_if_stmt:
+        symbol [ s %s.1 118 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 119 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_8_119_62_if_stmt:
         %tmp.10 = lgetv %s.1;
-        symbol [ s %tmp.10 111 12 13 ];
-        symbol [ Physics %tmp.12 111 16 23 ];
+        symbol [ s %tmp.10 119 12 13 ];
+        symbol [ Physics %tmp.12 119 16 23 ];
         %tmp.12 = getv ? :Physics;
-        symbol [ MAX_SCROLL %tmp.13 111 24 34 ];
+        symbol [ MAX_SCROLL %tmp.13 119 24 34 ];
         %tmp.13 = getv %tmp.12 :MAX_SCROLL;
         %tmp.14 = gt %tmp.10 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_62_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_62_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_36_111_62_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 111 38 ]
-        symbol [ Physics %tmp.16 111 42 49 ];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_8_119_62_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_8_119_62_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_36_119_62_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 119 38 ]
+        symbol [ Physics %tmp.16 119 42 49 ];
         %tmp.16 = getv ? :Physics;
-        symbol [ MAX_SCROLL %tmp.17 111 50 60 ];
+        symbol [ MAX_SCROLL %tmp.17 119 50 60 ];
         %tmp.17 = getv %tmp.16 :MAX_SCROLL;
         lputv %s.1 %tmp.17;
-        symbol [ s %s.1 111 38 39 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_36_111_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_62_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_111_8_111_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 112 8 ]
-        %tmp.18 = lgetv %s.1;
-        symbol [ s %tmp.18 112 15 16 ];
-        ret %tmp.18;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_109_35_113_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 118; @symbol_functiondef = [step,118,13,17]; @symbol_param<0> = [dx,118,18,20]; @symbol_param<1> = [birdX,118,22,27]; @symbol_param<2> = [score,118,29,34]; @symbol_param<3> = [scaleNum,118,36,44]; @symbol_param<4> = [scaleDen,118,46,54]; ]
-    function step(dx, birdX, score, scaleNum, scaleDen) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_start:
+        symbol [ s %s.1 119 38 39 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_36_119_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_8_119_62_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_119_8_119_62_if_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 120 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_stop" ]
+        %tmp.18 = lgetv %s.1;
+        symbol [ s %tmp.18 120 15 16 ];
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_117_35_121_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 126; @symbol_functiondef = [step,126,13,17]; @symbol_param<0> = [dx,126,18,20]; @symbol_param<1> = [birdX,126,22,27]; @symbol_param<2> = [score,126,29,34]; @symbol_param<3> = [scaleNum,126,36,44]; @symbol_param<4> = [scaleDen,126,46,54]; ]
+    function step(dx, birdX, score, scaleNum, scaleDen) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_stop" ]
         %rightMost.1 = local;
-        symbol [ rightMost %rightMost.1 120 12 21 ];
+        symbol [ rightMost %rightMost.1 128 12 21 ];
         %tmp.1 = -10000;
         lputv %rightMost.1 %tmp.1;
-        symbol [ rightMost %rightMost.1 120 12 21 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 121 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_end" ]
+        symbol [ rightMost %rightMost.1 128 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 129 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 121 17 18 ];
+        symbol [ i %i.2 129 17 18 ];
         %tmp.2 = 0;
         lputv %i.2 %tmp.2;
-        symbol [ i %i.2 121 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_test:
+        symbol [ i %i.2 129 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_test:
         %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 121 24 25 ];
-        symbol [ MAX_PIPES %tmp.5 121 28 37 ];
+        symbol [ i %tmp.3 129 24 25 ];
+        symbol [ MAX_PIPES %tmp.5 129 28 37 ];
         %tmp.5 = getv ? :MAX_PIPES;
         %tmp.6 = lt %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_44_123_8_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 122 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_12_122_66_if_stmt:
-        symbol [ pipes %tmp.8 122 16 21 ];
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_44_131_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 130 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_12_130_66_if_stmt:
+        symbol [ pipes %tmp.8 130 16 21 ];
         %tmp.8 = getv ? :pipes;
         %tmp.9 = lgetv %i.2;
-        symbol [ i %tmp.9 122 22 23 ];
+        symbol [ i %tmp.9 130 22 23 ];
         %tmp.10 = agetv %tmp.8 %tmp.9;
-        symbol [ x %tmp.11 122 25 26 ];
+        symbol [ x %tmp.11 130 25 26 ];
         %tmp.11 = getv %tmp.10 :x;
         %tmp.12 = lgetv %rightMost.1;
-        symbol [ rightMost %tmp.12 122 29 38 ];
+        symbol [ rightMost %tmp.12 130 29 38 ];
         %tmp.13 = gt %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_12_122_66_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_12_122_66_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_40_122_66_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 122 42 ]
-        symbol [ pipes %tmp.15 122 54 59 ];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_12_130_66_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_12_130_66_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_40_130_66_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 130 42 ]
+        symbol [ pipes %tmp.15 130 54 59 ];
         %tmp.15 = getv ? :pipes;
         %tmp.16 = lgetv %i.2;
-        symbol [ i %tmp.16 122 60 61 ];
+        symbol [ i %tmp.16 130 60 61 ];
         %tmp.17 = agetv %tmp.15 %tmp.16;
-        symbol [ x %tmp.18 122 63 64 ];
+        symbol [ x %tmp.18 130 63 64 ];
         %tmp.18 = getv %tmp.17 :x;
         lputv %rightMost.1 %tmp.18;
-        symbol [ rightMost %rightMost.1 122 42 51 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_40_122_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_12_122_66_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_122_12_122_66_if_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_44_123_8_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 121 ]
+        symbol [ rightMost %rightMost.1 130 42 51 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_40_130_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_12_130_66_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_130_12_130_66_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_44_131_8_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 129 ]
         %tmp.21 = lgetv %i.2;
-        symbol [ i %tmp.21 121 39 40 ];
+        symbol [ i %tmp.21 129 39 40 ];
         %tmp.22 = add %tmp.21 1;
         lputv %i.2 %tmp.22;
-        symbol [ i %i.2 121 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_121_8_123_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 124 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_stop" ]
+        symbol [ i %i.2 129 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_8_131_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 132 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_stop" ]
         %added.3 = local;
-        symbol [ added %added.3 124 12 17 ];
+        symbol [ added %added.3 132 12 17 ];
         %tmp.23 = 0;
         lputv %added.3 %tmp.23;
-        symbol [ added %added.3 124 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 125 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_end" ]
+        symbol [ added %added.3 132 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 133 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_end" ]
         %i.4 = local;
-        symbol [ i %i.4 125 17 18 ];
+        symbol [ i %i.4 133 17 18 ];
         %tmp.24 = 0;
         lputv %i.4 %tmp.24;
-        symbol [ i %i.4 125 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_test:
+        symbol [ i %i.4 133 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_test:
         %tmp.25 = lgetv %i.4;
-        symbol [ i %tmp.25 125 24 25 ];
-        symbol [ MAX_PIPES %tmp.27 125 28 37 ];
+        symbol [ i %tmp.25 133 24 25 ];
+        symbol [ MAX_PIPES %tmp.27 133 28 37 ];
         %tmp.27 = getv ? :MAX_PIPES;
         %tmp.28 = lt %tmp.25 %tmp.27;
-        bf %tmp.28 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_44_139_8_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 126 12 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_44_139_8_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_44_139_8_stop" ]
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_44_147_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 134 12 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_44_147_8_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_44_147_8_stop" ]
         %p.5 = local;
-        symbol [ p %p.5 126 16 17 ];
-        symbol [ pipes %tmp.30 126 20 25 ];
+        symbol [ p %p.5 134 16 17 ];
+        symbol [ pipes %tmp.30 134 20 25 ];
         %tmp.30 = getv ? :pipes;
         %tmp.31 = lgetv %i.4;
-        symbol [ i %tmp.31 126 26 27 ];
+        symbol [ i %tmp.31 134 26 27 ];
         %tmp.32 = agetv %tmp.30 %tmp.31;
         lputv %p.5 %tmp.32;
-        symbol [ p %p.5 126 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 127 12 ]
+        symbol [ p %p.5 134 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 135 12 ]
         %tmp.33 = lgetv %p.5;
-        symbol [ p %tmp.33 127 12 13 ];
+        symbol [ p %tmp.33 135 12 13 ];
         %tmp.34 = lgetv %p.5;
-        symbol [ p %tmp.34 127 18 19 ];
-        symbol [ x %tmp.35 127 20 21 ];
+        symbol [ p %tmp.34 135 18 19 ];
+        symbol [ x %tmp.35 135 20 21 ];
         %tmp.35 = getv %tmp.34 :x;
         %tmp.36 = lgetv %dx;
-        symbol [ dx %tmp.36 127 24 26 ];
+        symbol [ dx %tmp.36 135 24 26 ];
         %tmp.37 = sub %tmp.35 %tmp.36;
-        symbol [ x ? 127 14 15 ];
+        symbol [ x ? 135 14 15 ];
         putv %tmp.33 :x %tmp.37;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 129 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_stmt:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_16_129_45_begin:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 137 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_stmt:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_16_137_45_begin:
         %tmp.38 = lgetv %p.5;
-        symbol [ p %tmp.38 129 16 17 ];
-        symbol [ scored %tmp.39 129 18 24 ];
+        symbol [ p %tmp.38 137 16 17 ];
+        symbol [ scored %tmp.39 137 18 24 ];
         %tmp.39 = getv %tmp.38 :scored;
         %tmp.40 = 0;
         %tmp.41 = eq %tmp.39 %tmp.40;
-        bf %tmp.41 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_33_129_45_true:
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_33_137_45_true:
         %tmp.42 = lgetv %p.5;
-        symbol [ p %tmp.42 129 33 34 ];
-        symbol [ x %tmp.43 129 35 36 ];
+        symbol [ p %tmp.42 137 33 34 ];
+        symbol [ x %tmp.43 137 35 36 ];
         %tmp.43 = getv %tmp.42 :x;
         %tmp.44 = lgetv %p.5;
-        symbol [ p %tmp.44 129 39 40 ];
-        symbol [ w %tmp.45 129 41 42 ];
+        symbol [ p %tmp.44 137 39 40 ];
+        symbol [ w %tmp.45 137 41 42 ];
         %tmp.45 = getv %tmp.44 :w;
         %tmp.46 = add %tmp.43 %tmp.45;
         %tmp.47 = lgetv %birdX;
-        symbol [ birdX %tmp.47 129 45 50 ];
+        symbol [ birdX %tmp.47 137 45 50 ];
         %tmp.48 = lt %tmp.46 %tmp.47;
         push %tmp.48;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_33_129_45_end:
-        %tmp.49 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_16_129_45_begin] [%tmp.48 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_33_129_45_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_33_129_45_end];
-        bf %tmp.49 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_52_132_12_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 130 16 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_33_137_45_end:
+        %tmp.49 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_16_137_45_begin] [%tmp.48 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_33_137_45_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_33_137_45_end];
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_52_140_12_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 138 16 ]
         %tmp.50 = lgetv %p.5;
-        symbol [ p %tmp.50 130 16 17 ];
+        symbol [ p %tmp.50 138 16 17 ];
         %tmp.51 = 1;
-        symbol [ scored ? 130 18 24 ];
+        symbol [ scored ? 138 18 24 ];
         putv %tmp.50 :scored %tmp.51;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 131 16 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 139 16 ]
         %tmp.52 = lgetv %added.3;
-        symbol [ added %tmp.52 131 27 32 ];
+        symbol [ added %tmp.52 139 27 32 ];
         %tmp.53 = 1;
         %tmp.54 = add %tmp.52 %tmp.53;
         lputv %added.3 %tmp.54;
-        symbol [ added %added.3 131 16 21 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_52_132_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_129_12_132_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 134 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_12_138_12_if_stmt:
+        symbol [ added %added.3 139 16 21 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_52_140_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_137_12_140_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 142 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_12_146_12_if_stmt:
         %tmp.55 = lgetv %p.5;
-        symbol [ p %tmp.55 134 16 17 ];
-        symbol [ x %tmp.56 134 18 19 ];
+        symbol [ p %tmp.55 142 16 17 ];
+        symbol [ x %tmp.56 142 18 19 ];
         %tmp.56 = getv %tmp.55 :x;
         %tmp.57 = lgetv %p.5;
-        symbol [ p %tmp.57 134 22 23 ];
-        symbol [ w %tmp.58 134 24 25 ];
+        symbol [ p %tmp.57 142 22 23 ];
+        symbol [ w %tmp.58 142 24 25 ];
         %tmp.58 = getv %tmp.57 :w;
         %tmp.59 = add %tmp.56 %tmp.58;
         %tmp.60 = -4;
         %tmp.61 = lt %tmp.59 %tmp.60;
-        bf %tmp.61 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_12_138_12_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_12_138_12_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_32_138_12_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 135 16 ]
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_12_146_12_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_32_146_12_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 143 16 ]
         %tmp.62 = self;
-        symbol [ _setupPipe %tmp.63 135 16 26 ];
+        symbol [ _setupPipe %tmp.63 143 16 26 ];
         %tmp.63 = getv function %tmp.62 :_setupPipe;
         %tmp.64 = lgetv %p.5;
-        symbol [ p %tmp.64 135 27 28 ];
+        symbol [ p %tmp.64 143 27 28 ];
         %tmp.65 = lgetv %rightMost.1;
-        symbol [ rightMost %tmp.65 135 30 39 ];
-        symbol [ spacing %tmp.67 135 42 49 ];
+        symbol [ rightMost %tmp.65 143 30 39 ];
+        symbol [ spacing %tmp.67 143 42 49 ];
         %tmp.67 = getv ? :spacing;
         %tmp.68 = add %tmp.65 %tmp.67;
         %tmp.69 = self;
-        symbol [ gapForScore %tmp.70 136 27 38 ];
+        symbol [ gapForScore %tmp.70 144 27 38 ];
         %tmp.70 = getv function %tmp.69 :gapForScore;
         %tmp.71 = lgetv %score;
-        symbol [ score %tmp.71 136 39 44 ];
+        symbol [ score %tmp.71 144 39 44 ];
         %tmp.72 = lgetv %added.3;
-        symbol [ added %tmp.72 136 47 52 ];
+        symbol [ added %tmp.72 144 47 52 ];
         %tmp.73 = add %tmp.71 %tmp.72;
         %tmp.74 = lgetv %scaleNum;
-        symbol [ scaleNum %tmp.74 136 54 62 ];
+        symbol [ scaleNum %tmp.74 144 54 62 ];
         %tmp.75 = lgetv %scaleDen;
-        symbol [ scaleDen %tmp.75 136 64 72 ];
+        symbol [ scaleDen %tmp.75 144 64 72 ];
         %tmp.76 = invoke %tmp.69 %tmp.70(%tmp.73, %tmp.74, %tmp.75);
         invoke %tmp.62 %tmp.63(%tmp.64, %tmp.68, %tmp.76);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 137 16 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 145 16 ]
         %tmp.77 = lgetv %p.5;
-        symbol [ p %tmp.77 137 28 29 ];
-        symbol [ x %tmp.78 137 30 31 ];
+        symbol [ p %tmp.77 145 28 29 ];
+        symbol [ x %tmp.78 145 30 31 ];
         %tmp.78 = getv %tmp.77 :x;
         lputv %rightMost.1 %tmp.78;
-        symbol [ rightMost %rightMost.1 137 16 25 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_32_138_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_12_138_12_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_134_12_138_12_if_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_44_139_8_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 125 ]
+        symbol [ rightMost %rightMost.1 145 16 25 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_32_146_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_142_12_146_12_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_44_147_8_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 133 ]
         %tmp.81 = lgetv %i.4;
-        symbol [ i %tmp.81 125 39 40 ];
+        symbol [ i %tmp.81 133 39 40 ];
         %tmp.82 = add %tmp.81 1;
         lputv %i.4 %tmp.82;
-        symbol [ i %i.4 125 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_125_8_139_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 140 8 ]
+        symbol [ i %i.4 133 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_133_8_147_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 148 8 ]
         %tmp.83 = lgetv %added.3;
-        symbol [ added %tmp.83 140 15 20 ];
+        symbol [ added %tmp.83 148 15 20 ];
         ret %tmp.83;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_118_56_141_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_126_56_149_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 144; @symbol_functiondef = [collides,144,13,21]; @symbol_param<0> = [birdBbox,144,22,30]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 152; @symbol_functiondef = [collides,152,13,21]; @symbol_param<0> = [birdBbox,152,22,30]; ]
     function collides(birdBbox) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 145 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_stop" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 153 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_stop" ]
         %bx0.1 = local;
-        symbol [ bx0 %bx0.1 145 12 15 ];
+        symbol [ bx0 %bx0.1 153 12 15 ];
         %tmp.1 = lgetv %birdBbox;
-        symbol [ birdBbox %tmp.1 145 18 26 ];
+        symbol [ birdBbox %tmp.1 153 18 26 ];
         %tmp.2 = 0;
         %tmp.3 = agetv %tmp.1 %tmp.2;
         lputv %bx0.1 %tmp.3;
-        symbol [ bx0 %bx0.1 145 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 146 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_stop" ]
+        symbol [ bx0 %bx0.1 153 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 154 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_stop" ]
         %by0.2 = local;
-        symbol [ by0 %by0.2 146 12 15 ];
+        symbol [ by0 %by0.2 154 12 15 ];
         %tmp.4 = lgetv %birdBbox;
-        symbol [ birdBbox %tmp.4 146 18 26 ];
+        symbol [ birdBbox %tmp.4 154 18 26 ];
         %tmp.5 = 1;
         %tmp.6 = agetv %tmp.4 %tmp.5;
         lputv %by0.2 %tmp.6;
-        symbol [ by0 %by0.2 146 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 147 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_stop" ]
+        symbol [ by0 %by0.2 154 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 155 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_stop" ]
         %bx1.3 = local;
-        symbol [ bx1 %bx1.3 147 12 15 ];
+        symbol [ bx1 %bx1.3 155 12 15 ];
         %tmp.7 = lgetv %birdBbox;
-        symbol [ birdBbox %tmp.7 147 18 26 ];
+        symbol [ birdBbox %tmp.7 155 18 26 ];
         %tmp.8 = 2;
         %tmp.9 = agetv %tmp.7 %tmp.8;
         lputv %bx1.3 %tmp.9;
-        symbol [ bx1 %bx1.3 147 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 148 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_stop" ]
+        symbol [ bx1 %bx1.3 155 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 156 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_stop" ]
         %by1.4 = local;
-        symbol [ by1 %by1.4 148 12 15 ];
+        symbol [ by1 %by1.4 156 12 15 ];
         %tmp.10 = lgetv %birdBbox;
-        symbol [ birdBbox %tmp.10 148 18 26 ];
+        symbol [ birdBbox %tmp.10 156 18 26 ];
         %tmp.11 = 3;
         %tmp.12 = agetv %tmp.10 %tmp.11;
         lputv %by1.4 %tmp.12;
-        symbol [ by1 %by1.4 148 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 149 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_8_149_42_if_stmt:
+        symbol [ by1 %by1.4 156 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 157 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_8_157_42_if_stmt:
         %tmp.13 = lgetv %by1.4;
-        symbol [ by1 %tmp.13 149 12 15 ];
-        symbol [ floorY %tmp.15 149 18 24 ];
+        symbol [ by1 %tmp.13 157 12 15 ];
+        symbol [ floorY %tmp.15 157 18 24 ];
         %tmp.15 = getv ? :floorY;
         %tmp.16 = gt %tmp.13 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_8_149_42_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_8_149_42_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_27_149_42_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 149 29 ]
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_8_157_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_8_157_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_27_157_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 157 29 ]
         %tmp.17 = true;
         ret %tmp.17;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_27_149_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_8_149_42_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_149_8_149_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 150 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_8_150_42_if_stmt:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_27_157_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_8_157_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_157_8_157_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 158 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_8_158_42_if_stmt:
         %tmp.18 = lgetv %by0.2;
-        symbol [ by0 %tmp.18 150 12 15 ];
-        symbol [ ceilY %tmp.20 150 18 23 ];
+        symbol [ by0 %tmp.18 158 12 15 ];
+        symbol [ ceilY %tmp.20 158 18 23 ];
         %tmp.20 = getv ? :ceilY;
         %tmp.21 = lt %tmp.18 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_8_150_42_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_8_150_42_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_27_150_42_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 150 29 ]
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_8_158_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_8_158_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_27_158_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 158 29 ]
         %tmp.22 = true;
         ret %tmp.22;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_27_150_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_8_150_42_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_150_8_150_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 151 8 ]
-        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_end" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_27_158_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_8_158_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_8_158_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 159 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_end" ]
         %i.5 = local;
-        symbol [ i %i.5 151 17 18 ];
+        symbol [ i %i.5 159 17 18 ];
         %tmp.23 = 0;
         lputv %i.5 %tmp.23;
-        symbol [ i %i.5 151 17 18 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_test:
+        symbol [ i %i.5 159 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_test:
         %tmp.24 = lgetv %i.5;
-        symbol [ i %tmp.24 151 24 25 ];
-        symbol [ MAX_PIPES %tmp.26 151 28 37 ];
+        symbol [ i %tmp.24 159 24 25 ];
+        symbol [ MAX_PIPES %tmp.26 159 28 37 ];
         %tmp.26 = getv ? :MAX_PIPES;
         %tmp.27 = lt %tmp.24 %tmp.26;
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_begin:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_44_159_8_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 152 12 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_44_159_8_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_44_159_8_stop" ]
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_44_167_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 160 12 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_44_167_8_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_44_167_8_stop" ]
         %p.6 = local;
-        symbol [ p %p.6 152 16 17 ];
-        symbol [ pipes %tmp.29 152 20 25 ];
+        symbol [ p %p.6 160 16 17 ];
+        symbol [ pipes %tmp.29 160 20 25 ];
         %tmp.29 = getv ? :pipes;
         %tmp.30 = lgetv %i.5;
-        symbol [ i %tmp.30 152 26 27 ];
+        symbol [ i %tmp.30 160 26 27 ];
         %tmp.31 = agetv %tmp.29 %tmp.30;
         lputv %p.6 %tmp.31;
-        symbol [ p %p.6 152 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 154 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_stmt:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_16_154_41_begin:
+        symbol [ p %p.6 160 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_stmt:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_16_162_41_begin:
         %tmp.32 = lgetv %p.6;
-        symbol [ p %tmp.32 154 16 17 ];
-        symbol [ x %tmp.33 154 18 19 ];
+        symbol [ p %tmp.32 162 16 17 ];
+        symbol [ x %tmp.33 162 18 19 ];
         %tmp.33 = getv %tmp.32 :x;
         %tmp.34 = lgetv %bx1.3;
-        symbol [ bx1 %tmp.34 154 22 25 ];
+        symbol [ bx1 %tmp.34 162 22 25 ];
         %tmp.35 = gt %tmp.33 %tmp.34;
-        bt %tmp.35 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_true;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_29_154_41_false:
+        bt %tmp.35 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_true;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_29_162_41_false:
         %tmp.36 = lgetv %p.6;
-        symbol [ p %tmp.36 154 29 30 ];
-        symbol [ x %tmp.37 154 31 32 ];
+        symbol [ p %tmp.36 162 29 30 ];
+        symbol [ x %tmp.37 162 31 32 ];
         %tmp.37 = getv %tmp.36 :x;
         %tmp.38 = lgetv %p.6;
-        symbol [ p %tmp.38 154 35 36 ];
-        symbol [ w %tmp.39 154 37 38 ];
+        symbol [ p %tmp.38 162 35 36 ];
+        symbol [ w %tmp.39 162 37 38 ];
         %tmp.39 = getv %tmp.38 :w;
         %tmp.40 = add %tmp.37 %tmp.39;
         %tmp.41 = lgetv %bx0.1;
-        symbol [ bx0 %tmp.41 154 41 44 ];
+        symbol [ bx0 %tmp.41 162 41 44 ];
         %tmp.42 = lt %tmp.40 %tmp.41;
         push %tmp.42;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_29_154_41_end:
-        %tmp.43 = phi [%tmp.35 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_16_154_41_begin] [%tmp.42 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_29_154_41_false] [%tmp.43 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_29_154_41_end];
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_46_154_58_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 154 48 ]
-        goto break @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_incr;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_46_154_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_154_12_154_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 156 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_12_156_48_if_stmt:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_29_162_41_end:
+        %tmp.43 = phi [%tmp.35 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_16_162_41_begin] [%tmp.42 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_29_162_41_false] [%tmp.43 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_29_162_41_end];
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_46_162_58_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 162 48 ]
+        goto break @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_incr;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_46_162_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_162_12_162_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 164 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_12_164_48_if_stmt:
         %tmp.44 = lgetv %by0.2;
-        symbol [ by0 %tmp.44 156 16 19 ];
+        symbol [ by0 %tmp.44 164 16 19 ];
         %tmp.45 = lgetv %p.6;
-        symbol [ p %tmp.45 156 22 23 ];
-        symbol [ gapTopY %tmp.46 156 24 31 ];
+        symbol [ p %tmp.45 164 22 23 ];
+        symbol [ gapTopY %tmp.46 164 24 31 ];
         %tmp.46 = getv %tmp.45 :gapTopY;
         %tmp.47 = lt %tmp.44 %tmp.46;
-        bf %tmp.47 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_12_156_48_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_12_156_48_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_33_156_48_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 156 35 ]
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_12_164_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_12_164_48_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_33_164_48_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 164 35 ]
         %tmp.48 = true;
         ret %tmp.48;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_33_156_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_12_156_48_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_156_12_156_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 158 12 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_12_158_48_if_stmt:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_33_164_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_12_164_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_164_12_164_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 166 12 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_12_166_48_if_stmt:
         %tmp.49 = lgetv %by1.4;
-        symbol [ by1 %tmp.49 158 16 19 ];
+        symbol [ by1 %tmp.49 166 16 19 ];
         %tmp.50 = lgetv %p.6;
-        symbol [ p %tmp.50 158 22 23 ];
-        symbol [ gapBotY %tmp.51 158 24 31 ];
+        symbol [ p %tmp.50 166 22 23 ];
+        symbol [ gapBotY %tmp.51 166 24 31 ];
         %tmp.51 = getv %tmp.50 :gapBotY;
         %tmp.52 = gt %tmp.49 %tmp.51;
-        bf %tmp.52 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_12_158_48_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_12_158_48_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_33_158_48_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 158 35 ]
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_12_166_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_12_166_48_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_33_166_48_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 166 35 ]
         %tmp.53 = true;
         ret %tmp.53;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_33_158_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_12_158_48_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_158_12_158_48_if_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_44_159_8_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 151 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_33_166_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_12_166_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_166_12_166_48_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_44_167_8_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 159 ]
         %tmp.56 = lgetv %i.5;
-        symbol [ i %tmp.56 151 39 40 ];
+        symbol [ i %tmp.56 159 39 40 ];
         %tmp.57 = add %tmp.56 1;
         lputv %i.5 %tmp.57;
-        symbol [ i %i.5 151 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_test;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_151_8_159_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 160 8 ]
+        symbol [ i %i.5 159 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_159_8_167_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc" 168 8 ]
         %tmp.58 = false;
         ret %tmp.58;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_144_32_161_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_ObstacleManager_mc_152_32_169_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/ObstacleManager.mc"; @line = 21; ]

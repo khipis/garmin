@@ -200,50 +200,26 @@ class UIManager {
 
     // ── Round-over overlay ────────────────────────────────────────────
     static function drawOver(dc, ctrl, sw, sh) {
-        var bw = sw * 70 / 100; if (bw < 162) { bw = 162; }
-        var bh = sh * 42 / 100; if (bh < 122) { bh = 122; }
-        var bx = (sw - bw) / 2;
-        var by = (sh - bh) / 2;
-
         // dim the world behind
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         for (var yy = 0; yy < sh; yy += 3) { dc.drawLine(0, yy, sw, yy); }
 
-        GfxUtil.vGradientRounded(dc, bx, by, bw, bh, 0x2A1408, 0x120802, 8, 11);
-        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 11);
-        dc.setColor(0xB8860B, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx + 2, by + 2, bw - 4, bh - 4, 9);
-
-        var cx = sw / 2;
         var jackTitle = (ctrl.scoreSys.jackpots > 0);
-        dc.setColor(jackTitle ? 0xFF44BB : 0xFFCC33, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 7, Graphics.FONT_SMALL,
-                    jackTitle ? "JACKPOT RUN!" : "ROUND OVER", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 31, Graphics.FONT_NUMBER_MILD,
-                    ctrl.scoreSys.score.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
-
-        var infoY = by + 58;
+        var lines = [
+            [ctrl.scoreSys.score.format("%d"), 0xFFFFFF]
+        ];
         if (ctrl.scoreSys.jackpots > 0) {
-            dc.setColor(0xFF66CC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, infoY, Graphics.FONT_XTINY,
-                        ctrl.scoreSys.jackpots.format("%d") + " jackpot" +
-                        (ctrl.scoreSys.jackpots > 1 ? "s" : "") + " hit!", Graphics.TEXT_JUSTIFY_CENTER);
-            infoY += 15;
+            lines.add([ctrl.scoreSys.jackpots.format("%d") + " jackpot" +
+                       (ctrl.scoreSys.jackpots > 1 ? "s" : "") + " hit!", 0xFF66CC]);
         }
         if (ctrl.hasNewBest()) {
-            dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, infoY, Graphics.FONT_XTINY, "★ NEW BEST! ★", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["★ NEW BEST! ★", 0x44FF66]);
         } else if (ctrl.scoreSys.hi > 0) {
-            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, infoY, Graphics.FONT_XTINY,
-                        "Best " + ctrl.scoreSys.hi.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + ctrl.scoreSys.hi.format("%d"), 0x88AABB]);
         }
-
-        dc.setColor(0xEECCAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 15, Graphics.FONT_XTINY,
-                    "tap = again   BACK = menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, sw, sh,
+            jackTitle ? "JACKPOT RUN!" : "ROUND OVER",
+            jackTitle ? 0xFF44BB : 0xFFCC33,
+            lines, "tap = again   BACK = menu", 0xFFAA22);
     }
 }

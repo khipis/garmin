@@ -115,21 +115,28 @@ class TargetManager {
         z[i]       = distance;
         // Spawn anywhere in the scannable yaw arc except the very
         // centre (so the player has to look around to find them).
-        var ny = (_randf() * 1.8) - 0.9;          // [-0.9 .. +0.9]
-        // Bias the primary further out as rounds progress.
+        var ny = (_randf() * 1.6) - 0.8;          // [-0.8 .. +0.8]
+        // Bias the primary a little further out as rounds progress, but keep it
+        // inside a comfortable horizontal sweep so the hostile is always
+        // findable with a natural wrist turn (the old ±1.3 pushed some targets
+        // past the easy scan range → "sometimes can't find the enemy").
         if (isPrimary) {
-            var bias = (round > 2) ? 0.55 : 0.35;
+            var bias = (round > 2) ? 0.40 : 0.28;
             if (ny > -bias && ny < bias) {
                 ny = (ny >= 0) ? ny + bias : ny - bias;
             }
-            if (ny >  1.3) { ny =  1.3; }
-            if (ny < -1.3) { ny = -1.3; }
+            if (ny >  1.0) { ny =  1.0; }
+            if (ny < -1.0) { ny = -1.0; }
         }
         yaw[i]   = ny;
-        // Pitch: sit around the horizon with a slight downward lean so
-        // targets rest near the ground line without demanding an extreme
-        // downward tilt to reach them.
-        pitch[i] = (_randf() * 0.6) - 0.22;       // [-0.22 .. +0.38]
+        // Pitch band straddles the resting gaze so the field reads naturally:
+        // some hostiles sit near/just-above centre (a quick, comfortable shot)
+        // and some are lower and need a genuine downward tilt. The band still
+        // stays ABOVE SS_GROUND_PITCH (which is more negative), so every target
+        // renders below the horizon and stays planted — it never floats.
+        // Deeper (more positive) pitch = closer to the shooter / lower on
+        // screen. Range: [-0.24 .. +0.30].
+        pitch[i] = (_randf() * 0.54) - 0.24;
 
         // Slow walk drift — only some targets move.
         var moveRoll = _rand(100);

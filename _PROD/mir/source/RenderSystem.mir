@@ -1,2433 +1,1105 @@
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [Graphics,8,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Math,9,13,17]; ]
-using Toybox.Math;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [System,10,13,19]; ]
-using Toybox.System;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 12; @symbol_classdef = [RenderSystem,12,6,18]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 11; @symbol_classdef = [RenderSystem,11,6,18]; ]
 class RenderSystem {
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 12; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 11; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 12; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 11; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 15; @symbol_functiondef = [drawPlayBackground,15,20,38]; @symbol_param<0> = [dc,15,39,41]; @symbol_param<1> = [sw,15,43,45]; @symbol_param<2> = [sh,15,47,49]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 13; @symbol_functiondef = [drawBackground,13,20,34]; @symbol_param<0> = [dc,13,35,37]; @symbol_param<1> = [sw,13,39,41]; @symbol_param<2> = [sh,13,43,45]; @symbol_param<3> = [groundY,13,47,54]; ]
     static
-    function drawPlayBackground(dc, sw, sh) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_15_51_23_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 16 8 ]
-        symbol [ GfxUtil %tmp.2 16 8 15 ];
-        %tmp.2 = getv ? :GfxUtil;
-        symbol [ vGradient %tmp.3 16 16 25 ];
-        %tmp.3 = getv function %tmp.2 :vGradient;
-        %tmp.4 = lgetv %dc;
-        symbol [ dc %tmp.4 16 26 28 ];
-        %tmp.5 = 0;
-        %tmp.6 = 0;
-        %tmp.7 = lgetv %sw;
-        symbol [ sw %tmp.7 16 36 38 ];
-        %tmp.8 = lgetv %sh;
-        symbol [ sh %tmp.8 16 40 42 ];
-        %tmp.9 = 0x2A0813;
-        %tmp.10 = 0x08040E;
-        %tmp.11 = 10;
-        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5, %tmp.6, %tmp.7, %tmp.8, %tmp.9, %tmp.10, %tmp.11);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 18 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_8_22_8_if_stmt:
-        %tmp.12 = lgetv %sw;
-        symbol [ sw %tmp.12 18 12 14 ];
-        %tmp.13 = lgetv %sh;
-        symbol [ sh %tmp.13 18 18 20 ];
-        %tmp.14 = eq %tmp.12 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_8_22_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_8_22_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_22_22_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 19 12 ]
-        %tmp.15 = lgetv %dc;
-        symbol [ dc %tmp.15 19 12 14 ];
-        symbol [ setColor %tmp.16 19 15 23 ];
-        %tmp.16 = getv function %tmp.15 :setColor;
-        %tmp.17 = 0x05030A;
-        symbol [ Graphics %tmp.18 19 34 42 ];
-        %tmp.18 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.19 19 43 60 ];
-        %tmp.19 = getv %tmp.18 :COLOR_TRANSPARENT;
-        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.19);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 20 12 ]
-        %tmp.20 = lgetv %dc;
-        symbol [ dc %tmp.20 20 12 14 ];
-        symbol [ fillCircle %tmp.21 20 15 25 ];
-        %tmp.21 = getv function %tmp.20 :fillCircle;
-        %tmp.22 = lgetv %sw;
-        symbol [ sw %tmp.22 20 26 28 ];
-        %tmp.23 = 2;
-        %tmp.24 = div %tmp.22 %tmp.23;
-        %tmp.25 = lgetv %sh;
-        symbol [ sh %tmp.25 20 34 36 ];
-        %tmp.26 = 2;
-        %tmp.27 = div %tmp.25 %tmp.26;
-        %tmp.28 = lgetv %sw;
-        symbol [ sw %tmp.28 20 42 44 ];
-        %tmp.29 = 2;
-        %tmp.30 = div %tmp.28 %tmp.29;
-        %tmp.31 = 4;
-        %tmp.32 = add %tmp.30 %tmp.31;
-        invoke %tmp.20 %tmp.21(%tmp.24, %tmp.27, %tmp.32);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 21 12 ]
-        symbol [ GfxUtil %tmp.34 21 12 19 ];
-        %tmp.34 = getv ? :GfxUtil;
-        symbol [ vGradient %tmp.35 21 20 29 ];
-        %tmp.35 = getv function %tmp.34 :vGradient;
-        %tmp.36 = lgetv %dc;
-        symbol [ dc %tmp.36 21 30 32 ];
-        %tmp.37 = lgetv %sw;
-        symbol [ sw %tmp.37 21 34 36 ];
-        %tmp.38 = 6;
-        %tmp.39 = div %tmp.37 %tmp.38;
-        %tmp.40 = lgetv %sh;
-        symbol [ sh %tmp.40 21 42 44 ];
-        %tmp.41 = 8;
-        %tmp.42 = div %tmp.40 %tmp.41;
-        %tmp.43 = lgetv %sw;
-        symbol [ sw %tmp.43 21 50 52 ];
-        %tmp.44 = 4;
-        %tmp.45 = mul %tmp.43 %tmp.44;
-        %tmp.46 = 6;
-        %tmp.47 = div %tmp.45 %tmp.46;
-        %tmp.48 = lgetv %sh;
-        symbol [ sh %tmp.48 21 62 64 ];
-        %tmp.49 = 6;
-        %tmp.50 = mul %tmp.48 %tmp.49;
-        %tmp.51 = 8;
-        %tmp.52 = div %tmp.50 %tmp.51;
-        %tmp.53 = 0x3A0A18;
-        %tmp.54 = 0x0A0410;
-        %tmp.55 = 8;
-        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.39, %tmp.42, %tmp.47, %tmp.52, %tmp.53, %tmp.54, %tmp.55);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_22_22_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_8_22_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_18_8_22_8_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_15_51_23_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 26; @symbol_functiondef = [drawCabinet,26,20,31]; @symbol_param<0> = [dc,26,32,34]; @symbol_param<1> = [sw,26,36,38]; @symbol_param<2> = [sh,26,40,42]; @symbol_param<3> = [cabX,26,44,48]; @symbol_param<4> = [cabY,26,50,54]; @symbol_param<5> = [cabW,26,56,60]; @symbol_param<6> = [cabH,26,62,66]; ]
-    static
-    function drawCabinet(dc, sw, sh, cabX, cabY, cabW, cabH) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 27 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop" ]
-        %fx.1 = local;
-        symbol [ fx %fx.1 27 12 14 ];
-        %tmp.1 = lgetv %cabX;
-        symbol [ cabX %tmp.1 27 17 21 ];
-        %tmp.2 = 12;
-        %tmp.3 = sub %tmp.1 %tmp.2;
-        lputv %fx.1 %tmp.3;
-        symbol [ fx %fx.1 27 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 27 28 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop" ]
-        %fy.2 = local;
-        symbol [ fy %fy.2 27 32 34 ];
-        %tmp.4 = lgetv %cabY;
-        symbol [ cabY %tmp.4 27 37 41 ];
-        %tmp.5 = 12;
-        %tmp.6 = sub %tmp.4 %tmp.5;
-        lputv %fy.2 %tmp.6;
-        symbol [ fy %fy.2 27 32 34 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 28 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop" ]
-        %fw.3 = local;
-        symbol [ fw %fw.3 28 12 14 ];
-        %tmp.7 = lgetv %cabW;
-        symbol [ cabW %tmp.7 28 17 21 ];
-        %tmp.8 = 24;
-        %tmp.9 = add %tmp.7 %tmp.8;
-        lputv %fw.3 %tmp.9;
-        symbol [ fw %fw.3 28 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 28 28 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop" ]
-        %fh.4 = local;
-        symbol [ fh %fh.4 28 32 34 ];
-        %tmp.10 = lgetv %cabH;
-        symbol [ cabH %tmp.10 28 37 41 ];
-        %tmp.11 = 24;
-        %tmp.12 = add %tmp.10 %tmp.11;
-        lputv %fh.4 %tmp.12;
-        symbol [ fh %fh.4 28 32 34 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 31 8 ]
-        %tmp.13 = lgetv %dc;
-        symbol [ dc %tmp.13 31 8 10 ];
-        symbol [ setColor %tmp.14 31 11 19 ];
-        %tmp.14 = getv function %tmp.13 :setColor;
-        %tmp.15 = 0x000000;
-        symbol [ Graphics %tmp.16 31 30 38 ];
-        %tmp.16 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.17 31 39 56 ];
-        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
-        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 32 8 ]
-        %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 32 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.19 32 11 31 ];
-        %tmp.19 = getv function %tmp.18 :fillRoundedRectangle;
-        %tmp.20 = lgetv %fx.1;
-        symbol [ fx %tmp.20 32 32 34 ];
-        %tmp.21 = 3;
-        %tmp.22 = add %tmp.20 %tmp.21;
-        %tmp.23 = lgetv %fy.2;
-        symbol [ fy %tmp.23 32 40 42 ];
-        %tmp.24 = 4;
-        %tmp.25 = add %tmp.23 %tmp.24;
-        %tmp.26 = lgetv %fw.3;
-        symbol [ fw %tmp.26 32 48 50 ];
-        %tmp.27 = lgetv %fh.4;
-        symbol [ fh %tmp.27 32 52 54 ];
-        %tmp.28 = 14;
-        invoke %tmp.18 %tmp.19(%tmp.22, %tmp.25, %tmp.26, %tmp.27, %tmp.28);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 35 8 ]
-        symbol [ GfxUtil %tmp.30 35 8 15 ];
-        %tmp.30 = getv ? :GfxUtil;
-        symbol [ vGradientRounded %tmp.31 35 16 32 ];
-        %tmp.31 = getv function %tmp.30 :vGradientRounded;
-        %tmp.32 = lgetv %dc;
-        symbol [ dc %tmp.32 35 33 35 ];
-        %tmp.33 = lgetv %fx.1;
-        symbol [ fx %tmp.33 35 37 39 ];
-        %tmp.34 = lgetv %fy.2;
-        symbol [ fy %tmp.34 35 41 43 ];
-        %tmp.35 = lgetv %fw.3;
-        symbol [ fw %tmp.35 35 45 47 ];
-        %tmp.36 = lgetv %fh.4;
-        symbol [ fh %tmp.36 35 49 51 ];
-        %tmp.37 = 0xF2C94C;
-        %tmp.38 = 0x6E4E12;
-        %tmp.39 = 10;
-        %tmp.40 = 14;
-        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33, %tmp.34, %tmp.35, %tmp.36, %tmp.37, %tmp.38, %tmp.39, %tmp.40);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 37 8 ]
-        %tmp.41 = lgetv %dc;
-        symbol [ dc %tmp.41 37 8 10 ];
-        symbol [ setColor %tmp.42 37 11 19 ];
-        %tmp.42 = getv function %tmp.41 :setColor;
-        %tmp.43 = 0xFFE9A0;
-        symbol [ Graphics %tmp.44 37 30 38 ];
-        %tmp.44 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.45 37 39 56 ];
-        %tmp.45 = getv %tmp.44 :COLOR_TRANSPARENT;
-        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 38 8 ]
-        %tmp.46 = lgetv %dc;
-        symbol [ dc %tmp.46 38 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.47 38 11 31 ];
-        %tmp.47 = getv function %tmp.46 :drawRoundedRectangle;
-        %tmp.48 = lgetv %fx.1;
-        symbol [ fx %tmp.48 38 32 34 ];
-        %tmp.49 = 2;
-        %tmp.50 = add %tmp.48 %tmp.49;
-        %tmp.51 = lgetv %fy.2;
-        symbol [ fy %tmp.51 38 40 42 ];
-        %tmp.52 = 2;
-        %tmp.53 = add %tmp.51 %tmp.52;
-        %tmp.54 = lgetv %fw.3;
-        symbol [ fw %tmp.54 38 48 50 ];
-        %tmp.55 = 4;
-        %tmp.56 = sub %tmp.54 %tmp.55;
-        %tmp.57 = lgetv %fh.4;
-        symbol [ fh %tmp.57 38 56 58 ];
-        %tmp.58 = 4;
-        %tmp.59 = sub %tmp.57 %tmp.58;
-        %tmp.60 = 12;
-        invoke %tmp.46 %tmp.47(%tmp.50, %tmp.53, %tmp.56, %tmp.59, %tmp.60);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 39 8 ]
-        %tmp.61 = lgetv %dc;
-        symbol [ dc %tmp.61 39 8 10 ];
-        symbol [ setColor %tmp.62 39 11 19 ];
-        %tmp.62 = getv function %tmp.61 :setColor;
-        %tmp.63 = 0x5A3E0E;
-        symbol [ Graphics %tmp.64 39 30 38 ];
-        %tmp.64 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.65 39 39 56 ];
-        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
-        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 40 8 ]
-        %tmp.66 = lgetv %dc;
-        symbol [ dc %tmp.66 40 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.67 40 11 31 ];
-        %tmp.67 = getv function %tmp.66 :drawRoundedRectangle;
-        %tmp.68 = lgetv %fx.1;
-        symbol [ fx %tmp.68 40 32 34 ];
-        %tmp.69 = lgetv %fy.2;
-        symbol [ fy %tmp.69 40 36 38 ];
-        %tmp.70 = lgetv %fw.3;
-        symbol [ fw %tmp.70 40 40 42 ];
-        %tmp.71 = lgetv %fh.4;
-        symbol [ fh %tmp.71 40 44 46 ];
-        %tmp.72 = 14;
-        invoke %tmp.66 %tmp.67(%tmp.68, %tmp.69, %tmp.70, %tmp.71, %tmp.72);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 43 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop" ]
-        %rv.5 = local;
-        symbol [ rv %rv.5 43 12 14 ];
-        %tmp.73 = 3;
-        lputv %rv.5 %tmp.73;
-        symbol [ rv %rv.5 43 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 44 8 ]
-        %tmp.74 = self;
-        symbol [ _rivet %tmp.75 44 8 14 ];
-        %tmp.75 = getv function %tmp.74 :_rivet;
-        %tmp.76 = lgetv %dc;
-        symbol [ dc %tmp.76 44 15 17 ];
-        %tmp.77 = lgetv %fx.1;
-        symbol [ fx %tmp.77 44 19 21 ];
-        %tmp.78 = 8;
-        %tmp.79 = add %tmp.77 %tmp.78;
-        %tmp.80 = lgetv %fy.2;
-        symbol [ fy %tmp.80 44 34 36 ];
-        %tmp.81 = 8;
-        %tmp.82 = add %tmp.80 %tmp.81;
-        %tmp.83 = lgetv %rv.5;
-        symbol [ rv %tmp.83 44 49 51 ];
-        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.79, %tmp.82, %tmp.83);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 45 8 ]
-        %tmp.84 = self;
-        symbol [ _rivet %tmp.85 45 8 14 ];
-        %tmp.85 = getv function %tmp.84 :_rivet;
-        %tmp.86 = lgetv %dc;
-        symbol [ dc %tmp.86 45 15 17 ];
-        %tmp.87 = lgetv %fx.1;
-        symbol [ fx %tmp.87 45 19 21 ];
-        %tmp.88 = lgetv %fw.3;
-        symbol [ fw %tmp.88 45 24 26 ];
-        %tmp.89 = add %tmp.87 %tmp.88;
-        %tmp.90 = 8;
-        %tmp.91 = sub %tmp.89 %tmp.90;
-        %tmp.92 = lgetv %fy.2;
-        symbol [ fy %tmp.92 45 34 36 ];
-        %tmp.93 = 8;
-        %tmp.94 = add %tmp.92 %tmp.93;
-        %tmp.95 = lgetv %rv.5;
-        symbol [ rv %tmp.95 45 49 51 ];
-        invoke %tmp.84 %tmp.85(%tmp.86, %tmp.91, %tmp.94, %tmp.95);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 46 8 ]
-        %tmp.96 = self;
-        symbol [ _rivet %tmp.97 46 8 14 ];
-        %tmp.97 = getv function %tmp.96 :_rivet;
-        %tmp.98 = lgetv %dc;
-        symbol [ dc %tmp.98 46 15 17 ];
-        %tmp.99 = lgetv %fx.1;
-        symbol [ fx %tmp.99 46 19 21 ];
-        %tmp.100 = 8;
-        %tmp.101 = add %tmp.99 %tmp.100;
-        %tmp.102 = lgetv %fy.2;
-        symbol [ fy %tmp.102 46 34 36 ];
-        %tmp.103 = lgetv %fh.4;
-        symbol [ fh %tmp.103 46 39 41 ];
-        %tmp.104 = add %tmp.102 %tmp.103;
-        %tmp.105 = 8;
-        %tmp.106 = sub %tmp.104 %tmp.105;
-        %tmp.107 = lgetv %rv.5;
-        symbol [ rv %tmp.107 46 49 51 ];
-        invoke %tmp.96 %tmp.97(%tmp.98, %tmp.101, %tmp.106, %tmp.107);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 47 8 ]
-        %tmp.108 = self;
-        symbol [ _rivet %tmp.109 47 8 14 ];
-        %tmp.109 = getv function %tmp.108 :_rivet;
-        %tmp.110 = lgetv %dc;
-        symbol [ dc %tmp.110 47 15 17 ];
-        %tmp.111 = lgetv %fx.1;
-        symbol [ fx %tmp.111 47 19 21 ];
-        %tmp.112 = lgetv %fw.3;
-        symbol [ fw %tmp.112 47 24 26 ];
-        %tmp.113 = add %tmp.111 %tmp.112;
-        %tmp.114 = 8;
-        %tmp.115 = sub %tmp.113 %tmp.114;
-        %tmp.116 = lgetv %fy.2;
-        symbol [ fy %tmp.116 47 34 36 ];
-        %tmp.117 = lgetv %fh.4;
-        symbol [ fh %tmp.117 47 39 41 ];
-        %tmp.118 = add %tmp.116 %tmp.117;
-        %tmp.119 = 8;
-        %tmp.120 = sub %tmp.118 %tmp.119;
-        %tmp.121 = lgetv %rv.5;
-        symbol [ rv %tmp.121 47 49 51 ];
-        invoke %tmp.108 %tmp.109(%tmp.110, %tmp.115, %tmp.120, %tmp.121);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 50 8 ]
-        %tmp.122 = lgetv %dc;
-        symbol [ dc %tmp.122 50 8 10 ];
-        symbol [ setColor %tmp.123 50 11 19 ];
-        %tmp.123 = getv function %tmp.122 :setColor;
-        %tmp.124 = 0x07040C;
-        symbol [ Graphics %tmp.125 50 30 38 ];
-        %tmp.125 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.126 50 39 56 ];
-        %tmp.126 = getv %tmp.125 :COLOR_TRANSPARENT;
-        invoke %tmp.122 %tmp.123(%tmp.124, %tmp.126);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 51 8 ]
-        %tmp.127 = lgetv %dc;
-        symbol [ dc %tmp.127 51 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.128 51 11 31 ];
-        %tmp.128 = getv function %tmp.127 :fillRoundedRectangle;
-        %tmp.129 = lgetv %cabX;
-        symbol [ cabX %tmp.129 51 32 36 ];
-        %tmp.130 = 3;
-        %tmp.131 = sub %tmp.129 %tmp.130;
-        %tmp.132 = lgetv %cabY;
-        symbol [ cabY %tmp.132 51 42 46 ];
-        %tmp.133 = 3;
-        %tmp.134 = sub %tmp.132 %tmp.133;
-        %tmp.135 = lgetv %cabW;
-        symbol [ cabW %tmp.135 51 52 56 ];
-        %tmp.136 = 6;
-        %tmp.137 = add %tmp.135 %tmp.136;
-        %tmp.138 = lgetv %cabH;
-        symbol [ cabH %tmp.138 51 62 66 ];
-        %tmp.139 = 6;
-        %tmp.140 = add %tmp.138 %tmp.139;
-        %tmp.141 = 6;
-        invoke %tmp.127 %tmp.128(%tmp.131, %tmp.134, %tmp.137, %tmp.140, %tmp.141);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_26_68_52_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 54; @symbol_functiondef = [_rivet,54,20,26]; @symbol_param<0> = [dc,54,27,29]; @symbol_param<1> = [cx,54,31,33]; @symbol_param<2> = [cy,54,35,37]; @symbol_param<3> = [r,54,39,40]; ]
-    static
-    function _rivet(dc, cx, cy, r) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_54_42_61_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 55 8 ]
+    function drawBackground(dc, sw, sh, groundY) {
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_13_56_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 14 8 ]
         %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 55 8 10 ];
-        symbol [ setColor %tmp.2 55 11 19 ];
+        symbol [ dc %tmp.1 14 8 10 ];
+        symbol [ setColor %tmp.2 14 11 19 ];
         %tmp.2 = getv function %tmp.1 :setColor;
-        %tmp.3 = 0x8A6508;
-        symbol [ Graphics %tmp.4 55 30 38 ];
+        %tmp.3 = 0x0B1418;
+        symbol [ Graphics %tmp.4 14 30 38 ];
         %tmp.4 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.5 55 39 56 ];
+        symbol [ COLOR_TRANSPARENT %tmp.5 14 39 56 ];
         %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
         invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 56 8 ]
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 15 8 ]
         %tmp.6 = lgetv %dc;
-        symbol [ dc %tmp.6 56 8 10 ];
-        symbol [ fillCircle %tmp.7 56 11 21 ];
-        %tmp.7 = getv function %tmp.6 :fillCircle;
-        %tmp.8 = lgetv %cx;
-        symbol [ cx %tmp.8 56 22 24 ];
-        %tmp.9 = lgetv %cy;
-        symbol [ cy %tmp.9 56 26 28 ];
-        %tmp.10 = lgetv %r;
-        symbol [ r %tmp.10 56 30 31 ];
-        %tmp.11 = 1;
-        %tmp.12 = add %tmp.10 %tmp.11;
-        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9, %tmp.12);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 57 8 ]
-        %tmp.13 = lgetv %dc;
-        symbol [ dc %tmp.13 57 8 10 ];
-        symbol [ setColor %tmp.14 57 11 19 ];
-        %tmp.14 = getv function %tmp.13 :setColor;
-        %tmp.15 = 0xFFE9A0;
-        symbol [ Graphics %tmp.16 57 30 38 ];
-        %tmp.16 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.17 57 39 56 ];
-        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
-        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 58 8 ]
-        %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 58 8 10 ];
-        symbol [ fillCircle %tmp.19 58 11 21 ];
-        %tmp.19 = getv function %tmp.18 :fillCircle;
-        %tmp.20 = lgetv %cx;
-        symbol [ cx %tmp.20 58 22 24 ];
-        %tmp.21 = lgetv %cy;
-        symbol [ cy %tmp.21 58 26 28 ];
-        %tmp.22 = lgetv %r;
-        symbol [ r %tmp.22 58 30 31 ];
-        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 59 8 ]
-        %tmp.23 = lgetv %dc;
-        symbol [ dc %tmp.23 59 8 10 ];
-        symbol [ setColor %tmp.24 59 11 19 ];
-        %tmp.24 = getv function %tmp.23 :setColor;
-        %tmp.25 = 0x8A6508;
-        symbol [ Graphics %tmp.26 59 30 38 ];
-        %tmp.26 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.27 59 39 56 ];
-        %tmp.27 = getv %tmp.26 :COLOR_TRANSPARENT;
-        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.27);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 60 8 ]
-        %tmp.28 = lgetv %dc;
-        symbol [ dc %tmp.28 60 8 10 ];
-        symbol [ fillCircle %tmp.29 60 11 21 ];
-        %tmp.29 = getv function %tmp.28 :fillCircle;
-        %tmp.30 = lgetv %cx;
-        symbol [ cx %tmp.30 60 22 24 ];
-        %tmp.31 = lgetv %cy;
-        symbol [ cy %tmp.31 60 26 28 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_begin:
-        %tmp.32 = lgetv %r;
-        symbol [ r %tmp.32 60 30 31 ];
-        %tmp.33 = 2;
-        %tmp.34 = sub %tmp.32 %tmp.33;
-        %tmp.35 = 1;
-        %tmp.36 = lt %tmp.34 %tmp.35;
-        bf %tmp.36 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_true:
-        %tmp.37 = 1;
-        push %tmp.37;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_else_false:
-        %tmp.38 = lgetv %r;
-        symbol [ r %tmp.38 60 46 47 ];
-        %tmp.39 = 2;
-        %tmp.40 = sub %tmp.38 %tmp.39;
-        push %tmp.40;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_end:
-        %tmp.41 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_else_false] [%tmp.41 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_60_30_60_50_end];
-        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.41);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_54_42_61_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 64; @symbol_functiondef = [drawReels,64,20,29]; @symbol_param<0> = [dc,64,30,32]; @symbol_param<1> = [ctrl,64,34,38]; @symbol_param<2> = [cabX,64,40,44]; @symbol_param<3> = [cabY,64,46,50]; @symbol_param<4> = [colW,64,52,56]; @symbol_param<5> = [rowH,64,58,62]; @symbol_param<6> = [gap,64,64,67]; ]
-    static
-    function drawReels(dc, ctrl, cabX, cabY, colW, rowH, gap) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_64_69_78_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 65 8 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 65 17 18 ];
-        %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 65 17 18 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 65 24 25 ];
-        %tmp.3 = 3;
-        %tmp.4 = lt %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_36_68_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 66 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_36_68_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_36_68_8_stop" ]
-        %colX.2 = local;
-        symbol [ colX %colX.2 66 16 20 ];
-        %tmp.5 = lgetv %cabX;
-        symbol [ cabX %tmp.5 66 23 27 ];
-        %tmp.6 = lgetv %i.1;
-        symbol [ i %tmp.6 66 30 31 ];
-        %tmp.7 = lgetv %colW;
-        symbol [ colW %tmp.7 66 35 39 ];
-        %tmp.8 = lgetv %gap;
-        symbol [ gap %tmp.8 66 42 45 ];
-        %tmp.9 = add %tmp.7 %tmp.8;
-        %tmp.10 = mul %tmp.6 %tmp.9;
-        %tmp.11 = add %tmp.5 %tmp.10;
-        lputv %colX.2 %tmp.11;
-        symbol [ colX %colX.2 66 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 67 12 ]
-        %tmp.12 = self;
-        symbol [ _drawColumn %tmp.13 67 12 23 ];
-        %tmp.13 = getv function %tmp.12 :_drawColumn;
-        %tmp.14 = lgetv %dc;
-        symbol [ dc %tmp.14 67 24 26 ];
-        %tmp.15 = lgetv %ctrl;
-        symbol [ ctrl %tmp.15 67 28 32 ];
-        %tmp.16 = lgetv %i.1;
-        symbol [ i %tmp.16 67 34 35 ];
-        %tmp.17 = lgetv %colX.2;
-        symbol [ colX %tmp.17 67 37 41 ];
-        %tmp.18 = lgetv %cabY;
-        symbol [ cabY %tmp.18 67 43 47 ];
-        %tmp.19 = lgetv %colW;
-        symbol [ colW %tmp.19 67 49 53 ];
-        %tmp.20 = lgetv %rowH;
-        symbol [ rowH %tmp.20 67 55 59 ];
-        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15, %tmp.16, %tmp.17, %tmp.18, %tmp.19, %tmp.20);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_36_68_8_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 65 ]
-        %tmp.23 = lgetv %i.1;
-        symbol [ i %tmp.23 65 31 32 ];
-        %tmp.24 = add %tmp.23 1;
-        lputv %i.1 %tmp.24;
-        symbol [ i %i.1 65 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_65_8_68_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 69 8 ]
+        symbol [ dc %tmp.6 15 8 10 ];
+        symbol [ fillRectangle %tmp.7 15 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = 0;
+        %tmp.9 = 0;
+        %tmp.10 = lgetv %sw;
+        symbol [ sw %tmp.10 15 31 33 ];
+        %tmp.11 = lgetv %groundY;
+        symbol [ groundY %tmp.11 15 35 42 ];
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9, %tmp.10, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 16 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 16 8 10 ];
+        symbol [ setColor %tmp.13 16 11 19 ];
+        %tmp.13 = getv function %tmp.12 :setColor;
+        %tmp.14 = 0x2A3A1E;
+        symbol [ Graphics %tmp.15 16 30 38 ];
+        %tmp.15 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.16 16 39 56 ];
+        %tmp.16 = getv %tmp.15 :COLOR_TRANSPARENT;
+        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.16);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 17 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 17 8 10 ];
+        symbol [ fillRectangle %tmp.18 17 11 24 ];
+        %tmp.18 = getv function %tmp.17 :fillRectangle;
+        %tmp.19 = 0;
+        %tmp.20 = lgetv %groundY;
+        symbol [ groundY %tmp.20 17 28 35 ];
+        %tmp.21 = lgetv %sw;
+        symbol [ sw %tmp.21 17 37 39 ];
+        %tmp.22 = lgetv %sh;
+        symbol [ sh %tmp.22 17 41 43 ];
+        %tmp.23 = lgetv %groundY;
+        symbol [ groundY %tmp.23 17 46 53 ];
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20, %tmp.21, %tmp.24);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 18 8 ]
         %tmp.25 = lgetv %dc;
-        symbol [ dc %tmp.25 69 8 10 ];
-        symbol [ clearClip %tmp.26 69 11 20 ];
-        %tmp.26 = getv function %tmp.25 :clearClip;
-        invoke %tmp.25 %tmp.26();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 72 8 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_end" ]
-        %d.3 = local;
-        symbol [ d %d.3 72 17 18 ];
-        %tmp.27 = 1;
-        lputv %d.3 %tmp.27;
-        symbol [ d %d.3 72 17 18 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_test:
-        %tmp.28 = lgetv %d.3;
-        symbol [ d %tmp.28 72 24 25 ];
-        %tmp.29 = 3;
-        %tmp.30 = lt %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_36_75_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 73 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_36_75_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_36_75_8_stop" ]
-        %dxp.4 = local;
-        symbol [ dxp %dxp.4 73 16 19 ];
-        %tmp.31 = lgetv %cabX;
-        symbol [ cabX %tmp.31 73 22 26 ];
-        %tmp.32 = lgetv %d.3;
-        symbol [ d %tmp.32 73 29 30 ];
-        %tmp.33 = lgetv %colW;
-        symbol [ colW %tmp.33 73 34 38 ];
-        %tmp.34 = lgetv %gap;
-        symbol [ gap %tmp.34 73 41 44 ];
-        %tmp.35 = add %tmp.33 %tmp.34;
-        %tmp.36 = mul %tmp.32 %tmp.35;
-        %tmp.37 = add %tmp.31 %tmp.36;
-        %tmp.38 = lgetv %gap;
-        symbol [ gap %tmp.38 73 48 51 ];
-        %tmp.39 = sub %tmp.37 %tmp.38;
-        lputv %dxp.4 %tmp.39;
-        symbol [ dxp %dxp.4 73 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 74 12 ]
-        symbol [ GfxUtil %tmp.41 74 12 19 ];
-        %tmp.41 = getv ? :GfxUtil;
-        symbol [ vGradient %tmp.42 74 20 29 ];
-        %tmp.42 = getv function %tmp.41 :vGradient;
-        %tmp.43 = lgetv %dc;
-        symbol [ dc %tmp.43 74 30 32 ];
-        %tmp.44 = lgetv %dxp.4;
-        symbol [ dxp %tmp.44 74 34 37 ];
-        %tmp.45 = lgetv %cabY;
-        symbol [ cabY %tmp.45 74 39 43 ];
-        %tmp.46 = lgetv %gap;
-        symbol [ gap %tmp.46 74 45 48 ];
-        %tmp.47 = lgetv %rowH;
-        symbol [ rowH %tmp.47 74 50 54 ];
-        %tmp.48 = 3;
-        %tmp.49 = mul %tmp.47 %tmp.48;
-        %tmp.50 = 0xF2C94C;
-        %tmp.51 = 0x6E4E12;
-        %tmp.52 = 6;
-        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44, %tmp.45, %tmp.46, %tmp.49, %tmp.50, %tmp.51, %tmp.52);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_36_75_8_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 72 ]
-        %tmp.55 = lgetv %d.3;
-        symbol [ d %tmp.55 72 31 32 ];
-        %tmp.56 = add %tmp.55 1;
-        lputv %d.3 %tmp.56;
-        symbol [ d %d.3 72 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_72_8_75_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 77 8 ]
-        %tmp.57 = self;
-        symbol [ _drawPayline %tmp.58 77 8 20 ];
-        %tmp.58 = getv function %tmp.57 :_drawPayline;
-        %tmp.59 = lgetv %dc;
-        symbol [ dc %tmp.59 77 21 23 ];
-        %tmp.60 = lgetv %cabX;
-        symbol [ cabX %tmp.60 77 25 29 ];
-        %tmp.61 = lgetv %cabY;
-        symbol [ cabY %tmp.61 77 31 35 ];
-        %tmp.62 = lgetv %colW;
-        symbol [ colW %tmp.62 77 37 41 ];
-        %tmp.63 = lgetv %rowH;
-        symbol [ rowH %tmp.63 77 43 47 ];
-        %tmp.64 = lgetv %gap;
-        symbol [ gap %tmp.64 77 49 52 ];
-        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61, %tmp.62, %tmp.63, %tmp.64);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_64_69_78_4_stop:
+        symbol [ dc %tmp.25 18 8 10 ];
+        symbol [ setColor %tmp.26 18 11 19 ];
+        %tmp.26 = getv function %tmp.25 :setColor;
+        %tmp.27 = 0x527A2E;
+        symbol [ Graphics %tmp.28 18 30 38 ];
+        %tmp.28 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.29 18 39 56 ];
+        %tmp.29 = getv %tmp.28 :COLOR_TRANSPARENT;
+        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.29);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 19 8 ]
+        %tmp.30 = lgetv %dc;
+        symbol [ dc %tmp.30 19 8 10 ];
+        symbol [ fillRectangle %tmp.31 19 11 24 ];
+        %tmp.31 = getv function %tmp.30 :fillRectangle;
+        %tmp.32 = 0;
+        %tmp.33 = lgetv %groundY;
+        symbol [ groundY %tmp.33 19 28 35 ];
+        %tmp.34 = lgetv %sw;
+        symbol [ sw %tmp.34 19 37 39 ];
+        %tmp.35 = 3;
+        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33, %tmp.34, %tmp.35);
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_13_56_20_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 80; @symbol_functiondef = [_drawColumn,80,27,38]; @symbol_param<0> = [dc,80,39,41]; @symbol_param<1> = [ctrl,80,43,47]; @symbol_param<2> = [i,80,49,50]; @symbol_param<3> = [colX,80,52,56]; @symbol_param<4> = [cabY,80,58,62]; @symbol_param<5> = [colW,80,64,68]; @symbol_param<6> = [rowH,80,70,74]; ]
-    protected static
-    function _drawColumn(dc, ctrl, i, colX, cabY, colW, rowH) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 81 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop" ]
-        %reel.1 = local;
-        symbol [ reel %reel.1 81 12 16 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 81 19 23 ];
-        symbol [ reels %tmp.2 81 24 29 ];
-        %tmp.2 = getv %tmp.1 :reels;
-        symbol [ reels %tmp.3 81 30 35 ];
-        %tmp.3 = getv %tmp.2 :reels;
-        %tmp.4 = lgetv %i;
-        symbol [ i %tmp.4 81 36 37 ];
-        %tmp.5 = agetv %tmp.3 %tmp.4;
-        lputv %reel.1 %tmp.5;
-        symbol [ reel %reel.1 81 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 82 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop" ]
-        %winH.2 = local;
-        symbol [ winH %winH.2 82 12 16 ];
-        %tmp.6 = lgetv %rowH;
-        symbol [ rowH %tmp.6 82 19 23 ];
-        %tmp.7 = 3;
-        %tmp.8 = mul %tmp.6 %tmp.7;
-        lputv %winH.2 %tmp.8;
-        symbol [ winH %winH.2 82 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 83 8 ]
-        %tmp.9 = lgetv %dc;
-        symbol [ dc %tmp.9 83 8 10 ];
-        symbol [ setClip %tmp.10 83 11 18 ];
-        %tmp.10 = getv function %tmp.9 :setClip;
-        %tmp.11 = lgetv %colX;
-        symbol [ colX %tmp.11 83 19 23 ];
-        %tmp.12 = lgetv %cabY;
-        symbol [ cabY %tmp.12 83 25 29 ];
-        %tmp.13 = lgetv %colW;
-        symbol [ colW %tmp.13 83 31 35 ];
-        %tmp.14 = lgetv %winH.2;
-        symbol [ winH %tmp.14 83 37 41 ];
-        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12, %tmp.13, %tmp.14);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 86 8 ]
-        symbol [ GfxUtil %tmp.16 86 8 15 ];
-        %tmp.16 = getv ? :GfxUtil;
-        symbol [ vGradient %tmp.17 86 16 25 ];
-        %tmp.17 = getv function %tmp.16 :vGradient;
-        %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 86 26 28 ];
-        %tmp.19 = lgetv %colX;
-        symbol [ colX %tmp.19 86 30 34 ];
-        %tmp.20 = lgetv %cabY;
-        symbol [ cabY %tmp.20 86 36 40 ];
-        %tmp.21 = lgetv %colW;
-        symbol [ colW %tmp.21 86 42 46 ];
-        %tmp.22 = lgetv %winH.2;
-        symbol [ winH %tmp.22 86 48 52 ];
-        %tmp.23 = 0x241A22;
-        %tmp.24 = 0x0D0910;
-        %tmp.25 = 8;
-        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.20, %tmp.21, %tmp.22, %tmp.23, %tmp.24, %tmp.25);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 88 8 ]
-        %tmp.26 = lgetv %dc;
-        symbol [ dc %tmp.26 88 8 10 ];
-        symbol [ setColor %tmp.27 88 11 19 ];
-        %tmp.27 = getv function %tmp.26 :setColor;
-        %tmp.28 = 0x000000;
-        symbol [ Graphics %tmp.29 88 30 38 ];
-        %tmp.29 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.30 88 39 56 ];
-        %tmp.30 = getv %tmp.29 :COLOR_TRANSPARENT;
-        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 89 8 ]
-        %tmp.31 = lgetv %dc;
-        symbol [ dc %tmp.31 89 8 10 ];
-        symbol [ fillRectangle %tmp.32 89 11 24 ];
-        %tmp.32 = getv function %tmp.31 :fillRectangle;
-        %tmp.33 = lgetv %colX;
-        symbol [ colX %tmp.33 89 25 29 ];
-        %tmp.34 = lgetv %cabY;
-        symbol [ cabY %tmp.34 89 31 35 ];
-        %tmp.35 = lgetv %colW;
-        symbol [ colW %tmp.35 89 37 41 ];
-        %tmp.36 = lgetv %rowH;
-        symbol [ rowH %tmp.36 89 43 47 ];
-        %tmp.37 = 3;
-        %tmp.38 = div %tmp.36 %tmp.37;
-        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.34, %tmp.35, %tmp.38);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 90 8 ]
-        %tmp.39 = lgetv %dc;
-        symbol [ dc %tmp.39 90 8 10 ];
-        symbol [ fillRectangle %tmp.40 90 11 24 ];
-        %tmp.40 = getv function %tmp.39 :fillRectangle;
-        %tmp.41 = lgetv %colX;
-        symbol [ colX %tmp.41 90 25 29 ];
-        %tmp.42 = lgetv %cabY;
-        symbol [ cabY %tmp.42 90 31 35 ];
-        %tmp.43 = lgetv %winH.2;
-        symbol [ winH %tmp.43 90 38 42 ];
-        %tmp.44 = add %tmp.42 %tmp.43;
-        %tmp.45 = lgetv %rowH;
-        symbol [ rowH %tmp.45 90 45 49 ];
-        %tmp.46 = 3;
-        %tmp.47 = div %tmp.45 %tmp.46;
-        %tmp.48 = sub %tmp.44 %tmp.47;
-        %tmp.49 = lgetv %colW;
-        symbol [ colW %tmp.49 90 55 59 ];
-        %tmp.50 = lgetv %rowH;
-        symbol [ rowH %tmp.50 90 61 65 ];
-        %tmp.51 = 3;
-        %tmp.52 = div %tmp.50 %tmp.51;
-        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.48, %tmp.49, %tmp.52);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 92 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop" ]
-        %frac.3 = local;
-        symbol [ frac %frac.3 92 12 16 ];
-        %tmp.53 = lgetv %reel.1;
-        symbol [ reel %tmp.53 92 19 23 ];
-        symbol [ scrollFrac %tmp.54 92 24 34 ];
-        %tmp.54 = getv function %tmp.53 :scrollFrac;
-        %tmp.55 = invoke %tmp.53 %tmp.54();
-        lputv %frac.3 %tmp.55;
-        symbol [ frac %frac.3 92 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 93 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop" ]
-        %cx.4 = local;
-        symbol [ cx %cx.4 93 12 14 ];
-        %tmp.56 = lgetv %colX;
-        symbol [ colX %tmp.56 93 17 21 ];
-        %tmp.57 = lgetv %colW;
-        symbol [ colW %tmp.57 93 24 28 ];
-        %tmp.58 = 2;
-        %tmp.59 = div %tmp.57 %tmp.58;
-        %tmp.60 = add %tmp.56 %tmp.59;
-        lputv %cx.4 %tmp.60;
-        symbol [ cx %cx.4 93 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 94 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop" ]
-        %size.5 = local;
-        symbol [ size %size.5 94 12 16 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_begin:
-        %tmp.61 = lgetv %colW;
-        symbol [ colW %tmp.61 94 20 24 ];
-        %tmp.62 = lgetv %rowH;
-        symbol [ rowH %tmp.62 94 27 31 ];
-        %tmp.63 = lt %tmp.61 %tmp.62;
-        bf %tmp.63 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_true:
-        %tmp.64 = lgetv %colW;
-        symbol [ colW %tmp.64 94 35 39 ];
-        push %tmp.64;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_else_false:
-        %tmp.65 = lgetv %rowH;
-        symbol [ rowH %tmp.65 94 42 46 ];
-        push %tmp.65;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_end:
-        %tmp.66 = phi [%tmp.63 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_begin] [%tmp.64 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_true] [%tmp.65 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_else_false] [%tmp.66 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_94_19_94_42_end];
-        lputv %size.5 %tmp.66;
-        symbol [ size %size.5 94 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 95 8 ]
-        %tmp.67 = lgetv %size.5;
-        symbol [ size %tmp.67 95 15 19 ];
-        %tmp.68 = 76;
-        %tmp.69 = mul %tmp.67 %tmp.68;
-        %tmp.70 = 100;
-        %tmp.71 = div %tmp.69 %tmp.70;
-        lputv %size.5 %tmp.71;
-        symbol [ size %size.5 95 8 12 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 98 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_8_104_8_if_stmt:
-        %tmp.72 = lgetv %reel.1;
-        symbol [ reel %tmp.72 98 12 16 ];
-        symbol [ state %tmp.73 98 17 22 ];
-        %tmp.73 = getv %tmp.72 :state;
-        symbol [ REEL_SPINNING %tmp.75 98 26 39 ];
-        %tmp.75 = getv ? :REEL_SPINNING;
-        %tmp.76 = eq %tmp.73 %tmp.75;
-        bf %tmp.76 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_8_104_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_8_104_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_41_104_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 99 12 ]
-        %tmp.77 = lgetv %dc;
-        symbol [ dc %tmp.77 99 12 14 ];
-        symbol [ setColor %tmp.78 99 15 23 ];
-        %tmp.78 = getv function %tmp.77 :setColor;
-        %tmp.79 = 0x3A2E38;
-        symbol [ Graphics %tmp.80 99 34 42 ];
-        %tmp.80 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.81 99 43 60 ];
-        %tmp.81 = getv %tmp.80 :COLOR_TRANSPARENT;
-        invoke %tmp.77 %tmp.78(%tmp.79, %tmp.81);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 100 12 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_end" ]
-        %s.6 = local;
-        symbol [ s %s.6 100 21 22 ];
-        %tmp.82 = 0;
-        lputv %s.6 %tmp.82;
-        symbol [ s %s.6 100 21 22 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_test:
-        %tmp.83 = lgetv %s.6;
-        symbol [ s %tmp.83 100 28 29 ];
-        %tmp.84 = 4;
-        %tmp.85 = lt %tmp.83 %tmp.84;
-        bf %tmp.85 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_40_103_12_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 101 16 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_40_103_12_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_40_103_12_stop" ]
-        %lx.7 = local;
-        symbol [ lx %lx.7 101 20 22 ];
-        %tmp.86 = lgetv %colX;
-        symbol [ colX %tmp.86 101 25 29 ];
-        %tmp.87 = lgetv %colW;
-        symbol [ colW %tmp.87 101 32 36 ];
-        %tmp.88 = lgetv %s.6;
-        symbol [ s %tmp.88 101 40 41 ];
-        %tmp.89 = 1;
-        %tmp.90 = add %tmp.88 %tmp.89;
-        %tmp.91 = mul %tmp.87 %tmp.90;
-        %tmp.92 = 5;
-        %tmp.93 = div %tmp.91 %tmp.92;
-        %tmp.94 = add %tmp.86 %tmp.93;
-        lputv %lx.7 %tmp.94;
-        symbol [ lx %lx.7 101 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 102 16 ]
-        %tmp.95 = lgetv %dc;
-        symbol [ dc %tmp.95 102 16 18 ];
-        symbol [ drawLine %tmp.96 102 19 27 ];
-        %tmp.96 = getv function %tmp.95 :drawLine;
-        %tmp.97 = lgetv %lx.7;
-        symbol [ lx %tmp.97 102 28 30 ];
-        %tmp.98 = lgetv %cabY;
-        symbol [ cabY %tmp.98 102 32 36 ];
-        %tmp.99 = 2;
-        %tmp.100 = add %tmp.98 %tmp.99;
-        %tmp.101 = lgetv %lx.7;
-        symbol [ lx %tmp.101 102 42 44 ];
-        %tmp.102 = lgetv %cabY;
-        symbol [ cabY %tmp.102 102 46 50 ];
-        %tmp.103 = lgetv %winH.2;
-        symbol [ winH %tmp.103 102 53 57 ];
-        %tmp.104 = add %tmp.102 %tmp.103;
-        %tmp.105 = 2;
-        %tmp.106 = sub %tmp.104 %tmp.105;
-        invoke %tmp.95 %tmp.96(%tmp.97, %tmp.100, %tmp.101, %tmp.106);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_40_103_12_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 100 ]
-        %tmp.109 = lgetv %s.6;
-        symbol [ s %tmp.109 100 35 36 ];
-        %tmp.110 = add %tmp.109 1;
-        lputv %s.6 %tmp.110;
-        symbol [ s %s.6 100 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_100_12_103_12_for_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_41_104_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_8_104_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_98_8_104_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 106 8 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_end" ]
-        %r.8 = local;
-        symbol [ r %r.8 106 17 18 ];
-        %tmp.111 = -1;
-        lputv %r.8 %tmp.111;
-        symbol [ r %r.8 106 17 18 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_test:
-        %tmp.112 = lgetv %r.8;
-        symbol [ r %tmp.112 106 25 26 ];
-        %tmp.113 = 2;
-        %tmp.114 = lte %tmp.112 %tmp.113;
-        bf %tmp.114 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 107 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_stop" ]
-        %sym.9 = local;
-        symbol [ sym %sym.9 107 16 19 ];
-        %tmp.115 = lgetv %reel.1;
-        symbol [ reel %tmp.115 107 22 26 ];
-        symbol [ symbolAt %tmp.116 107 27 35 ];
-        %tmp.116 = getv function %tmp.115 :symbolAt;
-        %tmp.117 = lgetv %r.8;
-        symbol [ r %tmp.117 107 36 37 ];
-        %tmp.118 = invoke %tmp.115 %tmp.116(%tmp.117);
-        lputv %sym.9 %tmp.118;
-        symbol [ sym %sym.9 107 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 108 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_stop" ]
-        %y.10 = local;
-        symbol [ y %y.10 108 16 17 ];
-        %tmp.119 = lgetv %cabY;
-        symbol [ cabY %tmp.119 108 20 24 ];
-        %tmp.120 = lgetv %r.8;
-        symbol [ r %tmp.120 108 28 29 ];
-        %tmp.121 = 1;
-        %tmp.122 = add %tmp.120 %tmp.121;
-        %tmp.123 = lgetv %rowH;
-        symbol [ rowH %tmp.123 108 37 41 ];
-        %tmp.124 = mul %tmp.122 %tmp.123;
-        %tmp.125 = add %tmp.119 %tmp.124;
-        %tmp.126 = lgetv %rowH;
-        symbol [ rowH %tmp.126 108 44 48 ];
-        %tmp.127 = 2;
-        %tmp.128 = div %tmp.126 %tmp.127;
-        %tmp.129 = add %tmp.125 %tmp.128;
-        %tmp.130 = lgetv %frac.3;
-        symbol [ frac %tmp.130 108 56 60 ];
-        %tmp.131 = lgetv %rowH;
-        symbol [ rowH %tmp.131 108 63 67 ];
-        %tmp.132 = mul %tmp.130 %tmp.131;
-        symbol [ toNumber %tmp.133 108 69 77 ];
-        %tmp.133 = getv function %tmp.132 :toNumber;
-        %tmp.134 = invoke %tmp.132 %tmp.133();
-        %tmp.135 = sub %tmp.129 %tmp.134;
-        lputv %y.10 %tmp.135;
-        symbol [ y %y.10 108 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 109 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_stop" ]
-        %dim.11 = local;
-        symbol [ dim %dim.11 109 16 19 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_begin:
-        %tmp.136 = lgetv %r.8;
-        symbol [ r %tmp.136 109 23 24 ];
-        %tmp.137 = 0;
-        %tmp.138 = eq %tmp.136 %tmp.137;
-        bf %tmp.138 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_true:
-        %tmp.139 = 100;
-        push %tmp.139;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_else_false:
-        %tmp.140 = 52;
-        push %tmp.140;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_end:
-        %tmp.141 = phi [%tmp.138 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_begin] [%tmp.139 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_true] [%tmp.140 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_else_false] [%tmp.141 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_109_22_109_39_end];
-        lputv %dim.11 %tmp.141;
-        symbol [ dim %dim.11 109 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 110 12 ]
-        symbol [ SymbolManager %tmp.143 110 12 25 ];
-        %tmp.143 = getv ? :SymbolManager;
-        symbol [ drawDim %tmp.144 110 26 33 ];
-        %tmp.144 = getv function %tmp.143 :drawDim;
-        %tmp.145 = lgetv %dc;
-        symbol [ dc %tmp.145 110 34 36 ];
-        %tmp.146 = lgetv %sym.9;
-        symbol [ sym %tmp.146 110 38 41 ];
-        %tmp.147 = lgetv %cx.4;
-        symbol [ cx %tmp.147 110 43 45 ];
-        %tmp.148 = lgetv %y.10;
-        symbol [ y %tmp.148 110 47 48 ];
-        %tmp.149 = lgetv %size.5;
-        symbol [ size %tmp.149 110 50 54 ];
-        %tmp.150 = lgetv %dim.11;
-        symbol [ dim %tmp.150 110 56 59 ];
-        invoke %tmp.143 %tmp.144(%tmp.145, %tmp.146, %tmp.147, %tmp.148, %tmp.149, %tmp.150);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_38_111_8_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 106 ]
-        %tmp.153 = lgetv %r.8;
-        symbol [ r %tmp.153 106 33 34 ];
-        %tmp.154 = add %tmp.153 1;
-        lputv %r.8 %tmp.154;
-        symbol [ r %r.8 106 33 34 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_106_8_111_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 116 8 ]
-        %tmp.155 = lgetv %dc;
-        symbol [ dc %tmp.155 116 8 10 ];
-        symbol [ setColor %tmp.156 116 11 19 ];
-        %tmp.156 = getv function %tmp.155 :setColor;
-        %tmp.157 = 0x4A4252;
-        symbol [ Graphics %tmp.158 116 30 38 ];
-        %tmp.158 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.159 116 39 56 ];
-        %tmp.159 = getv %tmp.158 :COLOR_TRANSPARENT;
-        invoke %tmp.155 %tmp.156(%tmp.157, %tmp.159);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 117 8 ]
-        %tmp.160 = lgetv %dc;
-        symbol [ dc %tmp.160 117 8 10 ];
-        symbol [ drawLine %tmp.161 117 11 19 ];
-        %tmp.161 = getv function %tmp.160 :drawLine;
-        %tmp.162 = lgetv %colX;
-        symbol [ colX %tmp.162 117 20 24 ];
-        %tmp.163 = 2;
-        %tmp.164 = add %tmp.162 %tmp.163;
-        %tmp.165 = lgetv %cabY;
-        symbol [ cabY %tmp.165 117 30 34 ];
-        %tmp.166 = lgetv %winH.2;
-        symbol [ winH %tmp.166 117 37 41 ];
-        %tmp.167 = 30;
-        %tmp.168 = mul %tmp.166 %tmp.167;
-        %tmp.169 = 100;
-        %tmp.170 = div %tmp.168 %tmp.169;
-        %tmp.171 = add %tmp.165 %tmp.170;
-        %tmp.172 = lgetv %colX;
-        symbol [ colX %tmp.172 117 54 58 ];
-        %tmp.173 = lgetv %colW;
-        symbol [ colW %tmp.173 117 61 65 ];
-        %tmp.174 = 40;
-        %tmp.175 = mul %tmp.173 %tmp.174;
-        %tmp.176 = 100;
-        %tmp.177 = div %tmp.175 %tmp.176;
-        %tmp.178 = add %tmp.172 %tmp.177;
-        %tmp.179 = lgetv %cabY;
-        symbol [ cabY %tmp.179 117 78 82 ];
-        %tmp.180 = 2;
-        %tmp.181 = add %tmp.179 %tmp.180;
-        invoke %tmp.160 %tmp.161(%tmp.164, %tmp.171, %tmp.178, %tmp.181);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 118 8 ]
-        %tmp.182 = lgetv %dc;
-        symbol [ dc %tmp.182 118 8 10 ];
-        symbol [ drawLine %tmp.183 118 11 19 ];
-        %tmp.183 = getv function %tmp.182 :drawLine;
-        %tmp.184 = lgetv %colX;
-        symbol [ colX %tmp.184 118 20 24 ];
-        %tmp.185 = 5;
-        %tmp.186 = add %tmp.184 %tmp.185;
-        %tmp.187 = lgetv %cabY;
-        symbol [ cabY %tmp.187 118 30 34 ];
-        %tmp.188 = lgetv %winH.2;
-        symbol [ winH %tmp.188 118 37 41 ];
-        %tmp.189 = 30;
-        %tmp.190 = mul %tmp.188 %tmp.189;
-        %tmp.191 = 100;
-        %tmp.192 = div %tmp.190 %tmp.191;
-        %tmp.193 = add %tmp.187 %tmp.192;
-        %tmp.194 = lgetv %colX;
-        symbol [ colX %tmp.194 118 54 58 ];
-        %tmp.195 = lgetv %colW;
-        symbol [ colW %tmp.195 118 61 65 ];
-        %tmp.196 = 40;
-        %tmp.197 = mul %tmp.195 %tmp.196;
-        %tmp.198 = 100;
-        %tmp.199 = div %tmp.197 %tmp.198;
-        %tmp.200 = add %tmp.194 %tmp.199;
-        %tmp.201 = 3;
-        %tmp.202 = add %tmp.200 %tmp.201;
-        %tmp.203 = lgetv %cabY;
-        symbol [ cabY %tmp.203 118 82 86 ];
-        %tmp.204 = 2;
-        %tmp.205 = add %tmp.203 %tmp.204;
-        invoke %tmp.182 %tmp.183(%tmp.186, %tmp.193, %tmp.202, %tmp.205);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 120 8 ]
-        %tmp.206 = lgetv %dc;
-        symbol [ dc %tmp.206 120 8 10 ];
-        symbol [ clearClip %tmp.207 120 11 20 ];
-        %tmp.207 = getv function %tmp.206 :clearClip;
-        invoke %tmp.206 %tmp.207();
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_80_76_121_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 123; @symbol_functiondef = [_drawPayline,123,27,39]; @symbol_param<0> = [dc,123,40,42]; @symbol_param<1> = [cabX,123,44,48]; @symbol_param<2> = [cabY,123,50,54]; @symbol_param<3> = [colW,123,56,60]; @symbol_param<4> = [rowH,123,62,66]; @symbol_param<5> = [gap,123,68,71]; ]
-    protected static
-    function _drawPayline(dc, cabX, cabY, colW, rowH, gap) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 124 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_stop" ]
-        %totalW.1 = local;
-        symbol [ totalW %totalW.1 124 12 18 ];
-        %tmp.1 = lgetv %colW;
-        symbol [ colW %tmp.1 124 21 25 ];
-        %tmp.2 = 3;
-        %tmp.3 = mul %tmp.1 %tmp.2;
-        %tmp.4 = lgetv %gap;
-        symbol [ gap %tmp.4 124 32 35 ];
-        %tmp.5 = 2;
-        %tmp.6 = mul %tmp.4 %tmp.5;
-        %tmp.7 = add %tmp.3 %tmp.6;
-        lputv %totalW.1 %tmp.7;
-        symbol [ totalW %totalW.1 124 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 125 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_stop" ]
-        %midTop.2 = local;
-        symbol [ midTop %midTop.2 125 12 18 ];
-        %tmp.8 = lgetv %cabY;
-        symbol [ cabY %tmp.8 125 21 25 ];
-        %tmp.9 = lgetv %rowH;
-        symbol [ rowH %tmp.9 125 28 32 ];
-        %tmp.10 = add %tmp.8 %tmp.9;
-        lputv %midTop.2 %tmp.10;
-        symbol [ midTop %midTop.2 125 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 126 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_stop" ]
-        %midBot.3 = local;
-        symbol [ midBot %midBot.3 126 12 18 ];
-        %tmp.11 = lgetv %cabY;
-        symbol [ cabY %tmp.11 126 21 25 ];
-        %tmp.12 = lgetv %rowH;
-        symbol [ rowH %tmp.12 126 28 32 ];
-        %tmp.13 = 2;
-        %tmp.14 = mul %tmp.12 %tmp.13;
-        %tmp.15 = add %tmp.11 %tmp.14;
-        lputv %midBot.3 %tmp.15;
-        symbol [ midBot %midBot.3 126 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 129 8 ]
-        %tmp.16 = lgetv %dc;
-        symbol [ dc %tmp.16 129 8 10 ];
-        symbol [ setColor %tmp.17 129 11 19 ];
-        %tmp.17 = getv function %tmp.16 :setColor;
-        %tmp.18 = 0xFFCC22;
-        symbol [ Graphics %tmp.19 129 30 38 ];
-        %tmp.19 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.20 129 39 56 ];
-        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
-        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 130 8 ]
-        %tmp.21 = lgetv %dc;
-        symbol [ dc %tmp.21 130 8 10 ];
-        symbol [ drawLine %tmp.22 130 11 19 ];
-        %tmp.22 = getv function %tmp.21 :drawLine;
-        %tmp.23 = lgetv %cabX;
-        symbol [ cabX %tmp.23 130 20 24 ];
-        %tmp.24 = 4;
-        %tmp.25 = sub %tmp.23 %tmp.24;
-        %tmp.26 = lgetv %midTop.2;
-        symbol [ midTop %tmp.26 130 30 36 ];
-        %tmp.27 = lgetv %cabX;
-        symbol [ cabX %tmp.27 130 38 42 ];
-        %tmp.28 = lgetv %totalW.1;
-        symbol [ totalW %tmp.28 130 45 51 ];
-        %tmp.29 = add %tmp.27 %tmp.28;
-        %tmp.30 = 4;
-        %tmp.31 = add %tmp.29 %tmp.30;
-        %tmp.32 = lgetv %midTop.2;
-        symbol [ midTop %tmp.32 130 57 63 ];
-        invoke %tmp.21 %tmp.22(%tmp.25, %tmp.26, %tmp.31, %tmp.32);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 131 8 ]
-        %tmp.33 = lgetv %dc;
-        symbol [ dc %tmp.33 131 8 10 ];
-        symbol [ drawLine %tmp.34 131 11 19 ];
-        %tmp.34 = getv function %tmp.33 :drawLine;
-        %tmp.35 = lgetv %cabX;
-        symbol [ cabX %tmp.35 131 20 24 ];
-        %tmp.36 = 4;
-        %tmp.37 = sub %tmp.35 %tmp.36;
-        %tmp.38 = lgetv %midBot.3;
-        symbol [ midBot %tmp.38 131 30 36 ];
-        %tmp.39 = lgetv %cabX;
-        symbol [ cabX %tmp.39 131 38 42 ];
-        %tmp.40 = lgetv %totalW.1;
-        symbol [ totalW %tmp.40 131 45 51 ];
-        %tmp.41 = add %tmp.39 %tmp.40;
-        %tmp.42 = 4;
-        %tmp.43 = add %tmp.41 %tmp.42;
-        %tmp.44 = lgetv %midBot.3;
-        symbol [ midBot %tmp.44 131 57 63 ];
-        invoke %tmp.33 %tmp.34(%tmp.37, %tmp.38, %tmp.43, %tmp.44);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 132 8 ]
-        %tmp.45 = lgetv %dc;
-        symbol [ dc %tmp.45 132 8 10 ];
-        symbol [ setColor %tmp.46 132 11 19 ];
-        %tmp.46 = getv function %tmp.45 :setColor;
-        %tmp.47 = 0x7A5A10;
-        symbol [ Graphics %tmp.48 132 30 38 ];
-        %tmp.48 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.49 132 39 56 ];
-        %tmp.49 = getv %tmp.48 :COLOR_TRANSPARENT;
-        invoke %tmp.45 %tmp.46(%tmp.47, %tmp.49);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 133 8 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 23; @symbol_functiondef = [drawTree,23,20,28]; @symbol_param<0> = [dc,23,29,31]; @symbol_param<1> = [ctrl,23,33,37]; @symbol_param<2> = [cx,23,39,41]; @symbol_param<3> = [trunkW,23,43,49]; @symbol_param<4> = [chopLineY,23,51,60]; @symbol_param<5> = [segH,23,62,66]; @symbol_param<6> = [shx,23,68,71]; ]
+    static
+    function drawTree(dc, ctrl, cx, trunkW, chopLineY, segH, shx) {
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 24 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_stop" ]
+        %half.1 = local;
+        symbol [ half %half.1 24 12 16 ];
+        %tmp.1 = lgetv %trunkW;
+        symbol [ trunkW %tmp.1 24 19 25 ];
+        %tmp.2 = 2;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %half.1 %tmp.3;
+        symbol [ half %half.1 24 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 25 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_stop" ]
+        %topY.2 = local;
+        symbol [ topY %topY.2 25 12 16 ];
+        %tmp.4 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.4 25 19 28 ];
+        %tmp.5 = lgetv %segH;
+        symbol [ segH %tmp.5 25 31 35 ];
+        symbol [ TG_VISIBLE %tmp.7 25 38 48 ];
+        %tmp.7 = getv ? :TG_VISIBLE;
+        %tmp.8 = mul %tmp.5 %tmp.7;
+        %tmp.9 = sub %tmp.4 %tmp.8;
+        lputv %topY.2 %tmp.9;
+        symbol [ topY %topY.2 25 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 27 8 ]
+        %tmp.10 = lgetv %dc;
+        symbol [ dc %tmp.10 27 8 10 ];
+        symbol [ setColor %tmp.11 27 11 19 ];
+        %tmp.11 = getv function %tmp.10 :setColor;
+        %tmp.12 = 0x8A5A2E;
+        symbol [ Graphics %tmp.13 27 30 38 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.14 27 39 56 ];
+        %tmp.14 = getv %tmp.13 :COLOR_TRANSPARENT;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.14);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 28 8 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 28 8 10 ];
+        symbol [ fillRectangle %tmp.16 28 11 24 ];
+        %tmp.16 = getv function %tmp.15 :fillRectangle;
+        %tmp.17 = lgetv %cx;
+        symbol [ cx %tmp.17 28 25 27 ];
+        %tmp.18 = lgetv %half.1;
+        symbol [ half %tmp.18 28 30 34 ];
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %shx;
+        symbol [ shx %tmp.20 28 37 40 ];
+        %tmp.21 = add %tmp.19 %tmp.20;
+        %tmp.22 = lgetv %topY.2;
+        symbol [ topY %tmp.22 28 42 46 ];
+        %tmp.23 = lgetv %trunkW;
+        symbol [ trunkW %tmp.23 28 48 54 ];
+        %tmp.24 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.24 28 56 65 ];
+        %tmp.25 = lgetv %topY.2;
+        symbol [ topY %tmp.25 28 68 72 ];
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        invoke %tmp.15 %tmp.16(%tmp.21, %tmp.22, %tmp.23, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 29 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 29 8 10 ];
+        symbol [ setColor %tmp.28 29 11 19 ];
+        %tmp.28 = getv function %tmp.27 :setColor;
+        %tmp.29 = 0x6B421F;
+        symbol [ Graphics %tmp.30 29 30 38 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.31 29 39 56 ];
+        %tmp.31 = getv %tmp.30 :COLOR_TRANSPARENT;
+        invoke %tmp.27 %tmp.28(%tmp.29, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 30 8 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 30 8 10 ];
+        symbol [ drawLine %tmp.33 30 11 19 ];
+        %tmp.33 = getv function %tmp.32 :drawLine;
+        %tmp.34 = lgetv %cx;
+        symbol [ cx %tmp.34 30 20 22 ];
+        %tmp.35 = lgetv %half.1;
+        symbol [ half %tmp.35 30 25 29 ];
+        %tmp.36 = 2;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = sub %tmp.34 %tmp.37;
+        %tmp.39 = lgetv %shx;
+        symbol [ shx %tmp.39 30 36 39 ];
+        %tmp.40 = add %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %topY.2;
+        symbol [ topY %tmp.41 30 41 45 ];
+        %tmp.42 = lgetv %cx;
+        symbol [ cx %tmp.42 30 47 49 ];
+        %tmp.43 = lgetv %half.1;
+        symbol [ half %tmp.43 30 52 56 ];
+        %tmp.44 = 2;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        %tmp.46 = sub %tmp.42 %tmp.45;
+        %tmp.47 = lgetv %shx;
+        symbol [ shx %tmp.47 30 63 66 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        %tmp.49 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.49 30 68 77 ];
+        invoke %tmp.32 %tmp.33(%tmp.40, %tmp.41, %tmp.48, %tmp.49);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 31 8 ]
         %tmp.50 = lgetv %dc;
-        symbol [ dc %tmp.50 133 8 10 ];
-        symbol [ drawLine %tmp.51 133 11 19 ];
+        symbol [ dc %tmp.50 31 8 10 ];
+        symbol [ drawLine %tmp.51 31 11 19 ];
         %tmp.51 = getv function %tmp.50 :drawLine;
-        %tmp.52 = lgetv %cabX;
-        symbol [ cabX %tmp.52 133 20 24 ];
-        %tmp.53 = 4;
-        %tmp.54 = sub %tmp.52 %tmp.53;
-        %tmp.55 = lgetv %midTop.2;
-        symbol [ midTop %tmp.55 133 30 36 ];
-        %tmp.56 = 1;
-        %tmp.57 = add %tmp.55 %tmp.56;
-        %tmp.58 = lgetv %cabX;
-        symbol [ cabX %tmp.58 133 42 46 ];
-        %tmp.59 = lgetv %totalW.1;
-        symbol [ totalW %tmp.59 133 49 55 ];
-        %tmp.60 = add %tmp.58 %tmp.59;
-        %tmp.61 = 4;
-        %tmp.62 = add %tmp.60 %tmp.61;
-        %tmp.63 = lgetv %midTop.2;
-        symbol [ midTop %tmp.63 133 61 67 ];
-        %tmp.64 = 1;
-        %tmp.65 = add %tmp.63 %tmp.64;
-        invoke %tmp.50 %tmp.51(%tmp.54, %tmp.57, %tmp.62, %tmp.65);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 134 8 ]
-        %tmp.66 = lgetv %dc;
-        symbol [ dc %tmp.66 134 8 10 ];
-        symbol [ drawLine %tmp.67 134 11 19 ];
-        %tmp.67 = getv function %tmp.66 :drawLine;
-        %tmp.68 = lgetv %cabX;
-        symbol [ cabX %tmp.68 134 20 24 ];
-        %tmp.69 = 4;
-        %tmp.70 = sub %tmp.68 %tmp.69;
-        %tmp.71 = lgetv %midBot.3;
-        symbol [ midBot %tmp.71 134 30 36 ];
-        %tmp.72 = 1;
-        %tmp.73 = sub %tmp.71 %tmp.72;
-        %tmp.74 = lgetv %cabX;
-        symbol [ cabX %tmp.74 134 42 46 ];
-        %tmp.75 = lgetv %totalW.1;
-        symbol [ totalW %tmp.75 134 49 55 ];
+        %tmp.52 = lgetv %cx;
+        symbol [ cx %tmp.52 31 20 22 ];
+        %tmp.53 = lgetv %shx;
+        symbol [ shx %tmp.53 31 25 28 ];
+        %tmp.54 = add %tmp.52 %tmp.53;
+        %tmp.55 = lgetv %topY.2;
+        symbol [ topY %tmp.55 31 41 45 ];
+        %tmp.56 = lgetv %cx;
+        symbol [ cx %tmp.56 31 47 49 ];
+        %tmp.57 = lgetv %shx;
+        symbol [ shx %tmp.57 31 52 55 ];
+        %tmp.58 = add %tmp.56 %tmp.57;
+        %tmp.59 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.59 31 68 77 ];
+        invoke %tmp.50 %tmp.51(%tmp.54, %tmp.55, %tmp.58, %tmp.59);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 32 8 ]
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 32 8 10 ];
+        symbol [ drawLine %tmp.61 32 11 19 ];
+        %tmp.61 = getv function %tmp.60 :drawLine;
+        %tmp.62 = lgetv %cx;
+        symbol [ cx %tmp.62 32 20 22 ];
+        %tmp.63 = lgetv %half.1;
+        symbol [ half %tmp.63 32 25 29 ];
+        %tmp.64 = 2;
+        %tmp.65 = div %tmp.63 %tmp.64;
+        %tmp.66 = add %tmp.62 %tmp.65;
+        %tmp.67 = lgetv %shx;
+        symbol [ shx %tmp.67 32 36 39 ];
+        %tmp.68 = add %tmp.66 %tmp.67;
+        %tmp.69 = lgetv %topY.2;
+        symbol [ topY %tmp.69 32 41 45 ];
+        %tmp.70 = lgetv %cx;
+        symbol [ cx %tmp.70 32 47 49 ];
+        %tmp.71 = lgetv %half.1;
+        symbol [ half %tmp.71 32 52 56 ];
+        %tmp.72 = 2;
+        %tmp.73 = div %tmp.71 %tmp.72;
+        %tmp.74 = add %tmp.70 %tmp.73;
+        %tmp.75 = lgetv %shx;
+        symbol [ shx %tmp.75 32 63 66 ];
         %tmp.76 = add %tmp.74 %tmp.75;
-        %tmp.77 = 4;
-        %tmp.78 = add %tmp.76 %tmp.77;
-        %tmp.79 = lgetv %midBot.3;
-        symbol [ midBot %tmp.79 134 61 67 ];
-        %tmp.80 = 1;
-        %tmp.81 = sub %tmp.79 %tmp.80;
-        invoke %tmp.66 %tmp.67(%tmp.70, %tmp.73, %tmp.78, %tmp.81);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 137 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_stop" ]
-        %my.4 = local;
-        symbol [ my %my.4 137 12 14 ];
-        %tmp.82 = lgetv %midTop.2;
-        symbol [ midTop %tmp.82 137 18 24 ];
-        %tmp.83 = lgetv %midBot.3;
-        symbol [ midBot %tmp.83 137 27 33 ];
-        %tmp.84 = add %tmp.82 %tmp.83;
-        %tmp.85 = 2;
-        %tmp.86 = div %tmp.84 %tmp.85;
-        lputv %my.4 %tmp.86;
-        symbol [ my %my.4 137 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 138 8 ]
-        %tmp.87 = self;
-        symbol [ _payArrow %tmp.88 138 8 17 ];
-        %tmp.88 = getv function %tmp.87 :_payArrow;
-        %tmp.89 = lgetv %dc;
-        symbol [ dc %tmp.89 138 18 20 ];
-        %tmp.90 = lgetv %cabX;
-        symbol [ cabX %tmp.90 138 22 26 ];
-        %tmp.91 = 8;
-        %tmp.92 = sub %tmp.90 %tmp.91;
-        %tmp.93 = lgetv %my.4;
-        symbol [ my %tmp.93 138 32 34 ];
-        %tmp.94 = 1;
-        invoke %tmp.87 %tmp.88(%tmp.89, %tmp.92, %tmp.93, %tmp.94);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 139 8 ]
-        %tmp.95 = self;
-        symbol [ _payArrow %tmp.96 139 8 17 ];
-        %tmp.96 = getv function %tmp.95 :_payArrow;
-        %tmp.97 = lgetv %dc;
-        symbol [ dc %tmp.97 139 18 20 ];
-        %tmp.98 = lgetv %cabX;
-        symbol [ cabX %tmp.98 139 22 26 ];
-        %tmp.99 = lgetv %totalW.1;
-        symbol [ totalW %tmp.99 139 29 35 ];
-        %tmp.100 = add %tmp.98 %tmp.99;
-        %tmp.101 = 8;
-        %tmp.102 = add %tmp.100 %tmp.101;
-        %tmp.103 = lgetv %my.4;
-        symbol [ my %tmp.103 139 41 43 ];
-        %tmp.104 = -1;
-        invoke %tmp.95 %tmp.96(%tmp.97, %tmp.102, %tmp.103, %tmp.104);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_123_73_140_4_stop:
+        %tmp.77 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.77 32 68 77 ];
+        invoke %tmp.60 %tmp.61(%tmp.68, %tmp.69, %tmp.76, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_stop" ]
+        %offsetY.3 = local;
+        symbol [ offsetY %offsetY.3 36 12 19 ];
+        %tmp.78 = 0;
+        lputv %offsetY.3 %tmp.78;
+        symbol [ offsetY %offsetY.3 36 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 37 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_8_37_81_if_stmt:
+        %tmp.79 = lgetv %ctrl;
+        symbol [ ctrl %tmp.79 37 12 16 ];
+        symbol [ scrollT %tmp.80 37 17 24 ];
+        %tmp.80 = getv %tmp.79 :scrollT;
+        %tmp.81 = 0;
+        %tmp.82 = gt %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_8_37_81_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_8_37_81_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_30_37_81_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 37 32 ]
+        %tmp.83 = lgetv %segH;
+        symbol [ segH %tmp.83 37 43 47 ];
+        %tmp.84 = lgetv %ctrl;
+        symbol [ ctrl %tmp.84 37 50 54 ];
+        symbol [ scrollT %tmp.85 37 55 62 ];
+        %tmp.85 = getv %tmp.84 :scrollT;
+        %tmp.86 = mul %tmp.83 %tmp.85;
+        symbol [ SCROLL_FRAMES %tmp.88 37 66 79 ];
+        %tmp.88 = getv ? :SCROLL_FRAMES;
+        %tmp.89 = div %tmp.86 %tmp.88;
+        lputv %offsetY.3 %tmp.89;
+        symbol [ offsetY %offsetY.3 37 32 39 ];
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_30_37_81_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_8_37_81_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_37_8_37_81_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 39 8 ]
+        for @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_test @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_incr @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_begin" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 39 17 18 ];
+        %tmp.90 = 0;
+        lputv %i.4 %tmp.90;
+        symbol [ i %i.4 39 17 18 ];
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_test:
+        %tmp.91 = lgetv %i.4;
+        symbol [ i %tmp.91 39 24 25 ];
+        symbol [ TG_VISIBLE %tmp.93 39 28 38 ];
+        %tmp.93 = getv ? :TG_VISIBLE;
+        %tmp.94 = lt %tmp.91 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_begin:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 40 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_stop" ]
+        %segBottom.5 = local;
+        symbol [ segBottom %segBottom.5 40 16 25 ];
+        %tmp.95 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.95 40 28 37 ];
+        %tmp.96 = lgetv %i.4;
+        symbol [ i %tmp.96 40 40 41 ];
+        %tmp.97 = lgetv %segH;
+        symbol [ segH %tmp.97 40 44 48 ];
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        %tmp.99 = sub %tmp.95 %tmp.98;
+        %tmp.100 = lgetv %offsetY.3;
+        symbol [ offsetY %tmp.100 40 51 58 ];
+        %tmp.101 = sub %tmp.99 %tmp.100;
+        lputv %segBottom.5 %tmp.101;
+        symbol [ segBottom %segBottom.5 40 16 25 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 41 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_stop" ]
+        %segTop.6 = local;
+        symbol [ segTop %segTop.6 41 16 22 ];
+        %tmp.102 = lgetv %segBottom.5;
+        symbol [ segBottom %tmp.102 41 28 37 ];
+        %tmp.103 = lgetv %segH;
+        symbol [ segH %tmp.103 41 40 44 ];
+        %tmp.104 = sub %tmp.102 %tmp.103;
+        lputv %segTop.6 %tmp.104;
+        symbol [ segTop %segTop.6 41 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 42 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_stop" ]
+        %segType.7 = local;
+        symbol [ segType %segType.7 42 16 23 ];
+        %tmp.105 = lgetv %ctrl;
+        symbol [ ctrl %tmp.105 42 28 32 ];
+        symbol [ tree %tmp.106 42 33 37 ];
+        %tmp.106 = getv %tmp.105 :tree;
+        symbol [ seg %tmp.107 42 38 41 ];
+        %tmp.107 = getv %tmp.106 :seg;
+        %tmp.108 = lgetv %i.4;
+        symbol [ i %tmp.108 42 42 43 ];
+        %tmp.109 = agetv %tmp.107 %tmp.108;
+        lputv %segType.7 %tmp.109;
+        symbol [ segType %segType.7 42 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_12_43_49_if_stmt:
+        %tmp.110 = lgetv %segType.7;
+        symbol [ segType %tmp.110 43 16 23 ];
+        symbol [ SEG_NONE %tmp.112 43 27 35 ];
+        %tmp.112 = getv ? :SEG_NONE;
+        %tmp.113 = eq %tmp.110 %tmp.112;
+        bf %tmp.113 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_12_43_49_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_12_43_49_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_37_43_49_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 43 39 ]
+        goto break @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_incr;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_37_43_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_12_43_49_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_43_12_43_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 44 12 ]
+        %tmp.114 = self;
+        symbol [ _drawBranch %tmp.115 44 12 23 ];
+        %tmp.115 = getv function %tmp.114 :_drawBranch;
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 44 24 26 ];
+        %tmp.117 = lgetv %cx;
+        symbol [ cx %tmp.117 44 28 30 ];
+        %tmp.118 = lgetv %half.1;
+        symbol [ half %tmp.118 44 32 36 ];
+        %tmp.119 = lgetv %segTop.6;
+        symbol [ segTop %tmp.119 44 38 44 ];
+        %tmp.120 = lgetv %segBottom.5;
+        symbol [ segBottom %tmp.120 44 46 55 ];
+        %tmp.121 = lgetv %segType.7;
+        symbol [ segType %tmp.121 44 57 64 ];
+        %tmp.122 = lgetv %shx;
+        symbol [ shx %tmp.122 44 66 69 ];
+        invoke %tmp.114 %tmp.115(%tmp.116, %tmp.117, %tmp.118, %tmp.119, %tmp.120, %tmp.121, %tmp.122);
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_45_45_8_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 39 ]
+        %tmp.125 = lgetv %i.4;
+        symbol [ i %tmp.125 39 40 41 ];
+        %tmp.126 = add %tmp.125 1;
+        lputv %i.4 %tmp.126;
+        symbol [ i %i.4 39 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_test;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_39_8_45_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 48 8 ]
+        %tmp.127 = lgetv %dc;
+        symbol [ dc %tmp.127 48 8 10 ];
+        symbol [ setColor %tmp.128 48 11 19 ];
+        %tmp.128 = getv function %tmp.127 :setColor;
+        %tmp.129 = 0xFFFFFF;
+        symbol [ Graphics %tmp.130 48 30 38 ];
+        %tmp.130 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.131 48 39 56 ];
+        %tmp.131 = getv %tmp.130 :COLOR_TRANSPARENT;
+        invoke %tmp.127 %tmp.128(%tmp.129, %tmp.131);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 49 8 ]
+        %tmp.132 = lgetv %dc;
+        symbol [ dc %tmp.132 49 8 10 ];
+        symbol [ drawLine %tmp.133 49 11 19 ];
+        %tmp.133 = getv function %tmp.132 :drawLine;
+        %tmp.134 = lgetv %cx;
+        symbol [ cx %tmp.134 49 20 22 ];
+        %tmp.135 = lgetv %half.1;
+        symbol [ half %tmp.135 49 25 29 ];
+        %tmp.136 = sub %tmp.134 %tmp.135;
+        %tmp.137 = 10;
+        %tmp.138 = sub %tmp.136 %tmp.137;
+        %tmp.139 = lgetv %shx;
+        symbol [ shx %tmp.139 49 37 40 ];
+        %tmp.140 = add %tmp.138 %tmp.139;
+        %tmp.141 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.141 49 42 51 ];
+        %tmp.142 = lgetv %cx;
+        symbol [ cx %tmp.142 49 53 55 ];
+        %tmp.143 = lgetv %half.1;
+        symbol [ half %tmp.143 49 58 62 ];
+        %tmp.144 = add %tmp.142 %tmp.143;
+        %tmp.145 = 10;
+        %tmp.146 = add %tmp.144 %tmp.145;
+        %tmp.147 = lgetv %shx;
+        symbol [ shx %tmp.147 49 70 73 ];
+        %tmp.148 = add %tmp.146 %tmp.147;
+        %tmp.149 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.149 49 75 84 ];
+        invoke %tmp.132 %tmp.133(%tmp.140, %tmp.141, %tmp.148, %tmp.149);
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_23_73_50_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 142; @symbol_functiondef = [_payArrow,142,27,36]; @symbol_param<0> = [dc,142,37,39]; @symbol_param<1> = [x,142,41,42]; @symbol_param<2> = [y,142,44,45]; @symbol_param<3> = [dir,142,47,50]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 52; @symbol_functiondef = [_drawBranch,52,27,38]; @symbol_param<0> = [dc,52,39,41]; @symbol_param<1> = [cx,52,43,45]; @symbol_param<2> = [half,52,47,51]; @symbol_param<3> = [segTop,52,53,59]; @symbol_param<4> = [segBottom,52,61,70]; @symbol_param<5> = [segType,52,72,79]; @symbol_param<6> = [shx,52,81,84]; ]
     protected static
-    function _payArrow(dc, x, y, dir) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_142_52_147_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 143 8 ]
-        %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 143 8 10 ];
-        symbol [ setColor %tmp.2 143 11 19 ];
-        %tmp.2 = getv function %tmp.1 :setColor;
-        %tmp.3 = 0x7A2A00;
-        symbol [ Graphics %tmp.4 143 30 38 ];
-        %tmp.4 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.5 143 39 56 ];
-        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
-        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 144 8 ]
-        %tmp.6 = lgetv %dc;
-        symbol [ dc %tmp.6 144 8 10 ];
-        symbol [ fillPolygon %tmp.7 144 11 22 ];
-        %tmp.7 = getv function %tmp.6 :fillPolygon;
-        %tmp.8 = newa 3;
-        %tmp.9 = newa 2;
-        %tmp.10 = lgetv %x;
-        symbol [ x %tmp.10 144 25 26 ];
-        %tmp.11 = dup %tmp.9;
-        %tmp.12 = aputv %tmp.11 0 %tmp.10;
-        %tmp.13 = lgetv %y;
-        symbol [ y %tmp.13 144 28 29 ];
-        %tmp.14 = 7;
-        %tmp.15 = sub %tmp.13 %tmp.14;
-        %tmp.16 = dup %tmp.12;
-        %tmp.17 = aputv %tmp.16 1 %tmp.15;
-        %tmp.18 = dup %tmp.8;
-        %tmp.19 = aputv %tmp.18 0 %tmp.17;
-        %tmp.20 = newa 2;
-        %tmp.21 = lgetv %x;
-        symbol [ x %tmp.21 144 37 38 ];
-        %tmp.22 = dup %tmp.20;
-        %tmp.23 = aputv %tmp.22 0 %tmp.21;
-        %tmp.24 = lgetv %y;
-        symbol [ y %tmp.24 144 40 41 ];
-        %tmp.25 = 7;
-        %tmp.26 = add %tmp.24 %tmp.25;
-        %tmp.27 = dup %tmp.23;
-        %tmp.28 = aputv %tmp.27 1 %tmp.26;
-        %tmp.29 = dup %tmp.19;
-        %tmp.30 = aputv %tmp.29 1 %tmp.28;
-        %tmp.31 = newa 2;
-        %tmp.32 = lgetv %x;
-        symbol [ x %tmp.32 144 49 50 ];
-        %tmp.33 = lgetv %dir;
-        symbol [ dir %tmp.33 144 53 56 ];
-        %tmp.34 = 11;
-        %tmp.35 = mul %tmp.33 %tmp.34;
-        %tmp.36 = add %tmp.32 %tmp.35;
-        %tmp.37 = dup %tmp.31;
-        %tmp.38 = aputv %tmp.37 0 %tmp.36;
-        %tmp.39 = lgetv %y;
-        symbol [ y %tmp.39 144 63 64 ];
-        %tmp.40 = dup %tmp.38;
-        %tmp.41 = aputv %tmp.40 1 %tmp.39;
-        %tmp.42 = dup %tmp.30;
-        %tmp.43 = aputv %tmp.42 2 %tmp.41;
-        invoke %tmp.6 %tmp.7(%tmp.43);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 145 8 ]
-        %tmp.44 = lgetv %dc;
-        symbol [ dc %tmp.44 145 8 10 ];
-        symbol [ setColor %tmp.45 145 11 19 ];
-        %tmp.45 = getv function %tmp.44 :setColor;
-        %tmp.46 = 0xFF5522;
-        symbol [ Graphics %tmp.47 145 30 38 ];
-        %tmp.47 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.48 145 39 56 ];
-        %tmp.48 = getv %tmp.47 :COLOR_TRANSPARENT;
-        invoke %tmp.44 %tmp.45(%tmp.46, %tmp.48);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 146 8 ]
-        %tmp.49 = lgetv %dc;
-        symbol [ dc %tmp.49 146 8 10 ];
-        symbol [ fillPolygon %tmp.50 146 11 22 ];
-        %tmp.50 = getv function %tmp.49 :fillPolygon;
-        %tmp.51 = newa 3;
-        %tmp.52 = newa 2;
-        %tmp.53 = lgetv %x;
-        symbol [ x %tmp.53 146 25 26 ];
-        %tmp.54 = dup %tmp.52;
-        %tmp.55 = aputv %tmp.54 0 %tmp.53;
-        %tmp.56 = lgetv %y;
-        symbol [ y %tmp.56 146 28 29 ];
-        %tmp.57 = 5;
-        %tmp.58 = sub %tmp.56 %tmp.57;
-        %tmp.59 = dup %tmp.55;
-        %tmp.60 = aputv %tmp.59 1 %tmp.58;
-        %tmp.61 = dup %tmp.51;
-        %tmp.62 = aputv %tmp.61 0 %tmp.60;
-        %tmp.63 = newa 2;
-        %tmp.64 = lgetv %x;
-        symbol [ x %tmp.64 146 37 38 ];
-        %tmp.65 = dup %tmp.63;
-        %tmp.66 = aputv %tmp.65 0 %tmp.64;
-        %tmp.67 = lgetv %y;
-        symbol [ y %tmp.67 146 40 41 ];
-        %tmp.68 = 5;
-        %tmp.69 = add %tmp.67 %tmp.68;
-        %tmp.70 = dup %tmp.66;
-        %tmp.71 = aputv %tmp.70 1 %tmp.69;
-        %tmp.72 = dup %tmp.62;
-        %tmp.73 = aputv %tmp.72 1 %tmp.71;
-        %tmp.74 = newa 2;
-        %tmp.75 = lgetv %x;
-        symbol [ x %tmp.75 146 49 50 ];
-        %tmp.76 = lgetv %dir;
-        symbol [ dir %tmp.76 146 53 56 ];
-        %tmp.77 = 8;
-        %tmp.78 = mul %tmp.76 %tmp.77;
-        %tmp.79 = add %tmp.75 %tmp.78;
-        %tmp.80 = dup %tmp.74;
-        %tmp.81 = aputv %tmp.80 0 %tmp.79;
-        %tmp.82 = lgetv %y;
-        symbol [ y %tmp.82 146 62 63 ];
-        %tmp.83 = dup %tmp.81;
-        %tmp.84 = aputv %tmp.83 1 %tmp.82;
-        %tmp.85 = dup %tmp.73;
-        %tmp.86 = aputv %tmp.85 2 %tmp.84;
-        invoke %tmp.49 %tmp.50(%tmp.86);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_142_52_147_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 150; @symbol_functiondef = [drawNextHint,150,20,32]; @symbol_param<0> = [dc,150,33,35]; @symbol_param<1> = [ctrl,150,37,41]; @symbol_param<2> = [cabX,150,43,47]; @symbol_param<3> = [cabY,150,49,53]; @symbol_param<4> = [colW,150,55,59]; @symbol_param<5> = [gap,150,61,64]; ]
-    static
-    function drawNextHint(dc, ctrl, cabX, cabY, colW, gap) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 151 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_stop" ]
-        %idx.1 = local;
-        symbol [ idx %idx.1 151 12 15 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 151 18 22 ];
-        symbol [ reels %tmp.2 151 23 28 ];
-        %tmp.2 = getv %tmp.1 :reels;
-        symbol [ nextSpinningIndex %tmp.3 151 29 46 ];
-        %tmp.3 = getv function %tmp.2 :nextSpinningIndex;
-        %tmp.4 = invoke %tmp.2 %tmp.3();
-        lputv %idx.1 %tmp.4;
-        symbol [ idx %idx.1 151 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 152 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_8_152_31_if_stmt:
-        %tmp.5 = lgetv %idx.1;
-        symbol [ idx %tmp.5 152 12 15 ];
-        %tmp.6 = 0;
-        %tmp.7 = lt %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_8_152_31_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_8_152_31_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_21_152_31_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 152 23 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_21_152_31_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_8_152_31_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_152_8_152_31_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 153 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_stop" ]
-        %cx.2 = local;
-        symbol [ cx %cx.2 153 12 14 ];
-        %tmp.8 = lgetv %cabX;
-        symbol [ cabX %tmp.8 153 17 21 ];
-        %tmp.9 = lgetv %idx.1;
-        symbol [ idx %tmp.9 153 24 27 ];
-        %tmp.10 = lgetv %colW;
-        symbol [ colW %tmp.10 153 31 35 ];
-        %tmp.11 = lgetv %gap;
-        symbol [ gap %tmp.11 153 38 41 ];
-        %tmp.12 = add %tmp.10 %tmp.11;
-        %tmp.13 = mul %tmp.9 %tmp.12;
-        %tmp.14 = add %tmp.8 %tmp.13;
-        %tmp.15 = lgetv %colW;
-        symbol [ colW %tmp.15 153 45 49 ];
-        %tmp.16 = 2;
-        %tmp.17 = div %tmp.15 %tmp.16;
-        %tmp.18 = add %tmp.14 %tmp.17;
-        lputv %cx.2 %tmp.18;
-        symbol [ cx %cx.2 153 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 154 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_stop" ]
-        %y.3 = local;
-        symbol [ y %y.3 154 12 13 ];
-        %tmp.19 = lgetv %cabY;
-        symbol [ cabY %tmp.19 154 17 21 ];
-        %tmp.20 = 15;
-        %tmp.21 = sub %tmp.19 %tmp.20;
-        lputv %y.3 %tmp.21;
-        symbol [ y %y.3 154 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 155 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_stop" ]
-        %bob.4 = local;
-        symbol [ bob %bob.4 155 12 15 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_begin:
-        symbol [ System %tmp.22 155 20 26 ];
-        %tmp.22 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.23 155 27 35 ];
-        %tmp.23 = getv function %tmp.22 :getTimer;
-        %tmp.24 = invoke %tmp.22 %tmp.23();
-        %tmp.25 = 150;
-        %tmp.26 = div %tmp.24 %tmp.25;
-        %tmp.27 = 2;
-        %tmp.28 = mod %tmp.26 %tmp.27;
-        %tmp.29 = 0;
-        %tmp.30 = eq %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_true:
-        %tmp.31 = 0;
-        push %tmp.31;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_else_false:
-        %tmp.32 = 2;
-        push %tmp.32;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_end:
-        %tmp.33 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_true] [%tmp.32 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_else_false] [%tmp.33 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_155_18_155_61_end];
-        lputv %bob.4 %tmp.33;
-        symbol [ bob %bob.4 155 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 156 8 ]
-        %tmp.34 = lgetv %dc;
-        symbol [ dc %tmp.34 156 8 10 ];
-        symbol [ setColor %tmp.35 156 11 19 ];
-        %tmp.35 = getv function %tmp.34 :setColor;
-        %tmp.36 = 0x66DDFF;
-        symbol [ Graphics %tmp.37 156 30 38 ];
-        %tmp.37 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.38 156 39 56 ];
-        %tmp.38 = getv %tmp.37 :COLOR_TRANSPARENT;
-        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.38);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 157 8 ]
-        %tmp.39 = lgetv %dc;
-        symbol [ dc %tmp.39 157 8 10 ];
-        symbol [ fillPolygon %tmp.40 157 11 22 ];
-        %tmp.40 = getv function %tmp.39 :fillPolygon;
-        %tmp.41 = newa 3;
-        %tmp.42 = newa 2;
-        %tmp.43 = lgetv %cx.2;
-        symbol [ cx %tmp.43 157 25 27 ];
-        %tmp.44 = 7;
-        %tmp.45 = sub %tmp.43 %tmp.44;
-        %tmp.46 = dup %tmp.42;
-        %tmp.47 = aputv %tmp.46 0 %tmp.45;
-        %tmp.48 = lgetv %y.3;
-        symbol [ y %tmp.48 157 33 34 ];
-        %tmp.49 = 6;
-        %tmp.50 = sub %tmp.48 %tmp.49;
-        %tmp.51 = lgetv %bob.4;
-        symbol [ bob %tmp.51 157 41 44 ];
-        %tmp.52 = add %tmp.50 %tmp.51;
-        %tmp.53 = dup %tmp.47;
-        %tmp.54 = aputv %tmp.53 1 %tmp.52;
-        %tmp.55 = dup %tmp.41;
-        %tmp.56 = aputv %tmp.55 0 %tmp.54;
-        %tmp.57 = newa 2;
-        %tmp.58 = lgetv %cx.2;
-        symbol [ cx %tmp.58 157 48 50 ];
-        %tmp.59 = 7;
-        %tmp.60 = add %tmp.58 %tmp.59;
-        %tmp.61 = dup %tmp.57;
-        %tmp.62 = aputv %tmp.61 0 %tmp.60;
-        %tmp.63 = lgetv %y.3;
-        symbol [ y %tmp.63 157 56 57 ];
-        %tmp.64 = 6;
-        %tmp.65 = sub %tmp.63 %tmp.64;
-        %tmp.66 = lgetv %bob.4;
-        symbol [ bob %tmp.66 157 64 67 ];
-        %tmp.67 = add %tmp.65 %tmp.66;
-        %tmp.68 = dup %tmp.62;
-        %tmp.69 = aputv %tmp.68 1 %tmp.67;
-        %tmp.70 = dup %tmp.56;
-        %tmp.71 = aputv %tmp.70 1 %tmp.69;
-        %tmp.72 = newa 2;
-        %tmp.73 = lgetv %cx.2;
-        symbol [ cx %tmp.73 157 71 73 ];
-        %tmp.74 = dup %tmp.72;
-        %tmp.75 = aputv %tmp.74 0 %tmp.73;
-        %tmp.76 = lgetv %y.3;
-        symbol [ y %tmp.76 157 75 76 ];
-        %tmp.77 = 3;
-        %tmp.78 = add %tmp.76 %tmp.77;
-        %tmp.79 = lgetv %bob.4;
-        symbol [ bob %tmp.79 157 83 86 ];
-        %tmp.80 = add %tmp.78 %tmp.79;
-        %tmp.81 = dup %tmp.75;
-        %tmp.82 = aputv %tmp.81 1 %tmp.80;
-        %tmp.83 = dup %tmp.71;
-        %tmp.84 = aputv %tmp.83 2 %tmp.82;
-        invoke %tmp.39 %tmp.40(%tmp.84);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_150_66_158_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 161; @symbol_functiondef = [drawLever,161,20,29]; @symbol_param<0> = [dc,161,30,32]; @symbol_param<1> = [ctrl,161,34,38]; @symbol_param<2> = [cabX,161,40,44]; @symbol_param<3> = [cabW,161,46,50]; @symbol_param<4> = [cabY,161,52,56]; @symbol_param<5> = [cabH,161,58,62]; ]
-    static
-    function drawLever(dc, ctrl, cabX, cabW, cabY, cabH) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 162 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_stop" ]
-        %baseX.1 = local;
-        symbol [ baseX %baseX.1 162 12 17 ];
-        %tmp.1 = lgetv %cabX;
-        symbol [ cabX %tmp.1 162 20 24 ];
-        %tmp.2 = lgetv %cabW;
-        symbol [ cabW %tmp.2 162 27 31 ];
+    function _drawBranch(dc, cx, half, segTop, segBottom, segType, shx) {
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %midY.1 = local;
+        symbol [ midY %midY.1 53 12 16 ];
+        %tmp.1 = lgetv %segTop;
+        symbol [ segTop %tmp.1 53 20 26 ];
+        %tmp.2 = lgetv %segBottom;
+        symbol [ segBottom %tmp.2 53 29 38 ];
         %tmp.3 = add %tmp.1 %tmp.2;
-        %tmp.4 = 20;
-        %tmp.5 = add %tmp.3 %tmp.4;
-        lputv %baseX.1 %tmp.5;
-        symbol [ baseX %baseX.1 162 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 163 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_stop" ]
-        %baseY.2 = local;
-        symbol [ baseY %baseY.2 163 12 17 ];
-        %tmp.6 = lgetv %cabY;
-        symbol [ cabY %tmp.6 163 20 24 ];
-        %tmp.7 = 8;
+        %tmp.4 = 2;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        lputv %midY.1 %tmp.5;
+        symbol [ midY %midY.1 53 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 54 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %len.2 = local;
+        symbol [ len %len.2 54 12 15 ];
+        %tmp.6 = lgetv %half;
+        symbol [ half %tmp.6 54 19 23 ];
+        %tmp.7 = 16;
         %tmp.8 = add %tmp.6 %tmp.7;
-        lputv %baseY.2 %tmp.8;
-        symbol [ baseY %baseY.2 163 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 164 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_stop" ]
-        %travel.3 = local;
-        symbol [ travel %travel.3 164 12 18 ];
-        %tmp.9 = lgetv %cabH;
-        symbol [ cabH %tmp.9 164 21 25 ];
-        %tmp.10 = 52;
-        %tmp.11 = mul %tmp.9 %tmp.10;
-        %tmp.12 = 100;
-        %tmp.13 = div %tmp.11 %tmp.12;
-        lputv %travel.3 %tmp.13;
-        symbol [ travel %travel.3 164 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 165 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_stop" ]
-        %pull.4 = local;
-        symbol [ pull %pull.4 165 12 16 ];
-        %tmp.14 = 0;
-        lputv %pull.4 %tmp.14;
-        symbol [ pull %pull.4 165 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 166 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_8_169_8_if_stmt:
-        %tmp.15 = lgetv %ctrl;
-        symbol [ ctrl %tmp.15 166 12 16 ];
-        symbol [ leverT %tmp.16 166 17 23 ];
-        %tmp.16 = getv %tmp.15 :leverT;
-        %tmp.17 = 0;
-        %tmp.18 = gt %tmp.16 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_8_169_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_8_169_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_29_169_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 167 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_29_169_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_29_169_8_stop" ]
-        %t.5 = local;
-        symbol [ t %t.5 167 16 17 ];
-        %tmp.19 = lgetv %ctrl;
-        symbol [ ctrl %tmp.19 167 20 24 ];
-        symbol [ leverT %tmp.20 167 25 31 ];
-        %tmp.20 = getv %tmp.19 :leverT;
-        symbol [ toFloat %tmp.21 167 32 39 ];
-        %tmp.21 = getv function %tmp.20 :toFloat;
-        %tmp.22 = invoke %tmp.20 %tmp.21();
-        symbol [ LEVER_FRAMES %tmp.24 167 44 56 ];
-        %tmp.24 = getv ? :LEVER_FRAMES;
-        %tmp.25 = div %tmp.22 %tmp.24;
-        lputv %t.5 %tmp.25;
-        symbol [ t %t.5 167 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 168 12 ]
-        symbol [ Math %tmp.26 168 20 24 ];
-        %tmp.26 = getm $.Toybox.Math;
-        symbol [ sin %tmp.27 168 25 28 ];
-        %tmp.27 = getv function %tmp.26 :sin;
-        %tmp.28 = lgetv %t.5;
-        symbol [ t %tmp.28 168 29 30 ];
-        symbol [ Math %tmp.29 168 33 37 ];
-        %tmp.29 = getm $.Toybox.Math;
-        symbol [ PI %tmp.30 168 38 40 ];
-        %tmp.30 = getv %tmp.29 :PI;
-        %tmp.31 = mul %tmp.28 %tmp.30;
-        %tmp.32 = invoke %tmp.26 %tmp.27(%tmp.31);
-        %tmp.33 = lgetv %travel.3;
-        symbol [ travel %tmp.33 168 44 50 ];
-        %tmp.34 = mul %tmp.32 %tmp.33;
-        symbol [ toNumber %tmp.35 168 52 60 ];
-        %tmp.35 = getv function %tmp.34 :toNumber;
-        %tmp.36 = invoke %tmp.34 %tmp.35();
-        lputv %pull.4 %tmp.36;
-        symbol [ pull %pull.4 168 12 16 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_29_169_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_8_169_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_166_8_169_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 171 8 ]
-        %tmp.37 = lgetv %dc;
-        symbol [ dc %tmp.37 171 8 10 ];
-        symbol [ setColor %tmp.38 171 11 19 ];
-        %tmp.38 = getv function %tmp.37 :setColor;
-        %tmp.39 = 0x5A3E0E;
-        symbol [ Graphics %tmp.40 171 30 38 ];
-        %tmp.40 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.41 171 39 56 ];
-        %tmp.41 = getv %tmp.40 :COLOR_TRANSPARENT;
-        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.41);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 172 8 ]
-        %tmp.42 = lgetv %dc;
-        symbol [ dc %tmp.42 172 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.43 172 11 31 ];
-        %tmp.43 = getv function %tmp.42 :fillRoundedRectangle;
-        %tmp.44 = lgetv %baseX.1;
-        symbol [ baseX %tmp.44 172 32 37 ];
-        %tmp.45 = 5;
-        %tmp.46 = sub %tmp.44 %tmp.45;
-        %tmp.47 = lgetv %baseY.2;
-        symbol [ baseY %tmp.47 172 43 48 ];
-        %tmp.48 = lgetv %cabH;
-        symbol [ cabH %tmp.48 172 51 55 ];
-        %tmp.49 = add %tmp.47 %tmp.48;
-        %tmp.50 = 18;
-        %tmp.51 = sub %tmp.49 %tmp.50;
-        %tmp.52 = 10;
-        %tmp.53 = 14;
-        %tmp.54 = 3;
-        invoke %tmp.42 %tmp.43(%tmp.46, %tmp.51, %tmp.52, %tmp.53, %tmp.54);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 174 8 ]
-        symbol [ GfxUtil %tmp.56 174 8 15 ];
-        %tmp.56 = getv ? :GfxUtil;
-        symbol [ vGradient %tmp.57 174 16 25 ];
-        %tmp.57 = getv function %tmp.56 :vGradient;
-        %tmp.58 = lgetv %dc;
-        symbol [ dc %tmp.58 174 26 28 ];
-        %tmp.59 = lgetv %baseX.1;
-        symbol [ baseX %tmp.59 174 30 35 ];
-        %tmp.60 = 3;
-        %tmp.61 = sub %tmp.59 %tmp.60;
-        %tmp.62 = lgetv %baseY.2;
-        symbol [ baseY %tmp.62 174 41 46 ];
-        %tmp.63 = lgetv %pull.4;
-        symbol [ pull %tmp.63 174 49 53 ];
-        %tmp.64 = add %tmp.62 %tmp.63;
-        %tmp.65 = 6;
-        %tmp.66 = lgetv %cabH;
-        symbol [ cabH %tmp.66 174 58 62 ];
-        %tmp.67 = 22;
-        %tmp.68 = sub %tmp.66 %tmp.67;
-        %tmp.69 = lgetv %pull.4;
-        symbol [ pull %tmp.69 174 70 74 ];
-        %tmp.70 = sub %tmp.68 %tmp.69;
-        %tmp.71 = 0xE8E8E8;
-        %tmp.72 = 0x707070;
-        %tmp.73 = 6;
-        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.61, %tmp.64, %tmp.65, %tmp.70, %tmp.71, %tmp.72, %tmp.73);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 176 8 ]
-        %tmp.74 = lgetv %dc;
-        symbol [ dc %tmp.74 176 8 10 ];
-        symbol [ setColor %tmp.75 176 11 19 ];
-        %tmp.75 = getv function %tmp.74 :setColor;
-        %tmp.76 = 0x7A0A12;
-        symbol [ Graphics %tmp.77 176 30 38 ];
-        %tmp.77 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.78 176 39 56 ];
-        %tmp.78 = getv %tmp.77 :COLOR_TRANSPARENT;
-        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.78);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 177 8 ]
-        %tmp.79 = lgetv %dc;
-        symbol [ dc %tmp.79 177 8 10 ];
-        symbol [ fillCircle %tmp.80 177 11 21 ];
-        %tmp.80 = getv function %tmp.79 :fillCircle;
-        %tmp.81 = lgetv %baseX.1;
-        symbol [ baseX %tmp.81 177 22 27 ];
-        %tmp.82 = lgetv %baseY.2;
-        symbol [ baseY %tmp.82 177 29 34 ];
-        %tmp.83 = lgetv %pull.4;
-        symbol [ pull %tmp.83 177 37 41 ];
-        %tmp.84 = add %tmp.82 %tmp.83;
-        %tmp.85 = 10;
-        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.84, %tmp.85);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 178 8 ]
-        %tmp.86 = lgetv %dc;
-        symbol [ dc %tmp.86 178 8 10 ];
-        symbol [ setColor %tmp.87 178 11 19 ];
-        %tmp.87 = getv function %tmp.86 :setColor;
-        %tmp.88 = 0xE23140;
-        symbol [ Graphics %tmp.89 178 30 38 ];
-        %tmp.89 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.90 178 39 56 ];
-        %tmp.90 = getv %tmp.89 :COLOR_TRANSPARENT;
-        invoke %tmp.86 %tmp.87(%tmp.88, %tmp.90);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 179 8 ]
-        %tmp.91 = lgetv %dc;
-        symbol [ dc %tmp.91 179 8 10 ];
-        symbol [ fillCircle %tmp.92 179 11 21 ];
-        %tmp.92 = getv function %tmp.91 :fillCircle;
-        %tmp.93 = lgetv %baseX.1;
-        symbol [ baseX %tmp.93 179 22 27 ];
-        %tmp.94 = lgetv %baseY.2;
-        symbol [ baseY %tmp.94 179 29 34 ];
-        %tmp.95 = lgetv %pull.4;
-        symbol [ pull %tmp.95 179 37 41 ];
-        %tmp.96 = add %tmp.94 %tmp.95;
-        %tmp.97 = 8;
-        invoke %tmp.91 %tmp.92(%tmp.93, %tmp.96, %tmp.97);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 180 8 ]
-        %tmp.98 = lgetv %dc;
-        symbol [ dc %tmp.98 180 8 10 ];
-        symbol [ setColor %tmp.99 180 11 19 ];
-        %tmp.99 = getv function %tmp.98 :setColor;
-        %tmp.100 = 0xFF9AA2;
-        symbol [ Graphics %tmp.101 180 30 38 ];
-        %tmp.101 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.102 180 39 56 ];
-        %tmp.102 = getv %tmp.101 :COLOR_TRANSPARENT;
-        invoke %tmp.98 %tmp.99(%tmp.100, %tmp.102);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 181 8 ]
-        %tmp.103 = lgetv %dc;
-        symbol [ dc %tmp.103 181 8 10 ];
-        symbol [ fillCircle %tmp.104 181 11 21 ];
-        %tmp.104 = getv function %tmp.103 :fillCircle;
-        %tmp.105 = lgetv %baseX.1;
-        symbol [ baseX %tmp.105 181 22 27 ];
-        %tmp.106 = 3;
-        %tmp.107 = sub %tmp.105 %tmp.106;
-        %tmp.108 = lgetv %baseY.2;
-        symbol [ baseY %tmp.108 181 33 38 ];
-        %tmp.109 = lgetv %pull.4;
-        symbol [ pull %tmp.109 181 41 45 ];
-        %tmp.110 = add %tmp.108 %tmp.109;
-        %tmp.111 = 3;
-        %tmp.112 = sub %tmp.110 %tmp.111;
-        %tmp.113 = 3;
-        invoke %tmp.103 %tmp.104(%tmp.107, %tmp.112, %tmp.113);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_161_64_182_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 185; @symbol_functiondef = [drawResultFlash,185,20,35]; @symbol_param<0> = [dc,185,36,38]; @symbol_param<1> = [ctrl,185,40,44]; @symbol_param<2> = [cabX,185,46,50]; @symbol_param<3> = [cabY,185,52,56]; @symbol_param<4> = [cabW,185,58,62]; @symbol_param<5> = [cabH,185,64,68]; ]
-    static
-    function drawResultFlash(dc, ctrl, cabX, cabY, cabW, cabH) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 186 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 186 12 13 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 186 16 20 ];
-        symbol [ lastResult %tmp.2 186 21 31 ];
-        %tmp.2 = getv %tmp.1 :lastResult;
-        lputv %r.1 %tmp.2;
-        symbol [ r %r.1 186 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 187 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_8_187_33_if_stmt:
-        %tmp.3 = lgetv %r.1;
-        symbol [ r %tmp.3 187 12 13 ];
-        %tmp.4 = null;
-        %tmp.5 = eq %tmp.3 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_8_187_33_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_8_187_33_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_23_187_33_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 187 25 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_23_187_33_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_8_187_33_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_187_8_187_33_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 188 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %kind.2 = local;
-        symbol [ kind %kind.2 188 12 16 ];
-        %tmp.6 = lgetv %r.1;
-        symbol [ r %tmp.6 188 19 20 ];
-        %tmp.7 = "kind";
-        %tmp.8 = agetv %tmp.6 %tmp.7;
-        lputv %kind.2 %tmp.8;
-        symbol [ kind %kind.2 188 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 189 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_8_189_38_if_stmt:
-        %tmp.9 = lgetv %kind.2;
-        symbol [ kind %tmp.9 189 12 16 ];
-        %tmp.10 = "NONE";
-        %tmp.11 = eq %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_8_189_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_8_189_38_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_28_189_38_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 189 30 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_28_189_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_8_189_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_189_8_189_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 191 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %pulse.3 = local;
-        symbol [ pulse %pulse.3 191 12 17 ];
-        %tmp.12 = lgetv %ctrl;
-        symbol [ ctrl %tmp.12 191 21 25 ];
-        symbol [ resultT %tmp.13 191 26 33 ];
-        %tmp.13 = getv %tmp.12 :resultT;
-        %tmp.14 = 8;
-        %tmp.15 = mod %tmp.13 %tmp.14;
-        %tmp.16 = 4;
-        %tmp.17 = lt %tmp.15 %tmp.16;
-        lputv %pulse.3 %tmp.17;
-        symbol [ pulse %pulse.3 191 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 192 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %col.4 = local;
-        symbol [ col %col.4 192 12 15 ];
-        %tmp.18 = 0xFFCC22;
-        lputv %col.4 %tmp.18;
-        symbol [ col %col.4 192 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 193 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_stmt:
-        %tmp.19 = lgetv %kind.2;
-        symbol [ kind %tmp.19 193 12 16 ];
-        %tmp.20 = "JACKPOT";
-        %tmp.21 = eq %tmp.19 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_31_193_68_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 193 33 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_begin:
-        %tmp.22 = lgetv %pulse.3;
-        symbol [ pulse %tmp.22 193 39 44 ];
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_true:
-        %tmp.23 = 0xFF33AA;
-        push %tmp.23;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_else_false:
-        %tmp.24 = 0xFFDD33;
-        push %tmp.24;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_end:
-        %tmp.25 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_else_false] [%tmp.25 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_39_193_58_end];
-        lputv %col.4 %tmp.25;
-        symbol [ col %col.4 193 33 36 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_31_193_68_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_false:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 194 13 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_13_194_72_if_stmt:
-        %tmp.26 = lgetv %kind.2;
-        symbol [ kind %tmp.26 194 17 21 ];
-        %tmp.27 = "TRIPLE";
-        %tmp.28 = eq %tmp.26 %tmp.27;
-        bf %tmp.28 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_13_194_72_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_13_194_72_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_35_194_72_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 194 37 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_begin:
-        %tmp.29 = lgetv %pulse.3;
-        symbol [ pulse %tmp.29 194 43 48 ];
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_true:
-        %tmp.30 = 0x33CC55;
-        push %tmp.30;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_else_false:
-        %tmp.31 = 0xAAFF66;
-        push %tmp.31;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_end:
-        %tmp.32 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_true] [%tmp.31 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_else_false] [%tmp.32 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_43_194_62_end];
-        lputv %col.4 %tmp.32;
-        symbol [ col %col.4 194 37 40 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_35_194_72_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_13_194_72_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_194_13_194_72_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_193_8_194_72_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 197 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %fx.5 = local;
-        symbol [ fx %fx.5 197 12 14 ];
-        %tmp.33 = lgetv %cabX;
-        symbol [ cabX %tmp.33 197 17 21 ];
-        %tmp.34 = 14;
-        %tmp.35 = sub %tmp.33 %tmp.34;
-        lputv %fx.5 %tmp.35;
-        symbol [ fx %fx.5 197 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 197 28 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %fy.6 = local;
-        symbol [ fy %fy.6 197 32 34 ];
-        %tmp.36 = lgetv %cabY;
-        symbol [ cabY %tmp.36 197 37 41 ];
-        %tmp.37 = 14;
-        %tmp.38 = sub %tmp.36 %tmp.37;
-        lputv %fy.6 %tmp.38;
-        symbol [ fy %fy.6 197 32 34 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 198 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %fw.7 = local;
-        symbol [ fw %fw.7 198 12 14 ];
-        %tmp.39 = lgetv %cabW;
-        symbol [ cabW %tmp.39 198 17 21 ];
-        %tmp.40 = 28;
-        %tmp.41 = add %tmp.39 %tmp.40;
-        lputv %fw.7 %tmp.41;
-        symbol [ fw %fw.7 198 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 198 28 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop" ]
-        %fh.8 = local;
-        symbol [ fh %fh.8 198 32 34 ];
-        %tmp.42 = lgetv %cabH;
-        symbol [ cabH %tmp.42 198 37 41 ];
-        %tmp.43 = 28;
-        %tmp.44 = add %tmp.42 %tmp.43;
-        lputv %fh.8 %tmp.44;
-        symbol [ fh %fh.8 198 32 34 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 199 8 ]
+        lputv %len.2 %tmp.8;
+        symbol [ len %len.2 54 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 55 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %dir.3 = local;
+        symbol [ dir %dir.3 55 12 15 ];
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_begin:
+        %tmp.9 = lgetv %segType;
+        symbol [ segType %tmp.9 55 20 27 ];
+        symbol [ SEG_LEFT %tmp.11 55 31 39 ];
+        %tmp.11 = getv ? :SEG_LEFT;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_true:
+        %tmp.13 = -1;
+        push %tmp.13;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_else_false:
+        %tmp.14 = 1;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_end:
+        %tmp.15 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_else_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_55_19_55_48_end];
+        lputv %dir.3 %tmp.15;
+        symbol [ dir %dir.3 55 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %bh.4 = local;
+        symbol [ bh %bh.4 56 12 14 ];
+        %tmp.16 = lgetv %segBottom;
+        symbol [ segBottom %tmp.16 56 20 29 ];
+        %tmp.17 = lgetv %segTop;
+        symbol [ segTop %tmp.17 56 32 38 ];
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = 55;
+        %tmp.20 = mul %tmp.18 %tmp.19;
+        %tmp.21 = 100;
+        %tmp.22 = div %tmp.20 %tmp.21;
+        lputv %bh.4 %tmp.22;
+        symbol [ bh %bh.4 56 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %trunkEdgeX.5 = local;
+        symbol [ trunkEdgeX %trunkEdgeX.5 58 12 22 ];
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 58 25 27 ];
+        %tmp.24 = lgetv %shx;
+        symbol [ shx %tmp.24 58 30 33 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %dir.3;
+        symbol [ dir %tmp.26 58 36 39 ];
+        %tmp.27 = lgetv %half;
+        symbol [ half %tmp.27 58 42 46 ];
+        %tmp.28 = mul %tmp.26 %tmp.27;
+        %tmp.29 = add %tmp.25 %tmp.28;
+        lputv %trunkEdgeX.5 %tmp.29;
+        symbol [ trunkEdgeX %trunkEdgeX.5 58 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %tipX.6 = local;
+        symbol [ tipX %tipX.6 59 12 16 ];
+        %tmp.30 = lgetv %cx;
+        symbol [ cx %tmp.30 59 25 27 ];
+        %tmp.31 = lgetv %shx;
+        symbol [ shx %tmp.31 59 30 33 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %dir.3;
+        symbol [ dir %tmp.33 59 36 39 ];
+        %tmp.34 = lgetv %half;
+        symbol [ half %tmp.34 59 43 47 ];
+        %tmp.35 = lgetv %len.2;
+        symbol [ len %tmp.35 59 50 53 ];
+        %tmp.36 = add %tmp.34 %tmp.35;
+        %tmp.37 = mul %tmp.33 %tmp.36;
+        %tmp.38 = add %tmp.32 %tmp.37;
+        lputv %tipX.6 %tmp.38;
+        symbol [ tipX %tipX.6 59 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop" ]
+        %stubX.7 = local;
+        symbol [ stubX %stubX.7 60 12 17 ];
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_begin:
+        %tmp.39 = lgetv %dir.3;
+        symbol [ dir %tmp.39 60 26 29 ];
+        %tmp.40 = 0;
+        %tmp.41 = lt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_true:
+        %tmp.42 = lgetv %tipX.6;
+        symbol [ tipX %tmp.42 60 37 41 ];
+        push %tmp.42;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_else_false:
+        %tmp.43 = lgetv %trunkEdgeX.5;
+        symbol [ trunkEdgeX %tmp.43 60 44 54 ];
+        push %tmp.43;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_end:
+        %tmp.44 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_begin] [%tmp.42 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_true] [%tmp.43 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_else_false] [%tmp.44 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_60_25_60_44_end];
+        lputv %stubX.7 %tmp.44;
+        symbol [ stubX %stubX.7 60 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 62 8 ]
         %tmp.45 = lgetv %dc;
-        symbol [ dc %tmp.45 199 8 10 ];
-        symbol [ setColor %tmp.46 199 11 19 ];
+        symbol [ dc %tmp.45 62 8 10 ];
+        symbol [ setColor %tmp.46 62 11 19 ];
         %tmp.46 = getv function %tmp.45 :setColor;
-        %tmp.47 = lgetv %col.4;
-        symbol [ col %tmp.47 199 20 23 ];
-        symbol [ Graphics %tmp.48 199 25 33 ];
+        %tmp.47 = 0xB07A3E;
+        symbol [ Graphics %tmp.48 62 30 38 ];
         %tmp.48 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.49 199 34 51 ];
+        symbol [ COLOR_TRANSPARENT %tmp.49 62 39 56 ];
         %tmp.49 = getv %tmp.48 :COLOR_TRANSPARENT;
         invoke %tmp.45 %tmp.46(%tmp.47, %tmp.49);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 200 8 ]
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 63 8 ]
         %tmp.50 = lgetv %dc;
-        symbol [ dc %tmp.50 200 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.51 200 11 31 ];
-        %tmp.51 = getv function %tmp.50 :drawRoundedRectangle;
-        %tmp.52 = lgetv %fx.5;
-        symbol [ fx %tmp.52 200 32 34 ];
-        %tmp.53 = lgetv %fy.6;
-        symbol [ fy %tmp.53 200 36 38 ];
-        %tmp.54 = lgetv %fw.7;
-        symbol [ fw %tmp.54 200 40 42 ];
-        %tmp.55 = lgetv %fh.8;
-        symbol [ fh %tmp.55 200 44 46 ];
-        %tmp.56 = 14;
-        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.53, %tmp.54, %tmp.55, %tmp.56);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 201 8 ]
-        %tmp.57 = lgetv %dc;
-        symbol [ dc %tmp.57 201 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.58 201 11 31 ];
-        %tmp.58 = getv function %tmp.57 :drawRoundedRectangle;
-        %tmp.59 = lgetv %fx.5;
-        symbol [ fx %tmp.59 201 32 34 ];
-        %tmp.60 = 1;
-        %tmp.61 = add %tmp.59 %tmp.60;
-        %tmp.62 = lgetv %fy.6;
-        symbol [ fy %tmp.62 201 40 42 ];
-        %tmp.63 = 1;
-        %tmp.64 = add %tmp.62 %tmp.63;
-        %tmp.65 = lgetv %fw.7;
-        symbol [ fw %tmp.65 201 48 50 ];
-        %tmp.66 = 2;
-        %tmp.67 = sub %tmp.65 %tmp.66;
-        %tmp.68 = lgetv %fh.8;
-        symbol [ fh %tmp.68 201 56 58 ];
-        %tmp.69 = 2;
-        %tmp.70 = sub %tmp.68 %tmp.69;
-        %tmp.71 = 13;
-        invoke %tmp.57 %tmp.58(%tmp.61, %tmp.64, %tmp.67, %tmp.70, %tmp.71);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 202 8 ]
-        %tmp.72 = lgetv %dc;
-        symbol [ dc %tmp.72 202 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.73 202 11 31 ];
-        %tmp.73 = getv function %tmp.72 :drawRoundedRectangle;
-        %tmp.74 = lgetv %fx.5;
-        symbol [ fx %tmp.74 202 32 34 ];
-        %tmp.75 = 2;
-        %tmp.76 = add %tmp.74 %tmp.75;
-        %tmp.77 = lgetv %fy.6;
-        symbol [ fy %tmp.77 202 40 42 ];
-        %tmp.78 = 2;
-        %tmp.79 = add %tmp.77 %tmp.78;
-        %tmp.80 = lgetv %fw.7;
-        symbol [ fw %tmp.80 202 48 50 ];
-        %tmp.81 = 4;
-        %tmp.82 = sub %tmp.80 %tmp.81;
-        %tmp.83 = lgetv %fh.8;
-        symbol [ fh %tmp.83 202 56 58 ];
-        %tmp.84 = 4;
-        %tmp.85 = sub %tmp.83 %tmp.84;
-        %tmp.86 = 12;
-        invoke %tmp.72 %tmp.73(%tmp.76, %tmp.79, %tmp.82, %tmp.85, %tmp.86);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 205 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_12_205_40_begin:
-        %tmp.87 = lgetv %kind.2;
-        symbol [ kind %tmp.87 205 12 16 ];
-        %tmp.88 = "TRIPLE";
-        %tmp.89 = eq %tmp.87 %tmp.88;
-        bt %tmp.89 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_true;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_32_205_40_false:
-        %tmp.90 = lgetv %kind.2;
-        symbol [ kind %tmp.90 205 32 36 ];
-        %tmp.91 = "JACKPOT";
-        %tmp.92 = eq %tmp.90 %tmp.91;
-        push %tmp.92;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_32_205_40_end:
-        %tmp.93 = phi [%tmp.89 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_12_205_40_begin] [%tmp.92 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_32_205_40_false] [%tmp.93 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_32_205_40_end];
-        bf %tmp.93 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_51_208_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 206 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_51_208_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_51_208_8_stop" ]
-        %age.9 = local;
-        symbol [ age %age.9 206 16 19 ];
-        symbol [ SLOT_RESULT_TICKS %tmp.95 206 22 39 ];
-        %tmp.95 = getv ? :SLOT_RESULT_TICKS;
-        %tmp.96 = lgetv %ctrl;
-        symbol [ ctrl %tmp.96 206 42 46 ];
-        symbol [ resultT %tmp.97 206 47 54 ];
-        %tmp.97 = getv %tmp.96 :resultT;
-        %tmp.98 = sub %tmp.95 %tmp.97;
-        lputv %age.9 %tmp.98;
-        symbol [ age %age.9 206 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 207 12 ]
-        %tmp.99 = self;
-        symbol [ _burst %tmp.100 207 12 18 ];
-        %tmp.100 = getv function %tmp.99 :_burst;
-        %tmp.101 = lgetv %dc;
-        symbol [ dc %tmp.101 207 19 21 ];
-        %tmp.102 = lgetv %cabX;
-        symbol [ cabX %tmp.102 207 23 27 ];
-        %tmp.103 = lgetv %cabW;
-        symbol [ cabW %tmp.103 207 30 34 ];
-        %tmp.104 = 2;
-        %tmp.105 = div %tmp.103 %tmp.104;
-        %tmp.106 = add %tmp.102 %tmp.105;
-        %tmp.107 = lgetv %cabY;
-        symbol [ cabY %tmp.107 207 40 44 ];
-        %tmp.108 = lgetv %cabH;
-        symbol [ cabH %tmp.108 207 47 51 ];
-        %tmp.109 = 2;
-        %tmp.110 = div %tmp.108 %tmp.109;
-        %tmp.111 = add %tmp.107 %tmp.110;
-        %tmp.112 = lgetv %cabW;
-        symbol [ cabW %tmp.112 207 57 61 ];
-        %tmp.113 = lgetv %cabH;
-        symbol [ cabH %tmp.113 207 63 67 ];
-        %tmp.114 = lgetv %age.9;
-        symbol [ age %tmp.114 207 69 72 ];
-        %tmp.115 = lgetv %kind.2;
-        symbol [ kind %tmp.115 207 74 78 ];
-        %tmp.116 = "JACKPOT";
-        %tmp.117 = eq %tmp.115 %tmp.116;
-        invoke %tmp.99 %tmp.100(%tmp.101, %tmp.106, %tmp.111, %tmp.112, %tmp.113, %tmp.114, %tmp.117);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_51_208_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_205_8_208_8_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_185_70_209_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 211; @symbol_functiondef = [_burst,211,27,33]; @symbol_param<0> = [dc,211,34,36]; @symbol_param<1> = [cx,211,38,40]; @symbol_param<2> = [cy,211,42,44]; @symbol_param<3> = [cabW,211,46,50]; @symbol_param<4> = [cabH,211,52,56]; @symbol_param<5> = [age,211,58,61]; @symbol_param<6> = [big,211,63,66]; ]
-    protected static
-    function _burst(dc, cx, cy, cabW, cabH, age, big) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 212 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_stop" ]
-        %n.1 = local;
-        symbol [ n %n.1 212 12 13 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_begin:
-        %tmp.1 = lgetv %big;
-        symbol [ big %tmp.1 212 16 19 ];
-        bf %tmp.1 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_true:
-        %tmp.2 = 10;
-        push %tmp.2;
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_else_false:
-        %tmp.3 = 6;
-        push %tmp.3;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_end:
-        %tmp.4 = phi [%tmp.1 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_begin] [%tmp.2 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_true] [%tmp.3 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_else_false] [%tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_212_16_212_27_end];
-        lputv %n.1 %tmp.4;
-        symbol [ n %n.1 212 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 213 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_stop" ]
-        %spread.2 = local;
-        symbol [ spread %spread.2 213 12 18 ];
-        %tmp.5 = lgetv %cabW;
-        symbol [ cabW %tmp.5 213 21 25 ];
-        %tmp.6 = 60;
-        %tmp.7 = mul %tmp.5 %tmp.6;
-        %tmp.8 = 100;
-        %tmp.9 = div %tmp.7 %tmp.8;
-        lputv %spread.2 %tmp.9;
-        symbol [ spread %spread.2 213 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 214 8 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_end" ]
-        %i.3 = local;
-        symbol [ i %i.3 214 17 18 ];
-        %tmp.10 = 0;
-        lputv %i.3 %tmp.10;
-        symbol [ i %i.3 214 17 18 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_test:
-        %tmp.11 = lgetv %i.3;
-        symbol [ i %tmp.11 214 24 25 ];
-        %tmp.12 = lgetv %n.1;
-        symbol [ n %tmp.12 214 28 29 ];
-        %tmp.13 = lt %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 216 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop" ]
-        %ang.4 = local;
-        symbol [ ang %ang.4 216 16 19 ];
-        %tmp.14 = lgetv %i.3;
-        symbol [ i %tmp.14 216 23 24 ];
-        %tmp.15 = 2617;
-        %tmp.16 = mul %tmp.14 %tmp.15;
-        %tmp.17 = 360;
-        %tmp.18 = mod %tmp.16 %tmp.17;
-        lputv %ang.4 %tmp.18;
-        symbol [ ang %ang.4 216 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 217 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop" ]
-        %rad.5 = local;
-        symbol [ rad %rad.5 217 16 19 ];
-        %tmp.19 = lgetv %ang.4;
-        symbol [ ang %tmp.19 217 22 25 ];
-        symbol [ Math %tmp.20 217 28 32 ];
-        %tmp.20 = getm $.Toybox.Math;
-        symbol [ PI %tmp.21 217 33 35 ];
-        %tmp.21 = getv %tmp.20 :PI;
-        %tmp.22 = mul %tmp.19 %tmp.21;
-        %tmp.23 = 180;
-        %tmp.24 = div %tmp.22 %tmp.23;
-        lputv %rad.5 %tmp.24;
-        symbol [ rad %rad.5 217 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 218 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop" ]
-        %dist.6 = local;
-        symbol [ dist %dist.6 218 16 20 ];
-        %tmp.25 = lgetv %age;
-        symbol [ age %tmp.25 218 24 27 ];
-        %tmp.26 = 5;
-        %tmp.27 = mul %tmp.25 %tmp.26;
-        %tmp.28 = lgetv %i.3;
-        symbol [ i %tmp.28 218 36 37 ];
-        %tmp.29 = 3;
-        %tmp.30 = mul %tmp.28 %tmp.29;
-        %tmp.31 = add %tmp.27 %tmp.30;
-        lputv %dist.6 %tmp.31;
-        symbol [ dist %dist.6 218 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 219 12 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_12_219_48_if_stmt:
-        %tmp.32 = lgetv %dist.6;
-        symbol [ dist %tmp.32 219 16 20 ];
-        %tmp.33 = lgetv %spread.2;
-        symbol [ spread %tmp.33 219 23 29 ];
-        %tmp.34 = gt %tmp.32 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_12_219_48_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_12_219_48_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_31_219_48_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 219 33 ]
-        %tmp.35 = lgetv %spread.2;
-        symbol [ spread %tmp.35 219 40 46 ];
-        lputv %dist.6 %tmp.35;
-        symbol [ dist %dist.6 219 33 37 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_31_219_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_12_219_48_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_219_12_219_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 220 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop" ]
-        %px.7 = local;
-        symbol [ px %px.7 220 16 18 ];
-        %tmp.36 = lgetv %cx;
-        symbol [ cx %tmp.36 220 21 23 ];
-        symbol [ Math %tmp.37 220 27 31 ];
-        %tmp.37 = getm $.Toybox.Math;
-        symbol [ cos %tmp.38 220 32 35 ];
-        %tmp.38 = getv function %tmp.37 :cos;
-        %tmp.39 = lgetv %rad.5;
-        symbol [ rad %tmp.39 220 36 39 ];
-        %tmp.40 = invoke %tmp.37 %tmp.38(%tmp.39);
-        %tmp.41 = lgetv %dist.6;
-        symbol [ dist %tmp.41 220 43 47 ];
-        %tmp.42 = mul %tmp.40 %tmp.41;
-        symbol [ toNumber %tmp.43 220 49 57 ];
-        %tmp.43 = getv function %tmp.42 :toNumber;
-        %tmp.44 = invoke %tmp.42 %tmp.43();
-        %tmp.45 = add %tmp.36 %tmp.44;
-        lputv %px.7 %tmp.45;
-        symbol [ px %px.7 220 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 221 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop" ]
-        %py.8 = local;
-        symbol [ py %py.8 221 16 18 ];
-        %tmp.46 = lgetv %cy;
-        symbol [ cy %tmp.46 221 21 23 ];
-        symbol [ Math %tmp.47 221 27 31 ];
-        %tmp.47 = getm $.Toybox.Math;
-        symbol [ sin %tmp.48 221 32 35 ];
-        %tmp.48 = getv function %tmp.47 :sin;
-        %tmp.49 = lgetv %rad.5;
-        symbol [ rad %tmp.49 221 36 39 ];
-        %tmp.50 = invoke %tmp.47 %tmp.48(%tmp.49);
-        %tmp.51 = lgetv %dist.6;
-        symbol [ dist %tmp.51 221 43 47 ];
-        %tmp.52 = mul %tmp.50 %tmp.51;
-        symbol [ toNumber %tmp.53 221 49 57 ];
-        %tmp.53 = getv function %tmp.52 :toNumber;
-        %tmp.54 = invoke %tmp.52 %tmp.53();
-        %tmp.55 = add %tmp.46 %tmp.54;
-        %tmp.56 = lgetv %age;
-        symbol [ age %tmp.56 221 62 65 ];
-        %tmp.57 = sub %tmp.55 %tmp.56;
-        lputv %py.8 %tmp.57;
-        symbol [ py %py.8 221 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 222 12 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_16_222_30_begin:
-        %tmp.58 = lgetv %i.3;
-        symbol [ i %tmp.58 222 16 17 ];
-        %tmp.59 = 2;
-        %tmp.60 = mod %tmp.58 %tmp.59;
-        %tmp.61 = 0;
-        %tmp.62 = eq %tmp.60 %tmp.61;
-        bt %tmp.62 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_true;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_30_222_30_false:
-        %tmp.63 = lgetv %big;
-        symbol [ big %tmp.63 222 30 33 ];
-        push %tmp.63;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_30_222_30_end:
-        %tmp.64 = phi [%tmp.62 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_16_222_30_begin] [%tmp.63 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_30_222_30_false] [%tmp.64 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_30_222_30_end];
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_35_230_12_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 224 16 ]
+        symbol [ dc %tmp.50 63 8 10 ];
+        symbol [ fillRectangle %tmp.51 63 11 24 ];
+        %tmp.51 = getv function %tmp.50 :fillRectangle;
+        %tmp.52 = lgetv %stubX.7;
+        symbol [ stubX %tmp.52 63 25 30 ];
+        %tmp.53 = lgetv %midY.1;
+        symbol [ midY %tmp.53 63 32 36 ];
+        %tmp.54 = lgetv %bh.4;
+        symbol [ bh %tmp.54 63 39 41 ];
+        %tmp.55 = 2;
+        %tmp.56 = div %tmp.54 %tmp.55;
+        %tmp.57 = sub %tmp.53 %tmp.56;
+        %tmp.58 = lgetv %len.2;
+        symbol [ len %tmp.58 63 47 50 ];
+        %tmp.59 = lgetv %bh.4;
+        symbol [ bh %tmp.59 63 52 54 ];
+        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.57, %tmp.58, %tmp.59);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 64 8 ]
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 64 8 10 ];
+        symbol [ setColor %tmp.61 64 11 19 ];
+        %tmp.61 = getv function %tmp.60 :setColor;
+        %tmp.62 = 0x6B421F;
+        symbol [ Graphics %tmp.63 64 30 38 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.64 64 39 56 ];
+        %tmp.64 = getv %tmp.63 :COLOR_TRANSPARENT;
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 65 8 ]
         %tmp.65 = lgetv %dc;
-        symbol [ dc %tmp.65 224 16 18 ];
-        symbol [ setColor %tmp.66 224 19 27 ];
-        %tmp.66 = getv function %tmp.65 :setColor;
-        %tmp.67 = 0xB8860B;
-        symbol [ Graphics %tmp.68 224 38 46 ];
-        %tmp.68 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.69 224 47 64 ];
-        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
-        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 225 16 ]
-        %tmp.70 = lgetv %dc;
-        symbol [ dc %tmp.70 225 16 18 ];
-        symbol [ fillCircle %tmp.71 225 19 29 ];
-        %tmp.71 = getv function %tmp.70 :fillCircle;
-        %tmp.72 = lgetv %px.7;
-        symbol [ px %tmp.72 225 30 32 ];
-        %tmp.73 = lgetv %py.8;
-        symbol [ py %tmp.73 225 34 36 ];
-        %tmp.74 = 5;
-        invoke %tmp.70 %tmp.71(%tmp.72, %tmp.73, %tmp.74);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 226 16 ]
+        symbol [ dc %tmp.65 65 8 10 ];
+        symbol [ drawRectangle %tmp.66 65 11 24 ];
+        %tmp.66 = getv function %tmp.65 :drawRectangle;
+        %tmp.67 = lgetv %stubX.7;
+        symbol [ stubX %tmp.67 65 25 30 ];
+        %tmp.68 = lgetv %midY.1;
+        symbol [ midY %tmp.68 65 32 36 ];
+        %tmp.69 = lgetv %bh.4;
+        symbol [ bh %tmp.69 65 39 41 ];
+        %tmp.70 = 2;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        %tmp.72 = sub %tmp.68 %tmp.71;
+        %tmp.73 = lgetv %len.2;
+        symbol [ len %tmp.73 65 47 50 ];
+        %tmp.74 = lgetv %bh.4;
+        symbol [ bh %tmp.74 65 52 54 ];
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.72, %tmp.73, %tmp.74);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 69 8 ]
         %tmp.75 = lgetv %dc;
-        symbol [ dc %tmp.75 226 16 18 ];
-        symbol [ setColor %tmp.76 226 19 27 ];
+        symbol [ dc %tmp.75 69 8 10 ];
+        symbol [ setColor %tmp.76 69 11 19 ];
         %tmp.76 = getv function %tmp.75 :setColor;
-        %tmp.77 = 0xFFDD44;
-        symbol [ Graphics %tmp.78 226 38 46 ];
+        %tmp.77 = 0x3FA13F;
+        symbol [ Graphics %tmp.78 69 30 38 ];
         %tmp.78 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.79 226 47 64 ];
+        symbol [ COLOR_TRANSPARENT %tmp.79 69 39 56 ];
         %tmp.79 = getv %tmp.78 :COLOR_TRANSPARENT;
         invoke %tmp.75 %tmp.76(%tmp.77, %tmp.79);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 227 16 ]
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 70 8 ]
         %tmp.80 = lgetv %dc;
-        symbol [ dc %tmp.80 227 16 18 ];
-        symbol [ fillCircle %tmp.81 227 19 29 ];
+        symbol [ dc %tmp.80 70 8 10 ];
+        symbol [ fillCircle %tmp.81 70 11 21 ];
         %tmp.81 = getv function %tmp.80 :fillCircle;
-        %tmp.82 = lgetv %px.7;
-        symbol [ px %tmp.82 227 30 32 ];
-        %tmp.83 = lgetv %py.8;
-        symbol [ py %tmp.83 227 34 36 ];
-        %tmp.84 = 4;
-        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.83, %tmp.84);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 228 16 ]
+        %tmp.82 = lgetv %tipX.6;
+        symbol [ tipX %tmp.82 70 22 26 ];
+        %tmp.83 = lgetv %midY.1;
+        symbol [ midY %tmp.83 70 28 32 ];
+        %tmp.84 = lgetv %bh.4;
+        symbol [ bh %tmp.84 70 35 37 ];
+        %tmp.85 = 2;
+        %tmp.86 = div %tmp.84 %tmp.85;
+        %tmp.87 = sub %tmp.83 %tmp.86;
+        %tmp.88 = lgetv %bh.4;
+        symbol [ bh %tmp.88 70 43 45 ];
+        %tmp.89 = 60;
+        %tmp.90 = mul %tmp.88 %tmp.89;
+        %tmp.91 = 100;
+        %tmp.92 = div %tmp.90 %tmp.91;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.87, %tmp.92);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 71 8 ]
+        %tmp.93 = lgetv %dc;
+        symbol [ dc %tmp.93 71 8 10 ];
+        symbol [ fillCircle %tmp.94 71 11 21 ];
+        %tmp.94 = getv function %tmp.93 :fillCircle;
+        %tmp.95 = lgetv %tipX.6;
+        symbol [ tipX %tmp.95 71 22 26 ];
+        %tmp.96 = lgetv %dir.3;
+        symbol [ dir %tmp.96 71 29 32 ];
+        %tmp.97 = lgetv %bh.4;
+        symbol [ bh %tmp.97 71 36 38 ];
+        %tmp.98 = 3;
+        %tmp.99 = div %tmp.97 %tmp.98;
+        %tmp.100 = mul %tmp.96 %tmp.99;
+        %tmp.101 = add %tmp.95 %tmp.100;
+        %tmp.102 = lgetv %midY.1;
+        symbol [ midY %tmp.102 71 45 49 ];
+        %tmp.103 = lgetv %bh.4;
+        symbol [ bh %tmp.103 71 52 54 ];
+        %tmp.104 = 3;
+        %tmp.105 = div %tmp.103 %tmp.104;
+        %tmp.106 = add %tmp.102 %tmp.105;
+        %tmp.107 = lgetv %bh.4;
+        symbol [ bh %tmp.107 71 60 62 ];
+        %tmp.108 = 45;
+        %tmp.109 = mul %tmp.107 %tmp.108;
+        %tmp.110 = 100;
+        %tmp.111 = div %tmp.109 %tmp.110;
+        invoke %tmp.93 %tmp.94(%tmp.101, %tmp.106, %tmp.111);
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_52_86_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 77; @symbol_functiondef = [drawPlayer,77,20,30]; @symbol_param<0> = [dc,77,31,33]; @symbol_param<1> = [ctrl,77,35,39]; @symbol_param<2> = [cx,77,41,43]; @symbol_param<3> = [trunkW,77,45,51]; @symbol_param<4> = [chopLineY,77,53,62]; @symbol_param<5> = [shx,77,64,67]; ]
+    static
+    function drawPlayer(dc, ctrl, cx, trunkW, chopLineY, shx) {
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %side.1 = local;
+        symbol [ side %side.1 78 12 16 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 78 20 24 ];
+        symbol [ player %tmp.2 78 25 31 ];
+        %tmp.2 = getv %tmp.1 :player;
+        symbol [ side %tmp.3 78 32 36 ];
+        %tmp.3 = getv %tmp.2 :side;
+        lputv %side.1 %tmp.3;
+        symbol [ side %side.1 78 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %half.2 = local;
+        symbol [ half %half.2 79 12 16 ];
+        %tmp.4 = lgetv %trunkW;
+        symbol [ trunkW %tmp.4 79 20 26 ];
+        %tmp.5 = 2;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        lputv %half.2 %tmp.6;
+        symbol [ half %half.2 79 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 80 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %px.3 = local;
+        symbol [ px %px.3 80 12 14 ];
+        %tmp.7 = lgetv %cx;
+        symbol [ cx %tmp.7 80 20 22 ];
+        %tmp.8 = lgetv %shx;
+        symbol [ shx %tmp.8 80 25 28 ];
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %side.1;
+        symbol [ side %tmp.10 80 31 35 ];
+        %tmp.11 = lgetv %half.2;
+        symbol [ half %tmp.11 80 39 43 ];
+        %tmp.12 = 14;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = mul %tmp.10 %tmp.13;
+        %tmp.15 = add %tmp.9 %tmp.14;
+        lputv %px.3 %tmp.15;
+        symbol [ px %px.3 80 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %feetY.4 = local;
+        symbol [ feetY %feetY.4 81 12 17 ];
+        %tmp.16 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.16 81 20 29 ];
+        %tmp.17 = 4;
+        %tmp.18 = add %tmp.16 %tmp.17;
+        lputv %feetY.4 %tmp.18;
+        symbol [ feetY %feetY.4 81 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 82 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %swinging.5 = local;
+        symbol [ swinging %swinging.5 82 12 20 ];
+        %tmp.19 = lgetv %ctrl;
+        symbol [ ctrl %tmp.19 82 24 28 ];
+        symbol [ player %tmp.20 82 29 35 ];
+        %tmp.20 = getv %tmp.19 :player;
+        symbol [ swingT %tmp.21 82 36 42 ];
+        %tmp.21 = getv %tmp.20 :swingT;
+        symbol [ SWING_FRAMES %tmp.23 82 45 57 ];
+        %tmp.23 = getv ? :SWING_FRAMES;
+        %tmp.24 = 2;
+        %tmp.25 = div %tmp.23 %tmp.24;
+        %tmp.26 = gt %tmp.21 %tmp.25;
+        lputv %swinging.5 %tmp.26;
+        symbol [ swinging %swinging.5 82 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 84 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 84 8 10 ];
+        symbol [ setColor %tmp.28 84 11 19 ];
+        %tmp.28 = getv function %tmp.27 :setColor;
+        %tmp.29 = 0x2A2A2A;
+        symbol [ Graphics %tmp.30 84 30 38 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.31 84 39 56 ];
+        %tmp.31 = getv %tmp.30 :COLOR_TRANSPARENT;
+        invoke %tmp.27 %tmp.28(%tmp.29, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 85 8 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 85 8 10 ];
+        symbol [ fillRectangle %tmp.33 85 11 24 ];
+        %tmp.33 = getv function %tmp.32 :fillRectangle;
+        %tmp.34 = lgetv %px.3;
+        symbol [ px %tmp.34 85 25 27 ];
+        %tmp.35 = 6;
+        %tmp.36 = sub %tmp.34 %tmp.35;
+        %tmp.37 = lgetv %feetY.4;
+        symbol [ feetY %tmp.37 85 33 38 ];
+        %tmp.38 = 8;
+        %tmp.39 = sub %tmp.37 %tmp.38;
+        %tmp.40 = 5;
+        %tmp.41 = 8;
+        invoke %tmp.32 %tmp.33(%tmp.36, %tmp.39, %tmp.40, %tmp.41);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 86 8 ]
+        %tmp.42 = lgetv %dc;
+        symbol [ dc %tmp.42 86 8 10 ];
+        symbol [ fillRectangle %tmp.43 86 11 24 ];
+        %tmp.43 = getv function %tmp.42 :fillRectangle;
+        %tmp.44 = lgetv %px.3;
+        symbol [ px %tmp.44 86 25 27 ];
+        %tmp.45 = 1;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %feetY.4;
+        symbol [ feetY %tmp.47 86 33 38 ];
+        %tmp.48 = 8;
+        %tmp.49 = sub %tmp.47 %tmp.48;
+        %tmp.50 = 5;
+        %tmp.51 = 8;
+        invoke %tmp.42 %tmp.43(%tmp.46, %tmp.49, %tmp.50, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 88 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 88 8 10 ];
+        symbol [ setColor %tmp.53 88 11 19 ];
+        %tmp.53 = getv function %tmp.52 :setColor;
+        %tmp.54 = 0xCC3333;
+        symbol [ Graphics %tmp.55 88 30 38 ];
+        %tmp.55 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.56 88 39 56 ];
+        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
+        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 89 8 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 89 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.58 89 11 31 ];
+        %tmp.58 = getv function %tmp.57 :fillRoundedRectangle;
+        %tmp.59 = lgetv %px.3;
+        symbol [ px %tmp.59 89 32 34 ];
+        %tmp.60 = 8;
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %feetY.4;
+        symbol [ feetY %tmp.62 89 40 45 ];
+        %tmp.63 = 24;
+        %tmp.64 = sub %tmp.62 %tmp.63;
+        %tmp.65 = 16;
+        %tmp.66 = 18;
+        %tmp.67 = 3;
+        invoke %tmp.57 %tmp.58(%tmp.61, %tmp.64, %tmp.65, %tmp.66, %tmp.67);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 91 8 ]
+        %tmp.68 = lgetv %dc;
+        symbol [ dc %tmp.68 91 8 10 ];
+        symbol [ setColor %tmp.69 91 11 19 ];
+        %tmp.69 = getv function %tmp.68 :setColor;
+        %tmp.70 = 0xE8B888;
+        symbol [ Graphics %tmp.71 91 30 38 ];
+        %tmp.71 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.72 91 39 56 ];
+        %tmp.72 = getv %tmp.71 :COLOR_TRANSPARENT;
+        invoke %tmp.68 %tmp.69(%tmp.70, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 92 8 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 92 8 10 ];
+        symbol [ fillCircle %tmp.74 92 11 21 ];
+        %tmp.74 = getv function %tmp.73 :fillCircle;
+        %tmp.75 = lgetv %px.3;
+        symbol [ px %tmp.75 92 22 24 ];
+        %tmp.76 = lgetv %feetY.4;
+        symbol [ feetY %tmp.76 92 26 31 ];
+        %tmp.77 = 30;
+        %tmp.78 = sub %tmp.76 %tmp.77;
+        %tmp.79 = 7;
+        invoke %tmp.73 %tmp.74(%tmp.75, %tmp.78, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 93 8 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 93 8 10 ];
+        symbol [ setColor %tmp.81 93 11 19 ];
+        %tmp.81 = getv function %tmp.80 :setColor;
+        %tmp.82 = 0x3355AA;
+        symbol [ Graphics %tmp.83 93 30 38 ];
+        %tmp.83 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.84 93 39 56 ];
+        %tmp.84 = getv %tmp.83 :COLOR_TRANSPARENT;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 94 8 ]
         %tmp.85 = lgetv %dc;
-        symbol [ dc %tmp.85 228 16 18 ];
-        symbol [ setColor %tmp.86 228 19 27 ];
-        %tmp.86 = getv function %tmp.85 :setColor;
-        %tmp.87 = 0x8A6508;
-        symbol [ Graphics %tmp.88 228 38 46 ];
-        %tmp.88 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.89 228 47 64 ];
-        %tmp.89 = getv %tmp.88 :COLOR_TRANSPARENT;
-        invoke %tmp.85 %tmp.86(%tmp.87, %tmp.89);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 229 16 ]
-        %tmp.90 = lgetv %dc;
-        symbol [ dc %tmp.90 229 16 18 ];
-        symbol [ drawLine %tmp.91 229 19 27 ];
-        %tmp.91 = getv function %tmp.90 :drawLine;
-        %tmp.92 = lgetv %px.7;
-        symbol [ px %tmp.92 229 28 30 ];
-        %tmp.93 = 1;
-        %tmp.94 = sub %tmp.92 %tmp.93;
-        %tmp.95 = lgetv %py.8;
-        symbol [ py %tmp.95 229 36 38 ];
-        %tmp.96 = 2;
-        %tmp.97 = sub %tmp.95 %tmp.96;
-        %tmp.98 = lgetv %px.7;
-        symbol [ px %tmp.98 229 44 46 ];
-        %tmp.99 = 1;
-        %tmp.100 = sub %tmp.98 %tmp.99;
-        %tmp.101 = lgetv %py.8;
-        symbol [ py %tmp.101 229 52 54 ];
-        %tmp.102 = 2;
-        %tmp.103 = add %tmp.101 %tmp.102;
-        invoke %tmp.90 %tmp.91(%tmp.94, %tmp.97, %tmp.100, %tmp.103);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_35_230_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_else_false:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_230_19_232_12_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 231 16 ]
-        symbol [ GfxUtil %tmp.105 231 16 23 ];
-        %tmp.105 = getv ? :GfxUtil;
-        symbol [ sparkle %tmp.106 231 24 31 ];
-        %tmp.106 = getv function %tmp.105 :sparkle;
-        %tmp.107 = lgetv %dc;
-        symbol [ dc %tmp.107 231 32 34 ];
-        %tmp.108 = lgetv %px.7;
-        symbol [ px %tmp.108 231 36 38 ];
-        %tmp.109 = lgetv %py.8;
-        symbol [ py %tmp.109 231 40 42 ];
-        %tmp.110 = 5;
-        %tmp.111 = 0xFFF3B0;
-        invoke %tmp.105 %tmp.106(%tmp.107, %tmp.108, %tmp.109, %tmp.110, %tmp.111);
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_230_19_232_12_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_222_12_232_12_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_36_233_8_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc" 214 ]
-        %tmp.114 = lgetv %i.3;
-        symbol [ i %tmp.114 214 31 32 ];
-        %tmp.115 = add %tmp.114 1;
-        lputv %i.3 %tmp.115;
-        symbol [ i %i.3 214 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_214_8_233_8_for_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_RenderSystem_mc_211_68_234_4_stop:
+        symbol [ dc %tmp.85 94 8 10 ];
+        symbol [ fillRectangle %tmp.86 94 11 24 ];
+        %tmp.86 = getv function %tmp.85 :fillRectangle;
+        %tmp.87 = lgetv %px.3;
+        symbol [ px %tmp.87 94 25 27 ];
+        %tmp.88 = 7;
+        %tmp.89 = sub %tmp.87 %tmp.88;
+        %tmp.90 = lgetv %feetY.4;
+        symbol [ feetY %tmp.90 94 33 38 ];
+        %tmp.91 = 36;
+        %tmp.92 = sub %tmp.90 %tmp.91;
+        %tmp.93 = 14;
+        %tmp.94 = 6;
+        invoke %tmp.85 %tmp.86(%tmp.89, %tmp.92, %tmp.93, %tmp.94);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %axeX.6 = local;
+        symbol [ axeX %axeX.6 96 12 16 ];
+        %tmp.95 = lgetv %px.3;
+        symbol [ px %tmp.95 96 19 21 ];
+        %tmp.96 = lgetv %side.1;
+        symbol [ side %tmp.96 96 24 28 ];
+        %tmp.97 = 6;
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        %tmp.99 = sub %tmp.95 %tmp.98;
+        lputv %axeX.6 %tmp.99;
+        symbol [ axeX %axeX.6 96 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop" ]
+        %axeY.7 = local;
+        symbol [ axeY %axeY.7 97 12 16 ];
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_begin:
+        %tmp.100 = lgetv %swinging.5;
+        symbol [ swinging %tmp.100 97 19 27 ];
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_true:
+        %tmp.101 = lgetv %feetY.4;
+        symbol [ feetY %tmp.101 97 30 35 ];
+        %tmp.102 = 20;
+        %tmp.103 = sub %tmp.101 %tmp.102;
+        push %tmp.103;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_else_false:
+        %tmp.104 = lgetv %feetY.4;
+        symbol [ feetY %tmp.104 97 43 48 ];
+        %tmp.105 = 28;
+        %tmp.106 = sub %tmp.104 %tmp.105;
+        push %tmp.106;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_end:
+        %tmp.107 = phi [%tmp.100 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_begin] [%tmp.103 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_true] [%tmp.106 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_else_false] [%tmp.107 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_97_19_97_51_end];
+        lputv %axeY.7 %tmp.107;
+        symbol [ axeY %axeY.7 97 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 98 8 ]
+        %tmp.108 = lgetv %dc;
+        symbol [ dc %tmp.108 98 8 10 ];
+        symbol [ setColor %tmp.109 98 11 19 ];
+        %tmp.109 = getv function %tmp.108 :setColor;
+        %tmp.110 = 0xCCCCCC;
+        symbol [ Graphics %tmp.111 98 30 38 ];
+        %tmp.111 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.112 98 39 56 ];
+        %tmp.112 = getv %tmp.111 :COLOR_TRANSPARENT;
+        invoke %tmp.108 %tmp.109(%tmp.110, %tmp.112);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 99 8 ]
+        %tmp.113 = lgetv %dc;
+        symbol [ dc %tmp.113 99 8 10 ];
+        symbol [ fillRectangle %tmp.114 99 11 24 ];
+        %tmp.114 = getv function %tmp.113 :fillRectangle;
+        %tmp.115 = lgetv %axeX.6;
+        symbol [ axeX %tmp.115 99 25 29 ];
+        %tmp.116 = lgetv %side.1;
+        symbol [ side %tmp.116 99 32 36 ];
+        %tmp.117 = 2;
+        %tmp.118 = mul %tmp.116 %tmp.117;
+        %tmp.119 = sub %tmp.115 %tmp.118;
+        %tmp.120 = lgetv %axeY.7;
+        symbol [ axeY %tmp.120 99 42 46 ];
+        %tmp.121 = 4;
+        %tmp.122 = 12;
+        invoke %tmp.113 %tmp.114(%tmp.119, %tmp.120, %tmp.121, %tmp.122);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 100 8 ]
+        %tmp.123 = lgetv %dc;
+        symbol [ dc %tmp.123 100 8 10 ];
+        symbol [ setColor %tmp.124 100 11 19 ];
+        %tmp.124 = getv function %tmp.123 :setColor;
+        %tmp.125 = 0x999999;
+        symbol [ Graphics %tmp.126 100 30 38 ];
+        %tmp.126 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.127 100 39 56 ];
+        %tmp.127 = getv %tmp.126 :COLOR_TRANSPARENT;
+        invoke %tmp.123 %tmp.124(%tmp.125, %tmp.127);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 101 8 ]
+        %tmp.128 = lgetv %dc;
+        symbol [ dc %tmp.128 101 8 10 ];
+        symbol [ fillRectangle %tmp.129 101 11 24 ];
+        %tmp.129 = getv function %tmp.128 :fillRectangle;
+        %tmp.130 = lgetv %axeX.6;
+        symbol [ axeX %tmp.130 101 25 29 ];
+        %tmp.131 = lgetv %side.1;
+        symbol [ side %tmp.131 101 32 36 ];
+        %tmp.132 = 8;
+        %tmp.133 = mul %tmp.131 %tmp.132;
+        %tmp.134 = sub %tmp.130 %tmp.133;
+        %tmp.135 = lgetv %axeY.7;
+        symbol [ axeY %tmp.135 101 42 46 ];
+        %tmp.136 = 4;
+        %tmp.137 = sub %tmp.135 %tmp.136;
+        %tmp.138 = 8;
+        %tmp.139 = 8;
+        invoke %tmp.128 %tmp.129(%tmp.134, %tmp.137, %tmp.138, %tmp.139);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 105 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_8_111_8_if_stmt:
+        %tmp.140 = lgetv %ctrl;
+        symbol [ ctrl %tmp.140 105 12 16 ];
+        symbol [ player %tmp.141 105 17 23 ];
+        %tmp.141 = getv %tmp.140 :player;
+        symbol [ swingT %tmp.142 105 24 30 ];
+        %tmp.142 = getv %tmp.141 :swingT;
+        %tmp.143 = 0;
+        %tmp.144 = gt %tmp.142 %tmp.143;
+        bf %tmp.144 @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_8_111_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_8_111_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_36_111_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 106 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_36_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_36_111_8_stop" ]
+        %spread.8 = local;
+        symbol [ spread %spread.8 106 16 22 ];
+        symbol [ SWING_FRAMES %tmp.146 106 25 37 ];
+        %tmp.146 = getv ? :SWING_FRAMES;
+        %tmp.147 = lgetv %ctrl;
+        symbol [ ctrl %tmp.147 106 40 44 ];
+        symbol [ player %tmp.148 106 45 51 ];
+        %tmp.148 = getv %tmp.147 :player;
+        symbol [ swingT %tmp.149 106 52 58 ];
+        %tmp.149 = getv %tmp.148 :swingT;
+        %tmp.150 = sub %tmp.146 %tmp.149;
+        %tmp.151 = 1;
+        %tmp.152 = add %tmp.150 %tmp.151;
+        lputv %spread.8 %tmp.152;
+        symbol [ spread %spread.8 106 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 107 12 ]
+        %tmp.153 = lgetv %dc;
+        symbol [ dc %tmp.153 107 12 14 ];
+        symbol [ setColor %tmp.154 107 15 23 ];
+        %tmp.154 = getv function %tmp.153 :setColor;
+        %tmp.155 = 0xD8B060;
+        symbol [ Graphics %tmp.156 107 34 42 ];
+        %tmp.156 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.157 107 43 60 ];
+        %tmp.157 = getv %tmp.156 :COLOR_TRANSPARENT;
+        invoke %tmp.153 %tmp.154(%tmp.155, %tmp.157);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 108 12 ]
+        %tmp.158 = lgetv %dc;
+        symbol [ dc %tmp.158 108 12 14 ];
+        symbol [ fillRectangle %tmp.159 108 15 28 ];
+        %tmp.159 = getv function %tmp.158 :fillRectangle;
+        %tmp.160 = lgetv %cx;
+        symbol [ cx %tmp.160 108 29 31 ];
+        %tmp.161 = lgetv %shx;
+        symbol [ shx %tmp.161 108 34 37 ];
+        %tmp.162 = add %tmp.160 %tmp.161;
+        %tmp.163 = lgetv %side.1;
+        symbol [ side %tmp.163 108 40 44 ];
+        %tmp.164 = lgetv %half.2;
+        symbol [ half %tmp.164 108 47 51 ];
+        %tmp.165 = mul %tmp.163 %tmp.164;
+        %tmp.166 = add %tmp.162 %tmp.165;
+        %tmp.167 = lgetv %side.1;
+        symbol [ side %tmp.167 108 54 58 ];
+        %tmp.168 = 2;
+        %tmp.169 = mul %tmp.167 %tmp.168;
+        %tmp.170 = sub %tmp.166 %tmp.169;
+        %tmp.171 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.171 108 64 73 ];
+        %tmp.172 = 6;
+        %tmp.173 = sub %tmp.171 %tmp.172;
+        %tmp.174 = lgetv %spread.8;
+        symbol [ spread %tmp.174 108 80 86 ];
+        %tmp.175 = sub %tmp.173 %tmp.174;
+        %tmp.176 = 3;
+        %tmp.177 = 3;
+        invoke %tmp.158 %tmp.159(%tmp.170, %tmp.175, %tmp.176, %tmp.177);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 109 12 ]
+        %tmp.178 = lgetv %dc;
+        symbol [ dc %tmp.178 109 12 14 ];
+        symbol [ fillRectangle %tmp.179 109 15 28 ];
+        %tmp.179 = getv function %tmp.178 :fillRectangle;
+        %tmp.180 = lgetv %cx;
+        symbol [ cx %tmp.180 109 29 31 ];
+        %tmp.181 = lgetv %shx;
+        symbol [ shx %tmp.181 109 34 37 ];
+        %tmp.182 = add %tmp.180 %tmp.181;
+        %tmp.183 = lgetv %side.1;
+        symbol [ side %tmp.183 109 40 44 ];
+        %tmp.184 = lgetv %half.2;
+        symbol [ half %tmp.184 109 47 51 ];
+        %tmp.185 = mul %tmp.183 %tmp.184;
+        %tmp.186 = add %tmp.182 %tmp.185;
+        %tmp.187 = lgetv %side.1;
+        symbol [ side %tmp.187 109 54 58 ];
+        %tmp.188 = 4;
+        %tmp.189 = mul %tmp.187 %tmp.188;
+        %tmp.190 = add %tmp.186 %tmp.189;
+        %tmp.191 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.191 109 64 73 ];
+        %tmp.192 = 2;
+        %tmp.193 = sub %tmp.191 %tmp.192;
+        %tmp.194 = lgetv %spread.8;
+        symbol [ spread %tmp.194 109 80 86 ];
+        %tmp.195 = 2;
+        %tmp.196 = mul %tmp.194 %tmp.195;
+        %tmp.197 = sub %tmp.193 %tmp.196;
+        %tmp.198 = 3;
+        %tmp.199 = 3;
+        invoke %tmp.178 %tmp.179(%tmp.190, %tmp.197, %tmp.198, %tmp.199);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc" 110 12 ]
+        %tmp.200 = lgetv %dc;
+        symbol [ dc %tmp.200 110 12 14 ];
+        symbol [ fillRectangle %tmp.201 110 15 28 ];
+        %tmp.201 = getv function %tmp.200 :fillRectangle;
+        %tmp.202 = lgetv %cx;
+        symbol [ cx %tmp.202 110 29 31 ];
+        %tmp.203 = lgetv %shx;
+        symbol [ shx %tmp.203 110 34 37 ];
+        %tmp.204 = add %tmp.202 %tmp.203;
+        %tmp.205 = lgetv %side.1;
+        symbol [ side %tmp.205 110 40 44 ];
+        %tmp.206 = lgetv %half.2;
+        symbol [ half %tmp.206 110 47 51 ];
+        %tmp.207 = mul %tmp.205 %tmp.206;
+        %tmp.208 = add %tmp.204 %tmp.207;
+        %tmp.209 = lgetv %side.1;
+        symbol [ side %tmp.209 110 54 58 ];
+        %tmp.210 = add %tmp.208 %tmp.209;
+        %tmp.211 = lgetv %chopLineY;
+        symbol [ chopLineY %tmp.211 110 64 73 ];
+        %tmp.212 = 3;
+        %tmp.213 = add %tmp.211 %tmp.212;
+        %tmp.214 = lgetv %spread.8;
+        symbol [ spread %tmp.214 110 80 86 ];
+        %tmp.215 = sub %tmp.213 %tmp.214;
+        %tmp.216 = 2;
+        %tmp.217 = 2;
+        invoke %tmp.200 %tmp.201(%tmp.210, %tmp.215, %tmp.216, %tmp.217);
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_36_111_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_8_111_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_105_8_111_8_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_RenderSystem_mc_77_69_112_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/RenderSystem.mc"; @line = 8; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/RenderSystem.mc"; @line = 9; ]
 <init> {
 }

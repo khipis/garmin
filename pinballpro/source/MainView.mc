@@ -297,41 +297,19 @@ class MainView extends WatchUi.View {
     }
 
     hidden function _drawOver(dc) {
-        var bw = _ctrl.screenW * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = _ctrl.screenH * 40 / 100; if (bh < 120) { bh = 120; }
-        var bx = (_ctrl.screenW - bw) / 2;
-        var by = (_ctrl.screenH - bh) / 2;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
         var col = (_ctrl.score >= _ctrl.hi && _ctrl.score > 0)
                   ? 0x44FF88 : 0xFF4466;
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        var cx = _ctrl.screenW / 2;
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 32, Graphics.FONT_XTINY,
-                    "Score " + _formatScore(_ctrl.score),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 48, Graphics.FONT_XTINY,
-                    "Table: " + TableLibrary.NAMES[_ctrl.tableIdx],
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [
+            ["Score " + _formatScore(_ctrl.score), 0xFFFFFF],
+            ["Table: " + TableLibrary.NAMES[_ctrl.tableIdx], 0xAACCEE]
+        ];
         if (_ctrl.score > 0 && _ctrl.score >= _ctrl.hi) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 66, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x44FF88]);
         } else if (_ctrl.hi > 0) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 66, Graphics.FONT_XTINY,
-                        "Best " + _formatScore(_ctrl.hi),
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + _formatScore(_ctrl.hi), 0xFFCC22]);
         }
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 16, Graphics.FONT_XTINY,
-                    "Tap = replay  ESC = menu", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _ctrl.screenW, _ctrl.screenH,
+            "GAME OVER", col, lines, "Tap = replay  ESC = menu", col);
     }
 
     // ── Menu ────────────────────────────────────────────────────────

@@ -1,0 +1,607 @@
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [WatchUi,9,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Graphics,10,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Application,11,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [Lang,12,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 14; @symbol_classdef = [StackTowerHooks,14,6,21]; @symbol_extends<0> = [GameHooks,14,30,39]; ]
+class StackTowerHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 14; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 14; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 15; @symbol_functiondef = [initialize,15,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_15_26_15_52_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 15 28 ]
+        symbol [ GameHooks %tmp.2 15 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 15 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_15_26_15_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 24 8 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_stop" ]
+        %horY.1 = local;
+        symbol [ horY %horY.1 24 12 16 ];
+        %tmp.1 = lgetv %cy;
+        symbol [ cy %tmp.1 24 19 21 ];
+        %tmp.2 = 14;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        lputv %horY.1 %tmp.3;
+        symbol [ horY %horY.1 24 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 26 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 26 8 10 ];
+        symbol [ setColor %tmp.5 26 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0xFF2299;
+        symbol [ Graphics %tmp.7 26 30 38 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.8 26 39 56 ];
+        %tmp.8 = getv %tmp.7 :COLOR_TRANSPARENT;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 27 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 27 8 10 ];
+        symbol [ drawLine %tmp.10 27 11 19 ];
+        %tmp.10 = getv function %tmp.9 :drawLine;
+        %tmp.11 = lgetv %cx;
+        symbol [ cx %tmp.11 27 20 22 ];
+        %tmp.12 = 38;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = lgetv %horY.1;
+        symbol [ horY %tmp.14 27 29 33 ];
+        %tmp.15 = lgetv %cx;
+        symbol [ cx %tmp.15 27 35 37 ];
+        %tmp.16 = 38;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %horY.1;
+        symbol [ horY %tmp.18 27 44 48 ];
+        invoke %tmp.9 %tmp.10(%tmp.13, %tmp.14, %tmp.17, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 29 8 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 29 8 10 ];
+        symbol [ setColor %tmp.20 29 11 19 ];
+        %tmp.20 = getv function %tmp.19 :setColor;
+        %tmp.21 = 0x66184A;
+        symbol [ Graphics %tmp.22 29 30 38 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.23 29 39 56 ];
+        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23);
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 30 8 ]
+        for @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_test @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_incr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_begin" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 30 17 18 ];
+        %tmp.24 = -3;
+        lputv %i.2 %tmp.24;
+        symbol [ i %i.2 30 17 18 ];
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_test:
+        %tmp.25 = lgetv %i.2;
+        symbol [ i %tmp.25 30 25 26 ];
+        %tmp.26 = 3;
+        %tmp.27 = lte %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_begin:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_38_32_8_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 31 12 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 31 12 14 ];
+        symbol [ drawLine %tmp.29 31 15 23 ];
+        %tmp.29 = getv function %tmp.28 :drawLine;
+        %tmp.30 = lgetv %cx;
+        symbol [ cx %tmp.30 31 24 26 ];
+        %tmp.31 = lgetv %i.2;
+        symbol [ i %tmp.31 31 29 30 ];
+        %tmp.32 = 13;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = add %tmp.30 %tmp.33;
+        %tmp.35 = lgetv %horY.1;
+        symbol [ horY %tmp.35 31 37 41 ];
+        %tmp.36 = 8;
+        %tmp.37 = add %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 31 47 49 ];
+        %tmp.39 = lgetv %horY.1;
+        symbol [ horY %tmp.39 31 51 55 ];
+        invoke %tmp.28 %tmp.29(%tmp.34, %tmp.37, %tmp.38, %tmp.39);
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_38_32_8_stop:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 30 ]
+        %tmp.42 = lgetv %i.2;
+        symbol [ i %tmp.42 30 33 34 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %i.2 %tmp.43;
+        symbol [ i %i.2 30 33 34 ];
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_test;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_30_8_32_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 34 8 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_stop" ]
+        %palette.3 = local;
+        symbol [ palette %palette.3 34 12 19 ];
+        %tmp.44 = newa 4;
+        %tmp.45 = 0xFF2244;
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 0 %tmp.45;
+        %tmp.48 = 0xFFCC00;
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 1 %tmp.48;
+        %tmp.51 = 0x22FF88;
+        %tmp.52 = dup %tmp.50;
+        %tmp.53 = aputv %tmp.52 2 %tmp.51;
+        %tmp.54 = 0x00CCFF;
+        %tmp.55 = dup %tmp.53;
+        %tmp.56 = aputv %tmp.55 3 %tmp.54;
+        lputv %palette.3 %tmp.56;
+        symbol [ palette %palette.3 34 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 35 8 ]
+        for @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_test @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_incr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_begin" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_end" ]
+        %j.4 = local;
+        symbol [ j %j.4 35 17 18 ];
+        %tmp.57 = 0;
+        lputv %j.4 %tmp.57;
+        symbol [ j %j.4 35 17 18 ];
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_test:
+        %tmp.58 = lgetv %j.4;
+        symbol [ j %tmp.58 35 24 25 ];
+        %tmp.59 = 4;
+        %tmp.60 = lt %tmp.58 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_begin:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_36_39_8_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 36 12 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_36_39_8_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_36_39_8_stop" ]
+        %off.5 = local;
+        symbol [ off %off.5 36 16 19 ];
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_begin:
+        %tmp.61 = lgetv %j.4;
+        symbol [ j %tmp.61 36 23 24 ];
+        %tmp.62 = 2;
+        %tmp.63 = mod %tmp.61 %tmp.62;
+        %tmp.64 = 0;
+        %tmp.65 = eq %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_else_false;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_true:
+        %tmp.66 = -3;
+        push %tmp.66;
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_else_false:
+        %tmp.67 = 3;
+        push %tmp.67;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_end:
+        %tmp.68 = phi [%tmp.65 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_else_false] [%tmp.68 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_36_22_36_42_end];
+        lputv %off.5 %tmp.68;
+        symbol [ off %off.5 36 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 37 12 ]
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 37 12 14 ];
+        symbol [ setColor %tmp.70 37 15 23 ];
+        %tmp.70 = getv function %tmp.69 :setColor;
+        %tmp.71 = lgetv %palette.3;
+        symbol [ palette %tmp.71 37 24 31 ];
+        %tmp.72 = lgetv %j.4;
+        symbol [ j %tmp.72 37 32 33 ];
+        %tmp.73 = agetv %tmp.71 %tmp.72;
+        symbol [ Graphics %tmp.74 37 36 44 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.75 37 45 62 ];
+        %tmp.75 = getv %tmp.74 :COLOR_TRANSPARENT;
+        invoke %tmp.69 %tmp.70(%tmp.73, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 38 12 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 38 12 14 ];
+        symbol [ fillRectangle %tmp.77 38 15 28 ];
+        %tmp.77 = getv function %tmp.76 :fillRectangle;
+        %tmp.78 = lgetv %cx;
+        symbol [ cx %tmp.78 38 29 31 ];
+        %tmp.79 = 12;
+        %tmp.80 = sub %tmp.78 %tmp.79;
+        %tmp.81 = lgetv %off.5;
+        symbol [ off %tmp.81 38 39 42 ];
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = lgetv %horY.1;
+        symbol [ horY %tmp.83 38 44 48 ];
+        %tmp.84 = 6;
+        %tmp.85 = sub %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %j.4;
+        symbol [ j %tmp.86 38 55 56 ];
+        %tmp.87 = 6;
+        %tmp.88 = mul %tmp.86 %tmp.87;
+        %tmp.89 = sub %tmp.85 %tmp.88;
+        %tmp.90 = 24;
+        %tmp.91 = 5;
+        invoke %tmp.76 %tmp.77(%tmp.82, %tmp.89, %tmp.90, %tmp.91);
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_36_39_8_stop:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 35 ]
+        %tmp.94 = lgetv %j.4;
+        symbol [ j %tmp.94 35 31 32 ];
+        %tmp.95 = add %tmp.94 1;
+        lputv %j.4 %tmp.95;
+        symbol [ j %j.4 35 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_test;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_35_8_39_8_for_end:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_23_47_40_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 43; @symbol_functiondef = [lbVariant,43,13,22]; @symbol_return<0> = [Lang,43,28,32]; @symbol_return<1> = [String,43,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_43_40_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_43_40_52_4_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_43_40_52_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 44 12 13 ];
+        symbol [ ST_DIFF_NORM %tmp.2 44 16 28 ];
+        %tmp.2 = getv ? :ST_DIFF_NORM;
+        lputv %d.1 %tmp.2;
+        symbol [ d %d.1 44 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_12_48_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 46 16 17 ];
+        symbol [ Application %tmp.3 46 20 31 ];
+        %tmp.3 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.4 46 32 39 ];
+        %tmp.4 = getv %tmp.3 :Storage;
+        symbol [ getValue %tmp.5 46 40 48 ];
+        %tmp.5 = getv function %tmp.4 :getValue;
+        symbol [ ST_DIFF_KEY %tmp.7 46 49 60 ];
+        %tmp.7 = getv ? :ST_DIFF_KEY;
+        %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.7);
+        lputv %v.2 %tmp.8;
+        symbol [ v %v.2 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_12_47_51_if_stmt:
+        %tmp.9 = lgetv %v.2;
+        symbol [ v %tmp.9 47 16 17 ];
+        symbol [ Lang %tmp.10 47 29 33 ];
+        %tmp.10 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.11 47 34 40 ];
+        %tmp.11 = getv %tmp.10 :Number;
+        %tmp.12 = isa %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_12_47_51_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_12_47_51_if_true:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_42_47_51_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 47 44 ]
+        %tmp.13 = lgetv %v.2;
+        symbol [ v %tmp.13 47 48 49 ];
+        %tmp.14 = as %tmp.13 { (Lang.Number) };
+        lputv %d.1 %tmp.14;
+        symbol [ d %d.1 47 44 45 ];
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_42_47_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_12_47_51_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_47_12_47_51_if_end:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_catch:
+        %tmp.15 = exception;
+        push %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_48_10_48_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 48 17 18 ];
+        %tmp.16 = dup %tmp.15;
+        lputv %e.3 %tmp.16;
+        symbol [ e %e.3 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally;
+        throw %tmp.15;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_45_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_8_49_48_if_stmt:
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 49 12 13 ];
+        symbol [ ST_DIFF_SLOW %tmp.19 49 17 29 ];
+        %tmp.19 = getv ? :ST_DIFF_SLOW;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_8_49_48_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_8_49_48_if_true:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_31_49_48_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 49 33 ]
+        %tmp.21 = "Slow";
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_31_49_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_8_49_48_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_49_8_49_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_8_50_48_if_stmt:
+        %tmp.22 = lgetv %d.1;
+        symbol [ d %tmp.22 50 12 13 ];
+        symbol [ ST_DIFF_FAST %tmp.24 50 17 29 ];
+        %tmp.24 = getv ? :ST_DIFF_FAST;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_8_50_48_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_8_50_48_if_true:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_31_50_48_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 50 33 ]
+        %tmp.26 = "Fast";
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_31_50_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_8_50_48_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_50_8_50_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 51 8 ]
+        %tmp.27 = "Norm";
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_43_40_52_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 54; @symbol_functiondef = [footerText,54,13,23]; @symbol_return<0> = [Lang,54,29,33]; @symbol_return<1> = [String,54,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_54_49_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 55 8 ]
+        try @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_beginTry @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_endTry @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_catch @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_beginTry:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_12_58_8_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 56 12 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_12_58_8_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_12_58_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 56 16 17 ];
+        symbol [ Application %tmp.1 56 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 56 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 56 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "hi";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 56 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 57 12 ]
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_stmt:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_16_57_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 57 16 17 ];
+        symbol [ Lang %tmp.7 57 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 57 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_44_57_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 57 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_44_57_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_16_57_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_44_57_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_44_57_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_true:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_51_57_86_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 57 53 ]
+        %tmp.15 = "BEST ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 57 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 57 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_51_57_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_57_12_57_86_if_end:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_12_58_8_stop:
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 58 10 ]
+        [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_catch" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_58_10_58_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 58 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 58 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_end;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_58_10_58_21_end:
+        try @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_catch @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_55_8_58_21_end:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 59 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_54_49_60_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 63; @symbol_functiondef = [buildStackTowerMenu,63,9,28]; @symbol_return<0> = [Lang,63,34,38]; @symbol_return<1> = [Array,63,39,44]; ]
+function buildStackTowerMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_start:
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 64 4 ]
+    [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 64 8 11 ];
+    symbol [ MenuConfig %tmp.4 64 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 65 9 15 const ];
+    symbol [ LB_GAME_ID %tmp.9 65 20 30 ];
+    %tmp.9 = getv ? :LB_GAME_ID;
+    %tmp.10 = dup %tmp.5;
+    %tmp.11 = aputv %tmp.10 %tmp.7 %tmp.9;
+    %tmp.13 = const :title1;
+    symbol [ title1 %tmp.13 66 9 15 const ];
+    %tmp.14 = "STACK";
+    %tmp.15 = dup %tmp.11;
+    %tmp.16 = aputv %tmp.15 %tmp.13 %tmp.14;
+    %tmp.18 = const :title2;
+    symbol [ title2 %tmp.18 67 9 15 const ];
+    %tmp.19 = "TOWER";
+    %tmp.20 = dup %tmp.16;
+    %tmp.21 = aputv %tmp.20 %tmp.18 %tmp.19;
+    %tmp.23 = const :col1;
+    symbol [ col1 %tmp.23 68 9 13 const ];
+    %tmp.24 = 0xFFCC22;
+    %tmp.25 = dup %tmp.21;
+    %tmp.26 = aputv %tmp.25 %tmp.23 %tmp.24;
+    %tmp.28 = const :col2;
+    symbol [ col2 %tmp.28 69 9 13 const ];
+    %tmp.29 = 0x22DDFF;
+    %tmp.30 = dup %tmp.26;
+    %tmp.31 = aputv %tmp.30 %tmp.28 %tmp.29;
+    %tmp.33 = const :bg;
+    symbol [ bg %tmp.33 70 9 11 const ];
+    %tmp.34 = 0x03020C;
+    %tmp.35 = dup %tmp.31;
+    %tmp.36 = aputv %tmp.35 %tmp.33 %tmp.34;
+    %tmp.38 = const :circle;
+    symbol [ circle %tmp.38 71 9 15 const ];
+    %tmp.39 = 0x0E0630;
+    %tmp.40 = dup %tmp.36;
+    %tmp.41 = aputv %tmp.40 %tmp.38 %tmp.39;
+    %tmp.43 = const :accent;
+    symbol [ accent %tmp.43 72 9 15 const ];
+    %tmp.44 = 0x22FF88;
+    %tmp.45 = dup %tmp.41;
+    %tmp.46 = aputv %tmp.45 %tmp.43 %tmp.44;
+    %tmp.48 = const :lbTitle;
+    symbol [ lbTitle %tmp.48 73 9 16 const ];
+    %tmp.49 = "STACK TOWER";
+    %tmp.50 = dup %tmp.46;
+    %tmp.51 = aputv %tmp.50 %tmp.48 %tmp.49;
+    %tmp.53 = const :hooks;
+    symbol [ hooks %tmp.53 74 9 14 const ];
+    symbol [ StackTowerHooks %tmp.57 74 24 39 ];
+    %tmp.57 = getv ? :StackTowerHooks;
+    %tmp.54 = newc %tmp.57 ();
+    %tmp.58 = dup %tmp.51;
+    %tmp.59 = aputv %tmp.58 %tmp.53 %tmp.54;
+    %tmp.61 = const :options;
+    symbol [ options %tmp.61 75 9 16 const ];
+    %tmp.62 = newa 2;
+    symbol [ GmOption %tmp.66 76 16 24 ];
+    %tmp.66 = getv ? :GmOption;
+    symbol [ ST_DIFF_KEY %tmp.68 76 25 36 ];
+    %tmp.68 = getv ? :ST_DIFF_KEY;
+    %tmp.69 = "Difficulty";
+    %tmp.70 = newa 3;
+    %tmp.71 = "SLOW";
+    %tmp.72 = dup %tmp.70;
+    %tmp.73 = aputv %tmp.72 0 %tmp.71;
+    %tmp.74 = "NORM";
+    %tmp.75 = dup %tmp.73;
+    %tmp.76 = aputv %tmp.75 1 %tmp.74;
+    %tmp.77 = "FAST";
+    %tmp.78 = dup %tmp.76;
+    %tmp.79 = aputv %tmp.78 2 %tmp.77;
+    %tmp.80 = 1;
+    %tmp.63 = newc %tmp.66 (%tmp.68, %tmp.69, %tmp.79, %tmp.80);
+    %tmp.81 = dup %tmp.62;
+    %tmp.82 = aputv %tmp.81 0 %tmp.63;
+    symbol [ GmOption %tmp.86 77 16 24 ];
+    %tmp.86 = getv ? :GmOption;
+    symbol [ ST_VIEW_KEY %tmp.88 77 25 36 ];
+    %tmp.88 = getv ? :ST_VIEW_KEY;
+    %tmp.89 = "View";
+    %tmp.90 = newa 2;
+    %tmp.91 = "2D";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 0 %tmp.91;
+    %tmp.94 = "3D";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 1 %tmp.94;
+    %tmp.97 = 0;
+    %tmp.83 = newc %tmp.86 (%tmp.88, %tmp.89, %tmp.96, %tmp.97);
+    %tmp.98 = dup %tmp.82;
+    %tmp.99 = aputv %tmp.98 1 %tmp.83;
+    %tmp.100 = dup %tmp.59;
+    %tmp.101 = aputv %tmp.100 %tmp.61 %tmp.99;
+    %tmp.1 = newc %tmp.4 (%tmp.101);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 64 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 80 4 ]
+    [ "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_start" "_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 80 8 9 ];
+    symbol [ GameMenuView %tmp.105 80 16 28 ];
+    %tmp.105 = getv ? :GameMenuView;
+    %tmp.106 = lgetv %cfg.1;
+    symbol [ cfg %tmp.106 80 29 32 ];
+    %tmp.102 = newc %tmp.105 (%tmp.106);
+    lputv %v.2 %tmp.102;
+    symbol [ v %v.2 80 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc" 81 4 ]
+    %tmp.107 = newa 2;
+    %tmp.108 = lgetv %v.2;
+    symbol [ v %tmp.108 81 12 13 ];
+    %tmp.109 = dup %tmp.107;
+    %tmp.110 = aputv %tmp.109 0 %tmp.108;
+    symbol [ GameMenuDelegate %tmp.114 81 19 35 ];
+    %tmp.114 = getv ? :GameMenuDelegate;
+    %tmp.115 = lgetv %v.2;
+    symbol [ v %tmp.115 81 36 37 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    %tmp.116 = dup %tmp.110;
+    %tmp.117 = aputv %tmp.116 1 %tmp.111;
+    ret %tmp.117;
+_Users_kkorolczuk_work_garmin_stacktower_source_StackTowerMenu_mc_63_45_82_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/stacktower/source/StackTowerMenu.mc"; @line = 9; ]
+<init> {
+}

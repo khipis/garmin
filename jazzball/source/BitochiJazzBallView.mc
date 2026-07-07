@@ -842,16 +842,9 @@ class BitochiJazzBallView extends WatchUi.View {
 
     hidden function drawLevelWin(dc) {
         var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w/2 - 68, _h/2 - 32, 136, 64, 8);
-        dc.setColor(0x224488, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w/2 - 68, _h/2 - 32, 136, 64, 8);
-        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 28, Graphics.FONT_MEDIUM, "LEVEL " + _level + "!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 6, Graphics.FONT_XTINY, "Filled: " + filledPct + "%", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 8 < 4) ? 0x88CCFF : 0x4488CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 12, Graphics.FONT_XTINY, "Tap > next level", Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Filled: " + filledPct + "%", 0xFFDD44] ];
+        GameOverCard.draw(dc, _w, _h, "LEVEL " + _level + "!", 0x44FF88,
+                          lines, "Tap > next level", 0x224488);
     }
 
     hidden function drawGameOver(dc) {

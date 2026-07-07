@@ -104,6 +104,16 @@ class GameController {
     var cx;
     var cy;
 
+    // ── Reticle model (crosshair moves, world stays put) ──────────
+    // The world is drawn STATIC around a fixed horizon; only the
+    // crosshair roams with the player's aim. retX/retY is the live
+    // crosshair pixel; horizonY is the fixed ground line. Enemies are
+    // projected onto that static world so they stay planted on the
+    // ground instead of appearing to float when you aim down.
+    var retX;
+    var retY;
+    var horizonY;
+
     // Accel snapshot (filled by MainView each tick).
     var lastAx;
     var lastAy;
@@ -168,6 +178,7 @@ class GameController {
         demoT        = 0;
         demoCaption  = "";
         lastAx = 0; lastAy = 0;
+        retX = 130; retY = 109; horizonY = 109;
 
         _loadPrefs();
         gyro.setSensitivity(sens);
@@ -176,6 +187,33 @@ class GameController {
     // ── Screen sync ───────────────────────────────────────────
     function syncDims(w, h) {
         sw = w; sh = h; cx = w / 2; cy = h / 2;
+        // Horizon sits a touch above centre so there is plenty of
+        // ground below it for the enemies to stand on.
+        horizonY = cy - (sh * 8) / 100;
+    }
+
+    // The fixed "world gaze" pitch that anchors enemy projection to
+    // the static horizon: with this bias, an enemy of ground-pitch p
+    // lands at screen y = horizonY + p*AR_FOV (p >= 0 → below horizon).
+    function worldGazePitch() {
+        return (cy - horizonY).toFloat() / AR_FOV;
+    }
+
+    // Recompute the crosshair pixel from the current aim. The reticle
+    // uses the SAME projection as the enemies, so aiming at an enemy's
+    // world angle puts the crosshair exactly on it. Aim-down (negative
+    // aimPitch) pushes the reticle DOWN toward the grounded enemies.
+    function updateReticle() {
+        var rx = cx + (gyro.aimYaw * AR_FOV).toNumber();
+        var ry = horizonY - (gyro.aimPitch * AR_FOV).toNumber();
+        var mx = 10;
+        if (rx < mx)          { rx = mx; }
+        if (rx > sw - mx)     { rx = sw - mx; }
+        var top = (sh * 18) / 100;
+        var bot = (sh * 82) / 100;
+        if (ry < top) { ry = top; }
+        if (ry > bot) { ry = bot; }
+        retX = rx; retY = ry;
     }
 
     // ── Persistence ───────────────────────────────────────────
@@ -345,6 +383,7 @@ class GameController {
         // Always update gyro so the menu/play view is responsive.
         var tension = bow.draw.toFloat() * 0.01;
         gyro.update(lastAx, lastAy, tension);
+        updateReticle();
 
         if (state == AR_INTERMISSION) {
             if (bannerT <= 0) { state = AR_PLAY; }
@@ -360,9 +399,10 @@ class GameController {
             if (roundTime <= 0) { _gameOver(); return; }
         }
 
-        // Enemies tick + project.
+        // Enemies tick + project onto the STATIC world (fixed gaze) so
+        // they stay planted on the ground; the crosshair moves, not them.
         enemies.tick(roundIdx, diff, roundTargetActive);
-        enemies.project(gyro.aimYaw, gyro.aimPitch, cx, cy);
+        enemies.project(0.0, worldGazePitch(), cx, cy);
 
         // Incoming arrows from archer mirror.
         if (roundIdx == AR_RD_F) { _archerFireTick(); }
@@ -483,7 +523,8 @@ class GameController {
         if (state != AR_PLAY) { return; }
         var bx = cx;
         var by = (sh * 88) / 100;
-        bow.release(bx, by, cx, cy);
+        // Fire at the crosshair, wherever the player has aimed it.
+        bow.release(bx, by, retX, retY);
     }
     function restart() { _startTournament(); }
     function recalibrate() { gyro.recalibrate(); }

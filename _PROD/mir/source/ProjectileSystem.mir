@@ -1,505 +1,509 @@
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 19; @position = 6; @symbol_constdef = [PI_MAX_P_SHOTS,19,6,20]; ]
-const PI_MAX_P_SHOTS = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 20; @position = 6; @symbol_constdef = [PI_MAX_E_SHOTS,20,6,20]; ]
-const PI_MAX_E_SHOTS = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 21; @position = 6; @symbol_constdef = [PI_P_BULLET_V,21,6,19]; ]
-const PI_P_BULLET_V = 0.95;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 22; @position = 6; @symbol_constdef = [PI_E_BULLET_V,22,6,19]; ]
-const PI_E_BULLET_V = 0.55;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 24; @symbol_classdef = [Bullet,24,6,12]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 18; @symbol_classdef = [Bullet,18,6,12]; ]
 class Bullet {
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 18; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 18; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 25; @position = 8; @symbol_vardef = [col,25,8,11]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 19; @position = 8; @symbol_vardef = [col,19,8,11]; ]
     var col;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 26; @position = 8; @symbol_vardef = [row,26,8,11]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 20; @position = 8; @symbol_vardef = [row,20,8,11]; ]
     var row;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 27; @position = 8; @symbol_vardef = [alive,27,8,13]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 21; @position = 8; @symbol_vardef = [alive,21,8,13]; ]
     var alive;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 29; @symbol_functiondef = [initialize,29,13,23]; @symbol_param<0> = [c,29,24,25]; @symbol_param<1> = [r,29,27,28]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 23; @symbol_functiondef = [initialize,23,13,23]; @symbol_param<0> = [c,23,24,25]; @symbol_param<1> = [r,23,27,28]; ]
     function initialize(c, r) as Void {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_29_30_29_64_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 29 32 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_23_30_23_64_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 23 32 ]
         %tmp.1 = lgetv %c;
-        symbol [ c %tmp.1 29 38 39 ];
-        symbol [ col ? 29 32 35 ];
+        symbol [ c %tmp.1 23 38 39 ];
+        symbol [ col ? 23 32 35 ];
         putv self :col %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 29 41 ]
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 23 41 ]
         %tmp.2 = lgetv %r;
-        symbol [ r %tmp.2 29 47 48 ];
-        symbol [ row ? 29 41 44 ];
+        symbol [ r %tmp.2 23 47 48 ];
+        symbol [ row ? 23 41 44 ];
         putv self :row %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 29 50 ]
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 23 50 ]
         %tmp.3 = true;
-        symbol [ alive ? 29 50 55 ];
+        symbol [ alive ? 23 50 55 ];
         putv self :alive %tmp.3;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_29_30_29_64_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_23_30_23_64_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 32; @symbol_classdef = [ProjectileSystem,32,6,22]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 26; @symbol_classdef = [ProjectileSystem,26,6,22]; ]
 class ProjectileSystem {
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 32; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 26; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 32; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 26; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 33; @position = 8; @symbol_vardef = [pShots,33,8,14]; ]
-    var pShots;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 34; @position = 8; @symbol_vardef = [eShots,34,8,14]; ]
-    var eShots;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 36; @symbol_functiondef = [initialize,36,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 27; @position = 8; @symbol_vardef = [bullets,27,8,15]; ]
+    var bullets;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 28; @position = 15; @symbol_vardef = [BULLET_SPEED,28,15,27]; ]
+    protected
+    var BULLET_SPEED = 0.85;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 29; @position = 15; @symbol_vardef = [MAX_SHOTS,29,15,24]; ]
+    protected
+    var MAX_SHOTS = 2;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 31; @symbol_functiondef = [initialize,31,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_36_26_36_54_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 36 28 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_31_26_31_42_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 31 28 ]
         %tmp.1 = newa 0;
-        symbol [ pShots ? 36 28 34 ];
-        putv self :pShots %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 36 41 ]
-        %tmp.2 = newa 0;
-        symbol [ eShots ? 36 41 47 ];
-        putv self :eShots %tmp.2;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_36_26_36_54_stop:
+        symbol [ bullets ? 31 28 35 ];
+        putv self :bullets %tmp.1;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_31_26_31_42_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 38; @symbol_functiondef = [reset,38,13,18]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 33; @symbol_functiondef = [reset,33,13,18]; ]
     function reset() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_38_21_38_49_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 38 23 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_33_21_33_37_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 33 23 ]
         %tmp.1 = newa 0;
-        symbol [ pShots ? 38 23 29 ];
-        putv self :pShots %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 38 36 ]
-        %tmp.2 = newa 0;
-        symbol [ eShots ? 38 36 42 ];
-        putv self :eShots %tmp.2;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_38_21_38_49_stop:
+        symbol [ bullets ? 33 23 30 ];
+        putv self :bullets %tmp.1;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_33_21_33_37_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 40; @symbol_functiondef = [playerFire,40,13,23]; @symbol_param<0> = [col,40,24,27]; @symbol_param<1> = [row,40,29,32]; ]
-    function playerFire(col, row) {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_40_34_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 41 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_8_41_61_if_stmt:
-        symbol [ pShots %tmp.2 41 12 18 ];
-        %tmp.2 = getv ? :pShots;
-        symbol [ size %tmp.3 41 19 23 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 35; @symbol_functiondef = [fire,35,13,17]; @symbol_param<0> = [playerCol,35,18,27]; @symbol_param<1> = [playerRow,35,29,38]; ]
+    function fire(playerCol, playerRow) {
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_35_40_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_8_36_57_if_stmt:
+        symbol [ bullets %tmp.2 36 12 19 ];
+        %tmp.2 = getv ? :bullets;
+        symbol [ size %tmp.3 36 20 24 ];
         %tmp.3 = getv function %tmp.2 :size;
         %tmp.4 = invoke %tmp.2 %tmp.3();
-        symbol [ PI_MAX_P_SHOTS %tmp.6 41 29 43 ];
-        %tmp.6 = getv ? :PI_MAX_P_SHOTS;
+        symbol [ MAX_SHOTS %tmp.6 36 30 39 ];
+        %tmp.6 = getv ? :MAX_SHOTS;
         %tmp.7 = gte %tmp.4 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_8_41_61_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_8_41_61_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_45_41_61_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 41 47 ]
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_8_36_57_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_8_36_57_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_41_36_57_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 36 43 ]
         %tmp.8 = false;
         ret %tmp.8;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_45_41_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_8_41_61_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_41_8_41_61_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 43 8 ]
-        symbol [ pShots %tmp.10 43 8 14 ];
-        %tmp.10 = getv ? :pShots;
-        symbol [ add %tmp.11 43 15 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_41_36_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_8_36_57_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_36_8_36_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 37 8 ]
+        symbol [ bullets %tmp.10 37 8 15 ];
+        %tmp.10 = getv ? :bullets;
+        symbol [ add %tmp.11 37 16 19 ];
         %tmp.11 = getv function %tmp.10 :add;
-        symbol [ Bullet %tmp.15 43 23 29 ];
+        symbol [ Bullet %tmp.15 37 24 30 ];
         %tmp.15 = getv ? :Bullet;
-        %tmp.16 = lgetv %col;
-        symbol [ col %tmp.16 43 30 33 ];
-        %tmp.17 = lgetv %row;
-        symbol [ row %tmp.17 43 35 38 ];
-        %tmp.18 = 0.5;
+        %tmp.16 = lgetv %playerCol;
+        symbol [ playerCol %tmp.16 37 31 40 ];
+        %tmp.17 = lgetv %playerRow;
+        symbol [ playerRow %tmp.17 37 42 51 ];
+        %tmp.18 = 1.0;
         %tmp.19 = sub %tmp.17 %tmp.18;
         %tmp.12 = newc %tmp.15 (%tmp.16, %tmp.19);
         invoke %tmp.10 %tmp.11(%tmp.12);
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 44 8 ]
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 38 8 ]
         %tmp.20 = true;
         ret %tmp.20;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_40_34_45_4_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_35_40_39_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 47; @symbol_functiondef = [enemyFire,47,13,22]; @symbol_param<0> = [col,47,23,26]; @symbol_param<1> = [row,47,28,31]; ]
-    function enemyFire(col, row) {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_47_33_51_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 48 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_8_48_61_if_stmt:
-        symbol [ eShots %tmp.2 48 12 18 ];
-        %tmp.2 = getv ? :eShots;
-        symbol [ size %tmp.3 48 19 23 ];
-        %tmp.3 = getv function %tmp.2 :size;
-        %tmp.4 = invoke %tmp.2 %tmp.3();
-        symbol [ PI_MAX_E_SHOTS %tmp.6 48 29 43 ];
-        %tmp.6 = getv ? :PI_MAX_E_SHOTS;
-        %tmp.7 = gte %tmp.4 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_8_48_61_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_8_48_61_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_45_48_61_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 48 47 ]
-        %tmp.8 = false;
-        ret %tmp.8;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_45_48_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_8_48_61_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_48_8_48_61_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 49 8 ]
-        symbol [ eShots %tmp.10 49 8 14 ];
-        %tmp.10 = getv ? :eShots;
-        symbol [ add %tmp.11 49 15 18 ];
-        %tmp.11 = getv function %tmp.10 :add;
-        symbol [ Bullet %tmp.15 49 23 29 ];
-        %tmp.15 = getv ? :Bullet;
-        %tmp.16 = lgetv %col;
-        symbol [ col %tmp.16 49 30 33 ];
-        %tmp.17 = lgetv %row;
-        symbol [ row %tmp.17 49 35 38 ];
-        %tmp.18 = 0.5;
-        %tmp.19 = add %tmp.17 %tmp.18;
-        %tmp.12 = newc %tmp.15 (%tmp.16, %tmp.19);
-        invoke %tmp.10 %tmp.11(%tmp.12);
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 50 8 ]
-        %tmp.20 = true;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_47_33_51_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 53; @symbol_functiondef = [tick,53,13,17]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 41; @symbol_functiondef = [tick,41,13,17]; ]
     function tick() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_53_20_67_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 54 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_end" ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_41_20_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 42 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_end" ]
         %i.1 = local;
-        symbol [ i %i.1 54 17 18 ];
+        symbol [ i %i.1 42 17 18 ];
         %tmp.1 = 0;
         lputv %i.1 %tmp.1;
-        symbol [ i %i.1 54 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_test:
+        symbol [ i %i.1 42 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_test:
         %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 54 24 25 ];
-        symbol [ pShots %tmp.4 54 28 34 ];
-        %tmp.4 = getv ? :pShots;
-        symbol [ size %tmp.5 54 35 39 ];
+        symbol [ i %tmp.2 42 24 25 ];
+        symbol [ bullets %tmp.4 42 28 35 ];
+        %tmp.4 = getv ? :bullets;
+        symbol [ size %tmp.5 42 36 40 ];
         %tmp.5 = getv function %tmp.4 :size;
         %tmp.6 = invoke %tmp.4 %tmp.5();
         %tmp.7 = lt %tmp.2 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_48_59_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 55 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_48_59_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_48_59_8_stop" ]
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_49_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 43 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_49_47_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_49_47_8_stop" ]
         %b.2 = local;
-        symbol [ b %b.2 55 16 17 ];
-        symbol [ pShots %tmp.9 55 20 26 ];
-        %tmp.9 = getv ? :pShots;
+        symbol [ b %b.2 43 16 17 ];
+        symbol [ bullets %tmp.9 43 20 27 ];
+        %tmp.9 = getv ? :bullets;
         %tmp.10 = lgetv %i.1;
-        symbol [ i %tmp.10 55 27 28 ];
+        symbol [ i %tmp.10 43 28 29 ];
         %tmp.11 = agetv %tmp.9 %tmp.10;
         lputv %b.2 %tmp.11;
-        symbol [ b %b.2 55 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 56 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_12_56_38_if_stmt:
+        symbol [ b %b.2 43 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 44 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_12_44_38_if_stmt:
         %tmp.12 = lgetv %b.2;
-        symbol [ b %tmp.12 56 17 18 ];
-        symbol [ alive %tmp.13 56 19 24 ];
+        symbol [ b %tmp.12 44 17 18 ];
+        symbol [ alive %tmp.13 44 19 24 ];
         %tmp.13 = getv %tmp.12 :alive;
         %tmp.14 = not %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_12_56_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_12_56_38_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_26_56_38_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 56 28 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_26_56_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_12_56_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_56_12_56_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 57 12 ]
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_12_44_38_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_12_44_38_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_26_44_38_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 44 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_26_44_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_12_44_38_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_44_12_44_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 45 12 ]
         %tmp.15 = lgetv %b.2;
-        symbol [ b %tmp.15 57 12 13 ];
+        symbol [ b %tmp.15 45 12 13 ];
         %tmp.16 = lgetv %b.2;
-        symbol [ b %tmp.16 57 20 21 ];
-        symbol [ row %tmp.17 57 22 25 ];
+        symbol [ b %tmp.16 45 20 21 ];
+        symbol [ row %tmp.17 45 22 25 ];
         %tmp.17 = getv %tmp.16 :row;
-        symbol [ PI_P_BULLET_V %tmp.19 57 28 41 ];
-        %tmp.19 = getv ? :PI_P_BULLET_V;
+        symbol [ BULLET_SPEED %tmp.19 45 28 40 ];
+        %tmp.19 = getv ? :BULLET_SPEED;
         %tmp.20 = sub %tmp.17 %tmp.19;
-        symbol [ row ? 57 14 17 ];
+        symbol [ row ? 45 14 17 ];
         putv %tmp.15 :row %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 58 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_12_58_49_if_stmt:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 46 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_12_46_49_if_stmt:
         %tmp.21 = lgetv %b.2;
-        symbol [ b %tmp.21 58 16 17 ];
-        symbol [ row %tmp.22 58 18 21 ];
+        symbol [ b %tmp.21 46 16 17 ];
+        symbol [ row %tmp.22 46 18 21 ];
         %tmp.22 = getv %tmp.21 :row;
         %tmp.23 = -1.0;
         %tmp.24 = lt %tmp.22 %tmp.23;
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_12_58_49_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_12_58_49_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_30_58_49_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 58 32 ]
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_12_46_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_12_46_49_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_30_46_49_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 46 32 ]
         %tmp.25 = lgetv %b.2;
-        symbol [ b %tmp.25 58 32 33 ];
+        symbol [ b %tmp.25 46 32 33 ];
         %tmp.26 = false;
-        symbol [ alive ? 58 34 39 ];
+        symbol [ alive ? 46 34 39 ];
         putv %tmp.25 :alive %tmp.26;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_30_58_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_12_58_49_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_58_12_58_49_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_48_59_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 54 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_30_46_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_12_46_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_46_12_46_49_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_49_47_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 42 ]
         %tmp.29 = lgetv %i.1;
-        symbol [ i %tmp.29 54 43 44 ];
+        symbol [ i %tmp.29 42 44 45 ];
         %tmp.30 = add %tmp.29 1;
         lputv %i.1 %tmp.30;
-        symbol [ i %i.1 54 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_54_8_59_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 60 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_end" ]
-        %j.3 = local;
-        symbol [ j %j.3 60 17 18 ];
-        %tmp.31 = 0;
-        lputv %j.3 %tmp.31;
-        symbol [ j %j.3 60 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_test:
-        %tmp.32 = lgetv %j.3;
-        symbol [ j %tmp.32 60 24 25 ];
-        symbol [ eShots %tmp.34 60 28 34 ];
-        %tmp.34 = getv ? :eShots;
-        symbol [ size %tmp.35 60 35 39 ];
-        %tmp.35 = getv function %tmp.34 :size;
-        %tmp.36 = invoke %tmp.34 %tmp.35();
-        %tmp.37 = lt %tmp.32 %tmp.36;
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_48_65_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 61 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_48_65_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_48_65_8_stop" ]
-        %b.4 = local;
-        symbol [ b %b.4 61 16 17 ];
-        symbol [ eShots %tmp.39 61 20 26 ];
-        %tmp.39 = getv ? :eShots;
-        %tmp.40 = lgetv %j.3;
-        symbol [ j %tmp.40 61 27 28 ];
-        %tmp.41 = agetv %tmp.39 %tmp.40;
-        lputv %b.4 %tmp.41;
-        symbol [ b %b.4 61 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 62 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_12_62_38_if_stmt:
-        %tmp.42 = lgetv %b.4;
-        symbol [ b %tmp.42 62 17 18 ];
-        symbol [ alive %tmp.43 62 19 24 ];
+        symbol [ i %i.1 42 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_42_8_47_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_41_20_54_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_41_20_54_4_stop" ]
+        %nb.3 = local;
+        symbol [ nb %nb.3 49 12 14 ];
+        %tmp.31 = newa 0;
+        lputv %nb.3 %tmp.31;
+        symbol [ nb %nb.3 49 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 50 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_end" ]
+        %j.4 = local;
+        symbol [ j %j.4 50 17 18 ];
+        %tmp.32 = 0;
+        lputv %j.4 %tmp.32;
+        symbol [ j %j.4 50 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_test:
+        %tmp.33 = lgetv %j.4;
+        symbol [ j %tmp.33 50 24 25 ];
+        symbol [ bullets %tmp.35 50 28 35 ];
+        %tmp.35 = getv ? :bullets;
+        symbol [ size %tmp.36 50 36 40 ];
+        %tmp.36 = getv function %tmp.35 :size;
+        %tmp.37 = invoke %tmp.35 %tmp.36();
+        %tmp.38 = lt %tmp.33 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_49_52_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 51 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_12_51_56_if_stmt:
+        symbol [ bullets %tmp.40 51 16 23 ];
+        %tmp.40 = getv ? :bullets;
+        %tmp.41 = lgetv %j.4;
+        symbol [ j %tmp.41 51 24 25 ];
+        %tmp.42 = agetv %tmp.40 %tmp.41;
+        symbol [ alive %tmp.43 51 27 32 ];
         %tmp.43 = getv %tmp.42 :alive;
-        %tmp.44 = not %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_12_62_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_12_62_38_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_26_62_38_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 62 28 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_26_62_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_12_62_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_62_12_62_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 63 12 ]
-        %tmp.45 = lgetv %b.4;
-        symbol [ b %tmp.45 63 12 13 ];
-        %tmp.46 = lgetv %b.4;
-        symbol [ b %tmp.46 63 20 21 ];
-        symbol [ row %tmp.47 63 22 25 ];
-        %tmp.47 = getv %tmp.46 :row;
-        symbol [ PI_E_BULLET_V %tmp.49 63 28 41 ];
-        %tmp.49 = getv ? :PI_E_BULLET_V;
-        %tmp.50 = add %tmp.47 %tmp.49;
-        symbol [ row ? 63 14 17 ];
-        putv %tmp.45 :row %tmp.50;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 64 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_12_64_64_if_stmt:
-        %tmp.51 = lgetv %b.4;
-        symbol [ b %tmp.51 64 16 17 ];
-        symbol [ row %tmp.52 64 18 21 ];
-        %tmp.52 = getv %tmp.51 :row;
-        symbol [ PI_BOARD_ROWS %tmp.54 64 24 37 ];
-        %tmp.54 = getv ? :PI_BOARD_ROWS;
-        %tmp.55 = 0.5;
-        %tmp.56 = add %tmp.54 %tmp.55;
-        %tmp.57 = gt %tmp.52 %tmp.56;
-        bf %tmp.57 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_12_64_64_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_12_64_64_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_45_64_64_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 64 47 ]
-        %tmp.58 = lgetv %b.4;
-        symbol [ b %tmp.58 64 47 48 ];
-        %tmp.59 = false;
-        symbol [ alive ? 64 49 54 ];
-        putv %tmp.58 :alive %tmp.59;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_45_64_64_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_12_64_64_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_64_12_64_64_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_48_65_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 60 ]
-        %tmp.62 = lgetv %j.3;
-        symbol [ j %tmp.62 60 43 44 ];
-        %tmp.63 = add %tmp.62 1;
-        lputv %j.3 %tmp.63;
-        symbol [ j %j.3 60 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_60_8_65_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 66 8 ]
-        %tmp.64 = self;
-        symbol [ _compact %tmp.65 66 8 16 ];
-        %tmp.65 = getv function %tmp.64 :_compact;
-        invoke %tmp.64 %tmp.65();
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_53_20_67_4_stop:
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_12_51_56_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_12_51_56_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_34_51_56_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 51 36 ]
+        %tmp.44 = lgetv %nb.3;
+        symbol [ nb %tmp.44 51 36 38 ];
+        symbol [ add %tmp.45 51 39 42 ];
+        %tmp.45 = getv function %tmp.44 :add;
+        symbol [ bullets %tmp.47 51 43 50 ];
+        %tmp.47 = getv ? :bullets;
+        %tmp.48 = lgetv %j.4;
+        symbol [ j %tmp.48 51 51 52 ];
+        %tmp.49 = agetv %tmp.47 %tmp.48;
+        invoke %tmp.44 %tmp.45(%tmp.49);
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_34_51_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_12_51_56_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_51_12_51_56_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_49_52_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 50 ]
+        %tmp.52 = lgetv %j.4;
+        symbol [ j %tmp.52 50 44 45 ];
+        %tmp.53 = add %tmp.52 1;
+        lputv %j.4 %tmp.53;
+        symbol [ j %j.4 50 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_50_8_52_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 53 8 ]
+        %tmp.54 = lgetv %nb.3;
+        symbol [ nb %tmp.54 53 18 20 ];
+        symbol [ bullets ? 53 8 15 ];
+        putv self :bullets %tmp.54;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_41_20_54_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 69; @symbol_functiondef = [_compact,69,20,28]; ]
-    protected
-    function _compact() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 70 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_stop" ]
-        %np.1 = local;
-        symbol [ np %np.1 70 12 14 ];
-        %tmp.1 = newa 0;
-        lputv %np.1 %tmp.1;
-        symbol [ np %np.1 70 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 71 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_end" ]
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 59; @symbol_functiondef = [collideAndKill,59,13,27]; @symbol_param<0> = [enemies,59,28,35]; ]
+    function collideAndKill(enemies) {
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_59_37_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_59_37_81_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_59_37_81_4_stop" ]
+        %killed.1 = local;
+        symbol [ killed %killed.1 60 12 18 ];
+        %tmp.1 = 0;
+        lputv %killed.1 %tmp.1;
+        symbol [ killed %killed.1 60 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 61 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 71 17 18 ];
+        symbol [ i %i.2 61 17 18 ];
         %tmp.2 = 0;
         lputv %i.2 %tmp.2;
-        symbol [ i %i.2 71 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_test:
+        symbol [ i %i.2 61 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_test:
         %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 71 24 25 ];
-        symbol [ pShots %tmp.5 71 28 34 ];
-        %tmp.5 = getv ? :pShots;
-        symbol [ size %tmp.6 71 35 39 ];
+        symbol [ i %tmp.3 61 24 25 ];
+        symbol [ bullets %tmp.5 61 28 35 ];
+        %tmp.5 = getv ? :bullets;
+        symbol [ size %tmp.6 61 36 40 ];
         %tmp.6 = getv function %tmp.5 :size;
         %tmp.7 = invoke %tmp.5 %tmp.6();
         %tmp.8 = lt %tmp.3 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_48_73_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 72 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_12_72_54_if_stmt:
-        symbol [ pShots %tmp.10 72 16 22 ];
-        %tmp.10 = getv ? :pShots;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 62 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 62 16 17 ];
+        symbol [ bullets %tmp.10 62 20 27 ];
+        %tmp.10 = getv ? :bullets;
         %tmp.11 = lgetv %i.2;
-        symbol [ i %tmp.11 72 23 24 ];
+        symbol [ i %tmp.11 62 28 29 ];
         %tmp.12 = agetv %tmp.10 %tmp.11;
-        symbol [ alive %tmp.13 72 26 31 ];
-        %tmp.13 = getv %tmp.12 :alive;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_12_72_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_12_72_54_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_33_72_54_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 72 35 ]
-        %tmp.14 = lgetv %np.1;
-        symbol [ np %tmp.14 72 35 37 ];
-        symbol [ add %tmp.15 72 38 41 ];
-        %tmp.15 = getv function %tmp.14 :add;
-        symbol [ pShots %tmp.17 72 42 48 ];
-        %tmp.17 = getv ? :pShots;
-        %tmp.18 = lgetv %i.2;
-        symbol [ i %tmp.18 72 49 50 ];
-        %tmp.19 = agetv %tmp.17 %tmp.18;
-        invoke %tmp.14 %tmp.15(%tmp.19);
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_33_72_54_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_12_72_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_72_12_72_54_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_48_73_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 71 ]
-        %tmp.22 = lgetv %i.2;
-        symbol [ i %tmp.22 71 43 44 ];
-        %tmp.23 = add %tmp.22 1;
-        lputv %i.2 %tmp.23;
-        symbol [ i %i.2 71 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_71_8_73_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 74 8 ]
-        %tmp.24 = lgetv %np.1;
-        symbol [ np %tmp.24 74 17 19 ];
-        symbol [ pShots ? 74 8 14 ];
-        putv self :pShots %tmp.24;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 75 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_stop" ]
-        %ne.3 = local;
-        symbol [ ne %ne.3 75 12 14 ];
-        %tmp.25 = newa 0;
-        lputv %ne.3 %tmp.25;
-        symbol [ ne %ne.3 75 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 76 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_end" ]
-        %j.4 = local;
-        symbol [ j %j.4 76 17 18 ];
-        %tmp.26 = 0;
-        lputv %j.4 %tmp.26;
-        symbol [ j %j.4 76 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_test:
-        %tmp.27 = lgetv %j.4;
-        symbol [ j %tmp.27 76 24 25 ];
-        symbol [ eShots %tmp.29 76 28 34 ];
-        %tmp.29 = getv ? :eShots;
-        symbol [ size %tmp.30 76 35 39 ];
-        %tmp.30 = getv function %tmp.29 :size;
-        %tmp.31 = invoke %tmp.29 %tmp.30();
-        %tmp.32 = lt %tmp.27 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_48_78_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 77 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_12_77_54_if_stmt:
-        symbol [ eShots %tmp.34 77 16 22 ];
-        %tmp.34 = getv ? :eShots;
-        %tmp.35 = lgetv %j.4;
-        symbol [ j %tmp.35 77 23 24 ];
+        lputv %b.3 %tmp.12;
+        symbol [ b %b.3 62 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 63 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_12_63_38_if_stmt:
+        %tmp.13 = lgetv %b.3;
+        symbol [ b %tmp.13 63 17 18 ];
+        symbol [ alive %tmp.14 63 19 24 ];
+        %tmp.14 = getv %tmp.13 :alive;
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_12_63_38_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_12_63_38_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_26_63_38_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 63 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_26_63_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_12_63_38_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_63_12_63_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 65 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_stop" ]
+        %bc.4 = local;
+        symbol [ bc %bc.4 65 16 18 ];
+        %tmp.16 = lgetv %b.3;
+        symbol [ b %tmp.16 65 22 23 ];
+        symbol [ col %tmp.17 65 24 27 ];
+        %tmp.17 = getv %tmp.16 :col;
+        %tmp.18 = 0.5;
+        %tmp.19 = add %tmp.17 %tmp.18;
+        symbol [ toNumber %tmp.20 65 35 43 ];
+        %tmp.20 = getv function %tmp.19 :toNumber;
+        %tmp.21 = invoke %tmp.19 %tmp.20();
+        lputv %bc.4 %tmp.21;
+        symbol [ bc %bc.4 65 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 66 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_stop" ]
+        %br.5 = local;
+        symbol [ br %br.5 66 16 18 ];
+        %tmp.22 = lgetv %b.3;
+        symbol [ b %tmp.22 66 22 23 ];
+        symbol [ row %tmp.23 66 24 27 ];
+        %tmp.23 = getv %tmp.22 :row;
+        %tmp.24 = 0.5;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        symbol [ toNumber %tmp.26 66 35 43 ];
+        %tmp.26 = getv function %tmp.25 :toNumber;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        lputv %br.5 %tmp.27;
+        symbol [ br %br.5 66 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 67 12 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_end" ]
+        %k.6 = local;
+        symbol [ k %k.6 67 21 22 ];
+        %tmp.28 = 0;
+        lputv %k.6 %tmp.28;
+        symbol [ k %k.6 67 21 22 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_test:
+        %tmp.29 = lgetv %k.6;
+        symbol [ k %tmp.29 67 28 29 ];
+        %tmp.30 = lgetv %enemies;
+        symbol [ enemies %tmp.30 67 32 39 ];
+        symbol [ size %tmp.31 67 40 44 ];
+        %tmp.31 = getv function %tmp.30 :size;
+        %tmp.32 = invoke %tmp.30 %tmp.31();
+        %tmp.33 = lt %tmp.29 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 68 16 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_stop" ]
+        %e.7 = local;
+        symbol [ e %e.7 68 20 21 ];
+        %tmp.34 = lgetv %enemies;
+        symbol [ enemies %tmp.34 68 24 31 ];
+        %tmp.35 = lgetv %k.6;
+        symbol [ k %tmp.35 68 32 33 ];
         %tmp.36 = agetv %tmp.34 %tmp.35;
-        symbol [ alive %tmp.37 77 26 31 ];
-        %tmp.37 = getv %tmp.36 :alive;
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_12_77_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_12_77_54_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_33_77_54_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 77 35 ]
-        %tmp.38 = lgetv %ne.3;
-        symbol [ ne %tmp.38 77 35 37 ];
-        symbol [ add %tmp.39 77 38 41 ];
-        %tmp.39 = getv function %tmp.38 :add;
-        symbol [ eShots %tmp.41 77 42 48 ];
-        %tmp.41 = getv ? :eShots;
-        %tmp.42 = lgetv %j.4;
-        symbol [ j %tmp.42 77 49 50 ];
-        %tmp.43 = agetv %tmp.41 %tmp.42;
-        invoke %tmp.38 %tmp.39(%tmp.43);
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_33_77_54_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_12_77_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_77_12_77_54_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_48_78_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 76 ]
-        %tmp.46 = lgetv %j.4;
-        symbol [ j %tmp.46 76 43 44 ];
-        %tmp.47 = add %tmp.46 1;
-        lputv %j.4 %tmp.47;
-        symbol [ j %j.4 76 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_76_8_78_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc" 79 8 ]
-        %tmp.48 = lgetv %ne.3;
-        symbol [ ne %tmp.48 79 17 19 ];
-        symbol [ eShots ? 79 8 14 ];
-        putv self :eShots %tmp.48;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_ProjectileSystem_mc_69_31_80_4_stop:
+        lputv %e.7 %tmp.36;
+        symbol [ e %e.7 68 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 69 16 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_16_69_51_if_stmt:
+        %tmp.37 = lgetv %e.7;
+        symbol [ e %tmp.37 69 20 21 ];
+        symbol [ state %tmp.38 69 22 27 ];
+        %tmp.38 = getv %tmp.37 :state;
+        symbol [ E_DEAD %tmp.40 69 31 37 ];
+        %tmp.40 = getv ? :E_DEAD;
+        %tmp.41 = eq %tmp.38 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_16_69_51_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_16_69_51_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_39_69_51_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 69 41 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_39_69_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_16_69_51_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_69_16_69_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 70 16 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_stop" ]
+        %ec.8 = local;
+        symbol [ ec %ec.8 70 20 22 ];
+        %tmp.42 = lgetv %e.7;
+        symbol [ e %tmp.42 70 25 26 ];
+        symbol [ intCol %tmp.43 70 27 33 ];
+        %tmp.43 = getv function %tmp.42 :intCol;
+        %tmp.44 = invoke %tmp.42 %tmp.43();
+        lputv %ec.8 %tmp.44;
+        symbol [ ec %ec.8 70 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 71 16 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_start" "_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_stop" ]
+        %er.9 = local;
+        symbol [ er %er.9 71 20 22 ];
+        %tmp.45 = lgetv %e.7;
+        symbol [ e %tmp.45 71 25 26 ];
+        symbol [ intRow %tmp.46 71 27 33 ];
+        %tmp.46 = getv function %tmp.45 :intRow;
+        %tmp.47 = invoke %tmp.45 %tmp.46();
+        lputv %er.9 %tmp.47;
+        symbol [ er %er.9 71 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 72 16 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_stmt:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_20_72_38_begin:
+        %tmp.48 = lgetv %ec.8;
+        symbol [ ec %tmp.48 72 20 22 ];
+        %tmp.49 = lgetv %bc.4;
+        symbol [ bc %tmp.49 72 26 28 ];
+        %tmp.50 = eq %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_32_72_38_true:
+        %tmp.51 = lgetv %er.9;
+        symbol [ er %tmp.51 72 32 34 ];
+        %tmp.52 = lgetv %br.5;
+        symbol [ br %tmp.52 72 38 40 ];
+        %tmp.53 = eq %tmp.51 %tmp.52;
+        push %tmp.53;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_32_72_38_end:
+        %tmp.54 = phi [%tmp.50 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_20_72_38_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_32_72_38_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_32_72_38_end];
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_42_77_16_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 73 20 ]
+        %tmp.55 = lgetv %e.7;
+        symbol [ e %tmp.55 73 20 21 ];
+        symbol [ E_DEAD %tmp.57 73 30 36 ];
+        %tmp.57 = getv ? :E_DEAD;
+        symbol [ state ? 73 22 27 ];
+        putv %tmp.55 :state %tmp.57;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 74 20 ]
+        %tmp.58 = lgetv %b.3;
+        symbol [ b %tmp.58 74 20 21 ];
+        %tmp.59 = false;
+        symbol [ alive ? 74 22 27 ];
+        putv %tmp.58 :alive %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 75 20 ]
+        %tmp.60 = lgetv %killed.1;
+        symbol [ killed %tmp.60 75 29 35 ];
+        %tmp.61 = 1;
+        %tmp.62 = add %tmp.60 %tmp.61;
+        lputv %killed.1 %tmp.62;
+        symbol [ killed %killed.1 75 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 76 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_42_77_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_72_16_77_16_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_53_78_12_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 67 ]
+        %tmp.65 = lgetv %k.6;
+        symbol [ k %tmp.65 67 48 49 ];
+        %tmp.66 = add %tmp.65 1;
+        lputv %k.6 %tmp.66;
+        symbol [ k %k.6 67 48 49 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_67_12_78_12_for_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_49_79_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 61 ]
+        %tmp.69 = lgetv %i.2;
+        symbol [ i %tmp.69 61 44 45 ];
+        %tmp.70 = add %tmp.69 1;
+        lputv %i.2 %tmp.70;
+        symbol [ i %i.2 61 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_61_8_79_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc" 80 8 ]
+        %tmp.71 = lgetv %killed.1;
+        symbol [ killed %tmp.71 80 15 21 ];
+        ret %tmp.71;
+_Users_kkorolczuk_work_garmin_starswarm_source_ProjectileSystem_mc_59_37_81_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/ProjectileSystem.mc"; @line = 19; ]
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/ProjectileSystem.mc"; @line = 18; ]
 <init> {
 }

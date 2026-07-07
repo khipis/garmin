@@ -371,6 +371,45 @@ class BitochiChessView extends WatchUi.View {
         return false;
     }
 
+    // Board square size in px — the input layer derives its swipe threshold
+    // from this so the same physical flick reads correctly on every watch.
+    function cellSize() { return _sq; }
+
+    // Flick-to-move: with a piece already selected, a swipe picks the legal
+    // destination whose on-screen direction best matches the flick and plays
+    // it. Direction is judged in SCREEN space, so it stays correct for both
+    // board orientations (white or black at the bottom). Taps remain the
+    // primary way to pick an exact target; this is the quick gesture that
+    // mirrors gemmatch's swipe-the-selected-piece feel.
+    function flickMove(dx, dy) {
+        if (_gs != CS_PLAY) { return; }
+        if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
+        if (_selSq < 0 || _legalMoves.size() == 0) { return; }
+        var mag = Math.sqrt(dx * dx + dy * dy);
+        if (mag < 1) { return; }
+        var ndx = dx / mag; var ndy = dy / mag;
+        var s0  = sqToScreen(_selSq);
+        var sx0 = s0[0] + _sq / 2.0; var sy0 = s0[1] + _sq / 2.0;
+        var bestIdx = -1; var bestAlign = -2.0; var bestDist = 0.0;
+        for (var i = 0; i < _legalMoves.size(); i++) {
+            var t  = sqToScreen(_legalMoves[i][1]);
+            var vx = (t[0] + _sq / 2.0) - sx0;
+            var vy = (t[1] + _sq / 2.0) - sy0;
+            var vm = Math.sqrt(vx * vx + vy * vy);
+            if (vm < 1) { continue; }
+            var align = (vx * ndx + vy * ndy) / vm;   // cos angle, [-1..1]
+            var better = false;
+            if (align > bestAlign + 0.05) { better = true; }
+            else if (align > bestAlign - 0.05 && bestIdx >= 0 && vm < bestDist) { better = true; }
+            if (better) { bestAlign = align; bestDist = vm; bestIdx = i; }
+        }
+        // Require the flick to point roughly at the target (within ~70°).
+        if (bestIdx >= 0 && bestAlign >= 0.35) {
+            _curSq = _legalMoves[bestIdx][1];
+            executeMove(_legalMoves[bestIdx]);
+        }
+    }
+
     hidden function handleSquare(sq) {
         if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
         var piece = _board[sq];
@@ -2160,16 +2199,7 @@ class BitochiChessView extends WatchUi.View {
     }
 
     hidden function drawEndOverlay(dc, title, sub) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w / 2 - 70, _h / 2 - 30, 140, 60, 8);
-        dc.setColor(0xAA7733, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w / 2 - 70, _h / 2 - 30, 140, 60, 8);
-        dc.setColor(0xFFDD55, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h / 2 - 26, Graphics.FONT_XTINY, title, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h / 2 - 10, Graphics.FONT_XTINY, sub, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_tick % 8 < 5) {
-            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h / 2 + 12, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        GameOverCard.draw(dc, _w, _h, title, 0xFFDD55,
+                          [ [sub, 0xFFDD55] ], "Tap for menu", 0xAA7733);
     }
 }

@@ -220,29 +220,11 @@ class UIManager {
 
     // ── Result overlay ─────────────────────────────────────────
     static function drawResult(dc, sw, sh, ctrl) {
-        var bw = sw * 72 / 100; if (bw < 160) { bw = 160; }
-        var bh = sh * 44 / 100; if (bh < 120) { bh = 120; }
-        var bx = (sw - bw) / 2;
-        var by = (sh - bh) / 2;
-        var cx = sw / 2;
-        dc.setColor(0x000510, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 38, Graphics.FONT_XTINY,
-                    "Score " + ctrl.score.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 56, Graphics.FONT_XTINY,
-                    "Wave  " + ctrl.wave.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 74, Graphics.FONT_XTINY,
-                    "Best  " + ctrl.bestScore.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap = menu", Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [
+            ["Score " + ctrl.score.format("%d"), 0xFFFFFF],
+            ["Wave  " + ctrl.wave.format("%d"), 0xFFFFFF],
+            ["Best  " + ctrl.bestScore.format("%d"), 0xFFFFFF]
+        ];
+        GameOverCard.draw(dc, sw, sh, "GAME OVER", 0xFF4466, lines, "Tap = menu", 0xFF4466);
     }
 }

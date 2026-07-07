@@ -269,35 +269,14 @@ class MainView extends WatchUi.View {
     }
 
     hidden function _drawOver(dc) {
-        var bw = _ctrl.screenW * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = _ctrl.screenH * 38 / 100; if (bh < 110) { bh = 110; }
-        var bx = (_ctrl.screenW - bw) / 2;
-        var by = (_ctrl.screenH - bh) / 2;
-        dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        var cx = _ctrl.screenW / 2;
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Score " + _ctrl.score.format("%d"),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var lines = [ ["Score " + _ctrl.score.format("%d"), 0xFFFFFF] ];
         if (_ctrl.score > 0 && _ctrl.score == _ctrl.hi) {
-            dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 48, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0x44FF66]);
         } else if (_ctrl.hi > 0) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 48, Graphics.FONT_XTINY,
-                        "Best " + _ctrl.hi.format("%d"),
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["Best " + _ctrl.hi.format("%d"), 0xFFCC22]);
         }
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _ctrl.screenW, _ctrl.screenH,
+                          "GAME OVER", 0xFF4466, lines, "Tap to retry", 0xFF4466);
     }
 
     // ── Input intents ──────────────────────────────────────────────

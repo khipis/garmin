@@ -684,36 +684,15 @@ class GameView extends WatchUi.View {
 
     // ── game-over screen ──────────────────────────────────────────────────
     hidden function _drawOver(dc) {
-        var bw = _sw * 42 / 100;
-        var bh = _sh * 24 / 100;
-        if (bw < 112) { bw = 112; }
-        if (bh < 78)  { bh = 78; }
-        var bx = _cx - bw / 2;
-        var by = _sh * 33 / 100;
-
-        dc.setColor(0x07070f, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0x1a1a3a, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-
-        dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, by + 5, Graphics.FONT_XTINY, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x888899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, by + 21, Graphics.FONT_XTINY,
-            _score.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
-
+        var lines = [
+            [_score.format("%05d"), 0x888899]
+        ];
         if (_score >= _hiScore && _hiScore > 0) {
-            dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, by + 37, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0xFFCC00]);
         } else if (_hiScore > 0) {
-            dc.setColor(0x2a2a44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, by + 37, Graphics.FONT_XTINY,
-                "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["best " + _hiScore.format("%05d"), 0x2a2a44]);
         }
-
-        dc.setColor(0x1a1a33, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, by + bh - 13, Graphics.FONT_XTINY,
-            "any key to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _sw, _sh, "GAME OVER", 0xCC2222, lines, "any key to retry", 0x1a1a3a);
     }
 
     // ── overlays ──────────────────────────────────────────────────────────

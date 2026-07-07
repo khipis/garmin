@@ -1579,26 +1579,24 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawWin(dc) {
-        var bw = _w * 82 / 100; var bh = _h * 50 / 100; var bx = (_w - bw) / 2; var by = _h * 18 / 100;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, bw, bh);
-        dc.setColor(0x225533, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, bw, bh);
         var victoryLine;
         if (_twoPlayer) {
             if (_winnerPlayer == 0)      { victoryLine = "P1 WINS!"; }
             else if (_winnerPlayer == 1) { victoryLine = "P2 WINS!"; }
             else                         { victoryLine = "VICTORY!"; }
         } else { victoryLine = "VICTORY!"; }
-        dc.setColor((_resultTick % 6 < 3) ? 0x44FF44 : 0x22DD22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, victoryLine, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 35 / 100, Graphics.FONT_XTINY, "Streak: " + _round + "  Kills: " + _kills, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 48 / 100, Graphics.FONT_XTINY, "Best: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_roundGold > 0) { dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 60 / 100, Graphics.FONT_XTINY, "+" + _roundGold + " gold", Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_newBest) { dc.setColor((_resultTick % 4 < 2) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 70 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
+        var lines = [
+            ["Streak: " + _round + "  Kills: " + _kills, 0xFFCC44],
+            ["Best: " + _bestStreak, 0xAABBCC]
+        ];
+        if (_roundGold > 0) { lines.add(["+" + _roundGold + " gold", 0xFFDD44]); }
+        if (_newBest) { lines.add(["NEW BEST!", 0xFFDD44]); }
+        var footer = "";
         if (_resultTick > 30) {
             var canShop = !(_shopOwned[0] && _shopOwned[1] && _shopOwned[2]);
-            var hint = canShop ? "Tap to visit ARMORY" : "Tap for next round";
-            dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 82 / 100, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
+            footer = canShop ? "Tap to visit ARMORY" : "Tap for next round";
         }
+        GameOverCard.draw(dc, _w, _h, victoryLine, 0x44FF44, lines, footer, 0x225533);
     }
 
     // ARMORY — shown after clearing a round (if anything is still unowned).
@@ -1667,16 +1665,14 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawGameOver(dc) {
-        var bw = _w * 82 / 100; var bh = _h * 52 / 100; var bx = (_w - bw) / 2; var by = _h * 18 / 100;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, bw, bh);
-        dc.setColor(0x553322, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, bw, bh);
-        dc.setColor((_resultTick % 6 < 3) ? 0xFF4444 : 0xCC2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, "DEFEATED", Graphics.TEXT_JUSTIFY_CENTER);
         var surv = _round - 1; if (surv < 0) { surv = 0; }
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 32 / 100, Graphics.FONT_XTINY, "Rounds: " + surv + "  Kills: " + _kills, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 45 / 100, Graphics.FONT_XTINY, "Best streak: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_newBest && surv > 0) { dc.setColor((_resultTick % 4 < 2) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 57 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_resultTick > 30) { dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 75 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER); }
+        var lines = [
+            ["Rounds: " + surv + "  Kills: " + _kills, 0xFFFFFF],
+            ["Best streak: " + _bestStreak, 0xFFCC44]
+        ];
+        if (_newBest && surv > 0) { lines.add(["NEW BEST!", 0xFFDD44]); }
+        var footer = (_resultTick > 30) ? "Tap to retry" : "";
+        GameOverCard.draw(dc, _w, _h, "DEFEATED", 0xFF4444, lines, footer, 0x553322);
     }
 
     // Space-aware menu geometry — three rows (1P / 2P / LEADERBOARD) sit

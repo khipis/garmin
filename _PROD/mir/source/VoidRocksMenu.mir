@@ -1,0 +1,584 @@
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 13; @symbol_classdef = [VoidRocksHooks,13,6,20]; @symbol_extends<0> = [GameHooks,13,29,38]; ]
+class VoidRocksHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 16; @symbol_functiondef = [startGame,16,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_16_33_19_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 17 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_16_33_19_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_16_33_19_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 17 12 13 ];
+        symbol [ MainView %tmp.4 17 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 17 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 18 8 ]
+        symbol [ WatchUi %tmp.5 18 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 18 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 18 25 26 ];
+        symbol [ InputHandler %tmp.11 18 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 18 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 18 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 18 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_16_33_19_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 22; @symbol_functiondef = [drawArt,22,13,20]; @symbol_param<0> = [dc,22,21,23]; @symbol_param<1> = [cx,22,25,27]; @symbol_param<2> = [cy,22,29,31]; @symbol_param<3> = [w,22,33,34]; @symbol_param<4> = [h,22,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_22_47_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 24 8 10 ];
+        symbol [ setColor %tmp.2 24 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x8899AA;
+        symbol [ Graphics %tmp.4 24 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 24 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 25 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 25 8 10 ];
+        symbol [ fillCircle %tmp.7 25 11 21 ];
+        %tmp.7 = getv function %tmp.6 :fillCircle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 25 22 24 ];
+        %tmp.9 = 10;
+        %tmp.10 = add %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 25 31 33 ];
+        %tmp.12 = 2;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = 7;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 26 8 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 26 8 10 ];
+        symbol [ setColor %tmp.16 26 11 19 ];
+        %tmp.16 = getv function %tmp.15 :setColor;
+        %tmp.17 = 0x66778A;
+        symbol [ Graphics %tmp.18 26 30 38 ];
+        %tmp.18 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.19 26 39 56 ];
+        %tmp.19 = getv %tmp.18 :COLOR_TRANSPARENT;
+        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.19);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 27 8 ]
+        %tmp.20 = lgetv %dc;
+        symbol [ dc %tmp.20 27 8 10 ];
+        symbol [ fillCircle %tmp.21 27 11 21 ];
+        %tmp.21 = getv function %tmp.20 :fillCircle;
+        %tmp.22 = lgetv %cx;
+        symbol [ cx %tmp.22 27 22 24 ];
+        %tmp.23 = 12;
+        %tmp.24 = add %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %cy;
+        symbol [ cy %tmp.25 27 31 33 ];
+        %tmp.26 = 2;
+        invoke %tmp.20 %tmp.21(%tmp.24, %tmp.25, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 28 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 28 8 10 ];
+        symbol [ fillCircle %tmp.28 28 11 21 ];
+        %tmp.28 = getv function %tmp.27 :fillCircle;
+        %tmp.29 = lgetv %cx;
+        symbol [ cx %tmp.29 28 22 24 ];
+        %tmp.30 = 8;
+        %tmp.31 = add %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %cy;
+        symbol [ cy %tmp.32 28 31 33 ];
+        %tmp.33 = 5;
+        %tmp.34 = add %tmp.32 %tmp.33;
+        %tmp.35 = 2;
+        invoke %tmp.27 %tmp.28(%tmp.31, %tmp.34, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 30 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 30 8 10 ];
+        symbol [ setColor %tmp.37 30 11 19 ];
+        %tmp.37 = getv function %tmp.36 :setColor;
+        %tmp.38 = 0x66CCFF;
+        symbol [ Graphics %tmp.39 30 30 38 ];
+        %tmp.39 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.40 30 39 56 ];
+        %tmp.40 = getv %tmp.39 :COLOR_TRANSPARENT;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 31 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 31 8 10 ];
+        symbol [ fillPolygon %tmp.42 31 11 22 ];
+        %tmp.42 = getv function %tmp.41 :fillPolygon;
+        %tmp.43 = newa 3;
+        %tmp.44 = newa 2;
+        %tmp.45 = lgetv %cx;
+        symbol [ cx %tmp.45 31 25 27 ];
+        %tmp.46 = 6;
+        %tmp.47 = sub %tmp.45 %tmp.46;
+        %tmp.48 = dup %tmp.44;
+        %tmp.49 = aputv %tmp.48 0 %tmp.47;
+        %tmp.50 = lgetv %cy;
+        symbol [ cy %tmp.50 31 33 35 ];
+        %tmp.51 = 9;
+        %tmp.52 = sub %tmp.50 %tmp.51;
+        %tmp.53 = dup %tmp.49;
+        %tmp.54 = aputv %tmp.53 1 %tmp.52;
+        %tmp.55 = dup %tmp.43;
+        %tmp.56 = aputv %tmp.55 0 %tmp.54;
+        %tmp.57 = newa 2;
+        %tmp.58 = lgetv %cx;
+        symbol [ cx %tmp.58 31 43 45 ];
+        %tmp.59 = 12;
+        %tmp.60 = sub %tmp.58 %tmp.59;
+        %tmp.61 = dup %tmp.57;
+        %tmp.62 = aputv %tmp.61 0 %tmp.60;
+        %tmp.63 = lgetv %cy;
+        symbol [ cy %tmp.63 31 52 54 ];
+        %tmp.64 = 8;
+        %tmp.65 = add %tmp.63 %tmp.64;
+        %tmp.66 = dup %tmp.62;
+        %tmp.67 = aputv %tmp.66 1 %tmp.65;
+        %tmp.68 = dup %tmp.56;
+        %tmp.69 = aputv %tmp.68 1 %tmp.67;
+        %tmp.70 = newa 2;
+        %tmp.71 = lgetv %cx;
+        symbol [ cx %tmp.71 31 62 64 ];
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 0 %tmp.71;
+        %tmp.74 = lgetv %cy;
+        symbol [ cy %tmp.74 31 66 68 ];
+        %tmp.75 = 8;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = dup %tmp.73;
+        %tmp.78 = aputv %tmp.77 1 %tmp.76;
+        %tmp.79 = dup %tmp.69;
+        %tmp.80 = aputv %tmp.79 2 %tmp.78;
+        invoke %tmp.41 %tmp.42(%tmp.80);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 33 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 33 8 10 ];
+        symbol [ setColor %tmp.82 33 11 19 ];
+        %tmp.82 = getv function %tmp.81 :setColor;
+        %tmp.83 = 0xFFEE66;
+        symbol [ Graphics %tmp.84 33 30 38 ];
+        %tmp.84 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.85 33 39 56 ];
+        %tmp.85 = getv %tmp.84 :COLOR_TRANSPARENT;
+        invoke %tmp.81 %tmp.82(%tmp.83, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 34 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 34 8 10 ];
+        symbol [ fillCircle %tmp.87 34 11 21 ];
+        %tmp.87 = getv function %tmp.86 :fillCircle;
+        %tmp.88 = lgetv %cx;
+        symbol [ cx %tmp.88 34 22 24 ];
+        %tmp.89 = 2;
+        %tmp.90 = add %tmp.88 %tmp.89;
+        %tmp.91 = lgetv %cy;
+        symbol [ cy %tmp.91 34 30 32 ];
+        %tmp.92 = 4;
+        %tmp.93 = sub %tmp.91 %tmp.92;
+        %tmp.94 = 1;
+        invoke %tmp.86 %tmp.87(%tmp.90, %tmp.93, %tmp.94);
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_22_47_35_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 39; @symbol_functiondef = [lbVariant,39,13,22]; @symbol_return<0> = [Lang,39,28,32]; @symbol_return<1> = [String,39,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_39_40_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_39_40_48_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_39_40_48_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 40 12 13 ];
+        symbol [ VR_DIFF_NORMAL %tmp.2 40 16 30 ];
+        %tmp.2 = getv ? :VR_DIFF_NORMAL;
+        lputv %d.1 %tmp.2;
+        symbol [ d %d.1 40 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 41 8 ]
+        try @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_beginTry @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_endTry @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_catch @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_beginTry:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_12_44_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 42 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_12_44_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_12_44_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 42 16 17 ];
+        symbol [ Application %tmp.3 42 20 31 ];
+        %tmp.3 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.4 42 32 39 ];
+        %tmp.4 = getv %tmp.3 :Storage;
+        symbol [ getValue %tmp.5 42 40 48 ];
+        %tmp.5 = getv function %tmp.4 :getValue;
+        symbol [ VR_DIFF_KEY %tmp.7 42 49 60 ];
+        %tmp.7 = getv ? :VR_DIFF_KEY;
+        %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.7);
+        lputv %v.2 %tmp.8;
+        symbol [ v %v.2 42 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_stmt:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_16_43_59_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_16_43_49_begin:
+        %tmp.9 = lgetv %v.2;
+        symbol [ v %tmp.9 43 16 17 ];
+        symbol [ Lang %tmp.10 43 29 33 ];
+        %tmp.10 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.11 43 34 40 ];
+        %tmp.11 = getv %tmp.10 :Number;
+        %tmp.12 = isa %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_44_43_49_true:
+        %tmp.13 = lgetv %v.2;
+        symbol [ v %tmp.13 43 44 45 ];
+        %tmp.14 = as %tmp.13 { (Lang.Number) };
+        %tmp.15 = 0;
+        %tmp.16 = gte %tmp.14 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_44_43_49_end:
+        %tmp.17 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_16_43_49_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_44_43_49_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_44_43_49_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_54_43_59_true:
+        %tmp.18 = lgetv %v.2;
+        symbol [ v %tmp.18 43 54 55 ];
+        %tmp.19 = as %tmp.18 { (Lang.Number) };
+        %tmp.20 = 2;
+        %tmp.21 = lte %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_54_43_59_end:
+        %tmp.22 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_16_43_59_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_54_43_59_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_54_43_59_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_62_43_71_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 43 64 ]
+        %tmp.23 = lgetv %v.2;
+        symbol [ v %tmp.23 43 68 69 ];
+        %tmp.24 = as %tmp.23 { (Lang.Number) };
+        lputv %d.1 %tmp.24;
+        symbol [ d %d.1 43 64 65 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_62_43_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_43_12_43_71_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_12_44_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_catch:
+        %tmp.25 = exception;
+        push %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 44 10 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_catch" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_44_10_44_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 44 17 18 ];
+        %tmp.26 = dup %tmp.25;
+        lputv %e.3 %tmp.26;
+        symbol [ e %e.3 44 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_44_10_44_21_end:
+        try @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_catch @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_44_10_44_21_end @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_44_10_44_21_end @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally;
+        throw %tmp.25;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_41_8_44_21_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_8_45_52_if_stmt:
+        %tmp.27 = lgetv %d.1;
+        symbol [ d %tmp.27 45 12 13 ];
+        symbol [ VR_DIFF_EASY %tmp.29 45 17 29 ];
+        %tmp.29 = getv ? :VR_DIFF_EASY;
+        %tmp.30 = eq %tmp.27 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_8_45_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_8_45_52_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_33_45_52_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 45 35 ]
+        %tmp.31 = "Easy";
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_33_45_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_8_45_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_45_8_45_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_8_46_52_if_stmt:
+        %tmp.32 = lgetv %d.1;
+        symbol [ d %tmp.32 46 12 13 ];
+        symbol [ VR_DIFF_NORMAL %tmp.34 46 17 31 ];
+        %tmp.34 = getv ? :VR_DIFF_NORMAL;
+        %tmp.35 = eq %tmp.32 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_8_46_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_8_46_52_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_33_46_52_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 46 35 ]
+        %tmp.36 = "Normal";
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_33_46_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_8_46_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_46_8_46_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 47 8 ]
+        %tmp.37 = "Hard";
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_39_40_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 51; @symbol_functiondef = [footerText,51,13,23]; @symbol_return<0> = [Lang,51,29,33]; @symbol_return<1> = [String,51,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_51_49_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 52 8 ]
+        try @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_beginTry @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_endTry @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_catch @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_beginTry:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_12_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 53 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_12_55_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_12_55_8_stop" ]
+        %b.1 = local;
+        symbol [ b %b.1 53 16 17 ];
+        symbol [ Application %tmp.1 53 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 53 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 53 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        symbol [ VR_BEST_KEY %tmp.5 53 49 60 ];
+        %tmp.5 = getv ? :VR_BEST_KEY;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %b.1 %tmp.6;
+        symbol [ b %b.1 53 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_stmt:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_16_54_48_begin:
+        %tmp.7 = lgetv %b.1;
+        symbol [ b %tmp.7 54 16 17 ];
+        symbol [ Lang %tmp.8 54 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 54 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_44_54_48_true:
+        %tmp.11 = lgetv %b.1;
+        symbol [ b %tmp.11 54 44 45 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        %tmp.13 = 0;
+        %tmp.14 = gt %tmp.12 %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_44_54_48_end:
+        %tmp.15 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_16_54_48_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_44_54_48_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_44_54_48_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_51_54_84_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 54 53 ]
+        %tmp.16 = "BEST ";
+        %tmp.17 = lgetv %b.1;
+        symbol [ b %tmp.17 54 70 71 ];
+        %tmp.18 = as %tmp.17 { (Lang.Number) };
+        symbol [ toString %tmp.19 54 72 80 ];
+        %tmp.19 = getv function %tmp.18 :toString;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = add %tmp.16 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_51_54_84_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_54_12_54_84_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_12_55_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 55 10 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_catch" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_55_10_55_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 55 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 55 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_55_10_55_21_end:
+        try @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_catch @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_55_10_55_21_end @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_55_10_55_21_end @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_52_8_55_21_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 56 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_51_49_57_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 60; @symbol_functiondef = [buildVoidRocksMenu,60,9,27]; @symbol_return<0> = [Lang,60,33,37]; @symbol_return<1> = [Array,60,38,43]; ]
+function buildVoidRocksMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 61 4 ]
+    [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 61 8 11 ];
+    symbol [ MenuConfig %tmp.4 61 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 62 9 15 const ];
+    symbol [ VR_LB_GAME_ID %tmp.9 62 20 33 ];
+    %tmp.9 = getv ? :VR_LB_GAME_ID;
+    %tmp.10 = dup %tmp.5;
+    %tmp.11 = aputv %tmp.10 %tmp.7 %tmp.9;
+    %tmp.13 = const :title1;
+    symbol [ title1 %tmp.13 63 9 15 const ];
+    %tmp.14 = "VOID";
+    %tmp.15 = dup %tmp.11;
+    %tmp.16 = aputv %tmp.15 %tmp.13 %tmp.14;
+    %tmp.18 = const :title2;
+    symbol [ title2 %tmp.18 64 9 15 const ];
+    %tmp.19 = "ROCKS";
+    %tmp.20 = dup %tmp.16;
+    %tmp.21 = aputv %tmp.20 %tmp.18 %tmp.19;
+    %tmp.23 = const :col1;
+    symbol [ col1 %tmp.23 65 9 13 const ];
+    %tmp.24 = 0x99DDFF;
+    %tmp.25 = dup %tmp.21;
+    %tmp.26 = aputv %tmp.25 %tmp.23 %tmp.24;
+    %tmp.28 = const :col2;
+    symbol [ col2 %tmp.28 66 9 13 const ];
+    %tmp.29 = 0xFFAA22;
+    %tmp.30 = dup %tmp.26;
+    %tmp.31 = aputv %tmp.30 %tmp.28 %tmp.29;
+    %tmp.33 = const :bg;
+    symbol [ bg %tmp.33 67 9 11 const ];
+    %tmp.34 = 0x000510;
+    %tmp.35 = dup %tmp.31;
+    %tmp.36 = aputv %tmp.35 %tmp.33 %tmp.34;
+    %tmp.38 = const :circle;
+    symbol [ circle %tmp.38 68 9 15 const ];
+    %tmp.39 = 0x081025;
+    %tmp.40 = dup %tmp.36;
+    %tmp.41 = aputv %tmp.40 %tmp.38 %tmp.39;
+    %tmp.43 = const :accent;
+    symbol [ accent %tmp.43 69 9 15 const ];
+    %tmp.44 = 0xFFEE66;
+    %tmp.45 = dup %tmp.41;
+    %tmp.46 = aputv %tmp.45 %tmp.43 %tmp.44;
+    %tmp.48 = const :lbTitle;
+    symbol [ lbTitle %tmp.48 70 9 16 const ];
+    %tmp.49 = "VOID ROCKS";
+    %tmp.50 = dup %tmp.46;
+    %tmp.51 = aputv %tmp.50 %tmp.48 %tmp.49;
+    %tmp.53 = const :hooks;
+    symbol [ hooks %tmp.53 71 9 14 const ];
+    symbol [ VoidRocksHooks %tmp.57 71 24 38 ];
+    %tmp.57 = getv ? :VoidRocksHooks;
+    %tmp.54 = newc %tmp.57 ();
+    %tmp.58 = dup %tmp.51;
+    %tmp.59 = aputv %tmp.58 %tmp.53 %tmp.54;
+    %tmp.61 = const :options;
+    symbol [ options %tmp.61 72 9 16 const ];
+    %tmp.62 = newa 2;
+    symbol [ GmOption %tmp.66 73 16 24 ];
+    %tmp.66 = getv ? :GmOption;
+    symbol [ VR_DIFF_KEY %tmp.68 73 25 36 ];
+    %tmp.68 = getv ? :VR_DIFF_KEY;
+    %tmp.69 = "Difficulty";
+    %tmp.70 = newa 3;
+    %tmp.71 = "EASY";
+    %tmp.72 = dup %tmp.70;
+    %tmp.73 = aputv %tmp.72 0 %tmp.71;
+    %tmp.74 = "NORMAL";
+    %tmp.75 = dup %tmp.73;
+    %tmp.76 = aputv %tmp.75 1 %tmp.74;
+    %tmp.77 = "HARD";
+    %tmp.78 = dup %tmp.76;
+    %tmp.79 = aputv %tmp.78 2 %tmp.77;
+    %tmp.80 = 1;
+    %tmp.63 = newc %tmp.66 (%tmp.68, %tmp.69, %tmp.79, %tmp.80);
+    %tmp.81 = dup %tmp.62;
+    %tmp.82 = aputv %tmp.81 0 %tmp.63;
+    symbol [ GmOption %tmp.86 74 16 24 ];
+    %tmp.86 = getv ? :GmOption;
+    symbol [ VR_LIVES_KEY %tmp.88 74 25 37 ];
+    %tmp.88 = getv ? :VR_LIVES_KEY;
+    %tmp.89 = "Lives";
+    %tmp.90 = newa 5;
+    %tmp.91 = "1";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 0 %tmp.91;
+    %tmp.94 = "2";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 1 %tmp.94;
+    %tmp.97 = "3";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 2 %tmp.97;
+    %tmp.100 = "4";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 3 %tmp.100;
+    %tmp.103 = "5";
+    %tmp.104 = dup %tmp.102;
+    %tmp.105 = aputv %tmp.104 4 %tmp.103;
+    %tmp.106 = 2;
+    %tmp.83 = newc %tmp.86 (%tmp.88, %tmp.89, %tmp.105, %tmp.106);
+    %tmp.107 = dup %tmp.82;
+    %tmp.108 = aputv %tmp.107 1 %tmp.83;
+    %tmp.109 = dup %tmp.59;
+    %tmp.110 = aputv %tmp.109 %tmp.61 %tmp.108;
+    %tmp.1 = newc %tmp.4 (%tmp.110);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 61 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 77 4 ]
+    [ "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 77 8 9 ];
+    symbol [ GameMenuView %tmp.114 77 16 28 ];
+    %tmp.114 = getv ? :GameMenuView;
+    %tmp.115 = lgetv %cfg.1;
+    symbol [ cfg %tmp.115 77 29 32 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    lputv %v.2 %tmp.111;
+    symbol [ v %v.2 77 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc" 78 4 ]
+    %tmp.116 = newa 2;
+    %tmp.117 = lgetv %v.2;
+    symbol [ v %tmp.117 78 12 13 ];
+    %tmp.118 = dup %tmp.116;
+    %tmp.119 = aputv %tmp.118 0 %tmp.117;
+    symbol [ GameMenuDelegate %tmp.123 78 19 35 ];
+    %tmp.123 = getv ? :GameMenuDelegate;
+    %tmp.124 = lgetv %v.2;
+    symbol [ v %tmp.124 78 36 37 ];
+    %tmp.120 = newc %tmp.123 (%tmp.124);
+    %tmp.125 = dup %tmp.119;
+    %tmp.126 = aputv %tmp.125 1 %tmp.120;
+    ret %tmp.126;
+_Users_kkorolczuk_work_garmin_voidrocks_source_VoidRocksMenu_mc_60_44_79_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/VoidRocksMenu.mc"; @line = 8; ]
+<init> {
+}

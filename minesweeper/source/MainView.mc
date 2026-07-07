@@ -224,31 +224,16 @@ class MainView extends WatchUi.View {
 
     // ── Win / Lose overlay ────────────────────────────────────────
     hidden function _drawResult(dc, won) {
-        var bw = _sw * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = _sh * 36 / 100; if (bh < 110) { bh = 110; }
-        var bx = (_sw - bw) / 2;
-        var by = (_sh - bh) / 2;
-        var cx = _sw / 2;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(won ? 0x44FF88 : 0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
-                    won ? "CLEARED!" : "BOOM!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
-                    "Size " + _ctrl.currentName(), Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
-                    "Time " + _ctrl.fmtTime(_ctrl.elapsedMs) + "s",
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var accent = won ? 0x44FF88 : 0xFF4466;
+        var lines = [
+            ["Size " + _ctrl.currentName(), 0xFFFFFF],
+            ["Time " + _ctrl.fmtTime(_ctrl.elapsedMs) + "s", 0xFFFFFF]
+        ];
         if (won && _ctrl.isNewBest()) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 64, Graphics.FONT_XTINY,
-                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            lines.add(["NEW BEST!", 0xFFCC22]);
         }
-        dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap = replay", Graphics.TEXT_JUSTIFY_CENTER);
+        GameOverCard.draw(dc, _sw, _sh, won ? "CLEARED!" : "BOOM!", accent,
+                          lines, "Tap = replay", accent);
     }
 
     // ── Leaderboard ───────────────────────────────────────────────
