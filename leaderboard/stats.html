@@ -1744,7 +1744,6 @@ async function loadActivity() {
         <tbody>${entries.map(e => {
           const flag  = e.c ? codeToFlag(e.c) : '';
           const cname = e.c ? (COUNTRY_NAMES[e.c] || e.c) : '—';
-          const ago   = _timeAgo(e.t);
           const vDisp = e.variant ? `<span class="muted">${esc(e.variant)}</span>` : '<span class="muted">—</span>';
           return `<tr onclick="openGame('${esc(e.game)}')" title="Open ${esc(e.game)} leaderboard">
             <td><b>${esc(e.game)}</b></td>
@@ -1752,7 +1751,7 @@ async function loadActivity() {
             <td>${esc(e.u)}</td>
             <td><span style="display:flex;align-items:center;gap:5px;justify-content:flex-end">${flag} <span class="muted">${esc(cname)}</span></span></td>
             <td><b>${(e.s||0).toLocaleString()}</b></td>
-            <td class="feed-ago">${ago}</td>
+            <td class="feed-ago">${_timeAgo(e.t * 1000)}</td>
           </tr>`;
         }).join('')}</tbody>
       </table>
