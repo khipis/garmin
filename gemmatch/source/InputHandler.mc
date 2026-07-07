@@ -20,25 +20,21 @@
 // Touch (GS_PLAY) — grab-and-flick (v7):
 //
 //   TAP on a gem        → that gem is SELECTED exactly where the finger lands.
-//   FLICK / SWIPE       → the currently SELECTED gem moves one cell in the
-//                         swipe direction: left→left, right→right, up→up,
-//                         down→down. If nothing is selected yet, the gem under
-//                         the start of the swipe is used.
+//   FLICK / SWIPE       → the gem under the finger moves one cell in the swipe
+//                         direction: left→left, right→right, up→up, down→down.
 //   LIFT without moving → resolves as a TAP and selects the touched gem.
 //
 // The whole gesture is driven by the drag stream (START/CONT/STOP). onTap and
 // onSwipe are treated as REDUNDANT fallbacks:
 //   • onTap → selectCell — idempotent, so if it fires alongside a drag it just
-//     re-selects the same gem (harmless). This is why taps are NEVER gated.
+//     re-selects the same gem (harmless). Taps are NEVER gated.
 //   • onSwipe → move the selected gem — this MUST be de-duped against a drag
 //     swipe, so a short "_swipeGuardMs" window (set ONLY when a drag swipe
 //     commits) swallows the trailing onSwipe/onTap echo of that same flick.
 //
-// DRAG_TYPE_START deliberately does NOT change selection: a swipe that begins
-// on some other cell must still move the gem the player previously selected,
-// instead of "randomly" replacing selection with the cell under the finger.
-// Because the guard is armed only by swipes — never by taps — a burst of quick
-// taps can never swallow one another.
+// DRAG_TYPE_START selects immediately. Garmin touch firmware often reports a
+// tap as a very short drag, so waiting until STOP made taps feel ignored. The
+// cell under the finger always owns the cursor.
 //
 // A gesture becomes a SWIPE once the finger travels past _swipeMin() px, a
 // threshold scaled to the board cell size so a deliberate tap never trips it.
@@ -88,12 +84,12 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _lastGestureMs = 0;
     }
 
-    // A flick counts as a SWIPE once travel passes ~55% of a cell (min 18px),
+    // A flick counts as a SWIPE once travel passes ~45% of a cell (min 18px),
     // so a deliberate tap — even a slightly sloppy one — never trips a swap.
     hidden function _swipeMin() {
         var cp = _v.cellSize();
         if (cp == null || cp <= 0) { return _SWIPE_MIN_FALLBACK; }
-        var t = cp * 55 / 100;
+        var t = cp * 45 / 100;
         return (t < _SWIPE_MIN_FALLBACK) ? _SWIPE_MIN_FALLBACK : t;
     }
 
@@ -177,13 +173,14 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragStartX = px;
             _dragStartY = py;
             _committed  = false;
-            // Record the cell under the finger, but do not select it yet. We
-            // only know this was a TAP when STOP arrives without crossing the
-            // swipe threshold. This keeps swipes bound to the already selected
-            // gem instead of unexpectedly jumping to the finger-start cell.
+            // Select immediately: where the finger touches, the cursor goes.
+            // This covers firmwares that emit taps as short drag START/STOP
+            // pairs and gives instant visual confirmation.
             var rc0 = _v.cellAt(px, py);
             if (rc0 != null) {
                 _startR = rc0[0]; _startC = rc0[1];
+                _v.selectCell(_startR, _startC);
+                WatchUi.requestUpdate();
             } else {
                 _startR = -1; _startC = -1;
             }
@@ -205,15 +202,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragStartX = -1;
             _dragStartY = -1;
             _markGesture();
-            // Resolve as a swipe if it crossed the threshold. If not, this is
-            // a plain tap from firmware that reports taps as START/STOP instead
-            // of onTap, so select the exact start cell.
+            // Resolve as a swipe if it crossed the threshold. If not, it was a
+            // tap and START already selected the exact touched cell.
             if (!_committed) {
                 _maybeSwipe(dx, dy);
-                if (!_committed && _startR >= 0) {
-                    _v.selectCell(_startR, _startC);
-                    WatchUi.requestUpdate();
-                }
             }
             _startR = -1; _startC = -1;
             return true;
@@ -238,9 +230,6 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onTap(evt) {
         _markGesture();
-        // Only a swipe echo is gated here; genuine taps are always honoured so
-        // rapid taps on different gems each land where the finger touched.
-        if (_inSwipeGuard()) { return true; }
         var xy = evt.getCoordinates();
         if (xy == null) { return true; }
         _v.handleTap(xy[0], xy[1]);       // selects the tapped gem in play
