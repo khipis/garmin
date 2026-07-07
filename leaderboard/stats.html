@@ -346,6 +346,39 @@
   .feed-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
   .feed-ago { color: var(--muted); font-size: .72rem; white-space: nowrap; }
 
+  /* ── Insight bar ─────────────────────────────────────────────────────────── */
+  .insight-bar {
+    background: linear-gradient(135deg, #0a2030 0%, #0d1e2b 100%);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px; padding: 14px 18px;
+    margin-bottom: 22px; font-size: .88rem; line-height: 1.6;
+  }
+  .insight-bar b { color: var(--accent); }
+  .insight-bar .insight-hi { color: var(--green); font-weight: 700; }
+
+  /* ── Section description ─────────────────────────────────────────────────── */
+  .section-desc {
+    font-size: .76rem; color: var(--muted); line-height: 1.5;
+    margin: -8px 0 14px; padding: 0 2px;
+  }
+
+  /* ── Admin divider ───────────────────────────────────────────────────────── */
+  .admin-divider {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #0a1520; border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 18px; margin: 28px 0 0;
+    cursor: pointer; user-select: none; transition: border-color .15s;
+  }
+  .admin-divider:hover { border-color: var(--muted); }
+  .admin-divider span:first-child { font-size: .82rem; font-weight: 600; color: var(--muted); }
+  .admin-caret {
+    font-size: .72rem; color: var(--muted); background: var(--border);
+    padding: 2px 8px; border-radius: 5px; transition: background .15s;
+  }
+  .admin-divider:hover .admin-caret { background: #1a3040; }
+  #admin-section { padding-top: 14px; }
+
   /* ── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 640px) {
     .layout { flex-direction: column; height: auto; }
@@ -386,179 +419,20 @@
 
     <!-- Overview panel -->
     <div id="overview-panel">
-      <div class="sh"><span class="sh-title">Totals — bots excluded</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
+
+      <!-- ── Business health at a glance ──────────────────────────────────────── -->
+      <div class="insight-bar" id="insight-bar">Loading summary…</div>
+
+      <div class="sh"><span class="sh-title">👥 Players — bots excluded</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
+      <div class="section-desc">Ilu różnych ludzi grało w twoje gry (każdy liczy się raz, niezależnie od liczby grań). <b>Returning</b> = wróciło w innym dniu. <b>Loyal</b> = grało przez co najmniej 7 różnych dni.</div>
       <div class="cards" id="cards"><div class="card"><div class="spinner"></div></div></div>
 
-      <div class="sh"><span class="sh-title">📈 Retention funnel</span><span class="sh-line"></span></div>
-      <div id="retention-funnel"></div>
-
-      <div class="sh"><span class="sh-title">📊 Engagement</span><span class="sh-line"></span></div>
-      <div class="cards" id="engagement-cards"></div>
-
-      <div class="sh"><span class="sh-title">Per game</span><span class="sh-line"></span>
-        <select class="hsel" id="pergame-limit" onchange="renderPerGameTable()">
-          <option value="8">Top 8</option>
-          <option value="20" selected>Top 20</option>
-          <option value="9999">Show all</option>
-        </select>
-      </div>
-      <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <div class="sh"><span class="sh-title">Per country</span><span class="sh-line"></span>
-        <select class="hsel" id="percountry-limit" onchange="renderPerCountryTable()">
-          <option value="8" selected>Top 8</option>
-          <option value="9999">Show all</option>
-        </select>
-      </div>
-      <div id="per-country"></div>
-
-      <div class="sh"><span class="sh-title">🎮 Game launches — all plays (incl. no-leaderboard)</span><span class="sh-line"></span><button class="hbtn" onclick="loadLaunches()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
-      <div class="cards" id="launch-cards"></div>
-      <div class="sh"><span class="sh-title">Launches by game</span><span class="sh-line"></span>
-        <select class="hsel" id="launchgame-limit" onchange="renderLaunchByGameTable()">
-          <option value="8">Top 8</option>
-          <option value="20" selected>Top 20</option>
-          <option value="9999">Show all</option>
-        </select>
-      </div>
-      <div id="launch-by-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
-      <div class="sh"><span class="sh-title">Launches by country</span><span class="sh-line"></span>
-        <select class="hsel" id="launchcountry-limit" onchange="renderLaunchByCountryTable()">
-          <option value="8" selected>Top 8</option>
-          <option value="9999">Show all</option>
-        </select>
-      </div>
-      <div id="launch-by-country"></div>
-
-      <div class="sh"><span class="sh-title">🚨 Error monitoring — last 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
-      <div id="error-rl"></div>
-      <div id="error-summary"></div>
-      <div class="sh" id="sh-real-errors" style="display:none"><span class="sh-title">Real errors (4xx / 5xx)</span><span class="sh-line"></span></div>
-      <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <div class="sh"><span class="sh-title">📅 Season history</span><span class="sh-line"></span>
-        <select class="hsel" id="snap-select" onchange="renderSelectedSnapshot()" style="display:none"></select>
-        <button class="hbtn" onclick="loadSnapshots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
-        <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
-        <button class="hbtn" onclick="resetStats()" id="reset-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">🗑️ Reset scores</button>
-      </div>
-      <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <div class="sh"><span class="sh-title">🏆 Hall of Fame — management</span><span class="sh-line"></span>
-        <select class="hsel" id="hof-game-filter" onchange="renderHofTable()" style="display:none"></select>
-        <button class="hbtn" onclick="loadHofAdmin()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
-        <button class="hbtn" onclick="promoteAllToHoF()" id="hof-promote-btn"
-          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#1a2a0a;border-color:#f59e0b;color:#f59e0b">
-          👑 Promote all leaders
-        </button>
-      </div>
-      <div id="hof-admin-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <!-- ── Bot traffic ──────────────────────────────────────────────────── -->
-      <div class="sh"><span class="sh-title">🤖 Bot traffic — synthetic leaderboard entries</span><span class="sh-line"></span>
-        <button class="hbtn" onclick="loadBots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
-        <button class="hbtn" onclick="deleteAllBots()" id="bots-del-btn"
-          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">
-          🗑️ Delete ALL bots
-        </button>
-        <button class="hbtn" onclick="reseedAllBots()" id="bots-seed-btn"
-          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">
-          🌱 Reseed ALL bots
-        </button>
-      </div>
-      <div id="bots-status" style="display:none;padding:6px 0 10px;font-size:.76rem"></div>
-      <div id="bots-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <div class="sh"><span class="sh-title">✉️ Messages — in-app announcements</span><span class="sh-line"></span>        <select class="hsel" id="msg-filter" onchange="renderMessages()" style="display:none"></select>
-        <button class="hbtn" onclick="loadMessages()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
-        <button class="hbtn" onclick="showMsgForm()" id="msg-add-btn"
-          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
-          ➕ Add message
-        </button>
-      </div>
-
-      <!-- Add / edit form (hidden until "Add" or "Edit") -->
-      <div id="msg-form" class="mform" style="display:none">
-        <input type="hidden" id="mf-id">
-        <div class="mgrid">
-          <label>Scope
-            <select class="minput" id="mf-scope" onchange="msgFormScopeChanged()">
-              <option value="global">Global (all games)</option>
-              <option value="game">Single game</option>
-            </select>
-          </label>
-          <label>Game id <span class="muted" id="mf-game-req" style="display:none">*</span>
-            <input class="minput" id="mf-game" placeholder="e.g. slotbandit" autocomplete="off">
-          </label>
-          <label>Placement
-            <select class="minput" id="mf-placement">
-              <option value="postgame">Post-game (after a run)</option>
-              <option value="launch">Launch (menu / pre-game)</option>
-              <option value="once">Once (one-shot, at start — re-armable)</option>
-              <option value="reset">Reset (after a wipe)</option>
-            </select>
-          </label>
-          <label>Weight <span class="muted">(higher wins)</span>
-            <input class="minput" id="mf-weight" type="number" value="0">
-          </label>
-          <label>Title <span class="muted">(max 60)</span>
-            <input class="minput" id="mf-title" maxlength="60" placeholder="Enjoying Bitochi?">
-          </label>
-          <label>Min gap <span class="muted">(hours between shows)</span>
-            <input class="minput" id="mf-gap" type="number" value="12" step="0.5">
-          </label>
-          <label class="mspan2">Body <span class="muted">(max 200)</span>
-            <textarea class="minput" id="mf-body" maxlength="200" rows="2"
-              placeholder="Short, friendly message shown on the watch…"></textarea>
-          </label>
-          <label>Link URL <span class="muted">(optional, opens on phone)</span>
-            <input class="minput" id="mf-url" placeholder="https://buymeacoffee.com/bitochi">
-          </label>
-          <label>Link label <span class="muted">(optional)</span>
-            <input class="minput" id="mf-urllabel" maxlength="40" placeholder="Buy me a coffee">
-          </label>
-          <label class="mcheck"><input type="checkbox" id="mf-active" checked> Active</label>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="hbtn" id="mf-save" onclick="saveMessage()"
-            style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
-          <button class="hbtn" onclick="hideMsgForm()">Cancel</button>
-          <span id="mf-status" class="muted" style="align-self:center"></span>
-        </div>
-      </div>
-
-      <div id="msg-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
-      <div class="sh"><span class="sh-title">🔗 Links — trackable redirects (bitochi.com/&lt;slug&gt; → /go/&lt;slug&gt;)</span><span class="sh-line"></span>
-        <button class="hbtn" onclick="loadLinks()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
-        <button class="hbtn" onclick="showLinkForm()" id="link-add-btn"
-          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
-          ➕ Add link
-        </button>
-      </div>
-      <div id="link-form" class="mform" style="display:none">
-        <div class="mgrid">
-          <label>Slug <span class="muted">(a-z 0-9 - _)</span>
-            <input class="minput" id="lf-slug" placeholder="coffee" autocomplete="off">
-          </label>
-          <label>Destination URL
-            <input class="minput" id="lf-url" placeholder="https://buymeacoffee.com/bitochi">
-          </label>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="hbtn" onclick="saveLink()"
-            style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
-          <button class="hbtn" onclick="document.getElementById('link-form').style.display='none'">Cancel</button>
-          <span id="lf-status" class="muted" style="align-self:center"></span>
-        </div>
-      </div>
-      <div id="link-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
-
+      <!-- ── Hot right now ──────────────────────────────────────────────────── -->
       <div class="sh"><span class="sh-title">🔥 Hot right now</span><span class="sh-line"></span>
         <select class="hsel" id="hot-window" onchange="loadHot()" style="max-width:120px">
-          <option value="24" selected>Last 24 h</option>
-          <option value="48">Last 48 h</option>
-          <option value="168">Last 7 days</option>
+          <option value="24" selected>Ostatnie 24 h</option>
+          <option value="48">Ostatnie 48 h</option>
+          <option value="168">Ostatnie 7 dni</option>
         </select>
         <select class="hsel" id="hot-limit" onchange="loadHot()" style="max-width:90px">
           <option value="8" selected>Top 8</option>
@@ -566,16 +440,198 @@
         </select>
         <button class="hbtn" onclick="loadHot()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
       </div>
+      <div class="section-desc">Gry z największą liczbą rozgrywek w wybranym oknie czasowym. <b>🔥 ×N</b> = N razy więcej grań niż poprzednie okno — twoje najszybciej rosnące hity.</div>
       <div id="hot-feed"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
-      <div class="sh"><span class="sh-title">🕹️ Last games played</span><span class="sh-line"></span>
+      <!-- ── Retention ──────────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">📈 Czy gracze wracają?</span><span class="sh-line"></span></div>
+      <div class="section-desc">Spośród wszystkich którzy kiedykolwiek zagrali — ilu wróciło następnego dnia, po 3 dniach, po tygodniu? Im wyższe liczby, tym bardziej wciągające gry.</div>
+      <div id="retention-funnel"></div>
+
+      <!-- ── Growth ────────────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🌱 Wzrost i zaangażowanie</span><span class="sh-line"></span></div>
+      <div class="section-desc"><b>New (7d)</b> = nowi gracze w tym tygodniu. <b>DAU avg (30d)</b> = ilu graczy dziennie średnio w ostatnim miesiącu. <b>Scores / player</b> = ile razy średnio każda osoba gra — im wyżej, tym lepiej.</div>
+      <div class="cards" id="engagement-cards"></div>
+
+      <!-- ── Live activity ─────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🕹️ Ostatnie rozgrywki</span><span class="sh-line"></span>
         <select class="hsel" id="activity-limit" onchange="loadActivity()" style="max-width:110px">
-          <option value="20" selected>Last 20</option>
-          <option value="50">Last 50</option>
+          <option value="20" selected>Ostatnie 20</option>
+          <option value="50">Ostatnie 50</option>
         </select>
         <button class="hbtn" onclick="loadActivity()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
       </div>
+      <div class="section-desc">Na żywo — ostatnie wyniki przesłane przez prawdziwych graczy. Kliknij dowolny wiersz, aby zobaczyć pełny leaderboard danej gry.</div>
       <div id="activity-feed"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <!-- ── Per game ───────────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🎮 Wszystkie gry — zestawienie</span><span class="sh-line"></span>
+        <select class="hsel" id="pergame-limit" onchange="renderPerGameTable()">
+          <option value="8">Top 8</option>
+          <option value="20" selected>Top 20</option>
+          <option value="9999">Wszystkie</option>
+        </select>
+      </div>
+      <div class="section-desc">Łączna liczba unikalnych graczy per gra od początku. Kliknij grę, żeby zobaczyć jej leaderboard.</div>
+      <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <!-- ── Per country ───────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🌍 Skąd są gracze?</span><span class="sh-line"></span>
+        <select class="hsel" id="percountry-limit" onchange="renderPerCountryTable()">
+          <option value="8" selected>Top 8</option>
+          <option value="9999">Wszystkie</option>
+        </select>
+      </div>
+      <div id="per-country"></div>
+
+      <!-- ── Admin section (collapsed) ─────────────────────────────────────── -->
+      <div class="admin-divider" onclick="toggleAdmin()">
+        <span>⚙️ Admin &amp; narzędzia techniczne</span>
+        <span class="admin-caret" id="admin-caret">▶ Pokaż</span>
+      </div>
+      <div id="admin-section" style="display:none">
+
+        <div class="sh"><span class="sh-title">🎮 Uruchomienia gier — wszystkie plays (bez leaderboard)</span><span class="sh-line"></span><button class="hbtn" onclick="loadLaunches()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
+        <div class="section-desc">Każde otwarcie aplikacji to "launch" — nawet bez przesłania wyniku. Przydatne do wykrywania gier, w które się wchodzi ale nie gra do końca.</div>
+        <div class="cards" id="launch-cards"></div>
+        <div class="sh"><span class="sh-title">Uruchomienia per gra</span><span class="sh-line"></span>
+          <select class="hsel" id="launchgame-limit" onchange="renderLaunchByGameTable()">
+            <option value="8">Top 8</option>
+            <option value="20" selected>Top 20</option>
+            <option value="9999">Wszystkie</option>
+          </select>
+        </div>
+        <div id="launch-by-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
+        <div class="sh"><span class="sh-title">Uruchomienia per kraj</span><span class="sh-line"></span>
+          <select class="hsel" id="launchcountry-limit" onchange="renderLaunchByCountryTable()">
+            <option value="8" selected>Top 8</option>
+            <option value="9999">Wszystkie</option>
+          </select>
+        </div>
+        <div id="launch-by-country"></div>
+
+        <div class="sh"><span class="sh-title">🚨 Monitoring błędów — ostatnie 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
+        <div id="error-rl"></div>
+        <div id="error-summary"></div>
+        <div class="sh" id="sh-real-errors" style="display:none"><span class="sh-title">Prawdziwe błędy (4xx / 5xx)</span><span class="sh-line"></span></div>
+        <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+        <div class="sh"><span class="sh-title">📅 Historia sezonów</span><span class="sh-line"></span>
+          <select class="hsel" id="snap-select" onchange="renderSelectedSnapshot()" style="display:none"></select>
+          <button class="hbtn" onclick="loadSnapshots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+          <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
+          <button class="hbtn" onclick="resetStats()" id="reset-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">🗑️ Reset scores</button>
+        </div>
+        <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+        <div class="sh"><span class="sh-title">🏆 Hall of Fame — zarządzanie</span><span class="sh-line"></span>
+          <select class="hsel" id="hof-game-filter" onchange="renderHofTable()" style="display:none"></select>
+          <button class="hbtn" onclick="loadHofAdmin()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+          <button class="hbtn" onclick="promoteAllToHoF()" id="hof-promote-btn"
+            style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#1a2a0a;border-color:#f59e0b;color:#f59e0b">
+            👑 Promote all leaders
+          </button>
+        </div>
+        <div id="hof-admin-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+        <div class="sh"><span class="sh-title">🤖 Bot traffic — syntetyczne wpisy leaderboard</span><span class="sh-line"></span>
+          <button class="hbtn" onclick="loadBots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+          <button class="hbtn" onclick="deleteAllBots()" id="bots-del-btn"
+            style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">
+            🗑️ Delete ALL bots
+          </button>
+          <button class="hbtn" onclick="reseedAllBots()" id="bots-seed-btn"
+            style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">
+            🌱 Reseed ALL bots
+          </button>
+        </div>
+        <div id="bots-status" style="display:none;padding:6px 0 10px;font-size:.76rem"></div>
+        <div id="bots-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+        <div class="sh"><span class="sh-title">✉️ Wiadomości — komunikaty w aplikacji</span><span class="sh-line"></span>
+          <select class="hsel" id="msg-filter" onchange="renderMessages()" style="display:none"></select>
+          <button class="hbtn" onclick="loadMessages()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+          <button class="hbtn" onclick="showMsgForm()" id="msg-add-btn"
+            style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
+            ➕ Add message
+          </button>
+        </div>
+        <div id="msg-form" class="mform" style="display:none">
+          <input type="hidden" id="mf-id">
+          <div class="mgrid">
+            <label>Scope
+              <select class="minput" id="mf-scope" onchange="msgFormScopeChanged()">
+                <option value="global">Global (all games)</option>
+                <option value="game">Single game</option>
+              </select>
+            </label>
+            <label>Game id <span class="muted" id="mf-game-req" style="display:none">*</span>
+              <input class="minput" id="mf-game" placeholder="e.g. slotbandit" autocomplete="off">
+            </label>
+            <label>Placement
+              <select class="minput" id="mf-placement">
+                <option value="postgame">Post-game (after a run)</option>
+                <option value="launch">Launch (menu / pre-game)</option>
+                <option value="once">Once (one-shot, at start — re-armable)</option>
+                <option value="reset">Reset (after a wipe)</option>
+              </select>
+            </label>
+            <label>Weight <span class="muted">(higher wins)</span>
+              <input class="minput" id="mf-weight" type="number" value="0">
+            </label>
+            <label>Title <span class="muted">(max 60)</span>
+              <input class="minput" id="mf-title" maxlength="60" placeholder="Enjoying Bitochi?">
+            </label>
+            <label>Min gap <span class="muted">(hours between shows)</span>
+              <input class="minput" id="mf-gap" type="number" value="12" step="0.5">
+            </label>
+            <label class="mspan2">Body <span class="muted">(max 200)</span>
+              <textarea class="minput" id="mf-body" maxlength="200" rows="2"
+                placeholder="Short, friendly message shown on the watch…"></textarea>
+            </label>
+            <label>Link URL <span class="muted">(optional, opens on phone)</span>
+              <input class="minput" id="mf-url" placeholder="https://buymeacoffee.com/bitochi">
+            </label>
+            <label>Link label <span class="muted">(optional)</span>
+              <input class="minput" id="mf-urllabel" maxlength="40" placeholder="Buy me a coffee">
+            </label>
+            <label class="mcheck"><input type="checkbox" id="mf-active" checked> Active</label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="hbtn" id="mf-save" onclick="saveMessage()"
+              style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
+            <button class="hbtn" onclick="hideMsgForm()">Cancel</button>
+            <span id="mf-status" class="muted" style="align-self:center"></span>
+          </div>
+        </div>
+        <div id="msg-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+        <div class="sh"><span class="sh-title">🔗 Linki — przekierowania (bitochi.com/&lt;slug&gt; → /go/&lt;slug&gt;)</span><span class="sh-line"></span>
+          <button class="hbtn" onclick="loadLinks()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+          <button class="hbtn" onclick="showLinkForm()" id="link-add-btn"
+            style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
+            ➕ Add link
+          </button>
+        </div>
+        <div id="link-form" class="mform" style="display:none">
+          <div class="mgrid">
+            <label>Slug <span class="muted">(a-z 0-9 - _)</span>
+              <input class="minput" id="lf-slug" placeholder="coffee" autocomplete="off">
+            </label>
+            <label>Destination URL
+              <input class="minput" id="lf-url" placeholder="https://buymeacoffee.com/bitochi">
+            </label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="hbtn" onclick="saveLink()"
+              style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
+            <button class="hbtn" onclick="document.getElementById('link-form').style.display='none'">Cancel</button>
+            <span id="lf-status" class="muted" style="align-self:center"></span>
+          </div>
+        </div>
+        <div id="link-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      </div><!-- /#admin-section -->
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -727,6 +783,7 @@ function renderStats() {
   // Per-country
   lastPerCountryRows = d.perCountry || [];
   renderPerCountryTable();
+  updateInsightBar();
 }
 
 function renderPerGameTable() {
@@ -879,6 +936,38 @@ async function loadLb(game, variant) {
   } catch(e) {
     el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+// ── Insight bar ───────────────────────────────────────────────────────────────
+function updateInsightBar() {
+  const el = document.getElementById('insight-bar');
+  if (!el || !statsData) return;
+  const t = statsData.totals || {};
+  const retPct   = t.players > 0 ? Math.round((t.returning || 0) / t.players * 100) : 0;
+  const loyalPct = t.players > 0 ? Math.round((t.loyal     || 0) / t.players * 100) : 0;
+  const newP     = t.newPlayers7d || 0;
+  const dau      = t.dau30d       || 0;
+
+  let rating = ''; // business health signal
+  if (loyalPct >= 15) rating = '🟢 Świetnie';
+  else if (retPct >= 30) rating = '🟡 Dobrze';
+  else rating = '🔵 Rośniemy';
+
+  el.innerHTML =
+    `${rating} — <b>${(t.players||0).toLocaleString()}</b> graczy w <b>${t.games||0}</b> grach &nbsp;·&nbsp; ` +
+    `<b>${retPct}%</b> wróciło kolejnego dnia &nbsp;·&nbsp; ` +
+    `<b>${loyalPct}%</b> gra 7+ dni &nbsp;·&nbsp; ` +
+    (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} nowych w tym tygodniu</span> &nbsp;·&nbsp; ` : '') +
+    (dau   ? `<b>${dau.toLocaleString()}</b> aktywnych dziennie (śr. 30d)` : '');
+}
+
+// ── Admin toggle ───────────────────────────────────────────────────────────────
+function toggleAdmin() {
+  const el    = document.getElementById('admin-section');
+  const caret = document.getElementById('admin-caret');
+  const open  = el.style.display === 'none';
+  el.style.display = open ? '' : 'none';
+  caret.textContent = open ? '▼ Ukryj' : '▶ Pokaż';
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
