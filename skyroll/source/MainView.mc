@@ -14,11 +14,13 @@ class MainView extends WatchUi.View {
 
     var ctrl;
     hidden var _timer;
+    hidden var _started;   // auto-start the run on first frame
 
     function initialize() {
         View.initialize();
         ctrl   = new GameController();
         _timer = new Timer.Timer();
+        _started = false;
     }
 
     function onLayout(dc) {
@@ -67,6 +69,12 @@ class MainView extends WatchUi.View {
     }
 
     function onUpdate(dc) {
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == SR_MENU) {
+            ctrl.startRun();
+            _started = true;
+        }
         UIManager.draw(dc, ctrl);
     }
 

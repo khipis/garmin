@@ -67,6 +67,9 @@ class MainView extends WatchUi.View {
     function onUpdate(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();
+        // Menu lives in the shared root view — drop straight into ship setup
+        // and never render an in-game menu here.
+        if (ctrl.state == GS_MENU) { ctrl.beginSetup(); }
         if (ctrl.state == GS_MENU) {
             UIManager.drawMenu(dc, ctrl, w, h);
             _layout = null;

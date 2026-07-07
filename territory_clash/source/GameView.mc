@@ -95,12 +95,27 @@ class GameView extends WatchUi.View {
         _sP  = 0;
         _sAI = 0;
         _timer = null;
-        _startGame();
-        _state   = GS_MENU;
-        _mode    = MODE_PVAI;
-        _diff    = DIFF_MED;
         _menuSel = 0;
-        _playerFirst = true;
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
+        _startGame();
+        if (_mode == MODE_AIAI) { _state = TC_AIST; }
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: tc_mode (0..2), tc_diff (0..2), tc_side (0=Black first, 1=White).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stgIdx("tc_mode", MODE_PVAI, 0, 2);
+        _diff        = _stgIdx("tc_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("tc_side", 0, 0, 1) == 0);
     }
 
     function onLayout(dc) {
@@ -143,11 +158,9 @@ class GameView extends WatchUi.View {
         if (dir == 3 && _curX < TC_N - 1) { _curX = _curX + 1; }
     }
 
-    // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
@@ -163,7 +176,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_state == TC_OVER) { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == TC_OVER) { _startGame(); if (_mode == MODE_AIAI) { _state = TC_AIST; } WatchUi.requestUpdate(); return; }
         if (_state == TC_AIST && _mode == MODE_PVP) {
             var ci = _curY * TC_N + _curX;
             if (_placeStone(ci, TC_AI)) {
@@ -648,7 +661,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x0A180A, 0x0A180A);
         dc.clear();
         _drawBoard(dc);
@@ -914,7 +927,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == TC_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == TC_OVER) { _startGame(); if (_mode == MODE_AIAI) { _state = TC_AIST; } return; }
         if (_state != TC_PLAY && !(_state == TC_AIST && _mode == MODE_PVP)) { return; }
         if (_step <= 0) { return; }
         var col = (tx - _boardX + _step / 2) / _step;

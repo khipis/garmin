@@ -6,7 +6,7 @@ class BitochiBoxingApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("boxing"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiBoxingView();
-        return [view, new BitochiBoxingDelegate(view)];
+        // Root view is the shared unified menu; FIGHT launches the game view.
+        return buildBoxingMenu();
     }
 }

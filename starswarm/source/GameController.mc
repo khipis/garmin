@@ -89,9 +89,10 @@ class GameController {
             var d = Application.Storage.getValue(SS_DIFF_KEY);
             if (d instanceof Number && d >= 0 && d <= 2) { menuDiff = d; }
         } catch (e) {}
+        // Lives now persists as an OPTIONS index (0..4) → 1..5 lives.
         try {
             var l = Application.Storage.getValue(SS_LIVES_KEY);
-            if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
+            if (l instanceof Number && l >= 0 && l <= 4) { menuLives = l + 1; }
         } catch (e) {}
     }
     hidden function _saveBest() {
@@ -140,6 +141,9 @@ class GameController {
     }
 
     // ── Lifecycle ───────────────────────────────────────────────
+    // Public entry used by the menu-less MainView (auto-start + restart).
+    function startGame() { _startGame(); }
+
     hidden function _startGame() {
         wave  = 1;
         lives = menuLives;

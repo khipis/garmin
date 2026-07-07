@@ -264,6 +264,9 @@ class GameController {
     }
 
     // ── Tournament ────────────────────────────────────────────
+    // Public entry used by the auto-start view (settings come from Storage).
+    function beginGame() { _startTournament(); }
+
     hidden function _startTournament() {
         score    = 0;
         combo    = 0;

@@ -15,7 +15,7 @@ class BitochiParachuteApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BitochiParachuteView();
-        return [view, new BitochiParachuteDelegate(view)];
+        // Root view is the shared unified menu; START launches the jump.
+        return buildParachuteMenu();
     }
 }

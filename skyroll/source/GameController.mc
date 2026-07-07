@@ -245,13 +245,11 @@ class GameController {
         return false;
     }
     function handleBack() {
-        if (state == SR_MENU)      { return false; }  // exit app
-        if (state == SR_PLAY)      {
-            // First back: bail out to menu (and bank score).
-            if (distance > bestScore) { bestScore = distance; _savePersist(); }
-            backToMenu(); return true;
+        // Bank the current run's score, then let the framework pop this view
+        // back to the shared menu (return false → InputHandler pops).
+        if (state == SR_PLAY && distance > bestScore) {
+            bestScore = distance; _savePersist();
         }
-        backToMenu();
-        return true;
+        return false;
     }
 }

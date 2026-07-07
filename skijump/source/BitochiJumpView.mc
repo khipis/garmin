@@ -190,6 +190,9 @@ class BitochiJumpView extends WatchUi.View {
         }
         _tourBestDist = 0.0; _tourBestVenue = 3;
         _showStandings = false; _jumperIdx = 0;
+        // Jumper now comes from the shared OPTIONS screen (sjJumper: 0..5).
+        var sjj = Application.Storage.getValue("sjJumper");
+        if (sjj != null && sjj >= 0 && sjj < NUM_JUMPERS) { _jumperIdx = sjj; }
         _shakeX = 0; _shakeY = 0; _shakeTick = 0; _crowdCheer = 0;
         _menuRow = 0;
         gameState = JS_MENU;
@@ -315,7 +318,13 @@ class BitochiJumpView extends WatchUi.View {
         for (var i = 0; i < TRAIL_N; i++) { _trailLife[i] = 0; }
     }
 
-    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true); }
+    function onShow() {
+        _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a competition.
+        // Only auto-start from a fresh launch (JS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the meet.
+        if (gameState == JS_MENU) { startCompetition(); }
+    }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
     function onTick() as Void {
@@ -764,7 +773,8 @@ class BitochiJumpView extends WatchUi.View {
 
     function onUpdate(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
-        if (gameState == JS_MENU)       { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (gameState == JS_MENU)       { startCompetition(); }
         if (gameState == JS_RESULT)     { drawResult(dc); return; }
         if (gameState == JS_STANDINGS)  { drawStandings(dc); return; }
         if (gameState == JS_FINAL)      { drawFinal(dc); return; }

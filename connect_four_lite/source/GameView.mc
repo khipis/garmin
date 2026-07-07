@@ -125,8 +125,26 @@ class GameView extends WatchUi.View {
         _abMaxDepth      = 0;
         _abRootMark      = MARK_AI;
         _abRootOpp       = MARK_P;
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        // Read them, configure, and drop straight into a game.
+        _applySettings();
         _startGame();
-        _state   = GS_MENU;   // override to show menu first
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: cf_mode (0..2), cf_diff (0..2), cf_side (0=Red first, 1=Yellow).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _cfMode      = _stgIdx("cf_mode", CF_MODE_PVAI, 0, 2);
+        _cfDiff      = _stgIdx("cf_diff", CF_DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("cf_side", 0, 0, 1) == 0);
     }
 
     function onLayout(dc) {
@@ -169,10 +187,9 @@ class GameView extends WatchUi.View {
     }
 
     // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
@@ -190,7 +207,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == GS_OVER) { _startGame(); return; }
         if (_state != GS_PLAY) { return; }
         if (_cfMode == CF_MODE_AIAI) { return; }  // AiAI: no human input
         var r = _dropRow(_curCol);
@@ -786,7 +803,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x060610, 0x060610);
         dc.clear();
         _drawBoard(dc);
@@ -1050,7 +1067,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == GS_OVER) { _startGame(); return; }
         if (_state != GS_PLAY) { return; }
         if (_cell <= 0) { return; }
         var col = (tx - _boardX) / _cell;

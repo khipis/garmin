@@ -6,7 +6,7 @@ class BitochiBricksApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("bricks"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiBricksView();
-        return [view, new BitochiBricksDelegate(view)];
+        // Root view is the shared unified menu; PLAY launches the game view.
+        return buildBricksMenu();
     }
 }

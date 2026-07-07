@@ -6,7 +6,7 @@ class BitochiBlobsApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("blobs"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiBlobsView();
-        return [view, new BitochiBlobsDelegate(view)];
+        // Root view is the shared unified menu; START launches the round view.
+        return buildBlobsMenu();
     }
 }

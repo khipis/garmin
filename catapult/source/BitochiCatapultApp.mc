@@ -15,7 +15,7 @@ class BitochiCatapultApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BitochiCatapultView();
-        return [view, new BitochiCatapultDelegate(view)];
+        // Root view is the shared unified menu; PLAY launches the game view.
+        return buildCatapultMenu();
     }
 }

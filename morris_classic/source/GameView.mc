@@ -142,8 +142,25 @@ class GameView extends WatchUi.View {
         _ai2pOpp       = MC_PLAYER;
         _lbHandled     = true;   // menu state — nothing to report yet
         _initTables();
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
         _startGame();
-        _state   = GS_MENU;
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: mor_mode (0..2), mor_diff (0..2), mor_side (0=player first, 1=second).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stgIdx("mor_mode", MODE_PVAI, 0, 2);
+        _diff        = _stgIdx("mor_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("mor_side", 0, 0, 1) == 0);
     }
 
     // ── Static tables (called once in initialize) ─────────────────────────
@@ -255,10 +272,9 @@ class GameView extends WatchUi.View {
     }
 
     // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
@@ -271,7 +287,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_state == MGS_OVER) { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == MGS_OVER) { _startGame(); WatchUi.requestUpdate(); return; }
         if (_mode == MODE_AIAI) { return; }
         // PvP: MGS_AI = P2 selecting, MGS_AI_RM = P2 picking destination
         if (_state == MGS_AI    && _mode == MODE_PVP) { _p2Select(); return; }
@@ -1065,7 +1081,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         if (_state == MGS_OVER && !_lbHandled) { _reportResult(); }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
@@ -1378,7 +1394,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == MGS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == MGS_OVER) { _startGame(); return; }
         if ((_state == MGS_AI || _state == MGS_AI_RM) && _mode != MODE_PVP) { return; }
         if (_step <= 0) { return; }
         // Find nearest of 24 nodes

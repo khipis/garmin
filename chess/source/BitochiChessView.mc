@@ -91,10 +91,15 @@ class BitochiChessView extends WatchUi.View {
         _w = ds.screenWidth; _h = ds.screenHeight;
         _tick = 0;
         _gs = CS_MENU;
-        _difficulty = 1;
-        _playerIsWhite = true;
-        _aiVsAi = false;
-        _pvp = false;
+        // Settings now live in the shared unified menu (OPTIONS); read them back.
+        var dv = Application.Storage.getValue("chess_diff");
+        _difficulty = (dv instanceof Lang.Number && dv >= 0 && dv <= 2) ? dv : 1;
+        var cv = Application.Storage.getValue("chess_color");
+        _playerIsWhite = !(cv instanceof Lang.Number && cv == 1);   // 0=WHITE, 1=BLACK
+        var mv = Application.Storage.getValue("chess_mode");
+        var modeIdx = (mv instanceof Lang.Number && mv >= 0 && mv <= 2) ? mv : 0;
+        _pvp    = (modeIdx == 1);
+        _aiVsAi = (modeIdx == 2);
         _menuRow = 0;
         _gameResultDone = false;
         _selSq = -1; _curSq = 36;
@@ -135,6 +140,13 @@ class BitochiChessView extends WatchUi.View {
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupGeometry();
+    }
+
+    // Root view is the shared unified menu; drop straight into a game. Only
+    // auto-start from the initial CS_MENU — returning from a pushed post-game
+    // card leaves us in a CHECKMATE/STALEMATE state, so the run is never reset.
+    function onShow() {
+        if (_gs == CS_MENU) { startGame(); }
     }
 
     hidden function setupGeometry() {
@@ -282,14 +294,12 @@ class BitochiChessView extends WatchUi.View {
     }
 
     function doBack() {
+        // While a piece is selected mid-move, BACK just deselects it.
         if (_gs == CS_PLAY && _selSq >= 0) {
             doDeselect();
             return true;
         }
-        if (_gs != CS_MENU) {
-            _gs = CS_MENU; _selSq = -1; _legalMoves = new [0];
-            return true;
-        }
+        // Otherwise let the framework pop back to the shared unified menu.
         return false;
     }
 
@@ -1313,7 +1323,7 @@ class BitochiChessView extends WatchUi.View {
 
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeometry(); }
-        if (_gs == CS_MENU) { drawMenu(dc); return; }
+        if (_gs == CS_MENU) { startGame(); }   // never render an in-game menu
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { _processGameResult(); }
         drawGame(dc);
         if (_gs == CS_PROMOTE)   { drawPromoOverlay(dc); }

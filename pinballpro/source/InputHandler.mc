@@ -126,7 +126,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var xy = evt.getCoordinates();
         var ctrl = _v._ctrl;
         if (ctrl.state == GS_MENU)   { _v.confirm();                       WatchUi.requestUpdate(); return true; }
-        if (ctrl.state == GS_OVER)   { _v.gotoMenu();                      WatchUi.requestUpdate(); return true; }
+        if (ctrl.state == GS_OVER)   { _v.confirm();                       WatchUi.requestUpdate(); return true; }
         if (ctrl.state == GS_LAUNCH) { _v.launchBall();                    WatchUi.requestUpdate(); return true; }
         // GS_PLAY — pulse both flippers.
         _v.tapPulseFlippers();
@@ -197,7 +197,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
                     if (isTap) {
                         // Small displacement on a non-play state → tap.
                         if (ctrl.state == GS_MENU)   { _v.confirm();    WatchUi.requestUpdate(); }
-                        if (ctrl.state == GS_OVER)   { _v.gotoMenu();   WatchUi.requestUpdate(); }
+                        if (ctrl.state == GS_OVER)   { _v.confirm();    WatchUi.requestUpdate(); }
                         if (ctrl.state == GS_LAUNCH) { _v.launchBall(); WatchUi.requestUpdate(); }
                     }
                 }

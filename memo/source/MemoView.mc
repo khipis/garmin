@@ -155,11 +155,19 @@ class MemoView extends WatchUi.View {
         _diffVariants = ["Easy", "Normal", "Hard"];
 
         _loadBest();
+
+        // Difficulty now comes from the shared OPTIONS screen (memo_diff: 0/1/2).
+        var dv = Application.Storage.getValue("memo_diff");
+        if (dv instanceof Number && dv >= 0 && dv <= 2) { _diff = dv; }
     }
 
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 100, true);
+        // The main menu is the shared root view; drop straight into a game.
+        // Only auto-start from a fresh launch (MG_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the game.
+        if (_gs == MG_MENU) { _startGame(); }
     }
 
     function onHide() {
@@ -353,9 +361,8 @@ class MemoView extends WatchUi.View {
         if (_gs == MG_PLAY)   { _flip(_cr * _cols + _cc); return; }
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view).
     function doBack() {
-        if (_gs == MG_PLAY)   { _gs = MG_MENU; return true; }
-        if (_gs == MG_RESULT) { _gs = MG_MENU; return true; }
         return false;
     }
 
@@ -428,7 +435,8 @@ class MemoView extends WatchUi.View {
     function onUpdate(dc) {
         if (_w != dc.getWidth()) { _w = dc.getWidth(); _h = dc.getHeight(); }
         dc.setColor(0x080818, 0x080818); dc.clear();
-        if (_gs == MG_MENU)   { _drMenu(dc);   return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == MG_MENU)   { _startGame(); }
         if (_gs == MG_PLAY)   { _drPlay(dc);   return; }
         if (_gs == MG_RESULT) { _drResult(dc); return; }
     }

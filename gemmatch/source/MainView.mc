@@ -65,7 +65,9 @@ class MainView extends WatchUi.View {
 
         dc.setColor(0x000000, 0x000000); dc.clear();
 
-        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
+        // Menu lives in the shared root view — drop straight into play and
+        // never render an in-game menu here.
+        if (_ctrl.state == GS_MENU) { _ctrl.startGame(); }
 
         _layoutBoard();
         if (_ctrl.shakeT > 0) {
@@ -284,6 +286,26 @@ class MainView extends WatchUi.View {
             dc.drawRectangle(cx0 + 1, cy0 + 1, _cellPx - 2, _cellPx - 2);
         }
 
+        // Live drag preview — the grabbed gem plus the neighbour it will
+        // swap into, so the move reads clearly before the finger lifts.
+        if (_ctrl.state == GS_PLAY && _ctrl.dragR >= 0) {
+            var dsx = _bx + _ctrl.dragC * _cellPx;
+            var dsy = _by + _ctrl.dragR * _cellPx;
+            dc.setColor(0x664400, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(dsx + 1, dsy + 1, _cellPx - 2, _cellPx - 2);
+
+            if (_ctrl.dragDR != 0 || _ctrl.dragDC != 0) {
+                var tr = _ctrl.dragR + _ctrl.dragDR;
+                var tc = _ctrl.dragC + _ctrl.dragDC;
+                var tx = _bx + tc * _cellPx;
+                var ty = _by + tr * _cellPx;
+                dc.setColor(0x33FF88, Graphics.COLOR_TRANSPARENT);
+                dc.drawRectangle(tx, ty, _cellPx, _cellPx);
+                dc.drawRectangle(tx + 1, ty + 1, _cellPx - 2, _cellPx - 2);
+                _drawDragArrow(dc, tx, ty, _ctrl.dragDR, _ctrl.dragDC);
+            }
+        }
+
         // Gems — skip the two animating cells during ANIM_SWAP
         var marks = _ctrl.animMarks;
         for (var r2 = 0; r2 < g.rows; r2++) {
@@ -296,7 +318,8 @@ class MainView extends WatchUi.View {
                 var t  = g.get(r2, c2);
                 var gx = _bx + c2 * _cellPx + _cellPx / 2;
                 var gy = isFall ? _fallGy(r2, c2) : (_by + r2 * _cellPx + _cellPx / 2);
-                var picked = (_ctrl.selR == r2 && _ctrl.selC == c2);
+                var picked = (_ctrl.selR == r2 && _ctrl.selC == c2) ||
+                             (_ctrl.dragR == r2 && _ctrl.dragC == c2);
                 if (flashOn && marks != null && marks[r2 * g.cols + c2]) {
                     Tile.drawFlash(dc, t, gx, gy, _cellPx);
                 } else {
@@ -311,6 +334,24 @@ class MainView extends WatchUi.View {
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(_bx - 1, _by - 1,
                          _cellPx * g.cols + 2, _cellPx * g.rows + 2);
+    }
+
+    // Small arrow inside the drag-preview target cell, pointing in the
+    // swap direction (dr, dc) so the intended move is unmistakable.
+    hidden function _drawDragArrow(dc, cellX, cellY, dr, dcc) {
+        var cx = cellX + _cellPx / 2;
+        var cy = cellY + _cellPx / 2;
+        var s  = _cellPx / 5; if (s < 3) { s = 3; }
+        dc.setColor(0x33FF88, Graphics.COLOR_TRANSPARENT);
+        if (dcc > 0) {        // →
+            dc.fillPolygon([[cx + s, cy], [cx - s, cy - s], [cx - s, cy + s]]);
+        } else if (dcc < 0) { // ←
+            dc.fillPolygon([[cx - s, cy], [cx + s, cy - s], [cx + s, cy + s]]);
+        } else if (dr > 0) {  // ↓
+            dc.fillPolygon([[cx, cy + s], [cx - s, cy - s], [cx + s, cy - s]]);
+        } else {              // ↑
+            dc.fillPolygon([[cx, cy - s], [cx - s, cy + s], [cx + s, cy + s]]);
+        }
     }
 
     // Interpolated Y for a gem currently tumbling into place during
@@ -411,9 +452,9 @@ class MainView extends WatchUi.View {
             dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
             var hint;
             if (_ctrl.selR < 0) {
-                hint = "drag=cursor  swipe=swap";
+                hint = "swipe gem = move";
             } else {
-                hint = "swipe=swap  tap adj=swap";
+                hint = "tap next gem = swap";
             }
             dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
                         hint, Graphics.TEXT_JUSTIFY_CENTER);
@@ -509,18 +550,38 @@ class MainView extends WatchUi.View {
         }
     }
 
-    // Direct-swap intent used by swipe gestures.
-    function handleSwap(dr, dc) {
+    // Swipe a specific gem (r,c) in direction (dr,dc) — the primary touch
+    // gesture. The gem the finger started on is the one that moves.
+    function swapFrom(r, c, dr, dc) {
         if (_ctrl.state != GS_PLAY || _ctrl.isAnimating()) { return; }
-        var tr = _ctrl.curR + dr;
-        var tc = _ctrl.curC + dc;
+        var tr = r + dr;
+        var tc = c + dc;
         if (tr < 0 || tr >= _ctrl.grid.rows ||
-            tc < 0 || tc >= _ctrl.grid.cols) {
-            _ctrl.moveCursor(dr, dc);
-            return;
-        }
-        _ctrl.beginSwap(_ctrl.curR, _ctrl.curC, tr, tc);
+            tc < 0 || tc >= _ctrl.grid.cols) { return; }
+        _ctrl.beginSwap(r, c, tr, tc);
     }
+
+    // onSwipe fallback (no start cell available): act on the picked gem,
+    // or the cursor gem if nothing is picked.
+    function handleSwipeSwap(dr, dc) {
+        if (_ctrl.state != GS_PLAY || _ctrl.isAnimating()) { return; }
+        var r = (_ctrl.selR >= 0) ? _ctrl.selR : _ctrl.curR;
+        var c = (_ctrl.selR >= 0) ? _ctrl.selC : _ctrl.curC;
+        var tr = r + dr;
+        var tc = c + dc;
+        if (tr < 0 || tr >= _ctrl.grid.rows ||
+            tc < 0 || tc >= _ctrl.grid.cols) { return; }
+        _ctrl.beginSwap(r, c, tr, tc);
+    }
+
+    // Tap-pick on a known board cell (used by the drag pipeline when a
+    // gesture ends without enough travel to count as a swipe).
+    function pickCell(r, c) { _ctrl.tapCell(r, c); }
+
+    // Live drag-preview passthroughs (touch feedback).
+    function startDrag(r, c)      { _ctrl.startDrag(r, c); }
+    function updateDragDir(dr, dc) { _ctrl.updateDragDir(dr, dc); }
+    function cancelDrag()          { _ctrl.cancelDrag(); }
 
     function navSelect() {
         if (_ctrl.state == GS_MENU && _ctrl.menuRow == MENU_LB) {
@@ -531,20 +592,13 @@ class MainView extends WatchUi.View {
     }
 
     function navBack() {
-        if (_ctrl.state == GS_PLAY) {
-            // ZEN: pressing back ends the session and shows the score
-            if (_ctrl.gameMode == GM_ZEN) {
-                _ctrl.endZen();
-                return true;
-            }
-            if (_ctrl.selR >= 0) { _ctrl.selR = -1; _ctrl.selC = -1; return true; }
-            _ctrl.gotoMenu();
+        // ZEN: back ends the session (shows + submits the score) instead of
+        // popping, so the run still counts. A second back then pops.
+        if (_ctrl.state == GS_PLAY && _ctrl.gameMode == GM_ZEN) {
+            _ctrl.endZen();
             return true;
         }
-        if (_ctrl.state == GS_OVER) {
-            _ctrl.gotoMenu();
-            return true;
-        }
+        // Everything else: pop back to the shared menu.
         return false;
     }
 

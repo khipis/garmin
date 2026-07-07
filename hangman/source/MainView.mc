@@ -18,6 +18,7 @@ class MainView extends WatchUi.View {
     var _kb;       // cached KbLayout from last draw (for tap routing)
     var _w;
     var _h;
+    hidden var _started;   // auto-start a round on first layout
 
     function initialize() {
         View.initialize();
@@ -25,6 +26,7 @@ class MainView extends WatchUi.View {
         _kb = null;
         _w = 0;
         _h = 0;
+        _started = false;
     }
 
     function onShow() {}
@@ -33,10 +35,13 @@ class MainView extends WatchUi.View {
     function onUpdate(dc) {
         _w = dc.getWidth();
         _h = dc.getHeight();
-        if (ctrl.state == GS_MENU) {
-            UIManager.drawMenu(dc, ctrl, _w, _h);
-            _kb = null;
-        } else if (ctrl.state == GS_PLAY) {
+        // Menu lives in the shared root view — drop straight into a round and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == GS_MENU) {
+            ctrl.startGame();
+            _started = true;
+        }
+        if (ctrl.state == GS_PLAY) {
             _kb = UIManager.drawGame(dc, ctrl, _w, _h);
         } else {
             UIManager.drawOverlay(dc, ctrl, _w, _h);

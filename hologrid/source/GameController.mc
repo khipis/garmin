@@ -83,26 +83,34 @@ class GameController {
         try { Application.Storage.setValue(HG_BEST_KEY, bestScore); } catch (e) {}
     }
     hidden function _loadSettings() {
+        // OPTIONS persists both settings as a 0-based index (the shared
+        // GmOption model). Start Level is an index into HG_START_MARKS;
+        // Lives is (index + 1).
         try {
             var s = Application.Storage.getValue("hg_slvl");
-            if (s instanceof Number) {
-                // Accept only stored values that are one of the
-                // menu marks; older values (e.g. 7) snap to the
-                // closest valid mark.
-                for (var i = 0; i < HG_START_MARKS.size(); i++) {
-                    if (HG_START_MARKS[i] == s) { menuStartLevel = s; break; }
-                }
+            if (s instanceof Number && s >= 0 && s < HG_START_MARKS.size()) {
+                menuStartLevel = HG_START_MARKS[s];
             }
         } catch (e) {}
         try {
             var l = Application.Storage.getValue("hg_lives");
-            if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
+            if (l instanceof Number && l >= 0 && l <= 4) { menuLives = l + 1; }
         } catch (e) {}
     }
     hidden function _saveSettings() {
-        try { Application.Storage.setValue("hg_slvl",  menuStartLevel); } catch (e) {}
-        try { Application.Storage.setValue("hg_lives", menuLives);      } catch (e) {}
+        // Kept for completeness; OPTIONS now owns these keys as indices.
+        try {
+            var idx = 0;
+            for (var i = 0; i < HG_START_MARKS.size(); i++) {
+                if (HG_START_MARKS[i] == menuStartLevel) { idx = i; break; }
+            }
+            Application.Storage.setValue("hg_slvl", idx);
+        } catch (e) {}
+        try { Application.Storage.setValue("hg_lives", menuLives - 1); } catch (e) {}
     }
+
+    // Public entry used by the auto-start MainView (settings from Storage).
+    function startGame() { _loadSettings(); _startNewGame(); }
 
     // ── Menu ─────────────────────────────────────────────────────
     function menuNext() { menuRow = (menuRow + 1) % HG_MENU_ROWS; }

@@ -72,7 +72,6 @@ APPS = [
     dict(id="breathinggascontrol", category="tool"),
     dict(id="diveplantoolkit",     category="tool"),
     dict(id="diveriskindicator",   category="tool"),
-    dict(id="quickdivecalculator", category="tool"),
     # ADHD tools
     dict(id="adhddecider",               category="fitness"),
     dict(id="bodycheck",                 category="fitness"),

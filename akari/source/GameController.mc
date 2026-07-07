@@ -117,7 +117,7 @@ class GameController {
         if (diff < 0 || diff > 1) { diff = 0; }
         mode = _loadInt("ak_mode", AK_MODE_LEVELS);
         if (mode < 0 || mode > 1) { mode = AK_MODE_LEVELS; }
-        showErrs = _loadBool("ak_errs", false);
+        showErrs = (_loadInt("ak_errs", 0) != 0);
         slot = _loadInt("ak_slot", 0);
         if (slot < 0) { slot = 0; }
         solvedTotal  = _loadInt("ak_solved_total", 0);
@@ -129,7 +129,7 @@ class GameController {
     function saveMenuSettings() {
         _save("ak_diff",  diff);
         _save("ak_mode",  mode);
-        _save("ak_errs",  showErrs);
+        _save("ak_errs",  showErrs ? 1 : 0);
         _save("ak_slot",  slot);
     }
 
@@ -199,6 +199,9 @@ class GameController {
     function totalSlots() { return PuzzleLoader.bucketSize(diff); }
 
     // ── Lifecycle ──────────────────────────────────────────────
+    // Public entry used by the auto-start view (settings come from Storage).
+    function beginGame() { _startGame(); }
+
     hidden function _startGame() {
         _refreshDailyStatus();
         var rec;

@@ -15,7 +15,7 @@ class BitochiJumpApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BitochiJumpView();
-        return [view, new BitochiJumpDelegate(view)];
+        // Root view is the shared unified menu; START launches the competition.
+        return buildSkiJumpMenu();
     }
 }

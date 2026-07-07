@@ -6,7 +6,7 @@ class ConnectFourLiteApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("connectfour"); }
     function onStop(state) {}
     function getInitialView() {
-        var v = new GameView();
-        return [v, new GameDelegate(v)];
+        // Root view is the shared unified menu; START launches GameView.
+        return buildConnectFourMenu();
     }
 }

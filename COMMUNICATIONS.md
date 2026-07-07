@@ -278,7 +278,8 @@ scope `global`, placement `launch`, title *"More free games"*, body listing
 bitochi.com, url `https://bitochi.com`, gap `24h`.
 
 **Per-game campaign that beats the global default.**
-scope `game`, game `slotbandit`, placement `postgame`, weight `10` → this replaces
+scope `game`, game `slotbandit`
+, placement `postgame`, weight `10` → this replaces
 the global post-game card *only* inside Slot Bandit.
 
 **Season reset.**

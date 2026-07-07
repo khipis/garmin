@@ -15,12 +15,14 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _sw;
     hidden var _sh;
+    hidden var _started;   // auto-start a puzzle on first layout
 
     function initialize() {
         View.initialize();
         ctrl   = new GameController();
         _timer = null;
         _sw    = 0; _sh = 0;
+        _started = false;
     }
 
     function onShow() {
@@ -38,7 +40,12 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         _sw = dc.getWidth(); _sh = dc.getHeight();
-        if (ctrl.state == LS_MENU) { UIManager.drawMenu(dc, _sw, _sh, ctrl); return; }
+        // Menu lives in the shared root view — drop straight into a puzzle
+        // and never render an in-game menu here.
+        if (!_started || ctrl.state == LS_MENU) {
+            ctrl.startGame();
+            _started = true;
+        }
         if (ctrl.state == LS_WIN)  { UIManager.drawWin(dc, _sw, _sh, ctrl);  return; }
         UIManager.drawPlay(dc, _sw, _sh, ctrl);
     }
@@ -76,25 +83,23 @@ class MainView extends WatchUi.View {
             if (ctrl.mode == LO_MODE_LEVELS && ctrl.level < LO_TOTAL_LEVELS) {
                 ctrl.nextLevel();
             } else {
-                ctrl.gotoMenu();
+                ctrl.restart();
             }
             return;
         }
         ctrl.pressCursor();
     }
     function navBack() {
-        if (ctrl.state == LS_MENU) { return false; }
-        ctrl.gotoMenu();
-        return true;
+        // Let InputHandler pop back to the shared menu.
+        return false;
     }
 
     function handleTap(x, y) {
-        if (ctrl.state == LS_MENU) { _menuTap(x, y); return; }
         if (ctrl.state == LS_WIN) {
             if (ctrl.mode == LO_MODE_LEVELS && ctrl.level < LO_TOTAL_LEVELS) {
                 ctrl.nextLevel();
             } else {
-                ctrl.gotoMenu();
+                ctrl.restart();
             }
             return;
         }

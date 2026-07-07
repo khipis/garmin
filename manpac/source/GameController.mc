@@ -111,13 +111,15 @@ class GameController {
         try { Application.Storage.setValue(MP_BEST_KEY, bestScore); } catch (e) {}
     }
     hidden function _loadSettings() {
+        // OPTIONS persists Start Level and Lives as 0-based indices (the
+        // shared GmOption model); Speed already matches MP_SPEED_* (0..2).
         try {
             var s = Application.Storage.getValue(MP_SLVL_KEY);
-            if (s instanceof Number && s >= 1 && s <= 9) { menuStartLevel = s; }
+            if (s instanceof Number && s >= 0 && s <= 8) { menuStartLevel = s + 1; }
         } catch (e) {}
         try {
             var l = Application.Storage.getValue(MP_LIVES_KEY);
-            if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
+            if (l instanceof Number && l >= 0 && l <= 4) { menuLives = l + 1; }
         } catch (e) {}
         try {
             var sp = Application.Storage.getValue(MP_SPEED_KEY);
@@ -125,10 +127,13 @@ class GameController {
         } catch (e) {}
     }
     hidden function _saveSettings() {
-        try { Application.Storage.setValue(MP_SLVL_KEY,  menuStartLevel); } catch (e) {}
-        try { Application.Storage.setValue(MP_LIVES_KEY, menuLives);      } catch (e) {}
-        try { Application.Storage.setValue(MP_SPEED_KEY, menuSpeed);      } catch (e) {}
+        try { Application.Storage.setValue(MP_SLVL_KEY,  menuStartLevel - 1); } catch (e) {}
+        try { Application.Storage.setValue(MP_LIVES_KEY, menuLives - 1);      } catch (e) {}
+        try { Application.Storage.setValue(MP_SPEED_KEY, menuSpeed);          } catch (e) {}
     }
+
+    // Public entry used by the auto-start MainView (settings from Storage).
+    function startGame() { _loadSettings(); _startGame(); }
 
     // Human-readable name for the current speed preset.
     function speedName() {

@@ -57,10 +57,8 @@ class DinosaurDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    // BACK: pause / exit
+    // BACK: return to the shared menu (framework pops this pushed view).
     function onBack() {
-        if (_v.doBack()) { WatchUi.requestUpdate(); return true; }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return false;
     }
 }

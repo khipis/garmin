@@ -22,12 +22,14 @@ class MainView extends WatchUi.View {
     hidden var _ox;
     hidden var _oy;
     hidden var _cell;
+    hidden var _started;   // auto-start the run on first layout
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _sw = 0; _sh = 0; _ox = 0; _oy = 0; _cell = 0;
+        _started = false;
     }
 
     function onShow() {
@@ -44,8 +46,11 @@ class MainView extends WatchUi.View {
         _sw = dc.getWidth(); _sh = dc.getHeight();
         dc.setColor(0x000308, 0x000308); dc.clear();
 
-        if (ctrl.state == PI_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl); return;
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == PI_MENU) {
+            ctrl.startGame();
+            _started = true;
         }
         _layout();
         UIManager.drawStars(dc, _sw, _sh);
@@ -84,7 +89,7 @@ class MainView extends WatchUi.View {
         dc.setColor(0x668090, Graphics.COLOR_TRANSPARENT);
         var hint;
         if (ctrl.state == PI_PLAY) { hint = "tap/btn fire  swipe = move"; }
-        else                        { hint = "tap = menu"; }
+        else                        { hint = "tap = restart"; }
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -94,31 +99,20 @@ class MainView extends WatchUi.View {
     // the user explicitly asked for "ruchy statku tylko gestami,
     // lewy dolny przycisk też strzela jako backup".
     function navUp() {
-        if (ctrl.state == PI_MENU) { ctrl.menuPrev(); return; }
-        if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == PI_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
     function navDown() {
-        if (ctrl.state == PI_MENU) { ctrl.menuNext(); return; }
-        if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == PI_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
     function navSelect() {
-        if (ctrl.state == PI_MENU) {
-            if (ctrl.menuRow == PI_ROW_LB) { openLeaderboard(); return; }
-            ctrl.menuActivate(); return;
-        }
-        if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == PI_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
 
-    // Open the shared global leaderboard for the current difficulty.
-    function openLeaderboard() {
-        var v = new LbScoresView(PI_LB_GAME_ID, ctrl.difficultyName(), "PIXEL INVADERS");
-        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
-    }
+    // BACK always pops to the shared menu.
     function navBack() {
-        if (ctrl.state != PI_MENU) { ctrl.gotoMenu(); return true; }
         return false;
     }
 
@@ -128,7 +122,7 @@ class MainView extends WatchUi.View {
     // in play are intentionally ignored so a stray drag doesn't
     // accidentally fire or pop the menu.
     function handleSwipe(dr, dc) {
-        if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == PI_OVER) { ctrl.startGame(); return; }
         if (ctrl.state != PI_PLAY) { return; }
         if      (dc < 0) { ctrl.moveLeft();  }
         else if (dc > 0) { ctrl.moveRight(); }
@@ -136,22 +130,7 @@ class MainView extends WatchUi.View {
     }
 
     function handleTap(x, y) {
-        if (ctrl.state == PI_MENU) {
-            var rg = UIManager.rowGeom(_sw, _sh);
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < PI_MENU_ROWS; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i);
-                    if (i == PI_ROW_LB) { openLeaderboard(); }
-                    else { ctrl.menuActivate(); }
-                    return;
-                }
-            }
-            return;
-        }
-        if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == PI_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
 }

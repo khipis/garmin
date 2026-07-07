@@ -175,6 +175,10 @@ class BitochiMinigolfView extends WatchUi.View {
         for (var i = 0; i < MG_TRAIL_LEN; i++) { _trailX[i] = 0; _trailY[i] = 0; }
         _aceCount = 0; _shakeT = 0; _flawless = false;
         _courseBmp = null; _courseBmpW = 0; _courseBmpH = 0; _courseBmpHole = -1;
+
+        // Difficulty now comes from the shared OPTIONS screen (golf_diff: 0/1/2).
+        var gd = Application.Storage.getValue("golf_diff");
+        if (gd instanceof Number && gd >= 0 && gd <= 2) { _difficulty = gd; }
     }
 
     function onLayout(dc) {
@@ -189,6 +193,10 @@ class BitochiMinigolfView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a round.
+        // Only auto-start from a fresh launch (MG_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the round.
+        if (_gs == MG_MENU) { startGame(); }
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
@@ -705,8 +713,8 @@ class BitochiMinigolfView extends WatchUi.View {
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view).
     function doBack() {
-        if (_gs != MG_MENU) { _gs = MG_MENU; return true; }
         return false;
     }
 
@@ -1210,7 +1218,8 @@ class BitochiMinigolfView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupVP(); }
-        if (_gs == MG_MENU)     { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == MG_MENU)     { startGame(); }
         // Handle GAMEOVER before drawHUD — _holeIdx is 9 at this point (out of _par bounds)
         if (_gs == MG_GAMEOVER) { drawGameOver(dc); return; }
 

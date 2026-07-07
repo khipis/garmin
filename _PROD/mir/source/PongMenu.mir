@@ -1,0 +1,475 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 13; @symbol_classdef = [PongHooks,13,6,15]; @symbol_extends<0> = [GameHooks,13,24,33]; ]
+class PongHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_23_47_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 24 8 10 ];
+        symbol [ setColor %tmp.2 24 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xFFFFFF;
+        symbol [ Graphics %tmp.4 24 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 24 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 25 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 25 8 10 ];
+        symbol [ fillRectangle %tmp.7 25 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 25 25 27 ];
+        %tmp.9 = 40;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 25 34 36 ];
+        %tmp.12 = 6;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 3;
+        %tmp.15 = 14;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 26 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 26 8 10 ];
+        symbol [ setColor %tmp.17 26 11 19 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0xFF44AA;
+        symbol [ Graphics %tmp.19 26 30 38 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 26 39 56 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 27 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 27 8 10 ];
+        symbol [ fillRectangle %tmp.22 27 11 24 ];
+        %tmp.22 = getv function %tmp.21 :fillRectangle;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 27 25 27 ];
+        %tmp.24 = 37;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %cy;
+        symbol [ cy %tmp.26 27 34 36 ];
+        %tmp.27 = 2;
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        %tmp.29 = 3;
+        %tmp.30 = 14;
+        invoke %tmp.21 %tmp.22(%tmp.25, %tmp.28, %tmp.29, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 28 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 28 8 10 ];
+        symbol [ setColor %tmp.32 28 11 19 ];
+        %tmp.32 = getv function %tmp.31 :setColor;
+        %tmp.33 = 0x00EEFF;
+        symbol [ Graphics %tmp.34 28 30 38 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.35 28 39 56 ];
+        %tmp.35 = getv %tmp.34 :COLOR_TRANSPARENT;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 29 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 29 8 10 ];
+        symbol [ fillRectangle %tmp.37 29 11 24 ];
+        %tmp.37 = getv function %tmp.36 :fillRectangle;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 29 25 27 ];
+        %tmp.39 = 2;
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %cy;
+        symbol [ cy %tmp.41 29 33 35 ];
+        %tmp.42 = 1;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        %tmp.44 = 4;
+        %tmp.45 = 4;
+        invoke %tmp.36 %tmp.37(%tmp.40, %tmp.43, %tmp.44, %tmp.45);
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_23_47_30_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 33; @symbol_functiondef = [lbVariant,33,13,22]; @symbol_return<0> = [Lang,33,28,32]; @symbol_return<1> = [String,33,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_33_40_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 34 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_33_40_42_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_33_40_42_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 34 12 13 ];
+        %tmp.1 = 1;
+        lputv %d.1 %tmp.1;
+        symbol [ d %d.1 34 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 35 8 ]
+        try @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_beginTry @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_endTry @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_catch @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_beginTry:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_12_38_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 36 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_12_38_8_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_12_38_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 36 16 17 ];
+        symbol [ Application %tmp.2 36 20 31 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.3 36 32 39 ];
+        %tmp.3 = getv %tmp.2 :Storage;
+        symbol [ getValue %tmp.4 36 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "pp_diff";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.2 %tmp.6;
+        symbol [ v %v.2 36 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 37 12 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_12_37_51_if_stmt:
+        %tmp.7 = lgetv %v.2;
+        symbol [ v %tmp.7 37 16 17 ];
+        symbol [ Lang %tmp.8 37 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 37 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_12_37_51_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_12_37_51_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_42_37_51_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 37 44 ]
+        %tmp.11 = lgetv %v.2;
+        symbol [ v %tmp.11 37 48 49 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        lputv %d.1 %tmp.12;
+        symbol [ d %d.1 37 44 45 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_42_37_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_12_37_51_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_37_12_37_51_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_12_38_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_catch:
+        %tmp.13 = exception;
+        push %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 38 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_catch" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_38_10_38_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 38 17 18 ];
+        %tmp.14 = dup %tmp.13;
+        lputv %e.3 %tmp.14;
+        symbol [ e %e.3 38 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_38_10_38_21_end:
+        try @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_catch @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_38_10_38_21_end @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_38_10_38_21_end @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally;
+        throw %tmp.13;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_35_8_38_21_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 39 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_8_39_37_if_stmt:
+        %tmp.15 = lgetv %d.1;
+        symbol [ d %tmp.15 39 12 13 ];
+        %tmp.16 = 0;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_8_39_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_8_39_37_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_20_39_37_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 39 22 ]
+        %tmp.18 = "Easy";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_20_39_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_8_39_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_39_8_39_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 40 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_8_40_37_if_stmt:
+        %tmp.19 = lgetv %d.1;
+        symbol [ d %tmp.19 40 12 13 ];
+        %tmp.20 = 2;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_8_40_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_8_40_37_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_20_40_37_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 40 22 ]
+        %tmp.22 = "Hard";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_20_40_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_8_40_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_40_8_40_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 41 8 ]
+        %tmp.23 = "Medium";
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_33_40_42_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 44; @symbol_functiondef = [footerText,44,13,23]; @symbol_return<0> = [Lang,44,29,33]; @symbol_return<1> = [String,44,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_44_49_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_12_48_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 46 16 17 ];
+        symbol [ Application %tmp.1 46 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 46 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 46 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "wins";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_stmt:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_16_47_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 47 16 17 ];
+        symbol [ Lang %tmp.7 47 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 47 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_44_47_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 47 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_44_47_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_16_47_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_44_47_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_44_47_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_51_47_86_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 47 53 ]
+        %tmp.15 = "WINS ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 47 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 47 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_51_47_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_47_12_47_86_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_48_10_48_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 48 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_45_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 49 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_44_49_50_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 54; @symbol_functiondef = [buildPongMenu,54,9,22]; @symbol_return<0> = [Lang,54,28,32]; @symbol_return<1> = [Array,54,33,38]; ]
+function buildPongMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 55 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 55 8 11 ];
+    symbol [ MenuConfig %tmp.4 55 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 56 9 15 const ];
+    %tmp.8 = "pongpro";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 57 9 15 const ];
+    %tmp.13 = "PONG";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :title2;
+    symbol [ title2 %tmp.17 58 9 15 const ];
+    %tmp.18 = "PRO";
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :col1;
+    symbol [ col1 %tmp.22 59 9 13 const ];
+    %tmp.23 = 0x00EEFF;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :col2;
+    symbol [ col2 %tmp.27 60 9 13 const ];
+    %tmp.28 = 0xFF44AA;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :bg;
+    symbol [ bg %tmp.32 61 9 11 const ];
+    %tmp.33 = 0x080808;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :circle;
+    symbol [ circle %tmp.37 62 9 15 const ];
+    %tmp.38 = 0x101418;
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :accent;
+    symbol [ accent %tmp.42 63 9 15 const ];
+    %tmp.43 = 0x34D399;
+    %tmp.44 = dup %tmp.40;
+    %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
+    %tmp.47 = const :lbTitle;
+    symbol [ lbTitle %tmp.47 64 9 16 const ];
+    %tmp.48 = "PONG PRO";
+    %tmp.49 = dup %tmp.45;
+    %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
+    %tmp.52 = const :hooks;
+    symbol [ hooks %tmp.52 65 9 14 const ];
+    symbol [ PongHooks %tmp.56 65 24 33 ];
+    %tmp.56 = getv ? :PongHooks;
+    %tmp.53 = newc %tmp.56 ();
+    %tmp.57 = dup %tmp.50;
+    %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
+    %tmp.60 = const :options;
+    symbol [ options %tmp.60 66 9 16 const ];
+    %tmp.61 = newa 2;
+    symbol [ GmOption %tmp.65 67 16 24 ];
+    %tmp.65 = getv ? :GmOption;
+    %tmp.66 = "pp_diff";
+    %tmp.67 = "Difficulty";
+    %tmp.68 = newa 3;
+    %tmp.69 = "EASY";
+    %tmp.70 = dup %tmp.68;
+    %tmp.71 = aputv %tmp.70 0 %tmp.69;
+    %tmp.72 = "MEDIUM";
+    %tmp.73 = dup %tmp.71;
+    %tmp.74 = aputv %tmp.73 1 %tmp.72;
+    %tmp.75 = "HARD";
+    %tmp.76 = dup %tmp.74;
+    %tmp.77 = aputv %tmp.76 2 %tmp.75;
+    %tmp.78 = 1;
+    %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.77, %tmp.78);
+    %tmp.79 = dup %tmp.61;
+    %tmp.80 = aputv %tmp.79 0 %tmp.62;
+    symbol [ GmOption %tmp.84 68 16 24 ];
+    %tmp.84 = getv ? :GmOption;
+    %tmp.85 = "pp_tilt";
+    %tmp.86 = "Tilt steer";
+    %tmp.87 = newa 2;
+    %tmp.88 = "OFF";
+    %tmp.89 = dup %tmp.87;
+    %tmp.90 = aputv %tmp.89 0 %tmp.88;
+    %tmp.91 = "ON";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 1 %tmp.91;
+    %tmp.94 = 0;
+    %tmp.81 = newc %tmp.84 (%tmp.85, %tmp.86, %tmp.93, %tmp.94);
+    %tmp.95 = dup %tmp.80;
+    %tmp.96 = aputv %tmp.95 1 %tmp.81;
+    %tmp.97 = dup %tmp.58;
+    %tmp.98 = aputv %tmp.97 %tmp.60 %tmp.96;
+    %tmp.1 = newc %tmp.4 (%tmp.98);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 55 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 71 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 71 8 9 ];
+    symbol [ GameMenuView %tmp.102 71 16 28 ];
+    %tmp.102 = getv ? :GameMenuView;
+    %tmp.103 = lgetv %cfg.1;
+    symbol [ cfg %tmp.103 71 29 32 ];
+    %tmp.99 = newc %tmp.102 (%tmp.103);
+    lputv %v.2 %tmp.99;
+    symbol [ v %v.2 71 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc" 72 4 ]
+    %tmp.104 = newa 2;
+    %tmp.105 = lgetv %v.2;
+    symbol [ v %tmp.105 72 12 13 ];
+    %tmp.106 = dup %tmp.104;
+    %tmp.107 = aputv %tmp.106 0 %tmp.105;
+    symbol [ GameMenuDelegate %tmp.111 72 19 35 ];
+    %tmp.111 = getv ? :GameMenuDelegate;
+    %tmp.112 = lgetv %v.2;
+    symbol [ v %tmp.112 72 36 37 ];
+    %tmp.108 = newc %tmp.111 (%tmp.112);
+    %tmp.113 = dup %tmp.107;
+    %tmp.114 = aputv %tmp.113 1 %tmp.108;
+    ret %tmp.114;
+_Users_kkorolczuk_work_garmin_pongpro_source_PongMenu_mc_54_39_73_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PongMenu.mc"; @line = 8; ]
+<init> {
+}

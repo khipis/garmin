@@ -52,7 +52,8 @@ class BitochiBlocksDelegate extends WatchUi.InputDelegate {
             return false;
         }
         if (key == WatchUi.KEY_ESC) {
-            if (_view.isPlaying()) { _view.doBack(); WatchUi.requestUpdate(); return true; }
+            // Back always returns to the shared root menu (framework pops us).
+            // Release the accelerometer subscription on the way out.
             if (_sensorEnabled) { Sensor.enableSensorEvents(null); _sensorEnabled = false; }
             return false;
         }

@@ -94,9 +94,11 @@ class GameController {
             var d = Application.Storage.getValue(CC_DIFF_KEY);
             if (d instanceof Number && d >= 0 && d <= 2) { menuDiff = d; }
         } catch (e) {}
+        // Lives is stored by the shared OPTIONS screen as an index (0..4);
+        // map it to the raw 1..5 lives count.
         try {
             var l = Application.Storage.getValue(CC_LIVES_KEY);
-            if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
+            if (l instanceof Number && l >= 0 && l <= 4) { menuLives = l + 1; }
         } catch (e) {}
     }
     hidden function _saveBest() {
@@ -145,6 +147,9 @@ class GameController {
     }
 
     // ── Lifecycle ────────────────────────────────────────────────
+    // Public entry used by the auto-start view (settings come from Storage).
+    function beginGame() { _startGame(); }
+
     hidden function _startGame() {
         level = 1;
         lives = menuLives;

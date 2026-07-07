@@ -3,6 +3,8 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Application;
+using Toybox.Lang;
 
 // ── Integer constants (safe at module level) ───────────────────────────────────
 const GS_RUN  = 0;
@@ -90,7 +92,7 @@ class CellWarsView extends WatchUi.View {
     function initialize() {
         View.initialize();
 
-        _gs       = GS_MENU;
+        _gs       = GS_RUN;   // unified menu handles setup; drop straight into the sim
         _mode     = MD_BATTLE;
         _speed    = 3;
         _density  = 1;
@@ -178,7 +180,26 @@ class CellWarsView extends WatchUi.View {
         _gox = (_w - _csz * GW) / 2;
         _goy = (_h - _csz * GH) / 2;
         _menuRowH = dc.getFontHeight(Graphics.FONT_XTINY) + 4;
+        _applySettings();
         _randomize();
+        _gs = GS_RUN;
+    }
+
+    // Read the sim setup persisted by the unified OPTIONS menu.
+    hidden function _applySettings() {
+        _mode    = _readIdx("cw_mode",  0, 0, MD_COUNT - 1);
+        _nTeams  = _readIdx("cw_teams", 1, 0, 2) + 2;   // idx 0..2 -> 2..4 teams
+        _speed   = _readIdx("cw_speed", 2, 0, 4) + 1;   // idx 0..4 -> speed 1..5
+        _density = _readIdx("cw_fill",  1, 0, 2);       // LOW/MED/HIGH
+        _theme   = _readIdx("cw_theme", 0, 0, TH_COUNT - 1);
+    }
+
+    hidden function _readIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
     }
 
     function onShow() { _startTimer(); }
@@ -575,13 +596,9 @@ class CellWarsView extends WatchUi.View {
     // ── controls ──────────────────────────────────────────────────────────────
 
     function doSelect() {
-        if (_gs == GS_RUN || _gs == GS_PAU) {
-            _gs = GS_MENU; _mSel = 0;
-        } else if (_gs == GS_MENU) {
-            _menuAct();
-        } else if (_gs == GS_INFO) {
-            _gs = GS_MENU;
-        }
+        // SELECT toggles pause/resume of the simulation.
+        if (_gs == GS_RUN)      { _gs = GS_PAU; }
+        else if (_gs == GS_PAU) { _gs = GS_RUN; }
     }
 
     hidden function _menuAct() {
@@ -606,42 +623,19 @@ class CellWarsView extends WatchUi.View {
     }
 
     function doUp() {
-        if (_gs == GS_MENU) {
-            _mSel = (_mSel + MENU_N - 1) % MENU_N;
-        } else if (_gs == GS_RUN || _gs == GS_PAU) {
-            if (_speed < 5) { _speed++; }
-        }
+        if (_speed < 5) { _speed++; }
     }
 
     function doDown() {
-        if (_gs == GS_MENU) {
-            _mSel = (_mSel + 1) % MENU_N;
-        } else if (_gs == GS_RUN || _gs == GS_PAU) {
-            if (_speed > 1) { _speed--; }
-        }
+        if (_speed > 1) { _speed--; }
     }
 
     function doBack() {
-        // From menu: only go back to simulation if one is already running
-        if (_gs == GS_MENU) { if (_gen > 0) { _gs = GS_RUN; return true; } return false; }
-        if (_gs == GS_PAU)  { _gs = GS_RUN;  return true; }
-        if (_gs == GS_INFO) { _gs = GS_MENU; return true; }
+        // Always return to the unified menu (delegate pops this view).
         return false;
     }
 
     function doTap(x, y) {
-        if (_gs == GS_MENU) {
-            var startY = _h * 21 / 100;
-            var endY   = _h * 83 / 100;
-            var rH     = (endY - startY) / MENU_N;
-            for (var i = 0; i < MENU_N; i++) {
-                var rowTop = startY + i * rH;
-                if (y >= rowTop && y < rowTop + rH) {
-                    _mSel = i; _menuAct(); return;
-                }
-            }
-        } else {
-            _gs = (_gs == GS_RUN) ? GS_PAU : GS_RUN;
-        }
+        _gs = (_gs == GS_RUN) ? GS_PAU : GS_RUN;
     }
 }

@@ -113,8 +113,10 @@ class GameController {
             if (d instanceof Number && d >= 0 && d <= 2) { menuDiff = d; }
         } catch (e) {}
         try {
+            // Lives is a shared-menu OPTION: GmOption stores a 0-based index
+            // (0..4) in VR_LIVES_KEY, so the actual life count is index + 1.
             var l = Application.Storage.getValue(VR_LIVES_KEY);
-            if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
+            if (l instanceof Number && l >= 0 && l <= 4) { menuLives = l + 1; }
         } catch (e) {}
     }
     hidden function _saveBest() {
@@ -162,6 +164,9 @@ class GameController {
         if (base > 2.2) { base = 2.2; }
         return base * _diffSpeedMul();
     }
+
+    // Public entry so MainView can auto-start gameplay from the shared menu.
+    function startGame() { _startGame(); }
 
     // ── Lifecycle ───────────────────────────────────────────────
     hidden function _startGame() {

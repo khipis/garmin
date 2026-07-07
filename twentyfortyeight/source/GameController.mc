@@ -65,7 +65,9 @@ class GameController {
         bestExp        = _loadInt("bestExp", 0);
         hasWonThisRun  = false;
         menuCursor     = MI_START;
-        timeMode       = _loadBool("tf_timemode", false);
+        // Mode is chosen in the shared menu's OPTIONS (GmOption stores a 0-based
+        // index in "tf_timemode"): 0 = Classic, 1 = Time speedrun.
+        timeMode       = (_loadInt("tf_timemode", 0) == 1);
         elapsedMs      = 0;
         lastTimeMs     = 0;
         bestTimeMs     = _loadInt("tf_besttime", -1);

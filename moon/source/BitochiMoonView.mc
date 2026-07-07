@@ -59,6 +59,10 @@ class BitochiMoonView extends WatchUi.View {
     hidden var _padSeg;         // index of the first flat landing-pad segment
     hidden var _padWidth;       // how many segments wide the pad is (shrinks with level)
 
+    // Difficulty from the shared OPTIONS screen (moon_diff: 0=Easy 1=Normal
+    // 2=Hard). Drives lunar gravity and starting fuel, and segments the LB.
+    hidden var _diff;
+
     // Progress
     hidden var _level;
     hidden var _lives;          // remaining lives (3 at game start)
@@ -116,6 +120,11 @@ class BitochiMoonView extends WatchUi.View {
         var bs = Application.Storage.getValue("moonBest");
         _best = (bs != null) ? bs : 0;
 
+        // Difficulty from the shared OPTIONS screen (moon_diff: 0/1/2).
+        _diff = 1;
+        var md = Application.Storage.getValue("moon_diff");
+        if (md instanceof Number && md >= 0 && md <= 2) { _diff = md; }
+
         _terrX = new [ML_SEGS + 1];
         _terrY = new [ML_SEGS + 1];
         for (var i = 0; i <= ML_SEGS; i++) { _terrX[i] = 0; _terrY[i] = 0; }
@@ -143,6 +152,9 @@ class BitochiMoonView extends WatchUi.View {
         // Fuel decreases gently — every 3 levels drop by 30, min 500
         var f = ML_FUEL_MAX - ((_level - 1) / 3) * 30;
         if (f < 500) { f = 500; }
+        // Difficulty fuel budget: Easy is generous, Hard is lean.
+        f += [300, 0, -250][_diff];
+        if (f < 250) { f = 250; }
         _fuel = f;
 
         generateTerrain();
@@ -193,6 +205,10 @@ class BitochiMoonView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a game.
+        // Only auto-start from a fresh launch (MS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the game.
+        if (_gs == MS_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -217,6 +233,8 @@ class BitochiMoonView extends WatchUi.View {
         // ── Gravity (increases slightly with level)
         var grav = 0.036 + (_level - 1).toFloat() * 0.003;
         if (grav > 0.070) { grav = 0.070; }
+        // Difficulty gravity scale: Easy floats, Hard drops hard.
+        grav = grav * [82, 100, 122][_diff].toFloat() / 100.0;
         _velY += grav;
 
         // ── Main thruster (upward impulse, fuel-gated)
@@ -312,8 +330,8 @@ class BitochiMoonView extends WatchUi.View {
                     _gs = MS_CRASH;
                     // End of game → submit cumulative session score (DESC, no variant)
                     if (_lives <= 0) {
-                        Leaderboard.submitScore(LB_GAME_ID, _score, null);
-                        Leaderboard.showPostGame(LB_GAME_ID, null, "MOON LANDER");
+                        Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+                        Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "MOON LANDER");
                     }
                     doVibe(2);
                 }
@@ -333,6 +351,11 @@ class BitochiMoonView extends WatchUi.View {
         if (fuelBonus < 0) { fuelBonus = 0; }
         var levelBonus = level * 50;
         return 100 + softBonus + fuelBonus + levelBonus;
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     // ── Menu / leaderboard navigation ─────────────────────────────────────────
@@ -373,7 +396,7 @@ class BitochiMoonView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "MOON LANDER");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "MOON LANDER");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -415,7 +438,8 @@ class BitochiMoonView extends WatchUi.View {
         dc.setColor(0x000814, 0x000814);
         dc.clear();
 
-        if (_gs == MS_MENU) { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == MS_MENU) { startGame(); }
 
         drawStars(dc);
         drawTerrain(dc);

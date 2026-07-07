@@ -6,7 +6,7 @@ class BitochiFishApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("fish"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiFishView();
-        return [view, new BitochiFishDelegate(view)];
+        // Root view is the shared unified menu; START launches the session.
+        return buildFishMenu();
     }
 }

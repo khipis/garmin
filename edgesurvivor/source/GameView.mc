@@ -84,10 +84,15 @@ class GameView extends WatchUi.View {
     // ── title menu selection ──────────────────────────────────────────────
     hidden var _menuRow;        // ES_ROW_*
 
+    // ── difficulty (0=Easy 1=Normal 2=Hard) from the shared OPTIONS screen
+    // (es_diff). Drives spawn rate / enemy speed; segments the leaderboard.
+    hidden var _diff;
+
     function initialize() {
         View.initialize();
         _state      = GS_TITLE;
         _menuRow    = ES_ROW_START;
+        _diff       = _loadDiff();
         _timer      = null;
         _flash      = 0;
         _phaseNotif = 0;
@@ -103,6 +108,21 @@ class GameView extends WatchUi.View {
         _nearMissTimer = 0;
         // Load hi-score from persistent storage (survives app restart).
         _hiScore = _loadHi();
+    }
+
+    // Read the persisted difficulty index (es_diff). Default NORMAL(1) keeps
+    // the previous single-difficulty feel.
+    hidden function _loadDiff() {
+        try {
+            var v = Application.Storage.getValue("es_diff");
+            if (v != null && v instanceof Number && v >= 0 && v <= 2) { return v; }
+        } catch (e) { }
+        return 1;
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     hidden function _loadHi() {
@@ -197,8 +217,8 @@ class GameView extends WatchUi.View {
         _tapLeft = 16;
     }
 
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_RUN) { _killPlayer(); return true; }
         return false;
     }
 
@@ -234,7 +254,7 @@ class GameView extends WatchUi.View {
     }
     // Open the shared global leaderboard.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, "", "EDGE SURVIVOR");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "EDGE SURVIVOR");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -264,6 +284,10 @@ class GameView extends WatchUi.View {
         _player.reset();
         _enemies.reset();
         _spawner.reset();
+        // Re-read the option each run and push it into the spawner so a change
+        // on the shared OPTIONS screen takes effect immediately.
+        _diff = _loadDiff();
+        _spawner.setDifficulty(_diff);
         _score      = 0;
         _flash      = 0;
         _phaseNotif = 0;
@@ -287,9 +311,10 @@ class GameView extends WatchUi.View {
         _flash = 14;
         _spawnDeathParticles();
         _state = GS_OVER;
-        // Submit this run's score to the global leaderboard (fire-and-forget).
-        Leaderboard.submitScore(LB_GAME_ID, _score, "");
-        Leaderboard.showPostGame(LB_GAME_ID, "", "EDGE SURVIVOR");
+        // Submit this run's score to the global leaderboard (fire-and-forget),
+        // segmented by difficulty.
+        Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "EDGE SURVIVOR");
         // haptic feedback
         if (Attention has :vibrate) {
             Attention.vibrate([new Attention.VibeProfile(100, 180)]);
@@ -404,7 +429,9 @@ class GameView extends WatchUi.View {
         }
 
         if (_state == GS_TITLE) {
-            _drawTitle(dc);
+            // No in-game title; the shared menu is the root. Drop straight
+            // into a run (allocations from onLayout are ready by now).
+            _startGame();
         } else if (_state == GS_OVER) {
             _drawOver(dc);
         } else {

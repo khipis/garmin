@@ -6,7 +6,7 @@ class BitochiBlocksApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("blocks"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiBlocksView();
-        return [view, new BitochiBlocksDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildBlocksMenu();
     }
 }

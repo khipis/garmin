@@ -6,7 +6,7 @@ class BitochiBlackjackApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("blackjack"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiBlackjackView();
-        return [view, new BitochiBlackjackDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildBlackjackMenu();
     }
 }

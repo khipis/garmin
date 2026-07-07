@@ -46,6 +46,11 @@ class BitochiParachuteView extends WatchUi.View {
     hidden var _windX;
     hidden var _windPhase;
 
+    // Wind setting from the shared OPTIONS screen (pc_wind: 0=Calm 1=Breezy
+    // 2=Gusty). Scales horizontal wind + gust strength and segments the LB.
+    hidden var _windSetting;   // 0/1/2 index
+    hidden var _windMul;       // multiplier applied to wind amplitude/gusts
+
     hidden var _score;
     hidden var _totalScore;
     hidden var _bestScore;
@@ -128,11 +133,34 @@ class BitochiParachuteView extends WatchUi.View {
         _landX = 0; _landR = 20; _landDist = 0.0; _landGrade = "";
         _jumpTick = 0; _resultTick = 0; _shakeT = 0; _flashT = 0;
         _menuSel = 0; _lbX = 0; _lbY = 0; _lbW = 0; _lbH = 0;
+
+        // Wind strength from the shared OPTIONS screen (pc_wind: 0/1/2,
+        // default 1 = Breezy so the default run matches today's wind).
+        _windSetting = 1;
+        var pw = Application.Storage.getValue("pc_wind");
+        if (pw instanceof Number && pw >= 0 && pw <= 2) { _windSetting = pw; }
+        _windMul = [0.45, 1.0, 1.65][_windSetting];
+
         gameState = PS_MENU;
     }
 
-    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true); }
+    // Leaderboard variant = wind setting, so Calm/Breezy/Gusty rank separately.
+    hidden function _windVariant() {
+        return ["calm", "breezy", "gusty"][_windSetting];
+    }
+
+    function onShow() {
+        _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true);
+        // The main menu is the shared root view; drop straight into a run.
+        // Only auto-start from a fresh launch (PS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the run.
+        if (gameState == PS_MENU) { startRun(); }
+    }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+
+    hidden function startRun() {
+        _level = 1; _totalScore = 0; _lives = 3; startLevel();
+    }
 
     function onTick() as Void {
         _tick++;
@@ -199,6 +227,7 @@ class BitochiParachuteView extends WatchUi.View {
         if (_gustSpawnTimer <= 0) {
             var maxForce = 0.5 + (_level - 4).toFloat() * 0.12;
             if (maxForce > 2.4) { maxForce = 2.4; }
+            maxForce = maxForce * _windMul;   // Calm/Breezy/Gusty wind setting
             _gustX = (Math.rand().abs() % 2 == 0 ? 1.0 : -1.0) * (0.4 + (Math.rand().abs() % 10).toFloat() / 10.0 * maxForce);
             _gustDecay = 20 + Math.rand().abs() % 35;
             _gustSpawnTimer = 50 + Math.rand().abs() % 90;
@@ -222,6 +251,7 @@ class BitochiParachuteView extends WatchUi.View {
         _windPhase += 0.06;
         var wAmp = 0.55 + _level.toFloat() * 0.14 + (_level / 4).toFloat() * 0.05;
         if (wAmp > 1.8) { wAmp = 1.8; }
+        wAmp = wAmp * _windMul;   // Calm/Breezy/Gusty wind setting
         _windX = Math.sin(_windPhase) * wAmp;
 
         updateGusts();
@@ -246,8 +276,8 @@ class BitochiParachuteView extends WatchUi.View {
             finalScore(false);
             if (_lives <= 0) {
                 gameState = PS_GAMEOVER; _resultTick = 0;
-                Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
-                Leaderboard.showPostGame(LB_GAME_ID, null, "PARACHUTE");
+                Leaderboard.submitScore(LB_GAME_ID, _totalScore, _windVariant());
+                Leaderboard.showPostGame(LB_GAME_ID, _windVariant(), "PARACHUTE");
             }
             else { gameState = PS_CRASH; _resultTick = 0; }
         }
@@ -262,6 +292,7 @@ class BitochiParachuteView extends WatchUi.View {
         _windPhase += 0.04;
         var wAmpC = 0.45 + _level.toFloat() * 0.10 + (_level / 4).toFloat() * 0.04;
         if (wAmpC > 1.4) { wAmpC = 1.4; }
+        wAmpC = wAmpC * _windMul;   // Calm/Breezy/Gusty wind setting
         _windX = Math.sin(_windPhase) * wAmpC;
 
         updateGusts();
@@ -307,8 +338,8 @@ class BitochiParachuteView extends WatchUi.View {
             _landAnimY = (_h * 10 / 100).toFloat();
             if (_lives <= 0) {
                 gameState = PS_GAMEOVER; _resultTick = 0;
-                Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
-                Leaderboard.showPostGame(LB_GAME_ID, null, "PARACHUTE");
+                Leaderboard.submitScore(LB_GAME_ID, _totalScore, _windVariant());
+                Leaderboard.showPostGame(LB_GAME_ID, _windVariant(), "PARACHUTE");
             }
             else { gameState = PS_LAND; _resultTick = 0; }
         }
@@ -426,7 +457,7 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "PARACHUTE");
+        var v = new LbScoresView(LB_GAME_ID, _windVariant(), "PARACHUTE");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -446,7 +477,7 @@ class BitochiParachuteView extends WatchUi.View {
     function doAction() {
         if (gameState == PS_MENU) {
             if (_menuSel == 1) { openLeaderboard(); }
-            else { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
+            else { startRun(); }
         }
         else if (gameState == PS_FREE) {
             if (_altitude > 300.0) { _flashT = 6; return; }
@@ -468,7 +499,8 @@ class BitochiParachuteView extends WatchUi.View {
 
     function onUpdate(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
-        if (gameState == PS_MENU) { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (gameState == PS_MENU) { startRun(); }
 
         var ox = 0; var oy = 0;
         if (_shakeT > 0) { ox = (Math.rand().abs() % 7) - 3; oy = (Math.rand().abs() % 5) - 2; }

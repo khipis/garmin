@@ -65,18 +65,6 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden function _refresh() { WatchUi.requestUpdate(); }
     hidden function _ctrl()    { return view.ctrl; }
 
-    // Activate the focused menu row. The LEADERBOARD row opens the shared
-    // leaderboard view; everything else is a normal controller action.
-    hidden function _activateMenu() {
-        var c = _ctrl();
-        if (c.menuCursor == MI_LEADERBOARD) {
-            view.openLeaderboard();
-        } else {
-            c.menuActivate();
-            _refresh();
-        }
-    }
-
     // ── Button events ───────────────────────────────────────────────
     function onKey(evt) {
         return _handleKeyCode(evt.getKey());
@@ -85,27 +73,23 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden function _handleKeyCode(k) {
         var c = _ctrl();
 
-        if (c.state == GS_MENU) {
-            if (k == WatchUi.KEY_UP)    { c.menuPrev();   _refresh(); return true; }
-            if (k == WatchUi.KEY_DOWN)  { c.menuNext();   _refresh(); return true; }
-            if (k == WatchUi.KEY_ENTER) { _activateMenu();            return true; }
-            if (k == WatchUi.KEY_ESC)   { return false; }   // let system exit
-        } else if (c.state == GS_PLAY) {
+        if (k == WatchUi.KEY_ESC) { return onBack(); }
+
+        if (c.state == GS_PLAY) {
             if (k == WatchUi.KEY_UP)    { c.tryMove(DIR_UP);    _refresh(); return true; }
             if (k == WatchUi.KEY_DOWN)  { c.tryMove(DIR_DOWN);  _refresh(); return true; }
             if (k == WatchUi.KEY_ENTER) { c.tryMove(DIR_RIGHT); _refresh(); return true; }
             if (k == WatchUi.KEY_MENU)  { c.tryMove(DIR_LEFT);  _refresh(); return true; }
-            if (k == WatchUi.KEY_ESC)   { c.gotoMenu();         _refresh(); return true; }
         } else if (c.state == GS_WIN) {
             if (k == WatchUi.KEY_ENTER) { c.continueAfterWin(); _refresh(); return true; }
-            if (k == WatchUi.KEY_ESC)   { c.gotoMenu();         _refresh(); return true; }
             if (k == WatchUi.KEY_UP || k == WatchUi.KEY_DOWN) {
                 c.continueAfterWin();
                 _refresh();
                 return true;
             }
-        } else { // GS_OVER
-            c.gotoMenu();
+        } else if (c.state == GS_OVER) {
+            // Game over → restart a fresh run in place.
+            c.newGame();
             _refresh();
             return true;
         }
@@ -127,7 +111,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()       { return _handleKeyCode(WatchUi.KEY_ENTER); }
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        return _handleKeyCode(WatchUi.KEY_ESC);
+        // Pop back to the shared unified menu.
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
     }
     // onNextPage / onPreviousPage are produced by SWIPE gestures (and
     // dedicated page buttons) — physical UP/DOWN keys are consumed by
@@ -136,16 +122,8 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // these page events too would fire a SECOND, oppositely-mapped
     // vertical move — that double-trigger is what made "swipe down" move
     // the tiles up. We therefore only use them for menu navigation.
-    function onNextPage() {
-        var c = _ctrl();
-        if (c.state == GS_MENU) { c.menuNext(); _refresh(); return true; }
-        return true;
-    }
-    function onPreviousPage() {
-        var c = _ctrl();
-        if (c.state == GS_MENU) { c.menuPrev(); _refresh(); return true; }
-        return true;
-    }
+    function onNextPage()     { return true; }
+    function onPreviousPage()  { return true; }
 
     // onMenu fires on long-press UP (Fenix, Forerunner) or the
     // dedicated MENU button (Edge). Map it to LEFT so the player
@@ -205,16 +183,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
                 }
                 _refresh();
                 return true;
-            } else if (c.state == GS_MENU) {
-                if (ady >= adx) {
-                    if (dy < 0) { c.menuPrev(); } else { c.menuNext(); }
-                    _refresh();
-                }
-                return true;
             } else if (c.state == GS_WIN) {
                 c.continueAfterWin(); _refresh(); return true;
             } else if (c.state == GS_OVER) {
-                c.gotoMenu(); _refresh(); return true;
+                c.newGame(); _refresh(); return true;
             }
         }
         return false;
@@ -225,9 +197,8 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onTap(evt) {
         _markGesture();
         var c = _ctrl();
-        if (c.state == GS_MENU) { _activateMenu();                  return true; }
         if (c.state == GS_WIN)  { c.continueAfterWin(); _refresh(); return true; }
-        if (c.state == GS_OVER) { c.gotoMenu();         _refresh(); return true; }
+        if (c.state == GS_OVER) { c.newGame();          _refresh(); return true; }
         return false;
     }
 }

@@ -100,6 +100,11 @@ class BitochiSerpentView extends WatchUi.View {
     // Snake body color palette (head→tail gradient, 6 steps)
     hidden var _snakePalette;
 
+    // OPTIONS "Speed" (sp_spd): 0=SLOW 1=NORMAL 2=FAST. Sets the base ticks per
+    // step, i.e. how fast the snake moves. NORMAL (1) is today's rate so the
+    // default experience is unchanged.
+    hidden var _spdSel;
+
     function initialize() {
         View.initialize();
         accelX = 0;
@@ -111,6 +116,10 @@ class BitochiSerpentView extends WatchUi.View {
 
         _best = Application.Storage.getValue("serpent_best");
         if (_best == null) { _best = 0; }
+
+        _spdSel = 1;
+        var sp = Application.Storage.getValue("sp_spd");
+        if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
 
         _sX = new [SMAX_SNAKE]; _sY = new [SMAX_SNAKE];
         _fX = new [SMAX_FOOD]; _fY = new [SMAX_FOOD];
@@ -138,6 +147,10 @@ class BitochiSerpentView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 80, true);
+        // The main menu is the shared root view; drop straight into a game.
+        // Only auto-start from a fresh launch (SS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the game.
+        if (_gs == SS_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -179,7 +192,9 @@ class BitochiSerpentView extends WatchUi.View {
 
         for (var i = 0; i < SPART_N; i++) { _prtLife[i] = 0; }
 
-        _stepBase = 5;  // ticks per step (80ms each = 400ms/step at start — faster)
+        // Base ticks per step from the OPTIONS "Speed" setting: SLOW=7,
+        // NORMAL=5 (today's default), FAST=3. Lower = quicker snake.
+        _stepBase = [7, 5, 3][_spdSel];
         _stepCount = 0;
         _accelCooldown = 0;
 
@@ -528,9 +543,10 @@ class BitochiSerpentView extends WatchUi.View {
             _best = _score;
             Application.Storage.setValue("serpent_best", _best);
         }
-        // Submit the run score to the global leaderboard (fire-and-forget).
-        Leaderboard.submitScore(SLB_GAME_ID, _score, "");
-        Leaderboard.showPostGame(SLB_GAME_ID, "", "SERPENT");
+        // Submit the run score to the global leaderboard (fire-and-forget),
+        // segmented by the chosen step-rate variant.
+        Leaderboard.submitScore(SLB_GAME_ID, _score, _lbVariant());
+        Leaderboard.showPostGame(SLB_GAME_ID, _lbVariant(), "SERPENT");
         doVibe(2);
     }
 
@@ -593,9 +609,14 @@ class BitochiSerpentView extends WatchUi.View {
         else { startGame(); }
     }
 
+    // Leaderboard variant = step rate, so SLOW/NORMAL/FAST rank separately.
+    hidden function _lbVariant() {
+        return ["slow", "normal", "fast"][_spdSel];
+    }
+
     // Open the shared global leaderboard for serpent.
     function openLeaderboard() {
-        var v = new LbScoresView(SLB_GAME_ID, "", "SERPENT");
+        var v = new LbScoresView(SLB_GAME_ID, _lbVariant(), "SERPENT");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -634,9 +655,10 @@ class BitochiSerpentView extends WatchUi.View {
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGrid(); }
 
-        if (_gs == SS_MENU)     { drawMenu(dc); }
-        else if (_gs == SS_PLAY){ drawGame(dc); }
-        else                    { drawOver(dc); }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == SS_MENU)      { startGame(); }
+        if (_gs == SS_PLAY)      { drawGame(dc); }
+        else if (_gs == SS_OVER) { drawOver(dc); }
     }
 
     // ── Menu screen ──────────────────────────────────────────────────────────

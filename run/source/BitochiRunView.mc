@@ -122,9 +122,20 @@ class BitochiRunView extends WatchUi.View {
     // Main-menu selection: 0 = START, 1 = LEADERBOARD (shared global board).
     hidden var _menuRow;
 
+    // OPTIONS "Speed" (run_spd): 0=NORMAL 1=FAST 2=INSANE. Scales how fast the
+    // monster closes the gap, so the whole chase plays quicker. NORMAL (0) is
+    // today's pace so the default experience is unchanged.
+    hidden var _spdSel;
+    hidden var _spdFactor;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
+
+        _spdSel = 0;
+        var sp = BrStore.getValue("run_spd");
+        if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
+        _spdFactor = [1.0, 1.3, 1.6][_spdSel];
 
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth;
@@ -227,16 +238,21 @@ class BitochiRunView extends WatchUi.View {
         if (_menuRow > 1) { _menuRow = 0; }
     }
 
+    // Leaderboard variant = chase speed, so NORMAL/FAST/INSANE rank separately.
+    hidden function _lbVariant() {
+        return ["s0", "s1", "s2"][_spdSel];
+    }
+
     // Push the shared global leaderboard view (auto-prompts for a username).
     function openLeaderboard() {
-        var v = new LbScoresView("run", "", "MONSTER ESC");
+        var v = new LbScoresView("run", _lbVariant(), "MONSTER ESC");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Submit the final session score to the global board on game over.
     hidden function submitToLeaderboard() {
-        Leaderboard.submitScore("run", _sessionScore, "");
-        Leaderboard.showPostGame("run", "", "MONSTER ESC");
+        Leaderboard.submitScore("run", _sessionScore, _lbVariant());
+        Leaderboard.showPostGame("run", _lbVariant(), "MONSTER ESC");
     }
 
     function nudgeDodge(dir) {
@@ -249,6 +265,10 @@ class BitochiRunView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a run.
+        // Only auto-start from a fresh launch (RS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the run.
+        if (gameState == RS_MENU) { _sessionScore = 0; startLevel(); }
     }
 
     function onHide() {
@@ -699,7 +719,7 @@ class BitochiRunView extends WatchUi.View {
         _playerDist += _playerSpeed;
 
         var msm = monsterSpeedMultiplier();
-        var monStep = _monsterBaseSpeed * msm;
+        var monStep = _monsterBaseSpeed * msm * _spdFactor;
         _monsterDist = _monsterDist + monStep + _monsterWobble;
 
         if (_monsterIdx != 6 && _monsterIdx != 3) {
@@ -881,7 +901,8 @@ class BitochiRunView extends WatchUi.View {
         dc.setColor(0x000000, 0x000000);
         dc.clear();
 
-        if (gameState == RS_MENU) { drawMenu(dc, w, h); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (gameState == RS_MENU) { _sessionScore = 0; startLevel(); }
         if (gameState == RS_INTRO) { drawIntro(dc, w, h); return; }
         if (gameState == RS_SCAN) { drawScanScene(dc, w, h); return; }
         if (gameState == RS_FOUND) { drawFoundScene(dc, w, h); return; }

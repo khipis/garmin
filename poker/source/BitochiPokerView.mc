@@ -47,6 +47,11 @@ class BitochiPokerView extends WatchUi.View {
     hidden var _peakChips;      // highest player stack reached this session
     hidden var _scoreSubmitted; // guard: submit leaderboard score once per session
 
+    // Session length from the shared OPTIONS screen (pk_hands: 0/1/2 = 10/20/40
+    // hands). The session ends after this many hands (or on a bust), turning the
+    // formerly-endless game into a fixed-length run. Segments the leaderboard.
+    hidden var _handsIdx; hidden var _handLimit; hidden var _handsPlayed;
+
     hidden var _rankStr;
     hidden var _suitStr;
     hidden var _handNames;
@@ -62,6 +67,11 @@ class BitochiPokerView extends WatchUi.View {
         _resultMsg = ""; _aiDelay = 0;
         _menuRow = PK_ROW_PLAY;
         _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
+        _handsIdx = 1;
+        var hv = Application.Storage.getValue("pk_hands");
+        if (hv instanceof Number && hv >= 0 && hv <= 2) { _handsIdx = hv; }
+        _handLimit = [10, 20, 40][_handsIdx];
+        _handsPlayed = 0;
         _deck = new [52]; _deckTop = 0;
         _pHand = new [5]; _aHand = new [5];
         _discard = new [5];
@@ -87,6 +97,10 @@ class BitochiPokerView extends WatchUi.View {
             _timer = new Timer.Timer();
             _timer.start(method(:onTick), 200, true);
         }
+        // The main menu is the shared root view; drop straight into a session.
+        // Only auto-start from a fresh launch (PK_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the session.
+        if (_gs == PK_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -135,7 +149,8 @@ class BitochiPokerView extends WatchUi.View {
 
     function doSelect() {
         if (_gs == PK_MENU) { menuActivate(); return; }
-        if (_gs == PK_SHOWDOWN || _gs == PK_GAMEOVER) {
+        if (_gs == PK_GAMEOVER) { resetGame(); return; }
+        if (_gs == PK_SHOWDOWN) {
             if (_pChips <= 0 || _aChips <= 0) { resetGame(); }
             else { startRound(); }
             return;
@@ -151,7 +166,8 @@ class BitochiPokerView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == PK_MENU) { menuTap(tx, ty); return; }
-        if (_gs == PK_SHOWDOWN || _gs == PK_GAMEOVER) {
+        if (_gs == PK_GAMEOVER) { resetGame(); return; }
+        if (_gs == PK_SHOWDOWN) {
             if (_pChips <= 0 || _aChips <= 0) { resetGame(); }
             else { startRound(); }
             return;
@@ -177,11 +193,12 @@ class BitochiPokerView extends WatchUi.View {
         }
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view).
+    // Submit the peak-chip score once so the session still counts.
     function doBack() {
-        if (_gs != PK_MENU) {
-            // Quitting back to the menu ends the session — submit the run.
-            endSession();
-            _gs = PK_MENU; _menuRow = PK_ROW_PLAY; return true;
+        if (!_scoreSubmitted) {
+            _scoreSubmitted = true;
+            Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
         }
         return false;
     }
@@ -212,7 +229,7 @@ class BitochiPokerView extends WatchUi.View {
 
     // Open the shared global leaderboard for poker.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "POKER");
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "POKER");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -243,8 +260,13 @@ class BitochiPokerView extends WatchUi.View {
     hidden function endSession() {
         if (_scoreSubmitted) { return; }
         _scoreSubmitted = true;
-        Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
-        Leaderboard.showPostGame(LB_GAME_ID, null, "POKER");
+        Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "POKER");
+    }
+
+    // Leaderboard variant = session length, so 10/20/40 hands rank separately.
+    hidden function _lbVariant() {
+        return ["h10", "h20", "h40"][_handsIdx];
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
@@ -252,12 +274,14 @@ class BitochiPokerView extends WatchUi.View {
     hidden function resetGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
         _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
+        _handsPlayed = 0;
         startRound();
     }
 
     hidden function startGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
         _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
+        _handsPlayed = 0;
         startRound();
     }
 
@@ -345,8 +369,14 @@ class BitochiPokerView extends WatchUi.View {
         }
         _pot = 0;
         if (_pChips > _peakChips) { _peakChips = _pChips; }
+        _handsPlayed++;
         if (_pChips <= 0) { _resultMsg = "BROKE! GAME OVER"; _gs = PK_GAMEOVER; endSession(); return; }
         if (_aChips <= 0) { _resultMsg = "AI BROKE! YOU WIN!"; _gs = PK_GAMEOVER; endSession(); return; }
+        // Fixed-length session: once the hand budget is spent, the run ends.
+        if (_handsPlayed >= _handLimit) {
+            _resultMsg = "SESSION DONE: " + _pChips;
+            _gs = PK_GAMEOVER; endSession(); return;
+        }
         _gs = PK_SHOWDOWN;
     }
 
@@ -403,7 +433,8 @@ class BitochiPokerView extends WatchUi.View {
         dc.setColor(0x000000, 0x000000);
         dc.clear();
 
-        if (_gs == PK_MENU)     { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == PK_MENU)     { startGame(); }
         if (_gs == PK_GAMEOVER) { drawGameOver(dc); return; }
 
         drawAIHand(dc);

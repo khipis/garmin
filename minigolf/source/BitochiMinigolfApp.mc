@@ -6,7 +6,7 @@ class BitochiMinigolfApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("minigolf"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiMinigolfView();
-        return [view, new BitochiMinigolfDelegate(view)];
+        // Root view is the shared unified menu; START launches the round.
+        return buildMinigolfMenu();
     }
 }

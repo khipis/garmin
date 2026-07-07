@@ -36,6 +36,7 @@ class MainView extends WatchUi.View {
     hidden var _hudTop;
     hidden var _laidOut;
     hidden var _frame;
+    hidden var _started;   // auto-start the run on first frame
 
     // Starfield — pre-generated once in _doLayout.
     hidden var _starX;
@@ -64,6 +65,7 @@ class MainView extends WatchUi.View {
         _hudTop = 0;
         _laidOut = false;
         _frame   = 0;
+        _started = false;
         _starX = null; _starY = null; _starPhase = null;
         _gridY = null; _gridHorizonY = 0;
         _sparkT = 0; _sparkRow = 0; _sparkX = 0; _sparkW = 0;
@@ -90,6 +92,13 @@ class MainView extends WatchUi.View {
         _sh = dc.getHeight();
         if (!_laidOut) { _doLayout(); _laidOut = true; }
 
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.startGame();
+            _started = true;
+        }
+
         // Smooth camera follow — keep tower top at ~30% from top.
         var top = _ctrl.tower.topBlock();
         if (top != null) {
@@ -105,8 +114,8 @@ class MainView extends WatchUi.View {
         }
 
         _drawSky(dc);
-
-        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
+        // Keep the signature retrowave grid as the in-game backdrop.
+        _drawRetrowaveGrid(dc);
 
         _drawGround(dc, shx);
         _drawTower(dc, shx);
@@ -625,7 +634,7 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Input intents ────────────────────────────────────────────────
@@ -668,8 +677,7 @@ class MainView extends WatchUi.View {
         _ctrl.dropAction(); _checkSparkle();
     }
     function handleBack() {
-        if (_ctrl.state == GS_PLAY) { _ctrl.gotoMenu(); return true; }
-        if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); return true; }
+        // Always pop back to the shared menu.
         return false;
     }
 

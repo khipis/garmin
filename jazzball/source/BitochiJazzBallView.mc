@@ -2,6 +2,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
 
 // ── Leaderboard ────────────────────────────────────────────────────────────────
 const LB_GAME_ID = "jazzball";
@@ -84,6 +85,10 @@ class BitochiJazzBallView extends WatchUi.View {
     // Pre-allocated BFS helpers — avoids per-tick allocations in floodFill
     hidden var _floodQueue;   // int[GCOLS*GROWS]
 
+    // Difficulty (0=Easy 1=Normal 2=Hard) from the shared OPTIONS screen
+    // (jb_diff). Drives ball count and ball speed; segments the leaderboard.
+    hidden var _diff;
+
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -105,6 +110,12 @@ class BitochiJazzBallView extends WatchUi.View {
         _ballColors = [0xFF4422, 0xFF8800, 0xFFCC00, 0x44FF88, 0x44AAFF, 0xFF44AA];
         _floodQueue = new [_totalCells];
 
+        // Difficulty from the shared OPTIONS screen (jb_diff: 0/1/2). Default
+        // NORMAL(1) matches the previous single-difficulty behaviour.
+        _diff = 1;
+        var jd = Application.Storage.getValue("jb_diff");
+        if (jd instanceof Number && jd >= 0 && jd <= 2) { _diff = jd; }
+
         _timer = null;
     }
 
@@ -120,6 +131,10 @@ class BitochiJazzBallView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:onTick), 40, true);
+        // The main menu is the shared root view; drop straight into a game.
+        // Only auto-start from a fresh launch (JB_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the game.
+        if (_gs == JB_MENU) { startGame(); }
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
@@ -464,8 +479,13 @@ class BitochiJazzBallView extends WatchUi.View {
         var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
         _finalScore = _score + filledPct;
         _gs = JB_GAMEOVER;
-        Leaderboard.submitScore(LB_GAME_ID, _finalScore, null);
-        Leaderboard.showPostGame(LB_GAME_ID, null, "JAZZBALL");
+        Leaderboard.submitScore(LB_GAME_ID, _finalScore, _diffVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "JAZZBALL");
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
@@ -498,8 +518,8 @@ class BitochiJazzBallView extends WatchUi.View {
         _fireLine();
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view).
     function doBack() {
-        if (_gs != JB_MENU) { _gs = JB_MENU; _wall = null; return true; }
         return false;
     }
 
@@ -558,7 +578,7 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "JAZZBALL");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "JAZZBALL");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -594,14 +614,23 @@ class BitochiJazzBallView extends WatchUi.View {
         _curCol = GCOLS / 2; _curRow = GROWS / 2;
         _nextHoriz = true;
 
-        // Level 1 starts with 1 ball, +1 per level
-        var numBalls = _level;
-        if (numBalls > 8) { numBalls = 8; }
+        // Level 1 starts with 1 ball, +1 per level. Difficulty shifts the
+        // count: Easy one fewer (and a lower cap), Hard one more.
+        var ballAdd = [-1, 0, 1][_diff];
+        var numBalls = _level + ballAdd;
+        if (numBalls < 1) { numBalls = 1; }
+        var ballCap = [6, 8, 8][_diff];
+        if (numBalls > ballCap) { numBalls = ballCap; }
         _balls = new [numBalls];
 
-        // Balls are faster at higher levels
+        // Balls are faster at higher levels; difficulty scales the base speed
+        // and its cap: Easy slower, Hard faster.
         var speedBase = 5 + _level * 2;
-        if (speedBase > 14) { speedBase = 14; }
+        var spdMul = [70, 100, 132][_diff];
+        speedBase = speedBase * spdMul / 100;
+        if (speedBase < 3) { speedBase = 3; }
+        var spdCap = [12, 14, 18][_diff];
+        if (speedBase > spdCap) { speedBase = spdCap; }
 
         for (var i = 0; i < numBalls; i++) {
             var bx = (4 + Math.rand().abs() % (GCOLS - 8)) * 10;
@@ -616,7 +645,8 @@ class BitochiJazzBallView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeo(); }
-        if (_gs == JB_MENU)    { drawMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == JB_MENU)    { startGame(); }
         drawBoard(dc);
         drawBalls(dc);
         drawCursor(dc);

@@ -70,8 +70,16 @@ class BitochiCheckersView extends WatchUi.View {
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
         _tick = 0;
-        _gs = GS_MENU; _difficulty = 1;
-        _playerIsWhite = true; _aiVsAi = false; _pvp = false;
+        _gs = GS_MENU;
+        // Settings now live in the shared unified menu (OPTIONS); read them back.
+        var dv = Application.Storage.getValue("checkers_diff");
+        _difficulty = (dv instanceof Lang.Number && dv >= 0 && dv <= 2) ? dv : 1;
+        var cv = Application.Storage.getValue("checkers_color");
+        _playerIsWhite = !(cv instanceof Lang.Number && cv == 1);   // 0=LIGHT, 1=DARK
+        var mv = Application.Storage.getValue("checkers_mode");
+        var modeIdx = (mv instanceof Lang.Number && mv >= 0 && mv <= 2) ? mv : 0;
+        _pvp    = (modeIdx == 1);
+        _aiVsAi = (modeIdx == 2);
         _selRow = -1; _selCol = -1;
         _mustRow = -1; _mustCol = -1;
         _curRow = 2; _curCol = 1;
@@ -100,6 +108,13 @@ class BitochiCheckersView extends WatchUi.View {
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupGeo();
+    }
+
+    // Root view is the shared unified menu; drop straight into a game. Only
+    // auto-start from the initial GS_MENU — returning from a pushed post-game
+    // card leaves us in a WIN/LOSE/DRAW state, so the run is never restarted.
+    function onShow() {
+        if (_gs == GS_MENU) { startGame(); }
     }
 
     hidden function setupGeo() {
@@ -298,15 +313,12 @@ class BitochiCheckersView extends WatchUi.View {
     }
 
     function doBack() {
+        // While a piece is selected mid-move, BACK just deselects it.
         if (_gs == GS_PLAY && _selRow >= 0 && _mustRow < 0) {
             doDeselect();
             return true;
         }
-        if (_gs != GS_MENU) {
-            _gs = GS_MENU; _selRow = -1; _selCol = -1;
-            _validDsts = new [0]; _mustRow = -1; _mustCol = -1;
-            return true;
-        }
+        // Otherwise let the framework pop back to the shared unified menu.
         return false;
     }
 
@@ -1267,7 +1279,7 @@ class BitochiCheckersView extends WatchUi.View {
 
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeo(); }
-        if (_gs == GS_MENU) { drawMenu(dc); return; }
+        if (_gs == GS_MENU) { startGame(); }   // never render an in-game menu
         drawBoard(dc);
         drawPieces(dc);
         drawHUD(dc);

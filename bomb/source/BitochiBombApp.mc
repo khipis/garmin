@@ -15,7 +15,7 @@ class BitochiBombApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BitochiBombView();
-        return [view, new BitochiBombDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildBombMenu();
     }
 }

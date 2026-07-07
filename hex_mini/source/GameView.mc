@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
+using Toybox.Lang;
 
 // ── Global leaderboard ─────────────────────────────────────────────────────
 const LB_GAME_ID = "hex_mini";
@@ -104,8 +105,25 @@ class GameView extends WatchUi.View {
         _diff    = DIFF_MED;
         _menuSel = 0;
         _playerFirst = true;
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
         _startGame();
-        _state   = GS_MENU;
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: hex_mode (0..2), hex_diff (0..2), hex_side (0=Red first, 1=Blue).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stgIdx("hex_mode", MODE_PVAI, 0, 2);
+        _diff        = _stgIdx("hex_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("hex_side", 0, 0, 1) == 0);
     }
 
     function onLayout(dc) {
@@ -181,10 +199,9 @@ class GameView extends WatchUi.View {
     }
 
     // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
@@ -197,7 +214,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_state == HGS_OVER) { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == HGS_OVER) { _startGame(); WatchUi.requestUpdate(); return; }
         if (_mode == MODE_AIAI) { return; }
         // PvP: HGS_AI state is player 2's turn
         if (_state == HGS_AI && _mode == MODE_PVP) {
@@ -607,7 +624,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
 
@@ -858,7 +875,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == HGS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == HGS_OVER) { _startGame(); return; }
         if (_state != HGS_PLAY && !(_state == HGS_AI && _mode == MODE_PVP)) { return; }
         if (_dx <= 0 || _dy <= 0) { return; }
         // Find nearest hex cell using pixel-to-hex inverse of _cx/_cy:

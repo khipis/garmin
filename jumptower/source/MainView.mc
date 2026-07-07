@@ -19,6 +19,7 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _laidOut;
     hidden var _bgFrame;            // counter for parallax animation
+    hidden var _started;            // auto-start the run on first layout
 
     function initialize() {
         View.initialize();
@@ -26,6 +27,7 @@ class MainView extends WatchUi.View {
         _timer   = null;
         _laidOut = false;
         _bgFrame = 0;
+        _started = false;
     }
 
     function onShow() {
@@ -48,10 +50,14 @@ class MainView extends WatchUi.View {
             _ctrl.setScreen(dc.getWidth(), dc.getHeight());
             _laidOut = true;
         }
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.beginRun();
+            _started = true;
+        }
 
         _drawBackground(dc);
-
-        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
 
         var shx = 0;
         if (_ctrl.deathShake > 0) { shx = (Math.rand() % 7) - 3; }
@@ -435,7 +441,7 @@ class MainView extends WatchUi.View {
 
     // Open the shared global leaderboard (no variant for Jump Tower).
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, "", "JUMP TOWER");
+        var v = new LbScoresView(LB_GAME_ID, _ctrl.diffVariant(), "JUMP TOWER");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -574,7 +580,7 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap = replay  ESC = menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Input intents (called from InputHandler) ────────────────────
@@ -588,44 +594,18 @@ class MainView extends WatchUi.View {
     function navUp()   { if (_ctrl.state == GS_MENU) { _ctrl.menuPrev(); } }
     function navDown() { if (_ctrl.state == GS_MENU) { _ctrl.menuNext(); } }
     function confirm() {
-        if (_ctrl.state == GS_MENU) {
-            if (_ctrl.menuRow == JT_ROW_LB) { openLeaderboard(); return; }
-            _ctrl.menuActivate();
-        } else if (_ctrl.state == GS_OVER) {
-            _ctrl.gotoMenu();
-        }
+        // Game-over → restart in place (new run); menu is no longer here.
+        if (_ctrl.state == GS_OVER) { _ctrl.beginRun(); }
     }
     function handleTap(x, y) {
-        if (_ctrl.state == GS_MENU) {
-            var rg = menuRowGeom();
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < JT_MENU_ROWS; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW &&
-                    y >= ry    && y < ry    + rowH) {
-                    _ctrl.setMenuRow(i);
-                    if (i == JT_ROW_LB) { openLeaderboard(); }
-                    else { _ctrl.menuActivate(); }
-                    return;
-                }
-            }
-            // Tap outside the rows: activate whatever is selected.
-            if (_ctrl.menuRow == JT_ROW_LB) { openLeaderboard(); }
-            else { _ctrl.menuActivate(); }
-            return;
-        }
-        if (_ctrl.state == GS_OVER)  { _ctrl.gotoMenu(); return; }
+        if (_ctrl.state == GS_OVER)  { _ctrl.beginRun(); return; }
         var dir = (x < _ctrl.screenW / 2) ? -1 : 1;
         _ctrl.tapDir(dir);
     }
+    // BACK (physical ESC or right-edge exit) pops to the shared menu.
     function handleBack() {
-        if (_ctrl.state == GS_PLAY || _ctrl.state == GS_OVER
-            || _ctrl.state == GS_READY) {
-            _ctrl.gotoMenu();
-            return true;
-        }
-        return false;
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
     }
 
     // ── Drag-based steering ────────────────────────────────────────

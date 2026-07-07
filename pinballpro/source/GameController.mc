@@ -318,7 +318,7 @@ class GameController {
 
     function selectAction() {
         if (state == GS_MENU)   { menuActivate(); return; }
-        if (state == GS_OVER)   { gotoMenu();     return; }
+        if (state == GS_OVER)   { startMatch();   return; }   // replay in place
         if (state == GS_LAUNCH) { launchBall();   return; }
     }
 

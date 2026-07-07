@@ -6,7 +6,7 @@ class SolitaireApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("solitaire"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new SolitaireView();
-        return [view, new SolitaireDelegate(view)];
+        // Root view is the shared unified menu; START deals a new game.
+        return buildSolitaireMenu();
     }
 }

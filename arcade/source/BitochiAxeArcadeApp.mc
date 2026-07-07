@@ -6,7 +6,7 @@ class BitochiAxeArcadeApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("arcade"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiAxeArcadeView();
-        return [view, new BitochiAxeArcadeDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildArcadeMenu();
     }
 }

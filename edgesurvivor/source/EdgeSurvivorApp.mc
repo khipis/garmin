@@ -6,7 +6,7 @@ class EdgeSurvivorApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("edgesurvivor"); }
     function onStop(state) {}
     function getInitialView() {
-        var v = new GameView();
-        return [v, new GameDelegate(v)];
+        // Root view is the shared unified menu; START launches GameView.
+        return buildEdgeSurvivorMenu();
     }
 }

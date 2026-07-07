@@ -11,13 +11,18 @@ using Toybox.Math;
 class SpawnManager {
     hidden var _nextSpawn;
     hidden var _phase;
+    // Difficulty (0=Easy 1=Normal 2=Hard) from the shared OPTIONS screen
+    // (es_diff). Scales spawn rate and enemy outward speed.
+    hidden var _diff;
 
-    function initialize() { reset(); }
+    function initialize() { _diff = 1; reset(); }
 
     function reset() {
         _nextSpawn = 90;
         _phase     = 0;
     }
+
+    function setDifficulty(d) { if (d >= 0 && d <= 2) { _diff = d; } }
 
     function getPhase() { return _phase; }
 
@@ -30,9 +35,13 @@ class SpawnManager {
 
         _doSpawn(score, pool, edgeRadius, playerAngle);
 
-        // spawn interval shrinks with score, minimum ~32 ticks (~1 s)
+        // spawn interval shrinks with score, minimum ~32 ticks (~1 s).
+        // Difficulty scales the interval: Easy spawns less often, Hard more.
         var iv = 110 - score / 28;
         if (iv < 32) { iv = 32; }
+        var ivMul = [138, 100, 72][_diff];
+        iv = iv * ivMul / 100;
+        if (iv < 22) { iv = 22; }
         _nextSpawn = iv + Math.rand() % 28;
     }
 
@@ -65,9 +74,19 @@ class SpawnManager {
             else             { type = ET_RING;    }
         }
 
-        // outward speed: grows with score, capped
+        // outward speed: grows with score, capped. Difficulty shifts the whole
+        // curve: Easy slower (and lower cap), Hard faster (and higher cap).
         var spd = 2 + score / 400;
-        if (spd > 5) { spd = 5; }
+        if (_diff == 0) {
+            spd = spd * 80 / 100;
+            if (spd < 1) { spd = 1; }
+            if (spd > 4) { spd = 4; }
+        } else if (_diff == 2) {
+            spd = spd * 130 / 100 + 1;
+            if (spd > 7) { spd = 7; }
+        } else {
+            if (spd > 5) { spd = 5; }
+        }
 
         if (type == ET_BULLET) {
             pool.spawn(ET_BULLET, Math.rand() % 360, 12, spd, 0);

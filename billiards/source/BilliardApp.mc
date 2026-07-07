@@ -9,7 +9,7 @@ class BilliardApp extends Application.AppBase {
     function onStart(state)  { Leaderboard.logLaunch("billiards"); }
     function onStop(state)   {}
     function getInitialView() {
-        var v = new BilliardView();
-        return [v, new BilliardDelegate(v)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildBilliardsMenu();
     }
 }

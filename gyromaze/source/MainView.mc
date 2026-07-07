@@ -22,13 +22,15 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _sw;
     hidden var _sh;
+    hidden var _started;   // auto-start the run on first layout
 
     function initialize() {
         View.initialize();
-        ctrl   = new GameController();
-        _timer = null;
-        _sw    = 0;
-        _sh    = 0;
+        ctrl     = new GameController();
+        _timer   = null;
+        _sw      = 0;
+        _sh      = 0;
+        _started = false;
     }
 
     function onShow() {
@@ -49,9 +51,13 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         _sw = dc.getWidth(); _sh = dc.getHeight();
-        if (ctrl.state == GM_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl);
-        } else if (ctrl.state == GM_WIN || ctrl.state == GM_OVER) {
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == GM_MENU) {
+            ctrl.startGame();
+            _started = true;
+        }
+        if (ctrl.state == GM_WIN || ctrl.state == GM_OVER) {
             UIManager.drawEnd(dc, _sw, _sh, ctrl);
         } else {
             UIManager.drawPlay(dc, _sw, _sh, ctrl);
@@ -94,9 +100,9 @@ class MainView extends WatchUi.View {
         ctrl.restart();
     }
     function navBack() {
-        if (ctrl.state == GM_MENU) { return false; }
         if (ctrl.state == GM_PAUSE) { ctrl.togglePause(); return true; }
-        ctrl.gotoMenu();
+        // Back to the shared menu.
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
         return true;
     }
     function handleTap(x, y) {

@@ -76,22 +76,18 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var k    = evt.getKey();
         var ctrl = view.ctrl;
 
-        if (ctrl.state == GS_MENU) {
-            if (k == WatchUi.KEY_UP)    { ctrl.menuCursor = (ctrl.menuCursor + MENU_ITEMS - 1) % MENU_ITEMS; _refresh(); return true; }
-            if (k == WatchUi.KEY_DOWN)  { ctrl.menuCursor = (ctrl.menuCursor + 1) % MENU_ITEMS;              _refresh(); return true; }
-            if (k == WatchUi.KEY_ENTER) { _activateMenu(ctrl);                                               _refresh(); return true; }
-            if (k == WatchUi.KEY_ESC)   { return false; }
-        } else if (ctrl.state == GS_PLAY) {
+        if (ctrl.state == GS_PLAY) {
             // KEY_UP   = vertical   cursor (up one row, wrap)
             // KEY_DOWN = horizontal cursor (right one letter A→Z→A)
             if (k == WatchUi.KEY_UP)    { ctrl.moveCursorVert(-1); _refresh(); return true; }
             if (k == WatchUi.KEY_DOWN)  { ctrl.moveCursorHoriz(1); _refresh(); return true; }
             if (k == WatchUi.KEY_ENTER) { ctrl.guessCurrent();     _refresh(); return true; }
-            if (k == WatchUi.KEY_ESC)   { ctrl.gotoMenu();         _refresh(); return true; }
+            if (k == WatchUi.KEY_ESC)   { return _goBack(); }
         } else {
-            // GS_WIN / GS_LOSE — any key returns to menu
-            if (k == WatchUi.KEY_ESC) { ctrl.gotoMenu(); _refresh(); return true; }
-            ctrl.gotoMenu(); _refresh(); return true;
+            // GS_WIN / GS_LOSE — BACK pops to the shared menu; any other key
+            // starts a fresh round in place.
+            if (k == WatchUi.KEY_ESC) { return _goBack(); }
+            ctrl.startGame(); _refresh(); return true;
         }
         return false;
     }
@@ -111,10 +107,16 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()        { return onKey(_synthKey(WatchUi.KEY_ENTER)); }
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        return onKey(_synthKey(WatchUi.KEY_ESC));
+        return _goBack();
     }
     function onNextPage()      { return onKey(_synthKey(WatchUi.KEY_DOWN));  }
     function onPreviousPage()  { return onKey(_synthKey(WatchUi.KEY_UP));    }
+
+    // Return to the shared menu.
+    hidden function _goBack() {
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
+    }
 
     // ── Swipe ───────────────────────────────────────────────────────
     // All swipes move the cursor and raise _swipeHandled so the
@@ -131,13 +133,6 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             if (d == WatchUi.SWIPE_DOWN)  { ctrl.moveCursorVert(1);   }
             if (d == WatchUi.SWIPE_LEFT)  { ctrl.moveCursorHoriz(-1); }
             if (d == WatchUi.SWIPE_RIGHT) { ctrl.moveCursorHoriz(1);  }
-            _refresh();
-            return true;
-        }
-        if (ctrl.state == GS_MENU) {
-            var d = evt.getDirection();
-            if (d == WatchUi.SWIPE_UP)   { ctrl.menuCursor = (ctrl.menuCursor + MENU_ITEMS - 1) % MENU_ITEMS; }
-            if (d == WatchUi.SWIPE_DOWN) { ctrl.menuCursor = (ctrl.menuCursor + 1) % MENU_ITEMS;              }
             _refresh();
             return true;
         }
@@ -207,30 +202,13 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _refresh();
             return true;
         }
-        if (ctrl.state == GS_MENU) {
-            _activateMenu(ctrl);
-            _refresh();
-            return true;
-        }
-        ctrl.gotoMenu();
+        // GS_WIN / GS_LOSE — tap starts a fresh round in place.
+        ctrl.startGame();
         _refresh();
         return true;
     }
 
     // ── Helpers ─────────────────────────────────────────────────────
-    hidden function _activateMenu(ctrl) {
-        if      (ctrl.menuCursor == MENU_CAT)   { ctrl.cycleCategory();   }
-        else if (ctrl.menuCursor == MENU_DIFF)  { ctrl.cycleDifficulty(); }
-        else if (ctrl.menuCursor == MENU_START) { ctrl.startGame();       }
-        else if (ctrl.menuCursor == MENU_LB)    { openLeaderboard(ctrl);  }
-    }
-
-    function openLeaderboard(ctrl) {
-        var variant = ctrl.variant();
-        var v = new LbScoresView(LB_GAME_ID, variant, "HANGMAN");
-        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
-    }
-
     hidden function _synthKey(code) { return new SyntheticKey(code); }
 }
 

@@ -39,6 +39,10 @@ class GameController {
     var deathFlash;      // ticks remaining of white flash
     var bgScroll;        // background skyline scroll offset (px)
 
+    // OPTIONS "Gap" (fp_gap): 0=WIDE 1=NORMAL 2=TIGHT. Adjusts the pipe gap
+    // height. NORMAL (1) is today's feel so the default experience is unchanged.
+    var gapSel;
+
     function initialize() {
         state       = GS_MENU;
         bird        = new Bird();
@@ -50,6 +54,19 @@ class GameController {
         pipeWidth = 22;
         deathFlash = 0;
         bgScroll = 0;
+
+        gapSel = 1;
+        try {
+            var v = Application.Storage.getValue("fp_gap");
+            if (v != null && v instanceof Number && v >= 0 && v <= 2) { gapSel = v; }
+        } catch (e) { }
+        // Wider gaps = easier; tighter = harder. Bias in 240-ref px.
+        obstacles.setGapBias([16, 0, -16][gapSel]);
+    }
+
+    // Leaderboard variant = gap size, so WIDE/NORMAL/TIGHT rank separately.
+    function variant() {
+        return ["wide", "normal", "tight"][gapSel];
     }
 
     hidden function _loadHi() {
@@ -150,8 +167,9 @@ class GameController {
         deathFlash = 4;
         if (score > hi) { hi = score; _saveHi(); }
         state = GS_OVER;
-        // Submit to the shared global leaderboard (fire-and-forget).
-        Leaderboard.submitScore("flappypidgeon", score, "");
-        Leaderboard.showPostGame("flappypidgeon", "", "FLAPPY");
+        // Submit to the shared global leaderboard (fire-and-forget),
+        // segmented by the chosen gap-size variant.
+        Leaderboard.submitScore("flappypidgeon", score, variant());
+        Leaderboard.showPostGame("flappypidgeon", variant(), "FLAPPY");
     }
 }

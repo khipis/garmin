@@ -135,8 +135,10 @@ class GameController {
 
         var m = _loadInt(DR_KEY_MODE, DR_MODE_CLASSIC);
         if (m >= 0 && m <= 2) { menuMode = m; }
-        var r = _loadInt(DR_KEY_REROLLS, 2);
-        if (r >= 1 && r <= 3) { menuRerolls = r; }
+        // Rerolls is stored by the shared OPTIONS screen as an index (0..2);
+        // map it to the raw 1..3 reroll count.
+        var r = _loadInt(DR_KEY_REROLLS, 1);
+        if (r >= 0 && r <= 2) { menuRerolls = r + 1; }
     }
     hidden function _loadInt(key, defv) {
         try {
@@ -218,6 +220,9 @@ class GameController {
     }
 
     // ── Lifecycle ───────────────────────────────────────────────
+    // Public entry used by the auto-start view (settings come from Storage).
+    function beginGame() { _startGame(); }
+
     hidden function _startGame() {
         _refreshDailyStatus();
         var mask = DR_MODE_CLASSIC_MASK;

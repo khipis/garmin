@@ -118,6 +118,10 @@ class BitochiBoxingView extends WatchUi.View {
 
     hidden var _menuSel;
 
+    // Difficulty from the shared OPTIONS screen (box_diff: 0/1/2 = easy/normal/
+    // hard). Scales opponent damage and speed, and segments the leaderboard.
+    hidden var _diff;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -166,11 +170,34 @@ class BitochiBoxingView extends WatchUi.View {
         _shakeX = 0; _shakeY = 0; _shakeLeft = 0;
         _flashTick = 0; _hitFlash = 0; _superFlash = 0; _introTick = 0; _koTick = 0;
         _menuSel = 0;
+
+        _diff = 1;
+        var dv = Application.Storage.getValue("box_diff");
+        if (dv instanceof Number && dv >= 0 && dv <= 2) { _diff = dv; }
+
         gameState = GS_MENU;
     }
 
-    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true); }
+    // Leaderboard variant = difficulty, so easy/normal/hard rank separately.
+    hidden function _lbVariant() {
+        return ["easy", "normal", "hard"][_diff];
+    }
+
+    function onShow() {
+        _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true);
+        // Root view is the shared menu; drop straight into a fresh match.
+        // Only auto-start from the initial GS_MENU state (returning from the
+        // post-game leaderboard card leaves us in WIN/LOSE/CHAMPION, not MENU).
+        if (gameState == GS_MENU) { startFromMenu(); }
+    }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+
+    // Begin a fresh career run from the shared main menu.
+    hidden function startFromMenu() {
+        _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false;
+        initFight();
+        gameState = GS_INTRO; _introTick = 0;
+    }
 
     hidden function initFight() {
         var r = _round;
@@ -179,8 +206,11 @@ class BitochiBoxingView extends WatchUi.View {
         if (_enemyMaxHp > 410) { _enemyMaxHp = 410; }
         _enemyHp = _enemyMaxHp;
         _enemyDmg = 8 + r * 2 + r / 4;
+        _enemyDmg = _enemyDmg * ([70, 100, 130][_diff]) / 100;
+        if (_enemyDmg < 3) { _enemyDmg = 3; }
         if (_enemyDmg > 38) { _enemyDmg = 38; }
         _enemySpeed = 1.0 + (r - 1) * 0.16 + (r / 6) * 0.08;
+        _enemySpeed = _enemySpeed * ([82, 100, 122][_diff]).toFloat() / 100.0;
         if (_enemySpeed > 3.2) { _enemySpeed = 3.2; }
         _enemyStaminaMax = 80 + r * 5;
         if (_enemyStaminaMax > 160) { _enemyStaminaMax = 160; }
@@ -237,8 +267,8 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (gameState == GS_WIN) {
             _rematchUsed = false;
             if (_wins >= 20) {
-                Leaderboard.submitScore(LB_GAME_ID, _score, "");
-                Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
+                Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
+                Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");
                 gameState = GS_CHAMPION;
             } else {
                 _round++; initFight();
@@ -288,7 +318,7 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, "", "BOXING");
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "BOXING");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -396,8 +426,8 @@ class BitochiBoxingView extends WatchUi.View {
                     // once the free rematch has been used — a first loss still
                     // offers a rematch, so the run isn't over yet.
                     if (_rematchUsed) {
-                        Leaderboard.submitScore(LB_GAME_ID, _score, "");
-                        Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
+                        Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
+                        Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");
                     }
                 }
             }
@@ -685,7 +715,7 @@ class BitochiBoxingView extends WatchUi.View {
 
     function onUpdate(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
-        if (gameState == GS_MENU) { drawMenu(dc); return; }
+        if (gameState == GS_MENU) { startFromMenu(); }   // never render an in-game menu
         if (gameState == GS_INTRO) { drawIntro(dc); return; }
 
         var ox = _shakeX; var oy = _shakeY;

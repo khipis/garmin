@@ -45,10 +45,9 @@ class MainView extends WatchUi.View {
 
         _drawBackground(dc);
 
-        if (_ctrl.state == GS_MENU) {
-            _drawMenu(dc);
-            return;
-        }
+        // Menu lives in the shared root view — drop straight into the
+        // ready-to-flap state and never render an in-game menu here.
+        if (_ctrl.state == GS_MENU) { _ctrl.ready(); }
 
         _drawPipes(dc);
         _drawGround(dc);
@@ -188,9 +187,9 @@ class MainView extends WatchUi.View {
         return [rowH, rowW, rowX, startY, lbY];
     }
 
-    // Open the shared global leaderboard for Flappy Pidgeon.
+    // Open the shared global leaderboard for the chosen gap-size variant.
     function openLeaderboard() {
-        var v = new LbScoresView("flappypidgeon", "", "FLAPPY");
+        var v = new LbScoresView("flappypidgeon", _ctrl.variant(), "FLAPPY");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -298,7 +297,7 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Input intents ──────────────────────────────────────────────
@@ -322,11 +321,7 @@ class MainView extends WatchUi.View {
         _ctrl.flapAction();
     }
     function handleBack() {
-        if (_ctrl.state == GS_PLAY || _ctrl.state == GS_OVER
-            || _ctrl.state == GS_READY) {
-            _ctrl.gotoMenu();
-            return true;
-        }
+        // BACK always returns to the shared menu (pop the gameplay view).
         return false;
     }
 }

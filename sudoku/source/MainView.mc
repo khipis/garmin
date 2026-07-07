@@ -17,12 +17,14 @@ class MainView extends WatchUi.View {
     hidden var _ctrl;
     hidden var _ui;
     hidden var _timer;
+    hidden var _started;   // auto-start the puzzle on first frame
 
     function initialize() {
         View.initialize();
         _ctrl  = new GameController();
         _ui    = new UIManager();
         _timer = null;
+        _started = false;
     }
 
     function onLayout(dc) {
@@ -53,9 +55,11 @@ class MainView extends WatchUi.View {
 
     // ── Drawing ──────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_ctrl.state == GS_MENU) {
-            _ui.drawMenu(dc, _ctrl);
-            return;
+        // Menu lives in the shared root view — drop straight into a puzzle and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.startGame();
+            _started = true;
         }
         _ui.drawBoard(dc, _ctrl);
         _ui.drawHUD(dc, _ctrl);
@@ -67,36 +71,20 @@ class MainView extends WatchUi.View {
 
     // ── Public intents (called from InputHandler) ────────────────────
     function navUp() {
-        if (_ctrl.state == GS_MENU) {
-            _ctrl.menuSel = (_ctrl.menuSel + 4) % 5;
-            _ctrl.dirty = true;
-            return;
-        }
         if (_ctrl.state == GS_PLAY)    { _ctrl.cycleCell(true); return; }
         if (_ctrl.state == GS_PAUSED)  { _ctrl.resume();        return; }
-        if (_ctrl.state == GS_COMPLETE || _ctrl.state == GS_FAILED) {
-            _ctrl.gotoMenu();
-        }
+        if (_ctrl.state == GS_COMPLETE) { _ctrl.startGame();       return; }
+        if (_ctrl.state == GS_FAILED)   { _ctrl.resumeFromFailed(); return; }
     }
 
     function navDown() {
-        if (_ctrl.state == GS_MENU) {
-            _ctrl.menuSel = (_ctrl.menuSel + 1) % 5;
-            _ctrl.dirty = true;
-            return;
-        }
         if (_ctrl.state == GS_PLAY)    { _ctrl.cycleCell(false); return; }
         if (_ctrl.state == GS_PAUSED)  { _ctrl.resume();         return; }
-        if (_ctrl.state == GS_COMPLETE || _ctrl.state == GS_FAILED) {
-            _ctrl.gotoMenu();
-        }
+        if (_ctrl.state == GS_COMPLETE) { _ctrl.startGame();       return; }
+        if (_ctrl.state == GS_FAILED)   { _ctrl.resumeFromFailed(); return; }
     }
 
     function navSelect() {
-        if (_ctrl.state == GS_MENU) {
-            _menuActivate();
-            return;
-        }
         if (_ctrl.state == GS_PLAY) {
             // Move cursor right → next row when wrapping. Quick way to
             // step through cells with a single button on non-touch
@@ -109,54 +97,30 @@ class MainView extends WatchUi.View {
             _ctrl.dirty = true;
             return;
         }
-        if (_ctrl.state == GS_PAUSED) { _ctrl.resume();   return; }
-        if (_ctrl.state == GS_COMPLETE || _ctrl.state == GS_FAILED) {
-            _ctrl.gotoMenu();
-        }
+        if (_ctrl.state == GS_PAUSED)   { _ctrl.resume();          return; }
+        if (_ctrl.state == GS_COMPLETE) { _ctrl.startGame();       return; }
+        if (_ctrl.state == GS_FAILED)   { _ctrl.resumeFromFailed(); return; }
     }
 
     // BACK semantics depend on state:
-    //   menu      → unhandled (delegate pops view → exit app)
-    //   play      → strict: submit board; relaxed: go to menu
-    //   paused    → menu
-    //   complete  → menu
+    //   play      → strict: submit board; relaxed: pop to shared menu
     //   failed    → resume to play (so user can fix)
+    //   paused / complete → pop to shared menu
     function navBack() {
-        if (_ctrl.state == GS_MENU) { return false; }
         if (_ctrl.state == GS_PLAY) {
             if (_ctrl.valMode == VAL_STRICT) {
                 _ctrl.submit();
-            } else {
-                _ctrl.gotoMenu();
+                return true;
             }
-            return true;
+            return false;   // pop back to the shared unified menu
         }
-        if (_ctrl.state == GS_PAUSED)   { _ctrl.gotoMenu(); return true; }
-        if (_ctrl.state == GS_COMPLETE) { _ctrl.gotoMenu(); return true; }
         if (_ctrl.state == GS_FAILED) {
             // Drop back into play so the player can fix mistakes.
             _ctrl.resumeFromFailed();
             return true;
         }
+        // PAUSED / COMPLETE / anything else → let the framework pop the view.
         return false;
-    }
-
-    hidden function _menuActivate() {
-        var s = _ctrl.menuSel;
-        if (s == 0) {
-            _ctrl.mode = (_ctrl.mode + 1) % 2;
-        } else if (s == 1) {
-            _ctrl.diff = (_ctrl.diff + 1) % 3;
-        } else if (s == 2) {
-            _ctrl.valMode = (_ctrl.valMode + 1) % 2;
-        } else if (s == 3) {
-            _ctrl.startGame();
-        } else {
-            openLeaderboard();
-            return;
-        }
-        if (s < 3) { _ctrl.saveMenuSettings(); }
-        _ctrl.dirty = true;
     }
 
     function openLeaderboard() {
@@ -165,14 +129,9 @@ class MainView extends WatchUi.View {
     }
 
     function handleTap(x, y) {
-        if (_ctrl.state == GS_MENU) {
-            _menuTap(x, y);
-            return;
-        }
-        if (_ctrl.state == GS_PAUSED) { _ctrl.resume(); return; }
-        if (_ctrl.state == GS_COMPLETE || _ctrl.state == GS_FAILED) {
-            _ctrl.gotoMenu(); return;
-        }
+        if (_ctrl.state == GS_PAUSED)   { _ctrl.resume();          return; }
+        if (_ctrl.state == GS_COMPLETE) { _ctrl.startGame();       return; }
+        if (_ctrl.state == GS_FAILED)   { _ctrl.resumeFromFailed(); return; }
         if (_ctrl.state != GS_PLAY) { return; }
         // Pick the cell under the tap.
         var rc = _ui.tapToCell(x, y, _ctrl.grid.n);
@@ -205,27 +164,5 @@ class MainView extends WatchUi.View {
         else if (dir == WatchUi.SWIPE_DOWN)  { _ctrl.moveCursor( 1, 0); }
         else if (dir == WatchUi.SWIPE_LEFT)  { _ctrl.moveCursor( 0,-1); }
         else if (dir == WatchUi.SWIPE_RIGHT) { _ctrl.moveCursor( 0, 1); }
-    }
-
-    // Map a tap on the menu screen to the nearest menu row.
-    hidden function _menuTap(x, y) {
-        // Recompute the same geometry the menu renderer uses.
-        // (h, rowH, gap, startY) — mirror UIManager.drawMenu.
-        // We can ask the system for screen dims via System.getDeviceSettings.
-        var ds = System.getDeviceSettings();
-        var h  = ds.screenHeight;
-        // Must mirror UIManager.drawMenu geometry exactly so taps line up
-        // with the rendered rows (kept in sync after the menu shrink).
-        var rowH = h * 8 / 100; if (rowH < 16) { rowH = 16; }
-        var gap  = h * 2 / 100; if (gap  < 3)  { gap  = 3;  }
-        var startY = h * 24 / 100;
-        for (var i = 0; i < 5; i++) {
-            var ry = startY + i * (rowH + gap);
-            if (y >= ry && y < ry + rowH) {
-                _ctrl.menuSel = i;
-                _menuActivate();
-                return;
-            }
-        }
     }
 }

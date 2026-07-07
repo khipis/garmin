@@ -53,6 +53,9 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         ctrl.syncDims(dc.getWidth(), dc.getHeight());
+        // Menu lives in the shared root view — drop straight into a tournament
+        // and never render an in-game menu here.
+        if (ctrl.state == AR_MENU) { ctrl.beginGame(); }
         UIManager.draw(dc, ctrl);
     }
 
@@ -83,7 +86,7 @@ class MainView extends WatchUi.View {
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
-        if (ctrl.state != AR_MENU) { ctrl.gotoMenu(); return true; }
+        // BACK always returns to the shared menu (pop the gameplay view).
         return false;
     }
 

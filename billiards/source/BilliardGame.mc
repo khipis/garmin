@@ -198,8 +198,9 @@ class BilliardGame {
         if (sd instanceof Lang.Number && sd >= 0 && sd <= DIFF_HARD) { diff = sd; }
         var sgt = Application.Storage.getValue("billGT");
         if (sgt instanceof Lang.Number && sgt >= 0 && sgt < GT_COUNT) { gameType = sgt; }
-        var spvp = Application.Storage.getValue("billPvP");
-        if (spvp instanceof Lang.Boolean) { pvpMode = spvp; }
+        // VS mode now comes from the shared OPTIONS screen (numeric index).
+        var svs = Application.Storage.getValue("bill_vs");
+        if (svs instanceof Lang.Number) { pvpMode = (svs == 1); }
 
         _applyGameType();
         _setupVP(260, 260);
@@ -596,7 +597,7 @@ class BilliardGame {
     }
 
     function doBack() {
-        if (gs != BS_MENU) { gs = BS_MENU; return true; }
+        // Root menu is the shared view now; let the framework pop us back to it.
         return false;
     }
 

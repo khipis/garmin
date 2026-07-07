@@ -15,6 +15,7 @@ class MainView extends WatchUi.View {
     hidden var _bx;
     hidden var _by;
     hidden var _flagMode;
+    hidden var _started;   // auto-start the board on first layout
 
     function initialize() {
         View.initialize();
@@ -22,6 +23,7 @@ class MainView extends WatchUi.View {
         _timer = null;
         _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0;
         _flagMode = false;
+        _started = false;
     }
 
     function onShow() {
@@ -40,7 +42,12 @@ class MainView extends WatchUi.View {
         _sh = dc.getHeight();
         dc.setColor(0x9098A0, 0x9098A0); dc.clear();
 
-        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
+        // Menu lives in the shared root view — drop straight into a board and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.startGame();
+            _started = true;
+        }
 
         _layoutBoard();
         _drawHUD(dc);
@@ -119,7 +126,7 @@ class MainView extends WatchUi.View {
                 hint = "btn=move  SEL=open  hold=flag  tap F=flag mode";
             }
         } else {
-            hint = "tap = menu";
+            hint = "tap = replay";
         }
         dc.setColor(0xBBBBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
@@ -241,7 +248,7 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap = replay", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Leaderboard ───────────────────────────────────────────────
@@ -255,33 +262,24 @@ class MainView extends WatchUi.View {
 
     // Bottom button / onNextPage → step cursor right (col++ wrap)
     function navHoriz() {
-        if (_ctrl.state == GS_MENU) { _ctrl.menuNext(); return; }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
-            _ctrl.gotoMenu(); return;
+            _restart(); return;
         }
         _ctrl.moveCursorHoriz();
     }
 
     // Upper button / onPreviousPage → step cursor down (row++ wrap)
     function navVert() {
-        if (_ctrl.state == GS_MENU) { _ctrl.menuPrev(); return; }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
-            _ctrl.gotoMenu(); return;
+            _restart(); return;
         }
         _ctrl.moveCursorVert();
     }
 
-    // SELECT only → reveal cursor cell (or activate menu row)
+    // SELECT only → reveal cursor cell (restart from a finished board)
     function navReveal() {
-        if (_ctrl.state == GS_MENU) {
-            if (_ctrl.menuRow == MENU_LEADER) { openLeaderboard(); return; }
-            _ctrl.menuActivate();
-            _flagMode = false;
-            return;
-        }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
-            _flagMode = false;
-            _ctrl.gotoMenu(); return;
+            _restart(); return;
         }
         _ctrl.revealCursor();
     }
@@ -289,34 +287,22 @@ class MainView extends WatchUi.View {
     // Long press only → flag cursor cell
     function navFlag() { _ctrl.flagCursor(); }
 
+    // Restart a fresh board in place (same settings) after a win/loss.
+    hidden function _restart() {
+        _flagMode = false;
+        _ctrl.startGame();
+    }
+
     function navBack() {
-        if (_ctrl.state == GS_PLAY || _ctrl.state == GS_WIN
-                || _ctrl.state == GS_LOSE) {
-            _flagMode = false;
-            _ctrl.gotoMenu(); return true;
-        }
+        // Let InputHandler pop back to the shared menu.
+        _flagMode = false;
         return false;
     }
 
     // Tap → in menu: activate tapped row; in play: reveal or flag tapped cell.
     function handleTap(x, y) {
-        if (_ctrl.state == GS_MENU) {
-            var rg   = _menuRowGeom();
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < MENU_ROW_COUNT; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    _ctrl.setMenuRow(i);
-                    if (i == MENU_LEADER) { openLeaderboard(); return; }
-                    _ctrl.menuActivate(); return;
-                }
-            }
-            return;
-        }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
-            _flagMode = false;
-            _ctrl.gotoMenu(); return;
+            _restart(); return;
         }
 
         // Tap on the mine-counter area (top-left strip) toggles flag mode.

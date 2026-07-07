@@ -82,6 +82,13 @@ class BitochiFishView extends WatchUi.View {
     // ── title-screen menu selection (START / LEADERBOARD) ─────────────────────
     hidden var _menuSel;
 
+    // Difficulty (0=Easy 1=Normal 2=Hard) from the shared OPTIONS screen
+    // (fish_diff). Drives the bite reaction window and the line-tension
+    // headroom (reel difficulty); segments the leaderboard.
+    hidden var _diff;
+    hidden var _biteMaxTicks;   // ticks the player has to react to a bite
+    hidden var _tensionMul;     // multiplier on max line tension (reel margin)
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -141,12 +148,27 @@ class BitochiFishView extends WatchUi.View {
 
         _fishNames = ["Minnow", "Shrimp", "Perch", "Roach", "Bass", "Carp", "Trout", "Pike", "Catfish", "Tuna"];
         _menuSel = FISH_ROW_START;
+
+        // Difficulty from the shared OPTIONS screen (fish_diff: 0/1/2). Default
+        // NORMAL(1) reproduces the previous single-difficulty tuning (90-tick
+        // bite window, 1.0× tension headroom).
+        _diff = 1;
+        var fd = Application.Storage.getValue("fish_diff");
+        if (fd instanceof Number && fd >= 0 && fd <= 2) { _diff = fd; }
+        _biteMaxTicks = [120, 90, 62][_diff];
+        _tensionMul = [1.25, 1.0, 0.8][_diff];
         setLevelGoal();
         spawnAmbPool();
         gameState = GS_MENU;
     }
 
-    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true); }
+    function onShow() {
+        _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a session.
+        // Only auto-start from a fresh launch (GS_MENU) so returning from the
+        // post-game leaderboard card doesn't restart the session.
+        if (gameState == GS_MENU) { startSession(); }
+    }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
     function onTick() as Void {
@@ -206,7 +228,7 @@ class BitochiFishView extends WatchUi.View {
             _biteTick++;
             _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.55) * 4.5;
             if (_biteTick % 7 == 0) { addRipple(_bobX.toNumber()); }
-            if (_biteTick > 90) {
+            if (_biteTick > _biteMaxTicks) {
                 _fishLives--; if (_fishLives < 0) { _fishLives = 0; }
                 gameState = GS_LOST; _resultMsg = "TOO SLOW!"; _resultTick = 0; _combo = 0; _emotion = 3;
             }
@@ -272,9 +294,10 @@ class BitochiFishView extends WatchUi.View {
             if (_resultTick > 70) {
                 if (_fishLives <= 0) {
                     gameState = GS_GAMEOVER; _resultTick = 0;
-                    // Session over — submit total catch value to the global leaderboard.
-                    Leaderboard.submitScore(LB_GAME_ID, _score, null);
-                    Leaderboard.showPostGame(LB_GAME_ID, null, "FISHING");
+                    // Session over — submit total catch value to the global
+                    // leaderboard, segmented by difficulty.
+                    Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+                    Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "FISHING");
                 }
                 else { gameState = GS_IDLE; _emotion = 0; }
             }
@@ -379,7 +402,7 @@ class BitochiFishView extends WatchUi.View {
         _fishVx = 0.0; _fishVy = 0.0;
         _fishPullDir = (Math.rand().abs() % 2 == 0) ? 28.0 : 208.0;
         _fishPullTimer = 25 + Math.rand().abs() % 20;
-        _maxTension = 100.0 + _lineTensionBonus;
+        _maxTension = (100.0 + _lineTensionBonus) * _tensionMul;
         _tension = 24.0 + _lineTensionBonus * 0.18; _reelProg = 0.0;
         _reelTarget = 44.0 + _fishType.toFloat() * 10.0 - _lineTensionBonus * 0.18;
         if (_reelTarget < 34.0) { _reelTarget = 34.0; }
@@ -493,10 +516,15 @@ class BitochiFishView extends WatchUi.View {
         setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
     }
 
-    // Open the shared global leaderboard view (no variant for fish).
+    // Open the shared global leaderboard view for the selected difficulty.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "FISHING");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "FISHING");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     // Hit-test the title menu rows for touch taps.
@@ -579,13 +607,15 @@ class BitochiFishView extends WatchUi.View {
 
     function onUpdate(dc) {
         var rw = dc.getWidth(); var rh = dc.getHeight();
-        // Menu & game-over use the full real screen (no scaling).
-        if (gameState == GS_MENU || gameState == GS_GAMEOVER) {
+        // Never render an in-game menu — the shared menu is the root view.
+        if (gameState == GS_MENU) { startSession(); }
+        // Game-over uses the full real screen (no scaling).
+        if (gameState == GS_GAMEOVER) {
             _w = rw; _h = rh; _cx = _w / 2; _cy = _h / 2;
             _waterY = _h * 51 / 100;
             _rodTipX = _w * 70 / 100; _rodTipY = _waterY - 18;
             _sceneOx = 0; _sceneOy = 0;
-            if (gameState == GS_MENU) { drawMenu(dc); } else { drawGameOver(dc); }
+            drawGameOver(dc);
             return;
         }
         // Gameplay: render the whole scene inside a centered box at 90% of the
@@ -954,7 +984,7 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 82 / 100 + oy, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
         var tlW = _w * 42 / 100; var tlX = (_w - tlW) / 2; var tlY = _h * 88 / 100;
         dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX + ox, tlY + oy, tlW, 5);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX + ox, tlY + oy, (90 - _biteTick) * tlW / 90, 5);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX + ox, tlY + oy, (_biteMaxTicks - _biteTick) * tlW / _biteMaxTicks, 5);
     }
 
     hidden function drawFightHUD(dc, ox, oy) {

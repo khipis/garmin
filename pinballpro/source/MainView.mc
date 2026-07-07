@@ -27,6 +27,7 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _laidOut;
     hidden var _delegate;
+    hidden var _started;   // auto-start the match on first layout
     // Safety: maximum frames a touch hold can keep flippers pressed
     // without a touch-up signal before we force-release them. Protects
     // against the device dropping the touch session (battery saver,
@@ -42,6 +43,7 @@ class MainView extends WatchUi.View {
         _laidOut = false;
         _delegate = null;
         _touchHoldFrames = 0;
+        _started = false;
     }
 
     function setDelegate(d) { _delegate = d; }
@@ -82,7 +84,12 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0x000814, 0x000814); dc.clear();
 
-        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
+        // Menu lives in the shared root view — drop straight into a match and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.startMatch();
+            _started = true;
+        }
 
         _drawTable(dc);
         _drawDrops(dc);
@@ -324,7 +331,7 @@ class MainView extends WatchUi.View {
         }
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 16, Graphics.FONT_XTINY,
-                    "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap = replay  ESC = menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Menu ────────────────────────────────────────────────────────
@@ -481,11 +488,8 @@ class MainView extends WatchUi.View {
     }
 
     function handleBack() {
-        if (_ctrl.state == GS_PLAY || _ctrl.state == GS_LAUNCH
-            || _ctrl.state == GS_OVER) {
-            _ctrl.gotoMenu();
-            return true;
-        }
-        return false;
+        // Back to the shared menu.
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
     }
 }

@@ -99,6 +99,13 @@ class GameController {
     var selR;
     var selC;
 
+    // Live drag preview (touch): the gem being swiped + the neighbour it
+    // will swap into. dragR < 0 means no drag in progress.
+    var dragR;
+    var dragC;
+    var dragDR;   // preview direction (0,0 until the finger picks an axis)
+    var dragDC;
+
     // Score / per-mode bests
     var score;
     var hiTime;
@@ -151,6 +158,7 @@ class GameController {
 
         curR = 0; curC = 0;
         selR = -1; selC = -1;
+        dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
 
         score   = 0;
         hiTime  = _load("hi_t");
@@ -284,6 +292,7 @@ class GameController {
         }
         curR = grid.rows / 2; curC = grid.cols / 2;
         selR = -1; selC = -1;
+        dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
         score          = 0;
         lastCascade    = 0;
         lastClearScore = 0;
@@ -501,6 +510,7 @@ class GameController {
     function gotoMenu() {
         state = GS_MENU;
         selR = -1; selC = -1;
+        dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
     }
 
     function isAnimating() { return animState != ANIM_NONE; }
@@ -519,7 +529,31 @@ class GameController {
         animMarks   = null;
         curR = r1; curC = c1;
         selR = -1; selC = -1;
+        dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
     }
+
+    // ── Live drag preview (touch) ────────────────────────────────────
+    // Called on touch-down over a gem: arms the preview on that gem.
+    function startDrag(r, c) {
+        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
+        if (r < 0 || r >= grid.rows || c < 0 || c >= grid.cols) { return; }
+        dragR = r; dragC = c; dragDR = 0; dragDC = 0;
+        curR = r; curC = c;
+    }
+
+    // Called while dragging: sets the previewed swap direction. The
+    // direction is dropped if it would push the gem off the board.
+    function updateDragDir(dr, dc) {
+        if (dragR < 0) { return; }
+        var tr = dragR + dr;
+        var tc = dragC + dc;
+        if (tr < 0 || tr >= grid.rows || tc < 0 || tc >= grid.cols) {
+            dr = 0; dc = 0;
+        }
+        dragDR = dr; dragDC = dc;
+    }
+
+    function cancelDrag() { dragR = -1; dragC = -1; dragDR = 0; dragDC = 0; }
 
     // ── Cursor / selection ───────────────────────────────────────────
     function moveCursor(dr, dc) {
@@ -576,24 +610,28 @@ class GameController {
         }
     }
 
-    // Tap a cell — moves cursor there (no implicit pick).
-    // Exception: if a gem is already selected and the tapped cell
-    // is adjacent, immediately attempt the swap (tap-pick-then-tap
-    // workflow still works naturally via SELECT-then-tap).
-    function tapCell(r, c) {        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
-        if (selR >= 0) {
-            if (selR == r && selC == c) {
-                selR = -1; selC = -1; return;   // deselect
-            }
-            if (grid.isAdjacent(selR, selC, r, c)) {
-                var sr = selR; var sc = selC;
-                selR = -1; selC = -1;
-                beginSwap(sr, sc, r, c);        // swap
-                return;
-            }
-            selR = -1; selC = -1;               // deselect on non-adjacent tap
+    // Tap a cell — tap-to-pick match-3 model:
+    //   nothing picked      → pick this gem
+    //   tap the picked gem  → un-pick it
+    //   tap an adjacent gem → swap the two
+    //   tap a far-away gem  → move the pick to the new gem
+    function tapCell(r, c) {
+        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
+        curR = r; curC = c;
+        if (selR < 0) {
+            selR = r; selC = c;                 // pick
+            return;
         }
-        curR = r; curC = c;                     // just move cursor
+        if (selR == r && selC == c) {
+            selR = -1; selC = -1; return;       // un-pick
+        }
+        if (grid.isAdjacent(selR, selC, r, c)) {
+            var sr = selR; var sc = selC;
+            selR = -1; selC = -1;
+            beginSwap(sr, sc, r, c);            // swap
+            return;
+        }
+        selR = r; selC = c;                     // re-pick the tapped gem
     }
 
     // Format ms → "MM:SS".

@@ -264,6 +264,8 @@ class GameController {
         state       = SC_PLAY;
     }
     function restart() { _startGame(); }
+    // Public entry used by the menu-less MainView (auto-start).
+    function startGame() { _startGame(); }
 
     // ── Accelerometer input (called every tick from MainView) ─
     // ax, ay: raw milli-g.  On first call we capture them as

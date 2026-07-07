@@ -128,7 +128,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── Button events ───────────────────────────────────────────────
     function onKey(evt) {
-        return _handleKeyCode(evt.getKey());
+        var k = evt.getKey();
+        if (k == WatchUi.KEY_ESC) { return onBack(); }
+        return _handleKeyCode(k);
     }
 
     hidden function _handleKeyCode(k) {
@@ -174,7 +176,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()       { return _handleKeyCode(WatchUi.KEY_ENTER); }
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        return _handleKeyCode(WatchUi.KEY_ESC);
+        // BACK always returns to the shared menu (pop the gameplay view).
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
     }
     function onNextPage()     { return _handleKeyCode(WatchUi.KEY_DOWN);  }
     function onPreviousPage() { return _handleKeyCode(WatchUi.KEY_UP);    }

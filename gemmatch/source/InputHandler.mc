@@ -17,25 +17,29 @@
 //       other play: clear selection → menu
 //       menu/over: pop view
 //
-// Touch (GS_PLAY) — drag-to-cursor model (v2, mirrors Battleship v4):
-//   touch-down → cursor snaps to the cell under the finger (instant feedback)
-//   drag       → cursor follows finger live across cells, with:
-//                  • 8 px deadzone before tracking engages (prevents wobbly taps)
-//                  • 5 px per-cell hysteresis (slightly damps fast flicks so
-//                    the cursor lands close to where the fingertip lifted)
-//   lift-off   → if total displacement ≥ 20 px: swap cursor gem in the
-//                dominant-axis direction of the whole gesture
-//              → if displacement < 20 px: treat as a tap (tapCell)
+// Touch (GS_PLAY) — grab-and-slide model (v4). The gem you TOUCH is the
+// gem that moves — always, on every firmware. On touch-down the gem is
+// grabbed (instant highlight); sliding the finger toward a neighbour
+// slides the gem there.
+//
+//   touch-down on a gem   → grab it: cursor + highlight snap onto it now.
+//   slide into a neighbour→ swap the grabbed gem into that neighbour the
+//                           instant the finger crosses the cell border
+//                           (also fires on lift-off past a small threshold).
+//   quick flick           → onSwipe swaps the grabbed gem in the flick
+//                           direction (covers firmwares that only report
+//                           the gesture as a swipe, never as a drag).
+//   tap (no slide)        → pick the gem; tapping an adjacent gem then
+//                           swaps the two (button-free two-tap fallback).
+//
+// Robustness: the grabbed cell is captured at touch-down (_startR/_startC)
+// and reused by every resolution path — cross-cell during drag, lift-off
+// threshold, and onSwipe — so the touched gem is never confused with the
+// cursor gem. _committed stops a single gesture swapping twice; _justSwiped
+// suppresses the trailing onTap/onSwipe a firmware may tack on after a drag.
 //
 // Touch (GS_MENU / GS_OVER):
 //   Tap → activate / confirm.
-//   Swipe up/down → navigate rows (firmwares that skip onDrag for menus).
-//
-// onSwipe fallback:
-//   Some firmwares deliver onSwipe but not onDrag (or fire both).
-//   In GS_PLAY we suppress onSwipe because onDrag already resolved the
-//   gesture (swap was fired at DRAG_TYPE_STOP).  In GS_MENU we keep it
-//   for row navigation.  _justSwiped gates onTap after a drag-swap.
 //
 // Phantom-back guard:
 //   Right-edge swipes on touch panels fire onBack alongside onDrag.
@@ -51,35 +55,34 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // Drag tracking state.
     hidden var _dragStartX;
     hidden var _dragStartY;
+    hidden var _startR;         // board cell the gesture started on (grabbed gem)
+    hidden var _startC;
+    hidden var _downMs;         // timer at touch-down (guards stale grab reuse)
     hidden var _dragMoved;
-    hidden var _justSwiped;     // true after a drag-swap; suppresses the trailing onTap
-    hidden var _lastCellR;
-    hidden var _lastCellC;
-    hidden var _lastCommitX;    // finger px at the last cell-commit point (hysteresis)
-    hidden var _lastCommitY;
+    hidden var _committed;      // this gesture already fired a swap
+    hidden var _justSwiped;     // true after a drag-swap; suppresses the trailing onTap/onSwipe
 
     // Phantom-back guard.
     hidden var _lastGestureMs;
 
-    // Deadzone before live tracking engages (px).
-    hidden const _DRAG_DEAD_PX  = 8;
-    // Minimum total displacement to treat lift-off as a swap gesture (px).
-    hidden const _SWIPE_MIN_PX  = 20;
-    // Per-cell resistance: finger must travel this many px past the last
-    // commit point before the cursor steps to the next cell.
-    hidden const _CELL_RESIST_PX = 5;
+    // Deadzone before a gesture counts as movement (px). Small = snappy.
+    hidden const _DRAG_DEAD_PX  = 6;
+    // Minimum finger travel to treat lift-off as a swipe (px). Kept small so
+    // a "light" flick on a gem is enough even if the finger never fully
+    // crosses into the neighbour cell.
+    hidden const _SWIPE_MIN_PX  = 12;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
         _v             = view;
         _dragStartX    = -1;
         _dragStartY    = -1;
+        _startR        = -1;
+        _startC        = -1;
+        _downMs        = 0;
         _dragMoved     = false;
+        _committed     = false;
         _justSwiped    = false;
-        _lastCellR     = -1;
-        _lastCellC     = -1;
-        _lastCommitX   = -1;
-        _lastCommitY   = -1;
         _lastGestureMs = 0;
     }
 
@@ -117,19 +120,36 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── Touch ────────────────────────────────────────────────────────
 
-    // onSwipe: used only for MENU row navigation.  In GS_PLAY the drag
-    // pipeline handles everything; _justSwiped suppresses the spurious
-    // onSwipe that some firmwares send after an onDrag sequence.
+    // onSwipe: quick-flick path. Fires on firmwares that report a fast
+    // gesture as a swipe rather than a full drag. Always acts on the gem the
+    // finger started on (captured at touch-down), so the touched gem moves —
+    // not the cursor gem. _justSwiped consumes the spurious onSwipe some
+    // firmwares tack on right after an onDrag already resolved the gesture.
     function onSwipe(evt) {
         _markGesture();
         if (_justSwiped) { _justSwiped = false; return true; }
-        // Fallback: firmwares that never send onDrag for in-game gestures
-        // will reach here.  Route as a direct swap so the game still responds.
-        var d = evt.getDirection();
-        if      (d == WatchUi.SWIPE_UP)    { _v.handleSwap(-1,  0); }
-        else if (d == WatchUi.SWIPE_DOWN)  { _v.handleSwap( 1,  0); }
-        else if (d == WatchUi.SWIPE_LEFT)  { _v.handleSwap( 0, -1); }
-        else if (d == WatchUi.SWIPE_RIGHT) { _v.handleSwap( 0,  1); }
+        var d  = evt.getDirection();
+        var dr = 0;
+        var dc = 0;
+        if      (d == WatchUi.SWIPE_UP)    { dr = -1; }
+        else if (d == WatchUi.SWIPE_DOWN)  { dr =  1; }
+        else if (d == WatchUi.SWIPE_LEFT)  { dc = -1; }
+        else if (d == WatchUi.SWIPE_RIGHT) { dc =  1; }
+        else { return true; }
+
+        // Use the grabbed gem only if the touch-down that set it belongs to
+        // this same gesture (recent). Otherwise it'd be a stale cell from an
+        // earlier gesture, so fall back to the picked/cursor gem.
+        var fresh = (_startR >= 0) &&
+                    ((System.getTimer() - _downMs) >= 0) &&
+                    ((System.getTimer() - _downMs) < 700);
+        if (fresh) {
+            _v.swapFrom(_startR, _startC, dr, dc);   // grabbed gem
+        } else {
+            _v.handleSwipeSwap(dr, dc);              // no fresh touch-down
+        }
+        _startR = -1; _startC = -1;
+        _v.cancelDrag();
         WatchUi.requestUpdate();
         return true;
     }
@@ -142,63 +162,60 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var py = xy[1];
 
         if (t == WatchUi.DRAG_TYPE_START) {
-            _dragStartX  = px;
-            _dragStartY  = py;
-            _dragMoved   = false;
-            _justSwiped  = false;
-            _lastCellR   = -1;
-            _lastCellC   = -1;
-            _lastCommitX = -1;
-            _lastCommitY = -1;
-            // Snap cursor to the touched cell immediately for live feedback.
+            _dragStartX = px;
+            _dragStartY = py;
+            _dragMoved  = false;
+            _committed  = false;
+            _justSwiped = false;
+            // Grab the gem under the finger immediately: cursor + highlight
+            // snap onto it now, before any movement.
+            _downMs = System.getTimer();
             var rc0 = _v.cellAt(px, py);
             if (rc0 != null) {
-                _v.setCursor(rc0[0], rc0[1]);
-                _lastCellR   = rc0[0];
-                _lastCellC   = rc0[1];
-                _lastCommitX = px;
-                _lastCommitY = py;
+                _startR = rc0[0];
+                _startC = rc0[1];
+                _v.startDrag(rc0[0], rc0[1]);
                 WatchUi.requestUpdate();
+            } else {
+                _startR = -1;
+                _startC = -1;
             }
             return true;
         }
 
         if (t == WatchUi.DRAG_TYPE_CONTINUE) {
-            if (_dragStartX < 0) { return true; }
-            var tdx  = px - _dragStartX;
-            var tdy  = py - _dragStartY;
-            var atdx = (tdx < 0) ? -tdx : tdx;
-            var atdy = (tdy < 0) ? -tdy : tdy;
+            if (_dragStartX < 0 || _committed || _startR < 0) { return true; }
+            var cdx  = px - _dragStartX;
+            var cdy  = py - _dragStartY;
+            var acdx = (cdx < 0) ? -cdx : cdx;
+            var acdy = (cdy < 0) ? -cdy : cdy;
+            if (acdx >= _DRAG_DEAD_PX || acdy >= _DRAG_DEAD_PX) { _dragMoved = true; }
+            if (!_dragMoved) { return true; }
 
-            // Engage live tracking once the finger clears the deadzone.
-            if (atdx >= _DRAG_DEAD_PX || atdy >= _DRAG_DEAD_PX) {
-                _dragMoved = true;
+            // Preview: highlight the neighbour the current slide points at.
+            var pdr = 0;
+            var pdc = 0;
+            if (acdx >= acdy) { pdc = (cdx > 0) ? 1 : -1; }
+            else              { pdr = (cdy > 0) ? 1 : -1; }
+            _v.updateDragDir(pdr, pdc);
+
+            // Commit the swap the moment the finger crosses fully into an
+            // adjacent cell — one step toward the cell now under the finger.
+            var rc = _v.cellAt(px, py);
+            if (rc != null && (rc[0] != _startR || rc[1] != _startC)) {
+                var ddr  = rc[0] - _startR;
+                var ddc  = rc[1] - _startC;
+                var addr = (ddr < 0) ? -ddr : ddr;
+                var addc = (ddc < 0) ? -ddc : ddc;
+                var sdr  = 0;
+                var sdc  = 0;
+                if (addc >= addr) { sdc = (ddc > 0) ? 1 : -1; }
+                else              { sdr = (ddr > 0) ? 1 : -1; }
+                _committed  = true;
+                _justSwiped = true;
+                _v.swapFrom(_startR, _startC, sdr, sdc);
             }
-            if (_dragMoved) {
-                var rc = _v.cellAt(px, py);
-                if (rc != null && (rc[0] != _lastCellR || rc[1] != _lastCellC)) {
-                    // Per-cell hysteresis: require extra travel from the
-                    // last committed position before the cursor steps.
-                    var allow = true;
-                    if (_lastCommitX >= 0) {
-                        var ddx  = px - _lastCommitX;
-                        var ddy  = py - _lastCommitY;
-                        var addx = (ddx < 0) ? -ddx : ddx;
-                        var addy = (ddy < 0) ? -ddy : ddy;
-                        if (addx < _CELL_RESIST_PX && addy < _CELL_RESIST_PX) {
-                            allow = false;
-                        }
-                    }
-                    if (allow) {
-                        _v.setCursor(rc[0], rc[1]);
-                        _lastCellR   = rc[0];
-                        _lastCellC   = rc[1];
-                        _lastCommitX = px;
-                        _lastCommitY = py;
-                        WatchUi.requestUpdate();
-                    }
-                }
-            }
+            WatchUi.requestUpdate();
             return true;
         }
 
@@ -209,25 +226,33 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragStartX = -1;
             _dragStartY = -1;
             _markGesture();
+            if (_committed) { return true; }   // already swapped mid-slide
 
-            if (!_dragMoved) {
-                // No real movement → let onTap handle this as a regular tap.
+            var adx = (dx < 0) ? -dx : dx;
+            var ady = (dy < 0) ? -dy : dy;
+
+            // Lift-off past the swipe threshold → swap the grabbed gem in the
+            // dominant-axis direction, even if the finger never fully crossed
+            // into the neighbour cell (covers short, light flicks).
+            if ((adx >= _SWIPE_MIN_PX || ady >= _SWIPE_MIN_PX) && _startR >= 0) {
+                _committed  = true;
+                _justSwiped = true;
+                if (adx >= ady) {
+                    _v.swapFrom(_startR, _startC, 0, (dx > 0) ? 1 : -1);
+                } else {
+                    _v.swapFrom(_startR, _startC, (dy > 0) ? 1 : -1, 0);
+                }
+                WatchUi.requestUpdate();
                 return true;
             }
 
-            // Resolve the gesture: if displacement exceeds the swap threshold,
-            // fire a swap in the dominant direction from wherever the cursor
-            // currently sits.  Otherwise fall through without swapping (the
-            // cursor already moved live, which is enough feedback).
-            var adx = (dx < 0) ? -dx : dx;
-            var ady = (dy < 0) ? -dy : dy;
-            if (adx >= _SWIPE_MIN_PX || ady >= _SWIPE_MIN_PX) {
+            // Barely moved → a tap-pick on the grabbed gem. (Some firmwares
+            // won't also emit onTap after a drag, so resolve it here;
+            // _justSwiped guards a duplicate onTap.)
+            _v.cancelDrag();
+            if (_startR >= 0) {
                 _justSwiped = true;
-                if (adx >= ady) {
-                    _v.handleSwap(0, (dx > 0) ? 1 : -1);
-                } else {
-                    _v.handleSwap((dy > 0) ? 1 : -1, 0);
-                }
+                _v.pickCell(_startR, _startC);
                 WatchUi.requestUpdate();
             }
             return true;
@@ -238,7 +263,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onTap(evt) {
         _markGesture();
-        // Swallow the ghost tap that fires right after a drag-swap is resolved.
+        // Swallow the ghost tap that fires right after a drag resolved things.
         if (_justSwiped) { _justSwiped = false; return true; }
         var xy = evt.getCoordinates();
         if (xy == null) { return true; }

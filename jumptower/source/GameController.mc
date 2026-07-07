@@ -69,8 +69,13 @@ class GameController {
     var screenH;
     var scrollLineY;      // screen-y where the camera locks
 
-    // Difficulty
+    // Difficulty (altitude bucket, 0..10) used to bias platform recycling.
     var difficulty;
+
+    // Difficulty SETTING from the shared OPTIONS screen (jt_diff: 0=Easy
+    // 1=Normal 2=Hard). Drives platform gap (spacing) so higher settings
+    // demand near-perfect hops, and segments the leaderboard.
+    var diffSetting;
 
     // FX
     var lastSpringFlash;  // ticks remaining for "BOING" feedback
@@ -98,6 +103,7 @@ class GameController {
         zoneFlashT     = 0;
         screenW = 240; screenH = 240; scrollLineY = 96;
         difficulty     = 0;
+        diffSetting    = _loadDiffSetting();
         lastSpringFlash= 0;
         deathShake     = 0;
         feetPrev       = 0;
@@ -130,6 +136,20 @@ class GameController {
             if (v != null && v instanceof Number && v > 0) { return v; }
         } catch (e) { }
         return 0;
+    }
+    // Difficulty setting from the shared OPTIONS screen (jt_diff: 0/1/2,
+    // default 1 = Normal so the default climb matches today's spacing).
+    hidden function _loadDiffSetting() {
+        try {
+            var v = Application.Storage.getValue("jt_diff");
+            if (v != null && v instanceof Number && v >= 0 && v <= 2) { return v; }
+        } catch (e) { }
+        return 1;
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    function diffVariant() {
+        return ["easy", "normal", "hard"][diffSetting];
     }
     hidden function _saveBestCoinsRun() {
         try { Application.Storage.setValue("bestCoinsRun", bestCoinsRun); } catch (e) { }
@@ -184,6 +204,9 @@ class GameController {
                     / (2.0 * Physics.GRAVITY);
         var maxGap = (jumpH * 75) / 100;
         var gap   = (h * 16) / 100;
+        // Difficulty setting scales platform spacing: Easy packs them
+        // closer, Hard spreads them near the reachable limit.
+        gap = (gap * [86, 100, 124][diffSetting]) / 100;
         if (gap < 30)     { gap = 30; }
         if (gap > maxGap) { gap = maxGap; }
         platforms.setBounds(w, platW, platH, gap);
@@ -233,6 +256,10 @@ class GameController {
 
     function gotoMenu() { state = GS_MENU; }
 
+    // Public entry used by the auto-start MainView: seed a run and drop
+    // straight into play (no in-game menu).
+    function beginRun() { ready(); state = GS_PLAY; }
+
     // ── Menu nav ────────────────────────────────────────────
     function menuPrev()    { menuRow = (menuRow + JT_MENU_ROWS - 1) % JT_MENU_ROWS; }
     function menuNext()    { menuRow = (menuRow + 1) % JT_MENU_ROWS; }
@@ -248,8 +275,7 @@ class GameController {
     function setHoldRight(b) { player.holdRight = b; }
     // Tap impulse (one-shot)
     function tapDir(d) {
-        if (state == GS_MENU) { ready(); state = GS_PLAY; return; }
-        if (state == GS_OVER) { gotoMenu(); return; }
+        if (state == GS_OVER) { beginRun(); return; }
         if (state == GS_READY) { state = GS_PLAY; }
         player.tapImpulse(d);
     }
@@ -382,8 +408,8 @@ class GameController {
         state = GS_OVER;
         // Submit the run's height (the metres value shown to the player)
         // to the global leaderboard. No variant for Jump Tower.
-        Leaderboard.submitScore(LB_GAME_ID, heightMetres().toNumber(), "");
-        Leaderboard.showPostGame(LB_GAME_ID, "", "JUMP TOWER");
+        Leaderboard.submitScore(LB_GAME_ID, heightMetres().toNumber(), diffVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, diffVariant(), "JUMP TOWER");
         // Secondary variant — best coin haul in a single run. Only
         // submitted on a new personal best, matching the pattern used
         // for the other games' bonus leaderboard categories.

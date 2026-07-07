@@ -10,9 +10,6 @@ class PinballProApp extends Application.AppBase {
     function onStop(state)   {}
 
     function getInitialView() {
-        var v = new MainView();
-        var d = new InputHandler(v);
-        v.setDelegate(d);
-        return [v, d];
+        return buildPinballProMenu();
     }
 }

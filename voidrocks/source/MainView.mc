@@ -25,12 +25,14 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _sw;
     hidden var _sh;
+    hidden var _started;   // auto-start a run on first frame
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _sw = 0; _sh = 0;
+        _started = false;
     }
 
     function onShow() {
@@ -64,9 +66,14 @@ class MainView extends WatchUi.View {
 
         dc.setColor(0x000510, 0x000510); dc.clear();
 
-        if (ctrl.state == VR_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl); return;
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here. (Dims are synced above so the
+        // controller can spawn the first wave correctly.)
+        if (!_started || ctrl.state == VR_MENU) {
+            ctrl.startGame();
+            _started = true;
         }
+
         UIManager.drawStars(dc, _sw, _sh);
         UIManager.drawAsteroids(dc, ctrl.rocks.rocks, _sw, _sh);
         UIManager.drawBullets(dc, ctrl.bullets.bullets);
@@ -82,7 +89,7 @@ class MainView extends WatchUi.View {
         dc.setColor(0x668090, Graphics.COLOR_TRANSPARENT);
         var hint;
         if (ctrl.state == VR_PLAY) { hint = "tilt/UP turn  DN thrust  tap fire"; }
-        else                        { hint = "tap = menu"; }
+        else                        { hint = "tap = restart"; }
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -95,51 +102,25 @@ class MainView extends WatchUi.View {
     //   SELECT → FIRE         (backup)
     //   tap    → FIRE
     function navUp() {
-        if (ctrl.state == VR_MENU) { ctrl.menuPrev(); return; }
-        if (ctrl.state == VR_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == VR_OVER) { ctrl.startGame(); return; }
         ctrl.rotL();
     }
     function navDown() {
-        if (ctrl.state == VR_MENU) { ctrl.menuNext(); return; }
-        if (ctrl.state == VR_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == VR_OVER) { ctrl.startGame(); return; }
         ctrl.thrust();
     }
     function navSelect() {
-        if (ctrl.state == VR_MENU) {
-            if (ctrl.menuRow == VR_ROW_LB) { openLeaderboard(); return; }
-            ctrl.menuActivate(); return;
-        }
-        if (ctrl.state == VR_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == VR_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
 
-    // Open the shared global leaderboard for the current difficulty.
-    function openLeaderboard() {
-        var v = new LbScoresView(VR_LB_GAME_ID, ctrl.difficultyName(), "VOID ROCKS");
-        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
-    }
+    // BACK pops back to the shared unified menu.
     function navBack() {
-        if (ctrl.state != VR_MENU) { ctrl.gotoMenu(); return true; }
         return false;
     }
 
     function handleTap(x, y) {
-        if (ctrl.state == VR_MENU) {
-            var rg = UIManager.rowGeom(_sw, _sh);
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < VR_MENU_ROWS; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i);
-                    if (i == VR_ROW_LB) { openLeaderboard(); }
-                    else { ctrl.menuActivate(); }
-                    return;
-                }
-            }
-            return;
-        }
-        if (ctrl.state == VR_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == VR_OVER) { ctrl.startGame(); return; }
         ctrl.fire();
     }
 }

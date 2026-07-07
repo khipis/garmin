@@ -6,7 +6,7 @@ class BitochiJazzBallApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("jazzball"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiJazzBallView();
-        return [view, new BitochiJazzBallDelegate(view)];
+        // Root view is the shared unified menu; START launches the game.
+        return buildJazzBallMenu();
     }
 }

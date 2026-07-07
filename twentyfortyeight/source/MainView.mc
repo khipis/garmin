@@ -17,11 +17,13 @@ using Toybox.Timer;
 class MainView extends WatchUi.View {
     var ctrl;
     hidden var _timer;
+    hidden var _started;   // auto-start a run on first frame
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
+        _started = false;
     }
 
     // A 1 s tick drives the live stopwatch — it only does work in Time mode
@@ -55,9 +57,13 @@ class MainView extends WatchUi.View {
     function onUpdate(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();
-        if (ctrl.state == GS_MENU) {
-            UIManager.drawMenu(dc, ctrl, w, h);
-        } else if (ctrl.state == GS_PLAY) {
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == GS_MENU) {
+            ctrl.newGame();
+            _started = true;
+        }
+        if (ctrl.state == GS_PLAY) {
             UIManager.drawGame(dc, ctrl, w, h);
         } else {
             UIManager.drawOverlay(dc, ctrl, w, h);

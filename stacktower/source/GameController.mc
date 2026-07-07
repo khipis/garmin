@@ -186,7 +186,7 @@ class GameController {
 
     function dropAction() {
         if (state == GS_MENU) { startGame(); return; }
-        if (state == GS_OVER) { gotoMenu();  return; }
+        if (state == GS_OVER) { startGame(); return; }   // restart in place
         if (state != GS_PLAY) { return; }
 
         var res = tower.drop();

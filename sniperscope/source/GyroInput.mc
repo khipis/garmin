@@ -9,10 +9,15 @@
 // the resting baseline so the player can level the watch in
 // their natural shooting stance.  `recalibrate()` re-arms this.
 //
-// Asymmetric pitch clamping: tilting the wrist DOWN past the
-// horizon is mechanically cramped — we amplify the down half
-// past a small dead zone so the player can comfortably aim at
-// targets near the ground without contorting the wrist.
+// Symmetric ease-out aiming: near the calibrated horizon the
+// response is 1:1 for fine control, then past a small linear
+// zone the travel is amplified equally in BOTH directions.  This
+// is what lets the wrist swing the scope all the way DOWN (and
+// up) with a small, comfortable tilt — and crucially it does not
+// depend on the sign of the accelerometer axis, so "aim down"
+// works on every device.  Earlier revisions boosted only one
+// pitch half and clamped the other tighter, which (depending on
+// axis polarity) made aiming down impossible.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Math;
@@ -58,20 +63,35 @@ class GyroInput {
         var ty =  dx.toFloat() * sc;
         var tp = -dy.toFloat() * sc;
 
-        // Asymmetric down-boost so the wrist can reach low targets.
-        if (tp > 0.20) { tp = 0.20 + (tp - 0.20) * 1.75; }
+        // Symmetric ease-out amplification: precise near the horizon,
+        // easy to swing to the extremes in EITHER direction. Applied
+        // identically to up/down (and left/right) so no direction is
+        // privileged and aiming down is always reachable.
+        ty = _amplify(ty);
+        tp = _amplify(tp);
 
-        // Hard clamp to the world bounds — past the edge of the
-        // scene there's nothing to see, no point letting gaze drift.
-        var limU = SS_WORLD_PITCH * 0.75;
-        var limD = SS_WORLD_PITCH * 1.10;
-        var limY = SS_WORLD_YAW   * 1.00;
+        // Symmetric, generous clamp — both directions reach comfortably
+        // past the target band so no hostile is ever out of reach.
+        var limP = SS_WORLD_PITCH * 1.15;
+        var limY = SS_WORLD_YAW   * 1.05;
         if (ty >  limY) { ty =  limY; }
         if (ty < -limY) { ty = -limY; }
-        if (tp >  limD) { tp =  limD; }
-        if (tp < -limU) { tp = -limU; }
+        if (tp >  limP) { tp =  limP; }
+        if (tp < -limP) { tp = -limP; }
 
         tYaw   = ty;
         tPitch = tp;
+    }
+
+    // Ease-out response curve, symmetric about the calibrated centre:
+    // a small linear zone for fine aim, then the excess travel past it
+    // is scaled up so the scope reaches the field edges without the
+    // wrist having to contort. Sign-agnostic → up and down feel equal.
+    hidden function _amplify(v) {
+        var lin = 0.15;   // 1:1 fine-control zone (radians)
+        var k   = 2.0;    // amplification of travel beyond the linear zone
+        if (v >  lin) { return  lin + (v - lin) * k; }
+        if (v < -lin) { return -lin + (v + lin) * k; }
+        return v;
     }
 }

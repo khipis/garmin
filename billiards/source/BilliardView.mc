@@ -73,6 +73,9 @@ class BilliardView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:onTick), 33, true);
+        // Root menu is the shared view; drop straight into a game. Only auto-start
+        // from a fresh launch so returning from the post-game card doesn't reset.
+        if (_game.gs == BS_MENU) { _game.startGame(); }
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
@@ -113,7 +116,7 @@ class BilliardView extends WatchUi.View {
     function onUpdate(dc) {
         if (_game.sw == 0) { _game.setScreenSize(dc.getWidth(), dc.getHeight()); }
         var g = _game;
-        if (g.gs == BS_MENU)     { _drawMenu(dc, g);     return; }
+        if (g.gs == BS_MENU)     { g.startGame(); }   // never render an in-game menu
         if (g.gs == BS_GAMEOVER) { _drawGameOver(dc, g); return; }
         _ensureBgBmp(g);
         if (_bgBmp != null) { dc.drawBitmap(0, 0, _bgBmp); } else { _drawTable(dc, g); }

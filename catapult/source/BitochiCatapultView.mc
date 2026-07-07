@@ -109,6 +109,11 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _windDisplay;
     hidden var _windGust;
 
+    // Difficulty from the shared OPTIONS screen (cat_diff: 0=Easy 1=Normal
+    // 2=Hard). Drives wind strength and castle/target distance, and segments
+    // the leaderboard.
+    hidden var _diff;
+
     hidden var _shakeLeft;
     hidden var _shakeOx;
     hidden var _shakeOy;
@@ -179,6 +184,7 @@ class BitochiCatapultView extends WatchUi.View {
     // and a one-shot guard so a finished match submits its score only once.
     hidden var _readySel;
     hidden var _scoreSubmitted;
+    hidden var _autoStarted;
 
     function initialize() {
         View.initialize();
@@ -261,6 +267,12 @@ class BitochiCatapultView extends WatchUi.View {
 
         _readySel = 0;
         _scoreSubmitted = false;
+        _autoStarted = false;
+
+        // Difficulty from the shared OPTIONS screen (cat_diff: 0/1/2).
+        _diff = 1;
+        var cd = Application.Storage.getValue("cat_diff");
+        if (cd instanceof Number && cd >= 0 && cd <= 2) { _diff = cd; }
 
         initRound();
     }
@@ -273,6 +285,10 @@ class BitochiCatapultView extends WatchUi.View {
         _accBonusShots = 0;
         var windSpan = 7 + _round / 3;
         if (windSpan > 11) { windSpan = 11; }
+        // Difficulty scales the wind range — Easy is nearly calm, Hard blows
+        // hard — so both the HUD reading and the physics stay consistent.
+        windSpan = windSpan * [55, 100, 145][_diff] / 100;
+        if (windSpan < 0) { windSpan = 0; }
         _windDisplay = (Math.rand().abs() % (windSpan * 2 + 1)) - windSpan;
         _wind = _windDisplay.toFloat() * (0.016 + _round.toFloat() * 0.00012);
         if (_wind > 0.22) { _wind = 0.22; }
@@ -280,6 +296,9 @@ class BitochiCatapultView extends WatchUi.View {
         _windGust = 0.0;
 
         _castleWX = 218.0 + (_round * 36).toFloat() + ((_round / 4) * 14).toFloat();
+        // Difficulty scales target distance — Easy pulls the castle closer,
+        // Hard pushes it farther out for a tougher lob.
+        _castleWX = _castleWX * [88, 100, 116][_diff].toFloat() / 100.0;
         if (_castleWX > 880.0) { _castleWX = 880.0; }
 
         _enemyIdx = _round - 1;
@@ -464,6 +483,14 @@ class BitochiCatapultView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 45, true);
+        // Root view is the shared unified menu; drop straight into the fight on
+        // the very first show. Guarded so returning from a pushed leaderboard /
+        // post-game card (or later rounds' scout screen) is left untouched.
+        if (gameState == GS_READY && !_autoStarted) {
+            _autoStarted = true;
+            gameState = GS_PREVIEW;
+            _previewTick = 0;
+        }
     }
 
     function onHide() {
@@ -1002,9 +1029,14 @@ class BitochiCatapultView extends WatchUi.View {
         }
     }
 
-    // Open the shared global leaderboard for catapult (no variants).
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
+    }
+
+    // Open the shared global leaderboard for catapult (per-difficulty board).
     function openLeaderboard() {
-        var v = new LbScoresView("catapult", "", "CATAPULT");
+        var v = new LbScoresView("catapult", _diffVariant(), "CATAPULT");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -1015,10 +1047,10 @@ class BitochiCatapultView extends WatchUi.View {
     // brutal damage haul both earn their own bragging rights.
     hidden function toGameOver() {
         if (!_scoreSubmitted) {
-            Leaderboard.submitScore("catapult", _score, "");
+            Leaderboard.submitScore("catapult", _score, _diffVariant());
             if (_matchDamage > 0) { Leaderboard.submitScore("catapult", _matchDamage, "damage"); }
             if (_matchShotsFired > 0) { Leaderboard.submitScore("catapult", _matchShotsFired, "shots"); }
-            Leaderboard.showPostGame("catapult", "", "CATAPULT");
+            Leaderboard.showPostGame("catapult", _diffVariant(), "CATAPULT");
             _scoreSubmitted = true;
         }
         gameState = GS_GAMEOVER;

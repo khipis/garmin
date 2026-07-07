@@ -6,7 +6,7 @@ class BitochiCheckersApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("checkers"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiCheckersView();
-        return [view, new BitochiCheckersDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildCheckersMenu();
     }
 }

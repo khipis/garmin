@@ -4,6 +4,11 @@ using Toybox.WatchUi;
 // Shared global leaderboard identifier for this game (bitochi.com).
 const LB_GAME_ID = "pets";
 
+// The one canonical Pet instance for this app session. The unified menu's
+// START launches gameplay on THIS instance, and onStop saves THIS instance,
+// so the played pet and the exit-save never diverge.
+var gPet = null;
+
 // One-shot guard so the launch/support message is offered at most once per app
 // session (MainView.onShow also fires when returning from pushed views).
 var gPetsAnnounced = false;
@@ -20,6 +25,7 @@ class BitochiPetsApp extends Application.AppBase {
         Leaderboard.logLaunch(LB_GAME_ID);
         _pet = new Pet();
         _pet.load();
+        gPet = _pet;
     }
 
     function onStop(state) {
@@ -43,11 +49,7 @@ class BitochiPetsApp extends Application.AppBase {
             _pet = new Pet();
             _pet.load();
         }
-        if (!_pet.isCreated) {
-            var view = new SetupView(_pet);
-            return [view, new SetupDelegate(_pet, view)];
-        }
-        var view = new MainView(_pet);
-        return [view, new MainDelegate(_pet, view)];
+        gPet = _pet;
+        return buildPetsMenu();
     }
 }

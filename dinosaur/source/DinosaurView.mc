@@ -87,6 +87,8 @@ class DinosaurView extends WatchUi.View {
     hidden var _score;
     hidden var _hiScore;
     hidden var _spd;        // px / tick
+    hidden var _spdSel;     // OPTIONS speed index: 0=NORMAL 1=FAST 2=INSANE
+    hidden var _baseSpd;    // starting scroll speed derived from _spdSel
     hidden var _nextObs;    // ticks until next spawn
     hidden var _phase;      // 0 / 1 / 2
     hidden var _scrollX;    // ground-texture scroll accumulator
@@ -162,6 +164,13 @@ class DinosaurView extends WatchUi.View {
         var stored = Application.Storage.getValue(SK_BEST);
         _hiScore = (stored != null) ? stored : 0;
 
+        // Base run/scroll speed comes from the shared OPTIONS screen
+        // (dino_spd: 0=NORMAL 1=FAST 2=INSANE). NORMAL keeps today's feel.
+        _spdSel = 0;
+        var sp = Application.Storage.getValue("dino_spd");
+        if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
+        _baseSpd = [5, 7, 9][_spdSel];
+
         _ox = new [OBS_MAX]; _ow = new [OBS_MAX];
         _oh = new [OBS_MAX]; _oa = new [OBS_MAX]; _ot = new [OBS_MAX];
         _obsScored = new [OBS_MAX];
@@ -218,6 +227,10 @@ class DinosaurView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:gameTick), 33, true);
+        // The main menu is the shared root view; drop straight into a run.
+        // Only auto-start from the initial title state so returning from the
+        // post-game leaderboard card doesn't restart the run.
+        if (_state == GS_TITLE) { _resetGame(); _state = GS_RUN; }
     }
 
     function onHide() {
@@ -308,10 +321,10 @@ class DinosaurView extends WatchUi.View {
                 _hiScore = _score; _flash = 70; _saveHiScore();
             }
             // Bailing still ends the run — submit the score to the leaderboard.
-            Leaderboard.submitScore(LB_GAME_ID, _score, "");
+            Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
             if (_coinsTotal > 0) { Leaderboard.submitScore(LB_GAME_ID, _coinsTotal, "coins"); }
             if (_bestCombo  > 0) { Leaderboard.submitScore(LB_GAME_ID, _bestCombo, "combo"); }
-            Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
+            Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "DINOSAUR");
             _state = GS_OVER;
             return true;
         }
@@ -328,6 +341,11 @@ class DinosaurView extends WatchUi.View {
     // Persist hi-score to storage so it survives app restart.
     hidden function _saveHiScore() {
         Application.Storage.setValue(SK_BEST, _hiScore);
+    }
+
+    // Leaderboard variant = base speed, so NORMAL/FAST/INSANE rank separately.
+    hidden function _lbVariant() {
+        return ["s0", "s1", "s2"][_spdSel];
     }
 
     // ── title-screen menu (START / LEADERBOARD) ───────────────────────────────
@@ -364,9 +382,9 @@ class DinosaurView extends WatchUi.View {
         }
     }
 
-    // Open the shared global leaderboard view (no variant for dinosaur).
+    // Open the shared global leaderboard view for the chosen speed variant.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, "", "DINOSAUR");
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "DINOSAUR");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -398,7 +416,7 @@ class DinosaurView extends WatchUi.View {
         _onGrd     = 1;
         _frame     = 0;
         _score     = 0;
-        _spd       = 5;
+        _spd       = _baseSpd;
         _nextObs   = 90;   // generous gap before very first obstacle
         _phase     = 0;
         _jumpsLeft = 1;
@@ -475,9 +493,12 @@ class DinosaurView extends WatchUi.View {
         // between two looks. Day/Sunset show clouds, Night/Dawn show stars.
         _theme = (_score / 450) % 4;
 
-        // speed: 5 at start → 15 at score 2000, hard cap to keep physics stable
-        _spd = 5 + _score / 200;
-        if (_spd > 16) { _spd = 16; }
+        // speed: base at start → ramps with score, hard cap to keep physics
+        // stable. Base + cap both scale with the chosen OPTIONS speed so
+        // FAST/INSANE feel noticeably quicker from the very first stride.
+        _spd = _baseSpd + _score / 200;
+        var cap = _baseSpd + 11;
+        if (_spd > cap) { _spd = cap; }
 
         // move obstacles + bookkeep near-miss bonuses
         var dinoRight = _dinoX + _dw;
@@ -536,10 +557,10 @@ class DinosaurView extends WatchUi.View {
                     _saveHiScore();
                 }
                 // Submit the finished run to the global leaderboard (once).
-                Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
                 if (_coinsTotal > 0) { Leaderboard.submitScore(LB_GAME_ID, _coinsTotal, "coins"); }
                 if (_bestCombo  > 0) { Leaderboard.submitScore(LB_GAME_ID, _bestCombo, "combo"); }
-                Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
+                Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "DINOSAUR");
             }
             return;
         }
@@ -779,6 +800,9 @@ class DinosaurView extends WatchUi.View {
         dc.setColor(bg, bg);
         dc.clear();
 
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_state == GS_TITLE || _state == GS_DEMO) { _resetGame(); _state = GS_RUN; }
+
         if (_theme == 0 || _theme == 1) { _drawClouds(dc); }
         else                            { _drawStars(dc); }
         _drawHorizonGlow(dc);
@@ -793,9 +817,7 @@ class DinosaurView extends WatchUi.View {
         _drawNearMiss(dc);
         _drawComboFlash(dc);
 
-        if (_state == GS_TITLE || _state == GS_DEMO) {
-            _drawTitle(dc);
-        } else if (_state == GS_OVER) {
+        if (_state == GS_OVER) {
             _drawScore(dc);
             _drawOver(dc);
         } else {

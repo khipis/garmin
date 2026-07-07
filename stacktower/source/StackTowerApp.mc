@@ -10,7 +10,7 @@ class StackTowerApp extends Application.AppBase {
     function onStop(state)   {}
 
     function getInitialView() {
-        var v = new MainView();
-        return [v, new InputHandler(v)];
+        // Root view is the shared unified menu; START launches MainView.
+        return buildStackTowerMenu();
     }
 }

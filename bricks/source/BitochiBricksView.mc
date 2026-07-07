@@ -57,6 +57,10 @@ class BitochiBricksView extends WatchUi.View {
     hidden var _bestScore;
     hidden var _resultTick;
 
+    // Difficulty (0=Easy 1=Normal 2=Hard) from the shared OPTIONS screen
+    // (br_diff). Drives ball speed and paddle width; segments the leaderboard.
+    hidden var _diff;
+
     // Menu navigation (0 = PLAY, 1 = LEADERBOARD). Row rects cached for tap.
     hidden var _menuSel;
     hidden var _menuRowX; hidden var _menuRowW; hidden var _menuRowH;
@@ -78,6 +82,10 @@ class BitochiBricksView extends WatchUi.View {
     hidden var _puFall;
     hidden var _laserSpd;
     hidden var _wallTop;
+
+    // Paddle widths (normal / wide-powerup) — difficulty-scaled in computeLayout.
+    hidden var _padNormW;
+    hidden var _padWideW;
 
     function initialize() {
         View.initialize();
@@ -106,6 +114,12 @@ class BitochiBricksView extends WatchUi.View {
         _menuSel = 0;
         _menuRowX = 0; _menuRowW = 0; _menuRowH = 0; _menuPlayY = 0; _menuLbY = 0;
 
+        // Difficulty from the shared OPTIONS screen (br_diff: 0/1/2). Default
+        // NORMAL(1) matches the previous single-difficulty behaviour.
+        _diff = 1;
+        var bd = Application.Storage.getValue("br_diff");
+        if (bd instanceof Number && bd >= 0 && bd <= 2) { _diff = bd; }
+
         computeLayout();
     }
 
@@ -130,6 +144,14 @@ class BitochiBricksView extends WatchUi.View {
         if (_padH < 5) { _padH = 5; }
 
         _spdBase = _h.toFloat() * 1.65 / 100.0;
+        // Difficulty scales ball speed: Easy slower, Hard faster.
+        var spdMul = [82, 100, 122][_diff];
+        _spdBase = _spdBase * spdMul / 100.0;
+
+        // Difficulty scales paddle width: Easy wider, Hard narrower.
+        var padPct = [24, 20, 16][_diff];
+        _padNormW = _w * padPct / 100;
+        _padWideW = _w * (padPct + 11) / 100;
 
         _puSz = _w * 32 / 1000;
         if (_puSz < 6) { _puSz = 6; }
@@ -214,8 +236,17 @@ class BitochiBricksView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
+        // Root view is the shared menu; drop straight into play. Only auto-start
+        // from the initial BS_MENU (returning from the post-game card is BS_OVER).
+        if (_gameState == BS_MENU) { startFromMenu(); }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+
+    // Begin a fresh run from the shared main menu.
+    hidden function startFromMenu() {
+        _level = 1; _score = 0; _lives = 3;
+        initLevel(); _gameState = BS_PLAY;
+    }
 
     function onTick() as Void {
         _tick++;
@@ -235,7 +266,7 @@ class BitochiBricksView extends WatchUi.View {
         if (_padWide > 0) { _padWide--; }
         if (_slowTick > 0) { _slowTick--; }
 
-        var padW = (_padWide > 0) ? (_w * 31 / 100) : (_w * 20 / 100);
+        var padW = (_padWide > 0) ? _padWideW : _padNormW;
         var half = padW.toFloat() / 2.0;
         var target = _w.toFloat() / 2.0 + accelX.toFloat() * _w.toFloat() / 1800.0;
         _padX = _padX * 0.74 + target * 0.26;
@@ -323,8 +354,8 @@ class BitochiBricksView extends WatchUi.View {
                     _bestScore = _score;
                     Application.Storage.setValue("bricksBest", _bestScore);
                 }
-                Leaderboard.submitScore(LB_GAME_ID, _score, null);
-                Leaderboard.showPostGame(LB_GAME_ID, null, "BRICKS");
+                Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+                Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "BRICKS");
                 _gameState = BS_OVER;
             } else {
                 spawnBall(-1);
@@ -438,7 +469,8 @@ class BitochiBricksView extends WatchUi.View {
         } else if (_gameState == BS_WIN && _resultTick > 18) {
             initLevel(); _gameState = BS_PLAY;
         } else if (_gameState == BS_OVER && _resultTick > 18) {
-            _gameState = BS_MENU;
+            // Play again restarts in place — the shared menu is only via BACK.
+            startFromMenu();
         } else if (_gameState == BS_PLAY && _laserReady && !_laserOn) {
             _laserX = _padX.toNumber();
             _laserY = (_padYpos - _padH).toFloat();
@@ -448,7 +480,7 @@ class BitochiBricksView extends WatchUi.View {
     }
 
     function doBack() {
-        if (_gameState != BS_MENU) { _gameState = BS_MENU; return true; }
+        // Always let the framework pop back to the shared unified menu.
         return false;
     }
 
@@ -473,8 +505,13 @@ class BitochiBricksView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "BRICKS");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "BRICKS");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     // ── Rendering ──────────────────────────────────────────────────────────
@@ -483,7 +520,7 @@ class BitochiBricksView extends WatchUi.View {
         var nw = dc.getWidth(); var nh = dc.getHeight();
         if (nw != _w || nh != _h) { _w = nw; _h = nh; computeLayout(); }
         dc.setColor(0x080D1A, 0x080D1A); dc.clear();
-        if (_gameState == BS_MENU) { drawMenu(dc);  return; }
+        if (_gameState == BS_MENU) { startFromMenu(); }   // never render an in-game menu
         if (_gameState == BS_WIN)  { drawWin(dc);   return; }
         if (_gameState == BS_OVER) { drawOver(dc);  return; }
         drawGame(dc);
@@ -608,7 +645,7 @@ class BitochiBricksView extends WatchUi.View {
         }
 
         // Paddle
-        var padW = (_padWide > 0) ? (_w * 31 / 100) : (_w * 20 / 100);
+        var padW = (_padWide > 0) ? _padWideW : _padNormW;
         var half2 = padW / 2;
         var ppx = _padX.toNumber() + ox; var ppy = _padYpos + oy;
         var padBodyC = (_padWide > 0) ? 0x22AA44 : 0x1E4E8C;

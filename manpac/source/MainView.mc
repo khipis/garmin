@@ -16,12 +16,14 @@ class MainView extends WatchUi.View {
     hidden var _sw;
     hidden var _sh;
     hidden var _curMs;
+    hidden var _started;   // auto-start the run on first layout
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _sw = 0; _sh = 0; _curMs = 210;
+        _started = false;
     }
 
     function onShow() {
@@ -47,9 +49,11 @@ class MainView extends WatchUi.View {
         _sw = dc.getWidth(); _sh = dc.getHeight();
         dc.setColor(0x000000, 0x000000); dc.clear();
 
-        if (ctrl.state == GS_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl);
-            return;
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == GS_MENU) {
+            ctrl.startGame();
+            _started = true;
         }
 
         var lay = _layoutBoard();
@@ -81,26 +85,20 @@ class MainView extends WatchUi.View {
 
     hidden function _drawFooter(dc) {
         dc.setColor(0x666688, Graphics.COLOR_TRANSPARENT);
-        var hint = (ctrl.state == GS_PLAY) ? "swipe / btns turn" : "tap = menu";
+        var hint = (ctrl.state == GS_PLAY) ? "swipe / btns turn" : "tap = replay";
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Input intents called by InputHandler ─────────────────────
     function navUp() {
-        if (ctrl.state == GS_MENU) { ctrl.menuPrev(); return; }
-        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.startGame(); return; }
     }
     function navDown() {
-        if (ctrl.state == GS_MENU) { ctrl.menuNext(); return; }
-        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.startGame(); return; }
     }
     function navSelect() {
-        if (ctrl.state == GS_MENU) {
-            if (ctrl.menuRow == MP_ROW_LB) { openLeaderboard(); return; }
-            ctrl.menuActivate(); return;
-        }
-        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.startGame(); return; }
     }
 
     // Open the shared global leaderboard (pushed from the view layer
@@ -135,16 +133,14 @@ class MainView extends WatchUi.View {
         else                          { ctrl.setDir(DIR_D); }
     }
     function navBack() {
-        if (ctrl.state == GS_PLAY || ctrl.state == GS_WIN || ctrl.state == GS_OVER) {
-            ctrl.gotoMenu(); return true;
-        }
+        // Let InputHandler pop back to the shared menu.
         return false;
     }
 
     // Swipe handler — sets Pac-Man's direction.
     // dr/dc is the unit delta from a SWIPE_* event or a manual drag.
     function handleSwipe(dr, dc) {
-        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.startGame(); return; }
         if (ctrl.state != GS_PLAY) { return; }
         var d = DIR_R;
         if      (dr < 0) { d = DIR_U; }
@@ -157,22 +153,7 @@ class MainView extends WatchUi.View {
     // Tap: in menu, activate the row under the tap; on result
     // screen, return to menu.  In play, ignored (we use swipes).
     function handleTap(x, y) {
-        if (ctrl.state == GS_MENU) {
-            var rg = UIManager.rowGeom(_sw, _sh);
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < MENU_ROWS; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i);
-                    if (i == MP_ROW_LB) { openLeaderboard(); }
-                    else { ctrl.menuActivate(); }
-                    return;
-                }
-            }
-            return;
-        }
-        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.startGame(); return; }
         // In play: tap is intentionally a no-op so a fingertip rest
         // doesn't trigger an accidental direction change.
     }

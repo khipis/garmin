@@ -139,9 +139,40 @@ class GameView extends WatchUi.View {
         _sh      = 0;
         _timer   = null;
         _gameOverHandled = false;
-        _init3DTables();
+        // Settings now come from the shared OPTIONS screen (persisted in
+        // Storage). Read them, configure the board, and drop straight into a
+        // game — the main menu is the shared GameMenuView.
+        _applySettings();
         _startGame();
-        _state   = GS_MENU;
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: ttp_mode, ttp_diff, ttp_grid (0..7), ttp_side (0=X first,1=O first).
+    hidden function _stg(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stg("ttp_mode", MODE_PVAI, 0, 2);
+        _diff        = _stg("ttp_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stg("ttp_side", 0, 0, 1) == 0);
+        var gi = _stg("ttp_grid", 2, 0, 7);   // default 5x5
+        if (gi <= 4) {
+            _is3D   = false;
+            _gridN  = gi + 3;                  // 0..4 → 3..7
+            _winLen = (_gridN == 3) ? 3 : 4;
+        } else {
+            _is3D    = true;
+            _n3D     = gi - 3;                 // 5..7 → 2..4
+            _total3D = _n3D * _n3D * _n3D;
+            _gridN   = _n3D;
+            _winLen  = _n3D;
+            _init3DTables();
+        }
     }
 
     // Build the winning-line tables for an N×N×N cube (N ∈ {2,3,4}).
@@ -418,16 +449,14 @@ class GameView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
-        if (_state == GS_MENU)  { _menuAction(); WatchUi.requestUpdate(); return; }
-        if (_state == GS_OVER)  { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == GS_MENU)  { _startGame(); WatchUi.requestUpdate(); return; }
+        if (_state == GS_OVER)  { _startGame(); WatchUi.requestUpdate(); return; }
         if (_mode == MODE_AIAI) { return; }
 
         var curIdx = _is3D ? (_curZ * _n3D * _n3D + _curY * _n3D + _curX)
@@ -1202,7 +1231,9 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_OVER && !_gameOverHandled) { _handleGameOver(); }
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        // The menu is the shared root view; if we ever land in GS_MENU, just
+        // begin a fresh game rather than drawing an in-game menu.
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x080810, 0x080810);
         dc.clear();
         if (_is3D) { _drawBoard3D(dc); }
@@ -1617,7 +1648,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == GS_OVER) { _startGame(); return; }
         if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
         if (_cell <= 0) { return; }
 

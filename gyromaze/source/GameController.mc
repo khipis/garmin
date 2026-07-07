@@ -96,7 +96,9 @@ class GameController {
     hidden function _loadAll() {
         diff      = _li("gm_diff",  GM_DIFF_EASY);
         if (diff < 0 || diff > 2) { diff = GM_DIFF_EASY; }
-        biomeMode = _li("gm_biome", -1);
+        // OPTIONS stores gm_biome as a 0-based index (0 = RANDOM, 1 = NORMAL,
+        // …); the controller uses -1 = random, 0..4 = biome, so shift by one.
+        biomeMode = _li("gm_biome", 0) - 1;
         if (biomeMode < -1 || biomeMode > GM_BIOME_CHAOS) { biomeMode = -1; }
         level     = _li("gm_level", 0);
         if (level < 0) { level = 0; }
@@ -106,7 +108,7 @@ class GameController {
     }
     function saveSettings() {
         _sv("gm_diff",  diff);
-        _sv("gm_biome", biomeMode);
+        _sv("gm_biome", biomeMode + 1);
         _sv("gm_level", level);
     }
 
@@ -166,6 +168,9 @@ class GameController {
     function elapsedSec() { return elapsed * 80 / 1000; }
 
     // ── Lifecycle ──────────────────────────────────────────────
+    // Public entry used by the auto-start MainView (settings come from Storage).
+    function startGame() { _loadAll(); _startGame(); }
+
     hidden function _startGame() {
         if (diff == GM_DIFF_EASY) { n = 7;  cellPx = 28; }
         else if (diff == GM_DIFF_MED) { n = 9; cellPx = 22; }

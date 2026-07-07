@@ -289,6 +289,8 @@ class GameController {
     // drives the "NEW RECORD!" banner on the recap screen.
     function hasNewRecord() { return _newDistFlag || _newShotFlag || _newHeadFlag; }
     function restart() { _startMission(); }
+    // Public entry used by the menu-less MainView (auto-start).
+    function startGame() { _startMission(); }
     function nextRoundOrFinish() {
         round++;
         if (round >= totalRounds) { _endMission(); return; }

@@ -1,6 +1,8 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Application;
+using Toybox.Lang;
 
 // ── Module-level constants ─────────────────────────────────────────────────
 const DISC_BLACK  = 1;
@@ -87,7 +89,27 @@ class GameView extends WatchUi.View {
         _playerColor = DISC_BLACK;
         _aiColor     = DISC_WHITE;
         _scoreSubmitted = false;
-        _gameState   = GS_MENU;
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
+        _startGame();
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: oth_mode (0..2), oth_diff (0..2), oth_side (0=Black first, 1=White).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stgIdx("oth_mode", MODE_PVAI, 0, 2);
+        _diff        = _stgIdx("oth_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("oth_side", 0, 0, 1) == 0);
+        _playerColor = _playerFirst ? DISC_BLACK : DISC_WHITE;
+        _aiColor     = _playerFirst ? DISC_WHITE : DISC_BLACK;
     }
 
     function onLayout(dc) {
@@ -131,11 +153,9 @@ class GameView extends WatchUi.View {
         }
     }
 
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_gameState == GS_MENU) { return false; }
-        _gameState = GS_MENU; _menuSel = 0;
-        WatchUi.requestUpdate();
-        return true;
+        return false;
     }
 
     // SELECT: place disc or start new game
@@ -153,7 +173,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_gameState == GS_OVER) { _gameState = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_gameState == GS_OVER) { _startGame(); WatchUi.requestUpdate(); return; }
         // PvP: P2 also places via cursor when it's GS_AI state
         var isP2Turn = (_gameState == GS_AI && _mode == MODE_PVP);
         if (_gameState != GS_PLAYER && !isP2Turn) { return; }
@@ -282,7 +302,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_gameState == GS_MENU) { _drawMenu(dc); return; }
+        if (_gameState == GS_MENU) { _startGame(); }
         // Dark background
         dc.setColor(0x0A120A, 0x0A120A);
         dc.clear();
@@ -553,7 +573,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_gameState == GS_OVER) { _gameState = GS_MENU; _menuSel = 0; return; }
+        if (_gameState == GS_OVER) { _startGame(); return; }
         if (_gameState != GS_PLAYER && !(_gameState == GS_AI && _mode == MODE_PVP)) { return; }
         if (_cell <= 0) { return; }
         var col = (tx - _boardX) / _cell;

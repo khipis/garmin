@@ -216,6 +216,9 @@ class GameController {
     }
 
     // ── Lifecycle ───────────────────────────────────────────────
+    // Public entry used by the auto-start MainView (settings from Storage).
+    function startGame() { _loadAll(); _refreshDailyStatus(); _startGame(); }
+
     hidden function _startGame() {
         _refreshDailyStatus();
         var lvl;

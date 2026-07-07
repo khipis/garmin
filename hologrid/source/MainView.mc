@@ -23,12 +23,14 @@ class MainView extends WatchUi.View {
     hidden var _cell;
     // Last direction set by the player (swipe, tap-quadrant, or UP/DN).
     hidden var _curDir;
+    hidden var _started;   // auto-start the run on first layout
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _sw = 0; _sh = 0; _ox = 0; _oy = 0; _cell = 0;
         _curDir = HG_DIR_R;
+        _started = false;
     }
 
     function onShow() {}
@@ -37,8 +39,11 @@ class MainView extends WatchUi.View {
     function onUpdate(dc) {
         _sw = dc.getWidth(); _sh = dc.getHeight();
         dc.setColor(0x020610, 0x020610); dc.clear();
-        if (ctrl.state == HG_S_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl); return;
+        // Menu lives in the shared root view — drop straight into a run and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == HG_S_MENU) {
+            ctrl.startGame();
+            _started = true;
         }
         _layout();
         UIManager.drawHUD(dc, _sw, _sh, ctrl);
@@ -76,7 +81,7 @@ class MainView extends WatchUi.View {
         if (ctrl.state == HG_S_PLAY) {
             hint = "swipe = move";
         } else {
-            hint = "Tap for menu";
+            hint = "Tap = replay";
         }
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);
@@ -84,21 +89,15 @@ class MainView extends WatchUi.View {
 
     // ── Intents from InputHandler ────────────────────────────────
     function navUp() {
-        if (ctrl.state == HG_S_MENU) { ctrl.menuPrev(); return; }
-        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.startGame(); return; }
         _curDir = (_curDir + 3) % 4;
     }
     function navDown() {
-        if (ctrl.state == HG_S_MENU) { ctrl.menuNext(); return; }
-        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.startGame(); return; }
         _curDir = (_curDir + 1) % 4;
     }
     function navSelect() {
-        if (ctrl.state == HG_S_MENU) {
-            if (ctrl.menuRow == HG_ROW_LB) { openLeaderboard(); return; }
-            ctrl.menuActivate(); return;
-        }
-        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.startGame(); return; }
         ctrl.tryMove(_curDir);
     }
 
@@ -108,14 +107,14 @@ class MainView extends WatchUi.View {
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
-        if (ctrl.state != HG_S_MENU) { ctrl.gotoMenu(); return true; }
+        // Let InputHandler pop back to the shared menu.
         return false;
     }
 
     // Swipe — set direction AND move immediately.  dr/dc are unit
     // deltas (-1, 0, +1) from the swipe event.
     function handleSwipe(dr, dc) {
-        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.startGame(); return; }
         if (ctrl.state != HG_S_PLAY) { return; }
         var d = HG_DIR_R;
         if      (dr < 0) { d = HG_DIR_U; }
@@ -129,22 +128,7 @@ class MainView extends WatchUi.View {
     // Tap — menu rows in MENU; "aim" in PLAY (sets direction but
     // doesn't move so the player can plan ahead and then SELECT).
     function handleTap(x, y) {
-        if (ctrl.state == HG_S_MENU) {
-            var rg = UIManager.rowGeom(_sw, _sh);
-            var rowH = rg[0]; var rowW = rg[1];
-            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-            for (var i = 0; i < HG_MENU_ROWS; i++) {
-                var ry = rowY0 + i * (rowH + gap);
-                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i);
-                    if (i == HG_ROW_LB) { openLeaderboard(); }
-                    else { ctrl.menuActivate(); }
-                    return;
-                }
-            }
-            return;
-        }
-        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == HG_S_WIN || ctrl.state == HG_S_OVER) { ctrl.startGame(); return; }
         if (_cell <= 0) { return; }
         // Tap on play sets direction relative to player; doesn't move.
         var px = _ox + ctrl.player.c * _cell + _cell / 2;

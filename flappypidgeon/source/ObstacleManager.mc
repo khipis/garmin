@@ -42,6 +42,9 @@ class ObstacleManager {
     var pipeWidth;
     var spawnX;         // x to (re)spawn newly-recycled pipes at
     var spacing;        // horizontal distance between pipe centers
+    // Gap size bias (px on the 240 reference), set from the OPTIONS "Gap"
+    // setting: WIDE = +, NORMAL = 0 (default feel), TIGHT = -.
+    var gapBias;
 
     function initialize() {
         pipes = new [MAX_PIPES];
@@ -52,7 +55,10 @@ class ObstacleManager {
         pipeWidth = 22;
         spawnX    = 240;
         spacing   = 110;
+        gapBias   = 0;
     }
+
+    function setGapBias(b) { gapBias = b; }
 
     function setBounds(w, top, bottom, pipeW) {
         screenW   = w;
@@ -99,8 +105,10 @@ class ObstacleManager {
     // Compute the gap height the next pipe should have for a given
     // score. Shrinks slowly per Physics.GAP_SHRINK.
     function gapForScore(score, scaleNum, scaleDen) {
-        var g = Physics.GAP_BASE - ((score / 5) * Physics.GAP_SHRINK).toNumber();
-        if (g < Physics.GAP_MIN) { g = Physics.GAP_MIN; }
+        var g = Physics.GAP_BASE + gapBias - ((score / 5) * Physics.GAP_SHRINK).toNumber();
+        var minG = Physics.GAP_MIN + gapBias;
+        if (minG < 40) { minG = 40; }   // absolute safety floor (bird still fits)
+        if (g < minG) { g = minG; }
         // Scale gap to screen size (scaleNum/scaleDen ~= screenH / 240).
         return (g * scaleNum) / scaleDen;
     }

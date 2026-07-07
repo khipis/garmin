@@ -68,12 +68,8 @@ class BitochiSerpentDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view).
     function onBack() {
-        if (_view.isPlaying()) {
-            _view.doBack();
-            WatchUi.requestUpdate();
-            return true;
-        }
         if (_sensorEnabled) { Sensor.enableSensorEvents(null); }
         return false;
     }

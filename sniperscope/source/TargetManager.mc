@@ -126,9 +126,10 @@ class TargetManager {
             if (ny < -1.3) { ny = -1.3; }
         }
         yaw[i]   = ny;
-        // Pitch: bias slightly downward so the target sits on the
-        // visible ground line rather than floating in the sky.
-        pitch[i] = (_randf() * 0.7) - 0.15;       // [-0.15 .. +0.55]
+        // Pitch: sit around the horizon with a slight downward lean so
+        // targets rest near the ground line without demanding an extreme
+        // downward tilt to reach them.
+        pitch[i] = (_randf() * 0.6) - 0.22;       // [-0.22 .. +0.38]
 
         // Slow walk drift — only some targets move.
         var moveRoll = _rand(100);

@@ -15,6 +15,7 @@ class MainView extends WatchUi.View {
     hidden var _sh;
     hidden var _laidOut;
     hidden var _announced;
+    hidden var _started;   // auto-start the round on first frame
 
     // Cached layout — recomputed once per screen size.
     hidden var _cabX;
@@ -34,6 +35,7 @@ class MainView extends WatchUi.View {
         _sw = 0; _sh = 0;
         _laidOut = false;
         _announced = false;
+        _started = false;
     }
 
     function onShow() {
@@ -58,9 +60,11 @@ class MainView extends WatchUi.View {
         _sh = dc.getHeight();
         if (!_laidOut) { _doLayout(); _laidOut = true; }
 
-        if (_ctrl.state == GS_MENU) {
-            UIManager.drawMenu(dc, _ctrl, _sw, _sh);
-            return;
+        // Menu lives in the shared root view — drop straight into a round and
+        // never render an in-game menu here.
+        if (!_started || _ctrl.state == GS_MENU) {
+            _ctrl.startGame();
+            _started = true;
         }
 
         dc.setColor(0x000000, 0x000000);
@@ -158,8 +162,7 @@ class MainView extends WatchUi.View {
     }
 
     function handleBack() {
-        if (_ctrl.state == GS_PLAY) { _ctrl.gotoMenu(); return true; }
-        if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); return true; }
+        // Always pop back to the shared menu.
         return false;
     }
 }

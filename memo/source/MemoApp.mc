@@ -6,7 +6,7 @@ class MemoApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("memo"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new MemoView();
-        return [view, new MemoDelegate(view)];
+        // Root view is the shared unified menu; START launches the game.
+        return buildMemoMenu();
     }
 }

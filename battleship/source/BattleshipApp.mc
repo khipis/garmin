@@ -10,7 +10,6 @@ class BattleshipApp extends Application.AppBase {
     function onStop(state)   {}
 
     function getInitialView() {
-        var v = new MainView();
-        return [v, new InputHandler(v)];
+        return buildBattleshipMenu();
     }
 }

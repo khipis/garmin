@@ -111,8 +111,25 @@ class GameView extends WatchUi.View {
         _playerFirst = true;
         _activePlayer = 1;
         _initLines();
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
         _startGame();
-        _state = GS_MENU;
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: gob_mode (0..2), gob_diff (0..2), gob_side (0=Light first, 1=Dark).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode        = _stgIdx("gob_mode", MODE_PVAI, 0, 2);
+        _diff        = _stgIdx("gob_diff", DIFF_MED, 0, 2);
+        _playerFirst = (_stgIdx("gob_side", 0, 0, 1) == 0);
     }
 
     function onLayout(dc) {
@@ -201,7 +218,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_state == GMS_OVER)   { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == GMS_OVER)   { _startGame(); WatchUi.requestUpdate(); return; }
         if (_state == GMS_AI)     { return; }
         if (_state == GMS_P_SIZE) { _confirmSizePick(); return; }
         if (_state == GMS_P_SEL)  { _doSelect(); }
@@ -214,9 +231,8 @@ class GameView extends WatchUi.View {
             _state = GMS_P_SEL; _selFrom = -1;
             return true;
         }
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        // Otherwise BACK returns to the shared menu (pop this gameplay view).
+        return false;
     }
 
     // ── Timer tick — AI turn ──────────────────────────────────────────────
@@ -767,7 +783,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
         _drawGrid(dc);
@@ -1100,7 +1116,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == GMS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == GMS_OVER) { _startGame(); return; }
         if (_state == GMS_AI)   { return; }
         if (_csz <= 0) { return; }
         // Map tap to board cell

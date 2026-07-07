@@ -15,7 +15,7 @@ class BitochiRunApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BitochiRunView();
-        return [view, new BitochiRunDelegate(view)];
+        // Root view is the shared unified menu; START launches the run.
+        return buildRunMenu();
     }
 }

@@ -143,7 +143,9 @@ class GameController {
         } catch (e) {}
         try {
             var t = Application.Storage.getValue("pp_tilt");
+            // OPTIONS stores an index (0/1); older builds stored a Boolean.
             if (t instanceof Boolean) { tiltEnabled = t; }
+            else if (t instanceof Number) { tiltEnabled = (t == 1); }
         } catch (e) {}
     }
     hidden function _saveDifficulty() {

@@ -113,11 +113,28 @@ class GameView extends WatchUi.View {
         _sP  = 0;
         _sAI = 0;
         _timer = null;
-        _startGame();
-        _state   = GS_MENU;
         _mode    = MODE_PVAI;
         _diff    = DIFF_MED;
         _menuSel = 0;
+        // Settings come from the shared OPTIONS screen (persisted in Storage).
+        _applySettings();
+        _startGame();
+        if (_mode == MODE_AIAI) { _state = MKS_AI; }
+    }
+
+    // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
+    // Keys: mk_mode (0..2), mk_diff (0..2).
+    hidden function _stgIdx(key, def, lo, hi) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number && v >= lo && v <= hi) { return v; }
+        } catch (e) {}
+        return def;
+    }
+
+    hidden function _applySettings() {
+        _mode = _stgIdx("mk_mode", MODE_PVAI, 0, 2);
+        _diff = _stgIdx("mk_diff", DIFF_MED, 0, 2);
     }
 
     function onLayout(dc) {
@@ -175,10 +192,9 @@ class GameView extends WatchUi.View {
     }
 
     // BACK: menu → pop app, in-game → return to menu
+    // BACK: always return to the shared menu (pop this gameplay view).
     function doBack() {
-        if (_state == GS_MENU) { return false; }
-        _state = GS_MENU; _menuSel = 0;
-        return true;
+        return false;
     }
 
     function doAction() {
@@ -193,7 +209,7 @@ class GameView extends WatchUi.View {
             WatchUi.requestUpdate();
             return;
         }
-        if (_state == MKS_OVER) { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_state == MKS_OVER) { _startGame(); if (_mode == MODE_AIAI) { _state = MKS_AI; } WatchUi.requestUpdate(); return; }
         if (_state == MKS_AI && _mode != MODE_PVP) { return; }
         if (_skipNext) { return; }
         if (_state == MKS_SUIT) {
@@ -561,7 +577,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == GS_MENU) { _startGame(); }
         dc.setColor(0x0B1E0F, 0x0B1E0F);   // dark card-table green
         dc.clear();
         _drawAIArea(dc);
@@ -1034,7 +1050,7 @@ class GameView extends WatchUi.View {
             }
             return;
         }
-        if (_state == MKS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == MKS_OVER) { _startGame(); if (_mode == MODE_AIAI) { _state = MKS_AI; } return; }
         if (_state == MKS_AI)   { return; }
         // Suit picker overlay — tap on a suit slot
         if (_state == MKS_SUIT) {

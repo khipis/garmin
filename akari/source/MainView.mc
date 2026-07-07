@@ -49,7 +49,9 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         _sw = dc.getWidth(); _sh = dc.getHeight();
-        if (ctrl.state == AS_MENU) { UIManager.drawMenu(dc, _sw, _sh, ctrl); return; }
+        // Menu lives in the shared root view — drop straight into a puzzle and
+        // never render an in-game menu here.
+        if (ctrl.state == AS_MENU) { ctrl.beginGame(); }
         if (ctrl.state == AS_WIN)  { UIManager.drawWin(dc, _sw, _sh, ctrl); return; }
         UIManager.drawPlay(dc, _sw, _sh, ctrl);
     }
@@ -79,9 +81,8 @@ class MainView extends WatchUi.View {
         ctrl.cycleCursor();
     }
     function navBack() {
-        if (ctrl.state == AS_MENU) { return false; }
-        ctrl.gotoMenu();
-        return true;
+        // BACK always returns to the shared menu (pop the gameplay view).
+        return false;
     }
 
     // Advance the cursor through the n*n scan order in `step` direction

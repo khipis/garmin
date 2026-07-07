@@ -123,6 +123,11 @@ class BitochiBombView extends WatchUi.View {
     hidden var _menuSel;
     hidden var _lbHandled;
 
+    // Difficulty from the shared OPTIONS screen (bomb_diff: 0/1/2 = easy/normal/
+    // hard). Scales the bomb budget per wave — the core resource whose depletion
+    // ends the run — so fewer bombs = harder. Segments the leaderboard.
+    hidden var _diff;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -226,12 +231,31 @@ class BitochiBombView extends WatchUi.View {
         _airstrikeTimer = 0;
         _menuSel = 0;
         _lbHandled = false;
+
+        _diff = 1;
+        var dv = Application.Storage.getValue("bomb_diff");
+        if (dv instanceof Number && dv >= 0 && dv <= 2) { _diff = dv; }
+
         gameState = GS_MENU;
+    }
+
+    // Leaderboard variant = difficulty, so easy/normal/hard rank separately.
+    hidden function _lbVariant() {
+        return ["easy", "normal", "hard"][_diff];
     }
 
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 33, true);
+        // Root menu is the shared view; drop straight into play. Only auto-start
+        // from a fresh launch (returning from the post-game card keeps the state).
+        if (gameState == GS_MENU) { startFromMenu(); }
+    }
+
+    // Begin a fresh run from the shared main menu (wave 1, cleared stats).
+    hidden function startFromMenu() {
+        _wave = 1; _score = 0; _totalKills = 0; _totalDamage = 0;
+        startWave();
     }
 
     function onHide() {
@@ -422,6 +446,8 @@ class BitochiBombView extends WatchUi.View {
     hidden function bombsForWave(w) {
         var b = 16 + w * 4;
         if (b > 60) { b = 60; }
+        b = b * ([150, 100, 60][_diff]) / 100;
+        if (b < 6) { b = 6; }
         return b;
     }
 
@@ -493,9 +519,9 @@ class BitochiBombView extends WatchUi.View {
                 _resultTick = 0;
                 if (!_lbHandled) {
                     _lbHandled = true;
-                    Leaderboard.submitScore(BOMB_LB_GAME_ID, _score, "");
+                    Leaderboard.submitScore(BOMB_LB_GAME_ID, _score, _lbVariant());
                     if (_totalDamage > 0) { Leaderboard.submitScore(BOMB_LB_GAME_ID, _totalDamage, "damage"); }
-                    Leaderboard.showPostGame(BOMB_LB_GAME_ID, "", "BOMB");
+                    Leaderboard.showPostGame(BOMB_LB_GAME_ID, _lbVariant(), "BOMB");
                 }
             }
         }
@@ -533,7 +559,7 @@ class BitochiBombView extends WatchUi.View {
     }
 
     function openLeaderboard() {
-        var v = new LbScoresView(BOMB_LB_GAME_ID, "", "BOMB");
+        var v = new LbScoresView(BOMB_LB_GAME_ID, _lbVariant(), "BOMB");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -1021,7 +1047,7 @@ class BitochiBombView extends WatchUi.View {
         _cy = _h / 2;
         _groundY = _h * 82 / 100;
 
-        if (gameState == GS_MENU) { drawMenu(dc); return; }
+        if (gameState == GS_MENU) { startFromMenu(); }   // never render an in-game menu
         if (gameState == GS_GAMEOVER) { drawGameOver(dc); return; }
         if (gameState == GS_BETWEEN) { drawBetween(dc); return; }
         drawScene(dc);

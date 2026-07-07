@@ -111,6 +111,12 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _menuRow;
     hidden var _submitted;
 
+    // Axes-per-level base, from the shared OPTIONS screen (arc_axes: 0/1/2 ->
+    // 3/5/7). Drives how many axes/throws you get per level before advancing;
+    // also segments the leaderboard (ax3/ax5/ax7).
+    hidden var _axesIdx;
+    hidden var _axesBase;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -204,11 +210,24 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         _menuRow = ARC_ROW_PLAY;
         _submitted = false;
+
+        _axesIdx = 1;
+        var av = Application.Storage.getValue("arc_axes");
+        if (av instanceof Number && av >= 0 && av <= 2) { _axesIdx = av; }
+        _axesBase = [3, 5, 7][_axesIdx];
+    }
+
+    // Leaderboard variant = axe-count setting, so 3/5/7 rank separately.
+    hidden function _lbVariant() {
+        return ["ax3", "ax5", "ax7"][_axesIdx];
     }
 
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 33, true);
+        // Root menu is the shared view; drop straight into play. Only auto-start
+        // from a fresh launch so returning from the post-game card doesn't reset.
+        if (gameState == GS_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -296,8 +315,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
                 }
                 if (!_submitted) {
                     _submitted = true;
-                    Leaderboard.submitScore(ARC_LB_GAME_ID, _score, "");
-                    Leaderboard.showPostGame(ARC_LB_GAME_ID, "", "AXE ARCADE");
+                    Leaderboard.submitScore(ARC_LB_GAME_ID, _score, _lbVariant());
+                    Leaderboard.showPostGame(ARC_LB_GAME_ID, _lbVariant(), "AXE ARCADE");
                 }
             }
         }
@@ -433,8 +452,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         if (_isBoss) {
             _logRadiusPct = 22;
-            _axesPerLevel = 8 + _level / 5;
-            if (_axesPerLevel > 14) { _axesPerLevel = 14; }
+            _axesPerLevel = (_axesBase + 3) + _level / 5;
+            if (_axesPerLevel > 14 + (_axesBase - 5)) { _axesPerLevel = 14 + (_axesBase - 5); }
             _hitMinDeg = 2.5;
 
             var preStuck = 2 + _level / 10;
@@ -450,7 +469,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _logRadiusPct = 18;
             if (_level % 4 == 2) { _logRadiusPct = 16; }
             else if (_level % 4 == 0) { _logRadiusPct = 17; }
-            _axesPerLevel = 5 + ((_level - 1) % 3);
+            _axesPerLevel = _axesBase + ((_level - 1) % 3);
             _hitMinDeg = 3.0 - (_level - 1).toFloat() * 0.04;
             if (_hitMinDeg < 1.5) { _hitMinDeg = 1.5; }
 
@@ -617,7 +636,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     // Open the shared global leaderboard for Axe Arcade.
     function openLeaderboard() {
-        var v = new LbScoresView(ARC_LB_GAME_ID, "", "AXE ARCADE");
+        var v = new LbScoresView(ARC_LB_GAME_ID, _lbVariant(), "AXE ARCADE");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -664,7 +683,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _cy = _h * 38 / 100;
         _logR = _w * _logRadiusPct / 100;
 
-        if (gameState == GS_MENU) { drawMenu(dc); return; }
+        if (gameState == GS_MENU) { startGame(); }   // never render an in-game menu
         drawScene(dc);
     }
 

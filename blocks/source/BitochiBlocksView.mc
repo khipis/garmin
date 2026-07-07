@@ -92,8 +92,9 @@ class BitochiBlocksView extends WatchUi.View {
         _best = Application.Storage.getValue("blocks_best");
         if (_best == null) { _best = 0; }
 
-        var ua = Application.Storage.getValue("blocks_accel");
-        _useAccel = (ua instanceof Toybox.Lang.Boolean) ? ua : false;
+        // Tilt steering now comes from the shared OPTIONS screen (numeric index).
+        var ut = Application.Storage.getValue("blocks_tilt");
+        _useAccel = (ut instanceof Toybox.Lang.Number) ? (ut == 1) : false;
         accelX = 0;
         _tiltArm = true;
         _menuSel = 0;
@@ -178,6 +179,9 @@ class BitochiBlocksView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 70, true);
+        // Root menu is the shared view; drop straight into play. Only auto-start
+        // from a fresh launch (returning from the post-game card keeps the state).
+        if (_gs == TBS_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -625,9 +629,9 @@ class BitochiBlocksView extends WatchUi.View {
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupBoard(); }
 
-        if (_gs == TBS_MENU)      { drawMenu(dc); }
-        else if (_gs == TBS_PLAY) { drawGame(dc); }
-        else                      { drawOver(dc); }
+        if (_gs == TBS_MENU) { startGame(); }   // never render an in-game menu
+        if (_gs == TBS_PLAY) { drawGame(dc); }
+        else                 { drawOver(dc); }
     }
 
     hidden function drawMenu(dc) {

@@ -25,9 +25,9 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         _sw = dc.getWidth(); _sh = dc.getHeight();
-        if (ctrl.state == DR_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl); return;
-        }
+        // Menu lives in the shared root view — drop straight into play and
+        // never render an in-game menu here.
+        if (ctrl.state == DR_MENU) { ctrl.beginGame(); }
         if (ctrl.state == DR_OVER) {
             UIManager.drawOver(dc, _sw, _sh, ctrl); return;
         }
@@ -59,7 +59,7 @@ class MainView extends WatchUi.View {
         ctrl.selectAction();
     }
     function navBack() {
-        if (ctrl.state != DR_MENU) { ctrl.gotoMenu(); return true; }
+        // BACK always returns to the shared menu (pop the gameplay view).
         return false;
     }
 

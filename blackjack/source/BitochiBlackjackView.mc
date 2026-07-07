@@ -27,6 +27,11 @@ class BitochiBlackjackView extends WatchUi.View {
     hidden var _pCards; hidden var _pCount;
     hidden var _dCards; hidden var _dCount;
 
+    // Shoe size from the shared OPTIONS screen (bj_decks: 0/1/2 = 1/2/6 decks).
+    // The shoe is only reshuffled when it runs low (penetration), so more decks
+    // genuinely last many more rounds and shift the odds. Segments the LB.
+    hidden var _decksIdx; hidden var _numDecks; hidden var _shoeSize;
+
     hidden var _chips; hidden var _resultMsg;
     hidden var _dealerDelay;
 
@@ -51,7 +56,12 @@ class BitochiBlackjackView extends WatchUi.View {
         _menuSel = 0;
         _mRowX = 0; _mRowW = 0; _mRowH = 0; _mPlayY = 0; _mLbY = 0;
         _resultMsg = "";
-        _deck = new [52]; _deckTop = 0;
+        _decksIdx = 2;
+        var dv = Application.Storage.getValue("bj_decks");
+        if (dv instanceof Number && dv >= 0 && dv <= 2) { _decksIdx = dv; }
+        _numDecks = [1, 2, 6][_decksIdx];
+        _shoeSize = _numDecks * 52;
+        _deck = new [_shoeSize]; _deckTop = _shoeSize;  // force a shuffle on first deal
         _pCards = new [12]; _pCount = 0;
         _dCards = new [12]; _dCount = 0;
         _dealerDelay = 0;
@@ -71,6 +81,9 @@ class BitochiBlackjackView extends WatchUi.View {
             _timer = new Timer.Timer();
             _timer.start(method(:onTick), 300, true);
         }
+        // Root menu is the shared view; drop straight into a session. Only
+        // auto-start from a fresh launch (returning from a pushed card keeps play).
+        if (_gs == BJ_MENU) { startGame(); }
     }
 
     function onHide() {
@@ -136,9 +149,11 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     function doBack() {
-        if (_gs != BJ_MENU) {
-            endSession();          // quitting to menu ends the session
-            _gs = BJ_MENU; return true;
+        // Quitting to the shared menu ends the session: submit the peak
+        // bankroll, then let the framework pop us back to the root menu.
+        if (_sessionActive) {
+            Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
+            _sessionActive = false;
         }
         return false;
     }
@@ -146,7 +161,7 @@ class BitochiBlackjackView extends WatchUi.View {
     function isMenu() { return _gs == BJ_MENU; }
 
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, null, "BLACKJACK");
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "BLACKJACK");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -163,8 +178,8 @@ class BitochiBlackjackView extends WatchUi.View {
     // Submit the session's peak bankroll once, then close the session.
     hidden function endSession() {
         if (_sessionActive) {
-            Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
-            Leaderboard.showPostGame(LB_GAME_ID, null, "BLACKJACK");
+            Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BLACKJACK");
             _sessionActive = false;
         }
     }
@@ -181,7 +196,9 @@ class BitochiBlackjackView extends WatchUi.View {
             _peakChips = BJ_START_CHIPS;
             _sessionActive = true;
         }
-        shuffleDeck();
+        // Reshuffle only when the shoe runs low, so a bigger shoe lasts many
+        // more rounds and the composition drifts between reshuffles.
+        if (_deckTop > _shoeSize - 20) { shuffleDeck(); }
         _pCount = 0; _dCount = 0;
         _pCards[_pCount] = dealCard(); _pCount++;
         _dCards[_dCount] = dealCard(); _dCount++;
@@ -197,7 +214,7 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     hidden function dealCard() {
-        if (_deckTop >= 52) { shuffleDeck(); }
+        if (_deckTop >= _shoeSize) { shuffleDeck(); }
         var c = _deck[_deckTop]; _deckTop++;
         return c;
     }
@@ -232,13 +249,18 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     hidden function shuffleDeck() {
-        for (var i = 0; i < 52; i++) { _deck[i] = i; }
-        for (var i = 51; i > 0; i--) {
+        for (var i = 0; i < _shoeSize; i++) { _deck[i] = i % 52; }
+        for (var i = _shoeSize - 1; i > 0; i--) {
             var j = (Math.rand() % (i + 1)).toNumber();
             if (j < 0) { j = -j; }
             var t = _deck[i]; _deck[i] = _deck[j]; _deck[j] = t;
         }
         _deckTop = 0;
+    }
+
+    // Leaderboard variant = shoe size, so 1/2/6 decks rank separately.
+    hidden function _lbVariant() {
+        return ["d1", "d2", "d6"][_decksIdx];
     }
 
     // Returns best hand value (aces counted optimally)
@@ -263,7 +285,7 @@ class BitochiBlackjackView extends WatchUi.View {
         dc.setColor(0x000000, 0x000000);
         dc.clear();
 
-        if (_gs == BJ_MENU) { drawMenu(dc); return; }
+        if (_gs == BJ_MENU) { startGame(); }   // never render an in-game menu
 
         drawHUD(dc);
         drawDealerHand(dc);

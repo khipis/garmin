@@ -297,7 +297,7 @@ class UIManager {
         if (ctrl.mode == LO_MODE_LEVELS && ctrl.level < LO_TOTAL_LEVELS) {
             hint = "tap/SEL = next level";
         } else {
-            hint = "tap/SEL = menu";
+            hint = "tap/SEL = replay";
         }
         dc.drawText(cx, sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);

@@ -257,8 +257,15 @@ class Pet {
             careStreak = (cs != null) ? cs : 0;
             var lcd = Application.Storage.getValue("lastCareDay");
             _lastCareDay = (lcd != null) ? lcd : -1;
-            var ve = Application.Storage.getValue("vibeEnabled");
-            vibeEnabled = (ve != null) ? ve : true;
+            // "petVibe" (the unified OPTIONS cycler, stored as 0/1) is canonical;
+            // fall back to the legacy boolean "vibeEnabled" for existing saves.
+            var pv = Application.Storage.getValue("petVibe");
+            if (pv != null) {
+                vibeEnabled = (pv != 0);
+            } else {
+                var ve = Application.Storage.getValue("vibeEnabled");
+                vibeEnabled = (ve != null) ? ve : true;
+            }
             var saved = Application.Storage.getValue("lastUpdate");
             if (saved != null && isAlive) {
                 var elapsed = Time.now().value() - saved;
@@ -330,6 +337,8 @@ class Pet {
 
     function toggleVibe() {
         vibeEnabled = !vibeEnabled;
+        // Keep the unified OPTIONS cycler in sync with the in-pet toggle.
+        Application.Storage.setValue("petVibe", vibeEnabled ? 1 : 0);
         eventText = vibeEnabled ? "Vibe: ON" : "Vibe: OFF";
         _eventTime = Time.now().value();
         save();

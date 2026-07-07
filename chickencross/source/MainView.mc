@@ -48,9 +48,9 @@ class MainView extends WatchUi.View {
         _sw = dc.getWidth(); _sh = dc.getHeight();
         dc.setColor(0x081020, 0x081020); dc.clear();
 
-        if (ctrl.state == CS_MENU) {
-            UIManager.drawMenu(dc, _sw, _sh, ctrl); return;
-        }
+        // Menu lives in the shared root view — drop straight into play and
+        // never render an in-game menu here.
+        if (ctrl.state == CS_MENU) { ctrl.beginGame(); }
         _layout();
         UIManager.drawHUD(dc, _sw, _sh, ctrl);
         UIManager.drawBoard(dc, _ox, _oy, _cell, ctrl.lanes);
@@ -117,7 +117,7 @@ class MainView extends WatchUi.View {
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
-        if (ctrl.state != CS_MENU) { ctrl.gotoMenu(); return true; }
+        // BACK always returns to the shared menu (pop the gameplay view).
         return false;
     }
 

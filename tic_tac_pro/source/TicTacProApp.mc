@@ -6,7 +6,7 @@ class TicTacProApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("tictacpro"); }
     function onStop(state) {}
     function getInitialView() {
-        var v = new GameView();
-        return [v, new GameDelegate(v)];
+        // Root view is the shared unified menu; START launches GameView.
+        return buildTicTacMenu();
     }
 }

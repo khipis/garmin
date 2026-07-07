@@ -136,14 +136,10 @@ class GameController {
         if (difficulty < 0 || difficulty > 2) { difficulty = AI_MEDIUM; }
         ai.setDifficulty(difficulty);
 
-        // shotsPerTurn lives on disk as the raw shot count (1 or 3)
-        // so a future "burst x5" preset would be additive without
-        // breaking the existing key.  Any unrecognised value falls
-        // back to single-shot.
-        shotsPerTurn = _loadInt("bs_shots", SHOTS_SINGLE);
-        if (shotsPerTurn != SHOTS_SINGLE && shotsPerTurn != SHOTS_BURST) {
-            shotsPerTurn = SHOTS_SINGLE;
-        }
+        // Shots preset is stored by the shared OPTIONS screen as an index
+        // (0 = single, 1 = burst) — map it to the raw shots-per-turn count.
+        var shotsIdx = _loadInt("bs_shots", 0);
+        shotsPerTurn = (shotsIdx == 1) ? SHOTS_BURST : SHOTS_SINGLE;
         playerShotsLeft = shotsPerTurn;
         aiShotsLeft     = 0;
 

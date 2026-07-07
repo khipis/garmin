@@ -10,7 +10,7 @@ class BitochiMoonApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("moon"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiMoonView();
-        return [view, new BitochiMoonDelegate(view)];
+        // Root view is the shared unified menu; START launches the lander.
+        return buildMoonMenu();
     }
 }

@@ -230,6 +230,6 @@ class UIManager {
                     Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
-                    "Tap = menu", Graphics.TEXT_JUSTIFY_CENTER);
+                    "Tap = replay", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

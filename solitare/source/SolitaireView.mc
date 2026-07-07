@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Application;
 
 // Global leaderboard game identifier (must match the backend key).
 const LB_GAME_ID = "solitaire";
@@ -69,6 +70,9 @@ class SolitaireView extends WatchUi.View {
         _tick = 0; _gs = SOL_MENU;
         _w = 240; _h = 240; _moves = 0;
         _drawCount = 1; _menuSel = 0;
+        // Draw mode now comes from the shared OPTIONS screen (sol_draw: 0=1card, 1=3card).
+        var dv = Application.Storage.getValue("sol_draw");
+        if (dv instanceof Number && dv == 1) { _drawCount = 3; }
         _rkS = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
         _stk = new [24]; _stkN = 0;
         _wst = new [24]; _wstN = 0;
@@ -96,6 +100,10 @@ class SolitaireView extends WatchUi.View {
             _timer = new Timer.Timer();
             _timer.start(method(:onTick), 150, true);
         }
+        // The main menu is the shared root view; deal straight into a game.
+        // Only auto-start from a fresh launch (SOL_MENU) so returning from the
+        // post-game leaderboard card doesn't re-deal an in-progress win screen.
+        if (_gs == SOL_MENU) { _deal(); }
     }
 
     function onHide() {
@@ -254,13 +262,13 @@ class SolitaireView extends WatchUi.View {
         else if (dir == WatchUi.SWIPE_RIGHT) { _cur = (_cur + 1) % 13; }
     }
 
+    // BACK returns to the shared menu (framework pops this pushed view). During
+    // play, BACK first cancels a held card; otherwise it pops out.
     function doBack() {
         if (_gs == SOL_PLAY) {
             if (_autoFndQ) { return true; }
             if (_sel >= 0) { _cancel(); return true; }
-            _gs = SOL_MENU; return true;
         }
-        if (_gs == SOL_WON || _gs == SOL_WINANIM) { _gs = SOL_MENU; return true; }
         return false;
     }
 
@@ -709,7 +717,8 @@ class SolitaireView extends WatchUi.View {
         }
         dc.setColor(0x0A2818, 0x0A2818);
         dc.clear();
-        if (_gs == SOL_MENU)    { _drMenu(dc); return; }
+        // Never render an in-game menu — the shared menu is the root view.
+        if (_gs == SOL_MENU)    { _deal(); }
         if (_gs == SOL_WINANIM) { _drTop(dc); _drTab(dc); _drWinAnim(dc); return; }
         if (_gs == SOL_WON)     { _drWin(dc); return; }
         _drTop(dc);

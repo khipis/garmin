@@ -1,27 +1,22 @@
 // ═══════════════════════════════════════════════════════════════
-// InputHandler.mc — Map inputs to menu navigation + paddle motion.
+// InputHandler.mc — Gameplay input for the live match view.
+//
+// The main menu is the shared GameMenuView (a separate root view), so this
+// delegate only handles play / serve / game-over. BACK pops back to the menu.
 //
 // Buttons
-//   In GS_MENU
-//     UP / DOWN           → cycle difficulty (prev / next)
-//     SELECT / ENTER      → START match
-//     BACK                → exit app
-//
-//   In GS_PLAY / GS_SERVE
+//   GS_PLAY / GS_SERVE
 //     UP pressed/released   → continuous paddle "up" hold
 //     DOWN pressed/released → continuous paddle "down" hold
-//     SELECT                → no-op (paddle already held by UP/DOWN)
-//     BACK                  → return to menu
-//
-//   In GS_OVER
-//     any input              → return to menu
+//     BACK                  → return to the menu (pop)
+//   GS_OVER
+//     SELECT / tap / swipe   → rematch
+//     BACK                   → return to the menu (pop)
 //
 // Touch
-//   GS_MENU: tap on a difficulty pill picks it; tap anywhere else
-//            STARTS the match.
-//   GS_PLAY: tap upper half → impulse up; tap lower half → impulse
-//            down; swipe up/down → impulse in that direction.
-//   GS_OVER: tap → return to menu.
+//   GS_PLAY: tap upper half → impulse up; lower half → impulse down;
+//            swipe up/down → impulse in that direction.
+//   GS_OVER: tap / swipe → rematch.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
@@ -29,7 +24,8 @@ using Toybox.System;
 
 class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _v;
-    // Phantom-back guard — see onBack.
+    // Phantom-back guard — a touch gesture can emit a spurious BACK on some
+    // firmwares right after a tap/swipe; swallow one BACK within 500 ms.
     hidden var _lastGestureMs;
 
     function initialize(view) {
@@ -46,55 +42,31 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onKeyPressed(evt) {
-        // Paddle hold only applies while a match is live. In menu /
-        // over states UP/DOWN are routed through onKey() below so we
-        // never start a phantom "hold" that lingers into the next
-        // match.
         if (!_v.isInMatch()) { return false; }
         var k = evt.getKey();
-        if      (k == WatchUi.KEY_UP)    { _v.holdUp(true);   return true; }
-        else if (k == WatchUi.KEY_DOWN)  { _v.holdDown(true); return true; }
+        if      (k == WatchUi.KEY_UP)   { _v.holdUp(true);   return true; }
+        else if (k == WatchUi.KEY_DOWN) { _v.holdDown(true); return true; }
         return false;
     }
     function onKeyReleased(evt) {
         if (!_v.isInMatch()) { return false; }
         var k = evt.getKey();
-        if      (k == WatchUi.KEY_UP)    { _v.holdUp(false);   return true; }
-        else if (k == WatchUi.KEY_DOWN)  { _v.holdDown(false); return true; }
+        if      (k == WatchUi.KEY_UP)   { _v.holdUp(false);   return true; }
+        else if (k == WatchUi.KEY_DOWN) { _v.holdDown(false); return true; }
         return false;
     }
 
     function onKey(evt) {
         var k = evt.getKey();
         if (k == WatchUi.KEY_ESC) { return onBack(); }
-        if (_v.isMenu()) {
-            if      (k == WatchUi.KEY_UP)    { _v.menuPrev();  WatchUi.requestUpdate(); return true; }
-            else if (k == WatchUi.KEY_DOWN)  { _v.menuNext();  WatchUi.requestUpdate(); return true; }
-            else if (k == WatchUi.KEY_ENTER) { _v.menuStart(); WatchUi.requestUpdate(); return true; }
-            return false;
-        }
-        if (_v.isOver()) {
-            _v.gotoMenu();
-            WatchUi.requestUpdate();
-            return true;
+        if (_v.isOver() && k == WatchUi.KEY_ENTER) {
+            _v.restart(); WatchUi.requestUpdate(); return true;
         }
         return false;
     }
 
     function onSelect() {
-        if (_v.isMenu()) { _v.menuStart(); WatchUi.requestUpdate(); return true; }
-        if (_v.isOver()) { _v.gotoMenu(); WatchUi.requestUpdate(); return true; }
-        return false;
-    }
-
-    // BehaviorDelegate convenience routes — make sure page-up /
-    // page-down also cycle difficulty in the menu.
-    function onNextPage() {
-        if (_v.isMenu()) { _v.menuNext(); WatchUi.requestUpdate(); return true; }
-        return false;
-    }
-    function onPreviousPage() {
-        if (_v.isMenu()) { _v.menuPrev(); WatchUi.requestUpdate(); return true; }
+        if (_v.isOver()) { _v.restart(); WatchUi.requestUpdate(); return true; }
         return false;
     }
 
@@ -108,19 +80,8 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onSwipe(evt) {
         _markGesture();
+        if (_v.isOver()) { _v.restart(); WatchUi.requestUpdate(); return true; }
         var d = evt.getDirection();
-        if (_v.isMenu()) {
-            if (d == WatchUi.SWIPE_UP)   { _v.menuPrev();  }
-            else if (d == WatchUi.SWIPE_DOWN) { _v.menuNext();  }
-            else                              { _v.menuStart(); }
-            WatchUi.requestUpdate();
-            return true;
-        }
-        if (_v.isOver()) {
-            _v.gotoMenu();
-            WatchUi.requestUpdate();
-            return true;
-        }
         if      (d == WatchUi.SWIPE_UP)   { _v.impulse(-1); }
         else if (d == WatchUi.SWIPE_DOWN) { _v.impulse( 1); }
         WatchUi.requestUpdate();
@@ -129,11 +90,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        if (_v.handleBack()) {
-            WatchUi.requestUpdate();
-            return true;
-        }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);   // back to the shared menu
         return true;
     }
 }

@@ -233,7 +233,9 @@ class BitochiBlobsView extends WatchUi.View {
             _cloudS[i] = 0.1 + (Math.rand().abs() % 8).toFloat() / 20.0;
         }
 
-        _twoPlayer = false;
+        // Player count now comes from the shared OPTIONS screen (blob_2p: 0/1).
+        var tp = Application.Storage.getValue("blob_2p");
+        _twoPlayer = (tp instanceof Toybox.Lang.Number) ? (tp == 1) : false;
         _menuSel = 0;
     }
 
@@ -244,6 +246,10 @@ class BitochiBlobsView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
+        // The main menu is the shared root view; drop straight into a round.
+        // Only auto-start from a fresh launch (GS_MENU) so returning from the
+        // post-game standing card doesn't restart the run.
+        if (gameState == GS_MENU) { startRound(); }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
@@ -1060,7 +1066,7 @@ class BitochiBlobsView extends WatchUi.View {
     function onUpdate(dc) {
         _w = dc.getWidth();
         _h = dc.getHeight();
-        if (gameState == GS_MENU) { drawMenu(dc); return; }
+        if (gameState == GS_MENU) { startRound(); }   // never render an in-game menu
         if (gameState == GS_SHOP) { drawShop(dc); return; }
         drawGame(dc);
     }

@@ -17,11 +17,13 @@ class MainView extends WatchUi.View {
 
     var ctrl;
     hidden var _timer;
+    hidden var _started;   // auto-start the mission on first frame
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
+        _started = false;
     }
 
     function onShow() {
@@ -55,18 +57,22 @@ class MainView extends WatchUi.View {
 
     function onUpdate(dc) {
         ctrl.syncDims(dc.getWidth(), dc.getHeight());
+        // Menu lives in the shared root view — drop straight into a mission and
+        // never render an in-game menu here.
+        if (!_started || ctrl.state == SS_MENU) {
+            ctrl.startGame();
+            _started = true;
+        }
         UIManager.draw(dc, ctrl);
     }
 
     // ── Intents from InputHandler ────────────────────────────
     function navUp() {
-        if (ctrl.state == SS_MENU) { ctrl.menuPrev(); return; }
-        if (ctrl.state == SS_OVER) { ctrl.gotoMenu(); return; }
+        if (ctrl.state == SS_OVER) { ctrl.restart(); return; }
         ctrl.recalibrate();
     }
     function navDown() {
-        if (ctrl.state == SS_MENU)   { ctrl.menuNext(); return; }
-        if (ctrl.state == SS_OVER)   { ctrl.gotoMenu(); return; }
+        if (ctrl.state == SS_OVER)   { ctrl.restart(); return; }
         if (ctrl.state == SS_RESULT) { ctrl.nextRoundOrFinish(); return; }
         ctrl.shoot();
     }
@@ -86,7 +92,8 @@ class MainView extends WatchUi.View {
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
-        if (ctrl.state != SS_MENU) { ctrl.gotoMenu(); return true; }
+        // Bank prefs, then let the framework pop back to the shared menu.
+        ctrl.savePrefs();
         return false;
     }
 

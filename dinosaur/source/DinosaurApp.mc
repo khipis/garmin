@@ -6,7 +6,7 @@ class DinosaurApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("dinosaur"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new DinosaurView();
-        return [view, new DinosaurDelegate(view)];
+        // Root view is the shared unified menu; START launches the run view.
+        return buildDinoMenu();
     }
 }

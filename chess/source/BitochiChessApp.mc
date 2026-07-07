@@ -6,7 +6,7 @@ class BitochiChessApp extends Application.AppBase {
     function onStart(state) { Leaderboard.logLaunch("chess"); }
     function onStop(state) {}
     function getInitialView() {
-        var view = new BitochiChessView();
-        return [view, new BitochiChessDelegate(view)];
+        // Root view is the shared unified menu; START launches the game view.
+        return buildChessMenu();
     }
 }
