@@ -29,8 +29,14 @@ class UIManager {
     var boardX;       // top-left X of the grid
     var boardY;       // top-left Y of the grid
 
+    // Exit (✕) button hit-box, recomputed each frame in drawHUD.
+    var exitX;
+    var exitY;
+    var exitR;
+
     function initialize() {
         sw = 0; sh = 0; cellPx = 0; boardX = 0; boardY = 0;
+        exitX = 0; exitY = 0; exitR = 0;
     }
 
     // Compute layout for a given grid side n and the active state.
@@ -40,12 +46,17 @@ class UIManager {
         sw = dc.getWidth();
         sh = dc.getHeight();
         var minDim = (sw < sh) ? sw : sh;
-        // Reserve room above (HUD) and below (controls / time).
-        var topPad = sh * 12 / 100;
-        var botPad = sh * 14 / 100;
+        // Reserve room above (HUD) and below (controls / time). The 9x9 grid
+        // is dense, so give it a little more vertical room than the 4x4.
+        var topPad = (n >= 9) ? (sh * 13 / 100) : (sh * 14 / 100);
+        var botPad = (n >= 9) ? (sh * 15 / 100) : (sh * 16 / 100);
         var avail  = sh - topPad - botPad;
-        if (avail > sw) { avail = sw; }
-        // Cell size derived from grid n; keep board square.
+        // Keep the whole square inside the screen width — critical on round
+        // watches so digit cells near the edges are never clipped.
+        var widthCap = sw * 92 / 100;
+        if (avail > widthCap) { avail = widthCap; }
+        // Snap the board side to an exact multiple of n so every cell is the
+        // same integer width and grid lines land on clean pixels.
         cellPx = avail / n;
         if (cellPx < 8) { cellPx = 8; }
         var boardSide = cellPx * n;
@@ -135,117 +146,163 @@ class UIManager {
         var box  = grid.box;
         layout(dc, n, ctrl.state);
 
-        // ── Row / column highlight under the selected cell ───────────
+        var bside = cellPx * n;
+
+        // ── Highlights: peer row / column / box, then the selected cell ──
         if (ctrl.state == GS_PLAY) {
-            dc.setColor(0x101824, Graphics.COLOR_TRANSPARENT);
-            // Full row
-            dc.fillRectangle(boardX,
-                             boardY + ctrl.curR * cellPx,
-                             cellPx * n, cellPx);
-            // Full column
-            dc.fillRectangle(boardX + ctrl.curC * cellPx,
-                             boardY,
-                             cellPx, cellPx * n);
-            // Box (the 2x2 / 3x3 containing the cursor)
+            // Peer row + column (soft blue so the eye instantly follows the
+            // active line even on a busy 9x9 board).
+            dc.setColor(0x16283C, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(boardX, boardY + ctrl.curR * cellPx, bside, cellPx);
+            dc.fillRectangle(boardX + ctrl.curC * cellPx, boardY, cellPx, bside);
+            // Box containing the cursor — a touch brighter than the lines.
             var br = (ctrl.curR / box) * box;
             var bc = (ctrl.curC / box) * box;
-            dc.setColor(0x141C30, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x1E3350, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(boardX + bc * cellPx, boardY + br * cellPx,
                              cellPx * box, cellPx * box);
-        }
-
-        // ── Selected cell background (drawn under digits) ────────────
-        if (ctrl.state == GS_PLAY) {
-            dc.setColor(0x2A2A12, Graphics.COLOR_TRANSPARENT);
+            // Selected cell — vivid gold fill so it's unmistakable.
+            dc.setColor(0x5A4A00, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(boardX + ctrl.curC * cellPx,
                              boardY + ctrl.curR * cellPx,
                              cellPx, cellPx);
         }
 
         // ── Digits ───────────────────────────────────────────────────
-        var font = _pickFont(cellPx);
-        var textOff = (cellPx - 16) / 2;
-        if (textOff < 0) { textOff = 0; }
+        var font = _pickFont(dc, cellPx);
         for (var r = 0; r < n; r++) {
             for (var c = 0; c < n; c++) {
                 var v = grid.getValue(r, c);
                 if (v == 0) { continue; }
                 var px = boardX + c * cellPx + cellPx / 2;
-                var py = boardY + r * cellPx + (cellPx - _fontH(font)) / 2;
+                var py = boardY + r * cellPx + cellPx / 2;
                 var col = 0xFFFFFF;
                 if      (grid.isError(r, c)) { col = 0xFF4444; }
                 else if (grid.isFixed(r, c)) { col = 0xFFFFFF; }
                 else                          { col = 0x44CCFF; }
                 dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(px, py, font,
-                            v.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(px, py, font, v.format("%d"),
+                            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
         }
 
         // ── Grid lines (thin internal, thick box edges) ──────────────
-        // Thin lines first
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i <= n; i++) {
-            dc.drawLine(boardX,             boardY + i * cellPx,
-                        boardX + n*cellPx,  boardY + i * cellPx);
+            dc.drawLine(boardX,          boardY + i * cellPx,
+                        boardX + bside,  boardY + i * cellPx);
             dc.drawLine(boardX + i * cellPx, boardY,
-                        boardX + i * cellPx, boardY + n*cellPx);
+                        boardX + i * cellPx, boardY + bside);
         }
         // Thick lines on box boundaries
         dc.setColor(0x88BBDD, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i <= n; i += box) {
             var lx = boardX + i * cellPx;
             var ly = boardY + i * cellPx;
-            // 2-pixel "thick" line
-            dc.drawLine(boardX,             ly,                 boardX + n*cellPx, ly);
-            dc.drawLine(boardX,             ly + 1,             boardX + n*cellPx, ly + 1);
-            dc.drawLine(lx,                 boardY,             lx,                boardY + n*cellPx);
-            dc.drawLine(lx + 1,             boardY,             lx + 1,            boardY + n*cellPx);
+            dc.drawLine(boardX,     ly,     boardX + bside, ly);
+            dc.drawLine(boardX,     ly + 1, boardX + bside, ly + 1);
+            dc.drawLine(lx,         boardY, lx,             boardY + bside);
+            dc.drawLine(lx + 1,     boardY, lx + 1,         boardY + bside);
+        }
+
+        // ── Selected-cell outline drawn LAST so it sits crisp on top ──
+        if (ctrl.state == GS_PLAY) {
+            var selX = boardX + ctrl.curC * cellPx;
+            var selY = boardY + ctrl.curR * cellPx;
+            dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(selX,     selY,     cellPx,     cellPx);
+            dc.drawRectangle(selX + 1, selY + 1, cellPx - 2, cellPx - 2);
         }
     }
 
-    // ── Top HUD: time + best ─────────────────────────────────────────
+    // ── Top HUD: exit button + time + mode ───────────────────────────
     function drawHUD(dc, ctrl) {
-        var cx = dc.getWidth() / 2;
+        var w  = dc.getWidth();
+        var cx = w / 2;
         var ty = dc.getHeight() * 3 / 100;
         if (ty < 4) { ty = 4; }
-        // Time
+
+        // Vertical centre of the clock text — used to align the HUD row.
+        var midY = ty + dc.getFontHeight(Graphics.FONT_XTINY) / 2;
+
+        // Exit (✕) button — sits just LEFT of the clock, inside the round
+        // safe zone so it's never clipped, giving touch-only watches a
+        // clear, always-visible way out.
+        if (ctrl.state == GS_PLAY || ctrl.state == GS_PAUSED) {
+            exitR = 11;
+            exitX = w * 30 / 100;
+            exitY = midY;
+            dc.setColor(0x2A1010, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(exitX, exitY, exitR);
+            dc.setColor(0xFF6666, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(exitX, exitY, exitR);
+            dc.drawCircle(exitX, exitY, exitR - 1);
+            var d = exitR / 2;
+            dc.drawLine(exitX - d, exitY - d, exitX + d, exitY + d);
+            dc.drawLine(exitX - d, exitY + d, exitX + d, exitY - d);
+        } else {
+            exitR = 0;
+        }
+
+        // Time (centre). Mode/difficulty is intentionally NOT shown here —
+        // the round safe zone is too narrow for ✕ + clock + mode without
+        // crowding. It lives in the footer and on the results screen.
         dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, ty, Graphics.FONT_XTINY,
                     ctrl.fmtMs(ctrl.elapsedMs), Graphics.TEXT_JUSTIFY_CENTER);
-        // Best (left)
-        if (ctrl.bestMs > 0) {
-            dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(6, ty, Graphics.FONT_XTINY,
-                        "B " + ctrl.fmtMs(ctrl.bestMs),
-                        Graphics.TEXT_JUSTIFY_LEFT);
-        }
-        // Mode/difficulty (right)
-        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        var diff = (ctrl.diff == DIFF_EASY) ? "E"
-                 : (ctrl.diff == DIFF_MED)  ? "M" : "H";
-        var lbl = ((ctrl.mode == MODE_QUICK) ? "4x4" : "9x9") + " " + diff;
-        dc.drawText(dc.getWidth() - 6, ty, Graphics.FONT_XTINY,
-                    lbl, Graphics.TEXT_JUSTIFY_RIGHT);
+    }
+
+    // Hit-test the exit (✕) button. Returns true if (x,y) lands on it.
+    // The hit-box is deliberately generous (fat-finger friendly) and biased
+    // downward so a tap that lands slightly below the small glyph still
+    // counts — the whole top-left corner above the board is "exit".
+    function tapInExit(x, y) {
+        if (exitR <= 0) { return false; }
+        // Everything in the top-left quadrant above the board and left of
+        // the clock is treated as the exit zone.
+        if (y <= boardY && x <= exitX + exitR + 14) { return true; }
+        var dx = x - exitX;
+        var dy = y - exitY;
+        var pad = exitR + 16;
+        return (dx > -pad && dx < pad && dy > -pad && dy < pad);
     }
 
     // ── Bottom hint bar ──────────────────────────────────────────────
+    // Kept inside the round safe zone (centred, pulled up from the very
+    // bottom) so text is never clipped by the display bezel.
     function drawFooter(dc, ctrl) {
-        var cx = dc.getWidth() / 2;
-        var fy = dc.getHeight() - 14;
-        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        var msg;
+        var w  = dc.getWidth();
+        var cx = w / 2;
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var fy = dc.getHeight() - dc.getHeight() * 8 / 100 - fh / 2;
         if (ctrl.state == GS_PLAY) {
-            msg = (ctrl.valMode == VAL_STRICT) ? "SEL cycle  BACK submit"
-                                               : "SEL cycle  BACK menu";
-        } else if (ctrl.state == GS_PAUSED) {
-            msg = "Tap or any key to resume";
-        } else {
-            msg = "";
-        }
-        if (msg.length() > 0) {
+            var hasBest = (ctrl.bestMs > 0);
+            if (hasBest) {
+                dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, fy - fh, Graphics.FONT_XTINY,
+                            "Best " + ctrl.fmtMs(ctrl.bestMs),
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
+            var msg = (ctrl.valMode == VAL_STRICT) ? "tap X to submit"
+                                                   : "tap X to exit";
+            // Fold mode+difficulty into the hint so it stays visible without
+            // crowding the top HUD.
+            if (!hasBest) {
+                var diff = (ctrl.diff == DIFF_EASY) ? "E"
+                         : (ctrl.diff == DIFF_MED)  ? "M" : "H";
+                var mLbl = ((ctrl.mode == MODE_QUICK) ? "4x4" : "9x9") + " " + diff;
+                dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, fy - fh, Graphics.FONT_XTINY, mLbl,
+                            Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
+            }
             dc.drawText(cx, fy, Graphics.FONT_XTINY, msg,
                         Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (ctrl.state == GS_PAUSED) {
+            dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, fy, Graphics.FONT_XTINY,
+                        "Tap or any key to resume", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -281,16 +338,20 @@ class UIManager {
                           lines, "Any key to retry", 0xFF4444);
     }
 
-    // ── Font picker — smaller font for the dense 9x9 grid ────────────
-    hidden function _pickFont(cell) {
-        if (cell >= 26) { return Graphics.FONT_SMALL;  }
-        if (cell >= 18) { return Graphics.FONT_XTINY;  }
-        return Graphics.FONT_XTINY;
-    }
-
-    hidden function _fontH(f) {
-        if (f == Graphics.FONT_SMALL) { return 18; }
-        return 12;
+    // ── Font picker — largest built-in font whose digit fits the cell ──
+    // Measures the real glyph box on this device (getFontHeight varies a
+    // lot across watches) so digits never spill out of their cell.
+    hidden function _pickFont(dc, cell) {
+        var cands = [Graphics.FONT_MEDIUM, Graphics.FONT_SMALL,
+                     Graphics.FONT_TINY,   Graphics.FONT_XTINY];
+        var fit = cell - 3;   // leave a hair of padding on every side
+        for (var i = 0; i < cands.size(); i++) {
+            var f = cands[i];
+            var h = dc.getFontHeight(f);
+            var w = dc.getTextWidthInPixels("8", f);
+            if (h <= fit && w <= fit) { return f; }
+        }
+        return Graphics.FONT_XTINY;   // smallest available fallback
     }
 
     // ── Tap helpers ──────────────────────────────────────────────────

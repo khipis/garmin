@@ -623,7 +623,10 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
     }
 
     // New players in the last 7 days (ip_hash whose first score arrived ≤7d ago).
-    const now7d = Date.now() - 7 * 86400 * 1000;
+    // NOTE: scores.timestamp is stored in SECONDS (Math.floor(Date.now()/1000)),
+    // so the cutoff must be in seconds too — otherwise the comparison is always
+    // false and this metric silently reports 0.
+    const now7d = Math.floor(Date.now() / 1000) - 7 * 86400;
     const newP = await env.DB
       .prepare(
         `SELECT COUNT(*) AS cnt FROM (
@@ -637,7 +640,8 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
     if (newP) totals.newPlayers7d = newP.cnt;
 
     // Average daily actives (distinct ip_hash per calendar day) over last 30 days.
-    const now30d = Date.now() - 30 * 86400 * 1000;
+    // scores.timestamp is in SECONDS, so use a seconds cutoff (see note above).
+    const now30d = Math.floor(Date.now() / 1000) - 30 * 86400;
     const dauRow = await env.DB
       .prepare(
         `SELECT ROUND(AVG(n), 1) AS dau FROM (
@@ -1477,6 +1481,15 @@ async function handleVisit(req: Request, env: Env): Promise<Response> {
       "INSERT INTO visits (ip_hash, timestamp) VALUES (?, ?)"
     ).bind(ipHash, now).run();
 
+    // Bump the cumulative all-time visit counter. This lives in its own row so
+    // it survives the 7-day prune below — the `visits` table is only a rolling
+    // window used for the "online" / 30-min-dedup logic, whereas `total` must
+    // be monotonic (a visit counter should never go down).
+    await env.DB.prepare(
+      "INSERT INTO counters (name, value) VALUES ('visits_total', 1) " +
+      "ON CONFLICT(name) DO UPDATE SET value = value + 1"
+    ).run();
+
     // Prune old rows (only bother when we actually insert, not every request).
     await env.DB.prepare(
       "DELETE FROM visits WHERE timestamp < ?"
@@ -1484,7 +1497,8 @@ async function handleVisit(req: Request, env: Env): Promise<Response> {
   }
 
   const [totalRow, onlineRow] = await Promise.all([
-    env.DB.prepare("SELECT COUNT(*) AS n FROM visits").first<{ n: number }>(),
+    env.DB.prepare("SELECT value AS n FROM counters WHERE name = 'visits_total'")
+      .first<{ n: number }>(),
     env.DB.prepare(
       "SELECT COUNT(DISTINCT ip_hash) AS n FROM visits WHERE timestamp > ?"
     ).bind(window5).first<{ n: number }>(),

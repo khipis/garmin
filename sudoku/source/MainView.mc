@@ -129,6 +129,18 @@ class MainView extends WatchUi.View {
     }
 
     function handleTap(x, y) {
+        // The ✕ button is a universal escape hatch — works on touch-only
+        // watches that have no physical BACK key. Check it in every state.
+        if (_ui.tapInExit(x, y)) {
+            if (_ctrl.state == GS_PLAY && _ctrl.valMode == VAL_STRICT) {
+                // Strict mode: ✕ submits the board (same as BACK).
+                _ctrl.submit();
+                WatchUi.requestUpdate();
+                return;
+            }
+            WatchUi.popView(WatchUi.SLIDE_RIGHT);
+            return;
+        }
         if (_ctrl.state == GS_PAUSED)   { _ctrl.resume();          return; }
         if (_ctrl.state == GS_COMPLETE) { _ctrl.startGame();       return; }
         if (_ctrl.state == GS_FAILED)   { _ctrl.resumeFromFailed(); return; }

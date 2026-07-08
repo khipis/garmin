@@ -49,6 +49,17 @@ CREATE TABLE IF NOT EXISTS visits (
 
 CREATE INDEX IF NOT EXISTS idx_visits_ts ON visits (timestamp DESC);
 
+-- ── Cumulative counters ───────────────────────────────────────────────────────
+-- Monotonic counters (e.g. all-time visit total). Kept separate from `visits` so
+-- the total survives the 7-day prune of that rolling online-window table.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS counters (name TEXT PRIMARY KEY, value INTEGER NOT NULL DEFAULT 0);
+--   INSERT OR IGNORE INTO counters (name, value) SELECT 'visits_total', COUNT(*) FROM visits;
+CREATE TABLE IF NOT EXISTS counters (
+  name  TEXT    PRIMARY KEY,   -- counter key, e.g. 'visits_total'
+  value INTEGER NOT NULL DEFAULT 0
+);
+
 -- ── API error log ─────────────────────────────────────────────────────────────
 -- Migration (run once on existing DB):
 --   CREATE TABLE IF NOT EXISTS api_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp INTEGER NOT NULL, game TEXT, error_code INTEGER NOT NULL, error_msg TEXT, ip_hash TEXT);
