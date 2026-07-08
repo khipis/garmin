@@ -1003,7 +1003,7 @@ const GAME_DESCS = {
   'activityboard':     'Turn your REAL watch stats into bragging rights. Activity Board reads your genuine steps, distance, vigorous cardio minutes, climb (elevation), floors, calories and active minutes — then rolls them into one signature FLEX SCORE and drops any of them onto this global leaderboard. Pick your tag and race the world live — today, this week, all-time. No fake numbers, just pure flex.',
   'akari':             'Akari (Light Up) logic puzzle — place bulbs so every white cell is lit, with no two bulbs shining on each other and every numbered wall satisfied. Global leaderboard ranks the fastest solve times — lower is better.',
   'arcade':            'Knife-hit style arcade game — throw axes at a spinning log and try not to hit the ones already lodged in it. Pure reflex challenge.',
-  'battleship':        'Classic Sea Battle on a 10×10 grid. Place your fleet, hunt the enemy ships, and sink everything before the AI sinks you.',
+  'archery':           'Gyroscope archery duel — tilt your wrist to aim the crosshair at moving targets across the range, hold your breath to steady the shot, and score as many hits as possible before time runs out. Requires a watch with a wrist gyroscope (accelerometer-based tilt control).',
   'billiards':         'Pool on your wrist — aim, power up, and shoot to pocket balls. Supports P vs AI and P vs P modes with adjustable difficulty.',
   'blackjack':         'Classic Blackjack card game. Hit, stand, or double down against the dealer and try to reach 21 without busting.',
   'blobs':             'Free-for-all artillery deathmatch on a scrolling battlefield. Destroy all enemy blobs before they obliterate you.',
@@ -1231,7 +1231,10 @@ function fmtScore(s) {
 
 function prettyVariant(v) {
   if (v === FISH_VARIANT) return '🐟 Biggest Fish';
+  if (v === 'progress')   return '📈 Progress';
   if (isActivityBoard() && ACTIVITY_VARIANTS[v]) return ACTIVITY_VARIANTS[v].label;
+  // Capitalize first letter for generic variants like "easy", "normal", "hard"
+  if (v) return v.charAt(0).toUpperCase() + v.slice(1);
   return v;
 }
 
@@ -1694,8 +1697,9 @@ function renderTargetBadge(data) {
 // ── Recently played ───────────────────────────────────────────────────────────
 async function loadRecent() {
   const lbKey = currentLbKey, game = currentGame;
+  // Intentionally NO variant filter — show recent plays across all difficulties
+  // so the section always has activity even if the user played a different mode.
   let url = `${API_BASE}/recent?game=${encodeURIComponent(lbKey)}&period=${currentPeriod}`;
-  if (currentVariant) url += `&variant=${encodeURIComponent(currentVariant)}`;
   try {
     const r = await fetch(url, { cache: 'no-store' });
     if (!r.ok) throw new Error();
@@ -1707,8 +1711,9 @@ async function loadRecent() {
     recentList.innerHTML = rows.map(r => {
       const flag = r.c ? `<span class="flag">${codeToFlag(r.c)}</span>` : '';
       const mine = r.u === meName ? ' style="color:var(--accent)"' : '';
+      const vbadge = r.v ? `<span style="font-size:.68rem;color:var(--muted);margin-left:4px">[${escHtml(prettyVariant(r.v))}]</span>` : '';
       return `<div class="recent-row">
-        <span class="ru"${mine}>${flag}${escHtml(r.u || 'anon')}</span>
+        <span class="ru"${mine}>${flag}${escHtml(r.u || 'anon')}${vbadge}</span>
         <span class="rs">${fmtScore(r.s)}</span>
         <span class="rt">${fmtAgo(r.t)}</span>
       </div>`;

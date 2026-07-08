@@ -407,20 +407,32 @@ async function handleGetRecent(url: URL, env: Env): Promise<Response> {
   const variant = sanitizeVariant(variantRaw);
 
   const cutoff = periodCutoff(period);
-  const where  = cutoff != null
-    ? "game = ? AND variant = ? AND timestamp >= ?"
-    : "game = ? AND variant = ?";
-  const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
 
-  let recent: { u: string; s: number; c: string | null; t: number }[] = [];
+  // When no variant is specified (empty string), show recent scores across
+  // ALL variants for this game — so "recently played" always shows real
+  // activity regardless of which difficulty tab is currently selected in
+  // the web UI.
+  let where: string;
+  let wbind: (string | number)[];
+  if (variant === "") {
+    where  = cutoff != null ? "game = ? AND timestamp >= ?" : "game = ?";
+    wbind  = cutoff != null ? [game, cutoff] : [game];
+  } else {
+    where  = cutoff != null
+      ? "game = ? AND variant = ? AND timestamp >= ?"
+      : "game = ? AND variant = ?";
+    wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
+  }
+
+  let recent: { u: string; s: number; v: string; c: string | null; t: number }[] = [];
   try {
     const res = await env.DB
       .prepare(
-        `SELECT user AS u, score AS s, country AS c, timestamp AS t
-         FROM scores WHERE ${where} ORDER BY timestamp DESC LIMIT 8`
+        `SELECT user AS u, score AS s, variant AS v, country AS c, timestamp AS t
+         FROM scores WHERE ${where} ORDER BY timestamp DESC LIMIT 10`
       )
       .bind(...wbind)
-      .all<{ u: string; s: number; c: string | null; t: number }>();
+      .all<{ u: string; s: number; v: string; c: string | null; t: number }>();
     recent = res.results ?? [];
   } catch (e) {
     console.error("DB query error:", e);
@@ -430,7 +442,9 @@ async function handleGetRecent(url: URL, env: Env): Promise<Response> {
   return json(
     { game, variant, period, updated: Math.floor(Date.now() / 1000), recent },
     200,
-    { "Cache-Control": `public, max-age=30, stale-while-revalidate=60` }
+    // Short cache: "recently played" should be near-real-time so scores
+    // appear within seconds, not minutes.
+    { "Cache-Control": `public, max-age=5, stale-while-revalidate=10` }
   );
 }
 
