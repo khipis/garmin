@@ -66,6 +66,13 @@ class BitochiChessView extends WatchUi.View {
     hidden var _menuRow;
     hidden var _gameResultDone;
 
+    // ── Engagement leaderboard: material captured ─────────────────────────────
+    // Tracks the sum of opponent piece values captured by the player this game
+    // (P=1 N/B=3 R=5 Q=9). Submitted to the "material" variant after every game
+    // (win/loss/draw) and mid-game exit so all active players appear on the board.
+    hidden var _capturedMat;
+    hidden var _capturesSubmitted;
+
     // Pre-allocated direction arrays — created once, shared by sqAttacked / knightMovesPool / slideMovesPool.
     // Without this, sqAttacked alone creates 6 local arrays per call → hundreds of allocs per AI turn.
     hidden var _kDR; hidden var _kDF;
@@ -299,6 +306,11 @@ class BitochiChessView extends WatchUi.View {
             doDeselect();
             return true;
         }
+        // Mid-game exit: commit any captured material so the player appears on
+        // the "material" leaderboard even for unfinished games.
+        if (_gs == CS_PLAY || _gs == CS_AI_THINK || _gs == CS_AI_EVAL || _gs == CS_AI_FINISH) {
+            submitCaptures();
+        }
         // Otherwise let the framework pop back to the shared unified menu.
         return false;
     }
@@ -449,6 +461,8 @@ class BitochiChessView extends WatchUi.View {
         _menuRow = 0;
         _selSq = -1;
         _gameResultDone = false;
+        _capturedMat = 0;
+        _capturesSubmitted = false;
         if (_aiVsAi) {
             _playerIsWhite = true;
             _curSq = 4;
@@ -516,6 +530,8 @@ class BitochiChessView extends WatchUi.View {
         _gameResultDone = true;
         if (_aiVsAi || _pvp) { return; }
 
+        submitCaptures();   // record material captured on EVERY outcome, win or lose
+
         if (_gs == CS_CHECKMATE && _whiteToMove != _playerIsWhite) {
             var newStreak = _loadStreak() + 1;
             _saveStreak(newStreak);
@@ -524,6 +540,27 @@ class BitochiChessView extends WatchUi.View {
         } else {
             _saveStreak(0);
         }
+    }
+
+    // Standard chess piece values: P=1 N=3 B=3 R=5 Q=9.
+    // Used to accumulate the "material" leaderboard score per game.
+    hidden function _chessPts(absP) {
+        if (absP == PC_QUEEN)  { return 9; }
+        if (absP == PC_ROOK)   { return 5; }
+        if (absP == PC_BISHOP) { return 3; }
+        if (absP == PC_KNIGHT) { return 3; }
+        if (absP == PC_PAWN)   { return 1; }
+        return 0;
+    }
+
+    // Submit material-captured to "material" variant — once per game session.
+    // Called at every game ending AND when the player presses BACK mid-game.
+    function submitCaptures() as Void {
+        if (_capturesSubmitted) { return; }
+        if (_capturedMat <= 0) { return; }
+        if (_aiVsAi || _pvp) { return; }
+        _capturesSubmitted = true;
+        try { Leaderboard.submitScore(LB_GAME_ID, _capturedMat, "material"); } catch (e) {}
     }
 
 
@@ -635,6 +672,16 @@ class BitochiChessView extends WatchUi.View {
         if (from == 63 || to == 63) { _castleRights = _castleRights & ~4; }
 
         if (absPiece == PC_PAWN || captured != PC_EMPTY) { _halfMove = 0; } else { _halfMove++; }
+
+        // Track material captured by the player for the "material" leaderboard.
+        // Only counts during P-vs-AI single-player runs, on the player's turn.
+        if (!_aiVsAi && !_pvp && _whiteToMove == _playerIsWhite) {
+            if (captured != PC_EMPTY) {
+                var absC = captured > 0 ? captured : -captured;
+                _capturedMat += _chessPts(absC);
+            }
+            if (flags == 2) { _capturedMat += 1; }  // en passant pawn
+        }
 
         _whiteToMove = !_whiteToMove;
         if (!_whiteToMove) { _moveCount++; }

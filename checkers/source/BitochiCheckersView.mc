@@ -49,6 +49,14 @@ class BitochiCheckersView extends WatchUi.View {
     hidden var _menuRow;
     hidden var _resultHandled;
 
+    // ── Engagement leaderboard: pieces taken ─────────────────────────────────
+    // Counts how many opponent pieces the player has captured this game.
+    // Submitted to the "captures" leaderboard variant after every game ending
+    // (win, loss, draw) and when the player exits mid-game — so even someone
+    // who loses every time still appears on the board and sees their progress.
+    hidden var _capturedByPlayer;
+    hidden var _capturesSubmitted;
+
     hidden var _dirsKing; hidden var _dirsWhite; hidden var _dirsBlack;
 
     hidden const AI_MAX = 48;
@@ -146,6 +154,7 @@ class BitochiCheckersView extends WatchUi.View {
         _selRow = -1; _selCol = -1;
         _mustRow = -1; _mustCol = -1;
         _validDsts = new [0];
+        _capturedByPlayer = 0;
     }
 
     function onTick() as Void {
@@ -183,6 +192,7 @@ class BitochiCheckersView extends WatchUi.View {
     hidden function _handleGameResult() {
         _resultHandled = true;
         if (_aiVsAi || _pvp) { return; }
+        submitCaptures();   // record pieces taken on EVERY outcome, win or lose
         if (_gs == GS_WIN) {
             var newStreak = _loadStreak() + 1;
             _saveStreak(newStreak);
@@ -191,6 +201,17 @@ class BitochiCheckersView extends WatchUi.View {
         } else {
             _saveStreak(0);
         }
+    }
+
+    // Submit pieces-captured to the "captures" variant — once per game session.
+    // Fires at every game ending AND when the player exits mid-game via BACK,
+    // so anyone who actively played appears on the leaderboard even after a loss.
+    function submitCaptures() as Void {
+        if (_capturesSubmitted) { return; }
+        if (_capturedByPlayer <= 0) { return; }
+        if (_aiVsAi || _pvp) { return; }
+        _capturesSubmitted = true;
+        try { Leaderboard.submitScore(LB_GAME_ID, _capturedByPlayer, "captures"); } catch (e) {}
     }
 
     function openLeaderboard() {
@@ -318,6 +339,11 @@ class BitochiCheckersView extends WatchUi.View {
             doDeselect();
             return true;
         }
+        // Mid-game exit via BACK: commit captures so the player appears on the
+        // "captures" leaderboard even for unfinished games.
+        if (_gs == GS_PLAY || _gs == GS_AI_THINK || _gs == GS_AI_EVAL) {
+            submitCaptures();
+        }
         // Otherwise let the framework pop back to the shared unified menu.
         return false;
     }
@@ -443,6 +469,7 @@ class BitochiCheckersView extends WatchUi.View {
         resetBoard();
         _menuRow = 0;
         _resultHandled = false;
+        _capturesSubmitted = false;
         _gs = GS_PLAY;
         if (_aiVsAi) {
             _playerIsWhite = true;
@@ -523,7 +550,7 @@ class BitochiCheckersView extends WatchUi.View {
         var piece = _board[fromR * 8 + fromC];
         _board[toR * 8 + toC] = piece;
         _board[fromR * 8 + fromC] = CK_EMPTY;
-        if (capR >= 0) { _board[capR * 8 + capC] = CK_EMPTY; }
+        if (capR >= 0) { _board[capR * 8 + capC] = CK_EMPTY; _capturedByPlayer++; }
 
         if (piece == CK_WHITE && toR == 7) { _board[toR * 8 + toC] = CK_WKING; piece = CK_WKING; }
         if (piece == CK_BLACK && toR == 0) { _board[toR * 8 + toC] = CK_BKING; piece = CK_BKING; }

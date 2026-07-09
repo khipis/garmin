@@ -1014,8 +1014,8 @@ const GAME_DESCS = {
   'bricks':            'Classic brick-breaker — control the paddle, launch the ball, and demolish all the bricks without letting it drop.',
   'catapult':          'Medieval siege game: adjust your catapult angle and power, then launch boulders at the castle walls.',
   'cellwars':          'Cellular automata battle simulator. Watch eight evolutionary algorithms compete for territory — or just let a single ruleset evolve in silence.',
-  'checkers':          'Classic draughts/checkers against an AI opponent. Capture all enemy pieces by jumping over them to win.',
-  'chess':             'Full chess game with AI opponent at multiple difficulty levels. Touch or button controls for every move on your Garmin watch.',
+  'checkers':          'Classic draughts/checkers against an AI opponent. Jump over and capture enemy pieces to clear the board. Leaderboard tracks your win streak AND total pieces captured — so even a hard-fought loss earns you a spot in the rankings.',
+  'chess':             'Full chess game with AI opponent at three difficulty levels. Touch or button controls for every move on your Garmin watch. Two leaderboard tracks: win streak (best consecutive wins) and material captured (total piece value taken — even losses count).',
   'chickencross':      'Help the chicken cross the busy road without getting squashed. Dodge cars, trucks, and other hazards in this Frogger-style classic.',
   'connect_four_lite': 'Drop coloured discs and line up four in a row — horizontally, vertically, or diagonally — before your opponent does.',
   'diceroyale':        'Yahtzee-inspired dice game. Roll five dice up to three times and aim for the highest-scoring combination on the scorecard.',
@@ -1232,6 +1232,8 @@ function fmtScore(s) {
 function prettyVariant(v) {
   if (v === FISH_VARIANT) return '🐟 Biggest Fish';
   if (v === 'progress')   return '📈 Progress';
+  if (v === 'captures')   return '🎯 Pieces Taken';
+  if (v === 'material')   return '⚔️ Material';
   if (isActivityBoard() && ACTIVITY_VARIANTS[v]) return ACTIVITY_VARIANTS[v].label;
   // Capitalize first letter for generic variants like "easy", "normal", "hard"
   if (v) return v.charAt(0).toUpperCase() + v.slice(1);
