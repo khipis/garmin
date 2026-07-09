@@ -65,6 +65,12 @@ class SolitaireView extends WatchUi.View {
     hidden var _startMs;
     hidden var _elapsedSecs;
 
+    // ── Engagement leaderboard: cards placed in foundation ───────────────────
+    // Counts how many cards made it to the four Ace piles (0–52, 52 = win).
+    // Submitted to the "progress" variant on every exit and on win, so players
+    // who never finish a deal still appear on the leaderboard.
+    hidden var _progressSubmitted;
+
     function initialize() {
         View.initialize();
         _tick = 0; _gs = SOL_MENU;
@@ -268,6 +274,8 @@ class SolitaireView extends WatchUi.View {
         if (_gs == SOL_PLAY) {
             if (_autoFndQ) { return true; }
             if (_sel >= 0) { _cancel(); return true; }
+            // Mid-game exit: record how far the player got (cards on foundation).
+            submitProgress();
         }
         return false;
     }
@@ -571,6 +579,7 @@ class SolitaireView extends WatchUi.View {
         _tapSubIdx = -1;
         _autoFndQ = false; _winTick = 0; _winParts = null;
         _startMs = System.getTimer(); _elapsedSecs = 0;
+        _progressSubmitted = false;
         _gs = SOL_PLAY;
         _autoFndQ = true;
     }
@@ -651,6 +660,7 @@ class SolitaireView extends WatchUi.View {
             if (secs < 1) { secs = 1; }
             _elapsedSecs = secs;
             Leaderboard.submitScore(LB_GAME_ID, _elapsedSecs, null);
+            submitProgress();   // also record 52 cards placed on the "progress" board
             Leaderboard.showPostGame(LB_GAME_ID, null, "SOLITAIRE");
         }
     }
@@ -658,6 +668,21 @@ class SolitaireView extends WatchUi.View {
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, null, "SOLITAIRE");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Total cards in the four foundation piles (0–52; 52 = full win).
+    hidden function _foundationTotal() {
+        return _fnd[0] + _fnd[1] + _fnd[2] + _fnd[3];
+    }
+
+    // Submit cards-placed count to "progress" variant — once per deal.
+    // Called on win AND on every BACK/exit so even partial games leave a trace.
+    function submitProgress() as Void {
+        if (_progressSubmitted) { return; }
+        var n = _foundationTotal();
+        if (n <= 0) { return; }
+        _progressSubmitted = true;
+        try { Leaderboard.submitScore(LB_GAME_ID, n, "progress"); } catch (e) {}
     }
 
     // ─── Win Animation ────────────────────────────────────────────────────────────
