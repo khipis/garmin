@@ -1508,6 +1508,20 @@ async function handleVisit(req: Request, env: Env): Promise<Response> {
     await env.DB.prepare(
       "DELETE FROM visits WHERE timestamp < ?"
     ).bind(cutoff7).run();
+  } else {
+    // Heartbeat: keep the latest row fresh without incrementing the
+    // 30-minute-deduplicated visit total. The frontend calls /visit once per
+    // minute, so users disappear from "online" roughly five minutes after
+    // leaving instead of five minutes after their initial page load.
+    await env.DB.prepare(
+      `UPDATE visits SET timestamp = ?
+       WHERE rowid = (
+         SELECT rowid FROM visits
+         WHERE ip_hash = ?
+         ORDER BY timestamp DESC
+         LIMIT 1
+       )`
+    ).bind(now, ipHash).run();
   }
 
   const [totalRow, onlineRow] = await Promise.all([

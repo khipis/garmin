@@ -27,7 +27,7 @@
     --shadow:    0 8px 32px rgba(0,0,0,.6);
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; max-width: 100%; overflow-x: hidden; }
 
   body {
     background: var(--bg);
@@ -57,6 +57,7 @@
     padding: 0 24px;
     display: flex; align-items: center; gap: 16px;
     height: 60px;
+    width: 100%; min-width: 0;
   }
 
   .logo {
@@ -65,6 +66,7 @@
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     white-space: nowrap;
+    min-width: 0; overflow: hidden; text-overflow: ellipsis;
   }
 
   header .sep { flex: 1; }
@@ -84,6 +86,7 @@
   .visitor-counters {
     display: flex; align-items: center; gap: 14px;
     font-size: .72rem; color: var(--muted); letter-spacing: .04em;
+    flex: 0 0 auto;
   }
   .visitor-counters .vc-item {
     display: flex; align-items: center; gap: 5px;
@@ -113,6 +116,7 @@
     text-decoration: none;
     transition: background .2s, border-color .2s, box-shadow .2s, transform .12s;
     white-space: nowrap;
+    flex: 0 0 auto;
   }
   .support-link:hover {
     background: rgba(251,191,36,.2);
@@ -570,6 +574,7 @@
     white-space: nowrap; flex-shrink: 0;
   }
   .fd-play-btn:hover { background: #fbbf24; }
+  #daily-card {
     background: linear-gradient(135deg, #1a1200 0%, #0d0800 100%);
     border: 1px solid #4a3a00;
     border-radius: 12px;
@@ -889,7 +894,7 @@
 
   /* ── 2026 game discovery refresh ─────────────────────────────────── */
   #game-selector-wrap {
-    padding: 24px max(20px, calc((100vw - 1180px) / 2));
+    padding: 18px max(20px, calc((100vw - 1180px) / 2)) 14px;
     background: #0b121b;
   }
   .library-heading {
@@ -909,7 +914,7 @@
   }
   .surprise-btn:hover { border-color: var(--accent); color: var(--accent); }
   .library-tools { display: flex; gap: 9px; align-items: center; margin-bottom: 10px; }
-  .game-search-wrap { position: relative; flex: 1; }
+  .game-search-wrap { position: relative; width: min(520px, 100%); }
   .game-search-icon {
     position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
     color: #6f879c; pointer-events: none;
@@ -926,48 +931,36 @@
     cursor: pointer; border-radius: 7px;
   }
   #game-search-clear:hover { background: #1b2a39; color: #fff; }
-  #category-scroll {
-    display: flex; gap: 6px; overflow-x: auto; padding: 2px 1px 9px;
-    scrollbar-width: none;
-  }
-  #category-scroll::-webkit-scrollbar { display: none; }
-  .category-chip {
-    flex: 0 0 auto; border: 1px solid #26384a; background: transparent; color: #71899e;
-    border-radius: 8px; padding: 6px 11px; font-size: .68rem; font-weight: 750;
-    cursor: pointer; text-transform: uppercase; letter-spacing: .05em;
-  }
-  .category-chip:hover { color: #cfeaff; border-color: #42617a; }
-  .category-chip.active { background: #123143; border-color: #1a7594; color: #8eeaff; }
   #game-scroll {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 8px; overflow: visible; padding: 4px 0; scroll-snap-type: none;
+    display: flex; gap: 7px; overflow-x: auto; overflow-y: hidden;
+    padding: 2px 1px 9px; scroll-snap-type: x proximity;
+    scrollbar-width: thin; scrollbar-color: #29445a transparent;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
   }
+  #game-scroll::-webkit-scrollbar { height: 4px; }
+  #game-scroll::-webkit-scrollbar-thumb { background: #29445a; border-radius: 9px; }
   .game-chip {
-    min-width: 0; width: 100%; height: 66px; border-radius: 11px;
-    padding: 10px 11px; text-align: left; display: grid;
-    grid-template-columns: 34px 1fr; grid-template-rows: 1fr 1fr;
-    column-gap: 9px; align-items: center; white-space: normal;
-    background: #101a25; border-color: #203244; text-transform: none;
+    flex: 0 0 auto; width: auto; height: 39px; border-radius: 999px;
+    padding: 5px 12px 5px 6px; text-align: left; display: inline-flex;
+    gap: 7px; align-items: center; white-space: nowrap; scroll-snap-align: start;
+    background: #101a25; border-color: #26394b; text-transform: none;
   }
   .game-chip-icon {
-    grid-row: 1 / 3; width: 34px; height: 34px; border-radius: 9px;
-    display: grid; place-items: center; background: #172635; font-size: 1rem;
+    width: 27px; height: 27px; border-radius: 50%;
+    display: grid; place-items: center; background: #172635; font-size: .82rem;
   }
   .game-chip-name {
-    align-self: end; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    color: #dceaf5; font-size: .77rem; font-weight: 800; letter-spacing: 0;
+    color: #dceaf5; font-size: .75rem; font-weight: 800; letter-spacing: 0;
   }
-  .game-chip-meta {
-    align-self: start; color: #607b91; font-size: .6rem; font-weight: 700;
-    letter-spacing: .06em; text-transform: uppercase;
-  }
+  .game-chip-meta { display: none; }
   .game-chip.is-hot::after {
-    content: 'HOT'; position: absolute; top: 5px; right: 6px; color: #ffb45e;
+    content: 'HOT'; position: static; color: #ffb45e;
     font-size: .52rem; font-weight: 900; letter-spacing: .06em;
   }
   .game-chip { position: relative; }
   .game-chip.active {
-    background: #102d3a; border-color: var(--accent); box-shadow: none;
+    background: #103141; border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,212,255,.12), 0 0 14px rgba(0,212,255,.14);
   }
   .game-chip.active .game-chip-icon { background: #12465b; }
   .library-result {
@@ -998,18 +991,47 @@
 
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
-    header { padding: 0 14px; }
-    .support-link { padding: 5px 9px; font-size: .64rem; }
+    header { height: 54px; padding: 0 10px; gap: 8px; }
+    .logo { font-size: .92rem; letter-spacing: .045em; }
+    .logo-long, .support-label { display: none; }
+    .live-dot, .visitor-counters .vc-total { display: none; }
+    .visitor-counters { gap: 5px; font-size: .65rem; }
+    .support-link {
+      width: 34px; height: 34px; padding: 0; justify-content: center;
+      font-size: .82rem;
+    }
+    #tab-nav { gap: 6px; padding: 10px 8px 12px; }
+    .tab-btn { flex: 1 1 0; justify-content: center; gap: 4px; padding: 8px 6px; font-size: .72rem; }
+    .tab-btn svg { width: 14px; height: 14px; }
+    #hero { height: 178px; }
+    #hero-overlay { padding: 14px 12px; }
+    #hero-game-name { font-size: 1.45rem; }
+    .hero-bottom { gap: 8px; }
+    #hero-tagline { font-size: .64rem; letter-spacing: .07em; }
+    #ciq-link { padding: 5px 9px; font-size: .65rem; }
+    #game-selector-wrap { padding: 14px 12px 10px; }
     .lb-row { padding: 12px 14px; }
+    main { padding: 18px 12px 44px; }
     .stats-cards { grid-template-columns: repeat(2, 1fr); }
     .stat-card .num { font-size: 1.4rem; }
     .ab-hype .ab-title { font-size: 1.05rem; }
-    .library-heading { align-items: start; }
-    .library-sub { max-width: 220px; }
-    #game-scroll { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .game-chip { height: 60px; grid-template-columns: 30px 1fr; padding: 8px; column-gap: 7px; }
-    .game-chip-icon { width: 30px; height: 30px; }
-    .game-chip-name { font-size: .7rem; }
+    .library-heading { align-items: start; margin-bottom: 10px; }
+    .library-title { font-size: 1.08rem; }
+    .library-sub { max-width: 235px; font-size: .7rem; line-height: 1.35; }
+    .surprise-btn { padding: 7px 9px; font-size: .67rem; }
+    #game-search { padding: 9px 35px; font-size: .78rem; }
+    .game-chip { height: 37px; padding-right: 11px; }
+    .game-chip-icon { width: 25px; height: 25px; }
+    .game-chip-name { font-size: .72rem; }
+    .library-result { font-size: .62rem; gap: 8px; }
+    .featured-daily-inner { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding: 11px 12px; }
+    .fd-badge { grid-column: 1 / -1; font-size: .59rem; }
+    .fd-label { white-space: normal; font-size: .76rem; line-height: 1.25; }
+    .fd-play-btn { padding: 6px 9px; font-size: .7rem; }
+    #lb-controls { padding: 0 8px; gap: 7px; }
+    .seg-btn { padding: 7px 10px; font-size: .74rem; }
+    #me-bar { padding: 0 10px; }
+    #me-input { min-width: 0; width: 100%; }
     #view-rankings > #featured-daily { margin: 10px 12px; }
   }
 </style>
@@ -1018,7 +1040,7 @@
 
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">⌚ Bitochi Games</div>
+  <div class="logo">⌚ Bitochi<span class="logo-long"> Games</span></div>
   <div class="sep"></div>
   <div class="visitor-counters">
     <div class="vc-item vc-online">
@@ -1032,8 +1054,8 @@
     </div>
   </div>
   <div class="live-dot">Live Rankings</div>
-  <a class="support-link" href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">
-    ☕ Support
+  <a class="support-link" href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener" aria-label="Support Bitochi">
+    ☕ <span class="support-label">Support</span>
   </a>
 </header>
 
@@ -1110,9 +1132,8 @@
       <button id="game-search-clear" type="button" aria-label="Clear search">✕</button>
     </div>
   </div>
-  <div id="category-scroll"></div>
   <div id="game-scroll"></div>
-  <div class="library-result"><span id="game-result-count"></span><span>Tap a game to see rankings and install</span></div>
+  <div class="library-result"><span id="game-result-count"></span><span>Swipe · tap once to open</span></div>
 </div>
 <div id="public-hot">
   <div class="public-hot-label">Trending with players now</div>
@@ -1624,7 +1645,6 @@ const GAME_GENRES = {
 const GENRE_ICON = { All:'✦', Arcade:'⚡', Puzzle:'◇', Strategy:'♟', Sports:'◎', Cards:'♠', Casual:'☻' };
 const GAME_GENRE = {};
 Object.entries(GAME_GENRES).forEach(([genre, ids]) => ids.forEach(id => GAME_GENRE[id] = genre));
-let activeGenre = 'All';
 let hotGameIds = new Set();
 
 function genreOf(g) { return GAME_GENRE[g.id] || 'Arcade'; }
@@ -1632,7 +1652,6 @@ function genreOf(g) { return GAME_GENRE[g.id] || 'Arcade'; }
 function filteredGames() {
   const q = (document.getElementById('game-search')?.value || '').trim().toLowerCase();
   return GAMES.filter(g => {
-    if (activeGenre !== 'All' && genreOf(g) !== activeGenre) return false;
     if (!q) return true;
     return `${g.label} ${g.id} ${genreOf(g)} ${GAME_DESCS[g.id] || ''}`.toLowerCase().includes(q);
   });
@@ -1657,17 +1676,6 @@ function buildGameChips(list = filteredGames()) {
 }
 
 function initGameDiscovery() {
-  const cat = document.getElementById('category-scroll');
-  cat.innerHTML = ['All','Arcade','Puzzle','Strategy','Sports','Cards','Casual'].map(x =>
-    `<button class="category-chip${x === activeGenre ? ' active' : ''}" data-genre="${x}">${GENRE_ICON[x]} ${x}</button>`
-  ).join('');
-  cat.onclick = e => {
-    const btn = e.target.closest('.category-chip');
-    if (!btn) return;
-    activeGenre = btn.dataset.genre;
-    cat.querySelectorAll('.category-chip').forEach(x => x.classList.toggle('active', x === btn));
-    buildGameChips();
-  };
   const search = document.getElementById('game-search');
   const clear = document.getElementById('game-search-clear');
   search.oninput = () => { clear.style.display = search.value ? 'block' : 'none'; buildGameChips(); };
@@ -2334,18 +2342,31 @@ function setPeriodUI() {
     x.classList.toggle('active', x.dataset.p === currentPeriod));
 }
 
-// ── Visitor counter ──────────────────────────────────────────────────────────
-(async function trackVisit() {
+// ── Live presence + visit counter ────────────────────────────────────────────
+// Refresh once per minute. The backend updates this visitor's last_seen without
+// increasing the 30-minute deduplicated visit total, so "online" really means
+// active within the last five minutes rather than "loaded the page recently".
+async function refreshPresence() {
   try {
     const r = await fetch(`${API_BASE}/visit`, { cache: 'no-store' });
-    if (!r.ok) return;
+    if (!r.ok) throw new Error('presence unavailable');
     const d = await r.json();
     const onlineEl = document.getElementById('vc-online-num');
     const totalEl  = document.getElementById('vc-total-num');
     if (onlineEl) onlineEl.textContent = d.online ?? '—';
     if (totalEl)  totalEl.textContent  = (d.total ?? 0).toLocaleString();
-  } catch (_) {}
-})();
+    const item = document.querySelector('.vc-online');
+    if (item) item.title = 'Visitors active in the last 5 minutes';
+  } catch (_) {
+    const onlineEl = document.getElementById('vc-online-num');
+    if (onlineEl) onlineEl.textContent = '—';
+  }
+}
+refreshPresence();
+setInterval(refreshPresence, 60000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') refreshPresence();
+});
 
 // Landing on bitochi.com with no explicit ?game= picks a random game out of
 // the top 5 most-played (by distinct players, season stats) instead of
