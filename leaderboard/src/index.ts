@@ -1521,6 +1521,182 @@ async function handleVisit(req: Request, env: Env): Promise<Response> {
   return json({ total: totalRow?.n ?? 0, online: onlineRow?.n ?? 0 });
 }
 
+// ── Daily Challenge ────────────────────────────────────────────────────────────
+// Challenge is deterministically generated per (date, game) from live stats.
+// No challenge-definition table needed; the generation is pure computation +
+// one read query for the median score of the game.
+
+const ASC_GAMES_SET = new Set<string>([
+  "sudoku","minesweeper","solitaire","lightsout","battleship","akari","memo",
+]);
+
+/** Deterministic seed from date string + game name (djb2-ish). */
+function dailySeed(dateStr: string, game: string): number {
+  let h = 0x811c9dc5;
+  const s = dateStr + "|" + game;
+  for (let i = 0; i < s.length; i++) {
+    h = Math.imul(h ^ s.charCodeAt(i), 0x01000193) >>> 0;
+  }
+  return h;
+}
+
+/** Today UTC as YYYY-MM-DD. */
+function todayUTC(): string {
+  const d = new Date();
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/**
+ * GET /daily?game=X[&user=Y]
+ * Returns today's challenge for a game. Cached at CDN level for 1 hour.
+ */
+async function handleGetDaily(url: URL, env: Env): Promise<Response> {
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const userRaw = (url.searchParams.get("user") ?? "").trim();
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+  const user = userRaw ? sanitizeUser(userRaw) : null;
+  const date = todayUTC();
+  const seed = dailySeed(date, game);
+  const isAsc = ASC_GAMES_SET.has(game);
+
+  // How many real-player scores exist for this game?
+  const countRow = await env.DB
+    .prepare("SELECT COUNT(*) AS n FROM scores WHERE game=? AND is_bot=0")
+    .bind(game).first<{ n: number }>();
+  const total = countRow?.n ?? 0;
+
+  let type = "rounds";
+  let target = 1 + (seed % 2); // 1 or 2 rounds
+  let label  = target === 1 ? "Play once today!" : `Play ${target} times today!`;
+  let asc    = false;
+
+  if (total >= 8) {
+    // Use the score at the ~50th percentile (adjusted ±15% by the daily seed).
+    const pctFactor = 0.85 + (seed % 30) / 100; // 0.85 → 1.15
+    const offset    = Math.floor(total * 0.5);
+
+    const order    = isAsc ? "ASC" : "DESC";
+    const row = await env.DB
+      .prepare(
+        `SELECT score FROM scores WHERE game=? AND is_bot=0 ORDER BY score ${order} LIMIT 1 OFFSET ?`
+      )
+      .bind(game, offset)
+      .first<{ score: number }>();
+
+    if (row && row.score > 0) {
+      const rawTarget = Math.round(row.score * pctFactor);
+      target = rawTarget > 0 ? rawTarget : 1;
+      type   = "score";
+      asc    = isAsc;
+      if (isAsc) {
+        label = `Finish in ${target}s or less!`;
+      } else {
+        label = `Score ${target}+!`;
+      }
+    }
+  }
+
+  // Check if this user already completed today.
+  let completed = false;
+  if (user) {
+    const doneRow = await env.DB
+      .prepare("SELECT 1 FROM daily_completions WHERE date_key=? AND game=? AND user=?")
+      .bind(date, game, user)
+      .first<{ "1": number }>();
+    completed = doneRow != null;
+  }
+
+  // Count total completions today.
+  const compRow = await env.DB
+    .prepare("SELECT COUNT(*) AS n FROM daily_completions WHERE date_key=? AND game=?")
+    .bind(date, game).first<{ n: number }>();
+  const completions = compRow?.n ?? 0;
+
+  return json(
+    { date, game, type, target, label, asc, completed, completions },
+    200,
+    // Cache at CDN for 1h — the same challenge is served to all players for a
+    // given game on a given day, so caching is safe and cheap on the DB.
+    { "Cache-Control": "public, max-age=3600, stale-while-revalidate=7200" }
+  );
+}
+
+/**
+ * POST /daily/complete  { game, user, score, date }
+ * Records a challenge completion. Requires X-LB-Key.
+ * Idempotent: upsert so double-submits are safe.
+ */
+async function handlePostDailyComplete(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let body: unknown;
+  try { body = await req.json(); } catch { return err("invalid JSON"); }
+  const b = body as Record<string, unknown>;
+
+  const gameRaw = typeof b.game  === "string" ? b.game.trim()  : "";
+  const userRaw = typeof b.user  === "string" ? b.user.trim()  : "anon";
+  const dateRaw = typeof b.date  === "string" ? b.date.trim()  : "";
+  const score   = typeof b.score === "number"  ? Math.round(b.score) : 0;
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+  const user  = sanitizeUser(userRaw || "anon");
+
+  // Validate date format YYYY-MM-DD (basic check).
+  const dateStr = /^\d{4}-\d{2}-\d{2}$/.test(dateRaw) ? dateRaw : todayUTC();
+  const ts = Math.floor(Date.now() / 1000);
+
+  await env.DB
+    .prepare(
+      "INSERT INTO daily_completions (date_key, game, user, score, completed_at) " +
+      "VALUES (?, ?, ?, ?, ?) " +
+      "ON CONFLICT(date_key, game, user) DO UPDATE SET score=MAX(score, excluded.score)"
+    )
+    .bind(dateStr, game, user, score, ts)
+    .run();
+
+  return json({ ok: true });
+}
+
+/**
+ * GET /daily/board?game=X[&date=YYYY-MM-DD]
+ * Returns top completions for a game on a given date (default today).
+ * Used by the web frontend to show who completed the daily challenge.
+ */
+async function handleGetDailyBoard(url: URL, env: Env): Promise<Response> {
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const dateRaw = (url.searchParams.get("date") ?? "").trim();
+
+  if (!gameRaw) return err("missing: game");
+  const game    = sanitizeGame(gameRaw);
+  if (!game)    return err("invalid game name");
+  const dateStr = /^\d{4}-\d{2}-\d{2}$/.test(dateRaw) ? dateRaw : todayUTC();
+
+  const rows = await env.DB
+    .prepare(
+      "SELECT user AS u, score AS s, completed_at AS t " +
+      "FROM daily_completions WHERE date_key=? AND game=? " +
+      "ORDER BY score DESC, completed_at ASC LIMIT 50"
+    )
+    .bind(dateStr, game)
+    .all<{ u: string; s: number; t: number }>();
+
+  const completions = rows.results ?? [];
+  return json(
+    { date: dateStr, game, completions },
+    200,
+    { "Cache-Control": "public, max-age=60, stale-while-revalidate=120" }
+  );
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url    = new URL(req.url);
@@ -1561,6 +1737,9 @@ export default {
     if (method === "GET"    && path === "/links")       return handleGetLinks(env);
     if (method === "POST"   && path === "/links")       return handlePostLink(req, env);
     if (method === "DELETE" && path === "/links")       return handleDeleteLink(req, env);
+    if (method === "GET"    && path === "/daily")        return handleGetDaily(url, env);
+    if (method === "POST"   && path === "/daily/complete") return handlePostDailyComplete(req, env);
+    if (method === "GET"    && path === "/daily/board")  return handleGetDailyBoard(url, env);
     if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"    && path === "/standing")    return handleGetStanding(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);

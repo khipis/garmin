@@ -185,6 +185,26 @@ CREATE TABLE IF NOT EXISTS resets (
 
 CREATE INDEX IF NOT EXISTS idx_resets_game ON resets (game, at DESC);
 
+-- ── Daily Challenges ───────────────────────────────────────────────────────────
+-- Tracks who completed the daily challenge for each game each day.
+-- The challenge itself is generated deterministically server-side from the date
+-- + game leaderboard stats, so no challenge-definition table is needed.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS daily_completions (date_key TEXT NOT NULL, game TEXT NOT NULL, user TEXT NOT NULL, score INTEGER NOT NULL DEFAULT 0, completed_at INTEGER NOT NULL);
+--   CREATE UNIQUE INDEX IF NOT EXISTS idx_dc_pk ON daily_completions (date_key, game, user);
+--   CREATE INDEX IF NOT EXISTS idx_dc_date_game ON daily_completions (date_key, game, completed_at DESC);
+CREATE TABLE IF NOT EXISTS daily_completions (
+  date_key     TEXT    NOT NULL,   -- 'YYYY-MM-DD' UTC
+  game         TEXT    NOT NULL,
+  user         TEXT    NOT NULL,
+  score        INTEGER NOT NULL DEFAULT 0,
+  completed_at INTEGER NOT NULL    -- unix seconds
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_dc_pk
+  ON daily_completions (date_key, game, user);
+CREATE INDEX IF NOT EXISTS idx_dc_date_game
+  ON daily_completions (date_key, game, completed_at DESC);
+
 -- ── Redirect links / short URLs ───────────────────────────────────────────────
 -- Branded, trackable redirects: GET /go/<slug> 302s to `url` and bumps `clicks`.
 -- Messages point at bitochi.com/coffee (a static page that forwards to

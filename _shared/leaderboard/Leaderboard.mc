@@ -118,6 +118,8 @@ module Leaderboard {
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
         _sender.send(game, user, score, variant, null);
+        // Daily challenge completion check — fully guarded, never throws.
+        try { DailyChallenge.onScoreSubmit(game, score, variant); } catch (e) {}
     }
 
     // Same as submitScore(), but attaches a small JSON-serialisable dictionary
@@ -134,6 +136,8 @@ module Leaderboard {
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
         _sender.send(game, user, score, variant, meta);
+        // Daily challenge completion check — fully guarded, never throws.
+        try { DailyChallenge.onScoreSubmit(game, score, variant); } catch (e) {}
     }
 
     // ── Launch ping (fire-and-forget) ─────────────────────────────────────────
@@ -159,6 +163,8 @@ module Leaderboard {
                 // Refresh the message bundle (shown from cache NEXT run; the
                 // delay also ensures pinger is the only in-flight request now).
                 fetchMessages(game);
+                // Kick off today's daily challenge fetch (cached for 24h).
+                try { DailyChallenge.prefetch(game); } catch (e) {}
             }
         } catch (e) {}
         // The 'once' card reads the cached bundle so it works offline too.
@@ -332,13 +338,16 @@ module Leaderboard {
     }
 
     // Convenience for a game's menu: prefer the one-shot 'once' call-to-action,
-    // then the (once-only) reset message, otherwise the throttled launch message.
+    // then the (once-only) reset message, then today's daily challenge,
+    // otherwise the throttled launch message.
     // Call this when the main menu becomes visible. `fallback` covers
     // offline/first-run for the launch slot.
     function announce(game as Lang.String, fallback as Lang.Dictionary or Null) as Lang.Boolean {
         try {
             if (showOnceIfDue(game)) { return true; }
             if (showResetMessageIfAny(game)) { return true; }
+            // Daily challenge — shows at most once per day, only when cached.
+            try { if (DailyChallenge.showIfDue(game)) { return true; } } catch (e) {}
             return showMessage(game, MSG_LAUNCH, fallback);
         } catch (e) {
             return false;

@@ -542,6 +542,86 @@
   .recent-row .rs { color: var(--accent); margin-left: auto; font-variant-numeric: tabular-nums; }
   .recent-row .rt { color: var(--muted); font-size: .7rem; min-width: 64px; text-align: right; }
 
+  /* ── Daily Challenge ──────────────────────────────────────────────── */
+  #daily-wrap { margin-top: 24px; }
+  /* Featured daily banner */
+  #featured-daily {
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, #1c1500 0%, #100e00 100%);
+    border: 1px solid #3a2d00;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .featured-daily-inner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+  }
+  .fd-badge {
+    font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+    color: #f59e0b; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .fd-body { flex: 1; min-width: 0; }
+  .fd-game { font-size: .82rem; color: #f59e0b; font-weight: 700; margin-bottom: 2px; }
+  .fd-label { font-size: .9rem; color: #fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fd-play-btn {
+    background: #f59e0b; color: #0a0800; border: none; border-radius: 8px;
+    padding: 7px 14px; font-size: .82rem; font-weight: 700; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .fd-play-btn:hover { background: #fbbf24; }
+    background: linear-gradient(135deg, #1a1200 0%, #0d0800 100%);
+    border: 1px solid #4a3a00;
+    border-radius: 12px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  #daily-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+  }
+  .daily-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    color: #f59e0b; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .daily-label {
+    font-size: 1.15rem; font-weight: 700; color: #fff;
+    margin-bottom: 6px; line-height: 1.3;
+  }
+  .daily-meta {
+    font-size: .78rem; color: #a38000;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .daily-completions-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.25);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: .75rem; color: #fbbf24; font-weight: 600;
+  }
+  .daily-done-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(52,211,153,.15); border: 1px solid rgba(52,211,153,.3);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: .75rem; color: #34d399; font-weight: 600;
+  }
+  .daily-board-title {
+    font-size: .8rem; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .07em;
+    margin: 14px 0 6px;
+  }
+  .daily-completer-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; border-bottom: 1px solid var(--border);
+    font-size: .83rem;
+  }
+  .daily-completer-row .dcr-rank { color: var(--gold); font-weight: 700; min-width: 24px; }
+  .daily-completer-row .dcr-user { color: var(--text); flex: 1; font-weight: 600; }
+  .daily-completer-row .dcr-score { color: var(--accent); font-variant-numeric: tabular-nums; }
+  .daily-completer-row .dcr-time { color: var(--muted); font-size: .7rem; text-align: right; min-width: 56px; }
+
   /* ── Loading skeleton ─────────────────────────────────────────────── */
   .skel-row {
     height: 44px; border-radius: 10px; margin-bottom: 8px;
@@ -885,6 +965,18 @@
   </div>
 </div>
 
+<!-- ── Featured Daily Challenge (global, rotates each day) ─────────────────── -->
+<div id="featured-daily" style="display:none">
+  <div class="featured-daily-inner">
+    <div class="fd-badge">🌟 Featured today</div>
+    <div class="fd-body">
+      <div id="fd-game-name" class="fd-game"></div>
+      <div id="fd-label" class="fd-label"></div>
+    </div>
+    <button id="fd-play-btn" class="fd-play-btn">Play now →</button>
+  </div>
+</div>
+
 <!-- ── Game selector ───────────────────────────────────────────────────────── -->
 <div id="game-selector-wrap">
   <div id="game-selector-label">Select game</div>
@@ -944,6 +1036,20 @@
       <span class="section-line"></span>
     </div>
     <div id="recent-list"></div>
+  </div>
+
+  <!-- Daily Challenge -->
+  <div id="daily-wrap" style="display:none">
+    <div class="section-header">
+      <span class="section-title">🌟 Daily Challenge</span>
+      <span class="section-line"></span>
+      <span class="update-tag" id="daily-date"></span>
+    </div>
+    <div id="daily-card"></div>
+    <div id="daily-board-wrap" style="display:none">
+      <div class="daily-board-title">Completed today</div>
+      <div id="daily-board-list"></div>
+    </div>
   </div>
 </main>
 
@@ -1426,6 +1532,7 @@ function selectGame(g, pushState = true) {
   meCard.style.display = 'none';
   targetBadge.style.display = 'none';
   recentWrap.style.display = 'none';
+  if (typeof dailyWrap !== 'undefined') { dailyWrap.style.display = 'none'; }
 
   // Show skeleton immediately
   lbHeaderEl.style.display = '';
@@ -1466,6 +1573,7 @@ async function fetchVariantsThenLoad(g) {
   }
 
   loadLeaderboard();
+  if (typeof loadDaily === 'function') { loadDaily(); }
 }
 
 // ── Build variant chips ──────────────────────────────────────────────────────
@@ -1723,6 +1831,79 @@ async function loadRecent() {
   } catch { recentWrap.style.display = 'none'; }
 }
 
+// ── Daily Challenge ───────────────────────────────────────────────────────────
+const dailyWrap  = document.getElementById('daily-wrap');
+const dailyCard  = document.getElementById('daily-card');
+const dailyDate  = document.getElementById('daily-date');
+const dailyBoardWrap = document.getElementById('daily-board-wrap');
+const dailyBoardList = document.getElementById('daily-board-list');
+
+async function loadDaily() {
+  const lbKey = currentLbKey, game = currentGame;
+  const meParam = meName ? `&user=${encodeURIComponent(meName)}` : '';
+  try {
+    const r = await fetch(`${API_BASE}/daily?game=${encodeURIComponent(lbKey)}${meParam}`);
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    if (game !== currentGame) return;
+
+    dailyWrap.style.display = '';
+    dailyDate.textContent = d.date || '';
+
+    const completed = d.completed === true;
+    const compCount = d.completions || 0;
+
+    const typeLabel = d.type === 'rounds'
+      ? `<span style="color:var(--muted);font-size:.78rem">Type: rounds</span>`
+      : '';
+
+    let targetDisplay = fmtScore(d.target);
+    if (d.type === 'score_asc' || d.asc) targetDisplay = '≤ ' + fmtScore(d.target);
+    if (d.type === 'score') targetDisplay = '≥ ' + fmtScore(d.target);
+
+    const doneBadge = completed
+      ? `<span class="daily-done-badge">✓ You completed it!</span>`
+      : '';
+    const compBadge = compCount > 0
+      ? `<span class="daily-completions-badge">🏅 ${compCount} completed today</span>`
+      : `<span style="color:var(--muted);font-size:.78rem">Be the first today!</span>`;
+
+    dailyCard.innerHTML = `
+      <div class="daily-badge">🌟 Today's challenge</div>
+      <div class="daily-label">${escHtml(d.label || 'Play today!')}</div>
+      <div class="daily-meta">
+        ${typeLabel}
+        ${compBadge}
+        ${doneBadge}
+      </div>`;
+
+    // Load completions board
+    loadDailyBoard(lbKey, game, d.date);
+  } catch {
+    dailyWrap.style.display = 'none';
+  }
+}
+
+async function loadDailyBoard(lbKey, game, date) {
+  try {
+    const r = await fetch(`${API_BASE}/daily/board?game=${encodeURIComponent(lbKey)}&date=${encodeURIComponent(date)}`);
+    if (!r.ok || game !== currentGame) return;
+    const d = await r.json();
+    const rows = d.completions || [];
+    if (!rows.length) { dailyBoardWrap.style.display = 'none'; return; }
+    dailyBoardWrap.style.display = '';
+    dailyBoardList.innerHTML = rows.slice(0, 10).map((c, i) => {
+      const mine = c.u === meName ? ' style="color:var(--accent)"' : '';
+      return `<div class="daily-completer-row">
+        <span class="dcr-rank">${i + 1}</span>
+        <span class="dcr-user"${mine}>${escHtml(c.u || 'anon')}</span>
+        <span class="dcr-score">${fmtScore(c.s)}</span>
+        <span class="dcr-time">${fmtAgo(c.t)}</span>
+      </div>`;
+    }).join('');
+  } catch { dailyBoardWrap.style.display = 'none'; }
+}
+
 // ── Share / copy ──────────────────────────────────────────────────────────────
 function shareUrl() {
   const u = new URL(location.href);
@@ -1976,6 +2157,48 @@ async function pickFeaturedGame() {
 }
 
 // ── Init: list every game; games without rankings just show their description ─
+// ── Featured daily game (rotates deterministically each day) ──────────────────
+function featuredDailyGame() {
+  // Exclude tool/widget apps from the featured rotation.
+  const exclude = new Set(['activityboard','breathtrainingtool','breathtrainingsystem',
+    'intervalbeeper','timer','fakenotificationescape']);
+  const eligible = GAMES.filter(g => g.ciq && !exclude.has(g.id));
+  if (!eligible.length) return GAMES[0];
+  // Deterministic: day-of-year index mod number of eligible games.
+  const d = new Date();
+  const dayOfYear = Math.floor((d - new Date(d.getUTCFullYear(), 0, 0)) / 86400000);
+  return eligible[dayOfYear % eligible.length];
+}
+
+async function loadFeaturedBanner() {
+  const fdEl   = document.getElementById('featured-daily');
+  const fdGame = document.getElementById('fd-game-name');
+  const fdLabel= document.getElementById('fd-label');
+  const fdBtn  = document.getElementById('fd-play-btn');
+  if (!fdEl || !fdGame || !fdLabel || !fdBtn) return;
+
+  const g = featuredDailyGame();
+  if (!g) return;
+
+  try {
+    const r = await fetch(`${API_BASE}/daily?game=${encodeURIComponent(lbKeyOf(g))}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    fdGame.textContent  = g.label.toUpperCase();
+    fdLabel.textContent = d.label || 'Play today!';
+    const compCount = d.completions || 0;
+    if (compCount > 0) {
+      fdLabel.textContent += ` · ${compCount} completed`;
+    }
+    fdBtn.onclick = () => {
+      const gObj = GAMES.find(x => x.id === g.id);
+      if (gObj) selectGame(gObj);
+      fdEl.style.display = 'none';
+    };
+    fdEl.style.display = '';
+  } catch { fdEl.style.display = 'none'; }
+}
+
 async function init() {
   buildGameChips(GAMES);
 
@@ -1988,9 +2211,10 @@ async function init() {
 
   const initId  = params.get('game');
   const wanted  = initId && GAMES.find(g => g.id === initId);
-  const featured = wanted ? null : await pickFeaturedGame();
-  // variant is set after fetchVariantsThenLoad resolves
-  selectGame(wanted || featured || GAMES[0], !wanted);
+  selectGame(wanted || GAMES[0], !wanted);
+
+  // Load the featured daily banner (async, non-blocking).
+  loadFeaturedBanner();
 }
 init();
 
