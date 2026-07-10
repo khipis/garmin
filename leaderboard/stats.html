@@ -346,6 +346,23 @@
   .feed-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
   .feed-ago { color: var(--muted); font-size: .72rem; white-space: nowrap; }
 
+  /* ── Daily challenge stats ──────────────────────────────────────── */
+  #daily-game-list { margin-bottom: 24px; }
+  .daily-game-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    font-size: .83rem; background: var(--card);
+  }
+  .daily-game-row:hover { background: #112030; }
+  .dgr-game { font-weight: 700; color: var(--text); min-width: 100px; flex: 1; }
+  .dgr-label { color: var(--muted); font-size: .78rem; flex: 2; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dgr-count {
+    background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.25);
+    border-radius: 20px; padding: 2px 10px;
+    font-size: .75rem; color: #fbbf24; font-weight: 700; min-width: 36px; text-align: center;
+  }
+  .dgr-count.zero { background: rgba(74,98,120,.1); border-color: rgba(74,98,120,.2); color: var(--muted); }
+
   /* ── Insight bar ─────────────────────────────────────────────────────────── */
   .insight-bar {
     background: linear-gradient(135deg, #0a2030 0%, #0d1e2b 100%);
@@ -452,6 +469,14 @@
       <div class="sh"><span class="sh-title">🌱 Growth & engagement</span><span class="sh-line"></span></div>
       <div class="section-desc"><b>New (7d)</b> = first-time players this week. <b>DAU avg (30d)</b> = average daily active players over the last month. <b>Scores / player</b> = average number of plays per person — the higher, the better.</div>
       <div class="cards" id="engagement-cards"></div>
+
+      <!-- ── Daily Challenge stats ──────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🌟 Daily Challenges — today's engagement</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadDailyStats()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+      </div>
+      <div class="section-desc">Overview of today's daily challenges across all games. Each game generates a fresh challenge every day based on the median leaderboard score. Track which players are coming back daily.</div>
+      <div class="cards" id="daily-summary-cards"><div class="card"><div class="spinner"></div></div></div>
+      <div id="daily-game-list"><div class="state"><div class="spinner"></div>Loading challenges…</div></div>
 
       <!-- ── Live activity ─────────────────────────────────────────────────── -->
       <div class="sh"><span class="sh-title">🕹️ Last games played</span><span class="sh-line"></span>
@@ -981,6 +1006,7 @@ loadLinks();
 loadBots();
 loadActivity();
 loadHot();
+loadDailyStats();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1867,6 +1893,91 @@ async function reseedAllBots() {
 }
 async function reseedBotsForGame(game) {
   await _runBotSeed(game);
+}
+
+// ── Daily Challenge stats ─────────────────────────────────────────────────────
+// Fetches today's challenge for the top N most-active games and shows a summary
+// table with the challenge label and how many players completed it today.
+const DAILY_TRACKED_GAMES = [
+  'drwal','fish','chess','checkers','solitare','sudoku','minesweeper','gemmatch',
+  'flappypidgeon','stacktower','archery','sniperscope','pongpro','billiards',
+  'blackjack','jazzball','slotbandit','pinballpro','bricks','bomb','boxing',
+  'catapult','arcade','dinosaur','edgesurvivor','jumptower','manpac','starcombat',
+  'voidrocks','pixelinvaders','minigolf','skijump','starswarm','chickencross',
+  'othello_blitz','connect_four_lite','tic_tac_pro','dots_boxes','hex_mini',
+  'lightsout','akari','memo'
+];
+
+async function loadDailyStats() {
+  const summaryEl = document.getElementById('daily-summary-cards');
+  const listEl    = document.getElementById('daily-game-list');
+  if (!summaryEl || !listEl) return;
+
+  summaryEl.innerHTML = '<div class="card"><div class="spinner"></div></div>';
+  listEl.innerHTML    = '<div class="state"><div class="spinner"></div>Loading challenges…</div>';
+
+  const today = new Date();
+  const dateStr = `${today.getUTCFullYear()}-${String(today.getUTCMonth()+1).padStart(2,'0')}-${String(today.getUTCDate()).padStart(2,'0')}`;
+
+  // Fetch all challenges in parallel (CDN-cached, cheap)
+  const results = await Promise.allSettled(
+    DAILY_TRACKED_GAMES.map(g =>
+      fetch(`${API}/daily?game=${encodeURIComponent(g)}`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    )
+  );
+
+  const challenges = results
+    .map((r, i) => r.status === 'fulfilled' && r.value
+      ? { game: DAILY_TRACKED_GAMES[i], ...r.value }
+      : null)
+    .filter(Boolean);
+
+  const totalCompletions = challenges.reduce((s, c) => s + (c.completions || 0), 0);
+  const gamesWithActivity = challenges.filter(c => (c.completions || 0) > 0).length;
+  const topGame = [...challenges].sort((a,b) => (b.completions||0) - (a.completions||0))[0];
+
+  // Summary cards
+  summaryEl.innerHTML = `
+    <div class="card">
+      <div class="card-val">${totalCompletions}</div>
+      <div class="card-lbl">Total completions today</div>
+    </div>
+    <div class="card">
+      <div class="card-val">${gamesWithActivity}</div>
+      <div class="card-lbl">Games with completions</div>
+    </div>
+    <div class="card">
+      <div class="card-val" style="font-size:1.1rem">${topGame ? esc(topGame.game) : '—'}</div>
+      <div class="card-lbl">Most completed game</div>
+    </div>
+    <div class="card">
+      <div class="card-val">${dateStr}</div>
+      <div class="card-lbl">Today (UTC)</div>
+    </div>`;
+
+  // Per-game list sorted by completions desc
+  const sorted = [...challenges].sort((a,b) => (b.completions||0) - (a.completions||0));
+  if (!sorted.length) {
+    listEl.innerHTML = '<div class="state">No daily challenge data available.</div>';
+    return;
+  }
+
+  listEl.innerHTML = sorted.map(c => {
+    const cnt   = c.completions || 0;
+    const badge = `<span class="dgr-count${cnt === 0 ? ' zero' : ''}">${cnt === 0 ? '—' : cnt + ' ✓'}</span>`;
+    const typeTag = c.type === 'rounds'
+      ? `<span style="color:#60a5fa;font-size:.72rem">[rounds]</span> `
+      : c.asc
+        ? `<span style="color:#a78bfa;font-size:.72rem">[fastest]</span> `
+        : '';
+    return `<div class="daily-game-row" onclick="openGame('${esc(c.game)}')" title="Open ${esc(c.game)}">
+      <span class="dgr-game">${esc(c.game)}</span>
+      <span class="dgr-label">${typeTag}${esc(c.label || '—')}</span>
+      ${badge}
+    </div>`;
+  }).join('');
 }
 
 // ── HOT games — trending by score velocity ────────────────────────────────────
