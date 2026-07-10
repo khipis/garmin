@@ -1523,14 +1523,14 @@ async function handleVisit(req: Request, env: Env): Promise<Response> {
 
 // ── Daily Challenge ────────────────────────────────────────────────────────────
 // Challenge is deterministically generated per (date, game) from live stats.
-// No challenge-definition table needed; the generation is pure computation +
-// one read query for the median score of the game.
+// Four rotating archetypes (score, hard, top_pct, rounds) with varied labels
+// so the challenge feels fresh every day and across different games.
 
 const ASC_GAMES_SET = new Set<string>([
-  "sudoku","minesweeper","solitaire","lightsout","battleship","akari","memo",
+  "sudoku","minesweeper","solitaire","solitare","lightsout","battleship","akari","memo",
 ]);
 
-/** Deterministic seed from date string + game name (djb2-ish). */
+/** Deterministic seed from date string + game name (FNV-1a). */
 function dailySeed(dateStr: string, game: string): number {
   let h = 0x811c9dc5;
   const s = dateStr + "|" + game;
@@ -1540,18 +1540,95 @@ function dailySeed(dateStr: string, game: string): number {
   return h;
 }
 
+/** Seeded pick from an array — deterministic, no side-effects. */
+function seedPick<T>(arr: T[], s: number, shift = 0): T {
+  return arr[((s >>> shift) + shift * 7) % arr.length];
+}
+
 /** Today UTC as YYYY-MM-DD. */
 function todayUTC(): string {
   const d = new Date();
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
 }
+
+// ── Label templates ────────────────────────────────────────────────────────────
+// Each array entry is a function(target, extra?) → string.
+// The label template is also chosen deterministically via the seed so the
+// same game produces different wording on different days.
+
+const LABELS_SCORE = [
+  (t: number) => `Score ${t}+ pts today!`,
+  (t: number) => `Hit ${t}+ points!`,
+  (t: number) => `${t}+ in a single run!`,
+  (t: number) => `Beat ${t} pts!`,
+  (t: number) => `Reach ${t} — can you do it?`,
+  (t: number) => `Score at least ${t} today!`,
+  (t: number) => `Post ${t}+ on the board!`,
+];
+const LABELS_SCORE_HARD = [
+  (t: number) => `Hard mode: ${t}+ pts!`,
+  (t: number) => `Elite target: ${t}+!`,
+  (t: number) => `Top 30% challenge: ${t}+!`,
+  (t: number) => `Push for ${t}+ today!`,
+  (t: number) => `Can you hit ${t}? Hard!`,
+];
+const LABELS_ASC = [
+  (t: number) => `Finish in ${t}s or less!`,
+  (t: number) => `Complete in under ${t}s!`,
+  (t: number) => `Beat ${t} seconds!`,
+  (t: number) => `Solve in max ${t}s!`,
+  (t: number) => `Speed run: ≤${t}s!`,
+  (t: number) => `${t}s or bust!`,
+];
+const LABELS_ASC_HARD = [
+  (t: number) => `Elite: finish in ${t}s!`,
+  (t: number) => `Hard: beat ${t}s!`,
+  (t: number) => `Crack it in ${t}s — tough!`,
+  (t: number) => `Sub-${t}s challenge!`,
+];
+const LABELS_PCT = [
+  (pct: number, t: number) => `Beat ${pct}% of players (${t}+)!`,
+  (pct: number, t: number) => `Break into the top ${100-pct}% — ${t}+!`,
+  (pct: number, t: number) => `Outrank ${pct}% of players (${t}+)!`,
+  (pct: number, t: number) => `Top ${100-pct}% today: ${t}+!`,
+  (pct: number, t: number) => `Beat ${pct}% — target: ${t}!`,
+];
+const LABELS_PCT_ASC = [
+  (pct: number, t: number) => `Faster than ${pct}%! (${t}s)`,
+  (pct: number, t: number) => `Top ${100-pct}% speedrun — ${t}s!`,
+  (pct: number, t: number) => `Beat ${pct}% of times: ≤${t}s!`,
+  (pct: number, t: number) => `Sub-${t}s: top ${100-pct}%!`,
+];
+const LABELS_ROUNDS_1 = [
+  () => `Play at least once today!`,
+  () => `One game today — just do it!`,
+  () => `Jump in today, any score counts!`,
+  () => `Log one game today!`,
+  () => `Show up today!`,
+];
+const LABELS_ROUNDS_2 = [
+  () => `Play twice today!`,
+  () => `Two runs today!`,
+  () => `Come back for a second go!`,
+  () => `2 games today — double dip!`,
+  () => `Play it twice today!`,
+];
+const LABELS_ROUNDS_3 = [
+  () => `Three runs today — can you?`,
+  () => `Play 3 times today!`,
+  () => `Triple session today!`,
+  () => `3 games today — grinder!`,
+  () => `Log 3 games today!`,
+];
 
 /**
  * GET /daily?game=X[&user=Y]
- * Returns today's challenge for a game. Cached at CDN level for 1 hour.
+ * Returns today's challenge. Four rotating archetypes:
+ *   0 → "score"    (normal difficulty ~p50)
+ *   1 → "hard"     (hard difficulty ~p30)
+ *   2 → "top_pct"  (beat X% of all players)
+ *   3 → "rounds"   (play N times today)
+ * Cached at CDN for 1 hour — same challenge for all players same day.
  */
 async function handleGetDaily(url: URL, env: Env): Promise<Response> {
   const gameRaw = (url.searchParams.get("game") ?? "").trim();
@@ -1560,44 +1637,86 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
   if (!gameRaw) return err("missing: game");
   const game = sanitizeGame(gameRaw);
   if (!game)   return err("invalid game name");
-  const user = userRaw ? sanitizeUser(userRaw) : null;
-  const date = todayUTC();
-  const seed = dailySeed(date, game);
-  const isAsc = ASC_GAMES_SET.has(game);
+  const user   = userRaw ? sanitizeUser(userRaw) : null;
+  const date   = todayUTC();
+  const seed   = dailySeed(date, game);
+  const isAsc  = ASC_GAMES_SET.has(game);
 
-  // How many real-player scores exist for this game?
+  // Archetype rotates across the 4 types via seed bits 0-1.
+  // But fall back to "rounds" when there's not enough data.
   const countRow = await env.DB
     .prepare("SELECT COUNT(*) AS n FROM scores WHERE game=? AND is_bot=0")
     .bind(game).first<{ n: number }>();
   const total = countRow?.n ?? 0;
 
-  let type = "rounds";
-  let target = 1 + (seed % 2); // 1 or 2 rounds
-  let label  = target === 1 ? "Play once today!" : `Play ${target} times today!`;
-  let asc    = false;
+  let type: string;
+  let target: number;
+  let label: string;
+  let asc = false;
+  let archetypePct = 0; // for "top_pct" archetype — stored in response as hint
 
-  if (total >= 8) {
-    // Use the score at the ~50th percentile (adjusted ±15% by the daily seed).
-    const pctFactor = 0.85 + (seed % 30) / 100; // 0.85 → 1.15
-    const offset    = Math.floor(total * 0.5);
+  if (total < 8) {
+    // Not enough history → always "rounds" (promote early plays)
+    const n = 1 + (seed % 2);
+    type   = "rounds";
+    target = n;
+    label  = seedPick(n === 1 ? LABELS_ROUNDS_1 : n === 2 ? LABELS_ROUNDS_2 : LABELS_ROUNDS_3, seed)();
+  } else {
+    const archetype = seed % 4; // 0=score, 1=hard, 2=top_pct, 3=rounds
 
-    const order    = isAsc ? "ASC" : "DESC";
-    const row = await env.DB
-      .prepare(
-        `SELECT score FROM scores WHERE game=? AND is_bot=0 ORDER BY score ${order} LIMIT 1 OFFSET ?`
-      )
-      .bind(game, offset)
-      .first<{ score: number }>();
+    if (archetype === 3) {
+      // Rounds — 2 or 3 games
+      const n = 2 + (seed % 2); // 2 or 3
+      type   = "rounds";
+      target = n;
+      label  = seedPick(n === 2 ? LABELS_ROUNDS_2 : LABELS_ROUNDS_3, seed, 4)();
 
-    if (row && row.score > 0) {
-      const rawTarget = Math.round(row.score * pctFactor);
+    } else {
+      // Score-based archetype (0=normal, 1=hard, 2=top_pct)
+      const order  = isAsc ? "ASC" : "DESC";
+      asc = isAsc;
+
+      // Percentile offset per archetype
+      // archetype 0 → p50 ±10%   (approachable)
+      // archetype 1 → p30 ±8%    (hard)
+      // archetype 2 → p25–p40    (beat X% of players)
+      let baseOffset: number;
+      if (archetype === 0) {
+        // Normal: p45–p55
+        baseOffset = Math.floor(total * (0.45 + (seed % 10) / 100));
+      } else if (archetype === 1) {
+        // Hard: p25–p35
+        baseOffset = Math.floor(total * (0.25 + (seed % 10) / 100));
+      } else {
+        // top_pct: beat 50–75% of players → need to be in top 25–50% = offset 25–50%
+        archetypePct = [50, 60, 65, 70, 75][(seed >> 4) % 5];
+        baseOffset   = Math.floor(total * (1 - archetypePct / 100));
+      }
+      if (baseOffset >= total) baseOffset = total - 1;
+      if (baseOffset < 0)     baseOffset = 0;
+
+      const row = await env.DB
+        .prepare(`SELECT score FROM scores WHERE game=? AND is_bot=0 ORDER BY score ${order} LIMIT 1 OFFSET ?`)
+        .bind(game, baseOffset)
+        .first<{ score: number }>();
+
+      const rawTarget = row?.score ?? 0;
       target = rawTarget > 0 ? rawTarget : 1;
       type   = "score";
-      asc    = isAsc;
-      if (isAsc) {
-        label = `Finish in ${target}s or less!`;
+
+      if (archetype === 0) {
+        label = isAsc
+          ? seedPick(LABELS_ASC,      seed, 8)(target)
+          : seedPick(LABELS_SCORE,    seed, 8)(target);
+      } else if (archetype === 1) {
+        label = isAsc
+          ? seedPick(LABELS_ASC_HARD, seed, 12)(target)
+          : seedPick(LABELS_SCORE_HARD, seed, 12)(target);
       } else {
-        label = `Score ${target}+!`;
+        // top_pct
+        label = isAsc
+          ? seedPick(LABELS_PCT_ASC, seed, 16)(archetypePct, target)
+          : seedPick(LABELS_PCT,     seed, 16)(archetypePct, target);
       }
     }
   }
@@ -1619,7 +1738,7 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
   const completions = compRow?.n ?? 0;
 
   return json(
-    { date, game, type, target, label, asc, completed, completions },
+    { date, game, type, target, label, asc, pct: archetypePct || null, completed, completions },
     200,
     // Cache at CDN for 1h — the same challenge is served to all players for a
     // given game on a given day, so caching is safe and cheap on the DB.
