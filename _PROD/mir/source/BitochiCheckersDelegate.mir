@@ -2,654 +2,1218 @@
 using Toybox.WatchUi;
 [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [System,2,13,19]; ]
 using Toybox.System;
-[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 20; @symbol_classdef = [BitochiCheckersDelegate,20,6,29]; @symbol_extends<0> = [WatchUi,20,38,45]; @symbol_extends<1> = [BehaviorDelegate,20,46,62]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 25; @symbol_classdef = [BitochiCheckersDelegate,25,6,29]; @symbol_extends<0> = [WatchUi,25,38,45]; @symbol_extends<1> = [BehaviorDelegate,25,46,62]; ]
 class BitochiCheckersDelegate extends WatchUi.BehaviorDelegate {
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 20; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 25; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 20; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 25; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 21; @position = 15; @symbol_vardef = [_view,21,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 26; @position = 15; @symbol_vardef = [_view,26,15,20]; ]
     protected
     var _view;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 23; @position = 15; @symbol_vardef = [_dragging,23,15,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 28; @position = 15; @symbol_vardef = [_dragging,28,15,24]; ]
     protected
     var _dragging;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 24; @position = 15; @symbol_vardef = [_lastTapMs,24,15,25]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 29; @position = 15; @symbol_vardef = [_downX,29,15,21]; ]
+    protected
+    var _downX;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 29; @position = 34; @symbol_vardef = [_downY,29,34,40]; ]
+    protected
+    var _downY;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 30; @position = 15; @symbol_vardef = [_actedOnStart,30,15,28]; ]
+    protected
+    var _actedOnStart;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 31; @position = 15; @symbol_vardef = [_committed,31,15,25]; ]
+    protected
+    var _committed;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 32; @position = 15; @symbol_vardef = [_lastTapMs,32,15,25]; ]
     protected
     var _lastTapMs;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 27; @position = 17; @symbol_constdef = [_TAP_DEDUPE_MS,27,17,31]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 33; @position = 15; @symbol_vardef = [_swipeGuardMs,33,15,28]; ]
+    protected
+    var _swipeGuardMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 36; @position = 17; @symbol_constdef = [_TAP_DEDUPE_MS,36,17,31]; ]
     protected
     const _TAP_DEDUPE_MS = 180;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 32; @position = 15; @symbol_vardef = [_lastGestureMs,32,15,29]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 38; @position = 17; @symbol_constdef = [_SWIPE_GUARD_MS,38,17,32]; ]
+    protected
+    const _SWIPE_GUARD_MS = 320;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 40; @position = 17; @symbol_constdef = [_SWIPE_MIN_FALLBACK,40,17,36]; ]
+    protected
+    const _SWIPE_MIN_FALLBACK = 16;
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 45; @position = 15; @symbol_vardef = [_lastGestureMs,45,15,29]; ]
     protected
     var _lastGestureMs;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 33; @position = 17; @symbol_constdef = [_PHANTOM_BACK_MS,33,17,33]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 46; @position = 17; @symbol_constdef = [_PHANTOM_BACK_MS,46,17,33]; ]
     protected
     const _PHANTOM_BACK_MS = 500;
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 35; @symbol_functiondef = [initialize,35,13,23]; @symbol_param<0> = [view,35,24,28]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 48; @symbol_functiondef = [initialize,48,13,23]; @symbol_param<0> = [view,48,24,28]; ]
     function initialize(view) as Void {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_35_30_41_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 36 8 ]
-        symbol [ BehaviorDelegate %tmp.2 36 8 24 ];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_48_30_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 49 8 ]
+        symbol [ BehaviorDelegate %tmp.2 49 8 24 ];
         %tmp.2 = getv ? :BehaviorDelegate;
-        symbol [ initialize %tmp.3 36 25 35 ];
+        symbol [ initialize %tmp.3 49 25 35 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 37 8 ]
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 50 8 ]
         %tmp.4 = lgetv %view;
-        symbol [ view %tmp.4 37 25 29 ];
-        symbol [ _view ? 37 8 13 ];
+        symbol [ view %tmp.4 50 25 29 ];
+        symbol [ _view ? 50 8 13 ];
         putv self :_view %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 38 8 ]
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 51 8 ]
         %tmp.5 = false;
-        symbol [ _dragging ? 38 8 17 ];
+        symbol [ _dragging ? 51 8 17 ];
         putv self :_dragging %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 39 8 ]
-        %tmp.6 = 0;
-        symbol [ _lastTapMs ? 39 8 18 ];
-        putv self :_lastTapMs %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 40 8 ]
-        %tmp.7 = 0;
-        symbol [ _lastGestureMs ? 40 8 22 ];
-        putv self :_lastGestureMs %tmp.7;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_35_30_41_4_stop:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 52 8 ]
+        %tmp.6 = -1;
+        symbol [ _downX ? 52 8 14 ];
+        putv self :_downX %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 53 8 ]
+        %tmp.7 = -1;
+        symbol [ _downY ? 53 8 14 ];
+        putv self :_downY %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 54 8 ]
+        %tmp.8 = false;
+        symbol [ _actedOnStart ? 54 8 21 ];
+        putv self :_actedOnStart %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 55 8 ]
+        %tmp.9 = false;
+        symbol [ _committed ? 55 8 18 ];
+        putv self :_committed %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 56 8 ]
+        %tmp.10 = 0;
+        symbol [ _lastTapMs ? 56 8 18 ];
+        putv self :_lastTapMs %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 57 8 ]
+        %tmp.11 = 0;
+        symbol [ _swipeGuardMs ? 57 8 21 ];
+        putv self :_swipeGuardMs %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 58 8 ]
+        %tmp.12 = 0;
+        symbol [ _lastGestureMs ? 58 8 22 ];
+        putv self :_lastGestureMs %tmp.12;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_48_30_59_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 43; @symbol_functiondef = [_markGesture,43,20,32]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 61; @symbol_functiondef = [_markGesture,61,20,32]; ]
     protected
     function _markGesture() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_43_35_43_73_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 43 37 ]
-        symbol [ System %tmp.1 43 54 60 ];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_61_35_61_73_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 61 37 ]
+        symbol [ System %tmp.1 61 54 60 ];
         %tmp.1 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.2 43 61 69 ];
+        symbol [ getTimer %tmp.2 61 61 69 ];
         %tmp.2 = getv function %tmp.1 :getTimer;
         %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ _lastGestureMs ? 43 37 51 ];
+        symbol [ _lastGestureMs ? 61 37 51 ];
         putv self :_lastGestureMs %tmp.3;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_43_35_43_73_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_61_35_61_73_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 44; @symbol_functiondef = [_isPhantomBack,44,20,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 62; @symbol_functiondef = [_isPhantomBack,62,20,34]; ]
     protected
     function _isPhantomBack() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_44_37_48_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 45 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_8_45_49_if_stmt:
-        symbol [ _lastGestureMs %tmp.2 45 12 26 ];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_62_37_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 63 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_8_63_49_if_stmt:
+        symbol [ _lastGestureMs %tmp.2 63 12 26 ];
         %tmp.2 = getv ? :_lastGestureMs;
         %tmp.3 = 0;
         %tmp.4 = eq %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_8_45_49_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_8_45_49_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_33_45_49_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 45 35 ]
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_8_63_49_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_8_63_49_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_33_63_49_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 63 35 ]
         %tmp.5 = false;
         ret %tmp.5;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_33_45_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_8_45_49_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_45_8_45_49_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 46 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_44_37_48_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_44_37_48_4_stop" ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_33_63_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_8_63_49_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_63_8_63_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 64 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_62_37_66_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_62_37_66_4_stop" ]
         %dt.1 = local;
-        symbol [ dt %dt.1 46 12 14 ];
-        symbol [ System %tmp.6 46 17 23 ];
+        symbol [ dt %dt.1 64 12 14 ];
+        symbol [ System %tmp.6 64 17 23 ];
         %tmp.6 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.7 46 24 32 ];
+        symbol [ getTimer %tmp.7 64 24 32 ];
         %tmp.7 = getv function %tmp.6 :getTimer;
         %tmp.8 = invoke %tmp.6 %tmp.7();
-        symbol [ _lastGestureMs %tmp.10 46 37 51 ];
+        symbol [ _lastGestureMs %tmp.10 64 37 51 ];
         %tmp.10 = getv ? :_lastGestureMs;
         %tmp.11 = sub %tmp.8 %tmp.10;
         lputv %dt.1 %tmp.11;
-        symbol [ dt %dt.1 46 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 47 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_16_47_32_begin:
+        symbol [ dt %dt.1 64 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 65 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_16_65_32_begin:
         %tmp.12 = lgetv %dt.1;
-        symbol [ dt %tmp.12 47 16 18 ];
+        symbol [ dt %tmp.12 65 16 18 ];
         %tmp.13 = 0;
         %tmp.14 = gte %tmp.12 %tmp.13;
         %tmp.15 = dup %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_27_47_32_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_27_47_32_true:
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_27_65_32_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_27_65_32_true:
         %tmp.16 = lgetv %dt.1;
-        symbol [ dt %tmp.16 47 27 29 ];
-        symbol [ _PHANTOM_BACK_MS %tmp.18 47 32 48 ];
+        symbol [ dt %tmp.16 65 27 29 ];
+        symbol [ _PHANTOM_BACK_MS %tmp.18 65 32 48 ];
         %tmp.18 = getv ? :_PHANTOM_BACK_MS;
         %tmp.19 = lt %tmp.16 %tmp.18;
         %tmp.20 = and %tmp.14 %tmp.19;
         push %tmp.20;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_27_47_32_end:
-        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_16_47_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_27_47_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_47_27_47_32_end];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_27_65_32_end:
+        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_16_65_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_27_65_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_27_65_32_end];
         ret %tmp.21;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_44_37_48_4_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_62_37_66_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 50; @symbol_functiondef = [onSelect,50,13,21]; ]
-    function onSelect() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_50_24_54_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 51 8 ]
-        symbol [ _view %tmp.2 51 8 13 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 70; @symbol_functiondef = [_swipeMin,70,20,29]; ]
+    protected
+    function _swipeMin() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 71 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 71 12 13 ];
+        symbol [ _view %tmp.2 71 16 21 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doSelect %tmp.3 51 14 22 ];
-        %tmp.3 = getv function %tmp.2 :doSelect;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 52 8 ]
-        symbol [ WatchUi %tmp.4 52 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 52 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 53 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_50_24_54_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 56; @symbol_functiondef = [onBack,56,13,19]; ]
-    function onBack() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_56_22_63_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 59 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_8_59_65_if_stmt:
-        %tmp.1 = self;
-        symbol [ _isPhantomBack %tmp.2 59 12 26 ];
-        %tmp.2 = getv function %tmp.1 :_isPhantomBack;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_8_59_65_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_8_59_65_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_30_59_65_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 59 32 ]
-        %tmp.4 = 0;
-        symbol [ _lastGestureMs ? 59 32 46 ];
-        putv self :_lastGestureMs %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 59 52 ]
-        %tmp.5 = true;
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_30_59_65_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_8_59_65_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_59_8_59_65_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 60 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_56_22_63_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_56_22_63_4_stop" ]
-        %h.1 = local;
-        symbol [ h %h.1 60 12 13 ];
-        symbol [ _view %tmp.7 60 16 21 ];
-        %tmp.7 = getv ? :_view;
-        symbol [ doBack %tmp.8 60 22 28 ];
-        %tmp.8 = getv function %tmp.7 :doBack;
-        %tmp.9 = invoke %tmp.7 %tmp.8();
-        lputv %h.1 %tmp.9;
-        symbol [ h %h.1 60 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 61 8 ]
-        symbol [ WatchUi %tmp.10 61 8 15 ];
-        %tmp.10 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.11 61 16 29 ];
-        %tmp.11 = getv function %tmp.10 :requestUpdate;
-        invoke %tmp.10 %tmp.11();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 62 8 ]
-        %tmp.12 = lgetv %h.1;
-        symbol [ h %tmp.12 62 15 16 ];
-        ret %tmp.12;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_56_22_63_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 65; @symbol_functiondef = [onMenu,65,13,19]; ]
-    function onMenu() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_22_69_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 66 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_22_69_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_22_69_4_stop" ]
-        %h.1 = local;
-        symbol [ h %h.1 66 12 13 ];
-        symbol [ _view %tmp.2 66 16 21 ];
-        %tmp.2 = getv ? :_view;
-        symbol [ doBack %tmp.3 66 22 28 ];
-        %tmp.3 = getv function %tmp.2 :doBack;
+        symbol [ cellSize %tmp.3 71 22 30 ];
+        %tmp.3 = getv function %tmp.2 :cellSize;
         %tmp.4 = invoke %tmp.2 %tmp.3();
-        lputv %h.1 %tmp.4;
-        symbol [ h %h.1 66 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 67 8 ]
-        symbol [ WatchUi %tmp.5 67 8 15 ];
-        %tmp.5 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.6 67 16 29 ];
-        %tmp.6 = getv function %tmp.5 :requestUpdate;
-        invoke %tmp.5 %tmp.6();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 68 8 ]
-        %tmp.7 = lgetv %h.1;
-        symbol [ h %tmp.7 68 15 16 ];
-        ret %tmp.7;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_65_22_69_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 71; @symbol_functiondef = [onPreviousPage,71,13,27]; ]
-    function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_71_30_75_4_start:
+        lputv %c.1 %tmp.4;
+        symbol [ c %c.1 71 12 13 ];
 [ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 72 8 ]
-        symbol [ _view %tmp.2 72 8 13 ];
-        %tmp.2 = getv ? :_view;
-        symbol [ doPrev %tmp.3 72 14 20 ];
-        %tmp.3 = getv function %tmp.2 :doPrev;
-        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_12_72_30_begin:
+        %tmp.5 = lgetv %c.1;
+        symbol [ c %tmp.5 72 12 13 ];
+        %tmp.6 = null;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bt %tmp.7 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_true;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_25_72_30_false:
+        %tmp.8 = lgetv %c.1;
+        symbol [ c %tmp.8 72 25 26 ];
+        %tmp.9 = as %tmp.8 { (!Null) };
+        %tmp.10 = 0;
+        %tmp.11 = lte %tmp.9 %tmp.10;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_25_72_30_end:
+        %tmp.12 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_12_72_30_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_25_72_30_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_25_72_30_end];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_33_72_63_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 72 35 ]
+        symbol [ _SWIPE_MIN_FALLBACK %tmp.14 72 42 61 ];
+        %tmp.14 = getv ? :_SWIPE_MIN_FALLBACK;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_33_72_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_72_8_72_63_if_end:
 [ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 73 8 ]
-        symbol [ WatchUi %tmp.4 73 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 73 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 73 12 13 ];
+        %tmp.15 = lgetv %c.1;
+        symbol [ c %tmp.15 73 16 17 ];
+        %tmp.16 = 55;
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = 100;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        lputv %t.2 %tmp.19;
+        symbol [ t %t.2 73 12 13 ];
 [ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 74 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_71_30_75_4_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_begin:
+        %tmp.20 = lgetv %t.2;
+        symbol [ t %tmp.20 74 16 17 ];
+        symbol [ _SWIPE_MIN_FALLBACK %tmp.22 74 20 39 ];
+        %tmp.22 = getv ? :_SWIPE_MIN_FALLBACK;
+        %tmp.23 = lt %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_else_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_true:
+        symbol [ _SWIPE_MIN_FALLBACK %tmp.25 74 43 62 ];
+        %tmp.25 = getv ? :_SWIPE_MIN_FALLBACK;
+        push %tmp.25;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_else_false:
+        %tmp.26 = lgetv %t.2;
+        symbol [ t %tmp.26 74 65 66 ];
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_end:
+        %tmp.27 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_74_15_74_65_end];
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_70_32_75_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 77; @symbol_functiondef = [onNextPage,77,13,23]; ]
-    function onNextPage() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_26_81_4_start:
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 77; @symbol_functiondef = [_inSwipeGuard,77,20,33]; ]
+    protected
+    function _inSwipeGuard() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_36_81_4_start:
 [ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 78 8 ]
-        symbol [ _view %tmp.2 78 8 13 ];
-        %tmp.2 = getv ? :_view;
-        symbol [ doNext %tmp.3 78 14 20 ];
-        %tmp.3 = getv function %tmp.2 :doNext;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 79 8 ]
-        symbol [ WatchUi %tmp.4 79 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 79 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 80 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_26_81_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 84; @symbol_functiondef = [_commit,84,20,27]; @symbol_param<0> = [px,84,28,30]; @symbol_param<1> = [py,84,32,34]; ]
-    protected
-    function _commit(px, py) {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_84_36_88_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 85 8 ]
-        symbol [ System %tmp.1 85 21 27 ];
-        %tmp.1 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.2 85 28 36 ];
-        %tmp.2 = getv function %tmp.1 :getTimer;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ _lastTapMs ? 85 8 18 ];
-        putv self :_lastTapMs %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 86 8 ]
-        symbol [ _view %tmp.5 86 8 13 ];
-        %tmp.5 = getv ? :_view;
-        symbol [ doTap %tmp.6 86 14 19 ];
-        %tmp.6 = getv function %tmp.5 :doTap;
-        %tmp.7 = lgetv %px;
-        symbol [ px %tmp.7 86 20 22 ];
-        %tmp.8 = lgetv %py;
-        symbol [ py %tmp.8 86 24 26 ];
-        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8);
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 87 8 ]
-        symbol [ WatchUi %tmp.9 87 8 15 ];
-        %tmp.9 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.10 87 16 29 ];
-        %tmp.10 = getv function %tmp.9 :requestUpdate;
-        invoke %tmp.9 %tmp.10();
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_84_36_88_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 90; @symbol_functiondef = [_recentlyTapped,90,20,35]; ]
-    protected
-    function _recentlyTapped() {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_90_38_94_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 91 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_8_91_45_if_stmt:
-        symbol [ _lastTapMs %tmp.2 91 12 22 ];
-        %tmp.2 = getv ? :_lastTapMs;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_8_78_48_if_stmt:
+        symbol [ _swipeGuardMs %tmp.2 78 12 25 ];
+        %tmp.2 = getv ? :_swipeGuardMs;
         %tmp.3 = 0;
         %tmp.4 = eq %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_8_91_45_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_8_91_45_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_29_91_45_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 91 31 ]
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_8_78_48_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_8_78_48_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_32_78_48_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 78 34 ]
         %tmp.5 = false;
         ret %tmp.5;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_29_91_45_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_8_91_45_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_91_8_91_45_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 92 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_90_38_94_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_90_38_94_4_stop" ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_32_78_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_8_78_48_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_78_8_78_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_36_81_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_36_81_4_stop" ]
         %dt.1 = local;
-        symbol [ dt %dt.1 92 12 14 ];
-        symbol [ System %tmp.6 92 17 23 ];
+        symbol [ dt %dt.1 79 12 14 ];
+        symbol [ System %tmp.6 79 17 23 ];
         %tmp.6 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.7 92 24 32 ];
+        symbol [ getTimer %tmp.7 79 24 32 ];
         %tmp.7 = getv function %tmp.6 :getTimer;
         %tmp.8 = invoke %tmp.6 %tmp.7();
-        symbol [ _lastTapMs %tmp.10 92 37 47 ];
-        %tmp.10 = getv ? :_lastTapMs;
+        symbol [ _swipeGuardMs %tmp.10 79 37 50 ];
+        %tmp.10 = getv ? :_swipeGuardMs;
         %tmp.11 = sub %tmp.8 %tmp.10;
         lputv %dt.1 %tmp.11;
-        symbol [ dt %dt.1 92 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 93 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_16_93_32_begin:
+        symbol [ dt %dt.1 79 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_16_80_32_begin:
         %tmp.12 = lgetv %dt.1;
-        symbol [ dt %tmp.12 93 16 18 ];
+        symbol [ dt %tmp.12 80 16 18 ];
         %tmp.13 = 0;
         %tmp.14 = gte %tmp.12 %tmp.13;
         %tmp.15 = dup %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_27_93_32_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_27_93_32_true:
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_27_80_32_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_27_80_32_true:
         %tmp.16 = lgetv %dt.1;
-        symbol [ dt %tmp.16 93 27 29 ];
-        symbol [ _TAP_DEDUPE_MS %tmp.18 93 32 46 ];
+        symbol [ dt %tmp.16 80 27 29 ];
+        symbol [ _SWIPE_GUARD_MS %tmp.18 80 32 47 ];
+        %tmp.18 = getv ? :_SWIPE_GUARD_MS;
+        %tmp.19 = lt %tmp.16 %tmp.18;
+        %tmp.20 = and %tmp.14 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_27_80_32_end:
+        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_16_80_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_27_80_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_80_27_80_32_end];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_77_36_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 83; @symbol_functiondef = [onSelect,83,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_83_24_87_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 84 8 ]
+        symbol [ _view %tmp.2 84 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doSelect %tmp.3 84 14 22 ];
+        %tmp.3 = getv function %tmp.2 :doSelect;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 85 8 ]
+        symbol [ WatchUi %tmp.4 85 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 85 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 86 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_83_24_87_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 89; @symbol_functiondef = [onBack,89,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_89_22_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 92 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_8_92_65_if_stmt:
+        %tmp.1 = self;
+        symbol [ _isPhantomBack %tmp.2 92 12 26 ];
+        %tmp.2 = getv function %tmp.1 :_isPhantomBack;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_8_92_65_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_8_92_65_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_30_92_65_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 92 32 ]
+        %tmp.4 = 0;
+        symbol [ _lastGestureMs ? 92 32 46 ];
+        putv self :_lastGestureMs %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 92 52 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_30_92_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_8_92_65_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_92_8_92_65_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_89_22_96_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_89_22_96_4_stop" ]
+        %h.1 = local;
+        symbol [ h %h.1 93 12 13 ];
+        symbol [ _view %tmp.7 93 16 21 ];
+        %tmp.7 = getv ? :_view;
+        symbol [ doBack %tmp.8 93 22 28 ];
+        %tmp.8 = getv function %tmp.7 :doBack;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        lputv %h.1 %tmp.9;
+        symbol [ h %h.1 93 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 94 8 ]
+        symbol [ WatchUi %tmp.10 94 8 15 ];
+        %tmp.10 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.11 94 16 29 ];
+        %tmp.11 = getv function %tmp.10 :requestUpdate;
+        invoke %tmp.10 %tmp.11();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 95 8 ]
+        %tmp.12 = lgetv %h.1;
+        symbol [ h %tmp.12 95 15 16 ];
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_89_22_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 98; @symbol_functiondef = [onMenu,98,13,19]; ]
+    function onMenu() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_22_102_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_22_102_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_22_102_4_stop" ]
+        %h.1 = local;
+        symbol [ h %h.1 99 12 13 ];
+        symbol [ _view %tmp.2 99 16 21 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doBack %tmp.3 99 22 28 ];
+        %tmp.3 = getv function %tmp.2 :doBack;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        lputv %h.1 %tmp.4;
+        symbol [ h %h.1 99 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 100 8 ]
+        symbol [ WatchUi %tmp.5 100 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 100 16 29 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 101 8 ]
+        %tmp.7 = lgetv %h.1;
+        symbol [ h %tmp.7 101 15 16 ];
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_22_102_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 104; @symbol_functiondef = [onPreviousPage,104,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_104_30_108_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 105 8 ]
+        symbol [ _view %tmp.2 105 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doPrev %tmp.3 105 14 20 ];
+        %tmp.3 = getv function %tmp.2 :doPrev;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 106 8 ]
+        symbol [ WatchUi %tmp.4 106 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 106 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 107 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_104_30_108_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 110; @symbol_functiondef = [onNextPage,110,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_26_114_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 111 8 ]
+        symbol [ _view %tmp.2 111 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doNext %tmp.3 111 14 20 ];
+        %tmp.3 = getv function %tmp.2 :doNext;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 112 8 ]
+        symbol [ WatchUi %tmp.4 112 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 112 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 113 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_26_114_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 117; @symbol_functiondef = [_commit,117,20,27]; @symbol_param<0> = [px,117,28,30]; @symbol_param<1> = [py,117,32,34]; ]
+    protected
+    function _commit(px, py) {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_36_121_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 118 8 ]
+        symbol [ System %tmp.1 118 21 27 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.2 118 28 36 ];
+        %tmp.2 = getv function %tmp.1 :getTimer;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _lastTapMs ? 118 8 18 ];
+        putv self :_lastTapMs %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 119 8 ]
+        symbol [ _view %tmp.5 119 8 13 ];
+        %tmp.5 = getv ? :_view;
+        symbol [ doTap %tmp.6 119 14 19 ];
+        %tmp.6 = getv function %tmp.5 :doTap;
+        %tmp.7 = lgetv %px;
+        symbol [ px %tmp.7 119 20 22 ];
+        %tmp.8 = lgetv %py;
+        symbol [ py %tmp.8 119 24 26 ];
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 120 8 ]
+        symbol [ WatchUi %tmp.9 120 8 15 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.10 120 16 29 ];
+        %tmp.10 = getv function %tmp.9 :requestUpdate;
+        invoke %tmp.9 %tmp.10();
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_36_121_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 123; @symbol_functiondef = [_recentlyTapped,123,20,35]; ]
+    protected
+    function _recentlyTapped() {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_123_38_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_8_124_45_if_stmt:
+        symbol [ _lastTapMs %tmp.2 124 12 22 ];
+        %tmp.2 = getv ? :_lastTapMs;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_8_124_45_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_8_124_45_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_29_124_45_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 124 31 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_29_124_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_8_124_45_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_124_8_124_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_123_38_127_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_123_38_127_4_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 125 12 14 ];
+        symbol [ System %tmp.6 125 17 23 ];
+        %tmp.6 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.7 125 24 32 ];
+        %tmp.7 = getv function %tmp.6 :getTimer;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        symbol [ _lastTapMs %tmp.10 125 37 47 ];
+        %tmp.10 = getv ? :_lastTapMs;
+        %tmp.11 = sub %tmp.8 %tmp.10;
+        lputv %dt.1 %tmp.11;
+        symbol [ dt %dt.1 125 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 126 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_16_126_32_begin:
+        %tmp.12 = lgetv %dt.1;
+        symbol [ dt %tmp.12 126 16 18 ];
+        %tmp.13 = 0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        %tmp.15 = dup %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_27_126_32_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_27_126_32_true:
+        %tmp.16 = lgetv %dt.1;
+        symbol [ dt %tmp.16 126 27 29 ];
+        symbol [ _TAP_DEDUPE_MS %tmp.18 126 32 46 ];
         %tmp.18 = getv ? :_TAP_DEDUPE_MS;
         %tmp.19 = lt %tmp.16 %tmp.18;
         %tmp.20 = and %tmp.14 %tmp.19;
         push %tmp.20;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_27_93_32_end:
-        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_16_93_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_27_93_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_93_27_93_32_end];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_27_126_32_end:
+        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_16_126_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_27_126_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_126_27_126_32_end];
         ret %tmp.21;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_90_38_94_4_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_123_38_127_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 96; @symbol_functiondef = [onTap,96,13,18]; @symbol_param<0> = [evt,96,19,22]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 130; @symbol_functiondef = [_swipeVec,130,20,29]; @symbol_param<0> = [d,130,30,31]; ]
+    protected
+    function _swipeVec(d) {
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_33_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 131 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_stmt:
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 131 17 18 ];
+        symbol [ WatchUi %tmp.2 131 22 29 ];
+        %tmp.2 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_UP %tmp.3 131 30 38 ];
+        %tmp.3 = getv %tmp.2 :SWIPE_UP;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_43_131_61_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 131 45 ]
+        %tmp.5 = newa 2;
+        %tmp.6 = 0;
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 0 %tmp.6;
+        %tmp.9 = -1;
+        %tmp.10 = dup %tmp.8;
+        %tmp.11 = aputv %tmp.10 1 %tmp.9;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_43_131_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_false:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 132 13 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_stmt:
+        %tmp.12 = lgetv %d;
+        symbol [ d %tmp.12 132 17 18 ];
+        symbol [ WatchUi %tmp.13 132 22 29 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.14 132 30 40 ];
+        %tmp.14 = getv %tmp.13 :SWIPE_DOWN;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_43_132_61_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 132 45 ]
+        %tmp.16 = newa 2;
+        %tmp.17 = 0;
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 0 %tmp.17;
+        %tmp.20 = 1;
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 1 %tmp.20;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_43_132_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_false:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 133 13 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_stmt:
+        %tmp.23 = lgetv %d;
+        symbol [ d %tmp.23 133 17 18 ];
+        symbol [ WatchUi %tmp.24 133 22 29 ];
+        %tmp.24 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_LEFT %tmp.25 133 30 40 ];
+        %tmp.25 = getv %tmp.24 :SWIPE_LEFT;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_43_133_61_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 133 45 ]
+        %tmp.27 = newa 2;
+        %tmp.28 = -1;
+        %tmp.29 = dup %tmp.27;
+        %tmp.30 = aputv %tmp.29 0 %tmp.28;
+        %tmp.31 = 0;
+        %tmp.32 = dup %tmp.30;
+        %tmp.33 = aputv %tmp.32 1 %tmp.31;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_43_133_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_false:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 134 13 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_13_134_61_if_stmt:
+        %tmp.34 = lgetv %d;
+        symbol [ d %tmp.34 134 17 18 ];
+        symbol [ WatchUi %tmp.35 134 22 29 ];
+        %tmp.35 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_RIGHT %tmp.36 134 30 41 ];
+        %tmp.36 = getv %tmp.35 :SWIPE_RIGHT;
+        %tmp.37 = eq %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_13_134_61_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_13_134_61_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_43_134_61_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 134 45 ]
+        %tmp.38 = newa 2;
+        %tmp.39 = 1;
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 0 %tmp.39;
+        %tmp.42 = 0;
+        %tmp.43 = dup %tmp.41;
+        %tmp.44 = aputv %tmp.43 1 %tmp.42;
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_43_134_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_13_134_61_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_134_13_134_61_if_end:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_133_13_134_61_if_end:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_132_13_134_61_if_end:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_8_134_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 135 8 ]
+        %tmp.45 = null;
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_33_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 138; @symbol_functiondef = [onTap,138,13,18]; @symbol_param<0> = [evt,138,19,22]; ]
     function onTap(evt) {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_96_24_102_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 97 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_96_24_102_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_96_24_102_4_stop" ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_24_145_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 139 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_24_145_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_24_145_4_stop" ]
         %xy.1 = local;
-        symbol [ xy %xy.1 97 12 14 ];
+        symbol [ xy %xy.1 139 12 14 ];
         %tmp.1 = lgetv %evt;
-        symbol [ evt %tmp.1 97 17 20 ];
-        symbol [ getCoordinates %tmp.2 97 21 35 ];
+        symbol [ evt %tmp.1 139 17 20 ];
+        symbol [ getCoordinates %tmp.2 139 21 35 ];
         %tmp.2 = getv function %tmp.1 :getCoordinates;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         lputv %xy.1 %tmp.3;
-        symbol [ xy %xy.1 97 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 98 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_8_98_39_if_stmt:
+        symbol [ xy %xy.1 139 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 140 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_8_140_39_if_stmt:
         %tmp.4 = lgetv %xy.1;
-        symbol [ xy %tmp.4 98 12 14 ];
+        symbol [ xy %tmp.4 140 12 14 ];
         %tmp.5 = null;
         %tmp.6 = eq %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_8_98_39_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_8_98_39_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_24_98_39_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 98 26 ]
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_8_140_39_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_8_140_39_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_24_140_39_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 140 26 ]
         %tmp.7 = true;
         ret %tmp.7;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_24_98_39_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_8_98_39_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_98_8_98_39_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 99 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_8_99_46_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_24_140_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_8_140_39_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_140_8_140_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 141 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_8_141_46_if_stmt:
         %tmp.8 = self;
-        symbol [ _recentlyTapped %tmp.9 99 12 27 ];
+        symbol [ _recentlyTapped %tmp.9 141 12 27 ];
         %tmp.9 = getv function %tmp.8 :_recentlyTapped;
         %tmp.10 = invoke %tmp.8 %tmp.9();
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_8_99_46_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_8_99_46_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_31_99_46_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 99 33 ]
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_8_141_46_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_8_141_46_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_31_141_46_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 141 33 ]
         %tmp.11 = true;
         ret %tmp.11;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_31_99_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_8_99_46_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_99_8_99_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_31_141_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_8_141_46_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_141_8_141_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 142 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_8_142_46_if_stmt:
         %tmp.12 = self;
-        symbol [ _commit %tmp.13 100 8 15 ];
-        %tmp.13 = getv function %tmp.12 :_commit;
-        %tmp.14 = lgetv %xy.1;
-        symbol [ xy %tmp.14 100 16 18 ];
-        %tmp.15 = 0;
-        %tmp.16 = agetv %tmp.14 %tmp.15;
-        %tmp.17 = lgetv %xy.1;
-        symbol [ xy %tmp.17 100 23 25 ];
-        %tmp.18 = 1;
-        %tmp.19 = agetv %tmp.17 %tmp.18;
-        invoke %tmp.12 %tmp.13(%tmp.16, %tmp.19);
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 101 8 ]
-        %tmp.20 = true;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_96_24_102_4_stop:
+        symbol [ _inSwipeGuard %tmp.13 142 12 25 ];
+        %tmp.13 = getv function %tmp.12 :_inSwipeGuard;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_8_142_46_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_8_142_46_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_31_142_46_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 142 33 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_31_142_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_8_142_46_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_142_8_142_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 143 8 ]
+        %tmp.16 = self;
+        symbol [ _commit %tmp.17 143 8 15 ];
+        %tmp.17 = getv function %tmp.16 :_commit;
+        %tmp.18 = lgetv %xy.1;
+        symbol [ xy %tmp.18 143 16 18 ];
+        %tmp.19 = 0;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %xy.1;
+        symbol [ xy %tmp.21 143 23 25 ];
+        %tmp.22 = 1;
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        invoke %tmp.16 %tmp.17(%tmp.20, %tmp.23);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 144 8 ]
+        %tmp.24 = true;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_24_145_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 108; @symbol_functiondef = [onSwipe,108,13,20]; @symbol_param<0> = [evt,108,21,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 149; @symbol_functiondef = [onSwipe,149,13,20]; @symbol_param<0> = [evt,149,21,24]; ]
     function onSwipe(evt) {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_108_26_112_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 109 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_149_26_156_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 150 8 ]
         %tmp.1 = self;
-        symbol [ _markGesture %tmp.2 109 8 20 ];
+        symbol [ _markGesture %tmp.2 150 8 20 ];
         %tmp.2 = getv function %tmp.1 :_markGesture;
         invoke %tmp.1 %tmp.2();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 110 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_8_110_43_if_stmt:
-        symbol [ _view %tmp.4 110 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 151 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_8_151_45_if_stmt:
+        symbol [ _view %tmp.4 151 13 18 ];
         %tmp.4 = getv ? :_view;
-        symbol [ inPlay %tmp.5 110 18 24 ];
+        symbol [ inPlay %tmp.5 151 19 25 ];
         %tmp.5 = getv function %tmp.4 :inPlay;
         %tmp.6 = invoke %tmp.4 %tmp.5();
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_8_110_43_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_8_110_43_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_28_110_43_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 110 30 ]
-        %tmp.7 = true;
-        ret %tmp.7;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_28_110_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_8_110_43_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_110_8_110_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 111 8 ]
+        %tmp.7 = not %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_8_151_45_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_8_151_45_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_29_151_45_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 151 31 ]
         %tmp.8 = false;
         ret %tmp.8;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_108_26_112_4_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_29_151_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_8_151_45_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_151_8_151_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 152 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_8_152_44_if_stmt:
+        %tmp.9 = self;
+        symbol [ _inSwipeGuard %tmp.10 152 12 25 ];
+        %tmp.10 = getv function %tmp.9 :_inSwipeGuard;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_8_152_44_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_8_152_44_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_29_152_44_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 152 31 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_29_152_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_8_152_44_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_152_8_152_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 153 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_149_26_156_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_149_26_156_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 153 12 13 ];
+        %tmp.13 = self;
+        symbol [ _swipeVec %tmp.14 153 16 25 ];
+        %tmp.14 = getv function %tmp.13 :_swipeVec;
+        %tmp.15 = lgetv %evt;
+        symbol [ evt %tmp.15 153 26 29 ];
+        symbol [ getDirection %tmp.16 153 30 42 ];
+        %tmp.16 = getv function %tmp.15 :getDirection;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = invoke %tmp.13 %tmp.14(%tmp.17);
+        lputv %v.1 %tmp.18;
+        symbol [ v %v.1 153 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_8_154_79_if_stmt:
+        %tmp.19 = lgetv %v.1;
+        symbol [ v %tmp.19 154 12 13 ];
+        %tmp.20 = null;
+        %tmp.21 = ne %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_8_154_79_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_8_154_79_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_23_154_79_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 154 25 ]
+        symbol [ _view %tmp.23 154 25 30 ];
+        %tmp.23 = getv ? :_view;
+        symbol [ flickMove %tmp.24 154 31 40 ];
+        %tmp.24 = getv function %tmp.23 :flickMove;
+        %tmp.25 = lgetv %v.1;
+        symbol [ v %tmp.25 154 41 42 ];
+        %tmp.26 = as %tmp.25 { (!Null) };
+        %tmp.27 = 0;
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %v.1;
+        symbol [ v %tmp.29 154 47 48 ];
+        %tmp.30 = as %tmp.29 { (!Null) };
+        %tmp.31 = 1;
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        invoke %tmp.23 %tmp.24(%tmp.28, %tmp.32);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 154 54 ]
+        symbol [ WatchUi %tmp.33 154 54 61 ];
+        %tmp.33 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.34 154 62 75 ];
+        %tmp.34 = getv function %tmp.33 :requestUpdate;
+        invoke %tmp.33 %tmp.34();
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_23_154_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_8_154_79_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_154_8_154_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 155 8 ]
+        %tmp.35 = true;
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_149_26_156_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 114; @symbol_functiondef = [onDrag,114,13,19]; @symbol_param<0> = [evt,114,20,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 158; @symbol_functiondef = [onDrag,158,13,19]; @symbol_param<0> = [evt,158,20,23]; ]
     function onDrag(evt) {
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 115 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_stop" ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 159 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_stop" ]
         %t.1 = local;
-        symbol [ t %t.1 115 12 13 ];
+        symbol [ t %t.1 159 12 13 ];
         %tmp.1 = lgetv %evt;
-        symbol [ evt %tmp.1 115 16 19 ];
-        symbol [ getType %tmp.2 115 20 27 ];
+        symbol [ evt %tmp.1 159 16 19 ];
+        symbol [ getType %tmp.2 159 20 27 ];
         %tmp.2 = getv function %tmp.1 :getType;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         lputv %t.1 %tmp.3;
-        symbol [ t %t.1 115 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 116 8 ]
-        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_stop" ]
+        symbol [ t %t.1 159 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 160 8 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_stop" ]
         %coords.2 = local;
-        symbol [ coords %coords.2 116 12 18 ];
+        symbol [ coords %coords.2 160 12 18 ];
         %tmp.4 = lgetv %evt;
-        symbol [ evt %tmp.4 116 21 24 ];
-        symbol [ getCoordinates %tmp.5 116 25 39 ];
+        symbol [ evt %tmp.4 160 21 24 ];
+        symbol [ getCoordinates %tmp.5 160 25 39 ];
         %tmp.5 = getv function %tmp.4 :getCoordinates;
         %tmp.6 = invoke %tmp.4 %tmp.5();
         lputv %coords.2 %tmp.6;
-        symbol [ coords %coords.2 116 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 117 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_8_117_44_if_stmt:
-        %tmp.7 = lgetv %coords.2;
-        symbol [ coords %tmp.7 117 12 18 ];
-        %tmp.8 = null;
-        %tmp.9 = eq %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_8_117_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_8_117_44_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_28_117_44_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 117 30 ]
-        %tmp.10 = false;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_28_117_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_8_117_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_117_8_117_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 119 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_8_128_8_if_stmt:
-        %tmp.11 = lgetv %t.1;
-        symbol [ t %tmp.11 119 12 13 ];
-        symbol [ WatchUi %tmp.12 119 17 24 ];
-        %tmp.12 = getm $.Toybox.WatchUi;
-        symbol [ DRAG_TYPE_START %tmp.13 119 25 40 ];
-        %tmp.13 = getv %tmp.12 :DRAG_TYPE_START;
-        %tmp.14 = eq %tmp.11 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_8_128_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_8_128_8_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_42_128_8_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 122 12 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_12_122_49_if_stmt:
-        symbol [ _view %tmp.16 122 17 22 ];
-        %tmp.16 = getv ? :_view;
-        symbol [ inPlay %tmp.17 122 23 29 ];
-        %tmp.17 = getv function %tmp.16 :inPlay;
-        %tmp.18 = invoke %tmp.16 %tmp.17();
-        %tmp.19 = not %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_12_122_49_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_12_122_49_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_33_122_49_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 122 35 ]
+        symbol [ coords %coords.2 160 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 162 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_8_181_8_if_stmt:
+        %tmp.7 = lgetv %t.1;
+        symbol [ t %tmp.7 162 12 13 ];
+        symbol [ WatchUi %tmp.8 162 17 24 ];
+        %tmp.8 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_START %tmp.9 162 25 40 ];
+        %tmp.9 = getv %tmp.8 :DRAG_TYPE_START;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_8_181_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_8_181_8_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_42_181_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 165 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_12_165_49_if_stmt:
+        symbol [ _view %tmp.12 165 17 22 ];
+        %tmp.12 = getv ? :_view;
+        symbol [ inPlay %tmp.13 165 23 29 ];
+        %tmp.13 = getv function %tmp.12 :inPlay;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_12_165_49_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_12_165_49_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_33_165_49_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 165 35 ]
+        %tmp.16 = false;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_33_165_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_12_165_49_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_165_12_165_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 166 12 ]
+        %tmp.17 = self;
+        symbol [ _markGesture %tmp.18 166 12 24 ];
+        %tmp.18 = getv function %tmp.17 :_markGesture;
+        invoke %tmp.17 %tmp.18();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 167 12 ]
+        %tmp.19 = true;
+        symbol [ _dragging ? 167 12 21 ];
+        putv self :_dragging %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 168 12 ]
         %tmp.20 = false;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_33_122_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_12_122_49_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_122_12_122_49_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 123 12 ]
-        %tmp.21 = self;
-        symbol [ _markGesture %tmp.22 123 12 24 ];
-        %tmp.22 = getv function %tmp.21 :_markGesture;
-        invoke %tmp.21 %tmp.22();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 124 12 ]
-        %tmp.23 = true;
-        symbol [ _dragging ? 124 12 21 ];
-        putv self :_dragging %tmp.23;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 125 12 ]
-        symbol [ _view %tmp.25 125 12 17 ];
-        %tmp.25 = getv ? :_view;
-        symbol [ hoverAt %tmp.26 125 18 25 ];
-        %tmp.26 = getv function %tmp.25 :hoverAt;
-        %tmp.27 = lgetv %coords.2;
-        symbol [ coords %tmp.27 125 26 32 ];
-        %tmp.28 = 0;
-        %tmp.29 = agetv %tmp.27 %tmp.28;
-        %tmp.30 = lgetv %coords.2;
-        symbol [ coords %tmp.30 125 37 43 ];
+        symbol [ _committed ? 168 12 22 ];
+        putv self :_committed %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 169 12 ]
+        %tmp.21 = false;
+        symbol [ _actedOnStart ? 169 12 25 ];
+        putv self :_actedOnStart %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 170 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_stmt:
+        %tmp.22 = lgetv %coords.2;
+        symbol [ coords %tmp.22 170 16 22 ];
+        %tmp.23 = null;
+        %tmp.24 = ne %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_else_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_32_177_12_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 171 16 ]
+        %tmp.25 = lgetv %coords.2;
+        symbol [ coords %tmp.25 171 25 31 ];
+        %tmp.26 = as %tmp.25 { (!Null) };
+        %tmp.27 = 0;
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        symbol [ _downX ? 171 16 22 ];
+        putv self :_downX %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 171 36 ]
+        %tmp.29 = lgetv %coords.2;
+        symbol [ coords %tmp.29 171 45 51 ];
+        %tmp.30 = as %tmp.29 { (!Null) };
         %tmp.31 = 1;
         %tmp.32 = agetv %tmp.30 %tmp.31;
-        invoke %tmp.25 %tmp.26(%tmp.29, %tmp.32);
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 126 12 ]
-        symbol [ WatchUi %tmp.33 126 12 19 ];
-        %tmp.33 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.34 126 20 33 ];
-        %tmp.34 = getv function %tmp.33 :requestUpdate;
-        invoke %tmp.33 %tmp.34();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 127 12 ]
-        %tmp.35 = true;
-        ret %tmp.35;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_42_128_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_8_128_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_119_8_128_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 130 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_8_136_8_if_stmt:
-        %tmp.36 = lgetv %t.1;
-        symbol [ t %tmp.36 130 12 13 ];
-        symbol [ WatchUi %tmp.37 130 17 24 ];
-        %tmp.37 = getm $.Toybox.WatchUi;
-        symbol [ DRAG_TYPE_CONTINUE %tmp.38 130 25 43 ];
-        %tmp.38 = getv %tmp.37 :DRAG_TYPE_CONTINUE;
-        %tmp.39 = eq %tmp.36 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_8_136_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_8_136_8_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_45_136_8_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 131 12 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_12_131_44_if_stmt:
-        symbol [ _dragging %tmp.41 131 17 26 ];
-        %tmp.41 = getv ? :_dragging;
-        %tmp.42 = not %tmp.41;
-        bf %tmp.42 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_12_131_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_12_131_44_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_28_131_44_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 131 30 ]
-        %tmp.43 = false;
-        ret %tmp.43;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_28_131_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_12_131_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_131_12_131_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 132 12 ]
-        %tmp.44 = self;
-        symbol [ _markGesture %tmp.45 132 12 24 ];
-        %tmp.45 = getv function %tmp.44 :_markGesture;
-        invoke %tmp.44 %tmp.45();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 133 12 ]
-        symbol [ _view %tmp.47 133 12 17 ];
-        %tmp.47 = getv ? :_view;
-        symbol [ hoverAt %tmp.48 133 18 25 ];
-        %tmp.48 = getv function %tmp.47 :hoverAt;
-        %tmp.49 = lgetv %coords.2;
-        symbol [ coords %tmp.49 133 26 32 ];
-        %tmp.50 = 0;
-        %tmp.51 = agetv %tmp.49 %tmp.50;
-        %tmp.52 = lgetv %coords.2;
-        symbol [ coords %tmp.52 133 37 43 ];
-        %tmp.53 = 1;
-        %tmp.54 = agetv %tmp.52 %tmp.53;
-        invoke %tmp.47 %tmp.48(%tmp.51, %tmp.54);
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 134 12 ]
-        symbol [ WatchUi %tmp.55 134 12 19 ];
-        %tmp.55 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.56 134 20 33 ];
-        %tmp.56 = getv function %tmp.55 :requestUpdate;
-        invoke %tmp.55 %tmp.56();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 135 12 ]
-        %tmp.57 = true;
-        ret %tmp.57;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_45_136_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_8_136_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_130_8_136_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 138 8 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_8_147_8_if_stmt:
-        %tmp.58 = lgetv %t.1;
-        symbol [ t %tmp.58 138 12 13 ];
-        symbol [ WatchUi %tmp.59 138 17 24 ];
-        %tmp.59 = getm $.Toybox.WatchUi;
-        symbol [ DRAG_TYPE_STOP %tmp.60 138 25 39 ];
-        %tmp.60 = getv %tmp.59 :DRAG_TYPE_STOP;
-        %tmp.61 = eq %tmp.58 %tmp.60;
-        bf %tmp.61 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_8_147_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_8_147_8_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_41_147_8_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 139 12 ]
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_12_139_44_if_stmt:
-        symbol [ _dragging %tmp.63 139 17 26 ];
-        %tmp.63 = getv ? :_dragging;
-        %tmp.64 = not %tmp.63;
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_12_139_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_12_139_44_if_true:
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_28_139_44_start:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 139 30 ]
-        %tmp.65 = false;
-        ret %tmp.65;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_28_139_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_12_139_44_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_139_12_139_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 140 12 ]
-        %tmp.66 = false;
-        symbol [ _dragging ? 140 12 21 ];
-        putv self :_dragging %tmp.66;
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 141 12 ]
-        %tmp.67 = self;
-        symbol [ _markGesture %tmp.68 141 12 24 ];
-        %tmp.68 = getv function %tmp.67 :_markGesture;
-        invoke %tmp.67 %tmp.68();
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 145 12 ]
-        %tmp.69 = self;
-        symbol [ _commit %tmp.70 145 12 19 ];
-        %tmp.70 = getv function %tmp.69 :_commit;
+        symbol [ _downY ? 171 36 42 ];
+        putv self :_downY %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 175 16 ]
+        %tmp.33 = self;
+        symbol [ _commit %tmp.34 175 16 23 ];
+        %tmp.34 = getv function %tmp.33 :_commit;
+        symbol [ _downX %tmp.36 175 24 30 ];
+        %tmp.36 = getv ? :_downX;
+        symbol [ _downY %tmp.38 175 32 38 ];
+        %tmp.38 = getv ? :_downY;
+        invoke %tmp.33 %tmp.34(%tmp.36, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 176 16 ]
+        %tmp.39 = true;
+        symbol [ _actedOnStart ? 176 16 29 ];
+        putv self :_actedOnStart %tmp.39;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_32_177_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_else_false:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_177_19_179_12_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 178 16 ]
+        %tmp.40 = -1;
+        symbol [ _downX ? 178 16 22 ];
+        putv self :_downX %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 178 29 ]
+        %tmp.41 = -1;
+        symbol [ _downY ? 178 29 35 ];
+        putv self :_downY %tmp.41;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_177_19_179_12_stop:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_170_12_179_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 180 12 ]
+        %tmp.42 = true;
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_42_181_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_8_181_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_162_8_181_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 183 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_8_198_8_if_stmt:
+        %tmp.43 = lgetv %t.1;
+        symbol [ t %tmp.43 183 12 13 ];
+        symbol [ WatchUi %tmp.44 183 17 24 ];
+        %tmp.44 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_CONTINUE %tmp.45 183 25 43 ];
+        %tmp.45 = getv %tmp.44 :DRAG_TYPE_CONTINUE;
+        %tmp.46 = eq %tmp.43 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_8_198_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_8_198_8_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 184 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_71_begin:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_54_begin:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_30_begin:
+        symbol [ _dragging %tmp.48 184 17 26 ];
+        %tmp.48 = getv ? :_dragging;
+        %tmp.49 = not %tmp.48;
+        bt %tmp.49 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_true;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_30_184_30_false:
+        symbol [ _committed %tmp.51 184 30 40 ];
+        %tmp.51 = getv ? :_committed;
+        push %tmp.51;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_30_184_30_end:
+        %tmp.52 = phi [%tmp.49 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_30_begin] [%tmp.51 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_30_184_30_false] [%tmp.52 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_30_184_30_end];
+        bt %tmp.52 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_true;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_44_184_54_false:
+        %tmp.53 = lgetv %coords.2;
+        symbol [ coords %tmp.53 184 44 50 ];
+        %tmp.54 = null;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        push %tmp.55;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_44_184_54_end:
+        %tmp.56 = phi [%tmp.52 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_54_begin] [%tmp.55 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_44_184_54_false] [%tmp.56 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_44_184_54_end];
+        bt %tmp.56 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_true;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_62_184_71_false:
+        symbol [ _downX %tmp.58 184 62 68 ];
+        %tmp.58 = getv ? :_downX;
+        %tmp.59 = 0;
+        %tmp.60 = lt %tmp.58 %tmp.59;
+        push %tmp.60;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_62_184_71_end:
+        %tmp.61 = phi [%tmp.56 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_16_184_71_begin] [%tmp.60 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_62_184_71_false] [%tmp.61 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_62_184_71_end];
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_74_184_89_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 184 76 ]
+        %tmp.62 = true;
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_74_184_89_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_184_12_184_89_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 185 12 ]
+        %tmp.63 = self;
+        symbol [ _markGesture %tmp.64 185 12 24 ];
+        %tmp.64 = getv function %tmp.63 :_markGesture;
+        invoke %tmp.63 %tmp.64();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 186 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop" ]
+        %ddx.3 = local;
+        symbol [ ddx %ddx.3 186 16 19 ];
+        %tmp.65 = lgetv %coords.2;
+        symbol [ coords %tmp.65 186 22 28 ];
+        %tmp.66 = 0;
+        %tmp.67 = agetv %tmp.65 %tmp.66;
+        symbol [ _downX %tmp.69 186 34 40 ];
+        %tmp.69 = getv ? :_downX;
+        %tmp.70 = sub %tmp.67 %tmp.69;
+        lputv %ddx.3 %tmp.70;
+        symbol [ ddx %ddx.3 186 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 187 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop" ]
+        %ddy.4 = local;
+        symbol [ ddy %ddy.4 187 16 19 ];
         %tmp.71 = lgetv %coords.2;
-        symbol [ coords %tmp.71 145 20 26 ];
-        %tmp.72 = 0;
+        symbol [ coords %tmp.71 187 22 28 ];
+        %tmp.72 = 1;
         %tmp.73 = agetv %tmp.71 %tmp.72;
-        %tmp.74 = lgetv %coords.2;
-        symbol [ coords %tmp.74 145 31 37 ];
-        %tmp.75 = 1;
-        %tmp.76 = agetv %tmp.74 %tmp.75;
-        invoke %tmp.69 %tmp.70(%tmp.73, %tmp.76);
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 146 12 ]
-        %tmp.77 = true;
-        ret %tmp.77;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_41_147_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_8_147_8_if_end;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_138_8_147_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 148 8 ]
-        %tmp.78 = false;
-        ret %tmp.78;
-_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_114_25_149_4_stop:
+        symbol [ _downY %tmp.75 187 34 40 ];
+        %tmp.75 = getv ? :_downY;
+        %tmp.76 = sub %tmp.73 %tmp.75;
+        lputv %ddy.4 %tmp.76;
+        symbol [ ddy %ddy.4 187 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 188 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop" ]
+        %adx.5 = local;
+        symbol [ adx %adx.5 188 16 19 ];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_begin:
+        %tmp.77 = lgetv %ddx.3;
+        symbol [ ddx %tmp.77 188 23 26 ];
+        %tmp.78 = 0;
+        %tmp.79 = lt %tmp.77 %tmp.78;
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_else_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_true:
+        %tmp.80 = lgetv %ddx.3;
+        symbol [ ddx %tmp.80 188 35 38 ];
+        %tmp.81 = sub 0 %tmp.80;
+        push %tmp.81;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_else_false:
+        %tmp.82 = lgetv %ddx.3;
+        symbol [ ddx %tmp.82 188 41 44 ];
+        push %tmp.82;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_end:
+        %tmp.83 = phi [%tmp.79 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_begin] [%tmp.81 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_true] [%tmp.82 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_else_false] [%tmp.83 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_188_22_188_41_end];
+        lputv %adx.5 %tmp.83;
+        symbol [ adx %adx.5 188 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 189 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop" ]
+        %ady.6 = local;
+        symbol [ ady %ady.6 189 16 19 ];
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_begin:
+        %tmp.84 = lgetv %ddy.4;
+        symbol [ ddy %tmp.84 189 23 26 ];
+        %tmp.85 = 0;
+        %tmp.86 = lt %tmp.84 %tmp.85;
+        bf %tmp.86 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_else_false;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_true:
+        %tmp.87 = lgetv %ddy.4;
+        symbol [ ddy %tmp.87 189 35 38 ];
+        %tmp.88 = sub 0 %tmp.87;
+        push %tmp.88;
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_else_false:
+        %tmp.89 = lgetv %ddy.4;
+        symbol [ ddy %tmp.89 189 41 44 ];
+        push %tmp.89;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_end:
+        %tmp.90 = phi [%tmp.86 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_begin] [%tmp.88 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_true] [%tmp.89 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_else_false] [%tmp.90 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_189_22_189_41_end];
+        lputv %ady.6 %tmp.90;
+        symbol [ ady %ady.6 189 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 190 12 ]
+        [ "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_start" "_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop" ]
+        %minPx.7 = local;
+        symbol [ minPx %minPx.7 190 16 21 ];
+        %tmp.91 = self;
+        symbol [ _swipeMin %tmp.92 190 24 33 ];
+        %tmp.92 = getv function %tmp.91 :_swipeMin;
+        %tmp.93 = invoke %tmp.91 %tmp.92();
+        lputv %minPx.7 %tmp.93;
+        symbol [ minPx %minPx.7 190 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 191 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_16_191_39_begin:
+        %tmp.94 = lgetv %adx.5;
+        symbol [ adx %tmp.94 191 16 19 ];
+        %tmp.95 = lgetv %minPx.7;
+        symbol [ minPx %tmp.95 191 23 28 ];
+        %tmp.96 = gte %tmp.94 %tmp.95;
+        bt %tmp.96 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_true;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_32_191_39_false:
+        %tmp.97 = lgetv %ady.6;
+        symbol [ ady %tmp.97 191 32 35 ];
+        %tmp.98 = lgetv %minPx.7;
+        symbol [ minPx %tmp.98 191 39 44 ];
+        %tmp.99 = gte %tmp.97 %tmp.98;
+        push %tmp.99;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_32_191_39_end:
+        %tmp.100 = phi [%tmp.96 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_16_191_39_begin] [%tmp.99 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_32_191_39_false] [%tmp.100 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_32_191_39_end];
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_46_196_12_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 192 16 ]
+        %tmp.101 = true;
+        symbol [ _committed ? 192 16 26 ];
+        putv self :_committed %tmp.101;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 193 16 ]
+        symbol [ System %tmp.102 193 32 38 ];
+        %tmp.102 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.103 193 39 47 ];
+        %tmp.103 = getv function %tmp.102 :getTimer;
+        %tmp.104 = invoke %tmp.102 %tmp.103();
+        symbol [ _swipeGuardMs ? 193 16 29 ];
+        putv self :_swipeGuardMs %tmp.104;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 194 16 ]
+        symbol [ _view %tmp.106 194 16 21 ];
+        %tmp.106 = getv ? :_view;
+        symbol [ flickMove %tmp.107 194 22 31 ];
+        %tmp.107 = getv function %tmp.106 :flickMove;
+        %tmp.108 = lgetv %ddx.3;
+        symbol [ ddx %tmp.108 194 32 35 ];
+        %tmp.109 = lgetv %ddy.4;
+        symbol [ ddy %tmp.109 194 37 40 ];
+        invoke %tmp.106 %tmp.107(%tmp.108, %tmp.109);
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 195 16 ]
+        symbol [ WatchUi %tmp.110 195 16 23 ];
+        %tmp.110 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.111 195 24 37 ];
+        %tmp.111 = getv function %tmp.110 :requestUpdate;
+        invoke %tmp.110 %tmp.111();
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_46_196_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_191_12_196_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 197 12 ]
+        %tmp.112 = true;
+        ret %tmp.112;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_45_198_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_8_198_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_183_8_198_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 200 8 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_8_209_8_if_stmt:
+        %tmp.113 = lgetv %t.1;
+        symbol [ t %tmp.113 200 12 13 ];
+        symbol [ WatchUi %tmp.114 200 17 24 ];
+        %tmp.114 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_STOP %tmp.115 200 25 39 ];
+        %tmp.115 = getv %tmp.114 :DRAG_TYPE_STOP;
+        %tmp.116 = eq %tmp.113 %tmp.115;
+        bf %tmp.116 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_8_209_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_8_209_8_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_41_209_8_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 201 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_12_201_44_if_stmt:
+        symbol [ _dragging %tmp.118 201 17 26 ];
+        %tmp.118 = getv ? :_dragging;
+        %tmp.119 = not %tmp.118;
+        bf %tmp.119 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_12_201_44_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_12_201_44_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_28_201_44_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 201 30 ]
+        %tmp.120 = false;
+        ret %tmp.120;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_28_201_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_12_201_44_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_201_12_201_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 202 12 ]
+        %tmp.121 = false;
+        symbol [ _dragging ? 202 12 21 ];
+        putv self :_dragging %tmp.121;
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 203 12 ]
+        %tmp.122 = self;
+        symbol [ _markGesture %tmp.123 203 12 24 ];
+        %tmp.123 = getv function %tmp.122 :_markGesture;
+        invoke %tmp.122 %tmp.123();
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 204 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_12_204_43_if_stmt:
+        symbol [ _committed %tmp.125 204 16 26 ];
+        %tmp.125 = getv ? :_committed;
+        bf %tmp.125 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_12_204_43_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_12_204_43_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_28_204_43_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 204 30 ]
+        %tmp.126 = true;
+        ret %tmp.126;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_28_204_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_12_204_43_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_204_12_204_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 207 12 ]
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_stmt:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_16_207_44_begin:
+        symbol [ _actedOnStart %tmp.128 207 17 30 ];
+        %tmp.128 = getv ? :_actedOnStart;
+        %tmp.129 = not %tmp.128;
+        bf %tmp.129 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_34_207_44_true:
+        %tmp.130 = lgetv %coords.2;
+        symbol [ coords %tmp.130 207 34 40 ];
+        %tmp.131 = null;
+        %tmp.132 = ne %tmp.130 %tmp.131;
+        push %tmp.132;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_34_207_44_end:
+        %tmp.133 = phi [%tmp.129 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_16_207_44_begin] [%tmp.132 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_34_207_44_true] [%tmp.133 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_34_207_44_end];
+        bf %tmp.133 @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_true:
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_50_207_83_start:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 207 52 ]
+        %tmp.134 = self;
+        symbol [ _commit %tmp.135 207 52 59 ];
+        %tmp.135 = getv function %tmp.134 :_commit;
+        %tmp.136 = lgetv %coords.2;
+        symbol [ coords %tmp.136 207 60 66 ];
+        %tmp.137 = as %tmp.136 { (!Null) };
+        %tmp.138 = 0;
+        %tmp.139 = agetv %tmp.137 %tmp.138;
+        %tmp.140 = lgetv %coords.2;
+        symbol [ coords %tmp.140 207 71 77 ];
+        %tmp.141 = as %tmp.140 { (!Null) };
+        %tmp.142 = 1;
+        %tmp.143 = agetv %tmp.141 %tmp.142;
+        invoke %tmp.134 %tmp.135(%tmp.139, %tmp.143);
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_50_207_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_207_12_207_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 208 12 ]
+        %tmp.144 = true;
+        ret %tmp.144;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_41_209_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_8_209_8_if_end;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_200_8_209_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc" 210 8 ]
+        %tmp.145 = false;
+        ret %tmp.145;
+_Users_kkorolczuk_work_garmin_checkers_source_BitochiCheckersDelegate_mc_158_25_211_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/checkers/source/BitochiCheckersDelegate.mc"; @line = 1; ]

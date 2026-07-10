@@ -472,156 +472,481 @@ _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_46_8_49_21_end:
         ret %tmp.37;
 _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_43_40_51_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 53; @symbol_functiondef = [footerText,53,13,23]; @symbol_return<0> = [Lang,53,29,33]; @symbol_return<1> = [String,53,34,40]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 55; @symbol_functiondef = [openBoard,55,13,22]; @symbol_return<0> = [Lang,55,28,32]; @symbol_return<1> = [Boolean,55,33,40]; ]
+    function openBoard() as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_55_41_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 56 8 ]
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_beginTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_endTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_beginTry:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_60_8_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 57 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_60_8_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_60_8_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 57 16 17 ];
+        symbol [ FishBoardPicker %tmp.4 57 24 39 ];
+        %tmp.4 = getv ? :FishBoardPicker;
+        %tmp.5 = self;
+        symbol [ lbVariant %tmp.6 57 40 49 ];
+        %tmp.6 = getv function %tmp.5 :lbVariant;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.1 = newc %tmp.4 (%tmp.7);
+        lputv %m.1 %tmp.1;
+        symbol [ m %m.1 57 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 58 12 ]
+        symbol [ WatchUi %tmp.8 58 12 19 ];
+        %tmp.8 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.9 58 20 28 ];
+        %tmp.9 = getv function %tmp.8 :pushView;
+        %tmp.10 = lgetv %m.1;
+        symbol [ m %tmp.10 58 29 30 ];
+        symbol [ FishBoardPickerDelegate %tmp.14 58 36 59 ];
+        %tmp.14 = getv ? :FishBoardPickerDelegate;
+        %tmp.15 = self;
+        symbol [ lbVariant %tmp.16 58 60 69 ];
+        %tmp.16 = getv function %tmp.15 :lbVariant;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.11 = newc %tmp.14 (%tmp.17);
+        symbol [ WatchUi %tmp.18 58 74 81 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.19 58 82 90 ];
+        %tmp.19 = getv %tmp.18 :SLIDE_UP;
+        invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11, %tmp.19);
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 59 12 ]
+        %tmp.20 = true;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_60_8_stop:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_catch:
+        %tmp.21 = exception;
+        push %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 60 10 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_catch" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_10_62_8_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 60 17 18 ];
+        %tmp.22 = dup %tmp.21;
+        lputv %e.2 %tmp.22;
+        symbol [ e %e.2 60 17 18 ];
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_20_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 61 12 ]
+        pop;
+        %tmp.23 = false;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_20_62_8_stop:
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_10_62_8_end:
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_10_62_8_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_60_10_62_8_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally;
+        throw %tmp.21;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_8_62_8_end:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_55_41_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 65; @symbol_functiondef = [footerText,65,13,23]; @symbol_return<0> = [Lang,65,29,33]; @symbol_return<1> = [String,65,34,40]; ]
     function footerText() as Lang.String or Null {
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_53_49_59_4_start:
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 54 8 ]
-        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_beginTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_endTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_beginTry:
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_12_57_8_start:
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 55 12 ]
-        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_12_57_8_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_12_57_8_stop" ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_65_49_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 66 8 ]
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_beginTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_endTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_beginTry:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_12_69_8_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 67 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_12_69_8_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_12_69_8_stop" ]
         %v.1 = local;
-        symbol [ v %v.1 55 16 17 ];
-        symbol [ Application %tmp.1 55 20 31 ];
+        symbol [ v %v.1 67 16 17 ];
+        symbol [ Application %tmp.1 67 20 31 ];
         %tmp.1 = getm $.Toybox.Application;
-        symbol [ Storage %tmp.2 55 32 39 ];
+        symbol [ Storage %tmp.2 67 32 39 ];
         %tmp.2 = getv %tmp.1 :Storage;
-        symbol [ getValue %tmp.3 55 40 48 ];
+        symbol [ getValue %tmp.3 67 40 48 ];
         %tmp.3 = getv function %tmp.2 :getValue;
         %tmp.4 = "fishBest";
         %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
         lputv %v.1 %tmp.5;
-        symbol [ v %v.1 55 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 56 12 ]
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_stmt:
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_16_56_48_begin:
+        symbol [ v %v.1 67 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 68 12 ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_stmt:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_16_68_48_begin:
         %tmp.6 = lgetv %v.1;
-        symbol [ v %tmp.6 56 16 17 ];
-        symbol [ Lang %tmp.7 56 29 33 ];
+        symbol [ v %tmp.6 68 16 17 ];
+        symbol [ Lang %tmp.7 68 29 33 ];
         %tmp.7 = getm $.Toybox.Lang;
-        symbol [ Number %tmp.8 56 34 40 ];
+        symbol [ Number %tmp.8 68 34 40 ];
         %tmp.8 = getv %tmp.7 :Number;
         %tmp.9 = isa %tmp.6 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_end;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_44_56_48_true:
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_44_68_48_true:
         %tmp.10 = lgetv %v.1;
-        symbol [ v %tmp.10 56 44 45 ];
+        symbol [ v %tmp.10 68 44 45 ];
         %tmp.11 = as %tmp.10 { (Lang.Number) };
         %tmp.12 = 0;
         %tmp.13 = gt %tmp.11 %tmp.12;
         push %tmp.13;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_44_56_48_end:
-        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_16_56_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_44_56_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_44_56_48_end];
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_end;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_true:
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_51_56_86_start:
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 56 53 ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_44_68_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_16_68_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_44_68_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_44_68_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_true:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_51_68_86_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 68 53 ]
         %tmp.15 = "BEST ";
         %tmp.16 = lgetv %v.1;
-        symbol [ v %tmp.16 56 70 71 ];
+        symbol [ v %tmp.16 68 70 71 ];
         %tmp.17 = as %tmp.16 { (Lang.Number) };
-        symbol [ format %tmp.18 56 72 78 ];
+        symbol [ format %tmp.18 68 72 78 ];
         %tmp.18 = getv function %tmp.17 :format;
         %tmp.19 = "%d";
         %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
         %tmp.21 = add %tmp.15 %tmp.20;
-        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
         ret %tmp.21;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_51_56_86_stop:
-        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_end;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_56_12_56_86_if_end:
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_12_57_8_stop:
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_endTry:
-        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
-        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_end;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_catch:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_51_68_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_68_12_68_86_if_end:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_12_69_8_stop:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_catch:
         %tmp.22 = exception;
         push %tmp.22;
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 57 10 ]
-        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_catch" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_57_10_57_21_end" ]
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 69 10 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_catch" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_69_10_69_21_end" ]
         %e.2 = local;
-        symbol [ e %e.2 57 17 18 ];
+        symbol [ e %e.2 69 17 18 ];
         %tmp.23 = dup %tmp.22;
         lputv %e.2 %tmp.23;
-        symbol [ e %e.2 57 17 18 ];
-        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
+        symbol [ e %e.2 69 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
         pop;
-        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_end;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_57_10_57_21_end:
-        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_57_10_57_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_57_10_57_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
-        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_69_10_69_21_end:
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_69_10_69_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_69_10_69_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally;
         throw %tmp.22;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_finally:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_finally:
         jsrret;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_54_8_57_21_end:
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_66_8_69_21_end:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 70 8 ]
         %tmp.24 = null;
         ret %tmp.24;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_53_49_59_4_stop:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_65_49_71_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 62; @symbol_functiondef = [buildFishMenu,62,9,22]; @symbol_return<0> = [Lang,62,28,32]; @symbol_return<1> = [Array,62,33,38]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 78; @symbol_classdef = [FishBoardPicker,78,6,21]; @symbol_extends<0> = [WatchUi,78,30,37]; @symbol_extends<1> = [Menu2,78,38,43]; ]
+class FishBoardPicker extends WatchUi.Menu2 {
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 78; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 78; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 79; @symbol_functiondef = [initialize,79,13,23]; @symbol_param<0> = [scoreVariant,79,24,36]; @symbol_param<0>_type<0> = [Lang,79,40,44]; @symbol_param<0>_type<1> = [String,79,45,51]; ]
+    function initialize(scoreVariant as Lang.String) as Void {
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_79_53_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 80 8 ]
+        symbol [ Menu2 %tmp.2 80 8 13 ];
+        %tmp.2 = getv ? :Menu2;
+        symbol [ initialize %tmp.3 80 14 24 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        %tmp.4 = newd 1;
+        %tmp.6 = const :title;
+        symbol [ title %tmp.6 80 27 32 const ];
+        %tmp.7 = "LEADERBOARDS";
+        %tmp.8 = dup %tmp.4;
+        %tmp.9 = aputv %tmp.8 %tmp.6 %tmp.7;
+        invoke %tmp.2 %tmp.3(%tmp.9);
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 81 8 ]
+        %tmp.10 = self;
+        symbol [ addItem %tmp.11 81 8 15 ];
+        %tmp.11 = getv function %tmp.10 :addItem;
+        symbol [ WatchUi %tmp.14 81 20 27 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.15 81 28 36 ];
+        %tmp.15 = getv function ? %tmp.14 :MenuItem;
+        %tmp.16 = "Top Scores";
+        %tmp.17 = "Session points";
+        %tmp.19 = const :scores;
+        symbol [ scores %tmp.19 81 72 78 const ];
+        %tmp.20 = null;
+        %tmp.12 = newc %tmp.15 (%tmp.16, %tmp.17, %tmp.19, %tmp.20);
+        invoke %tmp.10 %tmp.11(%tmp.12);
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 82 8 ]
+        %tmp.21 = self;
+        symbol [ addItem %tmp.22 82 8 15 ];
+        %tmp.22 = getv function %tmp.21 :addItem;
+        symbol [ WatchUi %tmp.25 82 20 27 ];
+        %tmp.25 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.26 82 28 36 ];
+        %tmp.26 = getv function ? %tmp.25 :MenuItem;
+        %tmp.27 = "Biggest Fish";
+        %tmp.28 = "Heaviest catch";
+        %tmp.30 = const :biggest;
+        symbol [ biggest %tmp.30 82 72 79 const ];
+        %tmp.31 = null;
+        %tmp.23 = newc %tmp.26 (%tmp.27, %tmp.28, %tmp.30, %tmp.31);
+        invoke %tmp.21 %tmp.22(%tmp.23);
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 83 8 ]
+        %tmp.32 = self;
+        symbol [ addItem %tmp.33 83 8 15 ];
+        %tmp.33 = getv function %tmp.32 :addItem;
+        symbol [ WatchUi %tmp.36 83 20 27 ];
+        %tmp.36 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.37 83 28 36 ];
+        %tmp.37 = getv function ? %tmp.36 :MenuItem;
+        %tmp.38 = "Progress";
+        %tmp.39 = "Level reached";
+        %tmp.41 = const :progress;
+        symbol [ progress %tmp.41 83 72 80 const ];
+        %tmp.42 = null;
+        %tmp.34 = newc %tmp.37 (%tmp.38, %tmp.39, %tmp.41, %tmp.42);
+        invoke %tmp.32 %tmp.33(%tmp.34);
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_79_53_84_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 87; @symbol_classdef = [FishBoardPickerDelegate,87,6,29]; @symbol_extends<0> = [WatchUi,87,38,45]; @symbol_extends<1> = [Menu2InputDelegate,87,46,64]; ]
+class FishBoardPickerDelegate extends WatchUi.Menu2InputDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 87; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 87; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 88; @position = 15; @symbol_vardef = [_scoreVariant,88,15,28]; ]
+    protected
+    var _scoreVariant;
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 89; @symbol_functiondef = [initialize,89,13,23]; @symbol_param<0> = [scoreVariant,89,24,36]; @symbol_param<0>_type<0> = [Lang,89,40,44]; @symbol_param<0>_type<1> = [String,89,45,51]; ]
+    function initialize(scoreVariant as Lang.String) as Void {
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_89_53_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 90 8 ]
+        symbol [ Menu2InputDelegate %tmp.2 90 8 26 ];
+        %tmp.2 = getv ? :Menu2InputDelegate;
+        symbol [ initialize %tmp.3 90 27 37 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 91 8 ]
+        %tmp.4 = lgetv %scoreVariant;
+        symbol [ scoreVariant %tmp.4 91 24 36 ];
+        symbol [ _scoreVariant ? 91 8 21 ];
+        putv self :_scoreVariant %tmp.4;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_89_53_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 93; @symbol_functiondef = [onSelect,93,13,21]; @symbol_param<0> = [item,93,22,26]; ]
+    function onSelect(item) {
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_stop" ]
+        %id.1 = local;
+        symbol [ id %id.1 94 12 14 ];
+        %tmp.1 = lgetv %item;
+        symbol [ item %tmp.1 94 17 21 ];
+        symbol [ getId %tmp.2 94 22 27 ];
+        %tmp.2 = getv function %tmp.1 :getId;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %id.1 %tmp.3;
+        symbol [ id %id.1 94 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 95 8 ]
+        symbol [ WatchUi %tmp.4 95 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.5 95 16 23 ];
+        %tmp.5 = getv function %tmp.4 :popView;
+        symbol [ WatchUi %tmp.6 95 24 31 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.7 95 32 42 ];
+        %tmp.7 = getv %tmp.6 :SLIDE_DOWN;
+        invoke %tmp.4 %tmp.5(%tmp.7);
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_stop" ]
+        %variant.2 = local;
+        symbol [ variant %variant.2 96 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 96 21 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_stop" ]
+        %title.3 = local;
+        symbol [ title %title.3 96 25 30 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_stmt:
+        %tmp.8 = lgetv %id.1;
+        symbol [ id %tmp.8 97 12 14 ];
+        %tmp.10 = const :biggest;
+        symbol [ biggest %tmp.10 97 19 26 const ];
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_false;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_true:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_34_97_86_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 97 36 ]
+        %tmp.12 = "biggest-fish";
+        lputv %variant.2 %tmp.12;
+        symbol [ variant %variant.2 97 36 43 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 97 62 ]
+        %tmp.13 = "BIGGEST FISH";
+        lputv %title.3 %tmp.13;
+        symbol [ title %title.3 97 62 67 ];
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_34_97_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_false:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 98 13 ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_stmt:
+        %tmp.14 = lgetv %id.1;
+        symbol [ id %tmp.14 98 17 19 ];
+        %tmp.16 = const :progress;
+        symbol [ progress %tmp.16 98 24 32 const ];
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_else_false;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_true:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_34_98_82_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 98 36 ]
+        %tmp.18 = "progress";
+        lputv %variant.2 %tmp.18;
+        symbol [ variant %variant.2 98 36 43 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 98 62 ]
+        %tmp.19 = "PROGRESS";
+        lputv %title.3 %tmp.19;
+        symbol [ title %title.3 98 62 67 ];
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_34_98_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_else_false:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_99_34_99_81_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 99 36 ]
+        symbol [ _scoreVariant %tmp.21 99 46 59 ];
+        %tmp.21 = getv ? :_scoreVariant;
+        lputv %variant.2 %tmp.21;
+        symbol [ variant %variant.2 99 36 43 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 99 62 ]
+        %tmp.22 = "FISHING";
+        lputv %title.3 %tmp.22;
+        symbol [ title %title.3 99 62 67 ];
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_99_34_99_81_stop:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_98_13_99_81_if_end:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_97_8_99_81_if_end:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 100 8 ]
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_beginTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_endTry @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_beginTry:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_12_103_8_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 101 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_12_103_8_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_12_103_8_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 101 16 17 ];
+        symbol [ LbScoresView %tmp.26 101 24 36 ];
+        %tmp.26 = getv ? :LbScoresView;
+        %tmp.27 = "fish";
+        %tmp.28 = lgetv %variant.2;
+        symbol [ variant %tmp.28 101 45 52 ];
+        %tmp.29 = lgetv %title.3;
+        symbol [ title %tmp.29 101 54 59 ];
+        %tmp.23 = newc %tmp.26 (%tmp.27, %tmp.28, %tmp.29);
+        lputv %v.4 %tmp.23;
+        symbol [ v %v.4 101 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 102 12 ]
+        symbol [ WatchUi %tmp.30 102 12 19 ];
+        %tmp.30 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.31 102 20 28 ];
+        %tmp.31 = getv function %tmp.30 :pushView;
+        %tmp.32 = lgetv %v.4;
+        symbol [ v %tmp.32 102 29 30 ];
+        symbol [ LbScoresDelegate %tmp.36 102 36 52 ];
+        %tmp.36 = getv ? :LbScoresDelegate;
+        %tmp.37 = lgetv %v.4;
+        symbol [ v %tmp.37 102 53 54 ];
+        %tmp.33 = newc %tmp.36 (%tmp.37);
+        symbol [ WatchUi %tmp.38 102 57 64 ];
+        %tmp.38 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.39 102 65 75 ];
+        %tmp.39 = getv %tmp.38 :SLIDE_LEFT;
+        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33, %tmp.39);
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_12_103_8_stop:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_catch:
+        %tmp.40 = exception;
+        push %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 103 10 ]
+        [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_catch" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_103_10_103_21_end" ]
+        %e.5 = local;
+        symbol [ e %e.5 103 17 18 ];
+        %tmp.41 = dup %tmp.40;
+        lputv %e.5 %tmp.41;
+        symbol [ e %e.5 103 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_end;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_103_10_103_21_end:
+        try @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_catch @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_103_10_103_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_103_10_103_21_end @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally;
+        throw %tmp.40;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_100_8_103_21_end:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 107; @symbol_functiondef = [buildFishMenu,107,9,22]; @symbol_return<0> = [Lang,107,28,32]; @symbol_return<1> = [Array,107,33,38]; ]
 function buildFishMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_start:
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 63 4 ]
-    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_stop" ]
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start:
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 108 4 ]
+    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop" ]
     %cfg.1 = local;
-    symbol [ cfg %cfg.1 63 8 11 ];
-    symbol [ MenuConfig %tmp.4 63 18 28 ];
+    symbol [ cfg %cfg.1 108 8 11 ];
+    symbol [ MenuConfig %tmp.4 108 18 28 ];
     %tmp.4 = getv ? :MenuConfig;
     %tmp.5 = newd 10;
     %tmp.7 = const :gameId;
-    symbol [ gameId %tmp.7 64 9 15 const ];
+    symbol [ gameId %tmp.7 109 9 15 const ];
     %tmp.8 = "fish";
     %tmp.9 = dup %tmp.5;
     %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
     %tmp.12 = const :title1;
-    symbol [ title1 %tmp.12 65 9 15 const ];
+    symbol [ title1 %tmp.12 110 9 15 const ];
     %tmp.13 = "FISH";
     %tmp.14 = dup %tmp.10;
     %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
     %tmp.17 = const :title2;
-    symbol [ title2 %tmp.17 66 9 15 const ];
+    symbol [ title2 %tmp.17 111 9 15 const ];
     %tmp.18 = null;
     %tmp.19 = dup %tmp.15;
     %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
     %tmp.22 = const :col1;
-    symbol [ col1 %tmp.22 67 9 13 const ];
+    symbol [ col1 %tmp.22 112 9 13 const ];
     %tmp.23 = 0xFFFFFF;
     %tmp.24 = dup %tmp.20;
     %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
     %tmp.27 = const :bg;
-    symbol [ bg %tmp.27 68 9 11 const ];
+    symbol [ bg %tmp.27 113 9 11 const ];
     %tmp.28 = 0x1E6FAA;
     %tmp.29 = dup %tmp.25;
     %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
     %tmp.32 = const :circle;
-    symbol [ circle %tmp.32 69 9 15 const ];
+    symbol [ circle %tmp.32 114 9 15 const ];
     %tmp.33 = 0x165688;
     %tmp.34 = dup %tmp.30;
     %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
     %tmp.37 = const :accent;
-    symbol [ accent %tmp.37 70 9 15 const ];
+    symbol [ accent %tmp.37 115 9 15 const ];
     %tmp.38 = 0x44CC66;
     %tmp.39 = dup %tmp.35;
     %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
     %tmp.42 = const :lbTitle;
-    symbol [ lbTitle %tmp.42 71 9 16 const ];
+    symbol [ lbTitle %tmp.42 116 9 16 const ];
     %tmp.43 = "FISHING";
     %tmp.44 = dup %tmp.40;
     %tmp.45 = aputv %tmp.44 %tmp.42 %tmp.43;
     %tmp.47 = const :hooks;
-    symbol [ hooks %tmp.47 72 9 14 const ];
-    symbol [ FishHooks %tmp.51 72 24 33 ];
+    symbol [ hooks %tmp.47 117 9 14 const ];
+    symbol [ FishHooks %tmp.51 117 24 33 ];
     %tmp.51 = getv ? :FishHooks;
     %tmp.48 = newc %tmp.51 ();
     %tmp.52 = dup %tmp.45;
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
-    symbol [ options %tmp.55 73 9 16 const ];
-    %tmp.56 = newa 1;
-    symbol [ GmOption %tmp.60 74 16 24 ];
+    symbol [ options %tmp.55 118 9 16 const ];
+    %tmp.56 = newa 2;
+    symbol [ GmOption %tmp.60 119 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "fish_diff";
     %tmp.62 = "Difficulty";
@@ -639,37 +964,52 @@ _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_start:
     %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
     %tmp.74 = dup %tmp.56;
     %tmp.75 = aputv %tmp.74 0 %tmp.57;
-    %tmp.76 = dup %tmp.53;
-    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
-    %tmp.1 = newc %tmp.4 (%tmp.77);
+    symbol [ GmOption %tmp.79 120 16 24 ];
+    %tmp.79 = getv ? :GmOption;
+    %tmp.80 = "fish_fx";
+    %tmp.81 = "Sound & Haptics";
+    %tmp.82 = newa 2;
+    %tmp.83 = "ON";
+    %tmp.84 = dup %tmp.82;
+    %tmp.85 = aputv %tmp.84 0 %tmp.83;
+    %tmp.86 = "OFF";
+    %tmp.87 = dup %tmp.85;
+    %tmp.88 = aputv %tmp.87 1 %tmp.86;
+    %tmp.89 = 0;
+    %tmp.76 = newc %tmp.79 (%tmp.80, %tmp.81, %tmp.88, %tmp.89);
+    %tmp.90 = dup %tmp.75;
+    %tmp.91 = aputv %tmp.90 1 %tmp.76;
+    %tmp.92 = dup %tmp.53;
+    %tmp.93 = aputv %tmp.92 %tmp.55 %tmp.91;
+    %tmp.1 = newc %tmp.4 (%tmp.93);
     lputv %cfg.1 %tmp.1;
-    symbol [ cfg %cfg.1 63 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 77 4 ]
-    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_stop" ]
+    symbol [ cfg %cfg.1 108 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 123 4 ]
+    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 77 8 9 ];
-    symbol [ GameMenuView %tmp.81 77 16 28 ];
-    %tmp.81 = getv ? :GameMenuView;
-    %tmp.82 = lgetv %cfg.1;
-    symbol [ cfg %tmp.82 77 29 32 ];
-    %tmp.78 = newc %tmp.81 (%tmp.82);
-    lputv %v.2 %tmp.78;
-    symbol [ v %v.2 77 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 78 4 ]
-    %tmp.83 = newa 2;
-    %tmp.84 = lgetv %v.2;
-    symbol [ v %tmp.84 78 12 13 ];
-    %tmp.85 = dup %tmp.83;
-    %tmp.86 = aputv %tmp.85 0 %tmp.84;
-    symbol [ GameMenuDelegate %tmp.90 78 19 35 ];
-    %tmp.90 = getv ? :GameMenuDelegate;
-    %tmp.91 = lgetv %v.2;
-    symbol [ v %tmp.91 78 36 37 ];
-    %tmp.87 = newc %tmp.90 (%tmp.91);
-    %tmp.92 = dup %tmp.86;
-    %tmp.93 = aputv %tmp.92 1 %tmp.87;
-    ret %tmp.93;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_62_39_79_0_stop:
+    symbol [ v %v.2 123 8 9 ];
+    symbol [ GameMenuView %tmp.97 123 16 28 ];
+    %tmp.97 = getv ? :GameMenuView;
+    %tmp.98 = lgetv %cfg.1;
+    symbol [ cfg %tmp.98 123 29 32 ];
+    %tmp.94 = newc %tmp.97 (%tmp.98);
+    lputv %v.2 %tmp.94;
+    symbol [ v %v.2 123 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 124 4 ]
+    %tmp.99 = newa 2;
+    %tmp.100 = lgetv %v.2;
+    symbol [ v %tmp.100 124 12 13 ];
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 0 %tmp.100;
+    symbol [ GameMenuDelegate %tmp.106 124 19 35 ];
+    %tmp.106 = getv ? :GameMenuDelegate;
+    %tmp.107 = lgetv %v.2;
+    symbol [ v %tmp.107 124 36 37 ];
+    %tmp.103 = newc %tmp.106 (%tmp.107);
+    %tmp.108 = dup %tmp.102;
+    %tmp.109 = aputv %tmp.108 1 %tmp.103;
+    ret %tmp.109;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 4; ]
 <init> {
