@@ -887,6 +887,115 @@
     #ab-confetti { display: none !important; }
   }
 
+  /* ── 2026 game discovery refresh ─────────────────────────────────── */
+  #game-selector-wrap {
+    padding: 24px max(20px, calc((100vw - 1180px) / 2));
+    background: #0b121b;
+  }
+  .library-heading {
+    display: flex; align-items: end; justify-content: space-between; gap: 16px;
+    margin-bottom: 14px;
+  }
+  .library-kicker {
+    color: var(--accent); font-size: .68rem; font-weight: 800;
+    letter-spacing: .14em; text-transform: uppercase; margin-bottom: 5px;
+  }
+  .library-title { font-size: clamp(1.2rem, 3vw, 1.75rem); font-weight: 850; color: #fff; }
+  .library-sub { color: #7f95a8; font-size: .78rem; margin-top: 4px; }
+  .surprise-btn {
+    border: 1px solid #33475b; background: #111c28; color: #dbeafe;
+    border-radius: 10px; padding: 9px 13px; font-size: .76rem; font-weight: 750;
+    cursor: pointer; white-space: nowrap;
+  }
+  .surprise-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .library-tools { display: flex; gap: 9px; align-items: center; margin-bottom: 10px; }
+  .game-search-wrap { position: relative; flex: 1; }
+  .game-search-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: #6f879c; pointer-events: none;
+  }
+  #game-search {
+    width: 100%; background: #111b27; border: 1px solid #26384a; color: #f0f7ff;
+    border-radius: 11px; padding: 11px 38px; font: inherit; font-size: .84rem;
+    outline: none;
+  }
+  #game-search:focus { border-color: var(--accent); }
+  #game-search-clear {
+    display: none; position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px; border: 0; background: transparent; color: #7890a4;
+    cursor: pointer; border-radius: 7px;
+  }
+  #game-search-clear:hover { background: #1b2a39; color: #fff; }
+  #category-scroll {
+    display: flex; gap: 6px; overflow-x: auto; padding: 2px 1px 9px;
+    scrollbar-width: none;
+  }
+  #category-scroll::-webkit-scrollbar { display: none; }
+  .category-chip {
+    flex: 0 0 auto; border: 1px solid #26384a; background: transparent; color: #71899e;
+    border-radius: 8px; padding: 6px 11px; font-size: .68rem; font-weight: 750;
+    cursor: pointer; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .category-chip:hover { color: #cfeaff; border-color: #42617a; }
+  .category-chip.active { background: #123143; border-color: #1a7594; color: #8eeaff; }
+  #game-scroll {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px; overflow: visible; padding: 4px 0; scroll-snap-type: none;
+  }
+  .game-chip {
+    min-width: 0; width: 100%; height: 66px; border-radius: 11px;
+    padding: 10px 11px; text-align: left; display: grid;
+    grid-template-columns: 34px 1fr; grid-template-rows: 1fr 1fr;
+    column-gap: 9px; align-items: center; white-space: normal;
+    background: #101a25; border-color: #203244; text-transform: none;
+  }
+  .game-chip-icon {
+    grid-row: 1 / 3; width: 34px; height: 34px; border-radius: 9px;
+    display: grid; place-items: center; background: #172635; font-size: 1rem;
+  }
+  .game-chip-name {
+    align-self: end; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: #dceaf5; font-size: .77rem; font-weight: 800; letter-spacing: 0;
+  }
+  .game-chip-meta {
+    align-self: start; color: #607b91; font-size: .6rem; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .game-chip.is-hot::after {
+    content: 'HOT'; position: absolute; top: 5px; right: 6px; color: #ffb45e;
+    font-size: .52rem; font-weight: 900; letter-spacing: .06em;
+  }
+  .game-chip { position: relative; }
+  .game-chip.active {
+    background: #102d3a; border-color: var(--accent); box-shadow: none;
+  }
+  .game-chip.active .game-chip-icon { background: #12465b; }
+  .library-result {
+    display: flex; justify-content: space-between; align-items: center;
+    color: #60778a; font-size: .68rem; margin-top: 9px;
+  }
+  .library-empty {
+    grid-column: 1 / -1; padding: 28px 16px; text-align: center; color: #6f879c;
+    border: 1px dashed #26384a; border-radius: 11px;
+  }
+  #public-hot {
+    display: none; max-width: 1180px; margin: 0 auto; padding: 0 20px 14px;
+  }
+  .public-hot-label {
+    color: #70889b; font-size: .63rem; text-transform: uppercase;
+    letter-spacing: .11em; margin-bottom: 8px;
+  }
+  .public-hot-list { display: flex; gap: 7px; flex-wrap: wrap; }
+  .public-hot-pill {
+    border: 1px solid #3b3025; background: #19140f; color: #ffbd72;
+    border-radius: 999px; padding: 6px 10px; font-size: .7rem; font-weight: 700;
+    cursor: pointer;
+  }
+  .public-hot-pill:hover { border-color: #ff9f43; color: #fff; }
+  #hero { height: clamp(210px, 33vw, 390px); }
+  #hero-overlay { background: linear-gradient(to top, rgba(8,12,16,.96) 0%, rgba(8,12,16,.16) 72%); }
+  #view-rankings > #featured-daily { max-width: 1180px; margin: 14px auto; }
+
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
     header { padding: 0 14px; }
@@ -895,6 +1004,13 @@
     .stats-cards { grid-template-columns: repeat(2, 1fr); }
     .stat-card .num { font-size: 1.4rem; }
     .ab-hype .ab-title { font-size: 1.05rem; }
+    .library-heading { align-items: start; }
+    .library-sub { max-width: 220px; }
+    #game-scroll { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .game-chip { height: 60px; grid-template-columns: 30px 1fr; padding: 8px; column-gap: 7px; }
+    .game-chip-icon { width: 30px; height: 30px; }
+    .game-chip-name { font-size: .7rem; }
+    #view-rankings > #featured-daily { margin: 10px 12px; }
   }
 </style>
 </head>
@@ -979,8 +1095,28 @@
 
 <!-- ── Game selector ───────────────────────────────────────────────────────── -->
 <div id="game-selector-wrap">
-  <div id="game-selector-label">Select game</div>
+  <div class="library-heading">
+    <div>
+      <div class="library-kicker">Garmin watch arcade</div>
+      <div class="library-title">Find your next game</div>
+      <div class="library-sub">Quick sessions, global rankings and a fresh challenge every day.</div>
+    </div>
+    <button class="surprise-btn" id="surprise-game" type="button">Surprise me</button>
+  </div>
+  <div class="library-tools">
+    <div class="game-search-wrap">
+      <span class="game-search-icon">⌕</span>
+      <input id="game-search" type="search" autocomplete="off" spellcheck="false" placeholder="Search games, genres or descriptions…">
+      <button id="game-search-clear" type="button" aria-label="Clear search">✕</button>
+    </div>
+  </div>
+  <div id="category-scroll"></div>
   <div id="game-scroll"></div>
+  <div class="library-result"><span id="game-result-count"></span><span>Tap a game to see rankings and install</span></div>
+</div>
+<div id="public-hot">
+  <div class="public-hot-label">Trending with players now</div>
+  <div class="public-hot-list" id="public-hot-list"></div>
 </div>
 
 <!-- ── Variant selector ─────────────────────────────────────────────────────── -->
@@ -1476,17 +1612,95 @@ function fmtAgo(unixSec) {
 
 const PERIOD_WORD = { all: 'all-time', week: 'this week', day: 'today' };
 
-// ── Build game chips ─────────────────────────────────────────────────────────
-function buildGameChips(list) {
+// ── Discover games: searchable, genre-filtered catalog ───────────────────────
+const GAME_GENRES = {
+  Puzzle: ['akari','blocks','gemmatch','hologrid','lightsout','memo','minesweeper','sudoku','twentyfortyeight'],
+  Strategy: ['battleship','cellwars','checkers','chess','connect_four_lite','dots_boxes','gobblet_mini','hex_mini','makao_lite','morris_classic','othello_blitz','territory_clash','tic_tac_pro'],
+  Arcade: ['arcade','blobs','bomb','bricks','chickencross','dinosaur','edgesurvivor','flappypidgeon','jazzball','jumptower','manpac','moon','parachute','pinballpro','pixelinvaders','run','serpent','skyroll','stacktower','starcombat','starswarm','voidrocks'],
+  Sports: ['archery','billiards','boxing','fish','gyromaze','minigolf','pongpro','skijump','sniperscope'],
+  Cards: ['blackjack','diceroyale','poker','solitare','slotbandit'],
+  Casual: ['8ball','activityboard','catapult','fakenotificationescape','hangman','pets']
+};
+const GENRE_ICON = { All:'✦', Arcade:'⚡', Puzzle:'◇', Strategy:'♟', Sports:'◎', Cards:'♠', Casual:'☻' };
+const GAME_GENRE = {};
+Object.entries(GAME_GENRES).forEach(([genre, ids]) => ids.forEach(id => GAME_GENRE[id] = genre));
+let activeGenre = 'All';
+let hotGameIds = new Set();
+
+function genreOf(g) { return GAME_GENRE[g.id] || 'Arcade'; }
+
+function filteredGames() {
+  const q = (document.getElementById('game-search')?.value || '').trim().toLowerCase();
+  return GAMES.filter(g => {
+    if (activeGenre !== 'All' && genreOf(g) !== activeGenre) return false;
+    if (!q) return true;
+    return `${g.label} ${g.id} ${genreOf(g)} ${GAME_DESCS[g.id] || ''}`.toLowerCase().includes(q);
+  });
+}
+
+function buildGameChips(list = filteredGames()) {
   gameScroll.innerHTML = '';
   list.forEach(g => {
     const btn = document.createElement('button');
-    btn.className    = 'game-chip';
+    const genre = genreOf(g);
+    btn.className    = `game-chip${hotGameIds.has(lbKeyOf(g)) ? ' is-hot' : ''}${currentGame === g.id ? ' active' : ''}`;
     btn.dataset.id   = g.id;
-    btn.textContent  = g.label;
+    btn.innerHTML    = `<span class="game-chip-icon">${GENRE_ICON[genre] || '•'}</span>
+      <span class="game-chip-name">${escHtml(g.label)}</span>
+      <span class="game-chip-meta">${escHtml(genre)}</span>`;
     btn.onclick      = () => selectGame(g);
     gameScroll.appendChild(btn);
   });
+  if (!list.length) gameScroll.innerHTML = '<div class="library-empty">No games match that search. Try another title or genre.</div>';
+  const count = document.getElementById('game-result-count');
+  if (count) count.textContent = `${list.length} of ${GAMES.length} games`;
+}
+
+function initGameDiscovery() {
+  const cat = document.getElementById('category-scroll');
+  cat.innerHTML = ['All','Arcade','Puzzle','Strategy','Sports','Cards','Casual'].map(x =>
+    `<button class="category-chip${x === activeGenre ? ' active' : ''}" data-genre="${x}">${GENRE_ICON[x]} ${x}</button>`
+  ).join('');
+  cat.onclick = e => {
+    const btn = e.target.closest('.category-chip');
+    if (!btn) return;
+    activeGenre = btn.dataset.genre;
+    cat.querySelectorAll('.category-chip').forEach(x => x.classList.toggle('active', x === btn));
+    buildGameChips();
+  };
+  const search = document.getElementById('game-search');
+  const clear = document.getElementById('game-search-clear');
+  search.oninput = () => { clear.style.display = search.value ? 'block' : 'none'; buildGameChips(); };
+  clear.onclick = () => { search.value = ''; clear.style.display = 'none'; buildGameChips(); search.focus(); };
+  document.getElementById('surprise-game').onclick = () => {
+    const choices = filteredGames();
+    if (!choices.length) return;
+    selectGame(choices[Math.floor(Math.random() * choices.length)]);
+    document.getElementById('hero').scrollIntoView({ behavior:'smooth', block:'start' });
+  };
+  buildGameChips();
+}
+
+async function loadPublicHot() {
+  try {
+    const d = await fetch(`${API_BASE}/hot?window=24&limit=6`).then(r => r.json());
+    const entries = d.entries || [];
+    hotGameIds = new Set(entries.map(x => x.game));
+    buildGameChips();
+    if (!entries.length) return;
+    const wrap = document.getElementById('public-hot');
+    document.getElementById('public-hot-list').innerHTML = entries.map(e => {
+      const g = LB_MAP[e.game];
+      if (!g) return '';
+      const trend = e.vel == null ? 'new' : e.vel >= 1 ? `↑ ${e.vel.toFixed(1)}×` : `${e.cur} plays`;
+      return `<button class="public-hot-pill" data-game="${g.id}">${escHtml(g.label)} · ${trend}</button>`;
+    }).join('');
+    wrap.onclick = e => {
+      const btn = e.target.closest('[data-game]');
+      if (btn && GAME_MAP[btn.dataset.game]) selectGame(GAME_MAP[btn.dataset.game]);
+    };
+    wrap.style.display = '';
+  } catch (_) {}
 }
 
 // ── Select game ─────────────────────────────────────────────────────────────
@@ -2200,7 +2414,7 @@ async function loadFeaturedBanner() {
 }
 
 async function init() {
-  buildGameChips(GAMES);
+  initGameDiscovery();
 
   const params  = new URL(location.href).searchParams;
   const p = params.get('period');
@@ -2215,6 +2429,7 @@ async function init() {
 
   // Load the featured daily banner (async, non-blocking).
   loadFeaturedBanner();
+  loadPublicHot();
 }
 init();
 

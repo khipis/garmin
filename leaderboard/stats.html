@@ -396,12 +396,118 @@
   .admin-divider:hover .admin-caret { background: #1a3040; }
   #admin-section { padding-top: 14px; }
 
+  /* ── Owner command center ───────────────────────────────────────────────── */
+  #main { background: #07111a; }
+  #overview-panel { max-width: 1380px; margin: 0 auto; }
+  .dashboard-intro {
+    display: flex; align-items: end; justify-content: space-between; gap: 18px;
+    margin-bottom: 18px;
+  }
+  .dashboard-eyebrow {
+    color: var(--accent); font-size: .64rem; font-weight: 800;
+    letter-spacing: .13em; text-transform: uppercase; margin-bottom: 5px;
+  }
+  .dashboard-title { font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 850; color: #f5fbff; }
+  .dashboard-sub { color: #7590a4; font-size: .78rem; line-height: 1.55; margin-top: 5px; }
+  .command-grid {
+    display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 10px;
+    margin: 0 0 24px;
+  }
+  .command-card {
+    background: #0c1b27; border: 1px solid #1b3447; border-radius: 13px;
+    padding: 16px; min-height: 148px;
+  }
+  .command-card.primary { background: #0b2230; border-color: #18526a; }
+  .command-label {
+    font-size: .61rem; color: #708ca0; text-transform: uppercase;
+    letter-spacing: .1em; font-weight: 800; margin-bottom: 10px;
+  }
+  .command-headline { font-size: 1.05rem; font-weight: 800; line-height: 1.35; color: #f3f9fd; }
+  .command-copy { margin-top: 8px; color: #8ca4b6; font-size: .74rem; line-height: 1.55; }
+  .signal-list { display: grid; gap: 7px; }
+  .signal-row {
+    display: flex; align-items: center; gap: 8px; font-size: .75rem;
+    padding-bottom: 7px; border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .signal-row:last-child { border: 0; padding-bottom: 0; }
+  .signal-name { font-weight: 750; color: #dceaf4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .signal-detail { margin-left: auto; color: #7893a6; white-space: nowrap; font-size: .68rem; }
+  .signal-mark { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: #5d7485; }
+  .signal-mark.good { background: #34d399; }
+  .signal-mark.warn { background: #fbbf24; }
+  .signal-mark.bad { background: #fb7185; }
+  .kpi-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 24px;
+  }
+  .kpi-cell { background: #0b1924; padding: 13px 14px; }
+  .kpi-value { font-size: 1.12rem; font-weight: 850; color: #f0f8ff; }
+  .kpi-label { color: #688397; font-size: .58rem; text-transform: uppercase; letter-spacing: .07em; margin-top: 3px; }
+  .kpi-note { color: #6e8799; font-size: .6rem; margin-top: 4px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px; border-radius: 999px;
+    padding: 3px 7px; font-size: .61rem; font-weight: 800; white-space: nowrap;
+  }
+  .status-hot { color: #ffbd72; background: rgba(251,146,60,.1); border: 1px solid rgba(251,146,60,.22); }
+  .status-rising { color: #6ee7b7; background: rgba(52,211,153,.09); border: 1px solid rgba(52,211,153,.2); }
+  .status-steady { color: #7dd3fc; background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+  .status-watch { color: #fda4af; background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.2); }
+  .status-quiet { color: #7890a3; background: rgba(120,144,163,.07); border: 1px solid rgba(120,144,163,.15); }
+  .game-intel-tools { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  #pergame-search {
+    width: 180px; background: var(--card); border: 1px solid var(--border);
+    color: var(--text); padding: 5px 9px; border-radius: 8px; font-size: .72rem; outline: none;
+  }
+  #pergame-search:focus { border-color: var(--accent); }
+  .intel-game-cell { min-width: 145px; }
+  .intel-game-name { color: #dcebf5; font-weight: 800; }
+  .intel-reason { color: #6d879a; font-size: .64rem; margin-top: 3px; max-width: 290px; }
+  .trend-up { color: #34d399; }
+  .trend-down { color: #fb7185; }
+  .trend-flat { color: #7890a3; }
+  .sb-search-wrap { padding: 0 10px 8px; }
+  #sb-search {
+    width: 100%; border: 1px solid var(--border); background: #081722; color: var(--text);
+    border-radius: 7px; padding: 7px 9px; font-size: .72rem; outline: none;
+  }
+  #sb-search:focus { border-color: var(--accent); }
+  .section-block {
+    background: rgba(10,26,40,.5); border: 1px solid rgba(26,48,64,.72);
+    border-radius: 14px; padding: 18px; margin: 0 0 18px;
+  }
+  .section-block .cards:last-child, .section-block table:last-child { margin-bottom: 0; }
+  .insight-bar { background: #0b2230; }
+  .cards { grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); }
+  .card { text-align: left; padding: 15px; }
+  .card .num, .card .card-val {
+    background: none; -webkit-text-fill-color: currentColor; color: #edf8ff;
+    font-size: 1.5rem; font-weight: 850;
+  }
+  .card .lbl, .card .card-lbl { text-align: left; }
+  .hot-grid { grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); }
+
   /* ── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 1000px) {
+    .command-grid { grid-template-columns: 1fr 1fr; }
+    .command-card.primary { grid-column: 1 / -1; min-height: 0; }
+    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 640px) {
     .layout { flex-direction: column; height: auto; }
-    #sidebar { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--border); max-height: 200px; }
+    #sidebar { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--border); max-height: 230px; }
     .cards { grid-template-columns: repeat(2, 1fr); }
     .bar-cell { display: none; }
+    header { padding: 0 12px; }
+    header .badge { display: none; }
+    #main { padding: 16px 12px 40px; }
+    .dashboard-intro { align-items: start; }
+    .command-grid { grid-template-columns: 1fr; }
+    .command-card.primary { grid-column: auto; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .game-intel-tools { width: 100%; }
+    #pergame-search { flex: 1; width: 120px; }
+    .hide-mobile { display: none; }
   }
 </style>
 </head>
@@ -427,6 +533,7 @@
     </div>
     <div class="sb-section">
       <div class="sb-label">Games</div>
+      <div class="sb-search-wrap"><input id="sb-search" type="search" placeholder="Find a game…" oninput="filterSidebarGames()"></div>
       <div id="sb-games"><div style="padding:10px 14px;font-size:.75rem;color:var(--muted)">Loading…</div></div>
     </div>
   </nav>
@@ -437,8 +544,31 @@
     <!-- Overview panel -->
     <div id="overview-panel">
 
+      <div class="dashboard-intro">
+        <div>
+          <div class="dashboard-eyebrow">Portfolio intelligence</div>
+          <div class="dashboard-title">What needs your attention today?</div>
+          <div class="dashboard-sub">A single view of momentum, player quality, retention and opportunities across the entire Bitochi catalog.</div>
+        </div>
+      </div>
+
       <!-- ── Business health at a glance ──────────────────────────────────────── -->
       <div class="insight-bar" id="insight-bar">Loading summary…</div>
+      <div class="command-grid">
+        <article class="command-card primary" id="command-summary">
+          <div class="command-label">Executive readout</div>
+          <div class="command-headline">Waiting for live data…</div>
+        </article>
+        <article class="command-card">
+          <div class="command-label">Double down</div>
+          <div class="signal-list" id="command-winners"><div class="muted">Loading momentum…</div></div>
+        </article>
+        <article class="command-card">
+          <div class="command-label">Needs attention</div>
+          <div class="signal-list" id="command-risks"><div class="muted">Loading signals…</div></div>
+        </article>
+      </div>
+      <div class="kpi-strip" id="kpi-strip"></div>
 
       <div class="sh"><span class="sh-title">👥 Players — bots excluded</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
       <div class="section-desc">How many unique people have played your games (each person counted once, regardless of how many times they played). <b>Returning</b> = came back on a different day. <b>Loyal</b> = played on at least 7 different days.</div>
@@ -491,13 +621,22 @@
 
       <!-- ── Per game ───────────────────────────────────────────────────────── -->
       <div class="sh"><span class="sh-title">🎮 All games — breakdown</span><span class="sh-line"></span>
-        <select class="hsel" id="pergame-limit" onchange="renderPerGameTable()">
-          <option value="8">Top 8</option>
-          <option value="20" selected>Top 20</option>
+        <div class="game-intel-tools">
+          <input id="pergame-search" type="search" placeholder="Search games…" oninput="renderPerGameTable()">
+          <select class="hsel" id="pergame-sort" onchange="renderPerGameTable()">
+            <option value="priority" selected>Priority</option>
+            <option value="momentum">Momentum</option>
+            <option value="players">Players</option>
+            <option value="depth">Engagement</option>
+          </select>
+          <select class="hsel" id="pergame-limit" onchange="renderPerGameTable()">
+          <option value="12" selected>Top 12</option>
+          <option value="24">Top 24</option>
           <option value="9999">Show all</option>
-        </select>
+          </select>
+        </div>
       </div>
-      <div class="section-desc">All-time unique players per game since launch. Click any game to see its leaderboard.</div>
+      <div class="section-desc">Prioritized using live momentum and engagement depth. <b>Depth</b> is scores per player. Click any game for its real-player leaderboard.</div>
       <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
       <!-- ── Per country ───────────────────────────────────────────────────── -->
@@ -722,6 +861,8 @@ let lastPerGameRows      = [];
 let lastPerCountryRows   = [];
 let lastLaunchGameRows   = [];
 let lastLaunchCountryRows = [];
+let lastHotEntries       = [];
+let lastDailyChallenges  = [];
 
 // ── Overview ──────────────────────────────────────────────────────────────────
 function showOverview() {
@@ -797,7 +938,7 @@ function renderStats() {
   // lengthen the page — so no limit select needed here).
   const sbEl = document.getElementById('sb-games');
   sbEl.innerHTML = rows.map(g => `
-    <div class="sb-item" id="sb-${g.game}" onclick="openGame('${esc(g.game)}')">
+    <div class="sb-item" id="sb-${g.game}" data-game="${esc(g.game.toLowerCase())}" onclick="openGame('${esc(g.game)}')">
       <span class="sb-dot"></span>
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.game)}</span>
       <span class="sb-cnt">${g.players||0}</span>
@@ -809,31 +950,78 @@ function renderStats() {
   lastPerCountryRows = d.perCountry || [];
   renderPerCountryTable();
   updateInsightBar();
+  renderCommandCenter();
+}
+
+function filterSidebarGames() {
+  const q = (document.getElementById('sb-search')?.value || '').trim().toLowerCase();
+  document.querySelectorAll('#sb-games .sb-item').forEach(el => {
+    el.style.display = !q || (el.dataset.game || '').includes(q) ? '' : 'none';
+  });
 }
 
 function renderPerGameTable() {
-  const rows = lastPerGameRows;
+  const q = (document.getElementById('pergame-search')?.value || '').trim().toLowerCase();
+  const sort = document.getElementById('pergame-sort')?.value || 'priority';
+  const hotByGame = new Map(lastHotEntries.map(x => [x.game, x]));
+  let rows = lastPerGameRows.map(g => {
+    const hot = hotByGame.get(g.game) || {};
+    const players = g.players || 0;
+    const depth = players ? (g.scores || 0) / players : 0;
+    const cur = hot.cur || 0;
+    const vel = hot.vel;
+    let status = 'quiet', statusLabel = 'Quiet', reason = 'No activity in the selected live window';
+    if (cur >= 2 && vel !== null && vel >= 1.5) {
+      status = 'hot'; statusLabel = 'Hot'; reason = `${vel.toFixed(1)}× the previous window`;
+    } else if (cur > 0 && (vel === null || vel >= 1)) {
+      status = 'rising'; statusLabel = vel === null ? 'New' : 'Rising';
+      reason = vel === null ? 'New activity appeared' : `${vel.toFixed(1)}× the previous window`;
+    } else if (players >= 5 && depth < 2) {
+      status = 'watch'; statusLabel = 'Watch';
+      reason = 'Players try it, but submit few scores';
+    } else if (cur > 0) {
+      status = 'steady'; statusLabel = 'Active';
+      reason = vel !== null && vel < 1 ? 'Active, but slower than prior window' : 'Recent player activity';
+    } else if (depth >= 5 && players >= 3) {
+      status = 'quiet'; statusLabel = 'Hidden gem';
+      reason = 'Strong depth, limited current reach';
+    }
+    const priorityWeight = { hot:500, rising:400, watch:300, steady:200, quiet:100 }[status];
+    return { ...g, depth, cur, vel, status, statusLabel, reason,
+      priority: priorityWeight + cur * 3 + Math.min(depth, 20) };
+  }).filter(g => !q || g.game.toLowerCase().includes(q));
+
+  if (sort === 'players') rows.sort((a,b) => (b.players||0) - (a.players||0));
+  else if (sort === 'depth') rows.sort((a,b) => b.depth - a.depth);
+  else if (sort === 'momentum') rows.sort((a,b) => (b.cur||0) - (a.cur||0) || (b.vel||0) - (a.vel||0));
+  else rows.sort((a,b) => b.priority - a.priority);
+
   const el = document.getElementById('per-game');
   if (!rows.length) { el.innerHTML = '<div class="state">No real scores yet.</div>'; return; }
 
   const limit = parseInt(document.getElementById('pergame-limit').value, 10);
   const shown = rows.slice(0, limit);
-  const maxP  = Math.max(...rows.map(g => g.players||0), 1);
 
   el.innerHTML = `
-    <table>
-      <thead><tr><th>Game</th><th>Players</th><th>IPs</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>Status</th><th>Game & signal</th><th>Players</th><th>Depth</th><th>24h plays</th><th>Trend</th><th class="hide-mobile">Scores</th></tr></thead>
       <tbody>${shown.map(g => {
-        const pct = Math.round(((g.players||0)/maxP)*100);
+        const trend = g.vel === null && g.cur > 0
+          ? '<span class="trend-up">new</span>'
+          : g.vel == null ? '<span class="trend-flat">—</span>'
+          : g.vel >= 1 ? `<span class="trend-up">↑ ${g.vel.toFixed(1)}×</span>`
+          : `<span class="trend-down">↓ ${g.vel.toFixed(1)}×</span>`;
         return `<tr style="cursor:pointer" onclick="openGame('${esc(g.game)}')">
-          <td><b>${esc(g.game)}</b></td>
+          <td><span class="status-pill status-${g.status}">${esc(g.statusLabel)}</span></td>
+          <td class="intel-game-cell"><div class="intel-game-name">${esc(g.game)}</div><div class="intel-reason">${esc(g.reason)}</div></td>
           <td><b>${(g.players||0).toLocaleString()}</b></td>
-          <td class="muted">${(g.devices||0).toLocaleString()}</td>
-          <td class="muted">${(g.scores||0).toLocaleString()}</td>
-          <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+          <td><b>${g.depth.toFixed(1)}×</b></td>
+          <td>${g.cur ? `<b>${g.cur.toLocaleString()}</b>` : '<span class="muted">—</span>'}</td>
+          <td>${trend}</td>
+          <td class="muted hide-mobile">${(g.scores||0).toLocaleString()}</td>
         </tr>`;
       }).join('')}</tbody>
-    </table>
+    </table></div>
     ${rows.length > shown.length ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${rows.length} — pick "Show all" above to see the rest.</div>` : ''}`;
 }
 
@@ -986,6 +1174,63 @@ function updateInsightBar() {
     (dau   ? `<b>${dau.toLocaleString()}</b> daily active avg (30d)` : '');
 }
 
+function renderCommandCenter() {
+  if (!statsData) return;
+  const t = statsData.totals || {};
+  const retPct = t.players ? Math.round((t.returning || 0) / t.players * 100) : 0;
+  const loyalPct = t.players ? Math.round((t.loyal || 0) / t.players * 100) : 0;
+  const livePlays = lastHotEntries.reduce((sum, x) => sum + (x.cur || 0), 0);
+  const rising = lastHotEntries.filter(x => x.cur >= 2 && (x.vel === null || x.vel >= 1.15));
+  const cooling = lastHotEntries.filter(x => x.prev > 0 && x.vel !== null && x.vel < .7);
+  const challengeDone = lastDailyChallenges.reduce((sum, x) => sum + (x.completions || 0), 0);
+  const top = [...lastHotEntries].sort((a,b) => (b.cur||0) - (a.cur||0))[0];
+  const avgDepth = Number(t.avgScoresPerPlayer || 0);
+
+  const summary = document.getElementById('command-summary');
+  if (summary) {
+    const headline = top
+      ? `${esc(top.game)} leads current play with ${(top.cur||0).toLocaleString()} score submissions.`
+      : `${(t.players||0).toLocaleString()} real players are visible across ${t.games||0} active games.`;
+    let action = rising.length
+      ? `${rising.length} game${rising.length===1?' is':'s are'} gaining momentum—promote the winners while attention is fresh.`
+      : 'No clear breakout is visible yet; use the watchlist to choose the next game to improve.';
+    if (retPct < 20) action += ` Return rate is ${retPct}%, so retention is the portfolio-wide priority.`;
+    summary.innerHTML = `<div class="command-label">Executive readout</div>
+      <div class="command-headline">${headline}</div>
+      <div class="command-copy">${action}</div>`;
+  }
+
+  const winners = rising.length ? rising.slice(0,4) : [...lastHotEntries].sort((a,b)=>(b.cur||0)-(a.cur||0)).slice(0,4);
+  document.getElementById('command-winners').innerHTML = winners.length ? winners.map(x => `
+    <div class="signal-row" style="cursor:pointer" onclick="openGame('${esc(x.game)}')">
+      <span class="signal-mark good"></span><span class="signal-name">${esc(x.game)}</span>
+      <span class="signal-detail">${(x.cur||0)} plays${x.vel ? ` · ${x.vel.toFixed(1)}×` : ' · new'}</span>
+    </div>`).join('') : '<div class="muted">No live momentum data yet.</div>';
+
+  const lowDepth = lastPerGameRows
+    .map(g => ({...g, depth:(g.scores||0)/Math.max(g.players||0,1)}))
+    .filter(g => (g.players||0) >= 5 && g.depth < 2)
+    .sort((a,b) => a.depth - b.depth);
+  const risks = [
+    ...cooling.slice(0,2).map(x => ({game:x.game, detail:`down to ${Math.round((x.vel||0)*100)}%`, level:'bad'})),
+    ...lowDepth.slice(0,3).map(x => ({game:x.game, detail:`${x.depth.toFixed(1)} scores/player`, level:'warn'}))
+  ].filter((x,i,a) => a.findIndex(y => y.game === x.game) === i).slice(0,4);
+  document.getElementById('command-risks').innerHTML = risks.length ? risks.map(x => `
+    <div class="signal-row" style="cursor:pointer" onclick="openGame('${esc(x.game)}')">
+      <span class="signal-mark ${x.level}"></span><span class="signal-name">${esc(x.game)}</span>
+      <span class="signal-detail">${esc(x.detail)}</span>
+    </div>`).join('') : '<div class="muted">No urgent game-level risks detected.</div>';
+
+  document.getElementById('kpi-strip').innerHTML = `
+    <div class="kpi-cell"><div class="kpi-value">${livePlays.toLocaleString()}</div><div class="kpi-label">Plays now</div><div class="kpi-note">selected hot window</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Return rate</div><div class="kpi-note">${(t.returning||0).toLocaleString()} multi-day players</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${avgDepth.toFixed(1)}×</div><div class="kpi-label">Play depth</div><div class="kpi-note">scores per player</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${challengeDone.toLocaleString()}</div><div class="kpi-label">Challenges done</div><div class="kpi-note">today across tracked games</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${(t.lifetimeLaunches||0).toLocaleString()}</div><div class="kpi-label">Lifetime opens</div><div class="kpi-note">${(t.lifetimePlayers||0).toLocaleString()} lifetime players</div></div>`;
+
+  renderPerGameTable();
+}
+
 // ── Admin toggle ───────────────────────────────────────────────────────────────
 function toggleAdmin() {
   const el    = document.getElementById('admin-section');
@@ -996,17 +1241,21 @@ function toggleAdmin() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-loadStats();
-loadLaunches();
-loadErrors();
-loadSnapshots();
-loadHofAdmin();
-loadMessages();
-loadLinks();
-loadBots();
-loadActivity();
-loadHot();
-loadDailyStats();
+// Defer until the whole script has been evaluated. Some data catalogs used by
+// the loaders are declared later in this file and must exist before first use.
+window.addEventListener('DOMContentLoaded', () => {
+  loadStats();
+  loadLaunches();
+  loadErrors();
+  loadSnapshots();
+  loadHofAdmin();
+  loadMessages();
+  loadLinks();
+  loadBots();
+  loadActivity();
+  loadHot();
+  loadDailyStats();
+});
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1933,6 +2182,8 @@ async function loadDailyStats() {
       ? { game: DAILY_TRACKED_GAMES[i], ...r.value }
       : null)
     .filter(Boolean);
+  lastDailyChallenges = challenges;
+  renderCommandCenter();
 
   const totalCompletions = challenges.reduce((s, c) => s + (c.completions || 0), 0);
   const gamesWithActivity = challenges.filter(c => (c.completions || 0) > 0).length;
@@ -1987,17 +2238,22 @@ async function loadHot() {
   const limit  = document.getElementById('hot-limit')?.value  || 8;
   el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
   try {
-    const r = await fetch(`${API}/hot?window=${window}&limit=${limit}`, { cache: 'no-store' });
+    // Fetch the full active set for portfolio signals; the selector only limits
+    // how many cards are shown.
+    const r = await fetch(`${API}/hot?window=${window}&limit=50`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
     const entries = d.entries || [];
+    lastHotEntries = entries;
+    renderCommandCenter();
     if (!entries.length) {
       el.innerHTML = `<div class="state">No activity in the last ${d.window_h}h.</div>`;
       return;
     }
     const rankIcon = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
     const rankCls  = i => i === 0 ? 'hot-rank-1' : i === 1 ? 'hot-rank-2' : i === 2 ? 'hot-rank-3' : '';
-    el.innerHTML = `<div class="hot-grid">${entries.map((e, i) => {
+    const shownEntries = entries.slice(0, Number(limit) || 8);
+    el.innerHTML = `<div class="hot-grid">${shownEntries.map((e, i) => {
       const isFire = e.vel !== null && e.vel >= 1.5;
       const isUp   = e.vel !== null && e.vel >= 1.0 && !isFire;
       const cardCls = isFire ? 'hot-card trend-fire' : isUp ? 'hot-card trend-up' : 'hot-card';
