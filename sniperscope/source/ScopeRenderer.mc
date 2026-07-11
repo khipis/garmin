@@ -45,15 +45,16 @@ class ScopeRenderer {
     // chimneys/antennas/water towers + a parapet ledge underfoot).
     static function drawScene(dc, ctrl, ox, oy) {
         var w = ctrl.sw; var h = ctrl.sh;
-        // Horizon locked to the target projection: same gaze, same full
-        // FOV. This is what keeps the hostiles planted on the ground when
-        // the scope swings up/down (no more targets floating in mid-air).
-        var horizonY = ctrl.cy + ((SS_GROUND_PITCH - ctrl.aim.gazePitch) * SS_FOV).toNumber() + oy;
+        // True optical view: horizon, scenery and targets all use the same
+        // current gaze transform. This keeps feet planted when looking up/down
+        // instead of making targets appear to float independently of the world.
+        var horizonY = ctrl.cy
+                     + ((SS_GROUND_PITCH - ctrl.aim.aimPitch)
+                        * ctrl.pitchScale()).toNumber() + oy;
         if (horizonY < h * 20 / 100) { horizonY = h * 20 / 100; }
         if (horizonY > h * 80 / 100) { horizonY = h * 80 / 100; }
 
-        // Parallax X based on yaw — scenery slides opposite gaze.
-        var px = (-ctrl.aim.aimYaw * SS_FOV * 0.5).toNumber() + ox;
+        var px = (-(ctrl.aim.aimYaw) * ctrl.yawScale()).toNumber() + ox;
         var ws = (ctrl.wind.strength * 4.0).toNumber();
 
         if      (ctrl.scene == SS_SCENE_URBAN)   { _sceneUrban(dc, w, h, horizonY, px, ox, ws); }
@@ -64,20 +65,20 @@ class ScopeRenderer {
     // ── FIELD — open countryside at dusk: rolling hills, lone trees,
     // tall warm grass. No buildings, no windows.
     hidden static function _sceneField(dc, w, h, horizonY, px, ox, ws) {
-        dc.setColor(0x2E2A4A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x48466E, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, horizonY - 14);
-        dc.setColor(0x5A4A5E, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x76677D, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY - 14, w, 8);
-        dc.setColor(0xB88858, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xD3A46E, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY - 6, w, 6);
 
-        dc.setColor(0x3E5A26, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x57763A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY, w, h - horizonY);
 
         // Rolling hills — overlapping circle caps poking above the
         // horizon line (cheap way to fake a hill skyline).
         var seed = 55511;
-        dc.setColor(0x2C4420, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x405E30, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < 6; i++) {
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             var hr = 46 + seed % 40;
@@ -93,7 +94,7 @@ class ScopeRenderer {
             var th = 14 + (ts >> 8) % 10;
             dc.setColor(0x241E14, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(tx, horizonY, tx, horizonY - th);
-            dc.setColor(0x203A18, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x315526, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(tx, horizonY - th, 6);
         }
 
@@ -113,16 +114,16 @@ class ScopeRenderer {
     hidden static function _sceneUrban(dc, w, h, horizonY, px, ox, ws) {
         // Sky band — deeper top fading to a brighter mid-tone near
         // the horizon.
-        dc.setColor(0x2A3848, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x40566C, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, horizonY - 10);
-        dc.setColor(0x3F5066, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x5A7088, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY - 10, w, 6);
         // Horizon glow — warm dawn band.
-        dc.setColor(0x6A6A4A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x93895E, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY - 4, w, 4);
 
         // Ground band — olive/green-ish mid-tone so silhouettes pop.
-        dc.setColor(0x223A1E, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x36552E, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY, w, h - horizonY);
 
         // Distant skyline — darker than the sky behind it but still
@@ -135,7 +136,7 @@ class ScopeRenderer {
             var bw = 18 + seed % 22;
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             var bh = 10 + seed % 32;
-            dc.setColor(0x1A2A24, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x293D35, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx0, horizonY - bh, bw, bh);
             if ((seed & 7) == 0 && bh >= 12) {
                 dc.setColor(0xAA7733, Graphics.COLOR_TRANSPARENT);
@@ -160,12 +161,12 @@ class ScopeRenderer {
     // ── ROOFTOP — closer, taller night skyline shot from up high:
     // chimneys / antennas / water towers, gravel + parapet underfoot.
     hidden static function _sceneRooftop(dc, w, h, horizonY, px, ox, ws) {
-        dc.setColor(0x151C30, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x303C5A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, horizonY - 8);
-        dc.setColor(0x263148, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x455572, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY - 8, w, 8);
 
-        dc.setColor(0x1E2430, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x343D4C, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY, w, h - horizonY);
 
         var seed = 68131;
@@ -176,7 +177,7 @@ class ScopeRenderer {
             var bw = 24 + seed % 26;
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             var bh = 22 + seed % 46;
-            dc.setColor(0x11151E, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x242B38, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx0, horizonY - bh, bw, bh);
             // Lit windows — cooler, sparser than urban (night city).
             if ((seed & 3) == 0) {
@@ -232,28 +233,17 @@ class ScopeRenderer {
         }
     }
 
-    // ── Off-scope letterbox (the dark mask around the scope). ──
+    // ── Lens rim. The complete watch face is the scope glass. ──
     static function drawScopeMask(dc, ctrl) {
         var sc = scopeCircle(ctrl);
         var cx0 = sc[0]; var cy0 = sc[1]; var r = sc[2];
-        // Outer dark ring (thick) — gives the lens its tube feel.
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        // Four black corner rectangles around the scope circle.
-        var outR = r + 24;
-        dc.fillRectangle(0, 0, ctrl.sw, cy0 - outR);
-        dc.fillRectangle(0, cy0 + outR, ctrl.sw, ctrl.sh - (cy0 + outR));
-        dc.fillRectangle(0, cy0 - outR, cx0 - outR, 2 * outR);
-        dc.fillRectangle(cx0 + outR, cy0 - outR, ctrl.sw - (cx0 + outR), 2 * outR);
-        // Dark vignette ring just outside the scope.
-        dc.setPenWidth(20);
-        dc.setColor(0x0A0E0A, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(cx0, cy0, r + 12);
-        dc.setPenWidth(8);
-        dc.setColor(0x040604, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(cx0, cy0, r + 4);
-        // Bright glass ring (the polished metal lip).
+        // A narrow rim preserves the optical cue without crushing the already
+        // limited watch brightness or shrinking the playable field.
+        dc.setPenWidth(5);
+        dc.setColor(0x182019, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx0, cy0, r + 1);
         dc.setPenWidth(2);
-        dc.setColor(0x5A6850, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x7F9272, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(cx0, cy0, r);
         dc.setPenWidth(1);
         dc.setColor(0xA5BD92, Graphics.COLOR_TRANSPARENT);
@@ -263,7 +253,8 @@ class ScopeRenderer {
     // ── Reticle (crosshair + mil dots + breathing wobble). ───
     static function drawReticle(dc, ctrl) {
         var sc = scopeCircle(ctrl);
-        var cx0 = sc[0]; var cy0 = sc[1]; var r = sc[2];
+        var rp = ctrl.reticleScreen();
+        var cx0 = rp[0]; var cy0 = rp[1];
 
         // Recoil pushes the reticle UP for `recoilT` ticks.
         var recoilY = (ctrl.recoilT > 0) ? -ctrl.recoilT * 2 : 0;
@@ -275,17 +266,18 @@ class ScopeRenderer {
         else                                  { col = 0xE0F0DC; }
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
 
-        // Horizontal & vertical hairs with a 6-px gap around centre.
-        var gap = 6;
-        var armX = r - 6;
-        var armY = r - 6;
+        // Full optical crosshair: the whole watch is the scope, so the reticle
+        // is fixed at centre and reaches across most of the lens.
+        var gap = 4;
+        var armX = sc[2] - 10;
+        var armY = sc[2] - 10;
         dc.drawLine(cx0 - armX, cy0 + recoilY, cx0 - gap, cy0 + recoilY);
         dc.drawLine(cx0 + gap,  cy0 + recoilY, cx0 + armX, cy0 + recoilY);
         dc.drawLine(cx0, cy0 - armY + recoilY, cx0, cy0 - gap + recoilY);
         dc.drawLine(cx0, cy0 + gap + recoilY, cx0, cy0 + armY + recoilY);
 
         // Mil dots below centre (range estimation aid).
-        for (var k = 1; k <= 4; k++) {
+        for (var k = 1; k <= 5; k++) {
             var dy = k * 8;
             if (dy + gap >= armY) { break; }
             dc.drawLine(cx0 - 3, cy0 + gap + dy + recoilY,
@@ -300,7 +292,7 @@ class ScopeRenderer {
         if (ctrl.breath.steady == 1) {
             dc.setPenWidth(1);
             dc.setColor(0x66FF66, Graphics.COLOR_TRANSPARENT);
-            dc.drawCircle(cx0, cy0, 18);
+            dc.drawCircle(cx0, cy0, 13);
         }
     }
 
@@ -320,8 +312,8 @@ class ScopeRenderer {
     static function drawBullet(dc, ctrl, ox, oy) {
         if (ctrl.bullet.live == 0) { return; }
         var ba = ctrl.bullet.screenAt(ctrl.cx, ctrl.cy,
-                                       ctrl.aim.gazeYaw,
-                                       ctrl.aim.gazePitch);
+                                       ctrl.yawScale(), ctrl.pitchScale(),
+                                       ctrl.aim.aimYaw, ctrl.aim.aimPitch);
         var bx = ba[0] + ox; var by = ba[1] + oy;
         var mx = ba[2] + ox; var my = ba[3] + oy;
 
@@ -362,8 +354,8 @@ class ScopeRenderer {
     // + 1 fill) but adds a lot of "oomph" to the trigger pull.
     static function drawMuzzleFlash(dc, ctrl) {
         if (ctrl.muzzleFlashT <= 0) { return; }
-        var sc = scopeCircle(ctrl);
-        var cx0 = sc[0]; var cy0 = sc[1];
+        var rp = ctrl.reticleScreen();
+        var cx0 = rp[0]; var cy0 = rp[1];
         var age = 3 - ctrl.muzzleFlashT;         // 0 (fresh) .. 2 (fading)
         var r = 10 + age * 8;
         dc.setPenWidth(2);

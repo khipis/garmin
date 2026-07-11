@@ -107,8 +107,11 @@ class UIManager {
     //   1 = legs hidden by low cover
     //   2 = chest + legs hidden (only head/shoulders peek above)
     hidden static function _drawSilhouette(dc, sx, sy, s, cover, isPrimary, diff, idx) {
-        var body = isPrimary ? 0x222226 : 0x4A4A52;
-        var trim = isPrimary ? 0x4A2A2A : 0x6A6A72;
+        // Lift silhouettes for transflective watch displays. Hostiles remain
+        // darker than civilians and are identified by the rifle, but no longer
+        // disappear into the terrain at normal backlight levels.
+        var body = isPrimary ? 0x34343A : 0x686874;
+        var trim = isPrimary ? 0x754444 : 0x90909C;
 
         var headR = s * 35 / 100; if (headR < 4) { headR = 4; }
         var headY = sy + headR;
@@ -294,11 +297,12 @@ class UIManager {
     hidden static function _rangeEstimate(ctrl) {
         var best = -1;
         var bestD2 = 99999999;
+        var rp = ctrl.reticleScreen();
         for (var i = 0; i < SS_TGT_MAX; i++) {
             if (ctrl.targets.live[i] == 0) { continue; }
             var sp = ctrl.targetScreen(i);
-            var dx = sp[0] - ctrl.cx;
-            var dy = sp[1] - ctrl.cy;
+            var dx = sp[0] - rp[0];
+            var dy = sp[1] - rp[1];
             var d2 = dx * dx + dy * dy;
             // Allow a generous proximity window so the assist is
             // useful while scanning, not only when perfectly on.

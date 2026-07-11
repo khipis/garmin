@@ -13,9 +13,9 @@
 //   Angular world (radians):
 //     yaw   ±SS_WORLD_YAW   — bearing across the scene
 //     pitch ±SS_WORLD_PITCH — elevation
-//   World → screen:
-//     sx = cx + (yaw   − gazeYaw)   · SS_FOV
-//     sy = cy + (pitch − gazePitch) · SS_FOV
+//   World → screen (moving scene, fixed optical reticle):
+//     object  = centre + (world angle − current aim) · dynamic scale
+//     reticle = centre
 //
 // TICK
 //   60 ms — fast enough for smooth gyro tracking, slow enough that
@@ -64,10 +64,13 @@ const SS_HOLD_DECAY      = 90;   // ticks after which sway grows again
                                  // (long-aim fatigue)
 
 // ── Scope geometry (proportions of min(sw,sh)) ────────────────
-const SS_SCOPE_PCT       = 92;   // %% of min dim used for scope opening
-const SS_FOV             = 240;  // pixels per radian (tighter than SC — feels zoomed in)
+const SS_SCOPE_PCT       = 98;   // nearly the complete watch face is the lens
 const SS_WORLD_YAW       = 1.6;  // ±yaw range player can scan
 const SS_WORLD_PITCH     = 0.9;  // ±pitch range
+// Targets stay inside this guaranteed-reachable band. Screen scale is derived
+// from the actual scope radius, so small and large watches get identical travel.
+const SS_TARGET_YAW_LIM  = 1.20;
+const SS_TARGET_PITCH_LIM = 0.52;
 // World pitch of the ground line. The scenery horizon is drawn at this
 // pitch and projected through the SAME gaze (and full FOV) as the
 // targets, so the ground and the hostiles pan in perfect lockstep — a
@@ -82,7 +85,7 @@ const SS_WORLD_PITCH     = 0.9;  // ±pitch range
 // downward tilt (the "lower" ones). An all-positive band made EVERY
 // target demand a sustained down-tilt, which read as "can't aim down".
 // The sniper is effectively overlooking a field from slightly above.
-const SS_GROUND_PITCH    = -0.28;
+const SS_GROUND_PITCH    = -0.50;
 
 // ── Breathing (sway) ──────────────────────────────────────────
 // Two superimposed slow sines (different periods) — looks more
@@ -110,7 +113,7 @@ const SS_ZONE_MISS       = 3;
 // DRIFT (dx, dy) in pixels from the muzzle direction at fire
 // time — the renderer projects that muzzle direction through
 // the player's CURRENT gaze each frame so the trace stays
-// world-anchored when the reticle moves.
+// world-anchored while the scope sweeps.
 //
 // Tuning: drop and drift are budgeted to fit comfortably inside
 // a ~120-px scope radius across the full distance range:

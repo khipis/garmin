@@ -156,6 +156,28 @@ class GameController {
 
     function syncDims(w, h) { sw = w; sh = h; cx = w / 2; cy = h / 2; }
 
+    // Optical-scope projection. The watch face is the glass: the reticle stays
+    // at its optical centre while the complete world moves beneath it. Scale
+    // comes from the real lens radius so the same angular sweep works on every
+    // supported watch size.
+    function scopeRadius() {
+        var mn = (sw < sh) ? sw : sh;
+        return mn * SS_SCOPE_PCT / 200;
+    }
+    function yawScale() {
+        var usable = scopeRadius() - 22;
+        if (usable < 32) { usable = 32; }
+        return usable.toFloat() / SS_TARGET_YAW_LIM;
+    }
+    function pitchScale() {
+        var usable = scopeRadius() - 26;
+        if (usable < 28) { usable = 28; }
+        return usable.toFloat() / SS_TARGET_PITCH_LIM;
+    }
+    function reticleScreen() {
+        return [cx, cy];
+    }
+
     // ── Persistence ──────────────────────────────────────────
     hidden function _li(k, d) {
         try {
@@ -374,13 +396,12 @@ class GameController {
         }
     }
 
-    // Convert one target's world (yaw, pitch) to current scope-frame
-    // screen position.  Used by the renderer and the collision step.
+    // Project a world-space target through the current optical axis. Subtracting
+    // gaze from every world object is the essential rifle-scope model: turning
+    // the watch right moves the complete scene left under a fixed crosshair.
     function targetScreen(i) {
-        var dy = targets.yaw[i]   - aim.gazeYaw;
-        var dp = targets.pitch[i] - aim.gazePitch;
-        var sx = (cx + dy * SS_FOV).toNumber();
-        var sy = (cy + dp * SS_FOV).toNumber();
+        var sx = (cx + (targets.yaw[i]   - aim.aimYaw)   * yawScale()).toNumber();
+        var sy = (cy + (targets.pitch[i] - aim.aimPitch) * pitchScale()).toNumber();
         return [sx, sy];
     }
     // Silhouette size in px for target `i` — bigger when closer.
@@ -409,7 +430,8 @@ class GameController {
         // BallisticsSystem.screenAt projects the world-locked
         // muzzle direction through the current gaze + adds drift,
         // so this matches exactly what the player is seeing.
-        var ba = bullet.screenAt(cx, cy, aim.gazeYaw, aim.gazePitch);
+        var ba = bullet.screenAt(cx, cy, yawScale(), pitchScale(),
+                                 aim.aimYaw, aim.aimPitch);
         var bx = ba[0];
         var by = ba[1];
         // Pull current screen positions and sizes for all targets.

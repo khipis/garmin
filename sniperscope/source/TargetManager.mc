@@ -115,7 +115,7 @@ class TargetManager {
         z[i]       = distance;
         // Spawn anywhere in the scannable yaw arc except the very
         // centre (so the player has to look around to find them).
-        var ny = (_randf() * 1.6) - 0.8;          // [-0.8 .. +0.8]
+        var ny = (_randf() * 1.8) - 0.9;          // [-0.9 .. +0.9]
         // Bias the primary a little further out as rounds progress, but keep it
         // inside a comfortable horizontal sweep so the hostile is always
         // findable with a natural wrist turn (the old ±1.3 pushed some targets
@@ -125,8 +125,8 @@ class TargetManager {
             if (ny > -bias && ny < bias) {
                 ny = (ny >= 0) ? ny + bias : ny - bias;
             }
-            if (ny >  1.0) { ny =  1.0; }
-            if (ny < -1.0) { ny = -1.0; }
+            if (ny >  SS_TARGET_YAW_LIM - 0.12) { ny =  SS_TARGET_YAW_LIM - 0.12; }
+            if (ny < -SS_TARGET_YAW_LIM + 0.12) { ny = -SS_TARGET_YAW_LIM + 0.12; }
         }
         yaw[i]   = ny;
         // Pitch band straddles the resting gaze so the field reads naturally:
@@ -135,8 +135,24 @@ class TargetManager {
         // stays ABOVE SS_GROUND_PITCH (which is more negative), so every target
         // renders below the horizon and stays planted — it never floats.
         // Deeper (more positive) pitch = closer to the shooter / lower on
-        // screen. Range: [-0.24 .. +0.30].
-        pitch[i] = (_randf() * 0.54) - 0.24;
+        // screen. The broader symmetric band now exercises the full moving
+        // reticle, while remaining inside its guaranteed reachable envelope.
+        // Range: [-0.40 .. +0.48].
+        pitch[i] = (_randf() * 0.88) - 0.40;
+
+        // Axis limits alone are insufficient for a circular lens: a target at
+        // both far-right AND low could still land outside the diagonal edge.
+        // Clamp the combined normalized vector to 80% of the lens envelope,
+        // leaving room for the silhouette and guaranteeing every hostile is
+        // visible and reachable in every direction.
+        var nx = yaw[i]   / SS_TARGET_YAW_LIM;
+        var np = pitch[i] / SS_TARGET_PITCH_LIM;
+        var nd2 = nx * nx + np * np;
+        if (nd2 > 0.64) {
+            var factor = 0.8 / Math.sqrt(nd2);
+            yaw[i]   = yaw[i]   * factor;
+            pitch[i] = pitch[i] * factor;
+        }
 
         // Slow walk drift — only some targets move.
         var moveRoll = _rand(100);
@@ -166,9 +182,15 @@ class TargetManager {
             if (live[i] == 0) { continue; }
             yaw[i]   = yaw[i]   + dy[i];
             pitch[i] = pitch[i] + dp[i];
-            // Bounce at scene edges.
-            if (yaw[i] >  1.4) { yaw[i] =  1.4; dy[i] = -dy[i]; }
-            if (yaw[i] < -1.4) { yaw[i] = -1.4; dy[i] = -dy[i]; }
+            // Bounce at the CIRCULAR scene edge. The allowable horizontal
+            // travel narrows for high/low targets, preventing movement from
+            // carrying a once-valid diagonal spawn outside the lens.
+            var pn = pitch[i] / SS_TARGET_PITCH_LIM;
+            var rem = 0.6724 - pn * pn; // 0.82² envelope
+            if (rem < 0.04) { rem = 0.04; }
+            var edge = SS_TARGET_YAW_LIM * Math.sqrt(rem);
+            if (yaw[i] >  edge) { yaw[i] =  edge; dy[i] = -dy[i]; }
+            if (yaw[i] < -edge) { yaw[i] = -edge; dy[i] = -dy[i]; }
         }
     }
 

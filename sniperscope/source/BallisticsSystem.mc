@@ -5,17 +5,14 @@
 //
 //   • Muzzle direction in WORLD angular coords
 //     (aimYawAtFire, aimPitchAtFire) — locked at fire time.
-//     The renderer projects this through the CURRENT gaze each
-//     frame, so moving the reticle after the shot makes the
-//     world-anchored trace SLIDE on the scope (correct), instead
-//     of the trace following the reticle (the old bug).
+//     The renderer projects this through the CURRENT optical axis using the
+//     same dynamic scales as every world object.
 //
 //   • Drift in SCREEN pixel units from that muzzle direction
 //     (dx, dy) — accumulated each tick from gravity (vy) and wind
 //     (vx).  This is independent of the player's gaze post-fire.
 //
-//   bullet_screen = project(aimYawAtFire, aimPitchAtFire,
-//                            current_gaze)  +  (dx, dy)
+//   bullet_screen = centre + (fireAim − currentAim) · screenScale + (dx, dy)
 //
 // Hit resolution happens once maxTtl elapses.  GameController
 // pulls the projected bullet position via screenAt(), passes the
@@ -99,13 +96,13 @@ class BallisticsSystem {
     // for a given scope frame.  All callers (renderer + collision)
     // go through here so they all see the same numbers.
     //   cx, cy           — current scope centre in screen pixels
-    //   gazeYaw, gazePitch — current filtered gaze (no sway)
+    //   scaleX, scaleY    — dynamic angle-to-pixel projection
     // Returns [bx, by, originX, originY] — bullet head and the
     // current screen position of the muzzle direction (for the
     // tracer line's far end).
-    function screenAt(cx, cy, gazeYaw, gazePitch) {
-        var originX = (cx + (aimYawAtFire   - gazeYaw)   * SS_FOV).toNumber();
-        var originY = (cy + (aimPitchAtFire - gazePitch) * SS_FOV).toNumber();
+    function screenAt(cx, cy, scaleX, scaleY, currentYaw, currentPitch) {
+        var originX = (cx + (aimYawAtFire   - currentYaw)   * scaleX).toNumber();
+        var originY = (cy + (aimPitchAtFire - currentPitch) * scaleY).toNumber();
         var bx = originX + dx.toNumber();
         var by = originY + dy.toNumber();
         return [bx, by, originX, originY];

@@ -34,13 +34,10 @@ class BitochiPetsApp extends Application.AppBase {
             // Report the creature-quality score on exit (save point). Only a
             // living, raised pet has a non-zero quality, so this never spams
             // a 0 during setup or after death.
-            var q = _pet.getQualityScore();
-            if (q > 0) {
-                Leaderboard.submitScore(LB_GAME_ID, q, "");
-            }
-            // Good/Evil alignment board — lifetime karma across every pet
-            // this player has ever raised (see Pet.reportKarma()).
-            _pet.reportKarma();
+            _pet.reportQuality();
+            // Alignment is submitted when its board is opened. Do not start a
+            // second web request here while the quality profile is in flight;
+            // Garmin permits only one pending Communications request.
         }
     }
 

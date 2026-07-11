@@ -354,6 +354,30 @@
     letter-spacing: .02em; margin-top: 2px;
   }
   .lb-row.fish-row.rank-1 .lb-fish-caption { color: var(--gold); }
+  /* ── Pixel Pets profile board ────────────────────────────────────── */
+  .lb-row.pet-row { grid-template-columns: 52px 50px minmax(0,1fr) auto; }
+  .lb-pet-ic {
+    width: 44px; height: 44px; border-radius: 14px;
+    display: grid; place-items: center;
+    background: linear-gradient(145deg, rgba(168,85,247,.18), rgba(0,212,255,.12));
+    border: 1px solid rgba(168,85,247,.28);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 5px 16px rgba(0,0,0,.24);
+  }
+  .lb-pet-name {
+    font-size: .72rem; color: #d8b4fe; font-weight: 700;
+    letter-spacing: .02em; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .lb-pet-stats {
+    grid-column: 3/5; display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 6px;
+  }
+  .lb-pet-stat {
+    padding: 3px 7px; border-radius: 999px; font-size: .65rem;
+    color: #a9bfd0; background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.07);
+  }
+  .lb-row.pet-row.rank-1 .lb-pet-name { color: var(--gold); }
   .lb-bar {
     height: 100%; border-radius: 2px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
@@ -1489,14 +1513,27 @@ function fmtActivity(v, s) {
 // Score formatter used across the board — activity-aware, else plain grouped.
 function fmtScore(s) {
   if (isActivityBoard()) return fmtActivity(currentVariant || 'flex', s);
+  if (currentLbKey === 'pets') {
+    if (!currentVariant) return Number(s).toLocaleString() + ' quality';
+    if (currentVariant === 'good' || currentVariant === 'evil') {
+      return Number(s).toLocaleString() + ' karma';
+    }
+    return Number(s).toLocaleString() + ' days';
+  }
   return Number(s).toLocaleString();
 }
 
 function prettyVariant(v) {
+  if (currentLbKey === 'pets' && !v) return '🏆 Pet Quality';
   if (v === FISH_VARIANT) return '🐟 Biggest Fish';
   if (v === 'progress')   return '📈 Progress';
   if (v === 'captures')   return '🎯 Pieces Taken';
   if (v === 'material')   return '⚔️ Material';
+  if (currentLbKey === 'pets') {
+    if (v === 'good') return '😇 Kindest Owners';
+    if (v === 'evil') return '😈 Most Chaotic';
+    return '🐾 ' + v.charAt(0).toUpperCase() + v.slice(1) + ' Lifespan';
+  }
   if (isActivityBoard() && ACTIVITY_VARIANTS[v]) return ACTIVITY_VARIANTS[v].label;
   // Capitalize first letter for generic variants like "easy", "normal", "hard"
   if (v) return v.charAt(0).toUpperCase() + v.slice(1);
@@ -1567,6 +1604,36 @@ function fishIconSvg(meta, px) {
     <circle cx="35" cy="11" r="2.6" fill="#fff"/>
     <circle cx="35.6" cy="11" r="1.3" fill="#111"/>
     ${golden ? '<circle cx="17" cy="7" r="1.3" fill="#fffde0"/><circle cx="30" cy="6" r="0.9" fill="#fffde0"/>' : ''}
+  </svg>`;
+}
+
+// Pixel Pets submits a compact profile with every quality/lifespan record.
+// Draw a cheerful deterministic avatar from the species id so the board feels
+// like a showcase of actual pets rather than a list of anonymous numbers.
+const PET_COLORS = [
+  '#78dce8','#ff7a59','#38bdf8','#a78b6d','#a78bfa','#fbbf24','#93c5fd',
+  '#f472b6','#fb7185','#8b5cf6','#fde047','#84cc16','#ef4444','#d6a56f',
+  '#f9a8d4','#65a30d','#94a3b8','#c084fc','#7c3aed','#f59e0b','#60a5fa',
+  '#fb7185','#f97316','#86efac','#f43f5e','#fef3c7','#818cf8'
+];
+
+function petIconSvg(meta, px = 38) {
+  const t = Math.max(0, Math.min(PET_COLORS.length - 1, Number(meta && meta.t) || 0));
+  const col = PET_COLORS[t];
+  const ear = t % 3;
+  const ears = ear === 0
+    ? `<path d="M8 13 L10 3 L18 11 M32 13 L30 3 L22 11" fill="${col}" stroke="#111827" stroke-width="1.5"/>`
+    : ear === 1
+      ? `<circle cx="10" cy="10" r="6" fill="${col}" stroke="#111827" stroke-width="1.5"/><circle cx="30" cy="10" r="6" fill="${col}" stroke="#111827" stroke-width="1.5"/>`
+      : `<path d="M7 14 Q1 8 5 4 Q13 7 15 13 M33 14 Q39 8 35 4 Q27 7 25 13" fill="${col}" stroke="#111827" stroke-width="1.5"/>`;
+  return `<svg width="${px}" height="${px}" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    ${ears}
+    <rect x="5" y="8" width="30" height="28" rx="13" fill="${col}" stroke="#111827" stroke-width="1.7"/>
+    <ellipse cx="20" cy="27" rx="10" ry="7" fill="#fff" opacity=".2"/>
+    <circle cx="14" cy="20" r="3.2" fill="#fff"/><circle cx="26" cy="20" r="3.2" fill="#fff"/>
+    <circle cx="14.6" cy="20.4" r="1.55" fill="#111827"/><circle cx="26.6" cy="20.4" r="1.55" fill="#111827"/>
+    <path d="M17 28 Q20 31 23 28" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="9.5" cy="26" r="2" fill="#fb7185" opacity=".55"/><circle cx="30.5" cy="26" r="2" fill="#fb7185" opacity=".55"/>
   </svg>`;
 }
 
@@ -1785,6 +1852,13 @@ async function fetchVariantsThenLoad(g) {
 
   if (g.id !== currentGame) return; // stale
 
+  // Pets has a meaningful unscoped board (overall care quality) in addition
+  // to species lifespan and alignment boards. The API only returns non-empty
+  // variants, so expose the main board explicitly as the first one-tap option.
+  if (g.id === 'pets' && variants.indexOf('') < 0) {
+    variants.unshift('');
+  }
+
   if (variants.length > 0) {
     buildVariantChips(variants);
     variantWrap.style.display = '';
@@ -1920,6 +1994,7 @@ function renderLeaderboard(data, game) {
   // The fish game's "biggest-fish" board gets a graphical fish avatar per row
   // instead of a plain number, sized/coloured by the catch's rarity.
   const isFishTrophy = (game === 'fish' && currentVariant === FISH_VARIANT);
+  const isPetsBoard  = (game === 'pets');
 
   const maxScore = Math.max.apply(null, rows.map(r => Math.abs(r.s))) || 1;
   let prevRank = null;
@@ -1932,7 +2007,8 @@ function renderLeaderboard(data, game) {
     prevRank = row.r;
     const rank = row.r;
     const top3 = rank <= 3;
-    const cls  = (top3 ? `rank-${rank}` : '') + (row.u === meName ? ' me' : '') + (isFishTrophy ? ' fish-row' : '');
+    const cls  = (top3 ? `rank-${rank}` : '') + (row.u === meName ? ' me' : '')
+               + (isFishTrophy ? ' fish-row' : '') + (isPetsBoard ? ' pet-row' : '');
     const icon = top3 ? RANK_ICONS[rank - 1] : rank;
     const pct  = Math.round((Math.abs(row.s) / maxScore) * 100);
     const flag = row.c ? `<span class="flag">${codeToFlag(row.c)}</span>` : '';
@@ -1952,6 +2028,34 @@ function renderLeaderboard(data, game) {
           <div class="lb-bar-wrap" style="grid-column:3/5">
             <div class="lb-bar" style="width:${pct}%"></div>
           </div>
+        </div>`;
+      return;
+    }
+
+    if (isPetsBoard) {
+      const meta = parseMeta(row.m);
+      const species = meta && meta.n ? escHtml(meta.n) : 'Pixel Pet';
+      const petName = meta && meta.p ? escHtml(meta.p) : species;
+      const days = Math.max(0, Number(meta && meta.d) || 0);
+      const happy = Math.max(0, Math.min(100, Number(meta && meta.h) || 0));
+      const well = Math.max(0, Math.min(100, Number(meta && meta.w) || 0));
+      const games = Math.max(0, Number(meta && meta.g) || 0);
+      const streak = Math.max(0, Number(meta && meta.c) || 0);
+      const stats = meta ? `
+        <div class="lb-pet-stats">
+          <span class="lb-pet-stat">🎂 ${days}d</span>
+          <span class="lb-pet-stat">💖 ${happy}% happy</span>
+          <span class="lb-pet-stat">✨ ${well}% well</span>
+          <span class="lb-pet-stat">🎮 ${games} games</span>
+          ${streak ? `<span class="lb-pet-stat">🔥 ${streak}d streak</span>` : ''}
+        </div>` : `<div class="lb-pet-stats"><span class="lb-pet-stat">Legacy score — profile updates after the next play</span></div>`;
+      html += `
+        <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
+          <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
+          <div class="lb-pet-ic">${petIconSvg(meta)}</div>
+          <div class="lb-user">${escHtml(row.u || 'anon')}<div class="lb-pet-name">${petName} · ${species}</div></div>
+          <div class="lb-score">${fmtScore(row.s)}</div>
+          ${stats}
         </div>`;
       return;
     }

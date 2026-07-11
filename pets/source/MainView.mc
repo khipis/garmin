@@ -820,8 +820,7 @@ class MainView extends WatchUi.View {
     function openLeaderboard() {
         // Refresh the player's standing right before they look at it.
         if (_pet != null) {
-            var q = _pet.getQualityScore();
-            if (q > 0) { Leaderboard.submitScore(LB_GAME_ID, q, ""); }
+            _pet.reportQuality();
         }
         var v = new LbScoresView(LB_GAME_ID, "", "PIXEL PETS");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
@@ -832,8 +831,17 @@ class MainView extends WatchUi.View {
     function openAlignLeaderboard() {
         var g = _pet.getKarmaGood();
         var e = _pet.getKarmaEvil();
-        if (e > g) { if (e > 0) { Leaderboard.submitScore(LB_GAME_ID, e, "evil"); } }
-        else { if (g > 0) { Leaderboard.submitScore(LB_GAME_ID, g, "good"); } }
+        if (e > g) {
+            if (e > 0) {
+                Leaderboard.submitScoreWithMeta(LB_GAME_ID, e, "evil",
+                                                _pet.getLeaderboardMeta());
+            }
+        } else {
+            if (g > 0) {
+                Leaderboard.submitScoreWithMeta(LB_GAME_ID, g, "good",
+                                                _pet.getLeaderboardMeta());
+            }
+        }
         var v;
         if (e > g) { v = new LbScoresView(LB_GAME_ID, "evil", "MOST EVIL"); }
         else { v = new LbScoresView(LB_GAME_ID, "good", "MOST GOOD"); }

@@ -916,6 +916,9 @@ class Pet {
 
     function playResult(score) {
         if (!isAlive) { return; }
+        // All seven minigames report exactly once through this common path,
+        // so this counts completed plays without inflating abandoned sessions.
+        recordGamePlayed();
         checkReturn();
         lastInteraction = Time.now().value();
         var joy;
@@ -1867,6 +1870,39 @@ class Pet {
         return score;
     }
 
+    // Rich but compact leaderboard payload. Short keys keep the request tiny:
+    // t=species id, n=species, p=pet name, d=days, h=happiness,
+    // w=overall wellbeing, g=minigames played, c=care streak.
+    function getLeaderboardMeta() {
+        return {
+            "t" => petType,
+            "n" => getTypeName(petType),
+            "p" => petName,
+            "d" => getLifespanDays(),
+            "h" => happiness,
+            "w" => getWellbeing(),
+            "g" => getGamesPlayed(),
+            "c" => careStreak
+        };
+    }
+
+    function getGamesPlayed() {
+        var v = Application.Storage.getValue("statGames");
+        return (v == null) ? 0 : v;
+    }
+
+    function recordGamePlayed() {
+        Application.Storage.setValue("statGames", getGamesPlayed() + 1);
+    }
+
+    function reportQuality() {
+        var q = getQualityScore();
+        if (q > 0) {
+            Leaderboard.submitScoreWithMeta(LB_GAME_ID, q, "",
+                                            getLeaderboardMeta());
+        }
+    }
+
     // ===== Karma (good/evil alignment) =====
     // Lifetime, account-wide totals — like statPunish/statHug they survive
     // resetPet() so the "kind of owner you are" persists across every pet
@@ -1902,8 +1938,13 @@ class Pet {
     function reportKarma() {
         var g = getKarmaGood();
         var e = getKarmaEvil();
-        if (g - e >= 30) { Leaderboard.submitScore(LB_GAME_ID, g, "good"); }
-        else if (e - g >= 30) { Leaderboard.submitScore(LB_GAME_ID, e, "evil"); }
+        if (g - e >= 30) {
+            Leaderboard.submitScoreWithMeta(LB_GAME_ID, g, "good",
+                                            getLeaderboardMeta());
+        } else if (e - g >= 30) {
+            Leaderboard.submitScoreWithMeta(LB_GAME_ID, e, "evil",
+                                            getLeaderboardMeta());
+        }
     }
 
     // Tracks the best-ever "Comet Catch" minigame score (persists across
@@ -1930,7 +1971,8 @@ class Pet {
         var days = getLifespanDays();
         if (days < 0) { days = 0; }
         var variant = getTypeName(petType).toLower();
-        Leaderboard.submitScore(LB_GAME_ID, days, variant);
+        Leaderboard.submitScoreWithMeta(LB_GAME_ID, days, variant,
+                                        getLeaderboardMeta());
         Leaderboard.showPostGame(LB_GAME_ID, variant, getTypeName(petType).toUpper() + " LIFESPAN");
     }
 
