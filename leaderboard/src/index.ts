@@ -76,7 +76,8 @@ async function hashIp(ip: string, salt: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", data);
   const bytes = new Uint8Array(digest);
   let hex = "";
-  for (let i = 0; i < 8; i++) hex += bytes[i].toString(16).padStart(2, "0");
+  // 4 bytes = 8 hex chars — enough for deduplication, reduced precision for privacy
+  for (let i = 0; i < 4; i++) hex += bytes[i].toString(16).padStart(2, "0");
   return hex;
 }
 
