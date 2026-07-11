@@ -1771,20 +1771,20 @@ async function handleGetDailyBoard(url: URL, env: Env): Promise<Response> {
 
 async function handleHit(env: Env): Promise<Response> {
   await env.DB.prepare(
-    `INSERT INTO counters (key, val) VALUES ('hits', 1)
-     ON CONFLICT(key) DO UPDATE SET val = val + 1`
+    `INSERT INTO counters (name, value) VALUES ('hits', 101)
+     ON CONFLICT(name) DO UPDATE SET value = value + 1`
   ).run();
   const row = await env.DB.prepare(
-    `SELECT val FROM counters WHERE key = 'hits'`
-  ).first<{ val: number }>();
-  return json({ ok: true, hits: row?.val ?? 1 });
+    `SELECT value FROM counters WHERE name = 'hits'`
+  ).first<{ value: number }>();
+  return json({ ok: true, hits: row?.value ?? 101 });
 }
 
 async function handleGetHits(env: Env): Promise<Response> {
   const row = await env.DB.prepare(
-    `SELECT val FROM counters WHERE key = 'hits'`
-  ).first<{ val: number }>();
-  return json({ hits: row?.val ?? 0 });
+    `SELECT value FROM counters WHERE name = 'hits'`
+  ).first<{ value: number }>();
+  return json({ hits: row?.value ?? 0 });
 }
 
 export default {
