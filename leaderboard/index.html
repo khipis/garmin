@@ -1266,6 +1266,7 @@
   &nbsp;·&nbsp; Garmin Connect IQ
   &nbsp;·&nbsp; <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">☕ Buy me a coffee</a>
   &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a>
+  &nbsp;·&nbsp; <span id="hit-counter" style="color:#4a6070"></span>
 </footer>
 
 <script>
@@ -2540,8 +2541,19 @@ async function init() {
   // Load the featured daily banner (async, non-blocking).
   loadFeaturedBanner();
   loadPublicHot();
+  trackHit();
 }
 init();
+
+// ── Anonymous page-view counter (no personal data) ─────────────────────────
+async function trackHit() {
+  try {
+    const r = await fetch(`${API_BASE}/hit`, { method: 'POST' });
+    const d = await r.json();
+    const el = document.getElementById('hit-counter');
+    if (el && d.hits) el.textContent = `👁 ${d.hits.toLocaleString()} views`;
+  } catch (_) {}
+}
 
 // ── Hall of Fame ───────────────────────────────────────────────────────────────
 const ASC_GAMES_HOF = new Set(['sudoku','minesweeper','solitaire','solitare','lightsout',

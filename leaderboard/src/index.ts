@@ -1767,6 +1767,26 @@ async function handleGetDailyBoard(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// ── Anonymous hit counter (no personal data) ──────────────────────────────────
+
+async function handleHit(env: Env): Promise<Response> {
+  await env.DB.prepare(
+    `INSERT INTO counters (key, val) VALUES ('hits', 1)
+     ON CONFLICT(key) DO UPDATE SET val = val + 1`
+  ).run();
+  const row = await env.DB.prepare(
+    `SELECT val FROM counters WHERE key = 'hits'`
+  ).first<{ val: number }>();
+  return json({ ok: true, hits: row?.val ?? 1 });
+}
+
+async function handleGetHits(env: Env): Promise<Response> {
+  const row = await env.DB.prepare(
+    `SELECT val FROM counters WHERE key = 'hits'`
+  ).first<{ val: number }>();
+  return json({ hits: row?.val ?? 0 });
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url    = new URL(req.url);
@@ -1823,6 +1843,8 @@ export default {
     if (method === "GET"    && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"    && path === "/errors")      return handleGetErrors(url, env);
     if (method === "GET"    && path === "/health")      return json({ ok: true, ts: Date.now() });
+    if (method === "POST"   && path === "/hit")         return handleHit(env);
+    if (method === "GET"    && path === "/hits")        return handleGetHits(env);
 
     return err("not found", 404);
   },
