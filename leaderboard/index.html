@@ -955,7 +955,9 @@
     padding: 2px 1px 9px; scroll-snap-type: x proximity;
     scrollbar-width: thin; scrollbar-color: #29445a transparent;
     overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    cursor: grab;
   }
+  #game-scroll:active { cursor: grabbing; }
   #game-scroll::-webkit-scrollbar { height: 4px; }
   #game-scroll::-webkit-scrollbar-thumb { background: #29445a; border-radius: 9px; }
   .game-chip {
@@ -1755,6 +1757,33 @@ function initGameDiscovery() {
     e.preventDefault();
     gameScroll.scrollBy({ left: e.deltaY * 2, behavior: 'auto' });
   }, { passive: false });
+
+  // Mouse drag-to-scroll on the game strip
+  let isDragging = false, dragStartX = 0, dragScrollLeft = 0, dragMoved = false;
+  gameScroll.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    isDragging = true; dragMoved = false;
+    dragStartX = e.pageX - gameScroll.offsetLeft;
+    dragScrollLeft = gameScroll.scrollLeft;
+    gameScroll.style.cursor = 'grabbing';
+    gameScroll.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const dx = (e.pageX - gameScroll.offsetLeft) - dragStartX;
+    if (Math.abs(dx) > 4) dragMoved = true;
+    if (dragMoved) gameScroll.scrollLeft = dragScrollLeft - dx;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    gameScroll.style.cursor = '';
+    gameScroll.style.userSelect = '';
+  });
+  // suppress click after drag so the chip doesn't open when releasing after scroll
+  gameScroll.addEventListener('click', e => {
+    if (dragMoved) { e.stopPropagation(); e.preventDefault(); dragMoved = false; }
+  }, true);
 
   // Arrow button scroll (step ≈ 3 chips)
   const STEP = 240;
