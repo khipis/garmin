@@ -1471,69 +1471,6 @@ async function handleGetErrors(url: URL, env: Env): Promise<Response> {
   }
 }
 
-// ── Visitor tracking ─────────────────────────────────────────────────────────
-// GET /visit  — fire-and-forget from the web frontend on page load.
-// Records an anonymised visit and returns { total, online } where
-// online = unique IP hashes seen in the last 5 minutes.
-// Deduplication: same IP counted at most once per 30-minute window.
-async function handleVisit(req: Request, env: Env): Promise<Response> {
-  const ip      = req.headers.get("CF-Connecting-IP") ?? "unknown";
-  const salt    = env.IP_SALT ?? env.LB_KEY ?? "bito-visit";
-  const ipHash  = await hashIp(ip, salt);
-  const now     = Date.now();
-  const window5  = now - 5  * 60 * 1000;   // 5 min  → online window
-  const window30 = now - 30 * 60 * 1000;   // 30 min → dedup window
-  const cutoff7  = now - 7  * 24 * 3600 * 1000; // 7 days → prune
-
-  // Only insert if this IP hasn't been seen in the last 30 minutes.
-  const recent = await env.DB.prepare(
-    "SELECT 1 FROM visits WHERE ip_hash = ? AND timestamp > ? LIMIT 1"
-  ).bind(ipHash, window30).first();
-
-  if (!recent) {
-    await env.DB.prepare(
-      "INSERT INTO visits (ip_hash, timestamp) VALUES (?, ?)"
-    ).bind(ipHash, now).run();
-
-    // Bump the cumulative all-time visit counter. This lives in its own row so
-    // it survives the 7-day prune below — the `visits` table is only a rolling
-    // window used for the "online" / 30-min-dedup logic, whereas `total` must
-    // be monotonic (a visit counter should never go down).
-    await env.DB.prepare(
-      "INSERT INTO counters (name, value) VALUES ('visits_total', 1) " +
-      "ON CONFLICT(name) DO UPDATE SET value = value + 1"
-    ).run();
-
-    // Prune old rows (only bother when we actually insert, not every request).
-    await env.DB.prepare(
-      "DELETE FROM visits WHERE timestamp < ?"
-    ).bind(cutoff7).run();
-  } else {
-    // Heartbeat: keep the latest row fresh without incrementing the
-    // 30-minute-deduplicated visit total. The frontend calls /visit once per
-    // minute, so users disappear from "online" roughly five minutes after
-    // leaving instead of five minutes after their initial page load.
-    await env.DB.prepare(
-      `UPDATE visits SET timestamp = ?
-       WHERE rowid = (
-         SELECT rowid FROM visits
-         WHERE ip_hash = ?
-         ORDER BY timestamp DESC
-         LIMIT 1
-       )`
-    ).bind(now, ipHash).run();
-  }
-
-  const [totalRow, onlineRow] = await Promise.all([
-    env.DB.prepare("SELECT value AS n FROM counters WHERE name = 'visits_total'")
-      .first<{ n: number }>(),
-    env.DB.prepare(
-      "SELECT COUNT(DISTINCT ip_hash) AS n FROM visits WHERE timestamp > ?"
-    ).bind(window5).first<{ n: number }>(),
-  ]);
-
-  return json({ total: totalRow?.n ?? 0, online: onlineRow?.n ?? 0 });
-}
 
 // ── Daily Challenge ────────────────────────────────────────────────────────────
 // Challenge is deterministically generated per (date, game) from live stats.
@@ -1884,7 +1821,6 @@ export default {
     if (method === "GET"    && path === "/snapshots")   return handleGetSnapshots(env);
     if (method === "GET"    && path === "/hof")         return handleGetHoF(env);
     if (method === "GET"    && path === "/variants")    return handleGetVariants(url, env);
-    if (method === "GET"    && path === "/visit")       return handleVisit(req, env);
     if (method === "GET"    && path === "/errors")      return handleGetErrors(url, env);
     if (method === "GET"    && path === "/health")      return json({ ok: true, ts: Date.now() });
 
