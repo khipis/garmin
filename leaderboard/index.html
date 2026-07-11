@@ -83,26 +83,7 @@
     animation: blink 2s ease-in-out infinite;
   }
 
-  .visitor-counters {
-    display: flex; align-items: center; gap: 14px;
-    font-size: .72rem; color: var(--muted); letter-spacing: .04em;
-    flex: 0 0 auto;
-  }
-  .visitor-counters .vc-item {
-    display: flex; align-items: center; gap: 5px;
-  }
-  .visitor-counters .vc-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 5px var(--green);
-    animation: blink 2s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  .visitor-counters .vc-num {
-    color: var(--text); font-weight: 700;
-  }
-  @media (max-width: 480px) {
-    .visitor-counters .vc-total { display: none; }
-  }
+  .visitor-counters { display: none; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
   .support-link {
@@ -1018,8 +999,7 @@
     header { height: 54px; padding: 0 10px; gap: 8px; }
     .logo { font-size: .92rem; letter-spacing: .045em; }
     .logo-long, .support-label { display: none; }
-    .live-dot, .visitor-counters .vc-total { display: none; }
-    .visitor-counters { gap: 5px; font-size: .65rem; }
+    .live-dot { display: none; }
     .support-link {
       width: 34px; height: 34px; padding: 0; justify-content: center;
       font-size: .82rem;
@@ -1066,17 +1046,6 @@
 <header>
   <div class="logo">⌚ Bitochi<span class="logo-long"> Games</span></div>
   <div class="sep"></div>
-  <div class="visitor-counters">
-    <div class="vc-item vc-online">
-      <div class="vc-dot"></div>
-      <span id="vc-online-num" class="vc-num">—</span>
-      <span>online</span>
-    </div>
-    <div class="vc-item vc-total">
-      <span id="vc-total-num" class="vc-num">—</span>
-      <span>visits</span>
-    </div>
-  </div>
   <div class="live-dot">Live Rankings</div>
   <a class="support-link" href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener" aria-label="Support Bitochi">
     ☕ <span class="support-label">Support</span>
@@ -2405,31 +2374,6 @@ function setPeriodUI() {
     x.classList.toggle('active', x.dataset.p === currentPeriod));
 }
 
-// ── Live presence + visit counter ────────────────────────────────────────────
-// Refresh once per minute. The backend updates this visitor's last_seen without
-// increasing the 30-minute deduplicated visit total, so "online" really means
-// active within the last five minutes rather than "loaded the page recently".
-async function refreshPresence() {
-  try {
-    const r = await fetch(`${API_BASE}/visit`, { cache: 'no-store' });
-    if (!r.ok) throw new Error('presence unavailable');
-    const d = await r.json();
-    const onlineEl = document.getElementById('vc-online-num');
-    const totalEl  = document.getElementById('vc-total-num');
-    if (onlineEl) onlineEl.textContent = d.online ?? '—';
-    if (totalEl)  totalEl.textContent  = (d.total ?? 0).toLocaleString();
-    const item = document.querySelector('.vc-online');
-    if (item) item.title = 'Visitors active in the last 5 minutes';
-  } catch (_) {
-    const onlineEl = document.getElementById('vc-online-num');
-    if (onlineEl) onlineEl.textContent = '—';
-  }
-}
-refreshPresence();
-setInterval(refreshPresence, 60000);
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') refreshPresence();
-});
 
 // Landing on bitochi.com with no explicit ?game= picks a random game out of
 // the top 5 most-played (by distinct players, season stats) instead of
