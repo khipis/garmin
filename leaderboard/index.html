@@ -806,7 +806,7 @@
     text-transform: uppercase; letter-spacing: .08em;
   }
   .stat-row {
-    display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px;
+    display: grid; grid-template-columns: 1fr auto; gap: 10px;
     align-items: center;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 11px 14px; margin-bottom: 7px;
@@ -816,7 +816,7 @@
   .stat-row .sg-val b { color: var(--accent); }
   .stat-row .sg-val small { display: block; color: var(--muted); font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; }
   .stat-head {
-    display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px;
+    display: grid; grid-template-columns: 1fr auto; gap: 10px;
     padding: 2px 14px 8px; font-size: .62rem; color: var(--muted);
     text-transform: uppercase; letter-spacing: .08em;
   }
@@ -1240,17 +1240,11 @@
 <section id="view-stats" style="display:none">
   <div id="stats-totals" class="stats-cards"></div>
   <div class="section-header">
-    <span class="section-title">Players per game</span>
+    <span class="section-title">Scores per game</span>
     <span class="section-line"></span>
     <span class="update-tag" id="stats-updated"></span>
   </div>
   <div id="stats-table"><div class="state-msg"><div class="spinner"></div><br>Loading stats…</div></div>
-
-  <div class="section-header" id="stats-country-header" style="display:none">
-    <span class="section-title">Players by country</span>
-    <span class="section-line"></span>
-  </div>
-  <div id="stats-countries"></div>
 </section>
 
 <!-- ── Hall of Fame view ────────────────────────────────────────────────────── -->
@@ -2339,15 +2333,11 @@ async function loadStats() {
     statsLoaded = true;
 
     const t = d.totals || {
-      games: 0, scores: 0, players: 0, devices: 0,
-      lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
+      games: 0, scores: 0, lifetimeGames: 0, lifetimeLaunches: 0
     };
     totalsEl.innerHTML = `
-      <div class="stat-card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Season Players</div></div>
-      <div class="stat-card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Season Devices</div></div>
       <div class="stat-card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Season Scores</div></div>
       <div class="stat-card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Season Games</div></div>
-      <div class="stat-card"><div class="num">${(t.lifetimePlayers||0).toLocaleString()}</div><div class="lbl">Lifetime Players</div></div>
       <div class="stat-card"><div class="num">${(t.lifetimeGames||0).toLocaleString()}</div><div class="lbl">Lifetime Games</div></div>
       <div class="stat-card"><div class="num">${(t.lifetimeLaunches||0).toLocaleString()}</div><div class="lbl">Lifetime Launches</div></div>`;
 
@@ -2361,46 +2351,15 @@ async function loadStats() {
       return;
     }
     tableEl.innerHTML =
-      `<div class="stat-head"><span>Game</span><span>Players</span><span>Devices</span><span>Scores</span></div>` +
+      `<div class="stat-head"><span>Game</span><span>Scores</span></div>` +
       rows.map(g => {
         const label = (LB_MAP[g.game] && LB_MAP[g.game].label) || g.game;
         return `
           <div class="stat-row">
             <div class="sg-name">${escHtml(label)}</div>
-            <div class="sg-val"><b>${(g.players||0).toLocaleString()}</b></div>
-            <div class="sg-val">${(g.devices||0).toLocaleString()}</div>
-            <div class="sg-val">${(g.scores||0).toLocaleString()}</div>
+            <div class="sg-val"><b>${(g.scores||0).toLocaleString()}</b></div>
           </div>`;
       }).join('');
-
-    // ── Country breakdown ────────────────────────────────────────────────────
-    const countryEl  = document.getElementById('stats-countries');
-    const countryHdr = document.getElementById('stats-country-header');
-    const countries  = d.perCountry || [];
-    if (countries.length && countryEl && countryHdr) {
-      const maxPlayers = Math.max(...countries.map(c => c.players || 0), 1);
-      countryHdr.style.display = '';
-      countryEl.innerHTML =
-        `<div class="country-head"><span>Country</span><span>Players</span><span>Scores</span></div>` +
-        countries.map(c => {
-          const code  = c.country || '??';
-          const flag  = c.country ? codeToFlag(c.country) : '🌐';
-          const name  = COUNTRY_NAMES[code] || code;
-          const pct   = Math.round(((c.players || 0) / maxPlayers) * 100);
-          return `
-            <div class="country-row">
-              <div class="cr-name">
-                <span class="flag">${flag}</span>
-                ${escHtml(name)}
-                <div class="country-bar-wrap" style="flex:1;margin-left:8px">
-                  <div class="country-bar" style="width:${pct}%"></div>
-                </div>
-              </div>
-              <div class="cr-val"><b>${(c.players||0).toLocaleString()}</b></div>
-              <div class="cr-val">${(c.scores||0).toLocaleString()}</div>
-            </div>`;
-        }).join('');
-    }
   } catch (e) {
     tableEl.innerHTML = `<div class="state-msg">⚠️ Could not load stats.</div>`;
   }
