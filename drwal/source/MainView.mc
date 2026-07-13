@@ -38,7 +38,10 @@ class MainView extends WatchUi.View {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:onTick), TICK_MS, true);
     }
-    function onHide() { if (_timer != null) { _timer.stop(); } }
+    function onHide() {
+        if (_timer != null) { _timer.stop(); }
+        try { Leaderboard.cancelPostGame(); } catch (e) {}
+    }
 
     function onTick() {
         _ctrl.step();
@@ -60,9 +63,10 @@ class MainView extends WatchUi.View {
         var shx = 0;
         if (_ctrl.player.shakeT > 0) { shx = (Math.rand() % 7) - 3; }
 
-        RenderSystem.drawBackground(dc, _sw, _sh, _groundY);
+        RenderSystem.drawBackground(dc, _sw, _sh, _groundY, _ctrl);
         RenderSystem.drawTree(dc, _ctrl, _cx, _trunkW, _chopLineY, _segH, shx);
         RenderSystem.drawPlayer(dc, _ctrl, _cx, _trunkW, _chopLineY, shx);
+        RenderSystem.drawEffects(dc, _ctrl, _cx, _trunkW, _chopLineY, shx);
         UIManager.drawHUD(dc, _ctrl, _sw, _hudTop, _energyBarY);
 
         if (_ctrl.state == GS_OVER) { UIManager.drawOver(dc, _ctrl, _sw, _sh); }

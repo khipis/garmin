@@ -104,8 +104,9 @@ class LbPinger {
     hidden var _game;
     hidden var _attempt;
     hidden var _timer;
+    hidden var _continued;
 
-    function initialize() { _attempt = 0; _timer = null; }
+    function initialize() { _attempt = 0; _timer = null; _continued = false; }
 
     function send(game) {
         _game = game;
@@ -126,18 +127,41 @@ class LbPinger {
         try {
             Communications.makeWebRequest(Leaderboard.API_BASE + "/launch",
                                           body, opts, method(:_onDone));
-        } catch (e) {}
+        } catch (e) {
+            _continuePipeline();
+        }
     }
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
-        if (responseCode == 200 || responseCode == 201) { return; }
-        if (responseCode >= 400 && responseCode < 500) { return; }
-        if (_attempt >= 3) { return; }
+        if (responseCode == 200 || responseCode == 201) { _continuePipeline(); return; }
+        if (responseCode >= 400 && responseCode < 500) { _continuePipeline(); return; }
+        if (_attempt >= 3) { _continuePipeline(); return; }
         var delay = [2000, 4000, 8000][_attempt];
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_doSend), delay, false); } catch (e) {}
+    }
+
+    hidden function _continuePipeline() as Void {
+        if (_continued) { return; }
+        _continued = true;
+        if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
+        // Leave the Communications callback before starting the next request;
+        // some firmware still considers the current request pending in-callback.
+        try {
+            _timer = new Timer.Timer();
+            _timer.start(method(:_advancePipeline), 250, false);
+        } catch (e) { _advancePipeline(); }
+    }
+
+    // NOTE: must be a public (non-hidden) function — it is used as a
+    // method(:_advancePipeline) timer callback. A method() reference to a
+    // hidden function resolves at fire time OUTSIDE any try/catch and crashes
+    // the app a moment after launch (this ran in every game via logLaunch).
+    function _advancePipeline() as Void {
+        _timer = null;
+        try { Leaderboard.afterLaunchPing(_game); } catch (e) {}
     }
 }
 
@@ -357,6 +381,7 @@ class LbScoresView extends WatchUi.View {
     hidden var _postGame;     // opened straight after a run → cache-bust + emphasis
     hidden var _retries;      // post-game: re-fetches left while the POST lands
     hidden var _retryTimer;
+    hidden var _alive;        // false once onHide fires — guards async callbacks
     hidden var _w;
     hidden var _h;
 
@@ -381,10 +406,12 @@ class LbScoresView extends WatchUi.View {
         _fitCount  = 0;
         _retries     = 0;
         _retryTimer  = null;
+        _alive       = false;
         _w = 0; _h = 0;
     }
 
     function onShow() {
+        _alive = true;
         if (!Leaderboard.isSupported()) {
             _state = 4;
             WatchUi.requestUpdate();
@@ -404,6 +431,7 @@ class LbScoresView extends WatchUi.View {
     function markPostGame() { _postGame = true; _retries = 4; }
 
     function onHide() {
+        _alive = false;
         if (_retryTimer != null) { _retryTimer.stop(); _retryTimer = null; }
     }
 
@@ -412,6 +440,7 @@ class LbScoresView extends WatchUi.View {
     // times until the player's freshly-submitted row shows up.
     function _retryFetch() as Void {
         if (_retryTimer != null) { _retryTimer.stop(); _retryTimer = null; }
+        if (!_alive) { return; }
         _doFetch();
     }
 
@@ -462,6 +491,7 @@ class LbScoresView extends WatchUi.View {
 
     // LbFetch listener callback — receives the full response dictionary.
     function onLeaderboard(ok, data) {
+        if (!_alive) { return; }
         if (!ok || !(data instanceof Lang.Dictionary)) {
             _state = 2; _scrollOff = 0; WatchUi.requestUpdate(); return;
         }
@@ -770,18 +800,26 @@ class LbPostGame {
     hidden var _game;
     hidden var _variant;
     hidden var _title;
+    hidden var _armed;
     function initialize(game, variant, title) {
         _game    = game;
         _variant = variant;
         _title   = (title != null) ? title : "LEADERBOARD";
         _t       = null;
+        _armed   = false;
     }
     function arm(delayMs) {
+        _armed = true;
         _t = new Timer.Timer();
         _t.start(method(:_fire), delayMs, false);
     }
+    function disarm() as Void {
+        _armed = false;
+        if (_t != null) { try { _t.stop(); } catch (e) {} _t = null; }
+    }
     function _fire() as Void {
         if (_t != null) { _t.stop(); _t = null; }
+        if (!_armed) { return; }
         // Engagement card FIRST (only once the player has a name, so we have a
         // real rank to show): "you're #12 / 340, +85 to the Hall of Fame, ..."
         // Dismissing it chains to the (occasional) support message, then the

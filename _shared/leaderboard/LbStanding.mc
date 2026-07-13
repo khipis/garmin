@@ -73,6 +73,7 @@ class LbStandingView extends WatchUi.View {
     hidden var _retries;
     hidden var _fetch;
     hidden var _timer;
+    hidden var _alive;        // false once onHide fires — guards async callbacks
     hidden var _w;
     hidden var _h;
 
@@ -87,12 +88,14 @@ class LbStandingView extends WatchUi.View {
         _retries = 3;
         _fetch   = null;
         _timer   = null;
+        _alive   = false;
         _w = 0; _h = 0;
     }
 
-    function onShow() { _doFetch(); }
+    function onShow() { _alive = true; _doFetch(); }
 
     function onHide() {
+        _alive = false;
         if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
     }
 
@@ -109,11 +112,13 @@ class LbStandingView extends WatchUi.View {
 
     function _retryFetch() as Void {
         if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
+        if (!_alive) { return; }
         _doFetch();
     }
 
     // Listener callback.
     function onStanding(ok, data) {
+        if (!_alive) { return; }
         if (!ok || !(data instanceof Lang.Dictionary)) {
             _state = 2; WatchUi.requestUpdate(); return;
         }

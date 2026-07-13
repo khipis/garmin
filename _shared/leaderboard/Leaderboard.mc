@@ -122,6 +122,20 @@ module Leaderboard {
         try { DailyChallenge.onScoreSubmit(game, score, variant); } catch (e) {}
     }
 
+    // Secondary metric submission for games that publish several variants from
+    // one completed session (Activity Board). It intentionally skips the Daily
+    // Challenge hook so one play cannot count as several "rounds" and cannot
+    // start a completion POST in the middle of a sequential score batch.
+    function submitScoreAux(game as Lang.String, score as Lang.Number,
+                            variant as Lang.String or Null) as Void {
+        if (!isSupported()) { return; }
+        if (!isPhoneConnected()) { return; }
+        var user = loadUser();
+        if (user == null) { user = "anon"; }
+        _sender = new LbSubmitter();
+        _sender.send(game, user, score, variant, null);
+    }
+
     // Same as submitScore(), but attaches a small JSON-serialisable dictionary
     // of extra fields (species, rarity, ...) that the web leaderboard can use
     // to render a richer "trophy" entry (e.g. fish/biggest-fish variant with a
@@ -158,19 +172,34 @@ module Leaderboard {
         _launchLogged = true;
         try {
             if (isPhoneConnected()) {
+                // Garmin allows only one pending makeWebRequest. Start with the
+                // launch ping; its terminal callback continues to messages,
+                // whose terminal callback then starts the Daily Challenge.
                 _pinger = new LbPinger();
                 _pinger.send(game);
-                // Refresh the message bundle (shown from cache NEXT run; the
-                // delay also ensures pinger is the only in-flight request now).
-                fetchMessages(game);
-                // Kick off today's daily challenge fetch (cached for 24h).
-                try { DailyChallenge.prefetch(game); } catch (e) {}
             }
         } catch (e) {}
         // The 'once' card reads the cached bundle so it works offline too.
         try {
             _onceTimer = new LbOnceTimer(game);
             _onceTimer.start();
+        } catch (e) {}
+    }
+
+    // Continuations for the single-flight launch network pipeline.
+    // Called exactly once by LbPinger / LbMessageFetcher after success,
+    // permanent failure, or exhausted retries.
+    function afterLaunchPing(game as Lang.String) as Void {
+        try {
+            _pinger = null;
+            if (isPhoneConnected()) { fetchMessages(game); }
+        } catch (e) {}
+    }
+
+    function afterMessages(game as Lang.String) as Void {
+        try {
+            _msgFetcher = null;
+            if (isPhoneConnected()) { DailyChallenge.prefetch(game); }
         } catch (e) {}
     }
 
@@ -386,11 +415,15 @@ module Leaderboard {
     // a game with two adjacent submit paths can't stack two pop-ups.
     var _pg     = null;
     var _pgLast = 0;
+    function cancelPostGame() as Void {
+        if (_pg != null) { try { _pg.disarm(); } catch (e) {} _pg = null; }
+    }
     function showPostGame(game as Lang.String, variant as Lang.String or Null,
                           title as Lang.String or Null) as Void {
         if (!isSupported()) { return; }
         var now = System.getTimer();
         if (_pg != null && (now - _pgLast) >= 0 && (now - _pgLast) < 2000) { return; }
+        cancelPostGame();
         _pgLast = now;
         _pg = new LbPostGame(game, variant, title);
         _pg.arm(1600);
