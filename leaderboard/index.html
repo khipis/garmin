@@ -403,6 +403,50 @@
     color: var(--accent);
   }
 
+  /* ── Store preview card (live Connect IQ store data) ──────────────── */
+  #store-preview {
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, rgba(0,212,255,.06), rgba(124,58,237,.06));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: none;
+  }
+  #store-preview.show { display: block; }
+  .sp-inner { display: flex; gap: 14px; padding: 13px 15px; align-items: stretch; }
+  .sp-shot {
+    flex: 0 0 auto; width: 112px; height: 112px; border-radius: 11px;
+    background: #0b1119; border: 1px solid var(--border);
+    overflow: hidden; display: grid; place-items: center;
+  }
+  .sp-shot img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .3s; }
+  .sp-shot img.loaded { opacity: 1; }
+  .sp-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .sp-title { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+  .sp-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-bottom: 8px; }
+  .sp-chip { font-size: .68rem; font-weight: 700; letter-spacing: .03em; color: #9fb2c4; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .sp-chip .sp-star { color: #fbbf24; }
+  .sp-desc {
+    font-size: .8rem; line-height: 1.5; color: var(--text); opacity: .82;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    margin-bottom: 10px; flex: 1;
+  }
+  .sp-cta {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 999px;
+    background: linear-gradient(135deg, rgba(0,212,255,.14), rgba(124,58,237,.14));
+    border: 1px solid rgba(0,212,255,.4);
+    color: var(--accent); font-size: .72rem; font-weight: 800;
+    letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+    transition: box-shadow .2s, background .2s;
+  }
+  .sp-cta:hover { background: linear-gradient(135deg, rgba(0,212,255,.24), rgba(124,58,237,.24)); box-shadow: 0 0 16px rgba(0,212,255,.3); }
+  @media (max-width: 520px) {
+    .sp-inner { flex-direction: column; align-items: stretch; }
+    .sp-shot { width: 100%; height: 150px; }
+    .sp-desc { -webkit-line-clamp: 2; }
+  }
+
   /* ── Game info card ───────────────────────────────────────────────── */
   #game-info {
     margin-top: 20px;
@@ -1076,7 +1120,7 @@
   <div class="sep"></div>
   <div class="live-dot">Live Rankings</div>
   <div id="hit-counter" class="hit-counter-badge"></div>
-  <a class="support-link" href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener" aria-label="Support Bitochi">
+  <a class="support-link" href="https://bitochi.com/coffee" target="_blank" rel="noopener" aria-label="Support Bitochi">
     ☕ <span class="support-label">Support</span>
   </a>
 </header>
@@ -1124,6 +1168,9 @@
     </div>
   </div>
 </div>
+
+<!-- ── Store preview (live Connect IQ store data for the selected game) ─────── -->
+<div id="store-preview"></div>
 
 <!-- ── Featured Daily Challenge (global, rotates each day) ─────────────────── -->
 <div id="featured-daily" style="display:none">
@@ -1271,7 +1318,7 @@
   <div style="margin-bottom:8px">🗓 Daily &amp; weekly boards reset automatically · 🏆 monthly seasons coming soon</div>
   Powered by <span style="color:#fff;font-weight:600">Bitochi Games</span>
   &nbsp;·&nbsp; Garmin Connect IQ
-  &nbsp;·&nbsp; <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+  &nbsp;·&nbsp; <a href="https://bitochi.com/coffee" target="_blank" rel="noopener">☕ Support Bitochi</a>
   &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a>
   &nbsp;·&nbsp; <span style="color:#3a5568">🍪 No cookies · scores stored in your browser's localStorage only</span>
 </footer>
@@ -1456,6 +1503,7 @@ const lbHeaderEl    = document.getElementById('lb-header');
 const variantWrap   = document.getElementById('variant-selector-wrap');
 const variantScroll = document.getElementById('variant-scroll');
 const gameInfoEl    = document.getElementById('game-info');
+const storePreviewEl = document.getElementById('store-preview');
 const meInput       = document.getElementById('me-input');
 const meCard        = document.getElementById('me-card');
 const targetBadge   = document.getElementById('target-badge');
@@ -1475,14 +1523,14 @@ function codeToFlag(cc) {
 
 // ── "Biggest Fish" trophy board — graphical fish avatar ──────────────────────
 // The fish game submits its "biggest-fish" variant with a small `meta` blob
-// {t: type 0-9, n: species name, r: rarity 0-3}. Colours mirror the on-watch
+// {t: type 0-15, n: species name, r: rarity 0-4}. Colours mirror the on-watch
 // palette (BitochiFishView.mc) so the same fish looks the same on the wrist
 // and on the web.
 const FISH_VARIANT      = 'biggest-fish';
-const FISH_BODY_COLORS  = ['#88BB88','#FFBB99','#44CC55','#33AA44','#DD9966','#7788AA','#EE8855','#4466CC','#997744','#FF6644'];
-const FISH_BELLY_COLORS = ['#AADDAA','#FFCCBB','#88EE99','#55BB66','#EEBB99','#AABBCC','#FFAA88','#77AADD','#BBAA77','#FF9977'];
-const FISH_RARITY_LABEL = ['Runt', '', 'Big', 'GIANT'];
-const FISH_RARITY_GLOW  = ['none', 'none', 'drop-shadow(0 0 4px rgba(255,255,255,.35))', 'drop-shadow(0 0 8px rgba(255,215,0,.9))'];
+const FISH_BODY_COLORS  = ['#88BB88','#FFBB99','#44CC55','#33AA44','#DD9966','#7788AA','#EE8855','#4466CC','#997744','#FF6644','#FF7788','#556644','#8899AA','#3355AA','#2244CC','#556677'];
+const FISH_BELLY_COLORS = ['#AADDAA','#FFCCBB','#88EE99','#55BB66','#EEBB99','#AABBCC','#FFAA88','#77AADD','#BBAA77','#FF9977','#FFBBC4','#8A9A6A','#CAD6E0','#9DB4E6','#9AB0F0','#C4CED8'];
+const FISH_RARITY_LABEL = ['Runt', '', 'Big', 'GIANT', 'LEGENDARY'];
+const FISH_RARITY_GLOW  = ['none', 'none', 'drop-shadow(0 0 4px rgba(255,255,255,.35))', 'drop-shadow(0 0 8px rgba(255,215,0,.9))', 'drop-shadow(0 0 10px rgba(176,91,255,.95))'];
 
 // ── Activity Board — real-stat variants (game=activityboard) ─────────────────
 // Every board is a real, higher-is-better metric pulled straight off the watch.
@@ -1591,19 +1639,23 @@ function fmtWeight(grams) {
 // watch app's fillCircle-based silhouette, rendered as inline SVG so it's
 // crisp at any size with zero extra network requests.
 function fishIconSvg(meta, px) {
-  const t = Math.max(0, Math.min(9, Number(meta && meta.t) || 0));
-  const rarity = Math.max(0, Math.min(3, Number(meta && meta.r) || 0));
-  const golden = rarity >= 3;
-  const body  = golden ? '#FFD700' : FISH_BODY_COLORS[t];
-  const belly = golden ? '#FFF3B0' : FISH_BELLY_COLORS[t];
+  const t = Math.max(0, Math.min(FISH_BODY_COLORS.length - 1, Number(meta && meta.t) || 0));
+  const rarity = Math.max(0, Math.min(4, Number(meta && meta.r) || 0));
+  const legendary = rarity >= 4;
+  const golden = rarity === 3;
+  const body  = legendary ? '#C86BFF' : (golden ? '#FFD700' : FISH_BODY_COLORS[t]);
+  const belly = legendary ? '#FFFFFF' : (golden ? '#FFF3B0' : FISH_BELLY_COLORS[t]);
   const h = Math.round(px * 0.72);
+  const sparkle = (golden || legendary)
+    ? '<circle cx="17" cy="7" r="1.3" fill="#fffde0"/><circle cx="30" cy="6" r="0.9" fill="#fffde0"/>'
+    : '';
   return `<svg width="${px}" height="${h}" viewBox="0 0 40 28" xmlns="http://www.w3.org/2000/svg" style="filter:${FISH_RARITY_GLOW[rarity]}">
     <polygon points="2,14 11,5 11,23" fill="${body}"/>
     <ellipse cx="25" cy="14" rx="15" ry="10.5" fill="${body}"/>
     <ellipse cx="26" cy="18" rx="8" ry="4.5" fill="${belly}"/>
     <circle cx="35" cy="11" r="2.6" fill="#fff"/>
     <circle cx="35.6" cy="11" r="1.3" fill="#111"/>
-    ${golden ? '<circle cx="17" cy="7" r="1.3" fill="#fffde0"/><circle cx="30" cy="6" r="0.9" fill="#fffde0"/>' : ''}
+    ${sparkle}
   </svg>`;
 }
 
@@ -1865,6 +1917,8 @@ function selectGame(g, pushState = true) {
     ciqLink.style.display = 'none';
   }
 
+  loadStorePreview(g);
+
   const chip = document.querySelector(`.game-chip[data-id="${g.id}"]`);
   if (chip) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
@@ -2068,7 +2122,7 @@ function renderLeaderboard(data, game) {
 
     if (isFishTrophy) {
       const meta   = parseMeta(row.m);
-      const rarity = Math.max(0, Math.min(3, Number(meta && meta.r) || 0));
+      const rarity = Math.max(0, Math.min(4, Number(meta && meta.r) || 0));
       const label  = FISH_RARITY_LABEL[rarity];
       const species = (meta && meta.n) ? escHtml(meta.n) : 'Fish';
       const caption = label ? `${label} ${species}` : species;
@@ -2335,6 +2389,78 @@ function toast(msg) {
   t._h = setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; }, 2200);
 }
 
+// ── Store preview (live Connect IQ store data) ───────────────────────────────
+// A compact card under the hero showing what the game is: a real store
+// screenshot, the store description, downloads + rating and a store link. Data
+// is pulled from our Worker's /ciq proxy (which caches the official Connect IQ
+// store API). Renders instantly with the local description, then upgrades in
+// place once live data arrives; degrades gracefully if the store is unreachable.
+const CIQ_EXT_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+const ciqPreviewCache = {};
+
+function fmtDownloads(n) {
+  n = Number(n) || 0;
+  if (n >= 1000000) return (n / 1000000).toFixed(n >= 10000000 ? 0 : 1) + 'M';
+  if (n >= 1000)    return (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k';
+  return String(n);
+}
+
+async function loadStorePreview(g) {
+  if (!storePreviewEl) return;
+  if (!g || !g.ciq) { storePreviewEl.classList.remove('show'); storePreviewEl.innerHTML = ''; return; }
+
+  const fallbackDesc = GAME_DESCS[g.id] || '';
+  // Immediate render (cached live data if we have it, else local fallback).
+  renderStorePreview(g, ciqPreviewCache[g.ciq] || null, fallbackDesc);
+  storePreviewEl.classList.add('show');
+  if (ciqPreviewCache[g.ciq]) return;
+
+  try {
+    const r = await fetch(`${API_BASE}/ciq?app=${encodeURIComponent(g.ciq)}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    ciqPreviewCache[g.ciq] = d;
+    if (currentGame === g.id) renderStorePreview(g, d, fallbackDesc);  // still the active game?
+  } catch (_) {
+    /* keep the local fallback render */
+  }
+}
+
+function renderStorePreview(g, d, fallbackDesc) {
+  const name = (d && d.name) ? d.name : g.label;
+  const desc = (d && d.desc) ? d.desc.replace(/\s*\n\s*/g, ' ') : fallbackDesc;
+  const heroFallback = `${HERO_BASE}/${g.id}_hero.png`;
+  const imgSrc = (d && d.shots && d.shots.length) ? d.shots[0] : heroFallback;
+
+  const chips = [];
+  if (d && d.rating > 0)    chips.push(`<span class="sp-chip"><span class="sp-star">★</span> ${d.rating.toFixed(1)}${d.reviews ? ` (${d.reviews})` : ''}</span>`);
+  if (d && d.downloads > 0) chips.push(`<span class="sp-chip">⬇ ${fmtDownloads(d.downloads)} installs</span>`);
+  if (d && d.version)       chips.push(`<span class="sp-chip">v${escHtml(d.version)}</span>`);
+  const metaHtml = chips.length ? `<div class="sp-meta">${chips.join('')}</div>` : '';
+
+  const ciqBtn = g.ciq
+    ? `<a class="sp-cta" href="${CIQ_STORE}${g.ciq}" target="_blank" rel="noopener">${CIQ_EXT_ICON} View on Connect IQ</a>`
+    : '';
+
+  storePreviewEl.innerHTML = `
+    <div class="sp-inner">
+      <div class="sp-shot"><img alt="${escHtml(name)} screenshot" loading="lazy"></div>
+      <div class="sp-body">
+        <div class="sp-title">${escHtml(name)}</div>
+        ${metaHtml}
+        ${desc ? `<div class="sp-desc">${escHtml(desc)}</div>` : '<div class="sp-desc"></div>'}
+        ${ciqBtn}
+      </div>
+    </div>`;
+
+  const img = storePreviewEl.querySelector('.sp-shot img');
+  if (img) {
+    img.onload  = () => img.classList.add('loaded');
+    img.onerror = () => { if (img.src.indexOf(heroFallback) === -1) { img.src = heroFallback; } };
+    img.src = imgSrc;
+  }
+}
+
 // ── Render game info card ────────────────────────────────────────────────────
 function renderGameInfo(gameId, prominent) {
   const g    = GAME_MAP[gameId];
@@ -2355,7 +2481,7 @@ function renderGameInfo(gameId, prominent) {
     ${desc ? `<p class="game-info-desc">${escHtml(desc)}</p>` : ''}
     <div class="game-info-actions">
       ${ciqBtn}
-      <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener" class="game-info-support">☕ Support Bitochi</a>
+      <a href="https://bitochi.com/coffee" target="_blank" rel="noopener" class="game-info-support">☕ Support Bitochi</a>
     </div>`;
 }
 
