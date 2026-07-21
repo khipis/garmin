@@ -1951,10 +1951,29 @@ async function handleGetHits(env: Env): Promise<Response> {
   return json({ hits: row?.value ?? 0 });
 }
 
+// ── Graceful degradation ──────────────────────────────────────────────────────
+// When D1 is unhealthy (upstream unavailable / internal errors on Cloudflare's
+// side), individual queries can HANG for ~20 s instead of failing fast. That
+// makes bitochi.com sit on a spinner. We cap every request at REQUEST_TIMEOUT_MS
+// and, on timeout OR any unhandled handler error, return a small well-formed
+// "degraded" payload so the site can show a clean "temporarily unavailable"
+// state immediately instead of hanging. Read endpoints include empty
+// top/recent/results arrays so existing frontends never crash on the shape.
+const REQUEST_TIMEOUT_MS = 7000;
+
+function degraded(): Response {
+  return json(
+    { ok: false, degraded: true,
+      error: "leaderboard temporarily unavailable — try again shortly",
+      top: [], recent: [], results: [], completions: [] },
+    503,
+    { "Cache-Control": "no-store", "Retry-After": "30" }
+  );
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url    = new URL(req.url);
-    const path   = url.pathname;
     const method = req.method.toUpperCase();
 
     if (method === "OPTIONS") {
@@ -1970,11 +1989,28 @@ export default {
 
     const ip = req.headers.get("CF-Connecting-IP") ?? "unknown";
     if (!checkRateLimit(ip)) {
-      // Log rate-limit hit (fire-and-forget, don't await on hot path)
+      // Log rate-limit hit (fire-and-forget — never block/hang the hot path,
+      // especially while D1 is degraded).
       const ipH = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
-      await logError(env, null, 429, "rate limit exceeded", ipH);
+      logError(env, null, 429, "rate limit exceeded", ipH).catch(() => {});
       return err("rate limit exceeded — try again shortly", 429);
     }
+
+    // Race the actual routing against a hard timeout so a hung D1 call can never
+    // stall the response. Any handler error also degrades cleanly.
+    const handlerP = route(req, env, url, method).catch((e) => {
+      console.error("handler error:", e);
+      return degraded();
+    });
+    const timeoutP = new Promise<Response>((resolve) =>
+      setTimeout(() => resolve(degraded()), REQUEST_TIMEOUT_MS)
+    );
+    return Promise.race([handlerP, timeoutP]);
+  },
+} satisfies ExportedHandler<Env>;
+
+async function route(req: Request, env: Env, url: URL, method: string): Promise<Response> {
+    const path = url.pathname;
 
     if (method === "POST"   && path === "/score")       return handlePostScore(req, env);
     if (method === "POST"   && path === "/launch")      return handleLaunch(req, env);
@@ -2012,5 +2048,4 @@ export default {
     if (method === "GET"    && path === "/hits")        return handleGetHits(env);
 
     return err("not found", 404);
-  },
-} satisfies ExportedHandler<Env>;
+}

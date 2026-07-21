@@ -1843,19 +1843,32 @@ async function loadLeaderboard() {
   if (variant) url += `&variant=${encodeURIComponent(variant)}`;
   if (meName)  url += `&user=${encodeURIComponent(meName)}`;
 
+  // Hard client-side timeout so a hung/degraded backend never leaves the user
+  // staring at a spinner — we bail after 12s and show a clean message.
+  let timedOut = false;
+  const to = setTimeout(() => { timedOut = true; try { fetchController.abort(); } catch (_) {} }, 12000);
+
   try {
     const resp = await fetch(url, { signal: fetchController.signal, cache: 'no-store' });
+    clearTimeout(to);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     if (game !== currentGame) return;
+    if (data && data.degraded) throw new Error('degraded');   // backend reported itself down
     lastData = data;
     renderLeaderboard(data, game);
     loadRecent();
   } catch (e) {
-    if (e.name === 'AbortError') return;
+    clearTimeout(to);
+    // A plain AbortError (without our timeout flag) means a newer request
+    // superseded this one — stay silent in that case.
+    if (e.name === 'AbortError' && !timedOut) return;
     if (game !== currentGame) return;
-    lbWrap.innerHTML = `<div class="state-msg">⚠️ Could not load rankings.</div>`;
+    lbWrap.innerHTML = `<div class="state-msg">⚠️ Leaderboard temporarily unavailable.<br><span style="opacity:.7;font-size:.85em">The rankings backend is having a moment — please try again shortly.</span></div>`;
+    lbHeaderEl.style.display = 'none';
     updateTag.textContent = '';
+    targetBadge.style.display = 'none';
+    recentWrap.style.display = 'none';
     renderGameInfo(game, true);
   }
 }
