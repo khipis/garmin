@@ -550,6 +550,112 @@ async function handleGetGames(env: Env): Promise<Response> {
   );
 }
 
+// ── Connect IQ store preview ────────────────────────────────────────────────
+// Proxies + caches a slim slice of the official Connect IQ store metadata so the
+// website can show a live "what is this game" card (real screenshot, store
+// description, downloads, rating) next to each leaderboard. The store's JSON API
+// sends no CORS header, so the browser can't call it directly — we fetch it
+// server-side, cache it in D1 (TTL) to avoid hammering Garmin, and hand back a
+// tiny CORS-enabled JSON. Screenshot/icon <img> URLs are returned ready to use
+// (images don't need CORS). Fully guarded: on any upstream failure we serve the
+// last good cache, so the card degrades gracefully instead of breaking.
+const CIQ_TTL_S    = 21600; // 6h freshness
+const CIQ_API_BASE = "https://apps.garmin.com/api/appsLibraryExternalServices/api";
+
+function isUuid(s: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+}
+
+interface CiqSlim {
+  app: string; name: string; desc: string;
+  downloads: number; rating: number; reviews: number;
+  version: string; updated: number;
+  icon: string | null; shots: string[];
+}
+
+function slimCiq(app: string, d: any): CiqSlim {
+  const locs = Array.isArray(d?.appLocalizations) ? d.appLocalizations : [];
+  const loc  = locs.find((l: any) => l && l.locale === "en") || locs[0] || {};
+  const shots = (Array.isArray(d?.screenshotFileIds) ? d.screenshotFileIds : [])
+    .slice(0, 12)
+    .map((id: string) => `${CIQ_API_BASE}/screenshots/${id}`);
+  return {
+    app,
+    name:      String(loc.name || "").trim(),
+    desc:      String(loc.description || "").trim(),
+    downloads: Number(d?.downloadCount || 0),
+    rating:    Number(d?.averageRating || 0),
+    reviews:   Number(d?.reviewCount || 0),
+    version:   d?.latestExternalVersion != null ? String(d.latestExternalVersion) : "",
+    updated:   Number(d?.changedDate || d?.lastApprovalDate || 0),
+    icon:      d?.iconFileId ? `${CIQ_API_BASE}/icons/${d.iconFileId}` : null,
+    shots,
+  };
+}
+
+const CIQ_HEADERS = (maxAge: number): HeadersInit => ({
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+  "Cache-Control": `public, max-age=${maxAge}, stale-while-revalidate=86400`,
+});
+
+async function handleGetCiq(url: URL, env: Env): Promise<Response> {
+  const app = (url.searchParams.get("app") || "").toLowerCase();
+  if (!isUuid(app)) return err("bad app id", 400);
+
+  const now = Math.floor(Date.now() / 1000);
+  try {
+    await env.DB.prepare(
+      "CREATE TABLE IF NOT EXISTS ciq_cache (app_id TEXT PRIMARY KEY, data TEXT NOT NULL, fetched_at INTEGER NOT NULL)"
+    ).run();
+  } catch (e) { /* table may already exist */ }
+
+  // Serve fresh cache when we have it.
+  let cachedData: string | null = null;
+  let cachedAt = 0;
+  try {
+    const row = await env.DB
+      .prepare("SELECT data, fetched_at FROM ciq_cache WHERE app_id = ?")
+      .bind(app)
+      .first<{ data: string; fetched_at: number }>();
+    if (row) { cachedData = row.data; cachedAt = row.fetched_at; }
+  } catch (e) { /* ignore cache read errors */ }
+
+  if (cachedData && (now - cachedAt) < CIQ_TTL_S) {
+    return new Response(cachedData, { status: 200, headers: CIQ_HEADERS(CIQ_TTL_S) });
+  }
+
+  // Refresh from the Connect IQ store.
+  let slim: CiqSlim | null = null;
+  try {
+    const r = await fetch(`${CIQ_API_BASE}/asw/apps/${app}`, {
+      headers: { "Accept": "application/json" },
+      cf: { cacheTtl: CIQ_TTL_S, cacheEverything: true },
+    } as RequestInit);
+    if (r.ok) {
+      const d = await r.json();
+      slim = slimCiq(app, d);
+    }
+  } catch (e) { /* upstream failure → fall back to stale below */ }
+
+  if (slim && slim.name) {
+    const data = JSON.stringify(slim);
+    try {
+      await env.DB.prepare(
+        "INSERT INTO ciq_cache (app_id, data, fetched_at) VALUES (?, ?, ?) " +
+        "ON CONFLICT(app_id) DO UPDATE SET data = excluded.data, fetched_at = excluded.fetched_at"
+      ).bind(app, data, now).run();
+    } catch (e) { /* cache write is best-effort */ }
+    return new Response(data, { status: 200, headers: CIQ_HEADERS(CIQ_TTL_S) });
+  }
+
+  // Upstream unavailable — serve stale cache if we have any, else fail soft.
+  if (cachedData) {
+    return new Response(cachedData, { status: 200, headers: CIQ_HEADERS(300) });
+  }
+  return err("ciq unavailable", 502);
+}
+
 // Aggregate player stats, computed live from the scores table. Used by the
 // "Stats" tab on bitochi.com for development/planning.
 // ?real=1 → exclude bot-seeded rows so the owner sees authentic traffic only.
@@ -1503,74 +1609,130 @@ function todayUTC(): string {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
 }
 
-// ── Label templates ────────────────────────────────────────────────────────────
-// Each array entry is a function(target, extra?) → string.
-// The label template is also chosen deterministically via the seed so the
-// same game produces different wording on different days.
+// ── Per-game flavor ─────────────────────────────────────────────────────────────
+// Each game gets a display name, a metric noun ("pts", "chops", "coins", "s"…)
+// and a "rounds" noun ("matches", "runs", "climbs"…) so the daily copy reads
+// naturally and feels tailored — "Chop 40+ today!" / "Play 2 matches today!"
+// instead of a generic "Score N pts". Unknown games fall back to DAILY_DEFAULT.
+type DailyMeta = { name: string; noun: string; roundsNoun: string };
+const DAILY_DEFAULT: DailyMeta = { name: "", noun: "pts", roundsNoun: "games" };
+const DAILY_META: Record<string, DailyMeta> = {
+  // ── Top games by launches ──
+  billiards:        { name: "Billiards",      noun: "pts",   roundsNoun: "matches"  },
+  pets:             { name: "Pets",           noun: "pts",   roundsNoun: "visits"   },
+  fish:             { name: "Fishing",        noun: "pts",   roundsNoun: "trips"    },
+  drwal:            { name: "Lumberjack",     noun: "chops", roundsNoun: "runs"     },
+  blobs:            { name: "Blobs",          noun: "pts",   roundsNoun: "battles"  },
+  catapult:         { name: "Catapult",       noun: "pts",   roundsNoun: "runs"     },
+  slotbandit:       { name: "Slot Bandit",    noun: "coins", roundsNoun: "sessions" },
+  jumptower:        { name: "Jump Tower",     noun: "pts",   roundsNoun: "climbs"   },
+  sniperscope:      { name: "Sniper Scope",   noun: "pts",   roundsNoun: "missions" },
+  checkers:         { name: "Checkers",       noun: "pts",   roundsNoun: "matches"  },
+  stacktower:       { name: "Stack Tower",    noun: "pts",   roundsNoun: "runs"     },
+  arcade:           { name: "Axe Arcade",     noun: "pts",   roundsNoun: "runs"     },
+  archery:          { name: "Archery",        noun: "pts",   roundsNoun: "rounds"   },
+  boxing:           { name: "Boxing",         noun: "pts",   roundsNoun: "bouts"    },
+  skyroll:          { name: "Sky Roll",       noun: "pts",   roundsNoun: "runs"     },
+  memo:             { name: "Memo",           noun: "moves", roundsNoun: "games"    },
+  twentyfortyeight: { name: "2048",           noun: "pts",   roundsNoun: "games"    },
+  pixelinvaders:    { name: "Pixel Invaders", noun: "pts",   roundsNoun: "runs"     },
+  blocks:           { name: "Blocks",         noun: "pts",   roundsNoun: "games"    },
+  manpac:           { name: "Manpac",         noun: "pts",   roundsNoun: "runs"     },
+  // ── ASC (lower is better) ──
+  sudoku:           { name: "Sudoku",         noun: "s",     roundsNoun: "puzzles"  },
+  minesweeper:      { name: "Minesweeper",    noun: "s",     roundsNoun: "boards"   },
+  solitaire:        { name: "Solitaire",      noun: "s",     roundsNoun: "deals"    },
+  solitare:         { name: "Solitaire",      noun: "s",     roundsNoun: "deals"    },
+  lightsout:        { name: "Lights Out",     noun: "moves", roundsNoun: "puzzles"  },
+  battleship:       { name: "Battleship",     noun: "shots", roundsNoun: "battles"  },
+  akari:            { name: "Akari",          noun: "s",     roundsNoun: "puzzles"  },
+};
+function dailyMeta(game: string): DailyMeta { return DAILY_META[game] ?? DAILY_DEFAULT; }
 
-const LABELS_SCORE = [
-  (t: number) => `Score ${t}+ pts today!`,
-  (t: number) => `Hit ${t}+ points!`,
-  (t: number) => `${t}+ in a single run!`,
-  (t: number) => `Beat ${t} pts!`,
-  (t: number) => `Reach ${t} — can you do it?`,
-  (t: number) => `Score at least ${t} today!`,
-  (t: number) => `Post ${t}+ on the board!`,
+/** Format an amount with its unit — "120 pts", "40 moves", "90s". */
+function amt(t: number, noun: string): string {
+  return noun === "s" ? `${t}s` : `${t} ${noun}`;
+}
+/** Rough singular of a rounds noun ("matches"→"match", "runs"→"run"). */
+function singularNoun(n: string): string {
+  if (n.endsWith("ches") || n.endsWith("shes") || n.endsWith("sses")) return n.slice(0, -2);
+  if (n.endsWith("s")) return n.slice(0, -1);
+  return n;
+}
+/** Round a target to a clean, goal-like number (larger values only). */
+function niceTarget(t: number): number {
+  if (t < 50)   return t;
+  if (t < 100)  return Math.round(t / 5) * 5;
+  if (t < 1000) return Math.round(t / 10) * 10;
+  return Math.round(t / 50) * 50;
+}
+
+// ── Label templates ────────────────────────────────────────────────────────────
+// Each entry is a function(target, meta) → string, picked deterministically via
+// the seed so wording rotates per game per day.
+
+const LABELS_SCORE: ((t: number, m: DailyMeta) => string)[] = [
+  (t, m) => `Score ${amt(t, m.noun)} today!`,
+  (t, m) => `Hit ${t}+ ${m.noun}!`,
+  (t, m) => `${amt(t, m.noun)} in one run!`,
+  (t, m) => `Beat ${amt(t, m.noun)}!`,
+  (t, m) => `Reach ${amt(t, m.noun)} — can you?`,
+  (t, m) => `Post ${t}+ on the board!`,
+  (t, m) => m.name ? `${m.name}: ${amt(t, m.noun)}+ today!` : `Score at least ${t} today!`,
 ];
-const LABELS_SCORE_HARD = [
-  (t: number) => `Hard mode: ${t}+ pts!`,
-  (t: number) => `Elite target: ${t}+!`,
-  (t: number) => `Top 30% challenge: ${t}+!`,
-  (t: number) => `Push for ${t}+ today!`,
-  (t: number) => `Can you hit ${t}? Hard!`,
+const LABELS_SCORE_HARD: ((t: number, m: DailyMeta) => string)[] = [
+  (t, m) => `Hard mode: ${t}+ ${m.noun}!`,
+  (t, m) => `Elite target: ${amt(t, m.noun)}!`,
+  (t, m) => `Top-30% run: ${t}+ ${m.noun}!`,
+  (t, m) => `Push for ${amt(t, m.noun)}!`,
+  (t, m) => `Can you hit ${amt(t, m.noun)}? Tough!`,
 ];
-const LABELS_ASC = [
-  (t: number) => `Finish in ${t}s or less!`,
-  (t: number) => `Complete in under ${t}s!`,
-  (t: number) => `Beat ${t} seconds!`,
-  (t: number) => `Solve in max ${t}s!`,
-  (t: number) => `Speed run: ≤${t}s!`,
-  (t: number) => `${t}s or bust!`,
+const LABELS_ASC: ((t: number, m: DailyMeta) => string)[] = [
+  (t, m) => `Finish in ${amt(t, m.noun)} or less!`,
+  (t, m) => `Complete under ${amt(t, m.noun)}!`,
+  (t, m) => `Beat ${amt(t, m.noun)}!`,
+  (t, m) => `Max ${amt(t, m.noun)} — go!`,
+  (t, m) => `Speed run: ≤${amt(t, m.noun)}!`,
 ];
-const LABELS_ASC_HARD = [
-  (t: number) => `Elite: finish in ${t}s!`,
-  (t: number) => `Hard: beat ${t}s!`,
-  (t: number) => `Crack it in ${t}s — tough!`,
-  (t: number) => `Sub-${t}s challenge!`,
+const LABELS_ASC_HARD: ((t: number, m: DailyMeta) => string)[] = [
+  (t, m) => `Elite: under ${amt(t, m.noun)}!`,
+  (t, m) => `Hard: beat ${amt(t, m.noun)}!`,
+  (t, m) => `Crack it in ${amt(t, m.noun)} — tough!`,
+  (t, m) => `Sub-${amt(t, m.noun)} challenge!`,
 ];
-const LABELS_PCT = [
-  (pct: number, t: number) => `Beat ${pct}% of players (${t}+)!`,
-  (pct: number, t: number) => `Break into the top ${100-pct}% — ${t}+!`,
-  (pct: number, t: number) => `Outrank ${pct}% of players (${t}+)!`,
-  (pct: number, t: number) => `Top ${100-pct}% today: ${t}+!`,
-  (pct: number, t: number) => `Beat ${pct}% — target: ${t}!`,
+const LABELS_PCT: ((pct: number, t: number, m: DailyMeta) => string)[] = [
+  (pct, t, m) => `Beat ${pct}% of players — ${amt(t, m.noun)}!`,
+  (pct, t, m) => `Break the top ${100 - pct}%: ${t}+ ${m.noun}!`,
+  (pct, t, m) => `Outrank ${pct}% — ${amt(t, m.noun)}!`,
+  (pct, t, m) => `Top ${100 - pct}% today: ${t}+ ${m.noun}!`,
+  (pct, t, m) => `Beat ${pct}% — target ${amt(t, m.noun)}!`,
 ];
-const LABELS_PCT_ASC = [
-  (pct: number, t: number) => `Faster than ${pct}%! (${t}s)`,
-  (pct: number, t: number) => `Top ${100-pct}% speedrun — ${t}s!`,
-  (pct: number, t: number) => `Beat ${pct}% of times: ≤${t}s!`,
-  (pct: number, t: number) => `Sub-${t}s: top ${100-pct}%!`,
+const LABELS_PCT_ASC: ((pct: number, t: number, m: DailyMeta) => string)[] = [
+  (pct, t, m) => `Faster than ${pct}% — ${amt(t, m.noun)}!`,
+  (pct, t, m) => `Top ${100 - pct}% speed: ${amt(t, m.noun)}!`,
+  (pct, t, m) => `Beat ${pct}%: ≤${amt(t, m.noun)}!`,
+  (pct, t, m) => `Sub-${amt(t, m.noun)}: top ${100 - pct}%!`,
 ];
-const LABELS_ROUNDS_1 = [
-  () => `Play at least once today!`,
-  () => `One game today — just do it!`,
-  () => `Jump in today, any score counts!`,
-  () => `Log one game today!`,
-  () => `Show up today!`,
+const LABELS_ROUNDS_1: ((m: DailyMeta) => string)[] = [
+  (m) => m.name ? `Play ${m.name} today!` : `Play once today!`,
+  (m) => `Log one ${singularNoun(m.roundsNoun)} today!`,
+  (m) => `One ${singularNoun(m.roundsNoun)} — any score counts!`,
+  (m) => `Show up today — one ${singularNoun(m.roundsNoun)}!`,
+  (m) => `Jump in for a ${singularNoun(m.roundsNoun)} today!`,
 ];
-const LABELS_ROUNDS_2 = [
-  () => `Play twice today!`,
-  () => `Two runs today!`,
-  () => `Come back for a second go!`,
-  () => `2 games today — double dip!`,
-  () => `Play it twice today!`,
+const LABELS_ROUNDS_2: ((m: DailyMeta) => string)[] = [
+  (m) => `Play 2 ${m.roundsNoun} today!`,
+  (m) => `Two ${m.roundsNoun} today!`,
+  (m) => `Come back for a second ${singularNoun(m.roundsNoun)}!`,
+  (m) => `Double up: 2 ${m.roundsNoun}!`,
+  (m) => `Back-to-back ${m.roundsNoun} today!`,
 ];
-const LABELS_ROUNDS_3 = [
-  () => `Three runs today — can you?`,
-  () => `Play 3 times today!`,
-  () => `Triple session today!`,
-  () => `3 games today — grinder!`,
-  () => `Log 3 games today!`,
+const LABELS_ROUNDS_3: ((m: DailyMeta) => string)[] = [
+  (m) => `Play 3 ${m.roundsNoun} today!`,
+  (m) => `Triple session: 3 ${m.roundsNoun}!`,
+  (m) => `3 ${m.roundsNoun} today — grinder!`,
+  (m) => `Hat-trick: 3 ${m.roundsNoun}!`,
+  (m) => `Log 3 ${m.roundsNoun} today!`,
 ];
 
 /**
@@ -1593,6 +1755,7 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
   const date   = todayUTC();
   const seed   = dailySeed(date, game);
   const isAsc  = ASC_GAMES_SET.has(game);
+  const meta   = dailyMeta(game);
 
   // Archetype rotates across the 4 types via seed bits 0-1.
   // But fall back to "rounds" when there's not enough data.
@@ -1612,7 +1775,7 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
     const n = 1 + (seed % 2);
     type   = "rounds";
     target = n;
-    label  = seedPick(n === 1 ? LABELS_ROUNDS_1 : n === 2 ? LABELS_ROUNDS_2 : LABELS_ROUNDS_3, seed)();
+    label  = seedPick(n === 1 ? LABELS_ROUNDS_1 : LABELS_ROUNDS_2, seed)(meta);
   } else {
     const archetype = seed % 4; // 0=score, 1=hard, 2=top_pct, 3=rounds
 
@@ -1621,7 +1784,7 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
       const n = 2 + (seed % 2); // 2 or 3
       type   = "rounds";
       target = n;
-      label  = seedPick(n === 2 ? LABELS_ROUNDS_2 : LABELS_ROUNDS_3, seed, 4)();
+      label  = seedPick(n === 2 ? LABELS_ROUNDS_2 : LABELS_ROUNDS_3, seed, 4)(meta);
 
     } else {
       // Score-based archetype (0=normal, 1=hard, 2=top_pct)
@@ -1653,22 +1816,22 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
         .first<{ score: number }>();
 
       const rawTarget = row?.score ?? 0;
-      target = rawTarget > 0 ? rawTarget : 1;
+      target = rawTarget > 0 ? niceTarget(rawTarget) : 1;
       type   = "score";
 
       if (archetype === 0) {
         label = isAsc
-          ? seedPick(LABELS_ASC,      seed, 8)(target)
-          : seedPick(LABELS_SCORE,    seed, 8)(target);
+          ? seedPick(LABELS_ASC,      seed, 8)(target, meta)
+          : seedPick(LABELS_SCORE,    seed, 8)(target, meta);
       } else if (archetype === 1) {
         label = isAsc
-          ? seedPick(LABELS_ASC_HARD, seed, 12)(target)
-          : seedPick(LABELS_SCORE_HARD, seed, 12)(target);
+          ? seedPick(LABELS_ASC_HARD, seed, 12)(target, meta)
+          : seedPick(LABELS_SCORE_HARD, seed, 12)(target, meta);
       } else {
         // top_pct
         label = isAsc
-          ? seedPick(LABELS_PCT_ASC, seed, 16)(archetypePct, target)
-          : seedPick(LABELS_PCT,     seed, 16)(archetypePct, target);
+          ? seedPick(LABELS_PCT_ASC, seed, 16)(archetypePct, target, meta)
+          : seedPick(LABELS_PCT,     seed, 16)(archetypePct, target, meta);
       }
     }
   }
@@ -1837,6 +2000,7 @@ export default {
     if (method === "GET"    && path === "/activity")    return handleGetActivity(url, env);
     if (method === "GET"    && path === "/hot")         return handleGetHot(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);
+    if (method === "GET"    && path === "/ciq")         return handleGetCiq(url, env);
     if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(url, env);
     if (method === "GET"    && path === "/snapshots")   return handleGetSnapshots(env);

@@ -114,7 +114,7 @@
 
   /* ── Hero banner ──────────────────────────────────────────────────── */
   #hero {
-    position: relative; width: 100%; height: clamp(180px, 36vw, 380px);
+    position: relative; width: 100%; height: clamp(300px, 46vw, 560px);
     overflow: hidden;
     background: var(--surface);
   }
@@ -413,23 +413,28 @@
     display: none;
   }
   #store-preview.show { display: block; }
-  .sp-inner { display: flex; gap: 14px; padding: 13px 15px; align-items: stretch; }
-  .sp-shot {
-    flex: 0 0 auto; width: 112px; height: 112px; border-radius: 11px;
-    background: #0b1119; border: 1px solid var(--border);
-    overflow: hidden; display: grid; place-items: center;
+  .sp-gallery {
+    display: flex; gap: 8px; overflow-x: auto; padding: 13px 15px 6px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
   }
-  .sp-shot img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .3s; }
+  .sp-gallery::-webkit-scrollbar { height: 6px; }
+  .sp-gallery::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 3px; }
+  .sp-gallery::-webkit-scrollbar-track { background: transparent; }
+  .sp-shot {
+    flex: 0 0 auto; height: 172px; border-radius: 11px;
+    background: #0b1119; border: 1px solid var(--border);
+    overflow: hidden; display: block; scroll-snap-align: start; text-decoration: none;
+  }
+  .sp-shot img { height: 100%; width: auto; display: block; object-fit: contain; opacity: 0; transition: opacity .3s; }
   .sp-shot img.loaded { opacity: 1; }
-  .sp-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .sp-body { padding: 8px 15px 15px; display: flex; flex-direction: column; }
   .sp-title { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
   .sp-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-bottom: 8px; }
   .sp-chip { font-size: .68rem; font-weight: 700; letter-spacing: .03em; color: #9fb2c4; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
   .sp-chip .sp-star { color: #fbbf24; }
   .sp-desc {
-    font-size: .8rem; line-height: 1.5; color: var(--text); opacity: .82;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-    margin-bottom: 10px; flex: 1;
+    font-size: .82rem; line-height: 1.55; color: var(--text); opacity: .85;
+    white-space: pre-line; margin-bottom: 12px;
   }
   .sp-cta {
     align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
@@ -442,9 +447,7 @@
   }
   .sp-cta:hover { background: linear-gradient(135deg, rgba(0,212,255,.24), rgba(124,58,237,.24)); box-shadow: 0 0 16px rgba(0,212,255,.3); }
   @media (max-width: 520px) {
-    .sp-inner { flex-direction: column; align-items: stretch; }
-    .sp-shot { width: 100%; height: 150px; }
-    .sp-desc { -webkit-line-clamp: 2; }
+    .sp-shot { height: 150px; }
   }
 
   /* ── Game info card ───────────────────────────────────────────────── */
@@ -1056,7 +1059,7 @@
     cursor: pointer;
   }
   .public-hot-pill:hover { border-color: #ff9f43; color: #fff; }
-  #hero { height: clamp(210px, 33vw, 390px); }
+  #hero { height: clamp(300px, 46vw, 560px); }
   #hero-overlay { background: linear-gradient(to top, rgba(8,12,16,.96) 0%, rgba(8,12,16,.16) 72%); }
   #view-rankings > #featured-daily { max-width: 1180px; margin: 14px auto; }
 
@@ -1079,7 +1082,7 @@
     #tab-nav { gap: 6px; padding: 10px 8px 12px; }
     .tab-btn { flex: 1 1 0; justify-content: center; gap: 4px; padding: 8px 6px; font-size: .72rem; }
     .tab-btn svg { width: 14px; height: 14px; }
-    #hero { height: 178px; }
+    #hero { height: 260px; }
     #hero-overlay { padding: 14px 12px; }
     #hero-game-name { font-size: 1.45rem; }
     .hero-bottom { gap: 8px; }
@@ -2428,9 +2431,9 @@ async function loadStorePreview(g) {
 
 function renderStorePreview(g, d, fallbackDesc) {
   const name = (d && d.name) ? d.name : g.label;
-  const desc = (d && d.desc) ? d.desc.replace(/\s*\n\s*/g, ' ') : fallbackDesc;
+  const desc = (d && d.desc) ? d.desc.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim() : fallbackDesc;
   const heroFallback = `${HERO_BASE}/${g.id}_hero.png`;
-  const imgSrc = (d && d.shots && d.shots.length) ? d.shots[0] : heroFallback;
+  const shots = (d && Array.isArray(d.shots)) ? d.shots.filter(Boolean) : [];
 
   const chips = [];
   if (d && d.rating > 0)    chips.push(`<span class="sp-chip"><span class="sp-star">★</span> ${d.rating.toFixed(1)}${d.reviews ? ` (${d.reviews})` : ''}</span>`);
@@ -2442,23 +2445,28 @@ function renderStorePreview(g, d, fallbackDesc) {
     ? `<a class="sp-cta" href="${CIQ_STORE}${g.ciq}" target="_blank" rel="noopener">${CIQ_EXT_ICON} View on Connect IQ</a>`
     : '';
 
+  // Full screenshot gallery when the store gives us shots; hero image as a
+  // graceful fallback while live data is still loading / unavailable.
+  const galleryImgs = shots.length
+    ? shots.map((s, i) =>
+        `<a class="sp-shot" href="${escHtml(s)}" target="_blank" rel="noopener" title="Open screenshot ${i + 1}"><img alt="${escHtml(name)} screenshot ${i + 1}" loading="lazy" src="${escHtml(s)}"></a>`)
+      .join('')
+    : `<div class="sp-shot"><img alt="${escHtml(name)}" loading="lazy" src="${escHtml(heroFallback)}"></div>`;
+
   storePreviewEl.innerHTML = `
-    <div class="sp-inner">
-      <div class="sp-shot"><img alt="${escHtml(name)} screenshot" loading="lazy"></div>
-      <div class="sp-body">
-        <div class="sp-title">${escHtml(name)}</div>
-        ${metaHtml}
-        ${desc ? `<div class="sp-desc">${escHtml(desc)}</div>` : '<div class="sp-desc"></div>'}
-        ${ciqBtn}
-      </div>
+    <div class="sp-gallery">${galleryImgs}</div>
+    <div class="sp-body">
+      <div class="sp-title">${escHtml(name)}</div>
+      ${metaHtml}
+      ${desc ? `<div class="sp-desc">${escHtml(desc)}</div>` : ''}
+      ${ciqBtn}
     </div>`;
 
-  const img = storePreviewEl.querySelector('.sp-shot img');
-  if (img) {
+  storePreviewEl.querySelectorAll('.sp-shot img').forEach((img) => {
     img.onload  = () => img.classList.add('loaded');
-    img.onerror = () => { if (img.src.indexOf(heroFallback) === -1) { img.src = heroFallback; } };
-    img.src = imgSrc;
-  }
+    img.onerror = () => { const shot = img.closest('.sp-shot'); if (shot) shot.style.display = 'none'; };
+    if (img.complete && img.naturalWidth) img.classList.add('loaded');
+  });
 }
 
 // ── Render game info card ────────────────────────────────────────────────────
