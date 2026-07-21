@@ -57,7 +57,7 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             _pet.feed();
         }
         else if (idx == 1) {
-            var gt = Math.rand().abs() % 7;
+            var gt = Math.rand().abs() % 8;
             if (gt == 0) {
                 var gv = new MiniGameView(_pet);
                 WatchUi.pushView(gv, new MiniGameDelegate(gv), WatchUi.SLIDE_UP);
@@ -76,9 +76,12 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             } else if (gt == 5) {
                 var gv = new StarCatchGameView(_pet);
                 WatchUi.pushView(gv, new StarCatchGameDelegate(gv), WatchUi.SLIDE_UP);
-            } else {
+            } else if (gt == 6) {
                 var gv = new PeekabooGameView(_pet);
                 WatchUi.pushView(gv, new PeekabooGameDelegate(gv), WatchUi.SLIDE_UP);
+            } else {
+                var gv = new BalanceGameView(_pet);
+                WatchUi.pushView(gv, new BalanceGameDelegate(gv), WatchUi.SLIDE_UP);
             }
             return true;
         }
@@ -96,10 +99,15 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             _pet.toggleVibe();
         }
         else if (idx == 9) {
-            _view.openLeaderboard();
+            var stv = new StyleView(_pet);
+            WatchUi.pushView(stv, new StyleDelegate(stv), WatchUi.SLIDE_UP);
             return true;
         }
         else if (idx == 10) {
+            _view.openLeaderboard();
+            return true;
+        }
+        else if (idx == 11) {
             _view.openAlignLeaderboard();
             return true;
         }

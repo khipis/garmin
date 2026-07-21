@@ -358,6 +358,20 @@ class Pet {
         pendingVibe = 1;
     }
 
+    // ── Cosmetic customization (Style screen) ────────────────────────────────
+    function cyclePalette(dir) {
+        paletteIdx = (paletteIdx + dir + PALETTE_COUNT) % PALETTE_COUNT;
+        Application.Storage.setValue("paletteIdx", paletteIdx);
+    }
+
+    function cycleAccessory(dir) {
+        accessory = (accessory + dir + ACC_COUNT) % ACC_COUNT;
+        Application.Storage.setValue("accessory", accessory);
+    }
+
+    function getPaletteIdx() { return paletteIdx; }
+    function getAccessory()  { return accessory; }
+
     hidden function applyOffline(elapsed) {
         hunger += elapsed / getHungerRate();
         happiness -= elapsed / getHappyRate();
@@ -3617,6 +3631,16 @@ class Pet {
         drawFace(dc, sx, sy, ps, :normal);
     }
 
+    // Style-screen preview: current pet with palette + accessory applied and a
+    // friendly normal face (so cosmetics are always shown clearly).
+    function drawStylePreview(dc, cx, cy, ps) {
+        var sx = cx - 6 * ps;
+        var sy = cy - 6 * ps;
+        renderBody(dc, sx, sy, ps, petType, getColors(petType));
+        drawFace(dc, sx, sy, ps, :happy);
+        if (accessory != ACC_NONE) { drawAccessory(dc, cx, cy, ps); }
+    }
+
     hidden function desaturateColors(colors, wb) {
         var factor = 30 + wb * 70 / 50;
         if (factor > 100) { factor = 100; }
@@ -3778,8 +3802,15 @@ class Pet {
             dc.fillRectangle(sx+8*ps, sy+7*ps, ps, ps);
         } else {
             dc.setColor(eye, eye);
-            dc.fillRectangle(sx+3*ps, sy+4*ps, 2*ps, 2*ps);
-            dc.fillRectangle(sx+7*ps, sy+4*ps, 2*ps, 2*ps);
+            // Periodic blink: once every animation cycle drop to a thin closed
+            // eye line for one frame so the pet feels alive.
+            if (animFrame % 8 == 7) {
+                dc.fillRectangle(sx+3*ps, sy+5*ps, 2*ps, ps);
+                dc.fillRectangle(sx+7*ps, sy+5*ps, 2*ps, ps);
+            } else {
+                dc.fillRectangle(sx+3*ps, sy+4*ps, 2*ps, 2*ps);
+                dc.fillRectangle(sx+7*ps, sy+4*ps, 2*ps, 2*ps);
+            }
             dc.setColor(mouth, mouth);
             dc.fillRectangle(sx+4*ps, sy+7*ps, 4*ps, ps);
         }

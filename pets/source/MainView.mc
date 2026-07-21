@@ -29,7 +29,7 @@ class MainView extends WatchUi.View {
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe", "LB", "Align"];
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe", "Style", "LB", "Align"];
         _lbIdx = _actions.size() - 2;
         _alignIdx = _actions.size() - 1;
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
@@ -874,6 +874,7 @@ class MainView extends WatchUi.View {
         if (actionIdx == 6) { nameColor = 0xFF8844; }
         if (actionIdx == 7) { nameColor = 0xFF6666; }
         if (actionIdx == 8) { nameColor = 0x88AAFF; }
+        if (actionIdx == 9) { nameColor = 0x66CCFF; }
         if (actionIdx == _alignIdx) {
             var g = _pet.getKarmaGood();
             var e = _pet.getKarmaEvil();
