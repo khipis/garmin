@@ -414,40 +414,53 @@
   }
   #store-preview.show { display: block; }
   .sp-gallery {
-    display: flex; gap: 8px; overflow-x: auto; padding: 13px 15px 6px;
+    display: flex; gap: 7px; overflow-x: auto; padding: 12px 14px 4px;
     scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
   }
-  .sp-gallery::-webkit-scrollbar { height: 6px; }
+  .sp-gallery::-webkit-scrollbar { height: 5px; }
   .sp-gallery::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 3px; }
   .sp-gallery::-webkit-scrollbar-track { background: transparent; }
   .sp-shot {
-    flex: 0 0 auto; height: 172px; border-radius: 11px;
+    flex: 0 0 auto; height: 128px; border-radius: 10px;
     background: #0b1119; border: 1px solid var(--border);
     overflow: hidden; display: block; scroll-snap-align: start; text-decoration: none;
+    transition: border-color .2s, transform .2s;
   }
+  .sp-shot:hover { border-color: var(--accent); transform: translateY(-2px); }
   .sp-shot img { height: 100%; width: auto; display: block; object-fit: contain; opacity: 0; transition: opacity .3s; }
   .sp-shot img.loaded { opacity: 1; }
-  .sp-body { padding: 8px 15px 15px; display: flex; flex-direction: column; }
-  .sp-title { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
-  .sp-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-bottom: 8px; }
-  .sp-chip { font-size: .68rem; font-weight: 700; letter-spacing: .03em; color: #9fb2c4; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .sp-body { padding: 10px 15px 14px; display: flex; flex-direction: column; }
+  .sp-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 12px; margin-bottom: 8px; }
+  .sp-title { font-size: .92rem; font-weight: 800; color: var(--text); }
+  .sp-meta { display: flex; flex-wrap: wrap; gap: 4px 11px; }
+  .sp-chip { font-size: .67rem; font-weight: 700; letter-spacing: .03em; color: #9fb2c4; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
   .sp-chip .sp-star { color: #fbbf24; }
+  .sp-desc-wrap { margin-bottom: 11px; }
   .sp-desc {
-    font-size: .82rem; line-height: 1.55; color: var(--text); opacity: .85;
-    white-space: pre-line; margin-bottom: 12px;
+    font-size: .8rem; line-height: 1.55; color: var(--text); opacity: .82;
+    white-space: pre-line;
   }
+  .sp-desc.clamped {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .sp-more {
+    margin-top: 5px; background: none; border: 0; padding: 0;
+    color: var(--accent); font-size: .72rem; font-weight: 800;
+    letter-spacing: .04em; cursor: pointer;
+  }
+  .sp-more:hover { text-decoration: underline; }
   .sp-cta {
     align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 14px; border-radius: 999px;
+    padding: 6px 13px; border-radius: 999px;
     background: linear-gradient(135deg, rgba(0,212,255,.14), rgba(124,58,237,.14));
     border: 1px solid rgba(0,212,255,.4);
-    color: var(--accent); font-size: .72rem; font-weight: 800;
+    color: var(--accent); font-size: .7rem; font-weight: 800;
     letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
     transition: box-shadow .2s, background .2s;
   }
   .sp-cta:hover { background: linear-gradient(135deg, rgba(0,212,255,.24), rgba(124,58,237,.24)); box-shadow: 0 0 16px rgba(0,212,255,.3); }
   @media (max-width: 520px) {
-    .sp-shot { height: 150px; }
+    .sp-shot { height: 112px; }
   }
 
   /* ── Game info card ───────────────────────────────────────────────── */
@@ -2220,12 +2233,24 @@ function renderStorePreview(g, d, fallbackDesc) {
       .join('')
     : `<div class="sp-shot"><img alt="${escHtml(name)}" loading="lazy" src="${escHtml(heroFallback)}"></div>`;
 
+  // Keep the card compact by default so the leaderboard stays in view; long
+  // store descriptions collapse to 3 lines with an inline Show more toggle.
+  const needsToggle = !!desc && desc.length > 165;
+  const descHtml = desc
+    ? `<div class="sp-desc-wrap">
+         <div class="sp-desc${needsToggle ? ' clamped' : ''}">${escHtml(desc)}</div>
+         ${needsToggle ? '<button type="button" class="sp-more">Show more</button>' : ''}
+       </div>`
+    : '';
+
   storePreviewEl.innerHTML = `
     <div class="sp-gallery">${galleryImgs}</div>
     <div class="sp-body">
-      <div class="sp-title">${escHtml(name)}</div>
-      ${metaHtml}
-      ${desc ? `<div class="sp-desc">${escHtml(desc)}</div>` : ''}
+      <div class="sp-head">
+        <span class="sp-title">${escHtml(name)}</span>
+        ${metaHtml}
+      </div>
+      ${descHtml}
       ${ciqBtn}
     </div>`;
 
@@ -2234,14 +2259,22 @@ function renderStorePreview(g, d, fallbackDesc) {
     img.onerror = () => { const shot = img.closest('.sp-shot'); if (shot) shot.style.display = 'none'; };
     if (img.complete && img.naturalWidth) img.classList.add('loaded');
   });
+
+  const moreBtn = storePreviewEl.querySelector('.sp-more');
+  if (moreBtn) moreBtn.onclick = () => {
+    const dsc = storePreviewEl.querySelector('.sp-desc');
+    const clamped = dsc.classList.toggle('clamped');
+    moreBtn.textContent = clamped ? 'Show more' : 'Show less';
+  };
 }
 
 // ── Render game info card ────────────────────────────────────────────────────
 function renderGameInfo(gameId, prominent) {
-  const g    = GAME_MAP[gameId];
-  const desc = GAME_DESCS[gameId];
-  if (!g || (!desc && !g.ciq)) { gameInfoEl.style.display = 'none'; return; }
+  const g = GAME_MAP[gameId];
+  if (!g) { gameInfoEl.style.display = 'none'; return; }
 
+  // The full store description lives in the store-preview card near the top, so
+  // this card under the board is a clean actions row (store link + support).
   const extIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
   const ciqBtn = g.ciq
@@ -2253,7 +2286,6 @@ function renderGameInfo(gameId, prominent) {
   gameInfoEl.style.borderColor = prominent ? 'rgba(0,212,255,.3)' : 'var(--border)';
 
   gameInfoEl.innerHTML = `
-    ${desc ? `<p class="game-info-desc">${escHtml(desc)}</p>` : ''}
     <div class="game-info-actions">
       ${ciqBtn}
       <a href="https://bitochi.com/coffee" target="_blank" rel="noopener" class="game-info-support">☕ Support Bitochi</a>
