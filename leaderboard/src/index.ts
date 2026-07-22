@@ -1620,6 +1620,10 @@ const DAILY_META: Record<string, DailyMeta> = {
   // ── Top games by launches ──
   billiards:        { name: "Billiards",      noun: "pts",   roundsNoun: "matches"  },
   pets:             { name: "Pets",           noun: "pts",   roundsNoun: "visits"   },
+  creatures:        { name: "Creatures",      noun: "pts",   roundsNoun: "visits"   },
+  island:           { name: "Island Life",    noun: "pts",   roundsNoun: "visits"   },
+  mines:            { name: "Mines",          noun: "pts",   roundsNoun: "digs"     },
+  spacecolony:      { name: "Space Colony",   noun: "pts",   roundsNoun: "visits"   },
   fish:             { name: "Fishing",        noun: "pts",   roundsNoun: "trips"    },
   drwal:            { name: "Lumberjack",     noun: "chops", roundsNoun: "runs"     },
   blobs:            { name: "Blobs",          noun: "pts",   roundsNoun: "battles"  },
