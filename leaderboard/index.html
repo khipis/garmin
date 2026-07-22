@@ -1257,6 +1257,7 @@ const GAME_DESCS = {
   'island': 'Discover an empty island and slowly turn it into a personal paradise. Island Life is a cozy idle builder where your island keeps earning coins, attracting visitors and growing while you are away - then invites you back to make it more beautiful than ever.\n\nHOW TO PLAY\n- Collect offline income - coins, wood, stone and visitors - up to 24 hours\n- Build housing, nature, entertainment and special wonders\n- Unlock hidden areas and watch your island evolve into a tropical kingdom\n\nFEATURES\n- Cozy idle paradise builder for your wrist\n- Tourists, events, daily challenges and rare decorations\n- Evolution stages from lonely camp to mythical kingdom\n- Global leaderboards: most beautiful, highest level, largest population and rarest collection\n\nGrow your dream island a little more every day. Compete worldwide at bitochi.com.',
   'mines': 'Start with a rusty pickaxe and a tiny tunnel, then dig your way to an underground empire. Bitochi Mines is an idle mining and discovery game where your miners keep digging deeper and hauling resources while you are away - so you always come back to something new.\n\nHOW TO PLAY\n- Bank offline mining progress - stone, iron, gold, gems and depth - up to 24 hours\n- Descend through depth zones packed with materials, events and discoveries\n- Upgrade tools and build shafts, forge, elevator, lab and more\n\nFEATURES\n- Idle digging tycoon with constant discovery\n- Rarity-ranked collectibles from common ore to mythic finds\n- Daily challenges powered by your real activity\n- Global leaderboards: deepest mine, richest miner, most legendary finds and oldest mine\n\nWhat is below? Dig deeper at bitochi.com. Free to play - start mining.',
   'spacecolony': 'You are the commander of humanity\'s first colony on an unknown planet. Space Colony is an idle civilization builder where your base produces resources, expands and researches new technology around the clock - even while your watch is on your wrist.\n\nHOW TO PLAY\n- Manage energy, minerals, water, science and credits that accumulate offline for up to 24 hours\n- Build and upgrade habitats, reactors, mines, farms and laboratories\n- Explore planet regions and react to events like meteor showers and alien signals\n\nFEATURES\n- Deep structure tree that changes how your colony looks\n- Daily missions fueled by your real activity\n- Streaks and milestones from first colony to galactic empire\n- Global leaderboards: largest colony, most advanced technology and oldest surviving colony\n\nA polished one-more-upgrade loop that grows your galaxy while you sleep. Compete worldwide at bitochi.com.',
+  'farm': 'Start with a bare paddock and one lonely hen, then grow it into a bustling, storybook ranch. Farm Life is a cozy idle farm builder where your animals multiply, your crops ripen and your guests keep arriving while you are away - so you always come back to a farm that has grown a little more.\n\nHOW TO PLAY\n- Bank offline production - coins, wood, grain and feed - up to 24 hours\n- Raise chickens, ducks, pigs and cows, grow crops and build a market\n- Explore the surrounding land to unlock special landmarks\n\nFEATURES\n- Hand-crafted pixel diorama that grows richer as your farm grows\n- Random events, daily challenges and a login streak\n- A nine-piece charm collection to complete\n- Global leaderboards: farm level, most charming, biggest herd and rarest collection\n\nYour farm is always growing - beautiful, relaxing and impossible to put down. Compete worldwide at bitochi.com.',
   'pinballpro': 'Real pinball, pocket-sized. Pinball Arcade Pocket packs hand-crafted tables, stable flipper physics and deep arcade scoring into your Garmin - complete with multiball, missions and jackpots.\n\nHOW TO PLAY\n- Launch the ball with the power meter\n- Work the flippers to hit targets and ramps\n- Chase combos, missions and the multiball jackpot\n\nFEATURES\n- Multiple hand-crafted tables, including VORTEX and COMET\n- Combos, multipliers, skill shots and ball save\n- Missions, multiball jackpots and end-of-ball bonus\n- Nudge and tilt, spark particles, screen shake and neon effects\n- Global leaderboard - top the high-score charts\n- Daily challenge for a fresh table run every day\n\nOne plunge and you are hooked. Compete worldwide at bitochi.com. Free to play - pull the plunger.',
   'pixelinvaders': 'Defend Earth, one wave at a time. Pixel Invaders is a Space Invaders-style shooter - blast the descending alien ranks, dodge their fire, and use cover before it crumbles.\n\nHOW TO PLAY\n- Move your cannon left and right\n- Shoot the advancing aliens\n- Dodge incoming fire and survive each wave\n\nFEATURES\n- Classic retro invader action for Garmin\n- Escalating waves and destructible cover\n- Snappy touch and button controls\n- Global leaderboard - top the defender rankings\n- Daily challenge for a fresh invasion every day\n\nThe retro arcade legend, right on your wrist. Compete worldwide at bitochi.com. Free to play - open fire.',
   'poker': 'Go all-in, right from your wrist. Poker brings full Texas Hold\'em to Garmin - bet, raise, bluff and fold against AI opponents with real hand rankings and pot management.\n\nHOW TO PLAY\n- Play your hole cards through the flop, turn and river\n- Bet, call, raise or fold\n- Read the AI and take the pot\n\nFEATURES\n- Full Texas Hold\'em rules and hand rankings\n- AI opponents that bet and bluff\n- Complete pot and chip management\n- Global leaderboard - build the biggest stack\n- Daily challenge for a fresh table every day\n\nKnow when to hold and when to shove. Compete worldwide at bitochi.com. Free to play - take your seat.',
@@ -1309,6 +1310,7 @@ const GAMES = [
   { id: 'dots_boxes', label: 'Dots & Boxes', ciq: 'b2c70c32-28f3-49b0-9b12-9881b764ecf4' },
   { id: 'drwal', label: 'Drwal', ciq: '088f0c17-338b-42e0-a726-b5a194cd237d' },
   { id: 'edgesurvivor', label: 'Edge Survivor', ciq: '2df48c2a-c032-4cbd-bc66-2298a96785be' },
+  { id: 'farm', label: 'Farm Life', ciq: 'bda101a9-4d22-44d2-ba6d-1f9f7a8291df' },
   { id: 'fish', label: 'Fish', ciq: '80c5f794-12be-4040-972f-6f971fb5fe74' },
   { id: 'flappypidgeon', label: 'Flappy Pidgeon', ciq: 'ac26e3e7-d0b7-42fc-95ad-e854cdf472e3' },
   { id: 'gemmatch', label: 'Gem Match', ciq: '12c6e0d0-dd3e-4bc7-a0b6-d7901e5c4234' },
@@ -1464,6 +1466,9 @@ function fmtScore(s) {
     if (currentVariant === 'Colony') return n + ' pop';
     if (currentVariant === 'Age') return n + ' days';
   }
+  if (currentLbKey === 'farm') {
+    if (currentVariant === 'Herd') return n + ' animals';
+  }
   return n;
 }
 
@@ -1484,6 +1489,10 @@ const IDLE_VARIANTS = {
   spacecolony: {
     Civ: '🚀 Civilization', Colony: '🏙️ Largest Colony',
     Tech: '🔬 Technology', Age: '⏳ Oldest Colony', Explore: '🧭 Explorer',
+  },
+  farm: {
+    Level: '🌾 Farm Level', Charm: '✨ Most Charming',
+    Herd: '🐄 Biggest Herd', Collect: '🎗️ Rarest Collection',
   },
 };
 
@@ -1531,6 +1540,13 @@ function idleCaption(game, meta) {
     if (meta.civ != null) bits.push('Civ ' + meta.civ);
     if (meta.pop != null) bits.push(Number(meta.pop).toLocaleString() + ' pop');
     if (meta.regions != null) bits.push(meta.regions + ' regions');
+    return bits.map(escHtml).join(' · ');
+  }
+  if (game === 'farm') {
+    const bits = [];
+    if (meta.level != null) bits.push('Lv ' + meta.level);
+    if (meta.herd != null) bits.push(Number(meta.herd).toLocaleString() + ' animals');
+    if (meta.charm != null) bits.push(Number(meta.charm).toLocaleString() + ' charm');
     return bits.map(escHtml).join(' · ');
   }
   return '';
@@ -1707,7 +1723,7 @@ const GAME_GENRES = {
   Arcade: ['arcade','blobs','bomb','bricks','chickencross','dinosaur','edgesurvivor','flappypidgeon','jazzball','jumptower','manpac','moon','parachute','pinballpro','pixelinvaders','run','serpent','skyroll','stacktower','starcombat','starswarm','voidrocks'],
   Sports: ['archery','billiards','boxing','fish','gyromaze','minigolf','pongpro','skijump','sniperscope'],
   Cards: ['blackjack','diceroyale','poker','solitare','slotbandit'],
-  Casual: ['8ball','activityboard','catapult','creatures','fakenotificationescape','hangman','island','mines','pets','spacecolony']
+  Casual: ['8ball','activityboard','catapult','creatures','fakenotificationescape','farm','hangman','island','mines','pets','spacecolony']
 };
 const GENRE_ICON = { All:'✦', Arcade:'⚡', Puzzle:'◇', Strategy:'♟', Sports:'◎', Cards:'♠', Casual:'☻' };
 const GAME_GENRE = {};

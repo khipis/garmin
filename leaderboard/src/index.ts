@@ -1624,6 +1624,7 @@ const DAILY_META: Record<string, DailyMeta> = {
   island:           { name: "Island Life",    noun: "pts",   roundsNoun: "visits"   },
   mines:            { name: "Mines",          noun: "pts",   roundsNoun: "digs"     },
   spacecolony:      { name: "Space Colony",   noun: "pts",   roundsNoun: "visits"   },
+  farm:             { name: "Farm Life",      noun: "pts",   roundsNoun: "visits"   },
   fish:             { name: "Fishing",        noun: "pts",   roundsNoun: "trips"    },
   drwal:            { name: "Lumberjack",     noun: "chops", roundsNoun: "runs"     },
   blobs:            { name: "Blobs",          noun: "pts",   roundsNoun: "battles"  },
