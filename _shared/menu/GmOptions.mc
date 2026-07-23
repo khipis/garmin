@@ -15,6 +15,7 @@ using Toybox.Graphics;
 using Toybox.Lang;
 
 const GM_UNLOCK_ID = "__unlock";
+const GM_RESET_ID  = "__reset";
 
 class GmOptionsMenu extends WatchUi.Menu2 {
     function initialize(cfg as MenuConfig) {
@@ -24,6 +25,17 @@ class GmOptionsMenu extends WatchUi.Menu2 {
         for (var i = 0; i < opts.size(); i++) {
             var o = opts[i];
             addItem(new WatchUi.MenuItem(o.label, o.valueStr(), i, null));
+        }
+
+        // Optional destructive "Reset progress" row (idle builders etc.).
+        if (cfg.hooks != null) {
+            var showReset = false;
+            try { showReset = cfg.hooks.hasReset(); } catch (e) {}
+            if (showReset) {
+                var lbl = "Reset progress";
+                try { lbl = cfg.hooks.resetLabel(); } catch (e) {}
+                addItem(new WatchUi.MenuItem(lbl, "start over", GM_RESET_ID, null));
+            }
         }
 
         // NOTE: the "Full version" unlock row is intentionally hidden for now
@@ -53,6 +65,12 @@ class GmOptionsDelegate extends WatchUi.Menu2InputDelegate {
             return;
         }
 
+        // Destructive reset — always behind a confirmation screen.
+        if (id instanceof Lang.String && id.equals(GM_RESET_ID)) {
+            _openResetConfirm();
+            return;
+        }
+
         // A settings cycler (id is the index into cfg.options).
         if (!(id instanceof Lang.Number)) { return; }
         var o    = _cfg.options[id];
@@ -71,6 +89,36 @@ class GmOptionsDelegate extends WatchUi.Menu2InputDelegate {
             var v = new GmCodeEntryView(_cfg);
             WatchUi.pushView(v, new GmCodeEntryDelegate(v), WatchUi.SLIDE_LEFT);
         } catch (e) {}
+    }
+
+    hidden function _openResetConfirm() as Void {
+        try {
+            var lbl = "Reset progress";
+            try { lbl = _cfg.hooks.resetLabel(); } catch (e) {}
+            var m = new WatchUi.Menu2({ :title => lbl + "?" });
+            m.addItem(new WatchUi.MenuItem("Yes, start over", "erases everything", :yes, null));
+            m.addItem(new WatchUi.MenuItem("Cancel", null, :no, null));
+            WatchUi.pushView(m, new GmResetConfirmDelegate(_cfg), WatchUi.SLIDE_UP);
+        } catch (e) {}
+    }
+}
+
+// Confirmation for the destructive "Reset progress" action. Picking "Yes"
+// wipes the game's save via the hook, then pops back to the options screen.
+class GmResetConfirmDelegate extends WatchUi.Menu2InputDelegate {
+    hidden var _cfg;
+
+    function initialize(cfg as MenuConfig) {
+        Menu2InputDelegate.initialize();
+        _cfg = cfg;
+    }
+
+    function onSelect(item) {
+        var id = item.getId();
+        if (id == :yes) {
+            try { if (_cfg.hooks != null) { _cfg.hooks.resetProgress(); } } catch (e) {}
+        }
+        WatchUi.popView(WatchUi.SLIDE_DOWN);   // leave the confirm menu
     }
 }
 

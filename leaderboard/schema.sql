@@ -218,3 +218,16 @@ CREATE TABLE IF NOT EXISTS links (
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
+
+-- ── Connect IQ store preview cache ─────────────────────────────────────────────
+-- Caches a slim slice of the official Connect IQ store metadata (name, desc,
+-- downloads, rating, screenshot/icon URLs) so bitochi.com can show a live
+-- "what is this game" card without the browser hitting the (CORS-less) store API
+-- on every view. Served by GET /ciq?app=<appId>; refreshed lazily on a TTL.
+-- The Worker also CREATEs this table lazily, so this is just documentation/parity.
+-- Migration (run once on existing DB): the CREATE TABLE below is idempotent.
+CREATE TABLE IF NOT EXISTS ciq_cache (
+  app_id     TEXT PRIMARY KEY,     -- Connect IQ app UUID
+  data       TEXT NOT NULL,        -- slim JSON payload returned to the site
+  fetched_at INTEGER NOT NULL      -- unix seconds of last successful upstream fetch
+);

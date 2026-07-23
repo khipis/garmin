@@ -36,8 +36,9 @@ class LbMessageFetcher {
     hidden var _game;
     hidden var _attempt;
     hidden var _timer;
+    hidden var _continued;
 
-    function initialize() { _attempt = 0; _timer = null; }
+    function initialize() { _attempt = 0; _timer = null; _continued = false; }
 
     function send(game) {
         _game = game;
@@ -54,7 +55,9 @@ class LbMessageFetcher {
         try {
             Communications.makeWebRequest(Leaderboard.API_BASE + "/messages",
                                           params, opts, method(:_onDone));
-        } catch (e) {}
+        } catch (e) {
+            _continuePipeline();
+        }
     }
 
     function _onDone(responseCode as Lang.Number,
@@ -64,14 +67,35 @@ class LbMessageFetcher {
                 Application.Storage.setValue(Leaderboard.MSG_CACHE_KEY, data);
                 Application.Storage.setValue(Leaderboard.MSG_FETCH_KEY, Time.now().value());
             } catch (e) {}
+            _continuePipeline();
             return;
         }
-        if (responseCode >= 400 && responseCode < 500) { return; }
-        if (_attempt >= 2) { return; }
+        if (responseCode >= 400 && responseCode < 500) { _continuePipeline(); return; }
+        if (_attempt >= 2) { _continuePipeline(); return; }
         var delay = [3000, 8000][_attempt];
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_doSend), delay, false); } catch (e) {}
+    }
+
+    hidden function _continuePipeline() as Void {
+        if (_continued) { return; }
+        _continued = true;
+        if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
+        // Start Daily Challenge only after this callback has returned, otherwise
+        // older firmware may still report the message request as pending.
+        try {
+            _timer = new Timer.Timer();
+            _timer.start(method(:_advancePipeline), 250, false);
+        } catch (e) { _advancePipeline(); }
+    }
+
+    // NOTE: must be a public (non-hidden) function — used as a
+    // method(:_advancePipeline) timer callback. See LbViews.mc for why a
+    // hidden method() target crashes the app shortly after launch.
+    function _advancePipeline() as Void {
+        _timer = null;
+        try { Leaderboard.afterMessages(_game); } catch (e) {}
     }
 }
 

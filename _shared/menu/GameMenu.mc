@@ -102,6 +102,11 @@ class GameMenuView extends WatchUi.View {
 
     hidden function _openBoard() as Void {
         if (!Leaderboard.isSupported()) { return; }
+        // A game may fully own the leaderboard entry point (e.g. push a
+        // category picker for several boards). If it handled it, we're done.
+        if (_cfg.hooks != null) {
+            try { if (_cfg.hooks.openBoard()) { return; } } catch (e) {}
+        }
         var variant = "";
         if (_cfg.hooks != null) { variant = _cfg.hooks.lbVariant(); }
         try {
@@ -132,23 +137,17 @@ class GameMenuView extends WatchUi.View {
         var fhT = dc.getFontHeight(Graphics.FONT_SMALL);
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
 
-        // ── Title block ──
-        var y = (_h * 11) / 100 + fhT / 2;
-        dc.setColor(_cfg.col1, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, y, Graphics.FONT_SMALL, _cfg.title1, VC);
-        y += fhT * 78 / 100;
-        if (_cfg.title2 != null) {
-            dc.setColor(_cfg.col2, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, y, Graphics.FONT_SMALL, _cfg.title2, VC);
-            y += fhT * 78 / 100;
-        }
-        if (_cfg.brand != null && _cfg.brand.length() > 0) {
-            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, y, Graphics.FONT_XTINY, _cfg.brand, VC);
-            y += fhX;
-        }
+        // ── Title block geometry (positions computed first, drawn LAST) ──
+        // Some games (the idle builders) paint a full diorama in the art band
+        // that reaches up behind the title. To keep the title readable we draw
+        // the art FIRST, then stamp the title on top of it with a soft shadow.
+        var yT1 = (_h * 11) / 100 + fhT / 2;
+        var yT2 = yT1 + fhT * 78 / 100;
+        var yBrand = (_cfg.title2 != null ? yT2 : yT1) + fhT * 78 / 100;
+        var y = yBrand;
+        if (_cfg.brand != null && _cfg.brand.length() > 0) { y += fhX; }
 
-        // ── Signature art band ──
+        // ── Signature art band (drawn behind the title) ──
         var rg    = rowGeom();
         var rowsTop = rg[3];
         var artTop  = y + 2;
@@ -156,6 +155,15 @@ class GameMenuView extends WatchUi.View {
         if (_cfg.hooks != null && artBot - artTop > 10) {
             var artCy = (artTop + artBot) / 2;
             try { _cfg.hooks.drawArt(dc, cx, artCy, _w, _h); } catch (e) {}
+        }
+
+        // ── Title (on top of the art, with a legibility shadow) ──
+        _titleLine(dc, cx, yT1, Graphics.FONT_SMALL, _cfg.col1, _cfg.title1, VC);
+        if (_cfg.title2 != null) {
+            _titleLine(dc, cx, yT2, Graphics.FONT_SMALL, _cfg.col2, _cfg.title2, VC);
+        }
+        if (_cfg.brand != null && _cfg.brand.length() > 0) {
+            _titleLine(dc, cx, yBrand, Graphics.FONT_XTINY, LB_MUTED, _cfg.brand, VC);
         }
 
         // ── Rows ──
@@ -178,6 +186,17 @@ class GameMenuView extends WatchUi.View {
                 dc.drawText(cx, _h - fhX, Graphics.FONT_XTINY, ft, VC);
             }
         }
+    }
+
+    // Title line with a soft dark drop-shadow so it stays legible even when a
+    // bright signature diorama is painted behind it.
+    hidden function _titleLine(dc, cx, y, font, col, s, just) {
+        if (s == null) { return; }
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, y + 1, font, s, just);
+        dc.drawText(cx - 1, y + 1, font, s, just);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, y, font, s, just);
     }
 
     hidden function _drawRow(dc, x, y, w, h, idx, sel, cx) {

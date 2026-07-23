@@ -28,20 +28,20 @@ WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='ab');
 -- 1) GLOBAL · POST-GAME · "Support Bitochi" (via bitochi.com/coffee redirect)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'global', NULL, 'postgame',
-       'Enjoying Bitochi?',
-       'Every game here is free and ad-free. If they put a smile on your face, a small tip keeps new ones coming. Thank you!',
-       'https://bitochi.com/coffee', 'Buy me a coffee',
+       'Worth a coffee?',
+       'No ads. No tracking. No fee. Made by one person. If a game here made your day, tip the price of a coffee — open on your phone:',
+       'https://bitochi.com/coffee', 'bitochi.com/coffee',
        0, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='postgame' AND title='Enjoying Bitochi?');
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='postgame' AND title='Worth a coffee?');
 
--- 2) GLOBAL · LAUNCH · "Discover more games"
+-- 2) GLOBAL · LAUNCH · "Discover the new idle games"
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'global', NULL, 'launch',
-       'More free games',
-       '40+ tiny games and tools for your watch, all free. Compete on the global leaderboards at bitochi.com.',
-       'https://bitochi.com', 'See all games',
+       'New idle games!',
+       'Four new idle worlds just landed: Space Colony, Island, Mines and Creatures. Build, dig and evolve while you''re away, then climb the boards. On your phone:',
+       'https://bitochi.com', 'bitochi.com',
        0, 86400, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='launch' AND title='More free games');
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='launch' AND title='New idle games!');
 
 -- 3) GLOBAL · RESET · "New season" (shown once after a leaderboard wipe)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
@@ -55,21 +55,21 @@ WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL A
 -- 5) pets · LAUNCH · support Bitochi (coffee) shown at the very start
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'game', 'pets', 'launch',
-       'Enjoying Pixel Pets?',
-       'Every Bitochi game is free and ad-free. If it made you smile, a small tip keeps new ones coming. Thank you!',
-       'https://bitochi.com/coffee', 'Buy me a coffee',
+       'Love your pet?',
+       'Your pet is free — no ads, no tracking. If it put a smile on your face, a coffee-sized tip keeps new games coming. On your phone:',
+       'https://bitochi.com/coffee', 'bitochi.com/coffee',
        10, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='pets' AND placement='launch' AND title='Enjoying Pixel Pets?');
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='pets' AND placement='launch' AND title='Love your pet?');
 
 -- 6) GLOBAL · ONCE · one-shot support call-to-action (shown once per game at
 --    start, then never again until "re-armed" from the stats.html Messages panel).
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'global', NULL, 'once',
-       'Keep Bitochi free',
-       'All 60+ games and tools are free and ad-free. If they are worth a coffee to you, a one-time tip keeps them coming. Open bitochi.com/coffee on your phone. Thank you!',
-       'https://bitochi.com/coffee', 'Buy me a coffee',
+       'Keep them free',
+       '60+ games, all free, no ads, no tracking — I build them solo. If they''re worth a coffee to you, one small tip funds the next one. Open on your phone:',
+       'https://bitochi.com/coffee', 'bitochi.com/coffee',
        0, 0, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='once' AND title='Keep Bitochi free');
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='once' AND title='Keep them free');
 
 -- 7) activityboard · LAUNCH · send players to the hyped world board (bitochi.com/ab)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)

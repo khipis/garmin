@@ -35,8 +35,26 @@ class GameHooks {
     // Default: no variant.
     function lbVariant() as Lang.String { return ""; }
 
+    // Optional: fully handle opening the leaderboard yourself (e.g. push a
+    // category picker for a game with several boards). Return true if you
+    // pushed a view; return false to let the shared menu open the default
+    // single board (LbScoresView with lbVariant()). Default: false.
+    function openBoard() as Lang.Boolean { return false; }
+
     // Optional one-line footer under the rows (e.g. "WINS 12"), or null.
     function footerText() as Lang.String or Null { return null; }
+
+    // Optional: expose a "Reset progress" action in the OPTIONS screen. Return
+    // true to show the row; games that support wiping their save (e.g. the idle
+    // builders) override this + resetProgress(). Default: no reset row.
+    function hasReset() as Lang.Boolean { return false; }
+
+    // Optional label for the reset row (e.g. "Reset island"). Default generic.
+    function resetLabel() as Lang.String { return "Reset progress"; }
+
+    // Perform the actual wipe (clear the game's saved state back to zero). Only
+    // called after the player confirms. Fully guard your implementation.
+    function resetProgress() as Void {}
 }
 
 // ── A single OPTIONS setting: a labelled cycler persisted in Storage ─────────

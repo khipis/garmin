@@ -399,8 +399,8 @@ module Leaderboard {
     // this — so the owner can freely re-word the live message from stats.html.
     function defaultPostGameMsg() as Lang.Dictionary {
         return {
-            "title"     => "Enjoying Bitochi?",
-            "body"      => "All games are free & ad-free. A small tip keeps new ones coming!",
+            "title"     => "Worth a coffee?",
+            "body"      => "No ads. No tracking. No fee. Made by one person. If a game here made your day, tip the price of a coffee — open on your phone:",
             "url"       => "https://bitochi.com/coffee",
             "url_label" => "bitochi.com/coffee",
             "min_gap_s" => 43200

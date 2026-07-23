@@ -437,9 +437,12 @@
   .signal-mark.warn { background: #fbbf24; }
   .signal-mark.bad { background: #fb7185; }
   .kpi-strip {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
     background: var(--border); border: 1px solid var(--border); border-radius: 12px;
     overflow: hidden; margin-bottom: 24px;
+  }
+  @media (max-width: 1100px) {
+    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
   }
   .kpi-cell { background: #0b1924; padding: 13px 14px; }
   .kpi-value { font-size: 1.12rem; font-weight: 850; color: #f0f8ff; }
@@ -569,6 +572,27 @@
         </article>
       </div>
       <div class="kpi-strip" id="kpi-strip"></div>
+
+      <!-- ── Opens → scores conversion (launch pings vs real scores) ─────────── -->
+      <div class="sh"><span class="sh-title">📡 Opens → scores — are players finishing runs?</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadLaunches()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+      </div>
+      <div class="section-desc">Each app open sends a launch ping. Score submissions only happen when a run is finished / idle progress is published. Low conversion = many opens, few scores (menus, offline, or games that rarely submit).</div>
+      <div class="cards" id="conversion-cards"></div>
+      <div class="command-grid" style="margin-top:10px">
+        <article class="command-card">
+          <div class="command-label">Opened a lot · few scores</div>
+          <div class="signal-list" id="conversion-low"><div class="muted">Waiting for launch data…</div></div>
+        </article>
+        <article class="command-card">
+          <div class="command-label">Healthy converters</div>
+          <div class="signal-list" id="conversion-high"><div class="muted">Waiting for launch data…</div></div>
+        </article>
+        <article class="command-card">
+          <div class="command-label">Idle games (new)</div>
+          <div class="signal-list" id="idle-watch"><div class="muted">Waiting for data…</div></div>
+        </article>
+      </div>
 
       <div class="sh"><span class="sh-title">👥 Players — bots excluded</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
       <div class="section-desc">How many unique people have played your games (each person counted once, regardless of how many times they played). <b>Returning</b> = came back on a different day. <b>Loyal</b> = played on at least 7 different days.</div>
@@ -861,8 +885,14 @@ let lastPerGameRows      = [];
 let lastPerCountryRows   = [];
 let lastLaunchGameRows   = [];
 let lastLaunchCountryRows = [];
+let lastLaunchTotals     = {};
+let lastLaunch24h        = {};
+let lastLaunch7d         = {};
+let lastLaunchByGame24h  = [];
+let lastLaunchByGame7d   = [];
 let lastHotEntries       = [];
 let lastDailyChallenges  = [];
+const IDLE_GAMES = ['creatures', 'island', 'mines', 'spacecolony', 'farm'];
 
 // ── Overview ──────────────────────────────────────────────────────────────────
 function showOverview() {
@@ -1156,10 +1186,14 @@ function updateInsightBar() {
   const el = document.getElementById('insight-bar');
   if (!el || !statsData) return;
   const t = statsData.totals || {};
+  // "returning" = played on 2+ distinct calendar days (NOT next-day retention).
   const retPct   = t.players > 0 ? Math.round((t.returning || 0) / t.players * 100) : 0;
   const loyalPct = t.players > 0 ? Math.round((t.loyal     || 0) / t.players * 100) : 0;
   const newP     = t.newPlayers7d || 0;
   const dau      = t.dau30d       || 0;
+  const opens7d  = lastLaunch7d.launches || 0;
+  const opens24  = lastLaunch24h.launches || 0;
+  const depth    = Number(t.avgScoresPerPlayer || 0);
 
   let rating = ''; // business health signal
   if (loyalPct >= 15) rating = '🟢 Great';
@@ -1168,10 +1202,14 @@ function updateInsightBar() {
 
   el.innerHTML =
     `${rating} — <b>${(t.players||0).toLocaleString()}</b> players across <b>${t.games||0}</b> games &nbsp;·&nbsp; ` +
-    `<b>${retPct}%</b> returned next day &nbsp;·&nbsp; ` +
+    `<b>${retPct}%</b> multi-day (2+) &nbsp;·&nbsp; ` +
     `<b>${loyalPct}%</b> loyal (7+ days) &nbsp;·&nbsp; ` +
     (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} new this week</span> &nbsp;·&nbsp; ` : '') +
-    (dau   ? `<b>${dau.toLocaleString()}</b> daily active avg (30d)` : '');
+    (dau   ? `<b>${dau.toLocaleString()}</b> DAU avg (30d) &nbsp;·&nbsp; ` : '') +
+    (depth ? `<b>${depth.toFixed(1)}×</b> scores/player &nbsp;·&nbsp; ` : '') +
+    (opens24 || opens7d
+      ? `<b>${opens24.toLocaleString()}</b> opens/24h · <b>${opens7d.toLocaleString()}</b> opens/7d`
+      : '');
 }
 
 function renderCommandCenter() {
@@ -1194,7 +1232,11 @@ function renderCommandCenter() {
     let action = rising.length
       ? `${rising.length} game${rising.length===1?' is':'s are'} gaining momentum—promote the winners while attention is fresh.`
       : 'No clear breakout is visible yet; use the watchlist to choose the next game to improve.';
-    if (retPct < 20) action += ` Return rate is ${retPct}%, so retention is the portfolio-wide priority.`;
+    if (retPct < 20) action += ` Multi-day share is ${retPct}% — retention is the portfolio-wide priority.`;
+    const opens24 = lastLaunch24h.launches || 0;
+    if (opens24 > 0 && livePlays === 0) {
+      action += ` ${opens24} opens in 24h with no hot scores — check connectivity or submission paths.`;
+    }
     summary.innerHTML = `<div class="command-label">Executive readout</div>
       <div class="command-headline">${headline}</div>
       <div class="command-copy">${action}</div>`;
@@ -1221,13 +1263,23 @@ function renderCommandCenter() {
       <span class="signal-detail">${esc(x.detail)}</span>
     </div>`).join('') : '<div class="muted">No urgent game-level risks detected.</div>';
 
+  const opens24 = lastLaunch24h.launches || 0;
+  const opens7d = lastLaunch7d.launches || 0;
+  const openPlayers7d = lastLaunch7d.players || 0;
+  const scorePlayers = t.players || 0;
+  // Rough portfolio conversion: unique scorers vs unique openers (lifetime).
+  const lifeOpens = t.lifetimePlayers || lastLaunchTotals.players || 0;
+  const convPct = lifeOpens > 0 ? Math.round((scorePlayers / lifeOpens) * 100) : 0;
+
   document.getElementById('kpi-strip').innerHTML = `
     <div class="kpi-cell"><div class="kpi-value">${livePlays.toLocaleString()}</div><div class="kpi-label">Plays now</div><div class="kpi-note">selected hot window</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Return rate</div><div class="kpi-note">${(t.returning||0).toLocaleString()} multi-day players</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Multi-day</div><div class="kpi-note">${(t.returning||0).toLocaleString()} played 2+ days</div></div>
     <div class="kpi-cell"><div class="kpi-value">${avgDepth.toFixed(1)}×</div><div class="kpi-label">Play depth</div><div class="kpi-note">scores per player</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${challengeDone.toLocaleString()}</div><div class="kpi-label">Challenges done</div><div class="kpi-note">today across tracked games</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${(t.lifetimeLaunches||0).toLocaleString()}</div><div class="kpi-label">Lifetime opens</div><div class="kpi-note">${(t.lifetimePlayers||0).toLocaleString()} lifetime players</div></div>`;
+    <div class="kpi-cell"><div class="kpi-value">${challengeDone.toLocaleString()}</div><div class="kpi-label">Challenges done</div><div class="kpi-note">today · ${DAILY_TRACKED_GAMES.length} tracked</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${opens24.toLocaleString()}</div><div class="kpi-label">Opens / 24h</div><div class="kpi-note">${opens7d.toLocaleString()} / 7d · ${openPlayers7d.toLocaleString()} devices</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${convPct || '—'}%</div><div class="kpi-label">Open→score</div><div class="kpi-note">${scorePlayers.toLocaleString()} scorers / ${(lifeOpens||0).toLocaleString()} openers</div></div>`;
 
+  renderConversionInsights();
   renderPerGameTable();
 }
 
@@ -1269,20 +1321,109 @@ async function loadLaunches() {
     const d = await r.json();
 
     const t = d.totals || {};
+    lastLaunchTotals      = t;
+    lastLaunch24h         = d.last24h || {};
+    lastLaunch7d          = d.last7d  || {};
+    lastLaunchByGame24h   = d.byGame24h || [];
+    lastLaunchByGame7d    = d.byGame7d  || [];
+    lastLaunchGameRows    = d.byGame    || [];
+    lastLaunchCountryRows = d.byCountry || [];
+
     cardsEl.innerHTML = `
       <div class="card"><div class="num">${(t.launches||0).toLocaleString()}</div><div class="lbl">Total Launches</div></div>
       <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Unique Devices</div></div>
-      <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Opened</div></div>`;
+      <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Opened</div></div>
+      <div class="card"><div class="num">${(lastLaunch24h.launches||0).toLocaleString()}</div><div class="lbl">Opens / 24h</div></div>
+      <div class="card"><div class="num">${(lastLaunch7d.launches||0).toLocaleString()}</div><div class="lbl">Opens / 7d</div></div>`;
 
-    // By game — flags games that are played but produce no scores would need
-    // cross-referencing; here we just show raw play activity per game.
-    lastLaunchGameRows    = d.byGame    || [];
-    lastLaunchCountryRows = d.byCountry || [];
     renderLaunchByGameTable();
     renderLaunchByCountryTable();
+    updateInsightBar();
+    renderCommandCenter();
   } catch(e) {
     gameEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+// Cross-check launch pings vs score submissions per game.
+function renderConversionInsights() {
+  const cardsEl = document.getElementById('conversion-cards');
+  const lowEl   = document.getElementById('conversion-low');
+  const highEl  = document.getElementById('conversion-high');
+  const idleEl  = document.getElementById('idle-watch');
+  if (!cardsEl || !lowEl || !highEl || !idleEl) return;
+
+  const scoreByGame = new Map((lastPerGameRows || []).map(g => [g.game, g]));
+  const launchRows  = lastLaunchGameRows.length ? lastLaunchGameRows : [];
+  const rows = launchRows.map(L => {
+    const S = scoreByGame.get(L.game) || { scores: 0, players: 0 };
+    const opens = L.launches || 0;
+    const scores = S.scores || 0;
+    const openers = L.players || 0;
+    const scorers = S.players || 0;
+    // Scores per open (engagement) + scorers/openers (device conversion).
+    const scorePerOpen = opens > 0 ? scores / opens : 0;
+    const deviceConv   = openers > 0 ? scorers / openers : 0;
+    return { game: L.game, opens, scores, openers, scorers, scorePerOpen, deviceConv };
+  });
+
+  const opens24 = lastLaunch24h.launches || 0;
+  const opens7d = lastLaunch7d.launches || 0;
+  const totalOpens = lastLaunchTotals.launches || rows.reduce((s, r) => s + r.opens, 0);
+  const totalScores = (statsData?.totals?.scores) || rows.reduce((s, r) => s + r.scores, 0);
+  const portfolioSpo = totalOpens > 0 ? (totalScores / totalOpens) : 0;
+  const trackedDaily = DAILY_TRACKED_GAMES.length;
+  const idleWithOpens = IDLE_GAMES.filter(g => rows.find(r => r.game === g && r.opens > 0)).length;
+
+  cardsEl.innerHTML = `
+    <div class="card"><div class="num">${opens24.toLocaleString()}</div><div class="lbl">Opens last 24h</div>
+      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">${(lastLaunch24h.players||0).toLocaleString()} devices · ${(lastLaunch24h.games||0)} games</div></div>
+    <div class="card"><div class="num">${opens7d.toLocaleString()}</div><div class="lbl">Opens last 7d</div>
+      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">${(lastLaunch7d.players||0).toLocaleString()} devices</div></div>
+    <div class="card"><div class="num">${portfolioSpo.toFixed(2)}</div><div class="lbl">Scores / open</div>
+      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">portfolio lifetime</div></div>
+    <div class="card"><div class="num">${trackedDaily}</div><div class="lbl">Daily tracked</div>
+      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">${idleWithOpens}/5 idle games opened</div></div>`;
+
+  // Low converters: enough opens, weak score yield (skip brand-new with &lt;8 opens).
+  const low = [...rows]
+    .filter(r => r.opens >= 8 && r.scorePerOpen < 0.35)
+    .sort((a, b) => a.scorePerOpen - b.scorePerOpen)
+    .slice(0, 5);
+  lowEl.innerHTML = low.length ? low.map(r => `
+    <div class="signal-row" style="cursor:pointer" onclick="openGame('${esc(r.game)}')">
+      <span class="signal-mark warn"></span><span class="signal-name">${esc(r.game)}</span>
+      <span class="signal-detail">${r.opens} opens · ${r.scores} scores · ${(r.scorePerOpen*100).toFixed(0)}%</span>
+    </div>`).join('') : '<div class="muted">No weak converters yet (need ≥8 opens).</div>';
+
+  const high = [...rows]
+    .filter(r => r.opens >= 8 && r.scorePerOpen >= 0.6)
+    .sort((a, b) => b.scorePerOpen - a.scorePerOpen)
+    .slice(0, 5);
+  highEl.innerHTML = high.length ? high.map(r => `
+    <div class="signal-row" style="cursor:pointer" onclick="openGame('${esc(r.game)}')">
+      <span class="signal-mark good"></span><span class="signal-name">${esc(r.game)}</span>
+      <span class="signal-detail">${r.opens} opens · ${r.scores} scores · ${(r.scorePerOpen*100).toFixed(0)}%</span>
+    </div>`).join('') : '<div class="muted">No strong converters yet.</div>';
+
+  // Idle games watchlist — always show all 5 with opens (7d preferred) + scores.
+  const launch7 = new Map(lastLaunchByGame7d.map(x => [x.game, x]));
+  const launchAll = new Map(rows.map(x => [x.game, x]));
+  idleEl.innerHTML = IDLE_GAMES.map(g => {
+    const L7 = launch7.get(g);
+    const L  = launchAll.get(g);
+    const S  = scoreByGame.get(g) || { scores: 0, players: 0 };
+    const opens = (L7 && L7.launches) || (L && L.opens) || 0;
+    const scores = S.scores || 0;
+    const mark = opens === 0 ? 'bad' : (scores === 0 ? 'warn' : 'good');
+    const detail = opens === 0
+      ? 'no opens yet'
+      : `${opens} opens/7d · ${scores} scores · ${(S.players||0)} players`;
+    return `<div class="signal-row" style="cursor:pointer" onclick="openGame('${esc(g)}')">
+      <span class="signal-mark ${mark}"></span><span class="signal-name">${esc(g)}</span>
+      <span class="signal-detail">${esc(detail)}</span>
+    </div>`;
+  }).join('');
 }
 
 function renderLaunchByGameTable() {
@@ -2108,6 +2249,12 @@ const BOT_GAMES = [
   { game:'activityboard', variants:['floors'], scores:[4,    14],    bots:8 },
   { game:'activityboard', variants:['kcal'],   scores:[1200, 2200],  bots:8 },
   { game:'activityboard', variants:['active'], scores:[50,   130],   bots:8 },
+  // Idle builders — multi-category leaderboards (must match game LB_* consts)
+  { game:'creatures',    variants:['Rarity','Age','Evolution','Trainer'], scores:[20, 400], bots:6 },
+  { game:'island',       variants:['Level','Beauty','Pop','Collect'], scores:[20, 400], bots:6 },
+  { game:'mines',        variants:['Depth','Rich','Legend','Level','Age'], scores:[50, 800], bots:6 },
+  { game:'spacecolony',  variants:['Civ','Colony','Tech','Age','Explore'], scores:[20, 500], bots:6 },
+  { game:'farm',         variants:['Level','Charm','Herd','Collect'], scores:[20, 400], bots:6 },
 ];
 
 function botRnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }

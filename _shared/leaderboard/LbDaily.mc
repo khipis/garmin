@@ -35,6 +35,7 @@ module DailyChallenge {
     var _fetcher   = null;
     var _completer = null;
     var _celebTimer = null;
+    var _showTimer  = null;
 
     // ── Date helpers ───────────────────────────────────────────────────────
     // Returns today's date as compact "YYYYMMDD" string (local time, good
@@ -93,6 +94,18 @@ module DailyChallenge {
         } catch (e) {}
     }
 
+    // The main menu's first announce() call happens before the asynchronous
+    // fetch can finish. Once fresh data is cached, schedule a second, lightweight
+    // presentation attempt. This is what makes the card appear on first launch
+    // instead of only on a later app run.
+    function onFetched(game as Lang.String) as Void {
+        _fetcher = null;
+        try {
+            _showTimer = new LbDailyShowTimer(game);
+            _showTimer.arm();
+        } catch (e) {}
+    }
+
     // Show the daily challenge card if:
     //   • the challenge hasn't been shown today
     //   • the challenge hasn't been completed today
@@ -112,9 +125,11 @@ module DailyChallenge {
             var label = ch["label"];
             if (!(label instanceof Lang.String) || label.length() == 0) { return false; }
 
-            Application.Storage.setValue(SHOWN_KEY, today);
             var v = new LbDailyView(label);
             WatchUi.pushView(v, new LbDailyDelegate(), WatchUi.SLIDE_UP);
+            // Burn the once-per-day marker only after the view was pushed.
+            // An OOM/navigation failure must remain retryable.
+            Application.Storage.setValue(SHOWN_KEY, today);
             return true;
         } catch (e) {}
         return false;
@@ -168,6 +183,28 @@ module DailyChallenge {
             _celebTimer = new LbDailyCelebTimer(game, score);
             _celebTimer.arm();
         } catch (e) {}
+    }
+}
+
+// ── Post-fetch presentation timer ─────────────────────────────────────────────
+class LbDailyShowTimer {
+    hidden var _t;
+    hidden var _game;
+
+    function initialize(game) { _game = game; _t = null; }
+
+    function arm() as Void {
+        try {
+            _t = new Timer.Timer();
+            // Leave room for the one-shot support card to be presented first.
+            _t.start(method(:_fire), 2500, false);
+        } catch (e) {}
+    }
+
+    function _fire() as Void {
+        _t = null;
+        try { DailyChallenge.showIfDue(_game); } catch (e) {}
+        DailyChallenge._showTimer = null;
     }
 }
 
@@ -253,10 +290,11 @@ class LbDailyFetcher {
                 };
                 Application.Storage.setValue(DailyChallenge.CACHE_KEY, cache);
             } catch (e) {}
+            DailyChallenge.onFetched(_game);
             return;
         }
-        if (code >= 400 && code < 500) { return; }
-        if (_attempt >= 2) { return; }
+        if (code >= 400 && code < 500) { DailyChallenge._fetcher = null; return; }
+        if (_attempt >= 2) { DailyChallenge._fetcher = null; return; }
         var delay = [8000, 20000][_attempt];
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }

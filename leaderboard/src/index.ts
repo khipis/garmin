@@ -1178,12 +1178,19 @@ async function handleLaunch(req: Request, env: Env): Promise<Response> {
 // counts (and unique-device counts) split by game and by country, plus totals.
 // This is independent of the scores table, so it surfaces games that are being
 // played even when the leaderboard never receives a submission.
+// Also returns recent windows (24h / 7d) so the dashboard can spot momentum and
+// open→score conversion without a second endpoint.
 async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
   type ByGame    = { game: string; launches: number; players: number };
   type ByCountry = { country: string | null; launches: number; players: number };
+  type WindowAgg = { launches: number; games: number; players: number };
   let byGame: ByGame[] = [];
   let byCountry: ByCountry[] = [];
-  let totals = { launches: 0, games: 0, players: 0 };
+  let totals: WindowAgg = { launches: 0, games: 0, players: 0 };
+  let last24h: WindowAgg = { launches: 0, games: 0, players: 0 };
+  let last7d: WindowAgg = { launches: 0, games: 0, players: 0 };
+  let byGame24h: ByGame[] = [];
+  let byGame7d: ByGame[] = [];
 
   try {
     const g = await env.DB
@@ -1217,14 +1224,63 @@ async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
                 COUNT(DISTINCT ip_hash) AS players
          FROM launches`
       )
-      .first<typeof totals>();
+      .first<WindowAgg>();
     if (agg) totals = agg;
+
+    // launches.timestamp is unix ms (Date.now()), same as visits / api_errors.
+    const nowMs = Date.now();
+    const t24 = nowMs - 24 * 3600 * 1000;
+    const t7  = nowMs - 7 * 86400 * 1000;
+
+    const w24 = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS launches, COUNT(DISTINCT game) AS games,
+                COUNT(DISTINCT ip_hash) AS players
+         FROM launches WHERE timestamp > ?`
+      )
+      .bind(t24)
+      .first<WindowAgg>();
+    if (w24) last24h = w24;
+
+    const w7 = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS launches, COUNT(DISTINCT game) AS games,
+                COUNT(DISTINCT ip_hash) AS players
+         FROM launches WHERE timestamp > ?`
+      )
+      .bind(t7)
+      .first<WindowAgg>();
+    if (w7) last7d = w7;
+
+    const g24 = await env.DB
+      .prepare(
+        `SELECT game, COUNT(*) AS launches, COUNT(DISTINCT ip_hash) AS players
+         FROM launches WHERE timestamp > ?
+         GROUP BY game ORDER BY launches DESC LIMIT 40`
+      )
+      .bind(t24)
+      .all<ByGame>();
+    byGame24h = g24.results ?? [];
+
+    const g7 = await env.DB
+      .prepare(
+        `SELECT game, COUNT(*) AS launches, COUNT(DISTINCT ip_hash) AS players
+         FROM launches WHERE timestamp > ?
+         GROUP BY game ORDER BY launches DESC LIMIT 40`
+      )
+      .bind(t7)
+      .all<ByGame>();
+    byGame7d = g7.results ?? [];
   } catch (e) {
     console.error("launch stats error:", e);
     return err("db error", 500);
   }
 
-  return json({ updated: Math.floor(Date.now() / 1000), totals, byGame, byCountry });
+  return json({
+    updated: Math.floor(Date.now() / 1000),
+    totals, byGame, byCountry,
+    last24h, last7d, byGame24h, byGame7d,
+  });
 }
 
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
