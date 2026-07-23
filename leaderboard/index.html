@@ -1002,6 +1002,73 @@
     #me-input { min-width: 0; width: 100%; }
     #view-rankings > #featured-daily { margin: 10px 12px; }
   }
+
+  /* ── Top Choices — non-intrusive, data-driven recommendation card ─────── */
+  #top-choices {
+    position: fixed; z-index: 90;
+    right: 20px; bottom: 20px;
+    width: 320px; max-width: calc(100vw - 32px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px 14px 12px;
+    opacity: 0; transform: translateY(24px) scale(.98);
+    transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+    pointer-events: none;
+  }
+  #top-choices.show   { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  #top-choices.hiding { opacity: 0; transform: translateY(16px) scale(.98); }
+  #top-choices::before {
+    content: ''; position: absolute; left: 0; top: 0; right: 0; height: 2px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .tc-close {
+    position: absolute; top: 8px; right: 8px;
+    width: 26px; height: 26px; border: none; border-radius: 8px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-size: .9rem; line-height: 1; transition: color .15s, background .15s;
+  }
+  .tc-close:hover { color: var(--text); background: var(--surface2); }
+  .tc-head { font-size: .95rem; font-weight: 800; color: var(--text); padding-right: 24px; }
+  .tc-sub  { font-size: .72rem; color: var(--muted); margin: 3px 0 10px; line-height: 1.3; }
+  .tc-list { display: flex; flex-direction: column; gap: 6px; }
+  .tc-row {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; text-align: left; cursor: pointer;
+    background: var(--surface2); border: 1px solid transparent;
+    border-radius: 10px; padding: 7px 9px;
+    color: var(--text); font-size: .82rem; font-family: inherit;
+    transition: border-color .15s, transform .15s, background .15s;
+  }
+  .tc-row:hover { border-color: var(--accent); transform: translateX(2px); }
+  .tc-icon {
+    width: 34px; height: 34px; flex: 0 0 34px;
+    border-radius: 8px; object-fit: cover; background: var(--bg);
+  }
+  .tc-name { font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tc-tag  { font-size: .66rem; color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .tc-cta {
+    display: block; width: 100%; margin-top: 11px;
+    padding: 9px; border: none; border-radius: 10px; cursor: pointer;
+    font-size: .8rem; font-weight: 800; color: #061019; font-family: inherit;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    transition: filter .15s, transform .15s;
+  }
+  .tc-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  @media (max-width: 600px) {
+    #top-choices {
+      right: 50%; bottom: 14px; width: calc(100vw - 24px);
+      transform: translate(50%, 24px) scale(.98);
+    }
+    #top-choices.show   { transform: translate(50%, 0) scale(1); }
+    #top-choices.hiding { transform: translate(50%, 16px) scale(.98); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #top-choices { transition: opacity .3s ease; }
+  }
 </style>
 </head>
 <body>
@@ -2598,6 +2665,9 @@ async function init() {
   // Load the featured daily banner (async, non-blocking).
   loadFeaturedBanner();
   trackHit();
+
+  // Non-intrusive, data-driven "Top Choices" recommendation (first visit only).
+  initTopChoices();
 }
 init();
 
@@ -2735,6 +2805,185 @@ async function loadHoF() {
   } catch(e) {
     grid.innerHTML = `<div class="hof-empty">⚠️ Could not load Hall of Fame.</div>`;
   }
+}
+
+// ── Bitochi Top Choices ──────────────────────────────────────────────────────
+// A small, non-intrusive card that surfaces games with *current momentum* —
+// deliberately not the biggest-by-lifetime giants. Which games appear is chosen
+// purely from the public analytics endpoints, so nothing here is hardcoded.
+//
+// computeTopChoices() is kept standalone and reusable: reweight SIGNAL_WEIGHTS,
+// or feed richer signals later (e.g. per-game returning players once the API
+// exposes them) without touching the rendering below.
+const TOPCHOICES_KEY   = 'bito_topchoices_v1';
+const TOPCHOICES_TTL   = 7 * 24 * 60 * 60 * 1000; // don't reappear for 7 days
+const TOPCHOICES_DELAY = 3000;                     // show 3s after first visit
+const TOPCHOICES_MAX   = 5;
+
+// Tool/utility apps that shouldn't be recommended as "games".
+const TOPCHOICES_EXCLUDE = new Set(['activityboard','breathtrainingtool',
+  'breathtrainingsystem','intervalbeeper','timer','fakenotificationescape']);
+
+// Relative importance of each momentum signal. Tuned to favour recent activity
+// and growth trend over raw size, per the "current momentum" goal.
+const SIGNAL_WEIGHTS = {
+  players:     0.38, // distinct players in the recent window (player count)
+  recentPlays: 0.30, // score submissions in the recent window (recent plays)
+  growth:      0.20, // this window vs the previous one (growth trend)
+  depth:       0.12, // plays per player (engagement depth)
+};
+
+function tcNorm(vals) {
+  const max = Math.max(...vals, 0);
+  return max > 0 ? vals.map(v => v / max) : vals.map(() => 0);
+}
+
+// Resolves to [{ g:<GAMES obj>, tag, score }] (≤ max). Never throws: on any
+// failure it resolves to [] so the card simply stays hidden.
+async function computeTopChoices(max = TOPCHOICES_MAX) {
+  const fetchJson = async (path) => {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 2500);
+      const r = await fetch(`${API_BASE}${path}`, { cache: 'no-store', signal: ctrl.signal });
+      clearTimeout(t);
+      return r.ok ? await r.json() : null;
+    } catch { return null; }
+  };
+
+  const [hot, stats] = await Promise.all([
+    fetchJson('/hot?window=48&limit=50'),
+    fetchJson('/stats'),
+  ]);
+
+  // Season engagement depth (scores per player), keyed by leaderboard key.
+  const seasonDepth = {};
+  (stats?.perGame || []).forEach(row => {
+    if (row.players > 0) seasonDepth[row.game] = row.scores / row.players;
+  });
+
+  // Primary candidates: games with recent activity (real momentum).
+  let candidates = (hot?.entries || []).map(e => {
+    const g = LB_MAP[e.game];
+    if (!g || TOPCHOICES_EXCLUDE.has(g.id)) return null;
+    return {
+      g, players: e.players || 0, recentPlays: e.cur || 0, vel: e.vel,
+      growth: e.vel == null ? 1 : Math.min(e.vel, 3),
+      depth: seasonDepth[e.game] ?? (e.players > 0 ? e.cur / e.players : 0),
+    };
+  }).filter(Boolean);
+
+  // Fallback: no recent activity (fresh DB / offline) → most-played this season,
+  // so the card stays useful. These are tagged simply as "Popular".
+  if (!candidates.length) {
+    candidates = (stats?.perGame || []).map(row => {
+      const g = LB_MAP[row.game];
+      if (!g || TOPCHOICES_EXCLUDE.has(g.id)) return null;
+      return {
+        g, players: row.players || 0, recentPlays: row.scores || 0, vel: null,
+        growth: 1, depth: row.players > 0 ? row.scores / row.players : 0,
+        _fallback: true,
+      };
+    }).filter(Boolean);
+  }
+  if (!candidates.length) return [];
+
+  // One entry per game.
+  const seen = new Set();
+  candidates = candidates.filter(c => !seen.has(c.g.id) && seen.add(c.g.id));
+
+  // Normalise each signal across candidates, then blend with the weights.
+  const nP = tcNorm(candidates.map(c => c.players));
+  const nR = tcNorm(candidates.map(c => c.recentPlays));
+  const nG = tcNorm(candidates.map(c => c.growth));
+  const nD = tcNorm(candidates.map(c => c.depth));
+  candidates.forEach((c, i) => {
+    c.score = SIGNAL_WEIGHTS.players     * nP[i]
+            + SIGNAL_WEIGHTS.recentPlays * nR[i]
+            + SIGNAL_WEIGHTS.growth      * nG[i]
+            + SIGNAL_WEIGHTS.depth       * nD[i];
+  });
+
+  candidates.sort((a, b) => b.score - a.score);
+  const top = candidates.slice(0, max);
+
+  // A short, human-friendly momentum tag per game.
+  top.forEach(c => {
+    if (c._fallback)                                              c.tag = '⭐ Popular';
+    else if (c.vel != null && c.vel >= 1.6 && c.recentPlays >= 5) c.tag = '🔥 Trending';
+    else if (c.vel != null && c.vel >= 1.15)                      c.tag = '📈 Growing';
+    else                                                          c.tag = '⭐ Popular';
+  });
+
+  return top;
+}
+
+function topChoicesSeenRecently() {
+  try {
+    const ts = parseInt(localStorage.getItem(TOPCHOICES_KEY) || '0', 10);
+    return ts && (Date.now() - ts) < TOPCHOICES_TTL;
+  } catch { return false; }
+}
+function markTopChoicesSeen() {
+  try { localStorage.setItem(TOPCHOICES_KEY, String(Date.now())); } catch (_) {}
+}
+
+function dismissTopChoices() {
+  const el = document.getElementById('top-choices');
+  if (!el) return;
+  el.classList.add('hiding');
+  el.classList.remove('show');
+  setTimeout(() => el.remove(), 500);
+}
+
+function renderTopChoices(items) {
+  if (!items || !items.length || document.getElementById('top-choices')) return;
+
+  const rows = items.map(({ g, tag }) => `
+    <button class="tc-row" data-id="${g.id}">
+      <img class="tc-icon" src="${HERO_BASE}/${g.id}_hero.png" alt="" loading="lazy"
+           onerror="this.style.visibility='hidden'">
+      <span class="tc-name">${escHtml(g.label)}</span>
+      <span class="tc-tag">${tag}</span>
+    </button>`).join('');
+
+  const el = document.createElement('div');
+  el.id = 'top-choices';
+  el.setAttribute('role', 'complementary');
+  el.setAttribute('aria-label', 'Bitochi Top Choices');
+  el.innerHTML =
+    `<button class="tc-close" aria-label="Dismiss">✕</button>` +
+    `<div class="tc-head">🎮 Bitochi Top Choices</div>` +
+    `<div class="tc-sub">Popular Garmin games picked from real player activity</div>` +
+    `<div class="tc-list">${rows}</div>` +
+    `<button class="tc-cta">Explore all games →</button>`;
+  document.body.appendChild(el);
+
+  const gotoCatalog = () =>
+    document.getElementById('game-selector-wrap')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  el.querySelector('.tc-close').onclick = dismissTopChoices;
+  el.querySelectorAll('.tc-row').forEach(btn => btn.onclick = () => {
+    const g = GAME_MAP[btn.dataset.id];
+    if (g) selectGame(g);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    dismissTopChoices();
+  });
+  el.querySelector('.tc-cta').onclick = () => { gotoCatalog(); dismissTopChoices(); };
+
+  // Slide-in on the next frame so the transition actually runs.
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+}
+
+async function initTopChoices() {
+  if (topChoicesSeenRecently()) return;
+  await new Promise(res => setTimeout(res, TOPCHOICES_DELAY));
+  if (topChoicesSeenRecently()) return;   // guard against a racing tab
+  const items = await computeTopChoices();
+  if (!items.length) return;              // nothing worth recommending → stay silent
+  markTopChoicesSeen();                   // a display also starts the 7-day cooldown
+  renderTopChoices(items);
 }
 
 
