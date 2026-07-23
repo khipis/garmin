@@ -2669,7 +2669,9 @@ async function init() {
   // Non-intrusive, data-driven "Top Choices" recommendation (first visit only).
   initTopChoices();
 }
-init();
+// init() is invoked at the very end of this script, after every const/function
+// (incl. the Top Choices block) is initialised — otherwise the synchronous call
+// to initTopChoices() hits the TOPCHOICES_* consts in their temporal dead zone.
 
 // ── Anonymous page-view counter (no personal data) ─────────────────────────
 async function trackHit() {
@@ -2986,6 +2988,8 @@ async function initTopChoices() {
   renderTopChoices(items);
 }
 
+// Bootstrap — must run last so no declarations above are still in their TDZ.
+init();
 
 </script>
 </body>
