@@ -60,7 +60,11 @@ function buildSolitaireMenu() as Lang.Array {
         :lbTitle => "SOLITAIRE",
         :hooks   => new SolitaireHooks(),
         :options => [
-            new GmOption("sol_draw", "Draw", ["1 CARD", "3 CARD"], 0)
+            new GmOption("sol_draw", "Draw", ["1 CARD", "3 CARD"], 0),
+            new GmOption("sol_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic card-back — unlocked by rank, shop-ready. A locked pick
+            // simply renders as the classic back until it's owned.
+            new GmOption("sol_skin", "Card Back", ["CLASSIC", "NEON"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

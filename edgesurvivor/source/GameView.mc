@@ -20,6 +20,19 @@ const MAX_ENEMIES     = 8;
 const TRAIL_LEN       = 5;
 const PART_COUNT      = 8;
 
+// ── Juice: tiny expanding-ring FX pool (near-miss / pickup / phase) ──────────
+// A fixed-size ring buffer — no allocation in the game loop, just overwrites
+// the oldest slot. Each pop is drawn as a couple of cheap outline circles.
+const FX_MAX  = 6;
+const FX_LIFE = 12;
+
+// ── Pickup (periodic power-up on the edge) ───────────────────────────────────
+// A single collectible orb that appears on the ring at an angle away from the
+// player. Rotate onto it to bank a score + coin bonus (risk/reward vs dodging).
+const PICKUP_HIT_ANG = 13;   // angular grab threshold (degrees)
+const PICKUP_TTL     = 150;  // ticks the orb stays before vanishing (~5 s)
+const PICKUP_BONUS   = 25;   // score awarded on grab
+
 // ── Title-screen menu (chess-style rows) ─────────────────────────────────────
 // Two selectable rows: START and the shared global LEADERBOARD.
 const ES_MENU_ROWS = 2;
@@ -74,6 +87,33 @@ class GameView extends WatchUi.View {
     hidden var _partVx, _partVy;
     hidden var _partT;          // particle lifetime countdown
 
+    hidden var _frame;          // free-running frame counter for animations
+    hidden var _shake;          // screen-shake frames remaining (player damage)
+
+    // ── FX pop pool (near-miss / pickup / phase bursts) ──────────────────────
+    hidden var _fxX, _fxY, _fxLife, _fxCol;
+    hidden var _fxNext;
+
+    // ── pickup orb ────────────────────────────────────────────────────────
+    hidden var _pkActive;   // 1 = orb on the edge
+    hidden var _pkAngle;    // its angle (degrees)
+    hidden var _pkTtl;      // ticks before it vanishes
+    hidden var _pkCd;       // ticks until the next orb spawns
+    hidden var _pickFlash;  // brief brightening after a grab
+
+    // ── run stats (feed the end-of-run meta reward) ──────────────────────────
+    hidden var _pickups;    // orbs grabbed this run
+    hidden var _nearMisses; // clutch bullet dodges this run
+
+    // ── shared meta-progression (coins / XP / cosmetics / streak) ────────────
+    hidden var _skin;        // resolved skin index (0 classic / 1 neon / 2 gold)
+    hidden var _pgCoins;     // coins earned on the last run (game-over card)
+    hidden var _pgUnlockMsg; // one-shot "UNLOCKED: …" banner or null
+
+    // ── daily login-streak toast (queued by the App on first-of-day launch) ──
+    hidden var _toastMsg;
+    hidden var _toastT;
+
     // ── phase notification ────────────────────────────────────────────────
     hidden var _phaseNotif;
     hidden var _lastPhase;
@@ -106,6 +146,21 @@ class GameView extends WatchUi.View {
         _pY         = 0;
         _partT      = 0;
         _nearMissTimer = 0;
+        _frame      = 0;
+        _shake      = 0;
+        _fxNext     = 0;
+        _pkActive   = 0;
+        _pkAngle    = 0;
+        _pkTtl      = 0;
+        _pkCd       = 100;
+        _pickFlash  = 0;
+        _pickups    = 0;
+        _nearMisses = 0;
+        _skin       = 0;
+        _pgCoins    = 0;
+        _pgUnlockMsg = null;
+        _toastMsg   = null;
+        _toastT     = 0;
         // Load hi-score from persistent storage (survives app restart).
         _hiScore = _loadHi();
     }
@@ -163,6 +218,13 @@ class GameView extends WatchUi.View {
             _partX[i] = _cx; _partY[i] = _cy;
             _partVx[i] = 0;  _partVy[i] = 0;
         }
+
+        // FX pop pool (allocated once; never in the game loop).
+        _fxX = new [FX_MAX]; _fxY = new [FX_MAX];
+        _fxLife = new [FX_MAX]; _fxCol = new [FX_MAX];
+        for (var f = 0; f < FX_MAX; f++) {
+            _fxX[f] = _cx; _fxY[f] = _cy; _fxLife[f] = 0; _fxCol[f] = 0xFFFFFF;
+        }
         // Pre-seed player screen position so we don't render at (0,0) on
         // the title screen before _step() ever runs.
         _pX = _cx + _cosTab[270] * _edgeR / 1000;
@@ -172,6 +234,15 @@ class GameView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:gameTick), 33, true);
+        // Surface today's login-streak bonus as a one-shot toast (queued by the
+        // App's checkIn on the day's first launch). Shown once, then cleared.
+        try {
+            var dm = Application.Storage.getValue("es_daily_msg");
+            if (dm != null) {
+                _toastMsg = dm; _toastT = 100;
+                Application.Storage.deleteValue("es_daily_msg");
+            }
+        } catch (e) {}
     }
 
     function onHide() {
@@ -180,11 +251,18 @@ class GameView extends WatchUi.View {
 
     // ── timer callback ────────────────────────────────────────────────────
     function gameTick() {
+        _frame = _frame + 1;
         if (_state == GS_RUN) { _step(); }
         if (_flash         > 0) { _flash = _flash - 1; }
+        if (_shake         > 0) { _shake = _shake - 1; }
         if (_phaseNotif    > 0) { _phaseNotif = _phaseNotif - 1; }
         if (_nearMissTimer > 0) { _nearMissTimer = _nearMissTimer - 1; }
+        if (_pickFlash     > 0) { _pickFlash = _pickFlash - 1; }
+        if (_toastT        > 0) { _toastT = _toastT - 1; }
         if (_partT         > 0) { _updateParticles(); _partT = _partT - 1; }
+        for (var f = 0; f < FX_MAX; f++) {
+            if (_fxLife[f] > 0) { _fxLife[f] = _fxLife[f] - 1; }
+        }
         WatchUi.requestUpdate();
     }
 
@@ -290,18 +368,52 @@ class GameView extends WatchUi.View {
         _spawner.setDifficulty(_diff);
         _score      = 0;
         _flash      = 0;
+        _shake      = 0;
         _phaseNotif = 0;
         _lastPhase  = 0;
         _partT      = 0;
         _nearMissTimer = 0;
+        _pickFlash  = 0;
+        _pkActive   = 0;
+        _pkTtl      = 0;
+        _pkCd       = 100;
+        _pickups    = 0;
+        _nearMisses = 0;
+        _pgCoins    = 0;
+        _pgUnlockMsg = null;
+        for (var f = 0; f < FX_MAX; f++) { _fxLife[f] = 0; }
         keyRight    = 0;
         keyLeft     = 0;
         _tapRight   = 0;
         _tapLeft    = 0;
+        _skin       = _resolveSkin();
         _pX         = _cx + _cosTab[270] * _edgeR / 1000;
         _pY         = _cy + _sinTab[270] * _edgeR / 1000;
         _state      = GS_RUN;
     }
+
+    // Resolve the selected cosmetic skin, clamped to what the player actually
+    // owns (a locked pick always renders as CLASSIC — safe pre-shop and
+    // post-shop alike). 0 = CLASSIC, 1 = NEON, 2 = GOLD.
+    hidden function _resolveSkin() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("es_skin");
+            if (v instanceof Number && v >= 0 && v <= 2) { sel = v; }
+        } catch (e) {}
+        try {
+            if (sel == 1 && Progress.owns("skin_neon")) { return 1; }
+            if (sel == 2 && Progress.owns("skin_gold")) { return 2; }
+        } catch (e) {}
+        return 0;
+    }
+
+    // Per-skin colour palettes (dot / core / trail / dash halo). Branch-based
+    // (no per-frame array allocation on the render hot path).
+    hidden function _skinDot()   { if (_skin == 1) { return 0x39FF14; } if (_skin == 2) { return 0xFFD24A; } return 0xFFFFFF; }
+    hidden function _skinCore()  { if (_skin == 1) { return 0x00E0A0; } if (_skin == 2) { return 0xFFAA22; } return 0x7799FF; }
+    hidden function _skinTrail() { if (_skin == 1) { return 0x0E6A44; } if (_skin == 2) { return 0x6A5015; } return 0x1a3380; }
+    hidden function _skinDash()  { if (_skin == 1) { return 0x44FFCC; } if (_skin == 2) { return 0xFFCC55; } return 0x6688FF; }
 
     hidden function _killPlayer() {
         if (_score > _hiScore) {
@@ -309,7 +421,9 @@ class GameView extends WatchUi.View {
             _saveHi();
         }
         _flash = 14;
+        _shake = 12;              // screen shake on lethal hit (juice)
         _spawnDeathParticles();
+        _awardProgress();        // coins + XP + cosmetic unlocks (guarded)
         _state = GS_OVER;
         // Submit this run's score to the global leaderboard (fire-and-forget),
         // segmented by difficulty.
@@ -319,6 +433,44 @@ class GameView extends WatchUi.View {
         if (Attention has :vibrate) {
             Attention.vibrate([new Attention.VibeProfile(100, 180)]);
         }
+    }
+
+    // ── Meta-progression (shared, shop-ready via Progress) ───────────────────
+    // Grants coins + XP for the run scaled by survival time (score), pickups
+    // banked and clutch dodges, then unlocks cosmetic skins at rank milestones.
+    // Fully guarded so a Storage failure can never break the death path.
+    hidden function _awardProgress() {
+        try {
+            var coinsGain = _score / 40 + _pickups * 3 + _nearMisses;
+            if (coinsGain < 1)   { coinsGain = 1; }
+            if (coinsGain > 250) { coinsGain = 250; }
+            var xpGain = 5 + _score / 60 + _pickups * 2;
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+            _pgCoins = coinsGain;
+            var lvl = Progress.level();
+            var uNeon = Progress.unlockIfReached("skin_neon", lvl, 3);
+            var uGold = Progress.unlockIfReached("skin_gold", lvl, 6);
+            if (uGold)      { _pgUnlockMsg = "UNLOCKED: GOLD"; }
+            else if (uNeon) { _pgUnlockMsg = "UNLOCKED: NEON"; }
+        } catch (e) {}
+    }
+
+    // Themed rank ladder derived from the shared XP level.
+    hidden function _esRank(lvl) {
+        if (lvl >= 25) { return "Immortal"; }
+        if (lvl >= 15) { return "Edgelord"; }
+        if (lvl >= 10) { return "Veteran"; }
+        if (lvl >= 6)  { return "Survivor"; }
+        if (lvl >= 3)  { return "Dodger"; }
+        return "Rookie";
+    }
+
+    // Queue an expanding-ring FX pop at screen (x,y) in the given colour.
+    hidden function _spawnFx(x, y, col) {
+        _fxX[_fxNext] = x; _fxY[_fxNext] = y;
+        _fxLife[_fxNext] = FX_LIFE; _fxCol[_fxNext] = col;
+        _fxNext = (_fxNext + 1) % FX_MAX;
     }
 
     // ── main step ─────────────────────────────────────────────────────────
@@ -345,7 +497,14 @@ class GameView extends WatchUi.View {
         if (phase > _lastPhase) {
             _lastPhase  = phase;
             _phaseNotif = 70;
+            // Escalation flash: a ring pop at the centre so a new phase (and
+            // its new enemy type) reads instantly, plus a short shake.
+            _spawnFx(_cx, _cy, 0xFF8800);
+            if (_shake < 6) { _shake = 6; }
         }
+
+        // ── pickup orb (periodic power-up) ───────────────────────────────
+        _updatePickup(pa);
 
         // ── near-miss detection (bullet passing close but not hitting) ───
         _checkNearMiss(pa);
@@ -377,8 +536,53 @@ class GameView extends WatchUi.View {
             // close miss: within ~24 deg but outside kill zone
             if (adiff >= BULLET_HIT_ANG && adiff < 24) {
                 _nearMissTimer = 40;
+                _nearMisses = _nearMisses + 1;
                 _score = _score + 15;   // bonus points
+                // Burst at the dodged bullet — cheap, sells the clutch dodge.
+                var bx = _cx + _cosTab[_enemies.getAngle(i)] * ri / 1000;
+                var by = _cy + _sinTab[_enemies.getAngle(i)] * ri / 1000;
+                _spawnFx(bx, by, 0x00BBFF);
                 return;
+            }
+        }
+    }
+
+    // ── pickup orb ─────────────────────────────────────────────────────────
+    // One collectible at a time. When idle, a cooldown ticks down and then
+    // spawns an orb on the far side of the ring from the player, giving a
+    // real risk/reward decision: chase the bonus or keep dodging. Grabbing it
+    // banks score + fuels the end-of-run coin reward.
+    hidden function _updatePickup(pa) {
+        if (_pkActive == 0) {
+            if (_pkCd > 0) { _pkCd = _pkCd - 1; return; }
+            // Spawn opposite-ish the player so it can't be grabbed for free.
+            _pkAngle  = (pa + 120 + (Math.rand() % 120)) % 360;
+            _pkTtl    = PICKUP_TTL;
+            _pkActive = 1;
+            return;
+        }
+        // Active: expire on a timer.
+        _pkTtl = _pkTtl - 1;
+        if (_pkTtl <= 0) {
+            _pkActive = 0;
+            _pkCd = 90 + (Math.rand() % 90);
+            return;
+        }
+        // Grab check.
+        var d = _pkAngle - pa;
+        if (d < 0) { d = -d; }
+        if (d > 180) { d = 360 - d; }
+        if (d < PICKUP_HIT_ANG) {
+            _pkActive = 0;
+            _pkCd = 120 + (Math.rand() % 120);
+            _pickups = _pickups + 1;
+            _score = _score + PICKUP_BONUS;
+            _pickFlash = 8;
+            var gx = _cx + _cosTab[_pkAngle] * _edgeR / 1000;
+            var gy = _cy + _sinTab[_pkAngle] * _edgeR / 1000;
+            _spawnFx(gx, gy, 0xFFD24A);
+            if (Attention has :vibrate) {
+                try { Attention.vibrate([new Attention.VibeProfile(40, 60)]); } catch (e) {}
             }
         }
     }
@@ -412,6 +616,17 @@ class GameView extends WatchUi.View {
             return;
         }
 
+        // Screen shake: jitter the arena centre for a few frames on damage /
+        // phase escalation, then restore. Everything drawn relative to the
+        // centre (edge, enemies, player, rings, HUD) shakes together — cheap.
+        var ox = 0; var oy = 0;
+        if (_shake > 0) {
+            var amp = _shake; if (amp > 4) { amp = 4; }
+            ox = (((_frame * 7)  % 5) - 2) * amp / 4;
+            oy = (((_frame * 13) % 5) - 2) * amp / 4;
+            _cx = _cx + ox; _cy = _cy + oy;
+        }
+
         dc.setColor(0x000000, 0x000000);
         dc.clear();
 
@@ -423,9 +638,11 @@ class GameView extends WatchUi.View {
         // dot stuck at its starting position).
         if (_state != GS_TITLE) {
             _drawEnemies(dc);
+            if (_pkActive != 0) { _drawPickup(dc); }
             _drawPlayerTrail(dc);
             _drawPlayer(dc);
             _drawParticles(dc);
+            _drawFx(dc);
         }
 
         if (_state == GS_TITLE) {
@@ -441,7 +658,10 @@ class GameView extends WatchUi.View {
         if (_state == GS_RUN) {
             if (_phaseNotif > 0)    { _drawPhaseNotif(dc); }
             if (_nearMissTimer > 0) { _drawNearMiss(dc); }
+            if (_toastT > 0)        { _drawToast(dc); }
         }
+
+        if (_shake > 0) { _cx = _cx - ox; _cy = _cy - oy; }
     }
 
     // Faint concentric circles — depth / scale reference
@@ -455,9 +675,16 @@ class GameView extends WatchUi.View {
         dc.fillCircle(_cx, _cy, 3);
     }
 
-    // The player's constrained path — the edge circle
+    // The player's constrained path — the edge circle. Its hue shifts with the
+    // difficulty phase so escalation reads at a glance (cool blue → hot red).
     hidden function _drawEdge(dc) {
-        dc.setColor(0x1a2a5a, Graphics.COLOR_TRANSPARENT);
+        var col = 0x1a2a5a;
+        if (_state != GS_TITLE) {
+            if      (_lastPhase == 1) { col = 0x2a3a7a; }
+            else if (_lastPhase == 2) { col = 0x5a3a6a; }
+            else if (_lastPhase >= 3) { col = 0x7a2a3a; }
+        }
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(_cx, _cy, _edgeR);
         dc.drawCircle(_cx, _cy, _edgeR - 1);
     }
@@ -555,8 +782,10 @@ class GameView extends WatchUi.View {
     }
 
     // ── player ────────────────────────────────────────────────────────────
+    // Trail colour is tied to the cosmetic skin, so unlocking a skin visibly
+    // changes the comet-tail the player drags along the edge.
     hidden function _drawPlayerTrail(dc) {
-        dc.setColor(0x1a3380, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_skinTrail(), Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < TRAIL_LEN; i++) {
             var ta = _player.trailAngle[i];
             var tx = _cx + _cosTab[ta] * _edgeR / 1000;
@@ -568,16 +797,21 @@ class GameView extends WatchUi.View {
     }
 
     hidden function _drawPlayer(dc) {
-        // dash flash halo
+        // dash flash halo (skin-tinted)
         if (_player.isDashing > 0) {
-            dc.setColor(0x6688FF, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_skinDash(), Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(_pX, _pY, 11);
         }
-        // main dot
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        // brief grab flash halo when a pickup was just collected
+        if (_pickFlash > 0) {
+            dc.setColor(0xFFEE99, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_pX, _pY, 8 + _pickFlash);
+        }
+        // main dot (skin-tinted)
+        dc.setColor(_skinDot(), Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_pX, _pY, 6);
-        // inner core
-        dc.setColor(0x7799FF, Graphics.COLOR_TRANSPARENT);
+        // inner core (skin-tinted)
+        dc.setColor(_skinCore(), Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_pX, _pY, 3);
 
         // dash-ready indicator: tiny cyan dot slightly inside the edge
@@ -587,6 +821,43 @@ class GameView extends WatchUi.View {
             var iy = _cy + _sinTab[ia] * (_edgeR - 11) / 1000;
             dc.setColor(0x00CCFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(ix, iy, 3);
+        }
+    }
+
+    // ── pickup orb ──────────────────────────────────────────────────────────
+    // A pulsing gold diamond sitting on the edge. Blinks when about to expire
+    // and draws a faint spoke toward the centre so it's easy to spot.
+    hidden function _drawPickup(dc) {
+        // Blink out its final ~1 s so the player knows time is short.
+        if (_pkTtl < 30 && (_frame % 6 < 3)) { return; }
+        var px = _cx + _cosTab[_pkAngle] * _edgeR / 1000;
+        var py = _cy + _sinTab[_pkAngle] * _edgeR / 1000;
+        var pulse = (_frame % 20 < 10) ? 6 : 4;
+        // Guiding spoke from a bit inside the ring outward.
+        var ix = _cx + _cosTab[_pkAngle] * (_edgeR - 16) / 1000;
+        var iy = _cy + _sinTab[_pkAngle] * (_edgeR - 16) / 1000;
+        dc.setColor(0x5A4210, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(ix, iy, px, py);
+        // Diamond body.
+        dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[px, py - pulse], [px + pulse, py],
+                        [px, py + pulse], [px - pulse, py]]);
+        dc.setColor(0xFFF6C8, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py, 2);
+    }
+
+    // ── FX pops (near-miss / pickup / phase bursts) ──────────────────────────
+    // Each live slot is a fading, expanding outline ring — a couple of cheap
+    // circle draws, capped at FX_MAX so it never threatens the frame budget.
+    hidden function _drawFx(dc) {
+        for (var f = 0; f < FX_MAX; f++) {
+            var life = _fxLife[f];
+            if (life <= 0) { continue; }
+            var age = FX_LIFE - life;         // 0 (new) .. FX_LIFE-1 (old)
+            var r = 3 + age * 2;
+            dc.setColor(_fxCol[f], Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(_fxX[f], _fxY[f], r);
+            if (life > FX_LIFE / 2) { dc.drawCircle(_fxX[f], _fxY[f], r / 2); }
         }
     }
 
@@ -606,7 +877,7 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // ── HUD (score + dash indicator) ──────────────────────────────────────
+    // ── HUD (score + dash + phase + pickups) ──────────────────────────────
     hidden function _drawHUD(dc) {
         dc.setColor(0x777799, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, _sh * 7 / 100, Graphics.FONT_XTINY,
@@ -616,14 +887,53 @@ class GameView extends WatchUi.View {
             dc.drawText(_cx, _sh * 14 / 100, Graphics.FONT_XTINY,
                 "HI " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // Phase pips (left) — how deep into the escalation curve we are, so the
+        // ramp in enemy variety/speed is legible without reading numbers.
+        var pipY = _sh * 85 / 100;
+        for (var p = 0; p < 4; p++) {
+            var pc = 0x22242e;
+            if (p <= _lastPhase) {
+                if      (p == 0) { pc = 0x2a5aff; }
+                else if (p == 1) { pc = 0x5a7aff; }
+                else if (p == 2) { pc = 0xbb55ff; }
+                else             { pc = 0xff5544; }
+            }
+            dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_sw * 20 / 100 + p * 9, pipY, 3);
+        }
+
+        // Pickups banked this run (right) — the coin/score driver.
+        if (_pickups > 0) {
+            dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_sw * 80 / 100, pipY, Graphics.FONT_XTINY,
+                "+" + _pickups, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
+
         // dash availability
         if (_player.dashCd == 0) {
             dc.setColor(0x0077CC, Graphics.COLOR_TRANSPARENT);
         } else {
             dc.setColor(0x1a1a33, Graphics.COLOR_TRANSPARENT);
         }
-        dc.drawText(_cx, _sh * 85 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_cx, _sh * 90 / 100, Graphics.FONT_XTINY,
             "DASH", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── daily login-streak toast (non-blocking, one-shot) ────────────────────
+    hidden function _drawToast(dc) {
+        if (_toastMsg == null) { return; }
+        var y = _sh * 22 / 100;
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var bw = _sw * 74 / 100;
+        var bx = (_sw - bw) / 2;
+        dc.setColor(0x0C2A12, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bx, y - fh / 2 - 2, bw, fh + 4, 5);
+        dc.setColor(0x44BB22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bx, y - fh / 2 - 2, bw, fh + 4, 5);
+        dc.setColor(0xBFFFCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, y, Graphics.FONT_XTINY, _toastMsg,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // ── title screen ──────────────────────────────────────────────────────
@@ -692,6 +1002,18 @@ class GameView extends WatchUi.View {
         } else if (_hiScore > 0) {
             lines.add(["best " + _hiScore.format("%05d"), 0x2a2a44]);
         }
+        // Meta-progression summary (guarded). Compact "Lv N Rank +Cc" line,
+        // then either a one-shot unlock banner or the current login streak.
+        try {
+            var lvl = Progress.level();
+            lines.add(["Lv" + lvl + " " + _esRank(lvl) + " +" + _pgCoins + "c", 0x88DDAA]);
+            if (_pgUnlockMsg != null) {
+                lines.add([_pgUnlockMsg, 0xFFD24A]);
+            } else {
+                var st = Progress.currentStreak();
+                if (st > 1) { lines.add(["Streak " + st, 0x66AACC]); }
+            }
+        } catch (e) {}
         GameOverCard.draw(dc, _sw, _sh, "GAME OVER", 0xCC2222, lines, "any key to retry", 0x1a1a3a);
     }
 
@@ -701,11 +1023,21 @@ class GameView extends WatchUi.View {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, _sh * 45 / 100, Graphics.FONT_SMALL,
             "PHASE " + _lastPhase.format("%d") + "!", Graphics.TEXT_JUSTIFY_CENTER);
+        // Name the newly-introduced threat so the escalation is legible.
+        var what = null;
+        if      (_lastPhase == 1) { what = "walls + lasers"; }
+        else if (_lastPhase == 2) { what = "rings incoming"; }
+        else if (_lastPhase >= 3) { what = "everything, faster"; }
+        if (what != null) {
+            dc.setColor(0xCC7722, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _sh * 54 / 100, Graphics.FONT_XTINY,
+                what, Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     hidden function _drawNearMiss(dc) {
         dc.setColor(0x00BBFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 54 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_cx, _sh * 62 / 100, Graphics.FONT_XTINY,
             "NEAR MISS! +15", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

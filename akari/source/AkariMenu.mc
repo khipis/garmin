@@ -72,7 +72,8 @@ function buildAkariMenu() as Lang.Array {
         :options => [
             new GmOption("ak_diff", "Difficulty", ["EASY 6x6", "HARD 7x7"], 0),
             new GmOption("ak_mode", "Mode", ["LEVELS", "DAILY"], 0),
-            new GmOption("ak_errs", "Errors", ["OFF", "ON"], 0)
+            new GmOption("ak_errs", "Errors", ["OFF", "ON"], 0),
+            new GmOption("ak_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

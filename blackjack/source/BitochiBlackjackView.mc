@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
+using Toybox.Attention;
 
 // States
 const BJ_MENU     = 0;
@@ -13,6 +14,8 @@ const BJ_RESULT   = 3;
 // Card: rank 0=2 .. 12=A  suit 0=S 1=H 2=D 3=C
 const BJ_START_CHIPS = 500;
 const BJ_BET         = 50;
+
+const BJ_FX_KEY = "bj_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 // Global leaderboard
 const LB_GAME_ID = "blackjack";
@@ -44,6 +47,15 @@ class BitochiBlackjackView extends WatchUi.View {
 
     hidden var _rankStr; hidden var _suitStr;
 
+    // Meta-progression (shared, shop-ready via Progress module):
+    //   _toast/_toastT — one-shot daily login-bonus banner on first frame.
+    //   _pgUnlockMsg   — one-shot "UNLOCKED: <name>" shown on the result card.
+    hidden var _toast; hidden var _toastT;
+    hidden var _pgUnlockMsg;
+
+    // Sound + haptics master switch (OPTIONS: bj_fx). 0/unset = ON, 1 = OFF.
+    hidden var _fxOn;
+
     // Layout
     hidden var _cw; hidden var _ch; hidden var _gap;
     hidden var _pY; hidden var _dY;
@@ -67,6 +79,8 @@ class BitochiBlackjackView extends WatchUi.View {
         _dealerDelay = 0;
         _rankStr = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
         _suitStr = ["\u2660", "\u2665", "\u2666", "\u2663"];  // ♠ ♥ ♦ ♣
+        _toast = ""; _toastT = 0; _pgUnlockMsg = null;
+        _fxOn = _loadFx();
         _w = 240; _h = 240;
         _timer = null;
     }
@@ -84,6 +98,15 @@ class BitochiBlackjackView extends WatchUi.View {
         // Root menu is the shared view; drop straight into a session. Only
         // auto-start from a fresh launch (returning from a pushed card keeps play).
         if (_gs == BJ_MENU) { startGame(); }
+        // Surface today's login-streak bonus as a one-shot table toast (queued
+        // by the App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("bj_daily_msg");
+            if (dm != null) {
+                _toast = dm; _toastT = 18;
+                Application.Storage.deleteValue("bj_daily_msg");
+            }
+        } catch (e) {}
     }
 
     function onHide() {
@@ -105,6 +128,7 @@ class BitochiBlackjackView extends WatchUi.View {
 
     function onTick() as Void {
         _tick++;
+        if (_toastT > 0) { _toastT--; }
         if (_gs == BJ_DEALER) {
             _dealerDelay--;
             if (_dealerDelay <= 0) { dealerStep(); }
@@ -119,10 +143,13 @@ class BitochiBlackjackView extends WatchUi.View {
         if (_gs == BJ_RESULT) { nextRound(); return; }
         if (_gs != BJ_PLAY) { return; }
         _pCards[_pCount] = dealCard(); _pCount++;
+        _tone(0); _vibe(20, 20);           // card snap onto the felt
         if (handValue(_pCards, _pCount) > 21) {
             _resultMsg = "BUST! -" + BJ_BET;
             _chips -= BJ_BET;
             if (_chips <= 0) { _chips = 0; _resultMsg = "BUST! BROKE!"; }
+            _awardRound(0);
+            _tone(2); _vibe(85, 220);      // busted
             _gs = BJ_RESULT;
         }
     }
@@ -172,6 +199,8 @@ class BitochiBlackjackView extends WatchUi.View {
         _chips = BJ_START_CHIPS;
         _peakChips = BJ_START_CHIPS;
         _sessionActive = true;
+        _pgUnlockMsg = null;
+        _fxOn = _loadFx();
         nextRound();
     }
 
@@ -206,9 +235,11 @@ class BitochiBlackjackView extends WatchUi.View {
         _dCards[_dCount] = dealCard(); _dCount++;
         _resultMsg = "";
         _gs = BJ_PLAY;
+        _tone(0); _vibe(25, 40);           // opening deal — one light tick
 
         // Natural blackjack — go straight to dealer reveal
         if (handValue(_pCards, _pCount) == 21) {
+            _tone(1); _vibe(60, 120);      // dealt a natural
             _gs = BJ_DEALER; _dealerDelay = 1;
         }
     }
@@ -225,6 +256,7 @@ class BitochiBlackjackView extends WatchUi.View {
 
         if (dVal < 17) {
             _dCards[_dCount] = dealCard(); _dCount++;
+            _tone(0); _vibe(15, 15);       // dealer draws a card
             _dealerDelay = 2;
         } else {
             // Dealer stands — resolve
@@ -233,16 +265,24 @@ class BitochiBlackjackView extends WatchUi.View {
                 _resultMsg = "DEALER BUST! +" + BJ_BET;
                 _chips += BJ_BET;
                 trackPeak();
+                _awardRound(1);
+                _tone(1); _vibe(70, 160);  // win
             } else if (pVal > dVal) {
                 _resultMsg = "YOU WIN! +" + BJ_BET;
                 _chips += BJ_BET;
                 trackPeak();
+                _awardRound(1);
+                _tone(1); _vibe(70, 160);  // win
             } else if (dVal > pVal) {
                 _resultMsg = "DEALER WINS -" + BJ_BET;
                 _chips -= BJ_BET;
                 if (_chips < 0) { _chips = 0; }
+                _awardRound(0);
+                _tone(2); _vibe(75, 180);  // loss
             } else {
                 _resultMsg = "PUSH — Tie";
+                _awardRound(2);
+                _tone(0); _vibe(20, 40);   // push
             }
             _gs = BJ_RESULT;
         }
@@ -261,6 +301,55 @@ class BitochiBlackjackView extends WatchUi.View {
     // Leaderboard variant = shoe size, so 1/2/6 decks rank separately.
     hidden function _lbVariant() {
         return ["d1", "d2", "d6"][_decksIdx];
+    }
+
+    // ─── Meta-progression (shared, shop-ready via Progress module) ──────────────
+    // Grants coins + XP for each resolved round and unlocks a cosmetic card back
+    // at a rank milestone. kind: 1 = win, 2 = push, 0 = loss.
+    hidden function _awardRound(kind) {
+        var coinsGain; var xpGain;
+        if (kind == 1)      { coinsGain = 25; xpGain = 25; }
+        else if (kind == 2) { coinsGain = 5;  xpGain = 8;  }
+        else                { coinsGain = 3;  xpGain = 5;  }
+        try {
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+            if (Progress.unlockIfReached("blackjack_skin2", Progress.level(), 3)) {
+                _pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned card-back palette [bg, border, inner, pip]. Falls back
+    // to the classic navy back when the chosen skin isn't owned yet.
+    hidden function _skinBack() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("bj_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("blackjack_skin2")) {
+            return [0x2A0A3A, 0xFF33CC, 0x50206A, 0xFF66EE];
+        }
+        return [0x1A2E5A, 0x4A6AAA, 0x243A72, 0x4A6AAA];
+    }
+
+    // Result-card progression summary: rank/level + coin balance + login streak,
+    // plus a one-shot gold "UNLOCKED" banner when a milestone was just crossed.
+    hidden function _drawProgressLine(dc, y) {
+        try {
+            dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, y, Graphics.FONT_XTINY,
+                "Lv " + Progress.level() + " " + Progress.rankName()
+                + " - " + Progress.coins() + "c  St" + Progress.currentStreak(),
+                Graphics.TEXT_JUSTIFY_CENTER);
+            if (_pgUnlockMsg != null) {
+                var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+                dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, y + fh, Graphics.FONT_XTINY,
+                    _pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        } catch (e) {}
     }
 
     // Returns best hand value (aces counted optimally)
@@ -294,6 +383,17 @@ class BitochiBlackjackView extends WatchUi.View {
         if (_gs == BJ_PLAY)   { drawActions(dc); }
         if (_gs == BJ_RESULT) { drawResult(dc); }
         if (_gs == BJ_DEALER) { drawDealerThinking(dc); }
+        if (_toastT > 0) { drawToast(dc); }
+    }
+
+    // One-shot daily login-bonus banner, drawn over the felt on first frame.
+    hidden function drawToast(dc) {
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var ty = _h * 30 / 100;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, ty - 1, _w, fh + 2);
+        dc.setColor(0xFFEE55, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, ty, Graphics.FONT_XTINY, _toast, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawMenu(dc) {
@@ -444,18 +544,19 @@ class BitochiBlackjackView extends WatchUi.View {
 
     hidden function drawCardBack(dc, x, y) {
         var cr = 2 + _cw / 20;
-        dc.setColor(0x1A2E5A, Graphics.COLOR_TRANSPARENT);
+        var pal = _skinBack();  // [bg, border, inner, pip] — clamped to ownership
+        dc.setColor(pal[0], Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, _cw, _ch, cr);
-        dc.setColor(0x4A6AAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[1], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x, y, _cw, _ch, cr);
         // Inner border
         var m = 3;
-        dc.setColor(0x243A72, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[2], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x + m, y + m, _cw - m * 2, _ch - m * 2, 2);
         // Center diamond
         var cx = x + _cw / 2; var cy = y + _ch / 2;
         var ds = _cw / 5; if (ds < 3) { ds = 3; }
-        dc.setColor(0x4A6AAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[3], Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([[cx, cy - ds], [cx + ds, cy], [cx, cy + ds], [cx - ds, cy]]);
     }
 
@@ -495,6 +596,14 @@ class BitochiBlackjackView extends WatchUi.View {
         dc.drawText(_w / 2, ry + 2, Graphics.FONT_XTINY, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, ry + rH / 2, Graphics.FONT_XTINY, "Tap next", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Progression summary — placed above the result box (rendered on the
+        // cleared black background so it reads without its own panel).
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var py = ry - fh - 1;
+        if (_pgUnlockMsg != null) { py -= fh; }
+        if (py < 2) { py = 2; }
+        _drawProgressLine(dc, py);
     }
 
     hidden function drawDealerThinking(dc) {
@@ -503,5 +612,31 @@ class BitochiBlackjackView extends WatchUi.View {
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _pY + _ch + 12, Graphics.FONT_XTINY,
             "Dealer" + dots, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ─── Best-effort sound + haptics (silent/absent hardware is fine) ───────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(BJ_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 deal/select · 1 win/blackjack · 2 bust/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 }

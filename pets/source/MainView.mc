@@ -53,10 +53,10 @@ class MainView extends WatchUi.View {
             gPetsAnnounced = true;
             try {
                 Leaderboard.announce(LB_GAME_ID, {
-                    "title"     => "Enjoying Pixel Pets?",
-                    "body"      => "Every Bitochi game is free and ad-free. If it made you smile, a small tip keeps new ones coming. Thank you!",
+                    "title"     => "Love your pet?",
+                    "body"      => "Your pet is free — no ads, no tracking. If it put a smile on your face, a coffee-sized tip keeps new games coming. On your phone:",
                     "url"       => "https://bitochi.com/coffee",
-                    "url_label" => "Buy me a coffee",
+                    "url_label" => "bitochi.com/coffee",
                     "min_gap_s" => 43200
                 });
             } catch (e) {}

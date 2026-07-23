@@ -97,7 +97,8 @@ function buildLightsOutMenu() as Lang.Array {
         :options => [
             new GmOption("lo_diff", "Difficulty",
                 ["EASY 3x3", "MED 4x4", "HARD 5x5"], 1),
-            new GmOption("lo_mode", "Mode", ["LEVELS", "DAILY"], 0)
+            new GmOption("lo_mode", "Mode", ["LEVELS", "DAILY"], 0),
+            new GmOption("lo_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

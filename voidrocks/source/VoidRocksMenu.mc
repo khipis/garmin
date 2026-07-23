@@ -71,7 +71,8 @@ function buildVoidRocksMenu() as Lang.Array {
         :hooks   => new VoidRocksHooks(),
         :options => [
             new GmOption(VR_DIFF_KEY,  "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
-            new GmOption(VR_LIVES_KEY, "Lives", ["1", "2", "3", "4", "5"], 2)
+            new GmOption(VR_LIVES_KEY, "Lives", ["1", "2", "3", "4", "5"], 2),
+            new GmOption(VR_FX_KEY, "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

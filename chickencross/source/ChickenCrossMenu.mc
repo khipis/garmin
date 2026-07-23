@@ -55,7 +55,8 @@ function buildChickenCrossMenu() as Lang.Array {
         :hooks   => new ChickenCrossHooks(),
         :options => [
             new GmOption("cc_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
-            new GmOption("cc_lives", "Lives", ["1", "2", "3", "4", "5"], 2)
+            new GmOption("cc_lives", "Lives", ["1", "2", "3", "4", "5"], 2),
+            new GmOption("cc_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

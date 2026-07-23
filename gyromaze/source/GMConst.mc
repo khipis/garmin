@@ -42,6 +42,9 @@ const GM_ROW_LB    = 3;
 // Global leaderboard game id (matches _LOGOS / web id).
 const GM_LB_GAME_ID = "gyromaze";
 
+// Sound + haptics master switch (OPTIONS: gyr_fx). 0/unset = ON, 1 = OFF.
+const GM_FX_KEY = "gyr_fx";
+
 // Difficulty levels.
 const GM_DIFF_EASY = 0;   // 7×7 maze
 const GM_DIFF_MED  = 1;   // 9×9 maze

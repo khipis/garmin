@@ -24,8 +24,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 class TableLibrary {
-    static var NAMES = ["CLASSIC", "NOVA", "DERBY", "STINGER", "ECLIPSE"];
-    static var COUNT = 5;
+    static var NAMES = ["CLASSIC", "NOVA", "DERBY", "STINGER", "ECLIPSE",
+                        "VORTEX", "COMET"];
+    static var COUNT = 7;
 
     // Returns [bgColor, accentColor] for the given table.
     static function theme(idx) {
@@ -33,7 +34,35 @@ class TableLibrary {
         if (idx == 1) { return [0x14081E, 0xCC66FF]; }   // dark purple + magenta
         if (idx == 2) { return [0x1E0808, 0xFF6622]; }   // dark red + orange
         if (idx == 3) { return [0x1A1A05, 0xFFEE00]; }   // wasp black + yellow
-        return                [0x05101E, 0xCFE3FA];      // eclipse blue + white
+        if (idx == 4) { return [0x05101E, 0xCFE3FA]; }   // eclipse blue + white
+        if (idx == 5) { return [0x041818, 0x22FFCC]; }   // vortex teal
+        return                [0x0A0A20, 0xFF8844];      // comet indigo + amber
+    }
+
+    // Decorative-art style hint for MainView's playfield inlay layer.
+    static function artStyle(idx) {
+        if (idx == 0) { return :dashes; }
+        if (idx == 1) { return :diamond; }
+        if (idx == 2) { return :bolts; }
+        if (idx == 3) { return :hive; }
+        if (idx == 4) { return :sun; }
+        if (idx == 5) { return :spiral; }
+        return :streak;
+    }
+
+    // Mission chain for a table: array of [type, target].
+    //   type 0 = hit N bumpers · 1 = clear the drop bank N times
+    //        2 = hit N slingshots
+    // Completing the final mission awards an extra ball + big bonus,
+    // then the chain loops for endless play.
+    static function missions(idx) {
+        if (idx == 0) { return [[0, 12], [1, 1], [2, 8]]; }
+        if (idx == 1) { return [[0, 15], [1, 2], [0, 25]]; }
+        if (idx == 2) { return [[1, 1], [0, 14], [1, 2]]; }
+        if (idx == 3) { return [[0, 20], [2, 10], [1, 1]]; }
+        if (idx == 4) { return [[0, 18], [2, 12], [0, 30]]; }
+        if (idx == 5) { return [[0, 16], [1, 1], [2, 10]]; }
+        return [[1, 1], [0, 18], [1, 2]];
     }
 
     // Build everything for table `idx`. Returns a Dictionary with
@@ -102,7 +131,7 @@ class TableLibrary {
                 [cx + (pw * 24) / 100, rowC, sr, col1],
                 [cx,                   playY0 + ph * 46 / 100, sr + 2, 0xFFEE00]
             ];
-        } else {
+        } else if (idx == 4) {
             // ECLIPSE — giant sun + two satellites above the slings.
             var giantR = (pw * 14) / 100; if (giantR < 14) { giantR = 14; }
             var satR2  = (pw * 6)  / 100; if (satR2  < 6)  { satR2  = 6;  }
@@ -110,6 +139,33 @@ class TableLibrary {
                 [cx,                       playY0 + ph * 28 / 100, giantR, 0xCFE3FA],
                 [cx - (pw * 28) / 100,     playY0 + ph * 50 / 100, satR2,  0x66BBEE],
                 [cx + (pw * 28) / 100,     playY0 + ph * 50 / 100, satR2,  0x66BBEE]
+            ];
+        } else if (idx == 5) {
+            // VORTEX — a hexagonal ring of bumpers spinning around a
+            // bright core; caroms tend to orbit the middle.
+            var coreR = (pw * 9) / 100; if (coreR < 9) { coreR = 9; }
+            var ringR = (pw * 6) / 100; if (ringR < 6) { ringR = 6; }
+            var ry0 = playY0 + ph * 30 / 100;
+            bumpers = [
+                [cx,                     ry0,                      coreR, 0x22FFCC],
+                [cx - (pw * 24) / 100,   playY0 + ph * 16 / 100,   ringR, 0x33DDEE],
+                [cx + (pw * 24) / 100,   playY0 + ph * 16 / 100,   ringR, 0x33DDEE],
+                [cx - (pw * 30) / 100,   playY0 + ph * 40 / 100,   ringR, 0x66FFAA],
+                [cx + (pw * 30) / 100,   playY0 + ph * 40 / 100,   ringR, 0x66FFAA],
+                [cx,                     playY0 + ph * 50 / 100,   ringR, 0xAAFFEE]
+            ];
+        } else {
+            // COMET — two vertical columns of bumpers framing a fast
+            // central lane; amber/blue streak theme.
+            var cr = (pw * 6) / 100; if (cr < 6) { cr = 6; }
+            var colX = (pw * 20) / 100;
+            bumpers = [
+                [cx - colX,  playY0 + ph * 14 / 100, cr,     0xFF8844],
+                [cx + colX,  playY0 + ph * 14 / 100, cr,     0xFF8844],
+                [cx - colX,  playY0 + ph * 27 / 100, cr,     0x44AAFF],
+                [cx + colX,  playY0 + ph * 27 / 100, cr,     0x44AAFF],
+                [cx,         playY0 + ph * 20 / 100, cr + 1, 0xFFDD66],
+                [cx,         playY0 + ph * 40 / 100, cr + 1, 0xFFDD66]
             ];
         }
 
@@ -169,9 +225,31 @@ class TableLibrary {
                 [playX0 + (pw * 6) / 100,           playY0 + ph * 30 / 100, dW * 2 / 3, dropH, 0xFF6644],
                 [playX1 - (pw * 6) / 100 - dW * 2 / 3, playY0 + ph * 30 / 100, dW * 2 / 3, dropH, 0xFF6644]
             ];
-        } else {
+        } else if (idx == 4) {
             // ECLIPSE — no drop targets. Pure flow.
             drops = [];
+        } else if (idx == 5) {
+            // VORTEX — a 3-target bank tucked below the ring.
+            var dW = (pw * 10) / 100; if (dW < 9) { dW = 9; }
+            var dY = playY0 + ph * 60 / 100;
+            var col = 0x22FFCC;
+            drops = [
+                [cx - dW - dW / 2 - 4, dY, dW, dropH, col],
+                [cx -      dW / 2,     dY, dW, dropH, col],
+                [cx +      dW / 2 + 4, dY, dW, dropH, col]
+            ];
+        } else {
+            // COMET — 5-target bank across the mid-field lane.
+            var dW = (pw * 9) / 100; if (dW < 8) { dW = 8; }
+            var dY = playY0 + ph * 54 / 100;
+            var col = 0xFF8844;
+            drops = [
+                [cx - 2 * dW - 6 - dW / 2,  dY, dW, dropH, col],
+                [cx -     dW - 2 - dW / 2,  dY, dW, dropH, col],
+                [cx -             dW / 2 + 2, dY, dW, dropH, col],
+                [cx +         dW / 2 + 6,   dY, dW, dropH, col],
+                [cx + 2 * dW + 10 - dW / 2, dY, dW, dropH, col]
+            ];
         }
 
         // ── SLINGSHOTS ──────────────────────────────────────────────
@@ -183,6 +261,8 @@ class TableLibrary {
         if (idx == 2) { slingCol = 0xFFAA22; }
         if (idx == 3) { slingCol = 0xFFEE00; }
         if (idx == 4) { slingCol = 0xCFE3FA; }
+        if (idx == 5) { slingCol = 0x22FFCC; }
+        if (idx == 6) { slingCol = 0xFF8844; }
 
         // Lower (flipper-side) slings.
         var top   = playY0 + ph * 72 / 100;
@@ -206,10 +286,11 @@ class TableLibrary {
         // Upper chevron slings — small triangles in the upper third
         // of the playfield, pointing inward. Skipped for NOVA and
         // STINGER which already have lots of structure up there.
-        if (idx == 0 || idx == 2 || idx == 4) {
+        if (idx == 0 || idx == 2 || idx == 4 || idx == 5) {
             var midSlingColor = 0x88AAEE;
             if (idx == 2) { midSlingColor = 0xFFCC44; }
             if (idx == 4) { midSlingColor = 0xAAD0F4; }
+            if (idx == 5) { midSlingColor = 0x33DDAA; }
             var chTop = playY0 + ph * 58 / 100;
             var chBot = playY0 + ph * 66 / 100;
             var chLeftA  = playX0 + (pw * 5)  / 100;

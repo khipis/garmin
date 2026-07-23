@@ -4,10 +4,12 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 // ── Leaderboard ─────────────────────────────────────────────────────────────
 const LB_GAME_ID    = "tictacpro";
 const LB_STREAK_KEY = "tictacpro_streak";  // Application.Storage: consecutive wins vs AI
+const TTP_FX_KEY    = "ttp_fx";            // 0/unset = sound+haptics ON, 1 = OFF
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const MARK_NONE = 0;
@@ -96,6 +98,9 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Sound + haptics master switch (OPTIONS: ttp_fx) ───────────────────
+    hidden var _fxOn;
+
     // ── Multi-tick 2-ply search state ────────────────────────────────────
     hidden var _aiForkMark;    // mark being checked this phase
     hidden var _aiForkAiMk;    // mark the AI is actually playing
@@ -139,6 +144,7 @@ class GameView extends WatchUi.View {
         _sh      = 0;
         _timer   = null;
         _gameOverHandled = false;
+        _fxOn    = _loadFx();
         // Settings now come from the shared OPTIONS screen (persisted in
         // Storage). Read them, configure the board, and drop straight into a
         // game — the main menu is the shared GameMenuView.
@@ -465,7 +471,7 @@ class GameView extends WatchUi.View {
 
         // PvP: GS_AI = O's turn (P2 places O)
         if (_state == GS_AI && _mode == MODE_PVP) {
-            if (_cells[curIdx] != MARK_NONE) { return; }
+            if (_cells[curIdx] != MARK_NONE) { _tone(2); return; }
             _place(_curX, _curY, MARK_O);
             if (_checkWin(MARK_O)) {
                 _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
@@ -482,7 +488,7 @@ class GameView extends WatchUi.View {
 
         // PvAI player goes second: GS_AI = player's turn (player places O)
         if (_state == GS_AI && _mode == MODE_PVAI && !_playerFirst) {
-            if (_cells[curIdx] != MARK_NONE) { return; }
+            if (_cells[curIdx] != MARK_NONE) { _tone(2); return; }
             _place(_curX, _curY, MARK_O);
             if (_checkWin(MARK_O)) {
                 _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
@@ -498,7 +504,7 @@ class GameView extends WatchUi.View {
         }
 
         if (_state != GS_PLAY) { return; }
-        if (_cells[curIdx] != MARK_NONE) { return; }
+        if (_cells[curIdx] != MARK_NONE) { _tone(2); return; }
 
         _place(_curX, _curY, MARK_X);
         if (_checkWin(MARK_X)) {
@@ -570,9 +576,16 @@ class GameView extends WatchUi.View {
     // reset to 0 on a loss or draw.
     hidden function _handleGameOver() {
         _gameOverHandled = true;
-        if (_mode != MODE_PVAI) { return; }
         var playerWon = (_playerFirst && _overType == OVER_XWIN) ||
                         (!_playerFirst && _overType == OVER_OWIN);
+
+        // End-of-game feedback for every mode.
+        if (_overType == OVER_DRAW) { _tone(2); _vibe(40, 120); }
+        else if (_mode != MODE_PVAI) { _tone(1); _vibe(80, 180); }   // pvp / ai-vs-ai
+        else if (playerWon)          { _tone(3); _vibe(100, 250); }
+        else                          { _tone(4); _vibe(100, 350); }
+
+        if (_mode != MODE_PVAI) { return; }
         if (playerWon) {
             var stored = Application.Storage.getValue(LB_STREAK_KEY);
             var streak = (stored instanceof Lang.Number) ? stored : 0;
@@ -956,6 +969,7 @@ class GameView extends WatchUi.View {
         while (i < 4) { _winLine[i] = -1; _winLine3D[i] = -1; i = i + 1; }
         _moveCount = 0;
         _gameOverHandled = false;
+        _fxOn = _loadFx();
         if (_is3D) {
             _curX = _n3D / 2; _curY = _n3D / 2;
         } else {
@@ -970,6 +984,34 @@ class GameView extends WatchUi.View {
         }
     }
 
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    // kind: 0 place/move · 1 generic win · 2 illegal/draw · 3 win · 4 loss.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(TTP_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
+
     hidden function _place(x, y, mark) {
         if (_is3D) {
             var N = _n3D;
@@ -978,12 +1020,14 @@ class GameView extends WatchUi.View {
             _cells[y * _gridN + x] = mark;
         }
         _moveCount = _moveCount + 1;
+        _tone(0); _vibe(25, 30);   // mark placed (player or AI)
     }
 
     // Place by absolute 3D cell index.
     hidden function _place3D(cellIdx, mark) {
         _cells[cellIdx] = mark;
         _moveCount = _moveCount + 1;
+        _tone(0); _vibe(25, 30);   // mark placed (player or AI)
     }
 
     // ── Win detection ─────────────────────────────────────────────────────

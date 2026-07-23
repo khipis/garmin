@@ -3,8 +3,10 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 // ── Module-level constants ─────────────────────────────────────────────────
+const OTH_FX_KEY  = "oth_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 const DISC_BLACK  = 1;
 const DISC_WHITE  = 2;
 const GS_PLAYER   = 0;   // human's turn — cursor active
@@ -71,6 +73,7 @@ class GameView extends WatchUi.View {
     hidden var _playerColor;  // DISC_BLACK or DISC_WHITE
     hidden var _aiColor;
     hidden var _scoreSubmitted;  // guards against double leaderboard submit
+    hidden var _fxOn;            // sound + haptics master switch (OPTIONS: oth_fx)
 
     function initialize() {
         View.initialize();
@@ -89,9 +92,38 @@ class GameView extends WatchUi.View {
         _playerColor = DISC_BLACK;
         _aiColor     = DISC_WHITE;
         _scoreSubmitted = false;
+        _fxOn        = _loadFx();
         // Settings come from the shared OPTIONS screen (persisted in Storage).
         _applySettings();
         _startGame();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    // kind: 0 place/move · 1 big flip/capture · 2 illegal/pass · 3 win · 4 loss.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(OTH_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
@@ -136,20 +168,40 @@ class GameView extends WatchUi.View {
 
     // ── Public input API (GameDelegate) ───────────────────────────────────
 
-    function moveCursor(dx, dy) {
-        if (_gameState == GS_MENU) {
-            if (dy < 0 || dx < 0) { _menuSel = (_menuSel + NUM_MENU_ROWS - 1) % NUM_MENU_ROWS; }
-            else if (dy > 0 || dx > 0) { _menuSel = (_menuSel + 1) % NUM_MENU_ROWS; }
-            WatchUi.requestUpdate();
-            return;
+    // True whenever a human is on the clock and may move the cursor / place.
+    //   PvAI : GS_PLAYER is the human.
+    //   PvP  : GS_PLAYER is P1, GS_AI is P2 (both human).
+    //   AIvAI: never human.
+    hidden function _humanTurn() {
+        if (_gameState == GS_PLAYER) { return _mode != MODE_AIAI; }
+        if (_gameState == GS_AI)     { return _mode == MODE_PVP; }
+        return false;
+    }
+
+    // Move the cursor to the next/previous VALID move in reading order (wraps).
+    // Because it only ever lands on legal squares, two directional inputs are
+    // enough to reach any playable cell on any device.
+    function cycleMove(dir) {
+        if (!_humanTurn()) { return; }
+        var start = _curY * 8 + _curX;
+        var idx = start;
+        var step = (dir >= 0) ? 1 : -1;
+        var s = 0;
+        while (s < 64) {
+            idx = (idx + step + 64) % 64;
+            if (_validMoves[idx] != 0) { _curX = idx % 8; _curY = idx / 8; return; }
+            s = s + 1;
         }
-        if (_gameState != GS_PLAYER && !(_gameState == GS_AI && _mode == MODE_PVP)) { return; }
-        // dx != 0 → horizontal wrap along current row
-        // dy != 0 → vertical wrap along current column
-        if (dx != 0) {
-            _curX = (_curX + dx + 8) % 8;
-        } else if (dy != 0) {
-            _curY = (_curY + dy + 8) % 8;
+    }
+
+    // Snap the cursor onto a valid square (called when a human turn begins) so
+    // SELECT always has a legal target.
+    hidden function _snapCursorToValid() {
+        if (_validMoves[_curY * 8 + _curX] != 0) { return; }
+        var i = 0;
+        while (i < 64) {
+            if (_validMoves[i] != 0) { _curX = i % 8; _curY = i / 8; return; }
+            i = i + 1;
         }
     }
 
@@ -177,7 +229,7 @@ class GameView extends WatchUi.View {
         // PvP: P2 also places via cursor when it's GS_AI state
         var isP2Turn = (_gameState == GS_AI && _mode == MODE_PVP);
         if (_gameState != GS_PLAYER && !isP2Turn) { return; }
-        if (_validMoves[_curY * 8 + _curX] == 0) { return; }
+        if (_validMoves[_curY * 8 + _curX] == 0) { _tone(2); return; }
         var col = isP2Turn ? _aiColor : _playerColor;
         if (_board.placeDisc(_curX, _curY, col)) {
             _startAnim(col);
@@ -217,6 +269,7 @@ class GameView extends WatchUi.View {
         _animTick  = 0;
         _passNotif = 0;
         _scoreSubmitted = false;
+        _fxOn = _loadFx();
         _curX = 3; _curY = 3;
         // Black always goes first in Othello
         if (_playerColor == DISC_BLACK || _mode == MODE_AIAI) {
@@ -230,6 +283,10 @@ class GameView extends WatchUi.View {
 
     // Begin flip animation for 'targetCol' using the current board.flipBuf.
     hidden function _startAnim(targetCol) {
+        // Placement + flip feedback: bigger captures hit harder.
+        var flips = _board.flipCount;
+        if (flips >= 3) { _tone(1); _vibe(60, 90); }
+        else            { _tone(0); _vibe(25, 30); }
         _animTargetCol = targetCol;
         _animTick      = ANIM_TICKS;
         var i = 0;
@@ -262,11 +319,19 @@ class GameView extends WatchUi.View {
 
         if (!pCan && !aCan) {
             _gameState = GS_OVER;
+            var bc = _board.blackCount; var wc = _board.whiteCount;
+            var playerWins = (_playerColor == DISC_BLACK) ? (bc > wc) : (wc > bc);
+            var aiWins     = (_playerColor == DISC_BLACK) ? (wc > bc) : (bc > wc);
+            if (_mode != MODE_PVAI) { _tone(1); _vibe(80, 180); }   // pvp / ai-vs-ai
+            else if (playerWins)    { _tone(3); _vibe(100, 250); }
+            else if (aiWins)        { _tone(4); _vibe(100, 350); }
+            else                    { _tone(2); _vibe(40, 120); }   // draw
             _submitScoreIfWin();
             return;
         }
         if (!pCan) {
             _passNotif = 18;
+            _tone(2); _vibe(30, 60);   // your turn skipped
             _gameState = GS_AI;
             if (_mode == MODE_PVP) { _computeValidMoves(); }  // P2 needs valid moves
             return;
@@ -298,6 +363,7 @@ class GameView extends WatchUi.View {
             _validMoves[i] = (_board.isValidAt(i % 8, i / 8, col)) ? 1 : 0;
             i = i + 1;
         }
+        _snapCursorToValid();
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────
@@ -385,8 +451,8 @@ class GameView extends WatchUi.View {
             li = li + 1;
         }
 
-        // Valid-move dots (player turn only)
-        if (_gameState == GS_PLAYER) {
+        // Valid-move dots (any human turn)
+        if (_humanTurn()) {
             var dotR = _sr / 4;
             if (dotR < 2) { dotR = 2; }
             dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
@@ -423,8 +489,8 @@ class GameView extends WatchUi.View {
             di = di + 1;
         }
 
-        // Cursor highlight
-        if (_gameState == GS_PLAYER) {
+        // Cursor highlight (any human turn)
+        if (_humanTurn()) {
             var cpx = _boardX + _curX * _cell;
             var cpy = _boardY + _curY * _cell;
             var curCol = (_validMoves[_curY * 8 + _curX] != 0) ? 0xFFFF00 : 0xFF6600;
@@ -497,12 +563,13 @@ class GameView extends WatchUi.View {
             dc.drawText(_sw / 2 - 4, txtY, Graphics.FONT_XTINY, lbl2, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // BACK = exit hint (below board)
+        // Control hint (below board)
         var hintY = _boardY + 8 * _cell + 8;
         if (hintY < _sh - 14) {
             dc.setColor(0x2A3A2A, Graphics.COLOR_TRANSPARENT);
+            var hint = _humanTurn() ? "UP/DN move  ·  SELECT place" : "BACK = exit";
             dc.drawText(_sw / 2, hintY, Graphics.FONT_XTINY,
-                        "BACK = exit", Graphics.TEXT_JUSTIFY_CENTER);
+                        hint, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

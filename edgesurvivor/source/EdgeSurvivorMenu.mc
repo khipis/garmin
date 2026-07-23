@@ -64,7 +64,10 @@ function buildEdgeSurvivorMenu() as Lang.Array {
         :lbTitle => "EDGE SURVIVOR",
         :hooks   => new EdgeSurvivorHooks(),
         :options => [
-            new GmOption("es_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("es_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            // Cosmetic player skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the classic dot until it's owned.
+            new GmOption("es_skin", "Skin", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

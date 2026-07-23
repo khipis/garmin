@@ -76,7 +76,11 @@ function buildSerpentMenu() as Lang.Array {
         :lbTitle => "SERPENT",
         :hooks   => new SerpentHooks(),
         :options => [
-            new GmOption("sp_spd", "Speed", ["SLOW", "NORMAL", "FAST"], 1)
+            new GmOption("sp_spd", "Speed", ["SLOW", "NORMAL", "FAST"], 1),
+            // Cosmetic snake skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the CLASSIC skin until it's owned.
+            // Index order: 0=CLASSIC, 1=NEON (Lv3+), 2=GOLD (Lv6+).
+            new GmOption("sp_skin", "Skin", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

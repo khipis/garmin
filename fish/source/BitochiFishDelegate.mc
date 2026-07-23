@@ -64,6 +64,9 @@ class BitochiFishDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        // Exiting mid-run still counts: record score + progress before we pop
+        // back to the menu (no need to "lose" to appear on the boards).
+        _view.submitProgress();
         if (_sensorOn) { Sensor.enableSensorEvents(null); }
         return false;
     }

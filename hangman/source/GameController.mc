@@ -18,6 +18,9 @@
 
 using Toybox.Application;
 using Toybox.System;
+using Toybox.Attention;
+
+const HM_FX_KEY = "hm_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const LB_GAME_ID = "hangman";
 
@@ -59,6 +62,8 @@ class GameController {
     var totalWins;
     var streak;          // consecutive words solved without a loss
 
+    hidden var _fxOn;    // sound + haptics master switch (OPTIONS: hm_fx)
+
     function initialize() {
         state       = GS_MENU;
         word        = "";
@@ -71,7 +76,33 @@ class GameController {
         menuCursor  = MENU_START;
         totalWins   = _loadWins();
         streak      = _loadStreak();
+        _fxOn       = _loadFx();
         _loadSettings();
+    }
+
+    // ── Best-effort sound + haptics (guarded; silent hardware is fine) ──
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(HM_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadWins() {
@@ -131,6 +162,7 @@ class GameController {
         usedMask = 0;
         misses   = 0;
         cursor   = _firstLetterIndex();    // start cursor on a fresh letter
+        _fxOn    = _loadFx();
         state    = GS_PLAY;
     }
 
@@ -193,8 +225,14 @@ class GameController {
         usedMask = usedMask | bit;
         if (_wordContainsLetter(idx)) {
             revealed = revealed | bit;
+            // Correct letter — a crisp confirming tick.
+            _tone(0);
+            _vibe(25, 30);
             if (_isFullyRevealed()) {
                 state = GS_WIN;
+                // Word solved — victory fanfare.
+                _tone(1);
+                _vibe(100, 250);
                 totalWins = totalWins + 1;
                 _saveWins();
                 // Win streak: increment, persist, then submit to leaderboard.
@@ -205,8 +243,14 @@ class GameController {
             }
         } else {
             misses = misses + 1;
+            // Wrong letter — a low warning buzz.
+            _tone(2);
+            _vibe(55, 90);
             if (misses >= MAX_MISSES) {
                 state = GS_LOSE;
+                // Hung — defeat sting.
+                _tone(2);
+                _vibe(100, 200);
                 // Failed word breaks the streak.
                 streak = 0;
                 _saveStreak();

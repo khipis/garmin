@@ -649,9 +649,9 @@ _Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_53_49_59_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 62; @symbol_functiondef = [buildMoonMenu,62,9,22]; @symbol_return<0> = [Lang,62,28,32]; @symbol_return<1> = [Array,62,33,38]; ]
 function buildMoonMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start:
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_start:
 [ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 63 4 ]
-    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 63 8 11 ];
     symbol [ MenuConfig %tmp.4 63 18 28 ];
@@ -711,7 +711,7 @@ _Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start:
     %tmp.58 = aputv %tmp.57 %tmp.52 %tmp.53;
     %tmp.60 = const :options;
     symbol [ options %tmp.60 74 9 16 const ];
-    %tmp.61 = newa 1;
+    %tmp.61 = newa 2;
     symbol [ GmOption %tmp.65 75 16 24 ];
     %tmp.65 = getv ? :GmOption;
     %tmp.66 = "moon_diff";
@@ -730,37 +730,55 @@ _Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start:
     %tmp.62 = newc %tmp.65 (%tmp.66, %tmp.67, %tmp.77, %tmp.78);
     %tmp.79 = dup %tmp.61;
     %tmp.80 = aputv %tmp.79 0 %tmp.62;
-    %tmp.81 = dup %tmp.58;
-    %tmp.82 = aputv %tmp.81 %tmp.60 %tmp.80;
-    %tmp.1 = newc %tmp.4 (%tmp.82);
+    symbol [ GmOption %tmp.84 78 16 24 ];
+    %tmp.84 = getv ? :GmOption;
+    %tmp.85 = "moon_hull";
+    %tmp.86 = "Hull";
+    %tmp.87 = newa 3;
+    %tmp.88 = "CLASSIC";
+    %tmp.89 = dup %tmp.87;
+    %tmp.90 = aputv %tmp.89 0 %tmp.88;
+    %tmp.91 = "NEON";
+    %tmp.92 = dup %tmp.90;
+    %tmp.93 = aputv %tmp.92 1 %tmp.91;
+    %tmp.94 = "GOLD";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 2 %tmp.94;
+    %tmp.97 = 0;
+    %tmp.81 = newc %tmp.84 (%tmp.85, %tmp.86, %tmp.96, %tmp.97);
+    %tmp.98 = dup %tmp.80;
+    %tmp.99 = aputv %tmp.98 1 %tmp.81;
+    %tmp.100 = dup %tmp.58;
+    %tmp.101 = aputv %tmp.100 %tmp.60 %tmp.99;
+    %tmp.1 = newc %tmp.4 (%tmp.101);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 63 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 78 4 ]
-    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 81 4 ]
+    [ "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_start" "_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 78 8 9 ];
-    symbol [ GameMenuView %tmp.86 78 16 28 ];
-    %tmp.86 = getv ? :GameMenuView;
-    %tmp.87 = lgetv %cfg.1;
-    symbol [ cfg %tmp.87 78 29 32 ];
-    %tmp.83 = newc %tmp.86 (%tmp.87);
-    lputv %v.2 %tmp.83;
-    symbol [ v %v.2 78 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 79 4 ]
-    %tmp.88 = newa 2;
-    %tmp.89 = lgetv %v.2;
-    symbol [ v %tmp.89 79 12 13 ];
-    %tmp.90 = dup %tmp.88;
-    %tmp.91 = aputv %tmp.90 0 %tmp.89;
-    symbol [ GameMenuDelegate %tmp.95 79 19 35 ];
-    %tmp.95 = getv ? :GameMenuDelegate;
-    %tmp.96 = lgetv %v.2;
-    symbol [ v %tmp.96 79 36 37 ];
-    %tmp.92 = newc %tmp.95 (%tmp.96);
-    %tmp.97 = dup %tmp.91;
-    %tmp.98 = aputv %tmp.97 1 %tmp.92;
-    ret %tmp.98;
-_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_80_0_stop:
+    symbol [ v %v.2 81 8 9 ];
+    symbol [ GameMenuView %tmp.105 81 16 28 ];
+    %tmp.105 = getv ? :GameMenuView;
+    %tmp.106 = lgetv %cfg.1;
+    symbol [ cfg %tmp.106 81 29 32 ];
+    %tmp.102 = newc %tmp.105 (%tmp.106);
+    lputv %v.2 %tmp.102;
+    symbol [ v %v.2 81 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc" 82 4 ]
+    %tmp.107 = newa 2;
+    %tmp.108 = lgetv %v.2;
+    symbol [ v %tmp.108 82 12 13 ];
+    %tmp.109 = dup %tmp.107;
+    %tmp.110 = aputv %tmp.109 0 %tmp.108;
+    symbol [ GameMenuDelegate %tmp.114 82 19 35 ];
+    %tmp.114 = getv ? :GameMenuDelegate;
+    %tmp.115 = lgetv %v.2;
+    symbol [ v %tmp.115 82 36 37 ];
+    %tmp.111 = newc %tmp.114 (%tmp.115);
+    %tmp.116 = dup %tmp.110;
+    %tmp.117 = aputv %tmp.116 1 %tmp.111;
+    ret %tmp.117;
+_Users_kkorolczuk_work_garmin_moon_source_MoonMenu_mc_62_39_83_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/moon/source/MoonMenu.mc"; @line = 4; ]
 <init> {

@@ -79,7 +79,8 @@ function buildSkyRollMenu() as Lang.Array {
         :hooks   => new SkyRollHooks(),
         :options => [
             new GmOption(SR_K_SENS, "Sensitivity", ["LOW", "NORM", "HIGH"], 1),
-            new GmOption(SR_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1)
+            new GmOption(SR_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1),
+            new GmOption(SR_K_FX,   "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

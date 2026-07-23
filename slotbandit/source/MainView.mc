@@ -6,6 +6,8 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Math;
+using Toybox.Application;
 
 class MainView extends WatchUi.View {
     hidden var _ctrl;
@@ -16,6 +18,12 @@ class MainView extends WatchUi.View {
     hidden var _laidOut;
     hidden var _announced;
     hidden var _started;   // auto-start the round on first frame
+
+    // One-shot daily login-streak toast (queued by App.onStart's checkIn on the
+    // day's first launch). Shown over the reels for a short time on entry.
+    hidden var _dailyMsg;
+    hidden var _dailyT;
+    hidden var _dailyChecked;
 
     // Cached layout — recomputed once per screen size.
     hidden var _cabX;
@@ -36,6 +44,9 @@ class MainView extends WatchUi.View {
         _laidOut = false;
         _announced = false;
         _started = false;
+        _dailyMsg = null;
+        _dailyT = 0;
+        _dailyChecked = false;
     }
 
     function onShow() {
@@ -47,11 +58,24 @@ class MainView extends WatchUi.View {
             _announced = true;
             Leaderboard.announce(LB_GAME_ID, null);
         }
+        // Pick up today's queued login-streak bonus once, as a one-shot toast.
+        if (!_dailyChecked) {
+            _dailyChecked = true;
+            try {
+                var dm = Application.Storage.getValue("sb_daily_msg");
+                if (dm != null) {
+                    _dailyMsg = dm;
+                    _dailyT   = 40;   // ~2s at TICK_MS=50
+                    Application.Storage.deleteValue("sb_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
     function onHide() { if (_timer != null) { _timer.stop(); } }
 
     function onTick() {
         _ctrl.step();
+        if (_dailyT > 0) { _dailyT = _dailyT - 1; }
         WatchUi.requestUpdate();
     }
 
@@ -70,19 +94,48 @@ class MainView extends WatchUi.View {
         dc.setColor(0x000000, 0x000000);
         dc.clear();
 
-        RenderSystem.drawPlayBackground(dc, _sw, _sh);
-        RenderSystem.drawCabinet(dc, _sw, _sh, _cabX, _cabY, _cabW, _cabH);
-        RenderSystem.drawReels(dc, _ctrl, _cabX, _cabY, _colW, _rowH, _gap);
-        RenderSystem.drawResultFlash(dc, _ctrl, _cabX, _cabY, _cabW, _cabH);
-        if (_ctrl.spinState == SS_SPINNING && !_ctrl.autoPlay) {
-            RenderSystem.drawNextHint(dc, _ctrl, _cabX, _cabY, _colW, _gap);
+        // Screen-shake: jolt the cabinet (not the HUD) on big wins.
+        var shx = 0; var shy = 0;
+        if (_ctrl.shakeT > 0) {
+            var amp = (_ctrl.shakeT > 8) ? 3 : 2;
+            shx = (Math.rand() % (amp * 2 + 1)) - amp;
+            shy = (Math.rand() % (amp * 2 + 1)) - amp;
         }
-        RenderSystem.drawLever(dc, _ctrl, _cabX, _cabW, _cabY, _cabH);
+        var cx = _cabX + shx; var cy = _cabY + shy;
+
+        var gold = _ctrl.skinGold();
+        RenderSystem.drawPlayBackground(dc, _sw, _sh);
+        RenderSystem.drawCabinet(dc, _sw, _sh, cx, cy, _cabW, _cabH, gold);
+        RenderSystem.drawReels(dc, _ctrl, cx, cy, _colW, _rowH, _gap, gold);
+        if (_ctrl.anticIdx >= 0) {
+            RenderSystem.drawAntic(dc, _ctrl, cx, cy, _colW, _rowH, _gap);
+        }
+        RenderSystem.drawResultFlash(dc, _ctrl, cx, cy, _cabW, _cabH);
+        if (_ctrl.spinState == SS_SPINNING && !_ctrl.autoPlay) {
+            RenderSystem.drawNextHint(dc, _ctrl, cx, cy, _colW, _gap);
+        }
+        RenderSystem.drawLever(dc, _ctrl, cx, _cabW, cy, _cabH);
 
         UIManager.drawHUD(dc, _ctrl, _sw, _hudTop);
         UIManager.drawBottomBar(dc, _ctrl, _sw, _bottomY);
+        UIManager.drawBonus(dc, _ctrl, _sw, _sh);
+
+        if (_dailyT > 0 && _dailyMsg != null) { _drawDailyToast(dc); }
 
         if (_ctrl.state == GS_OVER) { UIManager.drawOver(dc, _ctrl, _sw, _sh); }
+    }
+
+    // Lightweight, non-blocking login-streak toast near the top of the screen.
+    hidden function _drawDailyToast(dc) {
+        var cx = _sw / 2;
+        var ty = _sh * 40 / 100;
+        var bw = _sw * 66 / 100; if (bw < 132) { bw = 132; }
+        var bh = 22;
+        var on = (_dailyT % 8 < 4);
+        GfxUtil.vGradientRounded(dc, cx - bw / 2, ty, bw, bh, 0x14400A, 0x081F05, 4, 6);
+        dc.setColor(on ? 0x8CFF44 : 0xFFDD55, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cx - bw / 2, ty, bw, bh, 6);
+        dc.drawText(cx, ty + 2, Graphics.FONT_XTINY, _dailyMsg, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _doLayout() {

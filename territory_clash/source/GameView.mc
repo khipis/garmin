@@ -4,6 +4,10 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
+
+// Sound + haptics master switch (OPTIONS: tc_fx). 0/unset = ON, 1 = OFF.
+const TC_FX_KEY = "tc_fx";
 
 // ── Territory Clash ───────────────────────────────────────────────────────
 //
@@ -85,6 +89,10 @@ class GameView extends WatchUi.View {
     hidden var _lbHandled;
     hidden var _timer;
 
+    // ── Sound + haptics (OPTIONS: tc_fx) ──────────────────────────────────
+    hidden var _fxOn;
+    hidden var _overFxDone;
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -96,10 +104,38 @@ class GameView extends WatchUi.View {
         _sAI = 0;
         _timer = null;
         _menuSel = 0;
+        _fxOn       = _loadFx();
+        _overFxDone = false;
         // Settings come from the shared OPTIONS screen (persisted in Storage).
         _applySettings();
         _startGame();
         if (_mode == MODE_AIAI) { _state = TC_AIST; }
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(TC_FX_KEY);
+            if (v instanceof Lang.Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 stone placed · 1 capture/win · 2 illegal/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
@@ -170,6 +206,7 @@ class GameView extends WatchUi.View {
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
             else if (_menuSel == 3) { _openLeaderboard(); return; }
             else if (_menuSel == 4) {
+                _tone(0);
                 _startGame();
                 if (_mode == MODE_AIAI) { _state = TC_AIST; }
             }
@@ -179,26 +216,34 @@ class GameView extends WatchUi.View {
         if (_state == TC_OVER) { _startGame(); if (_mode == MODE_AIAI) { _state = TC_AIST; } WatchUi.requestUpdate(); return; }
         if (_state == TC_AIST && _mode == MODE_PVP) {
             var ci = _curY * TC_N + _curX;
+            var capBefore = _captAI;
             if (_placeStone(ci, TC_AI)) {
-                _lastMove = ci; _passCount = 0; _checkWin();
+                _lastMove = ci; _passCount = 0;
+                if (_captAI > capBefore) { _tone(1); _vibe(65, 90); }   // capture!
+                else                     { _tone(0); _vibe(22, 28); }
+                _checkWin();
                 if (_state != TC_OVER) { _state = TC_PLAY; }
-            }
+            } else { _tone(2); }   // illegal move
             WatchUi.requestUpdate();
             return;
         }
         if (_state != TC_PLAY) { return; }
         var ci = _curY * TC_N + _curX;
+        var capBefore = _captP;
         if (_placeStone(ci, TC_P)) {
             _lastMove  = ci;
             _passCount = 0;
+            if (_captP > capBefore) { _tone(1); _vibe(65, 90); }   // capture!
+            else                    { _tone(0); _vibe(22, 28); }
             _checkWin();
             if (_state != TC_OVER) { _state = TC_AIST; }
-        }
+        } else { _tone(2); }   // illegal move
     }
 
     function doPass() {
         if (_state == TC_OVER) { return; }
         if (_state == TC_AIST && _mode == MODE_PVP) {
+            _tone(0);
             _passCount = _passCount + 1;
             if (_passCount >= 2) { _endGame(); return; }
             _lastMove = -1;
@@ -206,6 +251,7 @@ class GameView extends WatchUi.View {
             return;
         }
         if (_state != TC_PLAY) { return; }
+        _tone(0);
         _passCount = _passCount + 1;
         if (_passCount >= 2) { _endGame(); return; }
         _lastMove = -1;
@@ -246,6 +292,8 @@ class GameView extends WatchUi.View {
         _scoreAI   = 0;
         _lastMove  = -1;
         _lbHandled = false;
+        _fxOn       = _loadFx();
+        _overFxDone = false;
         if (_mode == MODE_PVAI && !_playerFirst) {
             _state = TC_AIST;
         } else {
@@ -626,6 +674,7 @@ class GameView extends WatchUi.View {
     }
 
     hidden function _aiDoTurn() {
+        var capBefore = _captAI;
         // Phase 1: find best-scored empty cell
         var bestScore = -999; var bestMove = -1;
         var i = 0;
@@ -651,6 +700,10 @@ class GameView extends WatchUi.View {
         if (played >= 0) {
             _lastMove  = played;
             _passCount = 0;
+            if (_mode != MODE_AIAI) {
+                if (_captAI > capBefore) { _tone(2); _vibe(45, 60); }   // AI took your stones
+                else                     { _tone(0); }                   // AI placed
+            }
             _checkWin();
         } else {
             _passCount = _passCount + 1;
@@ -662,6 +715,12 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_MENU) { _startGame(); }
+        if (_state == TC_OVER && !_overFxDone) {
+            _overFxDone = true;
+            if      (_scoreP  > _scoreAI) { _tone(1); _vibe(100, 220); }   // win!
+            else if (_scoreAI > _scoreP)  { _tone(2); _vibe(100, 200); }   // lose
+            else                          { _tone(0); _vibe(60, 120); }    // draw
+        }
         dc.setColor(0x0A180A, 0x0A180A);
         dc.clear();
         _drawBoard(dc);

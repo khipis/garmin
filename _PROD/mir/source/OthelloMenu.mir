@@ -1,0 +1,362 @@
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 9; @symbol_classdef = [OthelloHooks,9,6,18]; @symbol_extends<0> = [GameHooks,9,27,36]; ]
+class OthelloHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ GameView %tmp.4 13 20 28 ];
+        %tmp.4 = getv ? :GameView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ GameDelegate %tmp.11 14 32 44 ];
+        %tmp.11 = getv ? :GameDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 18; @symbol_functiondef = [drawArt,18,13,20]; @symbol_param<0> = [dc,18,21,23]; @symbol_param<1> = [cx,18,25,27]; @symbol_param<2> = [cy,18,29,31]; @symbol_param<3> = [w,18,33,34]; @symbol_param<4> = [h,18,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_18_47_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 19 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 19 8 10 ];
+        symbol [ setColor %tmp.2 19 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x1A7A1A;
+        symbol [ Graphics %tmp.4 19 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 19 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 20 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 20 8 10 ];
+        symbol [ fillRectangle %tmp.7 20 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 20 25 27 ];
+        %tmp.9 = 16;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 20 34 36 ];
+        %tmp.12 = 16;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = 32;
+        %tmp.15 = 32;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 21 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 21 8 10 ];
+        symbol [ setColor %tmp.17 21 11 19 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0x0D5C0D;
+        symbol [ Graphics %tmp.19 21 30 38 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 21 39 56 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 22 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 22 8 10 ];
+        symbol [ drawLine %tmp.22 22 11 19 ];
+        %tmp.22 = getv function %tmp.21 :drawLine;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 22 20 22 ];
+        %tmp.24 = lgetv %cy;
+        symbol [ cy %tmp.24 22 24 26 ];
+        %tmp.25 = 16;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        %tmp.27 = lgetv %cx;
+        symbol [ cx %tmp.27 22 33 35 ];
+        %tmp.28 = lgetv %cy;
+        symbol [ cy %tmp.28 22 37 39 ];
+        %tmp.29 = 16;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.26, %tmp.27, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 23 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 23 8 10 ];
+        symbol [ drawLine %tmp.32 23 11 19 ];
+        %tmp.32 = getv function %tmp.31 :drawLine;
+        %tmp.33 = lgetv %cx;
+        symbol [ cx %tmp.33 23 20 22 ];
+        %tmp.34 = 16;
+        %tmp.35 = sub %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %cy;
+        symbol [ cy %tmp.36 23 29 31 ];
+        %tmp.37 = lgetv %cx;
+        symbol [ cx %tmp.37 23 33 35 ];
+        %tmp.38 = 16;
+        %tmp.39 = add %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %cy;
+        symbol [ cy %tmp.40 23 42 44 ];
+        invoke %tmp.31 %tmp.32(%tmp.35, %tmp.36, %tmp.39, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 24 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 24 8 10 ];
+        symbol [ setColor %tmp.42 24 11 19 ];
+        %tmp.42 = getv function %tmp.41 :setColor;
+        %tmp.43 = 0x111111;
+        symbol [ Graphics %tmp.44 24 30 38 ];
+        %tmp.44 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.45 24 39 56 ];
+        %tmp.45 = getv %tmp.44 :COLOR_TRANSPARENT;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 25 8 ]
+        %tmp.46 = lgetv %dc;
+        symbol [ dc %tmp.46 25 8 10 ];
+        symbol [ fillCircle %tmp.47 25 11 21 ];
+        %tmp.47 = getv function %tmp.46 :fillCircle;
+        %tmp.48 = lgetv %cx;
+        symbol [ cx %tmp.48 25 22 24 ];
+        %tmp.49 = 8;
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        %tmp.51 = lgetv %cy;
+        symbol [ cy %tmp.51 25 30 32 ];
+        %tmp.52 = 8;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        %tmp.54 = 6;
+        invoke %tmp.46 %tmp.47(%tmp.50, %tmp.53, %tmp.54);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 26 8 ]
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 26 8 10 ];
+        symbol [ fillCircle %tmp.56 26 11 21 ];
+        %tmp.56 = getv function %tmp.55 :fillCircle;
+        %tmp.57 = lgetv %cx;
+        symbol [ cx %tmp.57 26 22 24 ];
+        %tmp.58 = 8;
+        %tmp.59 = add %tmp.57 %tmp.58;
+        %tmp.60 = lgetv %cy;
+        symbol [ cy %tmp.60 26 30 32 ];
+        %tmp.61 = 8;
+        %tmp.62 = add %tmp.60 %tmp.61;
+        %tmp.63 = 6;
+        invoke %tmp.55 %tmp.56(%tmp.59, %tmp.62, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 27 8 ]
+        %tmp.64 = lgetv %dc;
+        symbol [ dc %tmp.64 27 8 10 ];
+        symbol [ setColor %tmp.65 27 11 19 ];
+        %tmp.65 = getv function %tmp.64 :setColor;
+        %tmp.66 = 0xDDDDDD;
+        symbol [ Graphics %tmp.67 27 30 38 ];
+        %tmp.67 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.68 27 39 56 ];
+        %tmp.68 = getv %tmp.67 :COLOR_TRANSPARENT;
+        invoke %tmp.64 %tmp.65(%tmp.66, %tmp.68);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 28 8 ]
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 28 8 10 ];
+        symbol [ fillCircle %tmp.70 28 11 21 ];
+        %tmp.70 = getv function %tmp.69 :fillCircle;
+        %tmp.71 = lgetv %cx;
+        symbol [ cx %tmp.71 28 22 24 ];
+        %tmp.72 = 8;
+        %tmp.73 = add %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %cy;
+        symbol [ cy %tmp.74 28 30 32 ];
+        %tmp.75 = 8;
+        %tmp.76 = sub %tmp.74 %tmp.75;
+        %tmp.77 = 6;
+        invoke %tmp.69 %tmp.70(%tmp.73, %tmp.76, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 29 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 29 8 10 ];
+        symbol [ fillCircle %tmp.79 29 11 21 ];
+        %tmp.79 = getv function %tmp.78 :fillCircle;
+        %tmp.80 = lgetv %cx;
+        symbol [ cx %tmp.80 29 22 24 ];
+        %tmp.81 = 8;
+        %tmp.82 = sub %tmp.80 %tmp.81;
+        %tmp.83 = lgetv %cy;
+        symbol [ cy %tmp.83 29 30 32 ];
+        %tmp.84 = 8;
+        %tmp.85 = add %tmp.83 %tmp.84;
+        %tmp.86 = 6;
+        invoke %tmp.78 %tmp.79(%tmp.82, %tmp.85, %tmp.86);
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_18_47_30_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 35; @symbol_functiondef = [buildOthelloMenu,35,9,25]; @symbol_return<0> = [Lang,35,31,35]; @symbol_return<1> = [Array,35,36,41]; ]
+function buildOthelloMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 36 4 ]
+    [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 36 8 11 ];
+    symbol [ MenuConfig %tmp.4 36 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 37 9 15 const ];
+    %tmp.8 = "othello";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 38 9 15 const ];
+    %tmp.13 = "OTHELLO";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 39 9 13 const ];
+    %tmp.18 = 0x1A7A1A;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 40 9 11 const ];
+    %tmp.23 = 0x080808;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 41 9 15 const ];
+    %tmp.28 = 0x0A0A0A;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 42 9 15 const ];
+    %tmp.33 = 0x44CC44;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 43 9 16 const ];
+    %tmp.38 = "OTHELLO";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 44 9 14 const ];
+    symbol [ OthelloHooks %tmp.46 44 24 36 ];
+    %tmp.46 = getv ? :OthelloHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 45 9 16 const ];
+    %tmp.51 = newa 3;
+    symbol [ GmOption %tmp.55 46 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "oth_mode";
+    %tmp.57 = "Mode";
+    %tmp.58 = newa 3;
+    %tmp.59 = "P vs AI";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "P vs P";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "AI vs AI";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = 0;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
+    %tmp.69 = dup %tmp.51;
+    %tmp.70 = aputv %tmp.69 0 %tmp.52;
+    symbol [ GmOption %tmp.74 47 16 24 ];
+    %tmp.74 = getv ? :GmOption;
+    %tmp.75 = "oth_diff";
+    %tmp.76 = "AI level";
+    %tmp.77 = newa 3;
+    %tmp.78 = "EASY";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 0 %tmp.78;
+    %tmp.81 = "MED";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 1 %tmp.81;
+    %tmp.84 = "HARD";
+    %tmp.85 = dup %tmp.83;
+    %tmp.86 = aputv %tmp.85 2 %tmp.84;
+    %tmp.87 = 1;
+    %tmp.71 = newc %tmp.74 (%tmp.75, %tmp.76, %tmp.86, %tmp.87);
+    %tmp.88 = dup %tmp.70;
+    %tmp.89 = aputv %tmp.88 1 %tmp.71;
+    symbol [ GmOption %tmp.93 48 16 24 ];
+    %tmp.93 = getv ? :GmOption;
+    %tmp.94 = "oth_side";
+    %tmp.95 = "You play";
+    %tmp.96 = newa 2;
+    %tmp.97 = "BLACK";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 0 %tmp.97;
+    %tmp.100 = "WHITE";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 1 %tmp.100;
+    %tmp.103 = 0;
+    %tmp.90 = newc %tmp.93 (%tmp.94, %tmp.95, %tmp.102, %tmp.103);
+    %tmp.104 = dup %tmp.89;
+    %tmp.105 = aputv %tmp.104 2 %tmp.90;
+    %tmp.106 = dup %tmp.48;
+    %tmp.107 = aputv %tmp.106 %tmp.50 %tmp.105;
+    %tmp.1 = newc %tmp.4 (%tmp.107);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 36 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 51 4 ]
+    [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 51 8 9 ];
+    symbol [ GameMenuView %tmp.111 51 16 28 ];
+    %tmp.111 = getv ? :GameMenuView;
+    %tmp.112 = lgetv %cfg.1;
+    symbol [ cfg %tmp.112 51 29 32 ];
+    %tmp.108 = newc %tmp.111 (%tmp.112);
+    lputv %v.2 %tmp.108;
+    symbol [ v %v.2 51 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc" 52 4 ]
+    %tmp.113 = newa 2;
+    %tmp.114 = lgetv %v.2;
+    symbol [ v %tmp.114 52 12 13 ];
+    %tmp.115 = dup %tmp.113;
+    %tmp.116 = aputv %tmp.115 0 %tmp.114;
+    symbol [ GameMenuDelegate %tmp.120 52 19 35 ];
+    %tmp.120 = getv ? :GameMenuDelegate;
+    %tmp.121 = lgetv %v.2;
+    symbol [ v %tmp.121 52 36 37 ];
+    %tmp.117 = newc %tmp.120 (%tmp.121);
+    %tmp.122 = dup %tmp.116;
+    %tmp.123 = aputv %tmp.122 1 %tmp.117;
+    ret %tmp.123;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_OthelloMenu_mc_35_42_53_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/OthelloMenu.mc"; @line = 4; ]
+<init> {
+}

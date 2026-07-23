@@ -123,7 +123,23 @@ class MainView extends WatchUi.View {
         _drawMoving(dc, shx);
         if (_sparkT > 0) { _drawSparkle(dc, shx); }
         _drawHUD(dc);
+        if (_ctrl.dailyT > 0 && _ctrl.dailyMsg != null) { _drawDailyToast(dc); }
         if (_ctrl.state == GS_OVER) { _drawOver(dc); }
+    }
+
+    // One-shot daily-bonus toast (queued by the App on the day's first
+    // launch). A lightweight banner over the run — no new blocking view.
+    hidden function _drawDailyToast(dc) {
+        var cx = _sw / 2;
+        var cy = _sh * 32 / 100;
+        var bw = _sw * 92 / 100;
+        var bh = 20;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.setColor(0xFFD21A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.drawText(cx, cy - 7, Graphics.FONT_XTINY,
+                    _ctrl.dailyMsg, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _doLayout() {
@@ -273,12 +289,42 @@ class MainView extends WatchUi.View {
     hidden function _drawTower(dc, shx) {
         var blocks = _ctrl.tower.blocks;
         var is3d = (_ctrl.menuView == ST_VIEW_3D);
+        var lastIdx = blocks.size() - 1;
         for (var i = 0; i < blocks.size(); i++) {
             var b = blocks[i];
             var by = _rowBottomY(b.row);
             if (by < -BLOCK_H || by - BLOCK_H > _sh) { continue; }
-            _drawBlockAny(dc, is3d, b.leftWX + shx, by - BLOCK_H + 1,
-                          b.widthWX, BLOCK_H - 2, b.color, false);
+            var bx = b.leftWX + shx;
+            var byy = by - BLOCK_H + 1;
+            _drawBlockAny(dc, is3d, bx, byy, b.widthWX, BLOCK_H - 2, b.color, false);
+            if (b.special == 1) { _goldSheen(dc, bx, byy, b.widthWX, BLOCK_H - 2); }
+            // Landing pop — bright fading border on the freshly placed top block.
+            if (i == lastIdx && _ctrl.placeFlash > 0) {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawRectangle(bx - 1, byy - 1, b.widthWX + 2, BLOCK_H);
+            }
+        }
+    }
+
+    // Animated golden sheen for bonus blocks: pulsing border + sweeping glint.
+    // Block widths/positions are world-pixel Floats; coerce to Number before any
+    // modulo — Monkey C's `%` throws on Float operands (that was the crash the
+    // first gold block triggered).
+    hidden function _goldSheen(dc, x, y, w, h) {
+        var wi = w.toNumber();
+        var xi = x.toNumber();
+        if (wi <= 1 || h <= 1) { return; }
+        var ph = (_frame / 2) % 10;
+        var g  = (ph < 5) ? ph : (10 - ph);          // 0..5
+        var v  = 0xCC + g * 6; if (v > 0xFF) { v = 0xFF; }
+        dc.setColor((v << 16) | (v << 8) | 0x33, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(xi, y, wi, h);
+        var period = wi + 6;
+        var sweep  = (_frame % period) - 3;
+        var sx     = xi + sweep;
+        if (sx >= xi && sx < xi + wi) {
+            dc.setColor(0xFFFFEE, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(sx, y + 1, 2, h - 2);
         }
     }
 
@@ -287,32 +333,68 @@ class MainView extends WatchUi.View {
         if (m == null) { return; }
         var by = _rowBottomY(m.row);
 
-        // Target line — shows where the top block ends.
+        // Target line — shows where the top block ends. Pulses red when
+        // the tower gets dangerously narrow to ratchet up the tension.
         var top = _ctrl.tower.topBlock();
         if (top != null) {
             var tby = _rowBottomY(top.row);
-            dc.setColor(0x33FFCC, Graphics.COLOR_TRANSPARENT);
+            var tcol = 0x33FFCC;
+            if (top.widthWX <= 16) {
+                tcol = (((_frame / 2) % 2) == 0) ? 0xFF3355 : 0xFFAA55;
+            }
+            dc.setColor(tcol, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(top.leftWX + shx, tby - 2,
                         top.leftWX + top.widthWX + shx, tby - 2);
         }
 
         // Pulsing glow — on for 5 frames out of every 8.
         var glowOn = ((_frame / 2) % 8) < 5;
+        var mx = m.leftWX + shx;
+        var myy = by - BLOCK_H + 1;
         _drawBlockAny(dc, _ctrl.menuView == ST_VIEW_3D,
-                      m.leftWX + shx, by - BLOCK_H + 1,
-                      m.widthWX, BLOCK_H - 2, m.color, glowOn);
+                      mx, myy, m.widthWX, BLOCK_H - 2, m.color, glowOn);
+        if (m.special == 1) { _goldSheen(dc, mx, myy, m.widthWX, BLOCK_H - 2); }
     }
 
     hidden function _drawFalling(dc, shx) {
         var fp = _ctrl.tower.falling;
-        var is3d = (_ctrl.menuView == ST_VIEW_3D);
         for (var i = 0; i < fp.size(); i++) {
             var f = fp[i];
             var by = _rowBottomY(f.row);
             if (by - BLOCK_H > _sh + 20) { continue; }
-            _drawBlockAny(dc, is3d, f.leftWX + shx, by - BLOCK_H + 1,
-                          f.widthWX, BLOCK_H - 2, f.color, false);
+            _drawTumble(dc, f.leftWX + shx, by - BLOCK_H + 1,
+                        f.widthWX, BLOCK_H - 2, f.color, f.spin);
         }
+    }
+
+    // Rotate a corner (px,py) about (cx,cy) and return integer [x,y].
+    hidden function _rot(px, py, ca, sa, cx, cy) {
+        var rx = px * ca - py * sa + cx;
+        var ry = px * sa + py * ca + cy;
+        return [rx.toNumber(), ry.toNumber()];
+    }
+
+    // A tumbling overhang slice — rotated quad with a shaded lower edge.
+    hidden function _drawTumble(dc, x, y, w, h, col, spinDeg) {
+        if (w <= 0 || h <= 0) { return; }
+        var ang = spinDeg * 0.0174533;
+        var ca  = Math.cos(ang);
+        var sa  = Math.sin(ang);
+        var hw  = w / 2.0;
+        var hh  = h / 2.0;
+        var cxp = x + hw;
+        var cyp = y + hh;
+        var p0 = _rot(-hw, -hh, ca, sa, cxp, cyp);
+        var p1 = _rot( hw, -hh, ca, sa, cxp, cyp);
+        var p2 = _rot( hw,  hh, ca, sa, cxp, cyp);
+        var p3 = _rot(-hw,  hh, ca, sa, cxp, cyp);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([p0, p1, p2, p3]);
+        var r0 = (col >> 16) & 0xFF; var g0 = (col >> 8) & 0xFF; var b0 = col & 0xFF;
+        dc.setColor(((r0 * 45) / 100 << 16) | ((g0 * 45) / 100 << 8) | ((b0 * 45) / 100),
+                    Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(p2[0], p2[1], p3[0], p3[1]);
+        dc.drawLine(p3[0], p3[1], p0[0], p0[1]);
     }
 
     // ── Perfect-placement sparkle burst ─────────────────────────────
@@ -476,11 +558,42 @@ class MainView extends WatchUi.View {
                         "B " + _ctrl.hi.format("%d"),
                         Graphics.TEXT_JUSTIFY_RIGHT);
         }
+
+        // Live combo counter under the score panel.
+        if (_ctrl.combo >= 2) {
+            var ccol = (((_frame / 3) % 2) == 0) ? 0xFFCC22 : 0xFFFFAA;
+            dc.setColor(ccol, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _hudTop + 20, Graphics.FONT_XTINY,
+                        "COMBO x" + _ctrl.combo.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         if (_ctrl.lastPerfect > 0) {
             var pcol = ((_frame % 6) < 3) ? 0x22FF88 : 0xAAFFCC;
             dc.setColor(pcol, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, _sh - 22, Graphics.FONT_XTINY,
-                        "PERFECT  +50", Graphics.TEXT_JUSTIFY_CENTER);
+                        "PERFECT  +" + _ctrl.lastBonus.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        if (_ctrl.goldFlash > 0) {
+            dc.setColor(0xFFD21A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _sh - 40, Graphics.FONT_XTINY,
+                        "GOLD  +" + ST_GOLD_BONUS.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Big height-milestone banner.
+        if (_ctrl.milestoneT > 0) {
+            var my = _sh / 2 - 14;
+            dc.setColor(0x02040C, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - 46, my - 2, 92, 44, 8);
+            dc.setColor(0x22FF88, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(cx - 46, my - 2, 92, 44, 8);
+            dc.drawText(cx, my, Graphics.FONT_MEDIUM,
+                        _ctrl.milestoneN.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xAAFFCC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, my + 24, Graphics.FONT_XTINY,
+                        "FLOORS!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -606,10 +719,22 @@ class MainView extends WatchUi.View {
             ["Score " + _ctrl.score.format("%d"), 0xFFFFFF],
             ["Height " + _ctrl.tower.height().format("%d"), 0xFFFFFF]
         ];
+        if (_ctrl.bestCombo >= 2) {
+            lines.add(["Combo x" + _ctrl.bestCombo.format("%d"), 0xFFCC22]);
+        }
         if (_ctrl.score > 0 && _ctrl.score == _ctrl.hi) {
             lines.add(["NEW BEST!", 0x22FF88]);
         } else if (_ctrl.hi > 0) {
             lines.add(["Best " + _ctrl.hi.format("%d"), 0x88AABB]);
+        }
+        // Shared meta-progression summary line: level + rank + coin balance.
+        lines.add(["Lv " + Progress.level().format("%d") + " " + _ctrl.rankName()
+                   + " - " + Progress.coins().format("%d") + "c", 0xBFD8C4]);
+        if (Progress.currentStreak() > 1) {
+            lines.add(["Streak " + Progress.currentStreak().format("%d"), 0x22DDFF]);
+        }
+        if (_ctrl.pgUnlockMsg != null) {
+            lines.add([_ctrl.pgUnlockMsg, 0xFFD21A]);
         }
         GameOverCard.draw(dc, _sw, _sh, "MISS", 0xFF2244, lines,
                           "Tap to restart", 0xFF2244);

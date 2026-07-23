@@ -43,6 +43,7 @@ const PT_MOVING    = 1;
 const PT_BREAKABLE = 2;
 const PT_SPRING    = 3;
 const PT_JETPACK   = 4;
+const PT_SHIELD    = 5;   // normal bounce + grants a one-hit bubble shield
 
 class Platform {
     var x;         // left edge
@@ -192,13 +193,16 @@ class PlatformManager {
         // Apply the consequences for the chosen platform.
         if (bestType == PT_BREAKABLE) {
             plats[bestIdx].alive = false;
-            return [1, bestY];
+            return [5, bestY];
         }
         if (bestType == PT_SPRING) {
             return [2, bestY];
         }
         if (bestType == PT_JETPACK) {
             return [3, bestY];
+        }
+        if (bestType == PT_SHIELD) {
+            return [4, bestY];
         }
         return [1, bestY];
     }
@@ -277,13 +281,18 @@ class PlatformManager {
             // Jetpack — rare treat, gated off the easy bucket so new
             // players see the core bounce loop before flight shows up.
             var jet = (d >= 3) ? 3 : 0;
+            // Shield — a rare "second chance" pickup, also gated so it
+            // shows up once the run gets genuinely dangerous.
+            var shd = (d >= 2) ? 3 : 0;
             if (r < jet) {
                 p.type = PT_JETPACK;
-            } else if (r < jet + spr) {
+            } else if (r < jet + shd) {
+                p.type = PT_SHIELD;
+            } else if (r < jet + shd + spr) {
                 p.type = PT_SPRING;
-            } else if (r < jet + spr + brk) {
+            } else if (r < jet + shd + spr + brk) {
                 p.type = PT_BREAKABLE;
-            } else if (r < jet + spr + brk + mov) {
+            } else if (r < jet + shd + spr + brk + mov) {
                 p.type = PT_MOVING;
                 p.vx   = ((Math.rand() % 2 == 0) ? -1 : 1) * (1.0 + d * 0.1);
                 if (p.vx >  2.4) { p.vx =  2.4; }

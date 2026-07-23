@@ -24,29 +24,102 @@ _Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_5_26_5_50_stop:
     }
     [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 6; @symbol_functiondef = [onStart,6,13,20]; @symbol_param<0> = [state,6,21,26]; ]
     function onStart(state) {
-_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_6_28_6_63_start:
-[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 6 30 ]
-        symbol [ Leaderboard %tmp.2 6 30 41 ];
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_6_28_17_4_start:
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 7 8 ]
+        symbol [ Leaderboard %tmp.2 7 8 19 ];
         %tmp.2 = getv ? :Leaderboard;
-        symbol [ logLaunch %tmp.3 6 42 51 ];
+        symbol [ logLaunch %tmp.3 7 20 29 ];
         %tmp.3 = getv function %tmp.2 :logLaunch;
         %tmp.4 = "boxing";
         invoke %tmp.2 %tmp.3(%tmp.4);
-_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_6_28_6_63_stop:
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 10 8 ]
+        try @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_beginTry @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_endTry @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_catch @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_beginTry:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_12_16_8_start:
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 11 12 ]
+        [ "_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_12_16_8_start" "_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_12_16_8_stop" ]
+        %ci.1 = local;
+        symbol [ ci %ci.1 11 16 18 ];
+        symbol [ Progress %tmp.6 11 21 29 ];
+        %tmp.6 = getv ? :Progress;
+        symbol [ checkIn %tmp.7 11 30 37 ];
+        %tmp.7 = getv function %tmp.6 :checkIn;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %ci.1 %tmp.8;
+        symbol [ ci %ci.1 11 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 12 12 ]
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_12_15_12_if_stmt:
+        %tmp.9 = lgetv %ci.1;
+        symbol [ ci %tmp.9 12 16 18 ];
+        %tmp.10 = "first";
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_12_15_12_if_end;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_12_15_12_if_true:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_29_15_12_start:
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 13 16 ]
+        symbol [ Application %tmp.12 13 16 27 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 13 28 35 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ setValue %tmp.14 13 36 44 ];
+        %tmp.14 = getv function %tmp.13 :setValue;
+        %tmp.15 = "box_daily_msg";
+        %tmp.16 = "Daily +";
+        %tmp.17 = lgetv %ci.1;
+        symbol [ ci %tmp.17 14 32 34 ];
+        %tmp.18 = "bonus";
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        %tmp.20 = add %tmp.16 %tmp.19;
+        %tmp.21 = "  Streak ";
+        %tmp.22 = add %tmp.20 %tmp.21;
+        %tmp.23 = lgetv %ci.1;
+        symbol [ ci %tmp.23 14 60 62 ];
+        %tmp.24 = "streak";
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = add %tmp.22 %tmp.25;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.26);
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_29_15_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_12_15_12_if_end;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_12_12_15_12_if_end:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_12_16_8_stop:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_end;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 16 10 ]
+        [ "_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_catch" "_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_16_10_16_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 16 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 16 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_end;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_16_10_16_21_end:
+        try @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_catch @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_16_10_16_21_end @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_16_10_16_21_end @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_10_8_16_21_end:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_6_28_17_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 7; @symbol_functiondef = [onStop,7,13,19]; @symbol_param<0> = [state,7,20,25]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 18; @symbol_functiondef = [onStop,18,13,19]; @symbol_param<0> = [state,18,20,25]; ]
     function onStop(state) {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 8; @symbol_functiondef = [getInitialView,8,13,27]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 19; @symbol_functiondef = [getInitialView,19,13,27]; ]
     function getInitialView() {
-_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_8_30_11_4_start:
-[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 10 8 ]
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_19_30_22_4_start:
+[ "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc" 21 8 ]
         %tmp.1 = self;
-        symbol [ buildBoxingMenu %tmp.2 10 15 30 ];
+        symbol [ buildBoxingMenu %tmp.2 21 15 30 ];
         %tmp.2 = getv function %tmp.1 :buildBoxingMenu;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         ret %tmp.3;
-_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_8_30_11_4_stop:
+_Users_kkorolczuk_work_garmin_boxing_source_BitochiBoxingApp_mc_19_30_22_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/boxing/source/BitochiBoxingApp.mc"; @line = 1; ]

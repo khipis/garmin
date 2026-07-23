@@ -46,8 +46,9 @@ class StackTowerHooks extends GameHooks {
             var v = Application.Storage.getValue(ST_DIFF_KEY);
             if (v instanceof Lang.Number) { d = v; }
         } catch (e) {}
-        if (d == ST_DIFF_SLOW) { return "Slow"; }
-        if (d == ST_DIFF_FAST) { return "Fast"; }
+        if (d == ST_DIFF_SLOW)      { return "Slow"; }
+        if (d == ST_DIFF_FAST)      { return "Fast"; }
+        if (d == ST_DIFF_NIGHTMARE) { return "Nightmare"; }
         return "Norm";
     }
 
@@ -73,8 +74,12 @@ function buildStackTowerMenu() as Lang.Array {
         :lbTitle => "STACK TOWER",
         :hooks   => new StackTowerHooks(),
         :options => [
-            new GmOption(ST_DIFF_KEY, "Difficulty", ["SLOW", "NORM", "FAST"], 1),
-            new GmOption(ST_VIEW_KEY, "View",       ["2D", "3D"],             0)
+            new GmOption(ST_DIFF_KEY, "Difficulty",      ["SLOW", "NORM", "FAST", "NIGHTMARE"], 1),
+            new GmOption(ST_VIEW_KEY, "View",            ["2D", "3D"],             0),
+            // Cosmetic block-colour theme — unlocked by height / rank, shop-ready.
+            // A locked pick simply renders the classic palette until it's owned.
+            new GmOption(ST_SKIN_KEY, "Theme",           ["CLASSIC", "NEON", "GOLD"], 0),
+            new GmOption(ST_FX_KEY,   "Sound & Haptics", ["ON", "OFF"],            0)
         ]
     });
     var v = new GameMenuView(cfg);

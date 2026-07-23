@@ -4,9 +4,13 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 // ── Global leaderboard ─────────────────────────────────────────────────────
 const LB_GAME_ID = "hex_mini";
+
+// Sound + haptics master switch (OPTIONS: hex_fx). 0/unset = ON, 1 = OFF.
+const HEX_FX_KEY = "hex_fx";
 
 // ── Board ─────────────────────────────────────────────────────────────────
 const HEX_N     = 7;    // 7×7 board
@@ -85,6 +89,10 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Sound + haptics (OPTIONS: hex_fx) ─────────────────────────────────
+    hidden var _fxOn;
+    hidden var _overFxDone;
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -105,9 +113,37 @@ class GameView extends WatchUi.View {
         _diff    = DIFF_MED;
         _menuSel = 0;
         _playerFirst = true;
+        _fxOn        = _loadFx();
+        _overFxDone  = false;
         // Settings come from the shared OPTIONS screen (persisted in Storage).
         _applySettings();
         _startGame();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(HEX_FX_KEY);
+            if (v instanceof Lang.Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 stone placed · 1 connection/win · 2 illegal/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
@@ -209,7 +245,7 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else if (_menuSel == MROW_START) { _startGame(); }
+            else if (_menuSel == MROW_START) { _tone(0); _startGame(); }
             else if (_menuSel == MROW_LB) { openLeaderboard(); return; }
             WatchUi.requestUpdate();
             return;
@@ -218,8 +254,9 @@ class GameView extends WatchUi.View {
         if (_mode == MODE_AIAI) { return; }
         // PvP: HGS_AI state is player 2's turn
         if (_state == HGS_AI && _mode == MODE_PVP) {
-            if (_cells[_curR * HEX_N + _curC] != HM_NONE) { return; }
+            if (_cells[_curR * HEX_N + _curC] != HM_NONE) { _tone(2); return; }
             _placeMark(_curR, _curC, HM_AI);
+            _tone(0); _vibe(22, 28);
             if (_checkWin(HM_AI)) {
                 _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER; return;
             }
@@ -227,8 +264,9 @@ class GameView extends WatchUi.View {
             return;
         }
         if (_state != HGS_PLAY) { return; }
-        if (_cells[_curR * HEX_N + _curC] != HM_NONE) { return; }
+        if (_cells[_curR * HEX_N + _curC] != HM_NONE) { _tone(2); return; }
         _placeMark(_curR, _curC, HM_P);
+        _tone(0); _vibe(22, 28);
         if (_checkWin(HM_P)) {
             _overType = HOV_PWIN; _scoreP = _scoreP + 1; _state = HGS_OVER;
             _recordResult(true);
@@ -242,6 +280,7 @@ class GameView extends WatchUi.View {
         if (_mode == MODE_PVP) { return; }
         if (_state == HGS_AI) {
             _aiMove(HM_AI);
+            if (_mode != MODE_AIAI) { _tone(0); }   // AI placed a stone
             if (_checkWin(HM_AI)) {
                 _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER;
                 _recordResult(false);
@@ -271,6 +310,8 @@ class GameView extends WatchUi.View {
         _lastR     = -1;
         _lastC     = -1;
         _overType  = HOV_NONE;
+        _fxOn       = _loadFx();
+        _overFxDone = false;
         if (_mode == MODE_AIAI) {
             _state = HGS_AI;
         } else if (_mode == MODE_PVAI && !_playerFirst) {
@@ -625,6 +666,11 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_MENU) { _startGame(); }
+        if (_state == HGS_OVER && !_overFxDone) {
+            _overFxDone = true;
+            if (_overType == HOV_PWIN) { _tone(1); _vibe(100, 220); }   // win!
+            else                       { _tone(2); _vibe(100, 200); }   // lose
+        }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
 

@@ -8,6 +8,7 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Application;
 
 class MainView extends WatchUi.View {
 
@@ -17,6 +18,8 @@ class MainView extends WatchUi.View {
     hidden var _sh;
     hidden var _curMs;
     hidden var _started;   // auto-start the run on first layout
+    hidden var _dailyMsg;  // one-shot login-streak toast (or null)
+    hidden var _dailyMsgT; // frames the toast stays visible
 
     function initialize() {
         View.initialize();
@@ -24,12 +27,22 @@ class MainView extends WatchUi.View {
         _timer = null;
         _sw = 0; _sh = 0; _curMs = 210;
         _started = false;
+        _dailyMsg = null; _dailyMsgT = 0;
     }
 
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _curMs = ctrl.tickMs();
         _timer.start(method(:onTick), _curMs, true);
+        // Surface today's login-streak bonus as a one-shot toast (queued by the
+        // App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("mp_daily_msg");
+            if (dm != null) {
+                _dailyMsg = dm; _dailyMsgT = 24;
+                Application.Storage.deleteValue("mp_daily_msg");
+            }
+        } catch (e) {}
     }
     function onHide() { if (_timer != null) { _timer.stop(); } }
     function onTick() {
@@ -61,10 +74,28 @@ class MainView extends WatchUi.View {
         UIManager.drawHUD(dc, _sw, _sh, ctrl);
         UIManager.drawMaze(dc, ox, oy, cell, ctrl.grid, ctrl.n);
         UIManager.drawGhosts(dc, ox, oy, cell, ctrl.ghosts, ctrl.frightTicks);
-        UIManager.drawPlayer(dc, ox, oy, cell, ctrl.player);
+        UIManager.drawPlayer(dc, ox, oy, cell, ctrl.player, ctrl.pacColor());
         _drawFooter(dc);
+        if (_dailyMsgT > 0 && _dailyMsg != null) {
+            _drawDailyToast(dc);
+            _dailyMsgT--;
+        }
         if (ctrl.state == GS_WIN)  { UIManager.drawResult(dc, _sw, _sh, true,  ctrl); }
         if (ctrl.state == GS_OVER) { UIManager.drawResult(dc, _sw, _sh, false, ctrl); }
+    }
+
+    // Lightweight one-shot login-streak toast (no blocking view): a small
+    // centred banner over the maze for a few frames.
+    hidden function _drawDailyToast(dc) {
+        var ty = (_sh * 40) / 100;
+        var bw = (_sw * 76) / 100;
+        var bx = (_sw - bw) / 2;
+        dc.setColor(0x001018, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bx, ty - 11, bw, 22, 5);
+        dc.setColor(0xFFE100, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bx, ty - 11, bw, 22, 5);
+        dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, _dailyMsg,
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // Compute (origin_x, origin_y, cell_px) so the maze always fits.

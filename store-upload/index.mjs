@@ -14,29 +14,38 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import {
-  START_URL, SSO_HOSTS, AUTH_FILE, ARTIFACTS, UPLOAD, appUpdateUrl, REPO_ROOT, OVERRIDES,
+  START_URL, SSO_HOSTS, AUTH_FILE, ARTIFACTS, UPLOAD, DETAILS,
+  appUpdateUrl, appManageUrl, appEditUrl, REPO_ROOT, OVERRIDES,
 } from "./config.mjs";
 import {
   log, warn, die, ensureArtifacts, openContext, saveSession, requireAuth,
-  localApps, loadConfig, saveConfig, norm,
+  localApps, loadConfig, saveConfig, loadDescriptions, norm,
 } from "./lib.mjs";
 
 const [, , cmd, ...rest] = process.argv;
 const flags = parseFlags(rest);
 
 switch (cmd) {
-  case "login":  await cmdLogin();  break;
-  case "scan":   await cmdScan();   break;
-  case "record": await cmdRecord(); break;
-  case "upload": await cmdUpload(); break;
+  case "login":    await cmdLogin();    break;
+  case "scan":     await cmdScan();     break;
+  case "record":   await cmdRecord();   break;
+  case "upload":   await cmdUpload();   break;
+  case "describe": await cmdDescribe(); break;
   default:
-    log(`Usage: node index.mjs <login|scan|record|upload> [flags]
+    log(`Usage: node index.mjs <login|scan|record|upload|describe> [flags]
 
   login                       sign in once (headed), save session to auth.json
   scan                        list your store apps, write apps.config.json
   record                      capture network of one manual upload (headed)
   upload [--only a,b] [--dry-run] [--headed] [--headless]
                               upload _STORE/<slug>.iq for configured apps
+  describe [--only a,b] [--publish] [--discover] [--pause-before-save]
+           [--headed] [--headless]
+                              open each app's "Edit Details", paste the
+                              description from descriptions.json. Default is a
+                              DRY RUN (fills the field, screenshots, never saves);
+                              add --publish to actually save. --discover dumps
+                              each edit form's textareas/buttons (read-only).
 `);
     process.exit(cmd ? 1 : 0);
 }
@@ -313,6 +322,214 @@ async function cmdUpload() {
   const summary = path.join(ARTIFACTS, `upload-${Date.now()}.json`);
   fs.writeFileSync(summary, JSON.stringify(results, null, 2));
   log(`Summary: ${rel(summary)} · screenshots in ${rel(ARTIFACTS)}`);
+}
+
+// ── describe ──────────────────────────────────────────────────────────────────
+// For each configured app: open "Edit App Details", find the description
+// textarea, and replace it with the copy from descriptions.json. SAFE BY
+// DEFAULT — this is a dry run that fills the field + screenshots but never
+// clicks Save. Pass --publish to actually persist.
+async function cmdDescribe() {
+  requireAuth();
+  ensureArtifacts();
+  const cfg = loadConfig();
+  if (!cfg) die("No apps.config.json — run `npm run scan` first.");
+  const { developerId } = cfg;
+  if (!developerId) die("apps.config.json is missing developerId — re-run scan.");
+
+  const descs    = loadDescriptions();
+  const only     = flags.only ? new Set(String(flags.only).split(",").map((s) => s.trim())) : null;
+  const publish  = flags.publish === true;              // default = dry run
+  const discover = flags.discover === true;             // read-only DOM dump
+  const headed   = flags.headless === true ? false : true; // default headed
+  const pauseBeforeSave = flags["pause-before-save"] === true;
+
+  let queue = cfg.apps.filter((a) => a.appId);
+  if (only) queue = queue.filter((a) => only.has(a.slug));
+  if (!discover) {
+    const missing = queue.filter((a) => !descs[a.slug]).map((a) => a.slug);
+    if (missing.length) warn(`No description in descriptions.json for: ${missing.join(", ")}`);
+    queue = queue.filter((a) => descs[a.slug]);
+  }
+  if (!queue.length) die("Nothing to do (no matching apps / descriptions).");
+
+  const mode = discover ? "DISCOVER (read-only)" : publish ? "PUBLISH" : "DRY RUN (no save)";
+  log(`Describing ${queue.length} app(s) — ${mode}…`);
+  const { browser, page } = await openContext({ headed });
+  await page.goto(START_URL, { waitUntil: "domcontentloaded" }).catch(() => {});
+  await dismissCookie(page);
+  if (SSO_HOSTS.some((h) => page.url().includes(h))) {
+    await browser.close();
+    die("Session expired — run `npm run login` again.");
+  }
+
+  const results = [];
+  const discoveries = [];
+  for (const app of queue) {
+    log(`\n── ${app.slug} (appId=${app.appId}) ──`);
+    try {
+      const opened = await openDetailsForm(page, developerId, app.appId);
+      if (!opened.ok) throw new Error(opened.error || "could not open Edit Details");
+      log(`  · form via ${opened.via}: ${page.url()}`);
+
+      if (discover) {
+        const snap = await dumpForm(page);
+        discoveries.push({ slug: app.slug, url: page.url(), via: opened.via, ...snap });
+        await shot(page, app.slug, "discover");
+        log(`  · textareas=${snap.textareas.length}  buttons=[${snap.buttons.slice(0, 12).join(" | ")}]`);
+        results.push({ slug: app.slug, ok: true, reason: "discovered" });
+        continue;
+      }
+
+      const ta = await findDescTextarea(page);
+      if (!ta) throw new Error("description textarea not found");
+      const oldVal = (await ta.inputValue().catch(() => "")) || "";
+      const newVal = descs[app.slug];
+      log(`  description: ${oldVal.length} → ${newVal.length} chars`);
+
+      await ta.click().catch(() => {});
+      await ta.fill(newVal);
+      // Some portals rely on input/change events for the "dirty" flag.
+      await ta.evaluate((el) => {
+        el.dispatchEvent(new Event("input",  { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+      }).catch(() => {});
+      await page.waitForTimeout(400);
+
+      if (!publish) {
+        await shot(page, app.slug, "preview");
+        results.push({ slug: app.slug, ok: true, reason: "dry-run (filled, not saved)" });
+        continue;
+      }
+      if (pauseBeforeSave) {
+        await shot(page, app.slug, "before-save");
+        await waitForEnter(`  [${app.slug}] paused before save — ENTER to save (Ctrl+C to abort)… `);
+      }
+
+      const saved = await saveDetails(page, developerId, app.appId);
+      if (!saved.ok) throw new Error(saved.error || "save not confirmed");
+      await shot(page, app.slug, "saved");
+      results.push({ slug: app.slug, ok: true, reason: "saved" });
+      log(`  ✔ description saved`);
+    } catch (e) {
+      await shot(page, app.slug, "error");
+      warn(`  ✖ ${app.slug}: ${e.message}`);
+      results.push({ slug: app.slug, ok: false, reason: e.message });
+    }
+  }
+
+  await browser.close();
+  const ok  = results.filter((r) => r.ok);
+  const bad = results.filter((r) => !r.ok);
+  log(`\n=== DONE: ${ok.length}/${results.length} ok — ${mode} ===`);
+  if (bad.length) {
+    log(`  ✖ FAILED: ${bad.map((r) => r.slug).join(", ")}`);
+    for (const r of bad) log(`      ${r.slug}: ${r.reason || "failed"}`);
+  }
+  if (discover) {
+    const out = path.join(ARTIFACTS, `describe-discover-${Date.now()}.json`);
+    fs.writeFileSync(out, JSON.stringify(discoveries, null, 2));
+    log(`Discovery: ${rel(out)}`);
+  }
+  const summary = path.join(ARTIFACTS, `describe-${Date.now()}.json`);
+  fs.writeFileSync(summary, JSON.stringify(results, null, 2));
+  log(`Summary: ${rel(summary)} · screenshots in ${rel(ARTIFACTS)}`);
+}
+
+// Open the "Edit App Details" form. Tries the direct /edit URL first, then
+// falls back to the management page + clicking "Edit Details".
+async function openDetailsForm(page, dev, appId) {
+  await page.goto(appEditUrl(dev, appId), { waitUntil: "domcontentloaded" }).catch(() => {});
+  await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+  await dismissCookie(page);
+  await dismissModals(page);
+  if (await page.locator("textarea").count()) return { ok: true, via: "edit-url" };
+
+  await page.goto(appManageUrl(dev, appId), { waitUntil: "domcontentloaded" }).catch(() => {});
+  await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+  await dismissCookie(page);
+  const link = page.getByRole("link",   { name: DETAILS.editLink }).first();
+  const btn  = page.getByRole("button", { name: DETAILS.editLink }).first();
+  if (await link.count())      await link.click({ timeout: 8000 }).catch(() => {});
+  else if (await btn.count())  await btn.click({ timeout: 8000 }).catch(() => {});
+  else return { ok: false, error: "no 'Edit Details' link/button, and /edit had no textarea" };
+  await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+  await page.waitForSelector("textarea", { timeout: 15000 }).catch(() => {});
+  if (await page.locator("textarea").count()) return { ok: true, via: "edit-link" };
+  return { ok: false, error: "clicked 'Edit Details' but no textarea appeared" };
+}
+
+// Find the description textarea: prefer a labelled selector, else pick the
+// visible textarea that already holds the most text (the live description).
+async function findDescTextarea(page) {
+  const pref = page.locator(DETAILS.descTextarea).first();
+  if ((await pref.count()) && (await pref.isVisible().catch(() => false))) return pref;
+
+  const areas = page.locator("textarea");
+  const n = await areas.count();
+  let best = null, bestLen = -1;
+  for (let i = 0; i < n; i++) {
+    const a = areas.nth(i);
+    if (!(await a.isVisible().catch(() => false))) continue;
+    const v = (await a.inputValue().catch(() => "")) || "";
+    if (v.length > bestLen) { bestLen = v.length; best = a; }
+  }
+  // Only trust the heuristic pick if it already looks like a description.
+  if (best && bestLen >= DETAILS.minDescLen) return best;
+  return best; // fall back to the longest visible textarea anyway
+}
+
+// Read-only snapshot of the current form (textareas/inputs/buttons) so we can
+// confirm/tune selectors without touching anything.
+async function dumpForm(page) {
+  return await page.evaluate(() => {
+    const vis = (e) => !!(e.offsetWidth || e.offsetHeight || e.getClientRects().length);
+    const textareas = [...document.querySelectorAll("textarea")].map((e, i) => ({
+      i, id: e.id || null, name: e.name || null,
+      ariaLabel: e.getAttribute("aria-label") || null, placeholder: e.placeholder || null,
+      visible: vis(e), valueLen: (e.value || "").length, valuePreview: (e.value || "").slice(0, 140),
+    }));
+    const inputs = [...document.querySelectorAll("input")].map((e) => ({
+      type: e.type || null, id: e.id || null, name: e.name || null,
+    }));
+    const buttons = [...new Set([...document.querySelectorAll("button, a[role=button], input[type=submit]")]
+      .map((e) => (e.textContent || e.value || "").trim()).filter(Boolean))];
+    return { textareas, inputs, buttons };
+  });
+}
+
+// Click Save and confirm the change persisted (2xx on the save endpoint, or a
+// visible success with no error text).
+async function saveDetails(page, dev, appId) {
+  const frag = DETAILS.savePath + dev;
+  const respP = page.waitForResponse(
+    (r) => r.url().includes(frag) && ["POST", "PUT"].includes(r.request().method()),
+    { timeout: DETAILS.saveTimeout }
+  ).catch(() => null);
+  try {
+    await clickBtn(page, DETAILS.saveText, { waitEnabled: true, timeout: 20000 });
+  } catch (e) {
+    return { ok: false, error: "'Save' never became clickable" };
+  }
+  const resp = await respP;
+  if (resp && resp.status() >= 200 && resp.status() < 300) return { ok: true };
+  await page.waitForTimeout(2500);
+  if (!page.url().includes("/edit")) return { ok: true }; // redirected away → saved
+  const err = await page.evaluate((rxSrc) => {
+    const re = new RegExp(rxSrc, "i");
+    return re.test(document.body.innerText || "");
+  }, UPLOAD.errorText.source).catch(() => false);
+  if (err) return { ok: false, error: "portal reported an error after save" };
+  return { ok: true }; // no error surfaced → treat as saved (verify via screenshot)
+}
+
+// Best-effort dismissal of promotional/onboarding modals that can overlay the
+// edit form and intercept clicks (e.g. "Not Now").
+async function dismissModals(page) {
+  try {
+    const b = page.getByRole("button", { name: DETAILS.modalDismiss }).first();
+    if (await b.count()) await b.click({ timeout: 2500 }).catch(() => {});
+  } catch {}
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────

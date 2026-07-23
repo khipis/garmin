@@ -38,15 +38,17 @@ class CatapultHooks extends GameHooks {
         dc.fillRectangle(cx + 22, groundY - 15, 2, 4);
     }
 
-    // Leaderboard variant = difficulty (easy/normal/hard), matching submit.
+    // Leaderboard variant = the chosen catapult (classic/heavy/sniper),
+    // matching the in-game submit. cat_type is written when the player picks a
+    // machine at the start of a run, so the menu board mirrors their last pick.
     function lbVariant() as Lang.String {
-        var names = ["easy", "normal", "hard"];
-        var d = 1;
+        var names = ["classic", "heavy", "sniper", "gale", "titan"];
+        var t = 0;
         try {
-            var v = Application.Storage.getValue("cat_diff");
-            if (v instanceof Lang.Number && v >= 0 && v <= 2) { d = v; }
+            var v = Application.Storage.getValue("cat_type");
+            if (v instanceof Lang.Number && v >= 0 && v <= 4) { t = v; }
         } catch (e) {}
-        return names[d];
+        return names[t];
     }
 
     function footerText() as Lang.String or Null {
@@ -71,7 +73,8 @@ function buildCatapultMenu() as Lang.Array {
         :lbTitle => "CATAPULT",
         :hooks   => new CatapultHooks(),
         :options => [
-            new GmOption("cat_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("cat_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("cat_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -89,6 +89,32 @@ class BitochiJazzBallView extends WatchUi.View {
     // (jb_diff). Drives ball count and ball speed; segments the leaderboard.
     hidden var _diff;
 
+    // Sound & Haptics master switch (jb_fx: 0/unset=ON, 1=OFF). Gates BOTH
+    // tones and vibration, following the drwal dr_fx convention.
+    hidden var _fxOn;
+
+    // Particle burst pool (captures, wall breaks, powerup grabs). Fixed size,
+    // zero per-frame allocation.
+    hidden var _pX; hidden var _pY; hidden var _pVx; hidden var _pVy;
+    hidden var _pLife; hidden var _pCol;
+    hidden const PMAX = 20;
+
+    // FREEZE powerup: balls stop while this counts down.
+    hidden var _freezeTicks;
+
+    // Powerups sprinkled on the board. Captured (walled-in) or run-over cells
+    // grant the effect. Small fixed pool.
+    // type: 0 = FREEZE, 1 = SLOW, 2 = EXTRA LIFE
+    hidden var _puCol; hidden var _puRow; hidden var _puType; hidden var _puAlive;
+    hidden var _puN;
+    hidden const PUMAX = 3;
+
+    // Toast for powerup pickups: message + colour + countdown ticks.
+    hidden var _toast; hidden var _toastCol; hidden var _toastTick;
+
+    // Per-run colour theme (walls/background) cycles by level for variety.
+    hidden var _wallCol; hidden var _wallCapCol; hidden var _bgCol;
+
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -115,6 +141,26 @@ class BitochiJazzBallView extends WatchUi.View {
         _diff = 1;
         var jd = Application.Storage.getValue("jb_diff");
         if (jd instanceof Number && jd >= 0 && jd <= 2) { _diff = jd; }
+
+        // Sound & Haptics: ON unless explicitly OFF (jb_fx == 1).
+        _fxOn = true;
+        var fx = Application.Storage.getValue("jb_fx");
+        if (fx instanceof Number && fx == 1) { _fxOn = false; }
+
+        _pX = new [PMAX]; _pY = new [PMAX]; _pVx = new [PMAX]; _pVy = new [PMAX];
+        _pLife = new [PMAX]; _pCol = new [PMAX];
+        for (var i = 0; i < PMAX; i++) {
+            _pX[i] = 0.0; _pY[i] = 0.0; _pVx[i] = 0.0; _pVy[i] = 0.0; _pLife[i] = 0; _pCol[i] = 0;
+        }
+        _freezeTicks = 0;
+
+        _puCol = new [PUMAX]; _puRow = new [PUMAX]; _puType = new [PUMAX]; _puAlive = new [PUMAX];
+        for (var i = 0; i < PUMAX; i++) { _puCol[i] = 0; _puRow[i] = 0; _puType[i] = 0; _puAlive[i] = false; }
+        _puN = 0;
+
+        _toast = ""; _toastCol = 0xFFFFFF; _toastTick = 0;
+
+        _wallCol = 0x2A3D66; _wallCapCol = 0x3E5A96; _bgCol = 0x080C18;
 
         _timer = null;
     }
@@ -152,6 +198,9 @@ class BitochiJazzBallView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────────
     function onTick() as Void {
         _tick++;
+        updateParticles();
+        if (_freezeTicks > 0) { _freezeTicks--; }
+        if (_toastTick > 0) { _toastTick--; }
         if (_gs == JB_PLAY) {
             stepGame();
         } else if (_gs == JB_DEAD) {
@@ -165,7 +214,7 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     hidden function stepGame() {
-        moveBalls();
+        if (_freezeTicks <= 0) { moveBalls(); }
         if (_wall != null) {
             _wallAcc += 23;
             while (_wallAcc >= 10 && _wall != null) {
@@ -308,6 +357,7 @@ class BitochiJazzBallView extends WatchUi.View {
         var dirH = _wall[2];
         var fixedCoord = dirH ? _wall[1] : _wall[0];
         var headA = _wall[3]; var headB = _wall[4];
+        var prevOpen = _openCount;
 
         // Convert growing cells to permanent wall
         if (dirH) {
@@ -324,7 +374,57 @@ class BitochiJazzBallView extends WatchUi.View {
         fillEmptySide();
         recountOpen();
 
+        // Feedback proportional to how much was captured.
+        var captured = prevOpen - _openCount;
+        var mid = (headA + headB) / 2;
+        var bx = dirH ? cellPx(mid) : cellPx(fixedCoord);
+        var by = dirH ? cellPy(fixedCoord) : cellPy(mid);
+        if (captured > 12) {
+            spawnBurst(bx, by, _wallCapCol == 0 ? 0x66CCFF : 0x88DDFF, 12, 20);
+            doTone(Toybox.Attention.TONE_KEY);
+            doVibe(35, 60);
+        } else {
+            spawnBurst(bx, by, 0x88DDFF, 5, 14);
+            doVibe(20, 30);
+        }
+
+        collectPowerups();
         centerCursor();
+    }
+
+    // Any powerup whose cell has become wall (captured or run over) is grabbed.
+    hidden function collectPowerups() {
+        for (var i = 0; i < _puN; i++) {
+            if (!_puAlive[i]) { continue; }
+            var idx = _puRow[i] * GCOLS + _puCol[i];
+            if (_grid[idx] != CELL_WALL) { continue; }
+            _puAlive[i] = false;
+            var t = _puType[i];
+            spawnBurst(cellPx(_puCol[i]), cellPy(_puRow[i]), puColor(t), 10, 22);
+            doTone(Toybox.Attention.TONE_LOUD_BEEP);
+            doVibe(45, 80);
+            if (t == 0) {
+                _freezeTicks = 55;
+                _toast = "FREEZE!"; _toastCol = 0x66DDFF; _toastTick = 40;
+            } else if (t == 1) {
+                for (var b = 0; b < _balls.size(); b++) {
+                    var bb = _balls[b];
+                    var nvx = bb[2] / 2; if (nvx == 0) { nvx = bb[2] >= 0 ? 1 : -1; }
+                    var nvy = bb[3] / 2; if (nvy == 0) { nvy = bb[3] >= 0 ? 1 : -1; }
+                    bb[2] = nvx; bb[3] = nvy; _balls[b] = bb;
+                }
+                _toast = "SLOW-MO!"; _toastCol = 0xAA88FF; _toastTick = 40;
+            } else {
+                if (_lives < 9) { _lives++; }
+                _toast = "+1 LIFE!"; _toastCol = 0xFF88AA; _toastTick = 40;
+            }
+        }
+    }
+
+    hidden function puColor(t) {
+        if (t == 0) { return 0x44DDFF; }
+        if (t == 1) { return 0xAA66FF; }
+        return 0xFF5588;
     }
 
     // Place cursor at the center of the grid, or the nearest open cell to center.
@@ -454,10 +554,16 @@ class BitochiJazzBallView extends WatchUi.View {
                 }
             }
         }
+        var mid = (headA + headB) / 2;
+        var bx = dirH ? cellPx(mid) : cellPx(fixedCoord);
+        var by = dirH ? cellPy(fixedCoord) : cellPy(mid);
+        spawnBurst(bx, by, 0xFF3322, 14, 26);
         _wall = null;
         _lives--;
         _deadFlash = 8;
         _gs = JB_DEAD;
+        doTone(Toybox.Attention.TONE_FAILURE);
+        doVibe(90, 220);
         centerCursor();
     }
 
@@ -469,6 +575,9 @@ class BitochiJazzBallView extends WatchUi.View {
             // Reward clearing this level: fill % weighted by level reached.
             _score += filledPct * _level;
             _gs = JB_LEVEL_WIN;
+            spawnBurst(_w / 2, _h / 2, 0x44FF88, 16, 30);
+            doTone(Toybox.Attention.TONE_SUCCESS);
+            doVibe(60, 160);
         }
     }
 
@@ -479,6 +588,12 @@ class BitochiJazzBallView extends WatchUi.View {
         var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
         _finalScore = _score + filledPct;
         _gs = JB_GAMEOVER;
+        var prevBest = Application.Storage.getValue("jb_best");
+        if (!(prevBest instanceof Number) || _finalScore > prevBest) {
+            Application.Storage.setValue("jb_best", _finalScore);
+        }
+        doTone(Toybox.Attention.TONE_FAILURE);
+        doVibe(100, 300);
         Leaderboard.submitScore(LB_GAME_ID, _finalScore, _diffVariant());
         Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "JAZZBALL");
     }
@@ -487,6 +602,48 @@ class BitochiJazzBallView extends WatchUi.View {
     hidden function _diffVariant() {
         return ["easy", "normal", "hard"][_diff];
     }
+
+    // ── Feedback (gated by jb_fx) ───────────────────────────────────────────
+    hidden function doTone(t) {
+        if (!_fxOn) { return; }
+        if (Toybox has :Attention) { if (Toybox.Attention has :playTone) {
+            try { Toybox.Attention.playTone(t); } catch (e) {}
+        } }
+    }
+    hidden function doVibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (Toybox has :Attention) { if (Toybox.Attention has :vibrate) {
+            try { Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+        } }
+    }
+
+    // ── Particles ───────────────────────────────────────────────────────────
+    hidden function spawnBurst(px, py, col, count, spread) {
+        var made = 0;
+        for (var i = 0; i < PMAX && made < count; i++) {
+            if (_pLife[i] > 0) { continue; }
+            var a = (Math.rand().abs() % 628) / 100.0;
+            var sp = 0.6 + (Math.rand().abs() % spread).toFloat() / 10.0;
+            _pX[i] = px.toFloat(); _pY[i] = py.toFloat();
+            _pVx[i] = (Math.cos(a) * sp).toFloat();
+            _pVy[i] = (Math.sin(a) * sp).toFloat();
+            _pLife[i] = 10 + (Math.rand().abs() % 8);
+            _pCol[i] = col;
+            made++;
+        }
+    }
+    hidden function updateParticles() {
+        for (var i = 0; i < PMAX; i++) {
+            if (_pLife[i] <= 0) { continue; }
+            _pX[i] += _pVx[i];
+            _pY[i] += _pVy[i];
+            _pVy[i] += 0.12;
+            _pLife[i]--;
+        }
+    }
+    // Cell centre → pixel helpers for bursts.
+    hidden function cellPx(col) { return _ox + col * _cs + _cs / 2; }
+    hidden function cellPy(row) { return _oy + row * _cs + _cs / 2; }
 
     // ── Input ─────────────────────────────────────────────────────────────────
 
@@ -567,6 +724,8 @@ class BitochiJazzBallView extends WatchUi.View {
         _wall = [c, r, _curHoriz, startPos, startPos, true];
         _wallAcc = 0;
         _grid[r * GCOLS + c] = _curHoriz ? CELL_GROW_H : CELL_GROW_V;
+        doTone(Toybox.Attention.TONE_KEY);
+        doVibe(15, 25);
     }
 
     // ── Game setup ────────────────────────────────────────────────────────────
@@ -640,6 +799,41 @@ class BitochiJazzBallView extends WatchUi.View {
             _balls[i] = [bx, by, vx, vy, _ballColors[i % _ballColors.size()]];
         }
 
+        _freezeTicks = 0; _toastTick = 0;
+
+        // Per-level colour theme — keeps deep runs visually fresh.
+        var themes = [
+            [0x2A3D66, 0x3E5A96, 0x080C18],
+            [0x2E5A3A, 0x44885A, 0x08130B],
+            [0x5A3A2E, 0x966044, 0x140A08],
+            [0x4A2E5A, 0x7A4499, 0x0E0814],
+            [0x5A5030, 0x968444, 0x141207]
+        ];
+        var th = themes[(_level - 1) % 5];
+        _wallCol = th[0]; _wallCapCol = th[1]; _bgCol = th[2];
+
+        // Powerups: none on level 1 (teach the basics), then 1–2 sprinkled on
+        // open interior cells. Rarer EXTRA LIFE. Captured or run-over = grabbed.
+        _puN = 0;
+        for (var i = 0; i < PUMAX; i++) { _puAlive[i] = false; }
+        if (_level >= 2) {
+            var want = (_level >= 4) ? 2 : 1;
+            if (want > PUMAX) { want = PUMAX; }
+            for (var p = 0; p < want; p++) {
+                var pc = 0; var pr = 0; var ok = false; var tries = 0;
+                while (!ok && tries < 30) {
+                    pc = 3 + Math.rand().abs() % (GCOLS - 6);
+                    pr = 3 + Math.rand().abs() % (GROWS - 6);
+                    ok = (_grid[pr * GCOLS + pc] == CELL_OPEN);
+                    tries++;
+                }
+                if (!ok) { continue; }
+                var roll = Math.rand().abs() % 100;
+                var ptype = (roll < 15) ? 2 : ((roll < 55) ? 0 : 1);
+                _puCol[_puN] = pc; _puRow[_puN] = pr; _puType[_puN] = ptype; _puAlive[_puN] = true;
+                _puN++;
+            }
+        }
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
@@ -648,9 +842,13 @@ class BitochiJazzBallView extends WatchUi.View {
         // Never render an in-game menu — the shared menu is the root view.
         if (_gs == JB_MENU)    { startGame(); }
         drawBoard(dc);
+        drawPowerups(dc);
         drawBalls(dc);
         drawCursor(dc);
+        drawParticles(dc);
         drawHUD(dc);
+        if (_freezeTicks > 0)  { drawFreezeEdge(dc); }
+        if (_toastTick > 0)    { drawToast(dc); }
         if (_gs == JB_DEAD)    { drawDeadFlash(dc); }
         if (_gs == JB_LEVEL_WIN){ drawLevelWin(dc); }
         if (_gs == JB_GAMEOVER){ drawGameOver(dc); }
@@ -714,13 +912,17 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     hidden function drawBoard(dc) {
-        dc.setColor(0x080C18, 0x080C18); dc.clear();
+        dc.setColor(_bgCol, _bgCol); dc.clear();
+
+        // Subtle open-area glow so the empty space reads as "danger zone".
+        dc.setColor(0x0E1428, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_ox, _oy, _cs * GCOLS, _cs * GROWS);
 
         var blink = (_tick % 4 < 2);
         var growHC = blink ? 0x88DDFF : 0x4499CC;
         var growVC = blink ? 0xFFDD88 : 0xCC9944;
+        var boardW = _cs * GCOLS;
 
-        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
         for (var row = 0; row < GROWS; row++) {
             var base = row * GCOLS;
             var py = _oy + row * _cs;
@@ -731,44 +933,120 @@ class BitochiJazzBallView extends WatchUi.View {
                     if (spanS < 0) { spanS = col; }
                 } else {
                     if (spanS >= 0) {
-                        dc.fillRectangle(_ox + spanS * _cs, py, (col - spanS) * _cs, _cs);
+                        var sw = (col - spanS) * _cs;
+                        dc.setColor(_wallCol, Graphics.COLOR_TRANSPARENT);
+                        dc.fillRectangle(_ox + spanS * _cs, py, sw, _cs);
+                        // Bright top cap for a subtle bevelled, tiled look.
+                        dc.setColor(_wallCapCol, Graphics.COLOR_TRANSPARENT);
+                        dc.fillRectangle(_ox + spanS * _cs, py, sw, 1);
                         spanS = -1;
                     }
                     if (c == CELL_GROW_H) {
                         dc.setColor(growHC, Graphics.COLOR_TRANSPARENT);
                         dc.fillRectangle(_ox + col * _cs, py, _cs, _cs);
-                        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
                     } else if (c == CELL_GROW_V) {
                         dc.setColor(growVC, Graphics.COLOR_TRANSPARENT);
                         dc.fillRectangle(_ox + col * _cs, py, _cs, _cs);
-                        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
                     }
                 }
             }
         }
 
-        dc.setColor(0x1A2A44, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_ox - 1, _oy - 1, _cs * GCOLS + 2, _cs * GROWS + 2);
+        dc.setColor(_wallCapCol, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(_ox - 1, _oy - 1, boardW + 2, _cs * GROWS + 2);
+    }
+
+    // ── Powerups ─────────────────────────────────────────────────────────────
+    hidden function drawPowerups(dc) {
+        if (_gs != JB_PLAY && _gs != JB_DEAD) { return; }
+        var pr = _cs + 2; if (pr < 4) { pr = 4; }
+        var pulse = (_tick % 12 < 6);
+        for (var i = 0; i < _puN; i++) {
+            if (!_puAlive[i]) { continue; }
+            var cx = cellPx(_puCol[i]);
+            var cy = cellPy(_puRow[i]);
+            var t = _puType[i];
+            // Halo
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, cy, pr + 1);
+            dc.setColor(pulse ? 0xFFFFFF : puColor(t), Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy, pr);
+            dc.setColor(puColor(t), Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy, pr - 1);
+            // Glyph
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            if (t == 0) {           // FREEZE — snowflake-ish cross
+                dc.drawLine(cx - pr + 1, cy, cx + pr - 1, cy);
+                dc.drawLine(cx, cy - pr + 1, cx, cy + pr - 1);
+                dc.drawLine(cx - 2, cy - 2, cx + 2, cy + 2);
+                dc.drawLine(cx - 2, cy + 2, cx + 2, cy - 2);
+            } else if (t == 1) {    // SLOW — clock hands
+                dc.drawLine(cx, cy, cx, cy - pr + 2);
+                dc.drawLine(cx, cy, cx + pr - 3, cy);
+            } else {                // LIFE — heart-ish plus
+                dc.fillRectangle(cx - 1, cy - 3, 2, 6);
+                dc.fillRectangle(cx - 3, cy - 1, 6, 2);
+            }
+        }
+    }
+
+    hidden function drawParticles(dc) {
+        for (var i = 0; i < PMAX; i++) {
+            if (_pLife[i] <= 0) { continue; }
+            var sz = (_pLife[i] > 6) ? 2 : 1;
+            dc.setColor(_pCol[i], Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_pX[i].toNumber(), _pY[i].toNumber(), sz);
+        }
+    }
+
+    hidden function drawFreezeEdge(dc) {
+        var c = (_tick % 6 < 3) ? 0x88EEFF : 0x44AADD;
+        dc.setColor(c, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(_ox, _oy, _cs * GCOLS, _cs * GROWS);
+        dc.drawRectangle(_ox + 1, _oy + 1, _cs * GCOLS - 2, _cs * GROWS - 2);
+    }
+
+    hidden function drawToast(dc) {
+        dc.setColor(_toastCol, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, _toast, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Balls ─────────────────────────────────────────────────────────────────
     hidden function drawBalls(dc) {
         var br = _cs + 1;   // ball radius in pixels (slightly larger than a cell)
         if (br < 3) { br = 3; }
+        var frozen = (_freezeTicks > 0);
         for (var i = 0; i < _balls.size(); i++) {
             var b = _balls[i];
             var px = _ox + b[0] * _cs / 10;
             var py = _oy + b[1] * _cs / 10;
+            // Motion trail — a dimmer ghost a couple steps back along velocity.
+            if (!frozen) {
+                var tx = _ox + (b[0] - b[2] * 2) * _cs / 10;
+                var ty = _oy + (b[1] - b[3] * 2) * _cs / 10;
+                dc.setColor(dimColor(b[4]), Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(tx, ty, br - 1);
+            }
             // Glow shadow
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(px + 1, py + 1, br);
-            // Ball body
-            dc.setColor(b[4], Graphics.COLOR_TRANSPARENT);
+            // Ball body (icy tint while frozen)
+            dc.setColor(frozen ? 0x99DDFF : b[4], Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(px, py, br);
             // Highlight
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(px - br/3, py - br/3, br/3 + 1);
+            if (frozen) {
+                dc.setColor(0xCCF2FF, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(px, py, br);
+            }
         }
+    }
+
+    // Roughly halve each RGB channel for a dim trail ghost.
+    hidden function dimColor(c) {
+        var r = (c >> 16) & 0xFF; var g = (c >> 8) & 0xFF; var b = c & 0xFF;
+        r = r / 3; g = g / 3; b = b / 3;
+        return (r << 16) | (g << 8) | b;
     }
 
     // ── Cursor ────────────────────────────────────────────────────────────────
@@ -858,7 +1136,13 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 42 / 100, Graphics.FONT_XTINY, "Reached level " + _level, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 54 / 100, Graphics.FONT_SMALL, "Score " + _finalScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 52 / 100, Graphics.FONT_SMALL, "Score " + _finalScore, Graphics.TEXT_JUSTIFY_CENTER);
+        var best = Application.Storage.getValue("jb_best");
+        if (best instanceof Number) {
+            dc.setColor(_finalScore >= best ? 0x44FF88 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+            var lbl = (_finalScore >= best) ? "NEW BEST!" : ("Best " + best);
+            dc.drawText(_w/2, _h * 64 / 100, Graphics.FONT_XTINY, lbl, Graphics.TEXT_JUSTIFY_CENTER);
+        }
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x2266AA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 76 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }

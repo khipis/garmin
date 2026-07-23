@@ -50,7 +50,11 @@ function buildManpacMenu() as Lang.Array {
             new GmOption("mp_slvl", "Start Level",
                 ["1", "2", "3", "4", "5", "6", "7", "8", "9"], 0),
             new GmOption("mp_lives", "Lives", ["1", "2", "3", "4", "5"], 2),
-            new GmOption("mp_speed", "Speed", ["SLOW", "NORM", "FAST"], 1)
+            new GmOption("mp_speed", "Speed", ["SLOW", "NORM", "FAST"], 1),
+            // Cosmetic Pac skin — unlocked at rank 3, shop-ready. A locked pick
+            // simply renders as the classic yellow until it's owned.
+            new GmOption("mp_skin", "Skin", ["CLASSIC", "NEON"], 0),
+            new GmOption("mp_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -43,6 +43,18 @@ class ScoreSystem {
         return pts;
     }
 
+    // Registers a resolved spin using an already multiplier-adjusted gain
+    // (combo streak applied by the controller). Returns the points added.
+    function registerResultGain(result, gain) {
+        score = score + gain;
+        if (result["kind"] == "JACKPOT") { jackpots = jackpots + 1; }
+        spinsUsed = spinsUsed + 1;
+        return gain;
+    }
+
+    // Award extra spins (free-spin bonus) without consuming budget.
+    function addSpins(n) { spinsTotal = spinsTotal + n; }
+
     function spinsLeft() {
         var left = spinsTotal - spinsUsed;
         return (left < 0) ? 0 : left;

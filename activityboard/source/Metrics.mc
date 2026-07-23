@@ -26,19 +26,20 @@ module Metrics {
     const V_VIG    = "vig";    // vigorous intensity minutes (week) — the "sport/run effort" board
     const V_ELEV   = "elev";   // metres climbed today — hiking / trail / stairs
 
-    // Order used for the dashboard rows and the flex menu (flex is the headline,
-    // shown separately). Sport-forward ordering. Each entry: [variant, label].
-    function catalog() as Lang.Array {
-        return [
-            [V_STEPS,  "Steps"],
-            [V_DIST,   "Distance"],
-            [V_VIG,    "Cardio"],
-            [V_ELEV,   "Climb"],
-            [V_FLOORS, "Floors"],
-            [V_KCAL,   "Calories"],
-            [V_ACTIVE, "Active wk"]
-        ];
-    }
+    // Order used for the dashboard rows and flex menu. Keep one module-level
+    // catalog instead of allocating seven nested arrays on every 28 ms redraw;
+    // that allocation churn was enough to trigger IQ memory errors on watches
+    // with small heaps while network callbacks were also active.
+    var _catalog = [
+        [V_STEPS,  "Steps"],
+        [V_DIST,   "Distance"],
+        [V_VIG,    "Cardio"],
+        [V_ELEV,   "Climb"],
+        [V_FLOORS, "Floors"],
+        [V_KCAL,   "Calories"],
+        [V_ACTIVE, "Active wk"]
+    ];
+    function catalog() as Lang.Array { return _catalog; }
 
     function _n(x) {
         if (x instanceof Lang.Number) { return x; }

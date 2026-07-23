@@ -21,9 +21,11 @@ class Ball {
     var vy;
     var size;       // edge length in pixels
     var maxSpeed;   // cap on |vx| so paddles can keep up
+    var wallBounced; // true for the tick the ball bounced off top/bottom wall (FX cue)
 
     function initialize() {
         x = 0; y = 0; vx = 0.0; vy = 0.0; size = 6; maxSpeed = 6.0;
+        wallBounced = false;
     }
 
     function reset(cx, cy, baseSpd, toLeft) {
@@ -75,14 +77,17 @@ class Ball {
     function step(playX0, playY0, playX1, playY1) {
         x = x + vx;
         y = y + vy;
+        wallBounced = false;
         // Top / bottom walls
         var half = size / 2;
         if (y - half < playY0) {
             y  = playY0 + half;
             vy = -vy;
+            wallBounced = true;
         } else if (y + half > playY1) {
             y  = playY1 - half;
             vy = -vy;
+            wallBounced = true;
         }
         // Scoring walls
         if (x + half < playX0) { return -1; }

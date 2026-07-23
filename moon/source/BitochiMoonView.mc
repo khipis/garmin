@@ -24,6 +24,16 @@ enum { MS_MENU, MS_PLAY, MS_WIN, MS_CRASH }
 const ML_SEGS     = 12;    // terrain segments
 const ML_FUEL_MAX = 1000;  // starting fuel (units)
 
+// Particle pool size — shared by the thruster plume, side-jet puffs and the
+// landing dust kick-up. Small, fixed, pre-allocated (no per-frame alloc) so
+// the 20 fps loop stays cheap on every watch. Ring-buffer overwrite of the
+// oldest slot means bursts never allocate.
+const ML_PMAX = 30;
+// Particle kinds → colour ramp.
+const ML_PK_EXHAUST = 0;   // main thruster plume (yellow → orange → red)
+const ML_PK_SIDE    = 1;   // side-jet puff (pale blue)
+const ML_PK_DUST    = 2;   // landing dust (grey)
+
 // Global Bitochi leaderboard — higher composite landing score is better (DESC),
 // no variant. Score accumulates across all soft landings in a session and is
 // submitted once the player runs out of lives (end of game).
@@ -86,6 +96,35 @@ class BitochiMoonView extends WatchUi.View {
     hidden var _starX;
     hidden var _starY;
 
+    // ── Particle pool (exhaust plume / side puffs / landing dust) ──────────
+    hidden var _pX;     // Float — position
+    hidden var _pY;
+    hidden var _pVX;    // Float — velocity (px/tick)
+    hidden var _pVY;
+    hidden var _pLife;  // Number — remaining ticks (0 = free slot)
+    hidden var _pMax;   // Number — initial life, for fade ratio
+    hidden var _pKind;  // Number — ML_PK_*
+    hidden var _pNext;  // ring-buffer write cursor
+
+    // ── Horizontal wind (higher levels only, small + telegraphed) ─────────
+    hidden var _wind;   // Float — per-tick horizontal accel added to _velX
+
+    // ── Landing quality + soft-landing streak (juice + bonus) ─────────────
+    hidden var _landStreak;    // consecutive soft landings this session
+    hidden var _lastQuality;   // "PERFECT" / "GOOD" / "OK" (last landing), or null
+    hidden var _lastQClr;      // colour for the quality label
+    hidden var _lastQBonus;    // bonus points from the quality tier
+    hidden var _lastStreakBonus;
+
+    // ── Meta-progression (shared, shop-ready via Progress module) ─────────
+    hidden var _pgUnlockMsg;   // one-shot "UNLOCKED …" banner, or null
+    hidden var _pgAwarded;     // guard: award coins/XP only once per game over
+    hidden var _pgCoinsGain;   // coins granted at the last game over (overlay)
+
+    // ── Non-blocking toast (daily bonus) ──────────────────────────────────
+    hidden var _toastMsg;      // String or null
+    hidden var _toastT;        // remaining ticks
+
     // ── Lander geometry constants (pixels) ─────────────────────────────────
     hidden var HW;   // hull half-width
     hidden var HH;   // hull height
@@ -136,6 +175,22 @@ class BitochiMoonView extends WatchUi.View {
             _starX[i] = (Math.rand().abs() % _w).toNumber();
             _starY[i] = 24 + (Math.rand().abs() % (_h * 58 / 100)).toNumber();
         }
+
+        // Particle pool
+        _pX = new [ML_PMAX]; _pY = new [ML_PMAX];
+        _pVX = new [ML_PMAX]; _pVY = new [ML_PMAX];
+        _pLife = new [ML_PMAX]; _pMax = new [ML_PMAX]; _pKind = new [ML_PMAX];
+        for (var i = 0; i < ML_PMAX; i++) {
+            _pX[i] = 0.0; _pY[i] = 0.0; _pVX[i] = 0.0; _pVY[i] = 0.0;
+            _pLife[i] = 0; _pMax[i] = 1; _pKind[i] = 0;
+        }
+        _pNext = 0;
+
+        _wind = 0.0;
+        _landStreak = 0; _lastQuality = null; _lastQClr = 0xFFFFFF;
+        _lastQBonus = 0; _lastStreakBonus = 0;
+        _pgUnlockMsg = null; _pgAwarded = false; _pgCoinsGain = 0;
+        _toastMsg = null; _toastT = 0;
     }
 
     // ── Level start ──────────────────────────────────────────────────────────
@@ -156,6 +211,21 @@ class BitochiMoonView extends WatchUi.View {
         f += [300, 0, -250][_diff];
         if (f < 250) { f = 250; }
         _fuel = f;
+
+        // ── Wind: from level 4+, a small, steady horizontal breeze that the
+        // HUD telegraphs (arrow + strength) so it's a fair challenge, not a
+        // gotcha. Magnitude grows very gently with level and is scaled down
+        // on Easy / up on Hard. Kept tiny (|accel| ≲ 0.010 px/tick²) so it
+        // nudges drift rather than yanking the lander.
+        _wind = 0.0;
+        if (_level >= 4) {
+            var mag = 3 + (_level - 4);           // 3..~ (integer milli-units)
+            if (mag > 9) { mag = 9; }
+            mag = mag * [60, 100, 135][_diff] / 100;
+            var dir = ((Math.rand().abs() % 2) == 0) ? 1 : -1;
+            _wind = dir.toFloat() * mag.toFloat() / 1000.0;
+        }
+        _lastQuality = null;
 
         generateTerrain();
         _gs = MS_PLAY;
@@ -208,7 +278,18 @@ class BitochiMoonView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a game.
         // Only auto-start from a fresh launch (MS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the game.
-        if (_gs == MS_MENU) { startGame(); }
+        if (_gs == MS_MENU) {
+            startGame();
+            // Surface today's login-streak bonus as a one-shot toast (queued
+            // by the App's checkIn on the day's first launch).
+            try {
+                var dm = Application.Storage.getValue("moon_daily_msg");
+                if (dm != null) {
+                    _toastMsg = dm; _toastT = 70;
+                    Application.Storage.deleteValue("moon_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
 
     function onHide() {
@@ -223,6 +304,10 @@ class BitochiMoonView extends WatchUi.View {
         } else {
             _resultTick++;
         }
+        // Particles animate in every state so the plume trails off after a
+        // burn and the crash/landing dust keeps drifting on the result card.
+        _updateParticles();
+        if (_toastT > 0) { _toastT--; }
         WatchUi.requestUpdate();
     }
 
@@ -244,6 +329,7 @@ class BitochiMoonView extends WatchUi.View {
                 _velY -= 0.105;
                 _fuel -= 3;
                 if (_fuel < 0) { _fuel = 0; }
+                _emitExhaust();
             }
         }
 
@@ -253,12 +339,15 @@ class BitochiMoonView extends WatchUi.View {
         if (ax > deadzone) {
             var force = (ax - deadzone) / 7000.0;
             _velX += force;
-            if (_fuel > 0) { _fuel -= 1; if (_fuel < 0) { _fuel = 0; } }
+            if (_fuel > 0) { _fuel -= 1; if (_fuel < 0) { _fuel = 0; } _emitSidePuff(-1); }
         } else if (ax < -deadzone) {
             var force2 = (ax + deadzone) / 7000.0;
             _velX += force2;
-            if (_fuel > 0) { _fuel -= 1; if (_fuel < 0) { _fuel = 0; } }
+            if (_fuel > 0) { _fuel -= 1; if (_fuel < 0) { _fuel = 0; } _emitSidePuff(1); }
         }
+
+        // ── Horizontal wind (small, telegraphed; higher levels only)
+        _velX += _wind;
 
         // ── Very slight air drag
         _velX = _velX * 0.993;
@@ -311,15 +400,27 @@ class BitochiMoonView extends WatchUi.View {
 
                 if (onPad && vDown < maxV && vSide < 0.55) {
                     // ── SOFT LANDING ─────────────────────────────────────────
-                    _lastLand = landingScore(vDown, vSide, _fuel, _level);
-                    _score += _lastLand;
                     _posY = (terrH - HH - LH).toFloat();
+                    // Landing quality from how gently we touched down + fuel
+                    // spare, relative to this level's tolerance. Each tier
+                    // carries a matching bonus.
+                    _rateLanding(vDown, vSide, maxV, _fuel);
+                    // Soft-landing streak: consecutive safe touchdowns pay an
+                    // escalating bonus (capped) — rewards a clean run.
+                    _landStreak++;
+                    _lastStreakBonus = (_landStreak - 1) * 40;
+                    if (_lastStreakBonus > 200) { _lastStreakBonus = 200; }
+                    _lastLand = landingScore(vDown, vSide, _fuel, _level)
+                              + _lastQBonus + _lastStreakBonus;
+                    _score += _lastLand;
                     _velX = 0.0; _velY = 0.0;
                     _thrustTimer = 0;
+                    // Dust kick-up at the feet
+                    _emitDust(terrH);
                     _gs = MS_WIN;
                     if (_level > _best) {
                         _best = _level;
-                        Application.Storage.setValue("moonBest", _best);
+                        try { Application.Storage.setValue("moonBest", _best); } catch (e) {}
                     }
                     doVibe(1);
                 } else {
@@ -327,11 +428,14 @@ class BitochiMoonView extends WatchUi.View {
                     _crashFuel = (_fuel <= 0);
                     _lives--;
                     if (_lives < 0) { _lives = 0; }
+                    _landStreak = 0;
+                    _emitDust(terrH);
                     _gs = MS_CRASH;
                     // End of game → submit cumulative session score (DESC, no variant)
                     if (_lives <= 0) {
                         Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
                         Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "MOON LANDER");
+                        _awardProgress();
                     }
                     doVibe(2);
                 }
@@ -353,9 +457,141 @@ class BitochiMoonView extends WatchUi.View {
         return 100 + softBonus + fuelBonus + levelBonus;
     }
 
+    // ── Landing quality ──────────────────────────────────────────────────────
+    //  Classifies a soft landing as PERFECT / GOOD / OK from how far under the
+    //  level's tolerance we touched down (descent + sideways speed) plus fuel
+    //  spare. Sets _lastQuality / _lastQClr / _lastQBonus.
+    hidden function _rateLanding(vDown, vSide, maxV, fuelLeft) {
+        var v = vDown; if (v < 0.0) { v = -v; }
+        // 0.0 (right at the limit) .. 1.0 (feather-soft, zero speed)
+        var vScore = 1.0 - (v / maxV);
+        if (vScore < 0.0) { vScore = 0.0; }
+        var sSide = vSide; if (sSide < 0.0) { sSide = -sSide; }
+        var sScore = 1.0 - (sSide / 0.55);
+        if (sScore < 0.0) { sScore = 0.0; }
+        var fuelOk = (fuelLeft > ML_FUEL_MAX / 3);
+        if (vScore > 0.72 && sScore > 0.55 && fuelOk) {
+            _lastQuality = "PERFECT"; _lastQClr = 0x44FFCC; _lastQBonus = 200;
+        } else if (vScore > 0.45 && sScore > 0.35) {
+            _lastQuality = "GOOD";    _lastQClr = 0x88FF88; _lastQBonus = 90;
+        } else {
+            _lastQuality = "OK";      _lastQClr = 0xFFDD22; _lastQBonus = 0;
+        }
+    }
+
     // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
     hidden function _diffVariant() {
         return ["easy", "normal", "hard"][_diff];
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  PARTICLES — thruster plume, side-jet puffs, landing/crash dust
+    // ═════════════════════════════════════════════════════════════════════════
+    hidden function _clearParticles() {
+        for (var i = 0; i < ML_PMAX; i++) { _pLife[i] = 0; }
+        _pNext = 0;
+    }
+
+    hidden function _spawnParticle(x, y, vx, vy, life, kind) {
+        var i = _pNext;
+        _pX[i] = x; _pY[i] = y; _pVX[i] = vx; _pVY[i] = vy;
+        _pLife[i] = life; _pMax[i] = life; _pKind[i] = kind;
+        _pNext = (_pNext + 1) % ML_PMAX;
+    }
+
+    // Main-thruster exhaust: shoots DOWN from the nozzle with a little spread.
+    hidden function _emitExhaust() {
+        var nozX = _posX;
+        var nozY = _posY + HH.toFloat();
+        for (var k = 0; k < 2; k++) {
+            var spread = ((Math.rand().abs() % 9) - 4).toFloat() * 0.10;
+            var vy     = 0.9 + (Math.rand().abs() % 7).toFloat() * 0.12;
+            var life   = 5 + (Math.rand().abs() % 4);
+            _spawnParticle(nozX, nozY, spread + _velX * 0.3, vy, life, ML_PK_EXHAUST);
+        }
+    }
+
+    // Side-jet puff: dir = -1 fires from the LEFT nozzle (pushing right),
+    // dir = +1 fires from the RIGHT nozzle. Small, pale, short-lived.
+    hidden function _emitSidePuff(dir) {
+        var sx = _posX + dir.toFloat() * (HW.toFloat() + 1.0);
+        var sy = _posY + HH.toFloat() / 2.0;
+        var vx = dir.toFloat() * (0.6 + (Math.rand().abs() % 5).toFloat() * 0.1);
+        var vy = ((Math.rand().abs() % 5) - 2).toFloat() * 0.08;
+        _spawnParticle(sx, sy, vx, vy, 4 + (Math.rand().abs() % 3), ML_PK_SIDE);
+    }
+
+    // Landing / crash dust: a kicked-up fan of grey motes at the feet, flung
+    // up-and-out then settling under gravity.
+    hidden function _emitDust(terrH) {
+        var baseY = terrH.toFloat() - 1.0;
+        for (var k = 0; k < 10; k++) {
+            var vx = ((Math.rand().abs() % 21) - 10).toFloat() * 0.14;
+            var vy = -0.3 - (Math.rand().abs() % 8).toFloat() * 0.10;
+            var ox = ((Math.rand().abs() % (HW * 3 + 2)) - (HW + 1)).toFloat();
+            _spawnParticle(_posX + ox, baseY, vx, vy,
+                           8 + (Math.rand().abs() % 6), ML_PK_DUST);
+        }
+    }
+
+    hidden function _updateParticles() {
+        for (var i = 0; i < ML_PMAX; i++) {
+            if (_pLife[i] <= 0) { continue; }
+            _pX[i] += _pVX[i];
+            _pY[i] += _pVY[i];
+            if (_pKind[i] == ML_PK_DUST) {
+                _pVY[i] += 0.045;         // dust falls back down
+                _pVX[i] *= 0.92;
+            } else {
+                _pVX[i] *= 0.90;          // exhaust/puff slows + drifts
+            }
+            _pLife[i]--;
+        }
+    }
+
+    // ── Meta-progression award (shared, shop-ready via Progress module) ───────
+    //  Granted once at game over. Coins (future shop currency) + XP scale with
+    //  the cumulative session score. Crossing a rank milestone unlocks a hull
+    //  skin — the exact ownership a shop purchase would grant.
+    hidden function _awardProgress() {
+        if (_pgAwarded) { return; }
+        _pgAwarded = true;
+        var sc = _score;
+        var coinsGain = 8 + sc / 60;
+        if (coinsGain > 120) { coinsGain = 120; }
+        var xpGain = 12 + sc / 40;
+        if (xpGain > 150) { xpGain = 150; }
+        _pgCoinsGain = coinsGain;
+        Progress.addCoins(coinsGain);
+        Progress.addXp(xpGain);
+        var lvl = Progress.level();
+        var uNeon = Progress.unlockIfReached("hull_neon", lvl, 3);
+        var uGold = Progress.unlockIfReached("hull_gold", lvl, 6);
+        if (uGold)      { _pgUnlockMsg = "UNLOCKED: GOLD HULL"; }
+        else if (uNeon) { _pgUnlockMsg = "UNLOCKED: NEON HULL"; }
+    }
+
+    // Themed Moon-Lander rank ladder derived from the shared XP level.
+    hidden function _moonRank(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Commander"; }
+        if (lvl >= 10) { return "Captain"; }
+        if (lvl >= 6)  { return "Pilot"; }
+        if (lvl >= 3)  { return "Cadet"; }
+        return "Rookie";
+    }
+
+    // Selected-and-owned hull colour. Falls back to the classic hull when the
+    // chosen skin isn't owned yet — a locked pick never renders.
+    hidden function _hullColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("moon_hull");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("hull_neon")) { return 0x33FFCC; }
+        if (sel == 2 && Progress.owns("hull_gold")) { return 0xFFD24A; }
+        return 0xCCDDEE;
     }
 
     // ── Menu / leaderboard navigation ─────────────────────────────────────────
@@ -392,6 +628,9 @@ class BitochiMoonView extends WatchUi.View {
 
     hidden function startGame() {
         _level = 1; _lives = 3; _score = 0; _lastLand = 0;
+        _landStreak = 0; _lastStreakBonus = 0;
+        _pgAwarded = false; _pgUnlockMsg = null; _pgCoinsGain = 0;
+        _clearParticles();
         startLevel();
     }
 
@@ -449,11 +688,56 @@ class BitochiMoonView extends WatchUi.View {
         } else {
             drawLander(dc);
         }
+        drawParticles(dc);
 
         drawHUD(dc);
 
         if (_gs == MS_WIN)   { drawOverlay(dc, true); }
         if (_gs == MS_CRASH) { drawOverlay(dc, false); }
+
+        if (_toastT > 0 && _toastMsg != null) { drawToast(dc); }
+    }
+
+    // ── Particles ──────────────────────────────────────────────────────────
+    hidden function drawParticles(dc) {
+        for (var i = 0; i < ML_PMAX; i++) {
+            var life = _pLife[i];
+            if (life <= 0) { continue; }
+            var x = _pX[i].toNumber();
+            var y = _pY[i].toNumber();
+            var frac = life.toFloat() / _pMax[i].toFloat();  // 1 (new) .. 0 (old)
+            var kind = _pKind[i];
+            var clr;
+            var r;
+            if (kind == ML_PK_EXHAUST) {
+                // Hot core → cooling: yellow → orange → dark red as it fades.
+                clr = (frac > 0.66) ? 0xFFEE44 : ((frac > 0.33) ? 0xFF8811 : 0xCC3300);
+                r = (frac > 0.5) ? 2 : 1;
+            } else if (kind == ML_PK_SIDE) {
+                clr = (frac > 0.5) ? 0xBBE0FF : 0x5588AA;
+                r = 1;
+            } else {
+                // Dust: fades pale grey → dark grey.
+                clr = (frac > 0.5) ? 0x9A9A9A : 0x555555;
+                r = (frac > 0.5) ? 2 : 1;
+            }
+            dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x, y, r);
+        }
+    }
+
+    // ── Non-blocking toast (daily login bonus) ──────────────────────────────
+    hidden function drawToast(dc) {
+        var tw = _w * 74 / 100;
+        var th = 20;
+        var tx = (_w - tw) / 2;
+        var ty = _h * 30 / 100;
+        dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(tx, ty, tw, th, 5);
+        dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(tx, ty, tw, th, 5);
+        dc.drawText(_w / 2, ty + th / 2 - 7, Graphics.FONT_XTINY, _toastMsg,
+            Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Stars ─────────────────────────────────────────────────────────────────
@@ -530,6 +814,30 @@ class BitochiMoonView extends WatchUi.View {
         if (vy10 < 0) { vy10 = 0; }
         dc.drawText(_w - 4, 3, Graphics.FONT_XTINY,
             (vy10 / 10) + "." + (vy10 % 10), Graphics.TEXT_JUSTIFY_RIGHT);
+
+        // ── Telegraphs below the strip (play only) ──
+        if (_gs == MS_PLAY) {
+            // Wind: direction arrows + strength bars, colour-tiered.
+            if (_wind != 0.0) {
+                var right = (_wind > 0.0);
+                var mag = _wind; if (mag < 0.0) { mag = -mag; }
+                var bars = (mag * 1000.0 / 3.0 + 0.5).toNumber();  // ~1..3
+                if (bars < 1) { bars = 1; }
+                if (bars > 3) { bars = 3; }
+                var arrows = right ? ">>>" : "<<<";
+                dc.setColor((bars >= 3) ? 0xFF8844 : 0x66AACC, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, 24, Graphics.FONT_XTINY,
+                    right ? ("WIND " + arrows.substring(0, bars))
+                          : (arrows.substring(0, bars) + " WIND"),
+                    Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            // Soft-landing streak flame.
+            if (_landStreak >= 2) {
+                dc.setColor(0xFFAA33, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w - 4, 24, Graphics.FONT_XTINY,
+                    "x" + _landStreak, Graphics.TEXT_JUSTIFY_RIGHT);
+            }
+        }
     }
 
     // ── Terrain ───────────────────────────────────────────────────────────────
@@ -753,12 +1061,13 @@ class BitochiMoonView extends WatchUi.View {
     hidden function drawLander(dc) {
         var lx = _posX.toNumber();
         var ly = _posY.toNumber();
+        var hull = _hullColor();
 
         // Hull body
-        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(hull, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(lx - HW, ly, HW * 2, HH);
         // Top highlight
-        dc.setColor(0xEEF4FF, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_lighten(hull), Graphics.COLOR_TRANSPARENT);
         dc.drawLine(lx - HW, ly, lx + HW, ly);
 
         // Cockpit window
@@ -768,7 +1077,7 @@ class BitochiMoonView extends WatchUi.View {
         dc.fillRectangle(lx - 2, ly + 1, 3, 2);
 
         // Antenna stubs on top corners
-        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(hull, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(lx - HW, ly + 2, lx - HW - 2, ly - 1);
         dc.drawLine(lx + HW, ly + 2, lx + HW + 2, ly - 1);
 
@@ -781,24 +1090,23 @@ class BitochiMoonView extends WatchUi.View {
         dc.drawLine(lx - legOut - 2, ly + HH + LH, lx - legOut + 2, ly + HH + LH);
         dc.drawLine(lx + legOut - 2, ly + HH + LH, lx + legOut + 2, ly + HH + LH);
 
-        // Main thruster flame
-        if (_thrustTimer > 0) {
-            var fh = 3 + (_tick % 4);
-            dc.setColor(0xFF6600, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[lx - 3, ly + HH], [lx + 3, ly + HH], [lx, ly + HH + fh]]);
+        // Main-thruster nozzle glow (the plume itself is drawn by the
+        // particle system in drawParticles()).
+        if (_thrustTimer > 0 && _fuel > 0) {
             dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(lx - 2, ly + HH, 4, 2);
         }
+    }
 
-        // Side thruster puffs
-        var ax = _smoothAx;
-        if (ax > 140.0) {
-            dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(lx - HW - 1, ly + HH / 2, lx - HW - 5, ly + HH / 2);
-        } else if (ax < -140.0) {
-            dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(lx + HW + 1, ly + HH / 2, lx + HW + 5, ly + HH / 2);
-        }
+    // Roughly brighten a colour ~35% (clamped) for a hull top-highlight.
+    hidden function _lighten(color) {
+        var r = (color >> 16) & 0xFF;
+        var g = (color >> 8) & 0xFF;
+        var b = color & 0xFF;
+        r = r + (255 - r) * 35 / 100;
+        g = g + (255 - g) * 35 / 100;
+        b = b + (255 - b) * 35 / 100;
+        return (r << 16) | (g << 8) | b;
     }
 
     // ── Explosion ─────────────────────────────────────────────────────────────
@@ -819,40 +1127,50 @@ class BitochiMoonView extends WatchUi.View {
     hidden function drawOverlay(dc, won) {
         if (won) {
             dc.setColor(0x33FF77, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_MEDIUM,
+            dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_MEDIUM,
                 "LANDED!", Graphics.TEXT_JUSTIFY_CENTER);
+            // Landing quality tier (PERFECT / GOOD / OK)
+            if (_lastQuality != null) {
+                dc.setColor(_lastQClr, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 37 / 100, Graphics.FONT_SMALL,
+                    _lastQuality + (_lastQuality.equals("PERFECT") ? "!" : ""),
+                    Graphics.TEXT_JUSTIFY_CENTER);
+            }
             dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
-                "Level " + _level + " clear", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x557799, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY,
-                "Fuel left: " + _fuel, Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY,
-                "+" + _lastLand + "  Score " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 49 / 100, Graphics.FONT_XTINY,
+                "+" + _lastLand + "   Score " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+            // Fuel + streak line
+            var line = "Lv " + _level + " clear  -  Fuel " + _fuel;
+            if (_landStreak >= 2) { line = "Streak x" + _landStreak + "  +" + _lastStreakBonus; }
+            dc.setColor(_landStreak >= 2 ? 0xFFAA33 : 0x557799, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY,
+                line, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             var isGameOver = (_lives <= 0);
-            dc.setColor(isGameOver ? 0xFF0000 : 0xFF3333, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_MEDIUM,
-                isGameOver ? "GAME OVER" : (_crashFuel ? "NO FUEL!" : "CRASH!"),
-                Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
-                isGameOver ? ("Reached level " + _level) :
-                    (_crashFuel ? "Fuel exhausted" : "Too fast or off pad"),
-                Graphics.TEXT_JUSTIFY_CENTER);
-            // Lives remaining row
             if (!isGameOver) {
+                dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_MEDIUM,
+                    (_crashFuel ? "NO FUEL!" : "CRASH!"),
+                    Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
+                    (_crashFuel ? "Fuel exhausted" : "Too fast or off pad"),
+                    Graphics.TEXT_JUSTIFY_CENTER);
                 dc.drawText(_w / 2, _h * 53 / 100, Graphics.FONT_XTINY,
                     "Lives left: " + _lives, Graphics.TEXT_JUSTIFY_CENTER);
             } else {
-                if (_best > 0) {
-                    dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY,
-                        "Best: Level " + _best, Graphics.TEXT_JUSTIFY_CENTER);
-                }
+                dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_MEDIUM,
+                    "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 34 / 100, Graphics.FONT_XTINY,
+                    "Reached level " + _level +
+                        (_best > 0 ? "  -  Best " + _best : ""),
+                    Graphics.TEXT_JUSTIFY_CENTER);
                 dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY,
+                dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
                     "Score: " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+                _drawProgressLine(dc);
             }
         }
 
@@ -860,11 +1178,35 @@ class BitochiMoonView extends WatchUi.View {
             var isGameOver = (!won && _lives <= 0);
             var c1 = won ? 0x44AAFF : (isGameOver ? 0xFF4444 : 0xFF8844);
             var c2 = won ? 0x2277CC : (isGameOver ? 0xCC2222 : 0xCC6622);
+            var py = isGameOver ? (_h * 79 / 100) : (_h * 70 / 100);
             dc.setColor((_tick % 8 < 4) ? c1 : c2, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_w / 2, py, Graphics.FONT_XTINY,
                 won ? "Tap for next level" :
                     (isGameOver ? "Tap for menu" : "Tap to retry"),
                 Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // ── Progression summary (game over) ──────────────────────────────────────
+    //  One compact line: rank/level + coin balance (+ daily streak), plus a
+    //  one-shot gold "UNLOCKED" banner when the last game crossed a milestone.
+    hidden function _drawProgressLine(dc) {
+        var lvl = Progress.level();
+        var streak = 0;
+        try { streak = Progress.currentStreak(); } catch (e) {}
+        dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 53 / 100, Graphics.FONT_XTINY,
+            "Lv " + lvl + " " + _moonRank(lvl) + " - " + Progress.coins() + "c",
+            Graphics.TEXT_JUSTIFY_CENTER);
+        if (streak > 1) {
+            dc.setColor(0x66AACC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 61 / 100, Graphics.FONT_XTINY,
+                "Daily streak " + streak, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        if (_pgUnlockMsg != null) {
+            dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 69 / 100, Graphics.FONT_XTINY,
+                _pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -953,7 +1295,7 @@ class BitochiMoonView extends WatchUi.View {
     }
 
     hidden function drawMenuLander(dc, lx, ly) {
-        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_hullColor(), Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(lx - HW, ly, HW * 2, HH);
         dc.setColor(0x1144AA, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(lx - 3, ly + 1, 6, HH - 2);

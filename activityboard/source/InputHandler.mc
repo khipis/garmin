@@ -42,8 +42,16 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     // Open the flex chooser. On a watch with no web capability the dashboard is
-    // still a useful live stats screen, so we simply do nothing here.
+    // still a useful live stats screen, so we simply do nothing here. Fully
+    // guarded: this is the transition into the FlexMenuView chooser — the
+    // "what to send" list — which some small-heap watches in the manifest
+    // have crashed on. A failure here must never surface as an IQ error; the
+    // dashboard just stays put and the player can try again.
     hidden function _flex() {
+        try { return _flexImpl(); } catch (e) { return true; }
+    }
+
+    hidden function _flexImpl() {
         if (!Leaderboard.isSupported()) { return true; }
         if (!Leaderboard.hasUser()) {
             var nv = new LbNameEntryView();
@@ -51,9 +59,12 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             return true;
         }
         _view.refresh();
+        // Subtle confirm tick as the flex chooser opens.
+        AbFx.tone(0);
+        AbFx.vibe(15, 20);
         var snap = _view.snap();
-        var m = new FlexMenu(snap);
-        WatchUi.pushView(m, new FlexMenuDelegate(snap), WatchUi.SLIDE_UP);
+        var m = new FlexMenuView(snap);
+        WatchUi.pushView(m, new FlexMenuDelegate(m, snap), WatchUi.SLIDE_UP);
         return true;
     }
 }

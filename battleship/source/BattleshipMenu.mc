@@ -72,7 +72,11 @@ function buildBattleshipMenu() as Lang.Array {
         :hooks   => new BattleshipHooks(),
         :options => [
             new GmOption("bs_diff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 1),
-            new GmOption("bs_shots", "Shots", ["SINGLE", "BURST x3"], 0)
+            new GmOption("bs_shots", "Shots", ["SINGLE", "BURST x3"], 0),
+            new GmOption("bs_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic fleet skin — unlocked by naval rank, shop-ready. A
+            // locked pick simply renders as the classic hull until owned.
+            new GmOption("bs_skin", "Fleet", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

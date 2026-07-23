@@ -14,13 +14,25 @@ class ParachuteHooks extends GameHooks {
         WatchUi.pushView(v, new BitochiParachuteDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
-    // Signature art: a skydiver descending under a red canopy on taut lines.
+    // Signature art: a skydiver descending under a red canopy on taut lines,
+    // with a couple of drifting collectible rings alongside.
     function drawArt(dc, cx, cy, w, h) as Void {
-        // canopy dome
+        // faint bonus rings framing the diver
+        dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx - 16, cy + 16, 5); dc.drawCircle(cx - 16, cy + 16, 6);
+        dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx + 16, cy + 20, 4); dc.drawCircle(cx + 16, cy + 20, 5);
+
+        // canopy dome (dark rim → red → bright crown for depth)
+        dc.setColor(0x880022, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[cx - 18, cy + 2], [cx - 12, cy - 10], [cx - 4, cy - 14], [cx + 4, cy - 14], [cx + 12, cy - 10], [cx + 18, cy + 2]]);
         dc.setColor(0xCC1133, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[cx - 17, cy + 2], [cx - 11, cy - 9], [cx - 4, cy - 13], [cx + 4, cy - 13], [cx + 11, cy - 9], [cx + 17, cy + 2]]);
+        dc.fillPolygon([[cx - 15, cy], [cx - 10, cy - 9], [cx - 3, cy - 12], [cx + 4, cy - 12], [cx + 11, cy - 9], [cx + 15, cy]]);
         dc.setColor(0xFF3355, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[cx - 10, cy], [cx - 6, cy - 9], [cx, cy - 11], [cx - 2, cy]]);
+        dc.fillPolygon([[cx - 9, cy - 1], [cx - 5, cy - 9], [cx, cy - 11], [cx - 1, cy - 1]]);
+        dc.setColor(0xFFAABB, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[cx - 4, cy - 4], [cx - 2, cy - 10], [cx + 1, cy - 10], [cx, cy - 4]]);
+
         // suspension lines
         dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(cx - 15, cy + 2, cx - 2, cy + 12);
@@ -29,6 +41,7 @@ class ParachuteHooks extends GameHooks {
         // jumper
         dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, cy + 12, 3);
         dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cx - 3, cy + 15, 6, 6);
+        dc.setColor(0x3355CC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cx - 2, cy + 16, 4, 4);
     }
 
     // Leaderboard variant = wind setting (calm/breezy/gusty), matching submit.

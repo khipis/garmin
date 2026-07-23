@@ -147,6 +147,7 @@ const SS_K_HS   = "ss_hs";    // best headshots in a single mission
 const SS_K_DIST = "ss_dist";  // longest one-shot kill (metres)
 const SS_K_KILL = "ss_kill";  // lifetime hostiles eliminated
 const SS_K_SHOT = "ss_shot";  // best single-shot point value ever
+const SS_FX_KEY = "ss_fx";    // 0 = sound+haptics ON, 1 = OFF
 
 // ── Headshot streak (combo) system ────────────────────────────
 // Consecutive headshots (no misses/body-hits/decoys in between)

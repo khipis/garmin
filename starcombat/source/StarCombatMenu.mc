@@ -67,7 +67,11 @@ function buildStarCombatMenu() as Lang.Array {
         :hooks   => new StarCombatHooks(),
         :options => [
             new GmOption(SC_K_SENS, "Sensitivity", ["LOW", "NORM", "HIGH"], 1),
-            new GmOption(SC_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1)
+            new GmOption(SC_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1),
+            new GmOption("sc_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic ship skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the classic hull until it's owned.
+            new GmOption(SC_K_SKIN, "Ship", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -62,7 +62,10 @@ function buildBoxingMenu() as Lang.Array {
         :lbTitle => "BOXING",
         :hooks   => new BoxingHooks(),
         :options => [
-            new GmOption("box_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("box_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            // Cosmetic trunk skin — unlocked at rank 3, shop-ready. A locked pick
+            // simply renders as the classic blue trunks until it's owned.
+            new GmOption("box_skin", "Trunks", ["CLASSIC", "NEON"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

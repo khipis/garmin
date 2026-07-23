@@ -83,7 +83,11 @@ function buildJumpTowerMenu() as Lang.Array {
         :lbTitle => "JUMP TOWER",
         :hooks   => new JumpTowerHooks(),
         :options => [
-            new GmOption("jt_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("jt_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            // Cosmetic character skin — unlocked by climbing / rank, shop-ready.
+            // A locked pick simply renders the classic frog until it's owned.
+            new GmOption("jt_skin", "Skin", ["CLASSIC", "NEON", "GOLD"], 0),
+            new GmOption("jt_fx",   "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

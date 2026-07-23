@@ -63,7 +63,8 @@ function buildDotsBoxesMenu() as Lang.Array {
         :options => [
             new GmOption("db_mode", "Mode",     ["P vs AI", "P vs P", "AI vs AI"], 0),
             new GmOption("db_diff", "AI level",  ["EASY", "MED", "HARD"], 1),
-            new GmOption("db_side", "You play",  ["1ST", "2ND"], 0)
+            new GmOption("db_side", "You play",  ["1ST", "2ND"], 0),
+            new GmOption("db_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

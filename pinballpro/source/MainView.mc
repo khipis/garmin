@@ -18,6 +18,7 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Math;
 
 const TICK_MS = 25;
 
@@ -91,139 +92,286 @@ class MainView extends WatchUi.View {
             _started = true;
         }
 
-        _drawTable(dc);
-        _drawDrops(dc);
-        _drawSlings(dc);
-        _drawBumpers(dc);
-        _ctrl.fLeft.draw(dc);
-        _ctrl.fRight.draw(dc);
-        for (var i = 0; i < MAX_BALLS; i++) { _ctrl.balls[i].draw(dc); }
+        // Screen shake — sample once so the whole field jolts together.
+        var ox = _ctrl.shakeX();
+        var oy = _ctrl.shakeY();
+
+        _drawTable(dc, ox, oy);
+        _drawDrops(dc, ox, oy);
+        _drawSlings(dc, ox, oy);
+        _drawBumpers(dc, ox, oy);
+        _ctrl.fLeft.draw(dc, ox, oy);
+        _ctrl.fRight.draw(dc, ox, oy);
+        for (var i = 0; i < MAX_BALLS; i++) { _ctrl.balls[i].draw(dc, ox, oy); }
+        _drawParticles(dc, ox, oy);
+        _drawPopups(dc, ox, oy);
         _drawHUD(dc);
+        _drawBanner(dc);
 
         if (_ctrl.state == GS_LAUNCH) { _drawLaunchPrompt(dc); }
         if (_ctrl.state == GS_OVER)   { _drawOver(dc);         }
     }
 
     // ── Table backdrop ──────────────────────────────────────────────
-    hidden function _drawTable(dc) {
+    hidden function _drawTable(dc, ox, oy) {
         var theme = TableLibrary.theme(_ctrl.tableIdx);
         var bg     = theme[0];
         var accent = theme[1];
+        var x0 = _ctrl.playX0 + ox; var y0 = _ctrl.playY0 + oy;
+        var x1 = _ctrl.playX1 + ox; var y1 = _ctrl.playY1 + oy;
+        var pw = x1 - x0; var ph = y1 - y0;
 
         // Body
         dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_ctrl.playX0, _ctrl.playY0,
-                         _ctrl.playX1 - _ctrl.playX0,
-                         _ctrl.playY1 - _ctrl.playY0);
-        // Coloured bezel
-        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_ctrl.playX0 - 1, _ctrl.playY0 - 1,
-                         (_ctrl.playX1 - _ctrl.playX0) + 2,
-                         (_ctrl.playY1 - _ctrl.playY0) + 2);
+        dc.fillRectangle(x0, y0, pw, ph);
 
-        // Drain triangles below the flipper line — visual cue for the
-        // dead zone.
-        dc.setColor(0x110000, Graphics.COLOR_TRANSPARENT);
-        var fy = _ctrl.fLeft.pivotY + 8;
-        dc.fillPolygon([[_ctrl.playX0,     fy],
-                        [_ctrl.playX0 + 8, _ctrl.playY1],
-                        [_ctrl.playX0,     _ctrl.playY1]]);
-        dc.fillPolygon([[_ctrl.playX1,     fy],
-                        [_ctrl.playX1 - 8, _ctrl.playY1],
-                        [_ctrl.playX1,     _ctrl.playY1]]);
-
-        // Centre dashes — give the playfield depth
-        dc.setColor((accent & 0xFFFFFF) / 4, Graphics.COLOR_TRANSPARENT);
-        var cx = (_ctrl.playX0 + _ctrl.playX1) / 2;
-        var y  = _ctrl.playY0 + 12;
-        while (y < _ctrl.playY1 - 30) {
-            dc.fillRectangle(cx - 1, y, 2, 4);
-            y = y + 14;
+        // Playfield lighting — a brighter band up top fading down, so
+        // the table reads as lit from the backglass.
+        var bands = 5;
+        for (var g = 0; g < bands; g++) {
+            var t = 16 - g * 3; if (t < 0) { t = 0; }
+            dc.setColor(_mix(bg, 0xFFFFFF, t), Graphics.COLOR_TRANSPARENT);
+            var bh = ph / (bands + 3);
+            dc.fillRectangle(x0, y0 + g * bh, pw, bh);
         }
 
-        // Launcher lane indicator — narrow vertical strip on the right
-        dc.setColor((accent & 0xFFFFFF) / 6, Graphics.COLOR_TRANSPARENT);
-        var laneX = _ctrl.playX1 - 6;
-        dc.drawLine(laneX, _ctrl.playY0 + 6, laneX, _ctrl.playY1 - 12);
+        // Per-table decorative inlay layer.
+        _drawInlay(dc, x0, y0, x1, y1, accent);
+
+        // Coloured bezel (double for a neon-tube feel)
+        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(x0 - 1, y0 - 1, pw + 2, ph + 2);
+        dc.setColor(_mix(accent, 0x000000, 40), Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(x0 - 2, y0 - 2, pw + 4, ph + 4);
+
+        // Neon lane guides funnelling toward the flippers.
+        dc.setColor(_mix(accent, bg, 55), Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(2);
+        var fy = _ctrl.fLeft.pivotY + oy;
+        dc.drawLine(x0 + 3, y0 + ph * 55 / 100, _ctrl.fLeft.pivotX + ox - 6, fy - 6);
+        dc.drawLine(x1 - 3, y0 + ph * 55 / 100, _ctrl.fRight.pivotX + ox + 6, fy - 6);
+        dc.setPenWidth(1);
+
+        // Drain triangles below the flipper line.
+        dc.setColor(0x220305, Graphics.COLOR_TRANSPARENT);
+        var dfy = fy + 8;
+        dc.fillPolygon([[x0,     dfy], [x0 + 8, y1], [x0, y1]]);
+        dc.fillPolygon([[x1,     dfy], [x1 - 8, y1], [x1, y1]]);
+
+        // Launcher lane indicator.
+        dc.setColor(_mix(accent, bg, 70), Graphics.COLOR_TRANSPARENT);
+        var laneX = x1 - 6;
+        dc.drawLine(laneX, y0 + 6, laneX, y1 - 12);
+    }
+
+    // Per-table decorative artwork — cheap vector inlays that make
+    // each table read as a distinct machine.
+    hidden function _drawInlay(dc, x0, y0, x1, y1, accent) {
+        var pw = x1 - x0; var ph = y1 - y0;
+        var cx = (x0 + x1) / 2; var cy = (y0 + y1) / 2;
+        var faint = _mix(accent, 0x000000, 62);
+        dc.setColor(faint, Graphics.COLOR_TRANSPARENT);
+        var style = TableLibrary.artStyle(_ctrl.tableIdx);
+
+        if (style == :dashes) {
+            var y = y0 + 12;
+            while (y < y1 - 30) { dc.fillRectangle(cx - 1, y, 2, 5); y = y + 14; }
+        } else if (style == :diamond) {
+            var dr = pw * 30 / 100;
+            dc.drawLine(cx, cy - dr, cx + dr, cy);
+            dc.drawLine(cx + dr, cy, cx, cy + dr);
+            dc.drawLine(cx, cy + dr, cx - dr, cy);
+            dc.drawLine(cx - dr, cy, cx, cy - dr);
+        } else if (style == :bolts) {
+            for (var b = 0; b < 3; b++) {
+                var by = y0 + ph * (25 + b * 22) / 100;
+                dc.drawLine(x0 + 6, by, cx - 6, by + 8);
+                dc.drawLine(cx + 6, by + 8, x1 - 6, by);
+            }
+        } else if (style == :hive) {
+            for (var h = 0; h < 3; h++) {
+                var hy = y0 + ph * (22 + h * 16) / 100;
+                var hx = (h % 2 == 0) ? cx - pw / 6 : cx + pw / 6;
+                _hexOutline(dc, hx, hy, pw / 10);
+                _hexOutline(dc, (h % 2 == 0) ? cx + pw / 6 : cx - pw / 6, hy, pw / 10);
+            }
+        } else if (style == :sun) {
+            var rr = pw * 22 / 100;
+            for (var s = 0; s < 12; s++) {
+                var a = s * 3.14159 / 6.0;
+                dc.drawLine(cx, y0 + ph * 28 / 100,
+                            cx + rr * Math.cos(a),
+                            (y0 + ph * 28 / 100) + rr * Math.sin(a));
+            }
+        } else if (style == :spiral) {
+            var px = cx; var py = y0 + ph * 30 / 100;
+            for (var i2 = 0; i2 < 22; i2++) {
+                var ang = i2 * 0.6;
+                var rad = 3 + i2 * (pw / 90);
+                var nx = cx + rad * Math.cos(ang);
+                var ny = (y0 + ph * 30 / 100) + rad * Math.sin(ang);
+                dc.drawLine(px, py, nx, ny);
+                px = nx; py = ny;
+            }
+        } else {
+            // streak — diagonal speed lines.
+            for (var k = 0; k < 5; k++) {
+                var sx = x0 + pw * k / 5;
+                dc.drawLine(sx, y0 + 8, sx + pw / 6, y0 + ph * 45 / 100);
+            }
+        }
+    }
+
+    hidden function _hexOutline(dc, hx, hy, r) {
+        var pts = new [6];
+        for (var i = 0; i < 6; i++) {
+            var a = i * 3.14159 / 3.0;
+            pts[i] = [hx + r * Math.cos(a), hy + r * Math.sin(a)];
+        }
+        for (var j = 0; j < 6; j++) {
+            var n = (j + 1) % 6;
+            dc.drawLine(pts[j][0], pts[j][1], pts[n][0], pts[n][1]);
+        }
+    }
+
+    // Blend a→b by t/100 (integer channels, packed 0xRRGGBB).
+    hidden function _mix(a, b, t) {
+        if (t <= 0) { return a; }
+        if (t >= 100) { return b; }
+        var ar = (a >> 16) & 0xFF; var ag = (a >> 8) & 0xFF; var ab = a & 0xFF;
+        var br = (b >> 16) & 0xFF; var bg = (b >> 8) & 0xFF; var bb = b & 0xFF;
+        var rr = ar + (br - ar) * t / 100;
+        var rg = ag + (bg - ag) * t / 100;
+        var rb = ab + (bb - ab) * t / 100;
+        return (rr << 16) | (rg << 8) | rb;
     }
 
     // ── Drop targets ────────────────────────────────────────────────
-    hidden function _drawDrops(dc) {
+    hidden function _drawDrops(dc, ox, oy) {
         for (var i = 0; i < _ctrl.drops.size(); i++) {
             var d = _ctrl.drops[i];
+            var dx = d.x + ox; var dy = d.y + oy;
             if (d.down) {
-                // Ghost outline so the bank position is still visible
                 dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-                dc.drawRectangle(d.x, d.y, d.w, d.h);
+                dc.drawRectangle(dx, dy, d.w, d.h);
                 continue;
             }
             var col = (d.flash > 0) ? 0xFFFFFF : d.color;
+            // Glow when freshly hit.
+            if (d.flash > 0) {
+                dc.setColor(_mix(d.color, 0xFFFFFF, 60), Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(dx - 1, dy - 1, d.w + 2, d.h + 2);
+            }
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(d.x, d.y, d.w, d.h);
-            // White inner highlight bar — gives the target depth
+            dc.fillRectangle(dx, dy, d.w, d.h);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(d.x + 1, d.y + 1, d.w - 2, 1);
-            // Dark base bar
+            dc.fillRectangle(dx + 1, dy + 1, d.w - 2, 1);
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(d.x + 1, d.y + d.h - 2, d.w - 2, 1);
+            dc.fillRectangle(dx + 1, dy + d.h - 2, d.w - 2, 1);
         }
     }
 
     // ── Slingshots ──────────────────────────────────────────────────
-    hidden function _drawSlings(dc) {
+    hidden function _drawSlings(dc, ox, oy) {
         for (var i = 0; i < _ctrl.slings.size(); i++) {
             var s = _ctrl.slings[i];
             var fillCol = (s.flash > 0) ? 0xFFFFFF : s.color;
             dc.setColor(fillCol, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[s.ax, s.ay],
-                            [s.bx, s.by],
-                            [s.cx, s.cy]]);
-            // Edge highlight on the active edge
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.setPenWidth(2);
-            dc.drawLine(s.ax, s.ay, s.bx, s.by);
+            dc.fillPolygon([[s.ax + ox, s.ay + oy],
+                            [s.bx + ox, s.by + oy],
+                            [s.cx + ox, s.cy + oy]]);
+            var edgeCol = (s.flash > 0) ? 0xFFFFFF : _mix(s.color, 0xFFFFFF, 50);
+            dc.setColor(edgeCol, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth((s.flash > 0) ? 3 : 2);
+            dc.drawLine(s.ax + ox, s.ay + oy, s.bx + ox, s.by + oy);
             dc.setPenWidth(1);
         }
     }
 
     // ── Bumpers ─────────────────────────────────────────────────────
-    hidden function _drawBumpers(dc) {
+    hidden function _drawBumpers(dc, ox, oy) {
         for (var i = 0; i < _ctrl.bumpers.size(); i++) {
             var b   = _ctrl.bumpers[i];
-            var bx  = b[0];
-            var by  = b[1];
+            var bx  = b[0] + ox;
+            var by  = b[1] + oy;
             var r   = b[2];
             var col = b[3];
             var flash = b[4];
-            // Outer ring (flash white when struck)
-            var ring = (flash > 0) ? 0xFFFFFF : ((col >> 1) & 0x7F7F7F);
-            dc.setColor(ring, Graphics.COLOR_TRANSPARENT);
+
+            // Expanding shock ring on hit (uses the flash countdown).
+            if (flash > 0) {
+                dc.setColor(_mix(col, 0xFFFFFF, 70), Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(bx, by, r + 2 + (8 - flash));
+            }
+            // Soft outer glow.
+            dc.setColor(_mix(col, 0x000000, 55), Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bx, by, r + 2);
-            // Body
-            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            // Body (brightens on hit).
+            dc.setColor((flash > 0) ? _mix(col, 0xFFFFFF, 45) : col,
+                        Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bx, by, r);
-            // Inner cap
+            // Inner cap + specular.
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bx, by, r / 2);
-            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_mix(col, 0xFFFFFF, 25), Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bx, by, r / 3);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx - r / 3, by - r / 3, r / 5 + 1);
+        }
+    }
+
+    // ── Particles + score popups ────────────────────────────────────
+    hidden function _drawParticles(dc, ox, oy) {
+        var ps = _ctrl.fx.parts;
+        for (var i = 0; i < FxSystem.PCAP; i++) {
+            var p = ps[i];
+            if (p.life <= 0) { continue; }
+            var col = (p.life * 2 < p.maxLife)
+                      ? _mix(p.color, 0x000000, 45) : p.color;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            var pr = p.big ? 2 : 1;
+            dc.fillCircle(p.x + ox, p.y + oy, pr);
+        }
+    }
+
+    hidden function _drawPopups(dc, ox, oy) {
+        var us = _ctrl.fx.pops;
+        for (var i = 0; i < FxSystem.UCAP; i++) {
+            var u = us[i];
+            if (u.life <= 0) { continue; }
+            var col = (u.life * 3 < u.maxLife)
+                      ? _mix(u.color, 0x000000, 40) : u.color;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(u.x + ox, u.y + oy, Graphics.FONT_XTINY,
+                        u.text, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     // ── HUD ─────────────────────────────────────────────────────────
     hidden function _drawHUD(dc) {
         var cx = _ctrl.screenW / 2;
-        var ty = (_ctrl.screenH * 3) / 100; if (ty < 3) { ty = 3; }
+        var W  = _ctrl.screenW;
+        var H  = _ctrl.screenH;
+        var ty = (H * 3) / 100; if (ty < 3) { ty = 3; }
 
-        // Score — centre top
+        // Score — centre top.
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, ty, Graphics.FONT_MEDIUM,
                     _formatScore(_ctrl.score),
                     Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Lives → small balls top-right
+        // Multiplier badge under the score (only when boosted).
+        if (_ctrl.multiplier > 1) {
+            var mfh = dc.getFontHeight(Graphics.FONT_MEDIUM);
+            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ty + mfh - 4, Graphics.FONT_XTINY,
+                        "x" + _ctrl.multiplier.toString() + " COMBO",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Lives → small chrome balls top-right.
         dc.setColor(0xCCCCDD, Graphics.COLOR_TRANSPARENT);
-        var lvX = _ctrl.screenW - 8;
+        var lvX = W - 8;
         var maxShow = _ctrl.lives;
         if (maxShow > 5) { maxShow = 5; }
         for (var i = 0; i < maxShow; i++) {
@@ -235,19 +383,60 @@ class MainView extends WatchUi.View {
                         Graphics.TEXT_JUSTIFY_RIGHT);
         }
 
-        // Best / Multi-ball banner / Table name — top-left
-        var name = TableLibrary.NAMES[_ctrl.tableIdx];
+        // Top-left: table name, or MULTI / JACKPOT while multiball.
         if (_ctrl.isMultiball()) {
-            // "MULTI x2" flashes between cyan and yellow each tick
             dc.setColor(0xFFEE00, Graphics.COLOR_TRANSPARENT);
             dc.drawText(8, ty + 4, Graphics.FONT_XTINY,
-                        "MULTI x" + _ctrl.aliveBallCount().toString(),
+                        "JACKPOT " + _ctrl.jackpot.toString(),
                         Graphics.TEXT_JUSTIFY_LEFT);
         } else {
             dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
             dc.drawText(8, ty + 4, Graphics.FONT_XTINY,
-                        name, Graphics.TEXT_JUSTIFY_LEFT);
+                        TableLibrary.NAMES[_ctrl.tableIdx],
+                        Graphics.TEXT_JUSTIFY_LEFT);
         }
+
+        // Mission objective — centred just above the flipper line.
+        var missFh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var missY = H - missFh - 2;
+        if (_ctrl.state == GS_PLAY) {
+            dc.setColor(0x88DDBB, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, missY, Graphics.FONT_XTINY,
+                        _ctrl.missionLabel(), Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Ball-save ring indicator (bottom-left) while active.
+        if (_ctrl.ballSaveTimer > 0 && _ctrl.state == GS_PLAY) {
+            dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(10, missY, Graphics.FONT_XTINY, "SAVE",
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        }
+
+        // Tilt meter (bottom-right) — fills as you nudge.
+        if (_ctrl.tiltMeter > 0 && _ctrl.state == GS_PLAY) {
+            var tmW = 26; var tmH = 4;
+            var tmX = W - tmW - 8; var tmY = missY + missFh / 3;
+            dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(tmX, tmY, tmW, tmH);
+            var fillW = tmW * _ctrl.tiltMeter / GameController.TILT_MAX;
+            var tcol = (_ctrl.tiltMeter > 66) ? 0xFF3333 : 0xFFAA22;
+            dc.setColor(tcol, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(tmX, tmY, fillW, tmH);
+        }
+    }
+
+    // ── Event banner ────────────────────────────────────────────────
+    hidden function _drawBanner(dc) {
+        if (_ctrl.bannerTimer <= 0) { return; }
+        var cx = _ctrl.screenW / 2;
+        var cy = _ctrl.screenH * 40 / 100;
+        // Shadow plate.
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, cy + 1, Graphics.FONT_SMALL, _ctrl.bannerText,
+                    Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(_ctrl.bannerColor, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy, Graphics.FONT_SMALL, _ctrl.bannerText,
+                    Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Launch / over overlays ──────────────────────────────────────
@@ -277,22 +466,40 @@ class MainView extends WatchUi.View {
             var ty = mY + (mH * k) / 4;
             dc.drawLine(mX - 2, ty, mX + mW + 2, ty);
         }
+        // Skill-shot band — the lit sweet-spot on the meter.
+        var bandY0 = mY + mH - (mH * _ctrl.skillHi) / 100;
+        var bandY1 = mY + mH - (mH * _ctrl.skillLo) / 100;
+        dc.setColor(0x0A3A33, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(mX, bandY0, mW, bandY1 - bandY0);
+        dc.setColor(0x44FFEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(mX - 1, bandY0, mW + 2, bandY1 - bandY0);
+
         // Charge bar — grows from the bottom up.
         var p   = _ctrl.launchPower;
         if (p < 0)   { p = 0; }
         if (p > 100) { p = 100; }
         var barH = (mH * p) / 100;
+        var inBand = (p >= _ctrl.skillLo && p <= _ctrl.skillHi);
         var fill;
-        if (p < 40)      { fill = 0x44FF88; }
+        if (inBand)      { fill = 0x44FFEE; }
+        else if (p < 40) { fill = 0x44FF88; }
         else if (p < 75) { fill = 0xFFEE00; }
         else             { fill = 0xFF4422; }
         dc.setColor(fill, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(mX, mY + mH - barH, mW, barH);
 
-        // Hint label
-        dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
+        // Plunger arrow tracking the current charge.
+        var arrowY = mY + mH - barH;
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[mX - 4, arrowY - 3],
+                        [mX - 4, arrowY + 3],
+                        [mX,     arrowY]]);
+
+        // Hint label.
+        dc.setColor(inBand ? 0x44FFEE : 0x44FFAA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _ctrl.screenH - 18, Graphics.FONT_XTINY,
-                    "TAP / SEL: launch  -  " + p.format("%d") + "%",
+                    inBand ? "SKILL SHOT READY!"
+                           : ("LAUNCH  -  " + p.format("%d") + "%"),
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -307,6 +514,9 @@ class MainView extends WatchUi.View {
             lines.add(["NEW BEST!", 0x44FF88]);
         } else if (_ctrl.hi > 0) {
             lines.add(["Best " + _formatScore(_ctrl.hi), 0xFFCC22]);
+        }
+        if (_ctrl.bestCombo > 1) {
+            lines.add(["Best combo x" + _ctrl.bestCombo.toString(), 0x88DDBB]);
         }
         GameOverCard.draw(dc, _ctrl.screenW, _ctrl.screenH,
             "GAME OVER", col, lines, "Tap = replay  ESC = menu", col);

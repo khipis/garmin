@@ -72,7 +72,10 @@ function buildMoonMenu() as Lang.Array {
         :lbTitle => "MOON LANDER",
         :hooks   => new MoonHooks(),
         :options => [
-            new GmOption("moon_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("moon_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            // Cosmetic lander hull skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the classic hull until it's owned.
+            new GmOption("moon_hull", "Hull", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

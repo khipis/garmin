@@ -67,7 +67,8 @@ function buildRunMenu() as Lang.Array {
         :lbTitle => "MONSTER ESC",
         :hooks   => new RunHooks(),
         :options => [
-            new GmOption("run_spd", "Speed", ["NORMAL", "FAST", "INSANE"], 0)
+            new GmOption("run_spd", "Speed", ["NORMAL", "FAST", "INSANE"], 0),
+            new GmOption("run_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

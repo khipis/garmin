@@ -97,6 +97,11 @@ APPS=(
   memo
   drwal
   slotbandit
+  creatures
+  spacecolony
+  island
+  mines
+  farm
 )
 
 FILTER=""

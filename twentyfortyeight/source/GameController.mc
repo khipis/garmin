@@ -21,6 +21,9 @@
 
 using Toybox.Application;
 using Toybox.System;
+using Toybox.Attention;
+
+const TF_FX_KEY = "tf_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const GS_MENU = 0;
 const GS_PLAY = 1;
@@ -56,6 +59,7 @@ class GameController {
     var lastTimeMs;        // time of the run that just reached 2048
     var bestTimeMs;        // fastest 2048 time ever (persisted), -1 = none
     hidden var _startMs;   // System.getTimer() at run start
+    hidden var _fxOn;      // sound + haptics master switch (OPTIONS: tf_fx)
 
     function initialize() {
         state          = GS_MENU;
@@ -72,6 +76,31 @@ class GameController {
         lastTimeMs     = 0;
         bestTimeMs     = _loadInt("tf_besttime", -1);
         _startMs       = 0;
+        _fxOn          = _loadFx();
+    }
+
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(TF_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadBool(key, dflt) {
@@ -136,6 +165,7 @@ class GameController {
         elapsedMs  = 0;
         lastTimeMs = 0;
         _startMs   = System.getTimer();
+        _fxOn      = _loadFx();
         state = GS_PLAY;
     }
 
@@ -164,6 +194,15 @@ class GameController {
         var r = MergeEngine.applyMove(grid, dir);
         if (!r.moved) { return; }
 
+        // Slide feedback: a merge is a satisfying "clack", a plain slide a soft tick.
+        if (r.gained > 0) {
+            _tone(1);
+            _vibe(35, 45);
+        } else {
+            _tone(0);
+            _vibe(15, 20);
+        }
+
         if (r.gained > 0) {
             score = score + r.gained;
             if (score > best) {
@@ -184,6 +223,9 @@ class GameController {
 
         if (r.reached2048 && !hasWonThisRun) {
             hasWonThisRun = true;
+            // Victory fanfare for the first 2048 tile.
+            _tone(1);
+            _vibe(100, 250);
             // Time mode: reaching 2048 IS the goal — lock the time, save the
             // best, and submit it to the speedrun leaderboard (lower is better).
             if (timeMode) {
@@ -206,6 +248,9 @@ class GameController {
 
         if (!grid.hasAnyMove()) {
             state = GS_OVER;
+            // Game-over sting.
+            _tone(2);
+            _vibe(100, 200);
             // Classic only: submit final score (higher is better). Time-mode
             // runs that never reached 2048 simply don't post.
             if (!timeMode) {

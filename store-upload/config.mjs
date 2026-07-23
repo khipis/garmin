@@ -13,6 +13,8 @@ export const STORE_DIR = path.join(REPO_ROOT, "_STORE");
 export const AUTH_FILE   = path.join(HERE, "auth.json");
 // App list + slug→appId mapping (produced by `scan`, edited by hand as needed).
 export const CONFIG_FILE = path.join(HERE, "apps.config.json");
+// slug → store description text used by the `describe` command.
+export const DESCRIPTIONS_FILE = path.join(HERE, "descriptions.json");
 // Debug artifacts: screenshots + network recordings.
 export const ARTIFACTS   = path.join(HERE, "artifacts");
 
@@ -30,6 +32,16 @@ export function appUpdateUrl(developerId, appId) {
 // publish, so we use it as a success signal.
 export function appPublicUrl(appId) {
   return `https://apps.garmin.com/apps/${appId}`;
+}
+// The per-app management page (has the "Edit Details" action) and the direct
+// "Edit App Details" form URL. The portal has changed these before; the
+// `describe` command tries the direct URL first, then falls back to clicking
+// "Edit Details" on the management page.
+export function appManageUrl(developerId, appId) {
+  return `https://apps.garmin.com/developer/${developerId}/apps/${appId}`;
+}
+export function appEditUrl(developerId, appId) {
+  return `https://apps.garmin.com/developer/${developerId}/apps/${appId}/edit`;
 }
 
 // Explicit slug → store appId overrides. Applied BEFORE fuzzy name-matching so
@@ -71,4 +83,36 @@ export const UPLOAD = {
   publishPath:   "/ciq-developerservices/developers/", // …/{dev}/apps/{appId}
   // Text that signals a validation/submit error.
   errorText:     /(failed|invalid|error|already exists|not valid|unsupported)/i,
+};
+
+// Selectors / button texts for the "Edit App Details" form used by `describe`.
+// The description lives in a <textarea>; the portal has used a few ids/names for
+// it over time, so we try a labelled selector first and fall back to the
+// visible textarea holding the longest current text (see findDescTextarea).
+export const DETAILS = {
+  // Link/button that opens the details form from the management page.
+  editLink:     /Edit\s*(App\s*)?Details|Edit\s*Listing/i,
+  // Preferred selectors for the (English) description textarea, best → worst.
+  // Confirmed from the live "Edit App Details" form: id="app-desc-en"
+  // (the sibling "app-whats-new-en" is the release-notes field — leave it be).
+  descTextarea: [
+    'textarea#app-desc-en',
+    'textarea#appDescription',
+    'textarea#description',
+    'textarea[name="description"]',
+    'textarea[id*="desc" i]:not([id*="whats" i]):not([id*="new" i])',
+    'textarea[aria-label*="description" i]',
+    'textarea[placeholder*="description" i]',
+  ].join(", "),
+  // A "real" description textarea normally already holds more than this many
+  // characters — used to pick the right one when there are several textareas.
+  minDescLen:   30,
+  // Save/submit button on the details form (confirmed: "Submit").
+  saveText:     /^\s*(Submit|Save(\s*Changes)?|Update(\s*App)?|Publish)\s*$/i,
+  // Best-effort dismissal of promo/onboarding modals that can overlay the form.
+  modalDismiss: /^\s*(Not Now|Maybe Later|Dismiss)\s*$/i,
+  cookieDismiss:/^\s*(Decline|Accept)\s*$/i,
+  saveTimeout:  60000,
+  // Internal API fragment hit on save — used to confirm the change persisted.
+  savePath:     "/ciq-developerservices/developers/",
 };

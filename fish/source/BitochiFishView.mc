@@ -47,6 +47,14 @@ class BitochiFishView extends WatchUi.View {
     hidden var _bestFishWeight; hidden var _bestFishType; hidden var _bestFishRarity;
     hidden var _newBigFish;   // true this catch beat the lifetime record
 
+    // Lifetime best level reached — persisted and mirrored to the global
+    // "progress" leaderboard variant (how far a player has climbed).
+    hidden var _bestLevel;
+    // One submit of session score + progress per gameplay instance. Set true
+    // once we've reported this session (game-over OR exit) so the onHide safety
+    // net and the explicit game-over path can't double-submit.
+    hidden var _progressSubmitted;
+
     hidden var _fightCursor;    // -100..+100 tug-of-war position
 
     hidden var _tension; hidden var _maxTension;
@@ -60,6 +68,7 @@ class BitochiFishView extends WatchUi.View {
 
     hidden var _shakeTimer; hidden var _shakeOx; hidden var _shakeOy; hidden var _emotion;
     hidden var _sceneOx; hidden var _sceneOy;
+    hidden var _levelUpTick;   // >0 → show the "LEVEL UP!" banner for a moment
     hidden const MAX_PARTS = 28;
     hidden var _partX; hidden var _partY; hidden var _partVx; hidden var _partVy;
     hidden var _partLife; hidden var _partColor;
@@ -88,6 +97,22 @@ class BitochiFishView extends WatchUi.View {
     hidden var _diff;
     hidden var _biteMaxTicks;   // ticks the player has to react to a bite
     hidden var _tensionMul;     // multiplier on max line tension (reel margin)
+
+    // Sound + haptics master switch from the OPTIONS screen (fish_fx: 0 ON /
+    // 1 OFF). When off, both playTone() and doVibe() become no-ops.
+    hidden var _fxOn;
+
+    // ── Shared meta-progression (Progress module) ─────────────────────────────
+    // One-shot "UNLOCKED: <name>" banner shown on the game-over screen. Set when
+    // a catch crosses a gear milestone (or discovers a brand-new species) and
+    // cleared at the start of each session.
+    hidden var _pgUnlockMsg;
+    // First-launch-of-the-day login bonus toast, queued by the App's checkIn and
+    // surfaced as a lightweight non-blocking line over the first frames.
+    hidden var _dailyMsg; hidden var _dailyMsgT;
+    // Tick a session began at — used to guarantee faster first bites during the
+    // opening ~30s of a run (stronger first-30s hook for new players).
+    hidden var _sessionStartTick;
 
     function initialize() {
         View.initialize();
@@ -120,12 +145,15 @@ class BitochiFishView extends WatchUi.View {
         var bfr = Application.Storage.getValue("fishBigR");
         _bestFishRarity = (bfr != null) ? bfr : 0;
         _newBigFish = false;
+        var bl = Application.Storage.getValue("fishBestLevel");
+        _bestLevel = (bl instanceof Number) ? bl : 1;
+        _progressSubmitted = false;
         _fishCaught = 0; _combo = 0; _level = 1;
         _fishLives = 3; _levelCatches = 0; _levelGotSpecial = false;
         _goalCount = 1; _goalMinType = 0;
         _resultTick = 0; _resultMsg = ""; _lastPts = 0;
         _shakeTimer = 0; _shakeOx = 0; _shakeOy = 0; _emotion = 0;
-        _sceneOx = 0; _sceneOy = 0;
+        _sceneOx = 0; _sceneOy = 0; _levelUpTick = 0;
         _lineTensionBonus = 0.0; _nearAmbIdx = -1; _envType = 0;
 
         _partX = new [MAX_PARTS]; _partY = new [MAX_PARTS];
@@ -146,7 +174,8 @@ class BitochiFishView extends WatchUi.View {
         _ambType = new [MAX_AMB]; _ambDir = new [MAX_AMB]; _ambActive = new [MAX_AMB];
         for (var i = 0; i < MAX_AMB; i++) { _ambActive[i] = false; _ambX[i] = 0.0; _ambY[i] = 0.0; _ambVx[i] = 0.0; _ambType[i] = 0; _ambDir[i] = 1; }
 
-        _fishNames = ["Minnow", "Shrimp", "Perch", "Roach", "Bass", "Carp", "Trout", "Pike", "Catfish", "Tuna"];
+        _fishNames = ["Minnow", "Shrimp", "Perch", "Roach", "Bass", "Carp", "Trout", "Pike", "Catfish", "Tuna",
+                      "Salmon", "Eel", "Sturgeon", "Swordfish", "Marlin", "Shark"];
         _menuSel = FISH_ROW_START;
 
         // Difficulty from the shared OPTIONS screen (fish_diff: 0/1/2). Default
@@ -157,6 +186,12 @@ class BitochiFishView extends WatchUi.View {
         if (fd instanceof Number && fd >= 0 && fd <= 2) { _diff = fd; }
         _biteMaxTicks = [120, 90, 62][_diff];
         _tensionMul = [1.25, 1.0, 0.8][_diff];
+        _fxOn = true;
+        var fx = Application.Storage.getValue("fish_fx");
+        if (fx instanceof Number && fx == 1) { _fxOn = false; }
+        _pgUnlockMsg = null;
+        _dailyMsg = null; _dailyMsgT = 0;
+        _sessionStartTick = 0;
         setLevelGoal();
         spawnAmbPool();
         gameState = GS_MENU;
@@ -167,13 +202,136 @@ class BitochiFishView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a session.
         // Only auto-start from a fresh launch (GS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the session.
-        if (gameState == GS_MENU) { startSession(); }
+        if (gameState == GS_MENU) {
+            startSession();
+            // Surface today's login-streak bonus as a one-shot scene toast
+            // (queued by the App's checkIn on the day's first launch).
+            try {
+                var dm = Application.Storage.getValue("fish_daily_msg");
+                if (dm != null) {
+                    _dailyMsg = dm; _dailyMsgT = 90;
+                    Application.Storage.deleteValue("fish_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
-    function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+    function onHide() {
+        if (_timer != null) { _timer.stop(); _timer = null; }
+        // Safety net: whenever the game view goes away (back to menu, app
+        // suspend, watch closes the app) record this session's progress so
+        // leaving mid-run still counts — you don't have to "lose" to rank.
+        submitProgress();
+    }
+
+    // Report this session to the global boards, exactly once per gameplay
+    // instance. Score → difficulty board; highest level reached → progress
+    // board. Guarded and cheap-checked so trivial "opened then bailed" runs
+    // (no fish, no score, level 1) never spam the leaderboard.
+    function submitProgress() as Void {
+        if (_progressSubmitted) { return; }
+        if (_score <= 0 && _fishCaught <= 0 && _level <= 1) { return; }
+        _progressSubmitted = true;
+        if (_level > _bestLevel) {
+            _bestLevel = _level;
+            Application.Storage.setValue("fishBestLevel", _bestLevel);
+        }
+        Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+        // Progress board is global (all difficulties): value = level reached,
+        // with a small meta blob so the web board can show fish caught too.
+        Leaderboard.submitScoreWithMeta(LB_GAME_ID, _bestLevel, "progress",
+            { "lv" => _bestLevel, "f" => _fishCaught });
+    }
+
+    // ── Shared meta-progression on a catch (Progress module) ──────────────────
+    // Records the species in the FISHDEX, grants coins + XP proportional to the
+    // catch, and unlocks rank-gated rod gear. Coins are the future shop's
+    // currency; rod ownership is the exact set a shop purchase would grant, so
+    // nothing here blocks monetising better rods later. Fully guarded — a
+    // failure here must never break the catch flow.
+    hidden function awardCatchProgress(pts) {
+        try {
+            // FISHDEX: mark this species as discovered (idempotent). A brand-new
+            // species queues a one-shot game-over banner (gear unlocks override).
+            var speciesId = "fish_" + _fishType;
+            var newSpecies = !Progress.owns(speciesId);
+            Progress.unlock(speciesId);
+            if (newSpecies && _pgUnlockMsg == null) {
+                _pgUnlockMsg = "NEW: " + _fishNames[_fishType];
+            }
+
+            // Coins + XP scale with species tier, rarity and points scored.
+            var coinGain = 3 + _fishType + _fishRarity * 2 + pts / 60;
+            var xpGain   = 6 + _fishType * 2 + _fishRarity * 4;
+            Progress.addCoins(coinGain);
+            Progress.addXp(xpGain);
+
+            // Gear tiers unlocked by shared level (rod_pro @3, rod_master @6).
+            var lvl = Progress.level();
+            var uPro    = Progress.unlockIfReached("rod_pro", lvl, 3);
+            var uMaster = Progress.unlockIfReached("rod_master", lvl, 6);
+            if (uMaster)   { _pgUnlockMsg = "UNLOCKED: MASTER ROD"; }
+            else if (uPro) { _pgUnlockMsg = "UNLOCKED: PRO ROD"; }
+        } catch (e) {}
+    }
+
+    // How many of the 16 species the player has ever caught (FISHDEX progress).
+    hidden function fishdexOwned() {
+        try {
+            var ids = new [16];
+            for (var i = 0; i < 16; i++) { ids[i] = "fish_" + i; }
+            return Progress.ownedIn(ids);
+        } catch (e) {}
+        return 0;
+    }
+
+    // Selected-and-OWNED rod colour, clamped to ownership (locked pick falls
+    // back to the classic wooden rod). Drives both the rod and the fishing line.
+    hidden function rodColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("fish_rod");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 2 && Progress.owns("rod_master")) { return 0x33FFEE; } // MASTER teal
+        if (sel == 1 && Progress.owns("rod_pro"))    { return 0xFFD24A; } // PRO gold
+        return 0x8A6A3A;                                                  // BASIC wood
+    }
+    // Line tint that matches the owned rod skin (subtle, non-fight base colour).
+    hidden function gearLineColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("fish_rod");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 2 && Progress.owns("rod_master")) { return 0xAEFFF6; }
+        if (sel == 1 && Progress.owns("rod_pro"))    { return 0xFFE39A; }
+        return 0xBBBBBB;
+    }
+
+    // Roughly halve a colour's brightness (for the rod's shaded edge).
+    hidden function _dimColor(color) {
+        var r = (color >> 16) & 0xFF;
+        var g = (color >> 8) & 0xFF;
+        var b = color & 0xFF;
+        r = r * 60 / 100; g = g * 60 / 100; b = b * 60 / 100;
+        return (r << 16) | (g << 8) | b;
+    }
+
+    // Themed angler rank derived from the shared XP level.
+    hidden function _fishRank(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Master"; }
+        if (lvl >= 10) { return "Angler"; }
+        if (lvl >= 6)  { return "Pro"; }
+        if (lvl >= 3)  { return "Amateur"; }
+        return "Rookie";
+    }
 
     function onTick() as Void {
         _tick++;
         _waveOff += 0.06;
+        if (_levelUpTick > 0) { _levelUpTick--; }
+        if (_dailyMsgT > 0) { _dailyMsgT--; }
         _birdX += 0.32;
         if (_birdX > (_w + 28).toFloat()) { _birdX = -28.0; _birdY = 8 + Math.rand().abs() % 18; }
         if (_shakeTimer > 0) { _shakeOx = (Math.rand().abs() % 5) - 2; _shakeOy = (Math.rand().abs() % 3) - 1; _shakeTimer--; } else { _shakeOx = 0; _shakeOy = 0; }
@@ -199,6 +357,12 @@ class BitochiFishView extends WatchUi.View {
                 spawnSplash(_bobX.toNumber(), _waterY);
                 gameState = GS_WAIT;
                 _waitMax = 38 + Math.rand().abs() % 44;
+                // Stronger first 30s: guarantee much faster early bites so new
+                // players land a catch quickly (~30s at 50ms/tick ≈ 600 ticks).
+                // Subtle — only compresses the wait window, no other rebalance.
+                if (_tick - _sessionStartTick < 600) {
+                    _waitMax = 14 + Math.rand().abs() % 16;
+                }
                 _waitTick = _waitMax;
                 _nearAmbIdx = -1;
                 var nearDist = 85.0;
@@ -223,7 +387,7 @@ class BitochiFishView extends WatchUi.View {
             _approachY = _approachY + (_waterY.toFloat() + 14.0 - _approachY) * 0.016;
             var pct = 1.0 - _waitTick.toFloat() / _waitMax.toFloat();
             if (pct > 0.7 && _tick % 22 == 0) { addRipple((_approachX + (Math.rand().abs() % 10) - 5).toNumber()); }
-            if (_waitTick <= 0) { gameState = GS_BITE; _biteTick = 0; spawnFish(); doVibe(50, 60); _emotion = 1; }
+            if (_waitTick <= 0) { gameState = GS_BITE; _biteTick = 0; spawnFish(); doVibe(50, 60); playTone(1); _emotion = 1; }
         } else if (gameState == GS_BITE) {
             _biteTick++;
             _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.55) * 4.5;
@@ -231,6 +395,7 @@ class BitochiFishView extends WatchUi.View {
             if (_biteTick > _biteMaxTicks) {
                 _fishLives--; if (_fishLives < 0) { _fishLives = 0; }
                 gameState = GS_LOST; _resultMsg = "TOO SLOW!"; _resultTick = 0; _combo = 0; _emotion = 3;
+                playTone(3);
             }
         } else if (gameState == GS_FIGHT) {
             updateFight();
@@ -249,20 +414,20 @@ class BitochiFishView extends WatchUi.View {
                 // Weight = per-type base range × rarity multiplier × a small
                 // extra jitter, so every catch (even same type/rarity) lands
                 // on a slightly different number — no two fish are identical.
-                var wBase = [50, 12, 180, 100, 700, 1800, 550, 2200, 1100, 7500];
-                var wRng  = [60, 14, 350, 180, 1800, 4500, 1400, 5500, 2800, 18000];
-                var rarityWMul = [0.55, 1.0, 1.5, 2.6];
+                var wBase = [50, 12, 180, 100, 700, 1800, 550, 2200, 1100, 7500, 3000, 1500, 12000, 30000, 45000, 80000];
+                var wRng  = [60, 14, 350, 180, 1800, 4500, 1400, 5500, 2800, 18000, 6000, 4000, 40000, 60000, 90000, 220000];
+                var rarityWMul = [0.55, 1.0, 1.5, 2.6, 4.0];
                 var jitter = 0.88 + (Math.rand().abs() % 25).toFloat() * 0.01; // 0.88..1.12
                 var baseW = (wBase[_fishType] + Math.rand().abs() % wRng[_fishType]).toFloat();
                 _fishWeight = (baseW * rarityWMul[_fishRarity] * jitter).toNumber();
                 if (_fishWeight < 5) { _fishWeight = 5; }
 
-                var rarityPtsBonus = [0, 0, 40, 140];
+                var rarityPtsBonus = [0, 0, 40, 140, 320];
                 pts += rarityPtsBonus[_fishRarity];
                 _score += pts; _lastPts = pts; _combo++;
                 if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("fishBest", _bestScore); }
 
-                var rarityPrefix = ["Runt ", "", "Big ", "GIANT "];
+                var rarityPrefix = ["Runt ", "", "Big ", "GIANT ", "LEGENDARY "];
                 _resultMsg = rarityPrefix[_fishRarity] + _fishNames[_fishType] + "!";
 
                 // Lifetime "biggest fish" record — mirrored to the global
@@ -283,20 +448,28 @@ class BitochiFishView extends WatchUi.View {
                 if (_levelCatches >= _goalCount && _levelGotSpecial) {
                     _level++; if (_level > 15) { _level = 15; }
                     setLevelGoal(); _envType = getEnvType(); spawnAmbPool();
+                    _levelUpTick = 48; doVibe(90, 130);
+                    playTone(4);   // level-up fanfare
+                    if (_level > _bestLevel) {
+                        _bestLevel = _level;
+                        Application.Storage.setValue("fishBestLevel", _bestLevel);
+                    }
                 }
                 spawnCatchParts(_fishX.toNumber(), _fishY.toNumber());
                 if (_fishRarity >= 3) { spawnCatchParts(_fishX.toNumber(), _fishY.toNumber()); }
                 doVibe(_fishRarity >= 3 ? 140 : 80, _fishRarity >= 3 ? 180 : 120);
+                playTone(_fishRarity >= 3 ? 4 : 2);
                 _shakeTimer = (_fishRarity >= 3) ? 10 : 5; _emotion = 2;
+                awardCatchProgress(pts);
             }
         } else if (gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) {
             _resultTick++;
             if (_resultTick > 70) {
                 if (_fishLives <= 0) {
                     gameState = GS_GAMEOVER; _resultTick = 0;
-                    // Session over — submit total catch value to the global
-                    // leaderboard, segmented by difficulty.
-                    Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
+                    // Session over — report score (by difficulty) + progress
+                    // (level reached) to the global boards, then show the card.
+                    submitProgress();
                     Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "FISHING");
                 }
                 else { gameState = GS_IDLE; _emotion = 0; }
@@ -322,7 +495,7 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function spawnAmbPool() {
-        var maxT = 1 + _level / 2; if (maxT > 8) { maxT = 8; }
+        var maxT = _level + 1; if (maxT > 15) { maxT = 15; }
         for (var i = 0; i < MAX_AMB; i++) {
             _ambType[i] = Math.rand().abs() % (maxT + 1);
             _ambX[i] = (12 + Math.rand().abs() % (_w * 60 / 100 - 12)).toFloat();
@@ -367,8 +540,13 @@ class BitochiFishView extends WatchUi.View {
             _ambActive[_nearAmbIdx] = false;
             _nearAmbIdx = -1;
         } else {
-            var maxType = 1 + _level / 2; if (maxType > 9) { maxType = 9; }
-            var minType = 0; if (_level >= 5) { minType = 1; } if (_level >= 8) { minType = 2; }
+            // Species ramp climbs with level so deep sessions surface the big
+            // end-game trophies (Salmon…Shark, indices 10–15).
+            var maxType = _level; if (maxType < 1) { maxType = 1; } if (maxType > 15) { maxType = 15; }
+            var minType = 0;
+            if (_level >= 5) { minType = 1; }
+            if (_level >= 8) { minType = 2; }
+            if (_level >= 12) { minType = 4; }
             if (minType > maxType) { minType = maxType; }
             _fishType = minType + Math.rand().abs() % (maxType - minType + 1);
         }
@@ -376,26 +554,33 @@ class BitochiFishView extends WatchUi.View {
             _fishType = _goalMinType;
         }
         // Rarity roll — every hooked fish is "a bit random", not just its type.
-        // Runt/Big/GIANT shift size, fight difficulty and (at catch time)
-        // final weight, so no two Pikes ever weigh quite the same.
-        var rr = Math.rand().abs() % 100;
-        if (rr < 10)      { _fishRarity = 0; }       // Runt   10%
-        else if (rr < 78) { _fishRarity = 1; }       // Normal 68%
-        else if (rr < 95) { _fishRarity = 2; }       // Big    17%
-        else              { _fishRarity = 3; }       // GIANT   5%
+        // Runt/Big/GIANT/LEGENDARY shift size, fight difficulty and (at catch
+        // time) final weight, so no two Pikes ever weigh quite the same and a
+        // 1-in-100 LEGENDARY is a genuine "holy grail" trophy chase.
+        var rr = Math.rand().abs() % 1000;
+        if (rr < 100)      { _fishRarity = 0; }      // Runt      10%
+        else if (rr < 760) { _fishRarity = 1; }      // Normal    66%
+        else if (rr < 930) { _fishRarity = 2; }      // Big       17%
+        else if (rr < 990) { _fishRarity = 3; }      // GIANT      6%
+        else               { _fishRarity = 4; }      // LEGENDARY  1%
 
-        var fishSizes = [5, 6, 7, 8, 9, 11, 12, 14, 16, 18];
-        var sizeAdj = [-2, 0, 2, 5];
+        var fishSizes = [5, 6, 7, 8, 9, 11, 12, 14, 16, 18, 15, 14, 20, 20, 22, 24];
+        var sizeAdj = [-2, 0, 2, 5, 8];
         _fishSize = fishSizes[_fishType] + sizeAdj[_fishRarity];
         if (_fishSize < 3) { _fishSize = 3; }
+        if (_fishSize > 30) { _fishSize = 30; }
         var lvlF = _level.toFloat();
-        _fishStr = 0.42 + _fishType.toFloat() * 0.14 + lvlF * 0.035;
+        // Softer per-type strength/HP curve for the new heavyweight species so
+        // fights stay tense but don't drag forever.
+        var typeF = _fishType.toFloat(); if (typeF > 9.0) { typeF = 9.0 + (typeF - 9.0) * 0.5; }
+        _fishStr = 0.42 + typeF * 0.14 + lvlF * 0.035;
         if (_fishStr > 1.9) { _fishStr = 1.9; }
-        _fishHP = 38.0 + _fishType.toFloat() * 11.0 + lvlF * 2.8;
-        var rarityStrMul = [0.82, 1.0, 1.18, 1.42];
-        var rarityHpMul  = [0.75, 1.0, 1.35, 1.85];
+        _fishHP = 38.0 + typeF * 11.0 + lvlF * 2.8;
+        var rarityStrMul = [0.82, 1.0, 1.18, 1.42, 1.65];
+        var rarityHpMul  = [0.75, 1.0, 1.35, 1.85, 2.4];
         _fishStr *= rarityStrMul[_fishRarity]; if (_fishStr > 2.2) { _fishStr = 2.2; }
         _fishHP  *= rarityHpMul[_fishRarity];
+        if (_fishHP > 150.0) { _fishHP = 150.0; }
         _fishMaxHP = _fishHP;
         _fishX = _bobX + ((Math.rand().abs() % 2 == 0) ? -28.0 : 28.0);
         _fishY = _bobY + 48.0 + (Math.rand().abs() % 22).toFloat();
@@ -404,8 +589,9 @@ class BitochiFishView extends WatchUi.View {
         _fishPullTimer = 25 + Math.rand().abs() % 20;
         _maxTension = (100.0 + _lineTensionBonus) * _tensionMul;
         _tension = 24.0 + _lineTensionBonus * 0.18; _reelProg = 0.0;
-        _reelTarget = 44.0 + _fishType.toFloat() * 10.0 - _lineTensionBonus * 0.18;
+        _reelTarget = 44.0 + typeF * 10.0 - _lineTensionBonus * 0.18;
         if (_reelTarget < 34.0) { _reelTarget = 34.0; }
+        if (_reelTarget > 130.0) { _reelTarget = 130.0; }
         _fightCursor = 0.0;
     }
 
@@ -466,9 +652,10 @@ class BitochiFishView extends WatchUi.View {
             _fishLives--; if (_fishLives < 0) { _fishLives = 0; }
             gameState = GS_SNAP; _resultTick = 0; _resultMsg = "LINE SNAPPED!";
             _combo = 0; spawnSnapParts(_bobX.toNumber(), _waterY);
-            doVibe(100, 150); _shakeTimer = 8; _emotion = 3;
+            doVibe(100, 150); playTone(3); _shakeTimer = 8; _emotion = 3;
         }
         if (_tick % 14 == 0 && pullForce > 0.5) { addRipple(_fishX.toNumber()); }
+        if (_tick % 8 == 0) { spawnBubble(_fishX.toNumber(), _fishY.toNumber()); }
         if (_tension > 72.0) { doVibe((((_tension - 72.0) / 28.0 * 28.0)).toNumber() + 10, 20); }
         _bobX = _bobX * 0.88 + _fishX * 0.12;
         _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.27) * 2.0;
@@ -479,6 +666,9 @@ class BitochiFishView extends WatchUi.View {
             if (_resultTick > 15) {
                 _score = 0; _fishCaught = 0; _combo = 0; _level = 1;
                 _fishLives = 3; _lineTensionBonus = 0.0;
+                _progressSubmitted = false;
+                _pgUnlockMsg = null;
+                _sessionStartTick = _tick;
                 setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
             }
             return;
@@ -487,7 +677,7 @@ class BitochiFishView extends WatchUi.View {
         if (gameState == GS_IDLE) { _power = 0.0; _powerDir = 1; gameState = GS_POWER; return; }
         if (gameState == GS_POWER) {
             _castDist = _power; _bobX = _rodTipX.toFloat(); _bobY = _rodTipY.toFloat();
-            _bobVy = -3.8 - _power * 0.026; gameState = GS_CAST; doVibe(30, 40); return;
+            _bobVy = -3.8 - _power * 0.026; gameState = GS_CAST; doVibe(30, 40); playTone(0); return;
         }
         if (gameState == GS_BITE) { gameState = GS_FIGHT; _resultMsg = "FIGHT!"; _resultTick = 0; doVibe(40, 50); _emotion = 1; return; }
         if (gameState == GS_FIGHT) {
@@ -513,6 +703,9 @@ class BitochiFishView extends WatchUi.View {
     hidden function startSession() {
         _score = 0; _fishCaught = 0; _combo = 0; _level = 1;
         _fishLives = 3; _lineTensionBonus = 0.0;
+        _progressSubmitted = false;
+        _pgUnlockMsg = null;
+        _sessionStartTick = _tick;
         setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
     }
 
@@ -587,6 +780,20 @@ class BitochiFishView extends WatchUi.View {
         }
     }
 
+    // A single rising bubble — used during the fight for underwater ambience.
+    hidden function spawnBubble(ex, ey) {
+        for (var i = 0; i < MAX_PARTS; i++) {
+            if (_partLife[i] > 0) { continue; }
+            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 7) - 3).toFloat();
+            _partY[i] = ey.toFloat();
+            _partVx[i] = ((Math.rand().abs() % 5) - 2).toFloat() * 0.12;
+            _partVy[i] = -0.9 - (Math.rand().abs() % 5).toFloat() * 0.1;
+            _partLife[i] = 14 + Math.rand().abs() % 8;
+            _partColor[i] = 0x99CCEE;
+            return;
+        }
+    }
+
     hidden function spawnSnapParts(ex, ey) {
         var sc = [0xFF4444, 0xFFAA44, 0xFFFF88, 0xFF6644];
         var spawned = 0;
@@ -600,9 +807,26 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function doVibe(intensity, duration) {
+        if (!_fxOn) { return; }
         if (Toybox has :Attention) { if (Toybox.Attention has :vibrate) {
             Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
         } }
+    }
+
+    // Best-effort audio cue. Silent on watches without a tone transducer or with
+    // tones disabled — feedback still comes through vibration. kind:
+    //   0 cast · 1 bite · 2 catch · 3 fail · 4 level/giant.
+    hidden function playTone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Toybox.Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Toybox.Attention.TONE_KEY; }
+        else if (kind == 1) { t = Toybox.Attention.TONE_ALERT_HI; }
+        else if (kind == 2) { t = Toybox.Attention.TONE_MSG; }
+        else if (kind == 3) { t = Toybox.Attention.TONE_ALERT_LO; }
+        else                { t = Toybox.Attention.TONE_LOUD_BEEP; }
+        try { Toybox.Attention.playTone(t); } catch (e) {}
     }
 
     function onUpdate(dc) {
@@ -653,6 +877,38 @@ class BitochiFishView extends WatchUi.View {
         drawHUD(dc, ox, oy);
         if ((gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) && _resultTick < 65) { drawResultMsg(dc, ox, oy); }
         if (gameState == GS_CAUGHT && _resultTick < 58) { drawCaughtFish(dc, ox, oy); }
+        if (_levelUpTick > 0) { drawLevelUp(dc, ox, oy); }
+        if (_dailyMsgT > 0 && _dailyMsg != null) { drawDailyToast(dc, ox, oy); }
+    }
+
+    // Lightweight non-blocking login-bonus toast shown over the first frames of
+    // the day's first session (queued by the App's Progress.checkIn()).
+    hidden function drawDailyToast(dc, ox, oy) {
+        var ty = _h * 6 / 100 + oy;
+        var bw = _w * 74 / 100; var bxp = (_w - bw) / 2 + ox;
+        var bh = 16;
+        dc.setColor(0x0A2A3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxp, ty, bw, bh);
+        dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bxp, ty, bw, bh);
+        dc.setColor(0xEAFBFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + ox, ty + bh / 2 - 7, Graphics.FONT_XTINY, _dailyMsg, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Brief celebratory banner when the angler clears a level goal.
+    hidden function drawLevelUp(dc, ox, oy) {
+        var by = _h * 30 / 100 + oy;
+        var bh = 26;
+        var bw = _w * 66 / 100; var bxp = (_w - bw) / 2 + ox;
+        // Slide-in from the top for the first few ticks, then hold.
+        var appear = 48 - _levelUpTick;
+        var slide = (appear < 8) ? (8 - appear) * 5 : 0;
+        by -= slide;
+        dc.setColor(0x0A2A12, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxp, by, bw, bh);
+        dc.setColor((_tick % 6 < 3) ? 0x44FF66 : 0x33CC55, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(bxp, by, bw, bh); dc.drawRectangle(bxp + 1, by + 1, bw - 2, bh - 2);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + 1 + ox, by + bh / 2 - 7, Graphics.FONT_SMALL, "LEVEL " + _level + "!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xAAFFBB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + ox, by + bh / 2 - 8, Graphics.FONT_SMALL, "LEVEL " + _level + "!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawSky(dc, ox, oy) {
@@ -735,6 +991,41 @@ class BitochiFishView extends WatchUi.View {
             dc.setColor(wavC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 12, 3);
         }
         dc.setColor(deepC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, wy + 5, _w, _h - _waterY - 5);
+
+        // ── Underwater god-rays: faint light beams slanting down from the
+        // surface. Pure eye-candy; they slowly drift with _tick for life.
+        var rayC = (_envType == 5) ? 0x0E2438
+                 : ((_envType == 3) ? 0x6A4A24 : ((_envType == 2) ? 0x225568 : 0x2A70A8));
+        var rayDepth = _h - _waterY;
+        for (var gr = 0; gr < 3; gr++) {
+            var baseX = ((gr * 37 + (_tick / 3)) % (_w + 40)) - 20 + ox;
+            dc.setColor(rayC, Graphics.COLOR_TRANSPARENT);
+            for (var rs = 0; rs < rayDepth; rs += 3) {
+                dc.fillRectangle(baseX + rs / 2, wy + 3 + rs, 2, 2);
+            }
+        }
+
+        // ── Sun / moon glitter reflection on the water surface ─────────────
+        var glint = -1;
+        if (_envType == 0 || _envType == 4) { glint = 26; }
+        else if (_envType == 3)             { glint = 28; }
+        else if (_envType == 5)             { glint = 28; }
+        if (glint >= 0) {
+            var gTop = (_envType == 5) ? 0xAACCE8 : ((_envType == 3) ? 0xFFCC66 : 0xFFF0AA);
+            var gBot = (_envType == 5) ? 0x668AA8 : ((_envType == 3) ? 0xCC7A33 : 0xFFDD55);
+            for (var gi = 0; gi < 7; gi++) {
+                var gy2 = wy + 2 + gi * 4;
+                if (gy2 >= _h + oy) { break; }
+                // Width shimmers with a per-row sine so it looks like rippling light.
+                var sv = Math.sin(_tick.toFloat() * 0.22 + gi.toFloat() * 0.9) * 4.0;
+                if (sv < 0.0) { sv = -sv; }
+                var sw2 = 3 + sv.toNumber();
+                var jig = (Math.sin(_tick.toFloat() * 0.3 + gi.toFloat() * 1.7) * 2.0).toNumber();
+                dc.setColor((gi < 3) ? gTop : gBot, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(glint - sw2 + jig + ox, gy2, sw2 * 2, 2);
+            }
+        }
+
         for (var d = 0; d < 3; d++) {
             var dy = wy + 12 + d * 17;
             var shC = (_envType == 5) ? 0x08182A : (d % 2 == 0 ? 0x103A70 : 0x184880);
@@ -763,14 +1054,23 @@ class BitochiFishView extends WatchUi.View {
         if (t == 6) { return 0xEE8855; }
         if (t == 7) { return 0x4466CC; }
         if (t == 8) { return 0x997744; }
-        return 0xFF6644;
+        if (t == 9) { return 0xFF6644; }   // Tuna
+        if (t == 10) { return 0xFF6E85; }  // Salmon
+        if (t == 11) { return 0x54663E; }  // Eel
+        if (t == 12) { return 0x8A9BAD; }  // Sturgeon
+        if (t == 13) { return 0x3457A8; }  // Swordfish
+        if (t == 14) { return 0x2A4AD8; }  // Marlin
+        return 0x59677A;                    // Shark
     }
     hidden function getFishBellyType(t) {
         if (t == 0) { return 0xAADDAA; } if (t == 1) { return 0xFFCCBB; }
         if (t == 2) { return 0x88EE99; } if (t == 3) { return 0x55BB66; }
         if (t == 4) { return 0xEEBB99; } if (t == 5) { return 0xAABBCC; }
         if (t == 6) { return 0xFFAA88; } if (t == 7) { return 0x77AADD; }
-        if (t == 8) { return 0xBBAA77; } return 0xFF9977;
+        if (t == 8) { return 0xBBAA77; } if (t == 9) { return 0xFF9977; }
+        if (t == 10) { return 0xFFBBC4; } if (t == 11) { return 0x8A9A6A; }
+        if (t == 12) { return 0xCAD6E0; } if (t == 13) { return 0x9DB4E6; }
+        if (t == 14) { return 0x9AB0F0; } return 0xC4CED8;
     }
     hidden function getFishColor() { return getFishColorType(_fishType); }
 
@@ -784,8 +1084,19 @@ class BitochiFishView extends WatchUi.View {
 
     // GIANT-rarity hooked fish get a shiny golden tint instead of their normal
     // species colour — an instant "whoa, that's a big one" visual tell.
-    hidden function hookedFishBody()  { return (_fishRarity >= 3) ? 0xFFD700 : getFishColorType(_fishType); }
-    hidden function hookedFishBelly() { return (_fishRarity >= 3) ? 0xFFF3B0 : getFishBellyType(_fishType); }
+    // LEGENDARY fish shimmer through a shifting rainbow; GIANT get a golden
+    // tint; everything else wears its species colour.
+    hidden function hookedFishBody() {
+        if (_fishRarity >= 4) {
+            var pal = [0xFF3B6E, 0xFF9E2C, 0xFFE23B, 0x3BFF7A, 0x3BB0FF, 0xB05BFF];
+            return pal[(_tick / 3) % 6];
+        }
+        return (_fishRarity >= 3) ? 0xFFD700 : getFishColorType(_fishType);
+    }
+    hidden function hookedFishBelly() {
+        if (_fishRarity >= 4) { return 0xFFFFFF; }
+        return (_fishRarity >= 3) ? 0xFFF3B0 : getFishBellyType(_fishType);
+    }
 
     hidden function drawAmbFish(dc, ox, oy) {
         for (var i = 0; i < MAX_AMB; i++) {
@@ -874,8 +1185,11 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0x553322, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fx - 5, fy + 7, 5, 2); dc.fillRectangle(fx + 1, fy + 7, 5, 2);
         var tipX = _rodTipX + ox; var tipY = _rodTipY + oy;
         var handX = fx - 7; var handY = fy - 7;
-        dc.setColor(0x8A6A3A, Graphics.COLOR_TRANSPARENT); dc.drawLine(handX, handY, tipX, tipY); dc.drawLine(handX, handY - 1, tipX, tipY - 1);
-        dc.setColor(0x6A4A1A, Graphics.COLOR_TRANSPARENT); dc.drawLine(handX + 1, handY, tipX + 1, tipY);
+        // Rod colour reflects the owned+selected cosmetic (clamped to ownership).
+        var rodC = rodColor();
+        var rodShade = _dimColor(rodC);
+        dc.setColor(rodC, Graphics.COLOR_TRANSPARENT); dc.drawLine(handX, handY, tipX, tipY); dc.drawLine(handX, handY - 1, tipX, tipY - 1);
+        dc.setColor(rodShade, Graphics.COLOR_TRANSPARENT); dc.drawLine(handX + 1, handY, tipX + 1, tipY);
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT); dc.fillCircle(tipX, tipY, 2);
     }
 
@@ -883,7 +1197,7 @@ class BitochiFishView extends WatchUi.View {
         if (gameState == GS_IDLE || gameState == GS_POWER || gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP || gameState == GS_GAMEOVER) { return; }
         var tipX = _rodTipX + ox; var tipY = _rodTipY + oy;
         var bx = _bobX.toNumber() + ox; var by = _bobY.toNumber() + oy;
-        var lineC = 0xBBBBBB;
+        var lineC = gearLineColor();
         if (gameState == GS_FIGHT && _tension > 70.0) { lineC = (_tick % 4 < 2) ? 0xFF4444 : 0xCC2222; }
         else if (gameState == GS_FIGHT && _tension > 45.0) { lineC = 0xDDAA33; }
         dc.setColor(lineC, Graphics.COLOR_TRANSPARENT);
@@ -897,21 +1211,34 @@ class BitochiFishView extends WatchUi.View {
     hidden function drawFishUnder(dc, ox, oy) {
         var fx = _fishX.toNumber() + ox; var fy = _fishY.toNumber() + oy;
         var sz = _fishSize; var dir = (_fishVx >= 0) ? 1 : -1;
+        var wag = (Math.sin(_tick.toFloat() * 0.45) * 2.0).toNumber();  // swishing tail
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx + 2, fy + 2, sz + 1);
         var bodyC = hookedFishBody(); var bellyC = hookedFishBelly();
         dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(fx, fy, sz); dc.fillCircle(fx + dir * sz / 2, fy, sz * 80 / 100);
         dc.fillCircle(fx - dir * sz / 2, fy, sz * 70 / 100);
-        dc.fillCircle(fx - dir * (sz + 2), fy - sz / 3, sz / 3 + 1);
-        dc.fillCircle(fx - dir * (sz + 2), fy + sz / 3, sz / 3 + 1);
+        dc.fillCircle(fx - dir * (sz + 2), fy - sz / 3 + wag, sz / 3 + 1);
+        dc.fillCircle(fx - dir * (sz + 2), fy + sz / 3 + wag, sz / 3 + 1);
         dc.setColor(bellyC, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx, fy + sz / 3, sz * 50 / 100);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx + dir * (sz - 3), fy - 2, 3);
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx + dir * (sz - 2), fy - 2, 1);
         if (_fishType >= 4) { dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT); dc.fillPolygon([[fx, fy - sz + 1], [fx - 4, fy - sz - 5], [fx + 4, fy - sz - 5]]); }
-        if (_fishType >= 7) {
+        if (_fishType >= 7 && _fishType <= 9) {
             dc.setColor((_fishType == 9) ? 0xFF9966 : 0x5577CC, Graphics.COLOR_TRANSPARENT);
             var swordX = (dir >= 0) ? fx + sz : fx - sz - 11;
             dc.fillRectangle(swordX, fy - 1, (_fishType == 9) ? 12 : 8, 2);
+        }
+        // Long spear-bill for Swordfish/Marlin.
+        if (_fishType == 13 || _fishType == 14) {
+            dc.setColor(0xDDE4F0, Graphics.COLOR_TRANSPARENT);
+            var billLen = sz + 8;
+            var billX = (dir >= 0) ? fx + sz : fx - sz - billLen;
+            dc.fillRectangle(billX, fy - 1, billLen, 2);
+        }
+        // Tall dorsal fin for the Shark.
+        if (_fishType == 15) {
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[fx, fy - sz + 1], [fx - dir * 7, fy - sz - 10], [fx + dir * 4, fy - sz - 1]]);
         }
         if (gameState == GS_FIGHT && _fishHP > 0) {
             var hpW = sz * 2; var hpFill = (_fishHP / _fishMaxHP * hpW.toFloat()).toNumber(); if (hpFill < 0) { hpFill = 0; }
@@ -935,11 +1262,25 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX + ox, bY + oy, fill, bH);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, bY - 14 + oy, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Landing preview dot on water line using arc physics (gravity=0.30)
-        var vy0 = -3.8 - _power * 0.026;
-        var disc = vy0 * vy0 + 4.0 * 0.15 * 18.0;
-        var ft = (-vy0 + Math.sqrt(disc)) / (2.0 * 0.15);
-        var prevX = _rodTipX.toFloat() - _power * 0.044 * ft;
+        // Predicted cast trajectory — simulate the REAL bob physics (gravity
+        // 0.30/tick, horizontal step power*0.044) and lay a faint dotted arc
+        // from the rod tip to splashdown, capped with a bright landing marker.
+        var simX  = _rodTipX.toFloat();
+        var simY  = _rodTipY.toFloat();
+        var simVy = -3.8 - _power * 0.026;
+        var step  = 0;
+        while (simY < _waterY.toFloat() && step < 200) {
+            simVy += 0.30;
+            simX  -= _power * 0.044;
+            if (simX < 8.0) { simX = 8.0; }
+            simY += simVy;
+            step++;
+            if (step % 3 == 0 && simY < _waterY.toFloat()) {
+                dc.setColor(0xBBD8EE, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(simX.toNumber() + ox, simY.toNumber() + oy, 1);
+            }
+        }
+        var prevX = simX;
         if (prevX < 8.0) { prevX = 8.0; }
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() + ox, _waterY - 3 + oy, 5);
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() + ox, _waterY - 3 + oy, 4);
@@ -1154,17 +1495,34 @@ class BitochiFishView extends WatchUi.View {
 
     hidden function drawGameOver(dc) {
         dc.setColor(0x060E18, 0x060E18); dc.clear();
-        dc.setColor(0x2A0808, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 36 / 100, _w, _h * 28 / 100);
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 2, _h * 12 / 100 + 2, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_resultTick % 8 < 4) ? 0xFF4444 : 0xCC2222, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 12 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 34 / 100, Graphics.FONT_SMALL, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 50 / 100, Graphics.FONT_XTINY, "Fish: " + _fishCaught + "  Lv: " + _level, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_score >= _bestScore && _score > 0) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
-        else if (_bestScore > 0) { dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_bestFishWeight > 0) {
+        dc.setColor(0x2A0808, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 33 / 100, _w, _h * 22 / 100);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 2, _h * 9 / 100 + 2, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_resultTick % 8 < 4) ? 0xFF4444 : 0xCC2222, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 9 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 28 / 100, Graphics.FONT_SMALL, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 42 / 100, Graphics.FONT_XTINY, "Lv " + _level + " reached  ·  " + _fishCaught + " fish", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // ── Shared meta-progression summary (level/rank/coins + streak) ──
+        var plvl = 1; var pcoins = 0; var prank = "Rookie"; var streak = 0;
+        try {
+            plvl = Progress.level(); pcoins = Progress.coins();
+            prank = _fishRank(plvl); streak = Progress.currentStreak();
+        } catch (e) {}
+        dc.setColor(0xBFE8D4, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 52 / 100, Graphics.FONT_XTINY,
+            "Lv " + plvl + " " + prank + " - " + pcoins + "c", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x7FCBA8, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 61 / 100, Graphics.FONT_XTINY,
+            "Fishdex " + fishdexOwned() + "/16  ·  Streak " + streak, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // One-shot gear/species unlock banner takes the priority slot; otherwise
+        // fall back to the lifetime biggest-fish record.
+        if (_pgUnlockMsg != null) {
+            dc.setColor((_tick % 8 < 4) ? 0xFFD24A : 0xFFF3B0, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 71 / 100, Graphics.FONT_XTINY, _pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_bestFishWeight > 0) {
             var bfTxt = "Biggest: " + weightText(_bestFishWeight) + " " + _fishNames[_bestFishType];
             dc.setColor(0xFFD700, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 72 / 100, Graphics.FONT_XTINY, bfTxt, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 71 / 100, Graphics.FONT_XTINY, bfTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor((_tick % 10 < 5) ? 0x44CCFF : 0x33AADD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 82 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }

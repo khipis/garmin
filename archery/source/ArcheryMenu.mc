@@ -75,7 +75,8 @@ function buildArcheryMenu() as Lang.Array {
         :hooks   => new ArcheryHooks(),
         :options => [
             new GmOption("ar_sens", "Sensitivity", ["LOW", "NORM", "HIGH"], 1),
-            new GmOption("ar_diff", "Difficulty", ["EASY", "NORM", "HARD"], 1)
+            new GmOption("ar_diff", "Difficulty", ["EASY", "NORM", "HARD"], 1),
+            new GmOption("ar_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

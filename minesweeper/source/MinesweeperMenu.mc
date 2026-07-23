@@ -81,7 +81,8 @@ function buildMinesweeperMenu() as Lang.Array {
             new GmOption("lDiff", "Size",
                 ["8x8", "10x10", "12x12", "16x16", "24x24", "32x32"], 3),
             new GmOption("lDens", "Bombs",
-                ["10%", "15%", "20%", "25%", "30%"], 1)
+                ["10%", "15%", "20%", "25%", "30%"], 1),
+            new GmOption("ms_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

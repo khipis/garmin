@@ -72,7 +72,11 @@ function buildPixelInvadersMenu() as Lang.Array {
         :hooks   => new PixelInvadersHooks(),
         :options => [
             new GmOption(PI_DIFF_KEY,  "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
-            new GmOption(PI_LIVES_KEY, "Lives",      ["1", "2", "3", "4", "5"],  2)
+            new GmOption(PI_LIVES_KEY, "Lives",      ["1", "2", "3", "4", "5"],  2),
+            new GmOption("pi_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic ship skin — unlocked at rank 3, shop-ready. A locked pick
+            // simply renders as the classic ship until it's owned.
+            new GmOption("pi_skin", "Ship", ["CLASSIC", "NEON"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -1,0 +1,1722 @@
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 27; @symbol_usingdef<0> = [Toybox,27,6,12]; @symbol_usingdef<1> = [Application,27,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 28; @symbol_usingdef<0> = [Toybox,28,6,12]; @symbol_usingdef<1> = [Lang,28,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 29; @symbol_usingdef<0> = [Toybox,29,6,12]; @symbol_usingdef<1> = [Time,29,13,17]; ]
+using Toybox.Time;
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 30; @symbol_usingdef<0> = [Toybox,30,6,12]; @symbol_usingdef<1> = [Time,30,13,17]; @symbol_usingdef<2> = [Gregorian,30,18,27]; ]
+using Toybox.Time.Gregorian;
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 32; @symbol_moduledef = [Progress,32,7,15]; ]
+module Progress {
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 32; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 35; @position = 10; @symbol_constdef = [COINS_KEY,35,10,19]; ]
+    const COINS_KEY = "pg_coins";
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 36; @position = 10; @symbol_constdef = [XP_KEY,36,10,16]; ]
+    const XP_KEY = "pg_xp";
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 37; @position = 10; @symbol_constdef = [OWN_KEY,37,10,17]; ]
+    const OWN_KEY = "pg_own";
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 38; @position = 10; @symbol_constdef = [STREAK_KEY,38,10,20]; ]
+    const STREAK_KEY = "pg_streak";
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 41; @position = 10; @symbol_constdef = [XP_PER_LEVEL,41,10,22]; ]
+    const XP_PER_LEVEL = 150;
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 44; @symbol_functiondef = [_getNum,44,13,20]; @symbol_param<0> = [key,44,21,24]; @symbol_param<0>_type<0> = [Lang,44,28,32]; @symbol_param<0>_type<1> = [String,44,33,39]; @symbol_return<0> = [Lang,44,44,48]; @symbol_return<1> = [Number,44,49,55]; ]
+    function _getNum(key as Lang.String) as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_44_56_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_12_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_12_49_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_12_49_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 46 16 17 ];
+        symbol [ Application %tmp.1 46 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 46 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 46 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 46 49 52 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_12_47_54_if_stmt:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 47 16 17 ];
+        symbol [ Lang %tmp.7 47 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 47 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_12_47_54_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_12_47_54_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_42_47_54_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 47 44 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 47 51 52 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_42_47_54_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_12_47_54_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_47_12_47_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 48 12 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_12_48_65_if_stmt:
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 48 16 17 ];
+        symbol [ Lang %tmp.13 48 29 33 ];
+        %tmp.13 = getm $.Toybox.Lang;
+        symbol [ Float %tmp.14 48 34 39 ];
+        %tmp.14 = getv %tmp.13 :Float;
+        %tmp.15 = isa %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_12_48_65_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_12_48_65_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_42_48_65_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 48 44 ]
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 48 51 52 ];
+        %tmp.17 = as %tmp.16 { (Lang.Float) };
+        symbol [ toNumber %tmp.18 48 53 61 ];
+        %tmp.18 = getv function %tmp.17 :toNumber;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_42_48_65_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_12_48_65_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_48_12_48_65_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_12_49_8_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_catch:
+        %tmp.20 = exception;
+        push %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 49 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_49_10_49_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 49 17 18 ];
+        %tmp.21 = dup %tmp.20;
+        lputv %e.2 %tmp.21;
+        symbol [ e %e.2 49 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_49_10_49_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_49_10_49_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally;
+        throw %tmp.20;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_45_8_49_21_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 50 8 ]
+        %tmp.22 = 0;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_44_56_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 53; @symbol_functiondef = [_setNum,53,13,20]; @symbol_param<0> = [key,53,21,24]; @symbol_param<0>_type<0> = [Lang,53,28,32]; @symbol_param<0>_type<1> = [String,53,33,39]; @symbol_param<1> = [n,53,41,42]; @symbol_param<1>_type<0> = [Lang,53,46,50]; @symbol_param<1>_type<1> = [Number,53,51,57]; ]
+    function _setNum(key as Lang.String, n as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_53_67_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 54 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_12_54_52_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 54 14 ]
+        symbol [ Application %tmp.1 54 14 25 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 54 26 33 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ setValue %tmp.3 54 34 42 ];
+        %tmp.3 = getv function %tmp.2 :setValue;
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 54 43 46 ];
+        %tmp.5 = lgetv %n;
+        symbol [ n %tmp.5 54 48 49 ];
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_12_54_52_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_catch:
+        %tmp.6 = exception;
+        push %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 54 54 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_54_54_65_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 54 61 62 ];
+        %tmp.7 = dup %tmp.6;
+        lputv %e.1 %tmp.7;
+        symbol [ e %e.1 54 61 62 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_54_54_65_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_54_54_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_54_54_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally;
+        throw %tmp.6;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_54_8_54_65_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_53_67_55_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 57; @symbol_functiondef = [_getDict,57,13,21]; @symbol_param<0> = [key,57,22,25]; @symbol_param<0>_type<0> = [Lang,57,29,33]; @symbol_param<0>_type<1> = [String,57,34,40]; @symbol_return<0> = [Lang,57,45,49]; @symbol_return<1> = [Dictionary,57,50,60]; ]
+    function _getDict(key as Lang.String) as Lang.Dictionary {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_57_61_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 58 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_12_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 59 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_12_61_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_12_61_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 59 16 17 ];
+        symbol [ Application %tmp.1 59 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 59 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 59 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 59 49 52 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 59 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 60 12 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_12_60_58_if_stmt:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 60 16 17 ];
+        symbol [ Lang %tmp.7 60 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Dictionary %tmp.8 60 34 44 ];
+        %tmp.8 = getv %tmp.7 :Dictionary;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_12_60_58_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_12_60_58_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_46_60_58_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 60 48 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 60 55 56 ];
+        %tmp.11 = as %tmp.10 { (Lang.Dictionary) };
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_46_60_58_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_12_60_58_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_60_12_60_58_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_12_61_8_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_catch:
+        %tmp.12 = exception;
+        push %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 61 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_61_10_61_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 61 17 18 ];
+        %tmp.13 = dup %tmp.12;
+        lputv %e.2 %tmp.13;
+        symbol [ e %e.2 61 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_61_10_61_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally;
+        throw %tmp.12;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_58_8_61_21_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 62 8 ]
+        %tmp.14 = newd 0;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_57_61_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 65; @symbol_functiondef = [_setDict,65,13,21]; @symbol_param<0> = [key,65,22,25]; @symbol_param<0>_type<0> = [Lang,65,29,33]; @symbol_param<0>_type<1> = [String,65,34,40]; @symbol_param<1> = [d,65,42,43]; @symbol_param<1>_type<0> = [Lang,65,47,51]; @symbol_param<1>_type<1> = [Dictionary,65,52,62]; ]
+    function _setDict(key as Lang.String, d as Lang.Dictionary) as Void {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_65_72_67_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 66 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_12_66_52_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 66 14 ]
+        symbol [ Application %tmp.1 66 14 25 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 66 26 33 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ setValue %tmp.3 66 34 42 ];
+        %tmp.3 = getv function %tmp.2 :setValue;
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 66 43 46 ];
+        %tmp.5 = lgetv %d;
+        symbol [ d %tmp.5 66 48 49 ];
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_12_66_52_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_catch:
+        %tmp.6 = exception;
+        push %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 66 54 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_54_66_65_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 66 61 62 ];
+        %tmp.7 = dup %tmp.6;
+        lputv %e.1 %tmp.7;
+        symbol [ e %e.1 66 61 62 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_54_66_65_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_54_66_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_54_66_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally;
+        throw %tmp.6;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_66_8_66_65_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_65_72_67_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 70; @symbol_functiondef = [coins,70,13,18]; @symbol_return<0> = [Lang,70,24,28]; @symbol_return<1> = [Number,70,29,35]; ]
+    function coins() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_70_36_70_65_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 70 38 ]
+        %tmp.1 = self;
+        symbol [ _getNum %tmp.2 70 45 52 ];
+        %tmp.2 = getv function %tmp.1 :_getNum;
+        symbol [ COINS_KEY %tmp.4 70 53 62 ];
+        %tmp.4 = getv ? :COINS_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_70_36_70_65_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 73; @symbol_functiondef = [addCoins,73,13,21]; @symbol_param<0> = [n,73,22,23]; @symbol_param<0>_type<0> = [Lang,73,27,31]; @symbol_param<0>_type<1> = [Number,73,32,38]; @symbol_return<0> = [Lang,73,43,47]; @symbol_return<1> = [Number,73,48,54]; ]
+    function addCoins(n as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_73_55_78_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_73_55_78_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_73_55_78_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 74 12 13 ];
+        %tmp.1 = self;
+        symbol [ coins %tmp.2 74 16 21 ];
+        %tmp.2 = getv function %tmp.1 :coins;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = lgetv %n;
+        symbol [ n %tmp.4 74 26 27 ];
+        %tmp.5 = add %tmp.3 %tmp.4;
+        lputv %t.1 %tmp.5;
+        symbol [ t %t.1 74 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_8_75_28_if_stmt:
+        %tmp.6 = lgetv %t.1;
+        symbol [ t %tmp.6 75 12 13 ];
+        %tmp.7 = 0;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_8_75_28_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_8_75_28_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_19_75_28_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 75 21 ]
+        %tmp.9 = 0;
+        lputv %t.1 %tmp.9;
+        symbol [ t %t.1 75 21 22 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_19_75_28_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_8_75_28_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_75_8_75_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 76 8 ]
+        %tmp.10 = self;
+        symbol [ _setNum %tmp.11 76 8 15 ];
+        %tmp.11 = getv function %tmp.10 :_setNum;
+        symbol [ COINS_KEY %tmp.13 76 16 25 ];
+        %tmp.13 = getv ? :COINS_KEY;
+        %tmp.14 = lgetv %t.1;
+        symbol [ t %tmp.14 76 27 28 ];
+        invoke %tmp.10 %tmp.11(%tmp.13, %tmp.14);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 77 8 ]
+        %tmp.15 = lgetv %t.1;
+        symbol [ t %tmp.15 77 15 16 ];
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_73_55_78_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 82; @symbol_functiondef = [spendCoins,82,13,23]; @symbol_param<0> = [n,82,24,25]; @symbol_param<0>_type<0> = [Lang,82,29,33]; @symbol_param<0>_type<1> = [Number,82,34,40]; @symbol_return<0> = [Lang,82,45,49]; @symbol_return<1> = [Boolean,82,50,57]; ]
+    function spendCoins(n as Lang.Number) as Lang.Boolean {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_82_58_88_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_8_83_35_if_stmt:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 83 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_8_83_35_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_8_83_35_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_20_83_35_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 83 22 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_20_83_35_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_8_83_35_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_83_8_83_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_82_58_88_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_82_58_88_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 84 12 13 ];
+        %tmp.5 = self;
+        symbol [ coins %tmp.6 84 16 21 ];
+        %tmp.6 = getv function %tmp.5 :coins;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        lputv %c.1 %tmp.7;
+        symbol [ c %c.1 84 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_8_85_35_if_stmt:
+        %tmp.8 = lgetv %c.1;
+        symbol [ c %tmp.8 85 12 13 ];
+        %tmp.9 = lgetv %n;
+        symbol [ n %tmp.9 85 16 17 ];
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_8_85_35_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_8_85_35_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_19_85_35_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 85 21 ]
+        %tmp.11 = false;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_19_85_35_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_8_85_35_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_85_8_85_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 86 8 ]
+        %tmp.12 = self;
+        symbol [ _setNum %tmp.13 86 8 15 ];
+        %tmp.13 = getv function %tmp.12 :_setNum;
+        symbol [ COINS_KEY %tmp.15 86 16 25 ];
+        %tmp.15 = getv ? :COINS_KEY;
+        %tmp.16 = lgetv %c.1;
+        symbol [ c %tmp.16 86 27 28 ];
+        %tmp.17 = lgetv %n;
+        symbol [ n %tmp.17 86 31 32 ];
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        invoke %tmp.12 %tmp.13(%tmp.15, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 87 8 ]
+        %tmp.19 = true;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_82_58_88_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 91; @symbol_functiondef = [xp,91,13,15]; @symbol_return<0> = [Lang,91,21,25]; @symbol_return<1> = [Number,91,26,32]; ]
+    function xp() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_91_33_91_59_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 91 35 ]
+        %tmp.1 = self;
+        symbol [ _getNum %tmp.2 91 42 49 ];
+        %tmp.2 = getv function %tmp.1 :_getNum;
+        symbol [ XP_KEY %tmp.4 91 50 56 ];
+        %tmp.4 = getv ? :XP_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_91_33_91_59_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 94; @symbol_functiondef = [addXp,94,13,18]; @symbol_param<0> = [n,94,19,20]; @symbol_param<0>_type<0> = [Lang,94,24,28]; @symbol_param<0>_type<1> = [Number,94,29,35]; @symbol_return<0> = [Lang,94,40,44]; @symbol_return<1> = [Number,94,45,51]; ]
+    function addXp(n as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_94_52_99_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_94_52_99_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_94_52_99_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 95 12 13 ];
+        %tmp.1 = self;
+        symbol [ xp %tmp.2 95 16 18 ];
+        %tmp.2 = getv function %tmp.1 :xp;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = lgetv %n;
+        symbol [ n %tmp.4 95 23 24 ];
+        %tmp.5 = add %tmp.3 %tmp.4;
+        lputv %t.1 %tmp.5;
+        symbol [ t %t.1 95 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 96 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_8_96_28_if_stmt:
+        %tmp.6 = lgetv %t.1;
+        symbol [ t %tmp.6 96 12 13 ];
+        %tmp.7 = 0;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_8_96_28_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_8_96_28_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_19_96_28_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 96 21 ]
+        %tmp.9 = 0;
+        lputv %t.1 %tmp.9;
+        symbol [ t %t.1 96 21 22 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_19_96_28_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_8_96_28_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_96_8_96_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 97 8 ]
+        %tmp.10 = self;
+        symbol [ _setNum %tmp.11 97 8 15 ];
+        %tmp.11 = getv function %tmp.10 :_setNum;
+        symbol [ XP_KEY %tmp.13 97 16 22 ];
+        %tmp.13 = getv ? :XP_KEY;
+        %tmp.14 = lgetv %t.1;
+        symbol [ t %tmp.14 97 24 25 ];
+        invoke %tmp.10 %tmp.11(%tmp.13, %tmp.14);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 98 8 ]
+        %tmp.15 = lgetv %t.1;
+        symbol [ t %tmp.15 98 15 16 ];
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_94_52_99_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 102; @symbol_functiondef = [level,102,13,18]; @symbol_return<0> = [Lang,102,24,28]; @symbol_return<1> = [Number,102,29,35]; ]
+    function level() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_102_36_102_72_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 102 38 ]
+        %tmp.1 = 1;
+        %tmp.2 = self;
+        symbol [ xp %tmp.3 102 50 52 ];
+        %tmp.3 = getv function %tmp.2 :xp;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ XP_PER_LEVEL %tmp.6 102 57 69 ];
+        %tmp.6 = getv ? :XP_PER_LEVEL;
+        %tmp.7 = div %tmp.4 %tmp.6;
+        %tmp.8 = add %tmp.1 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_102_36_102_72_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 105; @symbol_functiondef = [xpIntoLevel,105,13,24]; @symbol_return<0> = [Lang,105,30,34]; @symbol_return<1> = [Number,105,35,41]; ]
+    function xpIntoLevel() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_105_42_105_72_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 105 44 ]
+        %tmp.1 = self;
+        symbol [ xp %tmp.2 105 51 53 ];
+        %tmp.2 = getv function %tmp.1 :xp;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ XP_PER_LEVEL %tmp.5 105 58 70 ];
+        %tmp.5 = getv ? :XP_PER_LEVEL;
+        %tmp.6 = mod %tmp.3 %tmp.5;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_105_42_105_72_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 108; @symbol_functiondef = [xpForLevel,108,13,23]; @symbol_return<0> = [Lang,108,29,33]; @symbol_return<1> = [Number,108,34,40]; ]
+    function xpForLevel() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_108_41_108_64_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 108 43 ]
+        symbol [ XP_PER_LEVEL %tmp.2 108 50 62 ];
+        %tmp.2 = getv ? :XP_PER_LEVEL;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_108_41_108_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 112; @symbol_functiondef = [rankName,112,13,21]; @symbol_return<0> = [Lang,112,27,31]; @symbol_return<1> = [String,112,32,38]; ]
+    function rankName() as Lang.String {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_112_39_120_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 113 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_112_39_120_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_112_39_120_4_stop" ]
+        %l.1 = local;
+        symbol [ l %l.1 113 12 13 ];
+        %tmp.1 = self;
+        symbol [ level %tmp.2 113 16 21 ];
+        %tmp.2 = getv function %tmp.1 :level;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %l.1 %tmp.3;
+        symbol [ l %l.1 113 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 114 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_8_114_40_if_stmt:
+        %tmp.4 = lgetv %l.1;
+        symbol [ l %tmp.4 114 12 13 ];
+        %tmp.5 = 25;
+        %tmp.6 = gte %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_8_114_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_8_114_40_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_21_114_40_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 114 23 ]
+        %tmp.7 = "Legend";
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_21_114_40_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_8_114_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_114_8_114_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 115 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_8_115_40_if_stmt:
+        %tmp.8 = lgetv %l.1;
+        symbol [ l %tmp.8 115 12 13 ];
+        %tmp.9 = 15;
+        %tmp.10 = gte %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_8_115_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_8_115_40_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_21_115_40_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 115 23 ]
+        %tmp.11 = "Master";
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_21_115_40_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_8_115_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_115_8_115_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 116 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_8_116_40_if_stmt:
+        %tmp.12 = lgetv %l.1;
+        symbol [ l %tmp.12 116 12 13 ];
+        %tmp.13 = 10;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_8_116_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_8_116_40_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_21_116_40_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 116 23 ]
+        %tmp.15 = "Expert";
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_21_116_40_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_8_116_40_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_116_8_116_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_8_117_37_if_stmt:
+        %tmp.16 = lgetv %l.1;
+        symbol [ l %tmp.16 117 12 13 ];
+        %tmp.17 = 6;
+        %tmp.18 = gte %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_8_117_37_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_8_117_37_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_21_117_37_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 117 23 ]
+        %tmp.19 = "Pro";
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_21_117_37_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_8_117_37_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_117_8_117_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_8_118_41_if_stmt:
+        %tmp.20 = lgetv %l.1;
+        symbol [ l %tmp.20 118 12 13 ];
+        %tmp.21 = 3;
+        %tmp.22 = gte %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_8_118_41_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_8_118_41_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_21_118_41_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 118 23 ]
+        %tmp.23 = "Amateur";
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_21_118_41_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_8_118_41_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_118_8_118_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 119 8 ]
+        %tmp.24 = "Rookie";
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_112_39_120_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 123; @symbol_functiondef = [owns,123,13,17]; @symbol_param<0> = [id,123,18,20]; @symbol_param<0>_type<0> = [Lang,123,24,28]; @symbol_param<0>_type<1> = [String,123,29,35]; @symbol_return<0> = [Lang,123,40,44]; @symbol_return<1> = [Boolean,123,45,52]; ]
+    function owns(id as Lang.String) as Lang.Boolean {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_123_53_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 124 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_123_53_127_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_123_53_127_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 124 12 13 ];
+        %tmp.1 = self;
+        symbol [ _getDict %tmp.2 124 16 24 ];
+        %tmp.2 = getv function %tmp.1 :_getDict;
+        symbol [ OWN_KEY %tmp.4 124 25 32 ];
+        %tmp.4 = getv ? :OWN_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %d.1 %tmp.5;
+        symbol [ d %d.1 124 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 125 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_12_125_52_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 125 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_21_125_46_begin:
+        %tmp.6 = lgetv %d.1;
+        symbol [ d %tmp.6 125 21 22 ];
+        symbol [ hasKey %tmp.7 125 23 29 ];
+        %tmp.7 = getv function %tmp.6 :hasKey;
+        %tmp.8 = lgetv %id;
+        symbol [ id %tmp.8 125 30 32 ];
+        %tmp.9 = invoke %tmp.6 %tmp.7(%tmp.8);
+        %tmp.10 = dup %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_37_125_46_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_37_125_46_true:
+        %tmp.11 = lgetv %d.1;
+        symbol [ d %tmp.11 125 37 38 ];
+        %tmp.12 = lgetv %id;
+        symbol [ id %tmp.12 125 39 41 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = true;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        %tmp.16 = and %tmp.9 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_37_125_46_end:
+        %tmp.17 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_21_125_46_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_37_125_46_true] [%tmp.17 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_37_125_46_end];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_12_125_52_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_catch:
+        %tmp.18 = exception;
+        push %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 125 54 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_54_125_65_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 125 61 62 ];
+        %tmp.19 = dup %tmp.18;
+        lputv %e.2 %tmp.19;
+        symbol [ e %e.2 125 61 62 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_54_125_65_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_54_125_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_54_125_65_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally;
+        throw %tmp.18;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_125_8_125_65_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 126 8 ]
+        %tmp.20 = false;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_123_53_127_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 131; @symbol_functiondef = [unlock,131,13,19]; @symbol_param<0> = [id,131,20,22]; @symbol_param<0>_type<0> = [Lang,131,26,30]; @symbol_param<0>_type<1> = [String,131,31,37]; ]
+    function unlock(id as Lang.String) as Void {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_131_47_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 132 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_8_132_32_if_stmt:
+        %tmp.1 = self;
+        symbol [ owns %tmp.2 132 12 16 ];
+        %tmp.2 = getv function %tmp.1 :owns;
+        %tmp.3 = lgetv %id;
+        symbol [ id %tmp.3 132 17 19 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_8_132_32_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_8_132_32_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_22_132_32_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 132 24 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_22_132_32_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_8_132_32_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_132_8_132_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 133 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_131_47_136_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_131_47_136_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 133 12 13 ];
+        %tmp.5 = self;
+        symbol [ _getDict %tmp.6 133 16 24 ];
+        %tmp.6 = getv function %tmp.5 :_getDict;
+        symbol [ OWN_KEY %tmp.8 133 25 32 ];
+        %tmp.8 = getv ? :OWN_KEY;
+        %tmp.9 = invoke %tmp.5 %tmp.6(%tmp.8);
+        lputv %d.1 %tmp.9;
+        symbol [ d %d.1 133 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 134 8 ]
+        %tmp.10 = lgetv %d.1;
+        symbol [ d %tmp.10 134 8 9 ];
+        %tmp.11 = true;
+        %tmp.12 = lgetv %id;
+        symbol [ id %tmp.12 134 10 12 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 135 8 ]
+        %tmp.13 = self;
+        symbol [ _setDict %tmp.14 135 8 16 ];
+        %tmp.14 = getv function %tmp.13 :_setDict;
+        symbol [ OWN_KEY %tmp.16 135 17 24 ];
+        %tmp.16 = getv ? :OWN_KEY;
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 135 26 27 ];
+        invoke %tmp.13 %tmp.14(%tmp.16, %tmp.17);
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_131_47_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 140; @symbol_functiondef = [unlockIfReached,140,13,28]; @symbol_param<0> = [id,140,29,31]; @symbol_param<0>_type<0> = [Lang,140,35,39]; @symbol_param<0>_type<1> = [String,140,40,46]; @symbol_param<1> = [have,140,48,52]; @symbol_param<1>_type<0> = [Lang,140,56,60]; @symbol_param<1>_type<1> = [Number,140,61,67]; @symbol_param<2> = [need,141,29,33]; @symbol_param<2>_type<0> = [Lang,141,37,41]; @symbol_param<2>_type<1> = [Number,141,42,48]; @symbol_return<0> = [Lang,141,53,57]; @symbol_return<1> = [Boolean,141,58,65]; ]
+    function unlockIfReached(id as Lang.String, have as Lang.Number, need as Lang.Number) as Lang.Boolean {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_141_66_145_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 142 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_8_142_38_if_stmt:
+        %tmp.1 = self;
+        symbol [ owns %tmp.2 142 12 16 ];
+        %tmp.2 = getv function %tmp.1 :owns;
+        %tmp.3 = lgetv %id;
+        symbol [ id %tmp.3 142 17 19 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_8_142_38_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_8_142_38_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_22_142_38_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 142 24 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_22_142_38_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_8_142_38_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_142_8_142_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 143 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_8_143_53_if_stmt:
+        %tmp.6 = lgetv %have;
+        symbol [ have %tmp.6 143 12 16 ];
+        %tmp.7 = lgetv %need;
+        symbol [ need %tmp.7 143 20 24 ];
+        %tmp.8 = gte %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_8_143_53_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_8_143_53_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_26_143_53_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 143 28 ]
+        %tmp.9 = self;
+        symbol [ unlock %tmp.10 143 28 34 ];
+        %tmp.10 = getv function %tmp.9 :unlock;
+        %tmp.11 = lgetv %id;
+        symbol [ id %tmp.11 143 35 37 ];
+        invoke %tmp.9 %tmp.10(%tmp.11);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 143 40 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_26_143_53_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_8_143_53_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_143_8_143_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 144 8 ]
+        %tmp.13 = false;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_141_66_145_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 148; @symbol_functiondef = [ownedIn,148,13,20]; @symbol_param<0> = [list,148,21,25]; @symbol_param<0>_type<0> = [Lang,148,29,33]; @symbol_param<0>_type<1> = [Array,148,34,39]; @symbol_return<0> = [Lang,148,44,48]; @symbol_return<1> = [Number,148,49,55]; ]
+    function ownedIn(list as Lang.Array) as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_148_56_154_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 149 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_148_56_154_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_148_56_154_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 149 12 13 ];
+        %tmp.1 = 0;
+        lputv %n.1 %tmp.1;
+        symbol [ n %n.1 149 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 150 8 ]
+        for @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_test @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_incr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_begin" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 150 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 150 17 18 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 150 24 25 ];
+        %tmp.4 = lgetv %list;
+        symbol [ list %tmp.4 150 28 32 ];
+        symbol [ size %tmp.5 150 33 37 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.3 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_begin:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_46_152_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 151 12 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_12_151_44_if_stmt:
+        %tmp.8 = self;
+        symbol [ owns %tmp.9 151 16 20 ];
+        %tmp.9 = getv function %tmp.8 :owns;
+        %tmp.10 = lgetv %list;
+        symbol [ list %tmp.10 151 21 25 ];
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 151 26 27 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        %tmp.13 = invoke %tmp.8 %tmp.9(%tmp.12);
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_12_151_44_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_12_151_44_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_31_151_44_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 151 33 ]
+        %tmp.14 = lgetv %n.1;
+        symbol [ n %tmp.14 151 37 38 ];
+        %tmp.15 = 1;
+        %tmp.16 = add %tmp.14 %tmp.15;
+        lputv %n.1 %tmp.16;
+        symbol [ n %n.1 151 33 34 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_31_151_44_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_12_151_44_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_151_12_151_44_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_46_152_8_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 150 ]
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 150 41 42 ];
+        %tmp.20 = add %tmp.19 1;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 150 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_test;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_150_8_152_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 153 8 ]
+        %tmp.21 = lgetv %n.1;
+        symbol [ n %tmp.21 153 15 16 ];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_148_56_154_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 157; @symbol_functiondef = [_todayKey,157,13,22]; @symbol_return<0> = [Lang,157,28,32]; @symbol_return<1> = [String,157,33,39]; ]
+    function _todayKey() as Lang.String {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_157_40_165_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 158 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 159 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_stop" ]
+        %ci.1 = local;
+        symbol [ ci %ci.1 159 16 18 ];
+        symbol [ Gregorian %tmp.1 159 21 30 ];
+        %tmp.1 = getm $.Toybox.Time.Gregorian;
+        symbol [ info %tmp.2 159 31 35 ];
+        %tmp.2 = getv function %tmp.1 :info;
+        symbol [ Time %tmp.3 159 36 40 ];
+        %tmp.3 = getm $.Toybox.Time;
+        symbol [ now %tmp.4 159 41 44 ];
+        %tmp.4 = getv function %tmp.3 :now;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        symbol [ Time %tmp.6 159 48 52 ];
+        %tmp.6 = getm $.Toybox.Time;
+        symbol [ FORMAT_SHORT %tmp.7 159 53 65 ];
+        %tmp.7 = getv %tmp.6 :FORMAT_SHORT;
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.5, %tmp.7);
+        lputv %ci.1 %tmp.8;
+        symbol [ ci %ci.1 159 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 160 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_stop" ]
+        %mo.2 = local;
+        symbol [ mo %mo.2 160 16 18 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_begin:
+        %tmp.9 = lgetv %ci.1;
+        symbol [ ci %tmp.9 160 21 23 ];
+        symbol [ month %tmp.10 160 24 29 ];
+        %tmp.10 = getv %tmp.9 :month;
+        %tmp.11 = 10;
+        %tmp.12 = lt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_else_false;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_true:
+        %tmp.13 = "0";
+        %tmp.14 = lgetv %ci.1;
+        symbol [ ci %tmp.14 160 43 45 ];
+        symbol [ month %tmp.15 160 46 51 ];
+        %tmp.15 = getv %tmp.14 :month;
+        symbol [ toString %tmp.16 160 52 60 ];
+        %tmp.16 = getv function %tmp.15 :toString;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = add %tmp.13 %tmp.17;
+        push %tmp.18;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_else_false:
+        %tmp.19 = lgetv %ci.1;
+        symbol [ ci %tmp.19 160 65 67 ];
+        symbol [ month %tmp.20 160 68 73 ];
+        %tmp.20 = getv %tmp.19 :month;
+        symbol [ toString %tmp.21 160 74 82 ];
+        %tmp.21 = getv function %tmp.20 :toString;
+        %tmp.22 = invoke %tmp.20 %tmp.21();
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_end:
+        %tmp.23 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_true] [%tmp.22 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_else_false] [%tmp.23 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_160_21_160_83_end];
+        lputv %mo.2 %tmp.23;
+        symbol [ mo %mo.2 160 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 161 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_stop" ]
+        %d.3 = local;
+        symbol [ d %d.3 161 16 17 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_begin:
+        %tmp.24 = lgetv %ci.1;
+        symbol [ ci %tmp.24 161 21 23 ];
+        symbol [ day %tmp.25 161 24 27 ];
+        %tmp.25 = getv %tmp.24 :day;
+        %tmp.26 = 10;
+        %tmp.27 = lt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_else_false;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_true:
+        %tmp.28 = "0";
+        %tmp.29 = lgetv %ci.1;
+        symbol [ ci %tmp.29 161 43 45 ];
+        symbol [ day %tmp.30 161 46 49 ];
+        %tmp.30 = getv %tmp.29 :day;
+        symbol [ toString %tmp.31 161 50 58 ];
+        %tmp.31 = getv function %tmp.30 :toString;
+        %tmp.32 = invoke %tmp.30 %tmp.31();
+        %tmp.33 = add %tmp.28 %tmp.32;
+        push %tmp.33;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_else_false:
+        %tmp.34 = lgetv %ci.1;
+        symbol [ ci %tmp.34 161 65 67 ];
+        symbol [ day %tmp.35 161 68 71 ];
+        %tmp.35 = getv %tmp.34 :day;
+        symbol [ toString %tmp.36 161 72 80 ];
+        %tmp.36 = getv function %tmp.35 :toString;
+        %tmp.37 = invoke %tmp.35 %tmp.36();
+        push %tmp.37;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_end:
+        %tmp.38 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_true] [%tmp.37 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_else_false] [%tmp.38 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_161_21_161_81_end];
+        lputv %d.3 %tmp.38;
+        symbol [ d %d.3 161 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 162 12 ]
+        %tmp.39 = lgetv %ci.1;
+        symbol [ ci %tmp.39 162 19 21 ];
+        symbol [ year %tmp.40 162 22 26 ];
+        %tmp.40 = getv %tmp.39 :year;
+        symbol [ toString %tmp.41 162 27 35 ];
+        %tmp.41 = getv function %tmp.40 :toString;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        %tmp.43 = lgetv %mo.2;
+        symbol [ mo %tmp.43 162 40 42 ];
+        %tmp.44 = add %tmp.42 %tmp.43;
+        %tmp.45 = lgetv %d.3;
+        symbol [ d %tmp.45 162 45 46 ];
+        %tmp.46 = add %tmp.44 %tmp.45;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+        ret %tmp.46;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_12_163_8_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_catch:
+        %tmp.47 = exception;
+        push %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 163 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_163_10_163_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 163 17 18 ];
+        %tmp.48 = dup %tmp.47;
+        lputv %e.4 %tmp.48;
+        symbol [ e %e.4 163 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_163_10_163_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_163_10_163_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_163_10_163_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally;
+        throw %tmp.47;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_158_8_163_21_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 164 8 ]
+        %tmp.49 = "00000000";
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_157_40_165_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 169; @symbol_functiondef = [_dayNumber,169,13,23]; @symbol_return<0> = [Lang,169,29,33]; @symbol_return<1> = [Number,169,34,40]; ]
+    function _dayNumber() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_169_41_175_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 170 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_12_173_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 171 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_12_173_8_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_12_173_8_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 171 16 20 ];
+        symbol [ Time %tmp.1 171 23 27 ];
+        %tmp.1 = getm $.Toybox.Time;
+        symbol [ now %tmp.2 171 28 31 ];
+        %tmp.2 = getv function %tmp.1 :now;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ value %tmp.4 171 34 39 ];
+        %tmp.4 = getv function %tmp.3 :value;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %secs.1 %tmp.5;
+        symbol [ secs %secs.1 171 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 172 12 ]
+        %tmp.6 = lgetv %secs.1;
+        symbol [ secs %tmp.6 172 19 23 ];
+        %tmp.7 = 86400;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_12_173_8_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_catch:
+        %tmp.9 = exception;
+        push %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 173 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_173_10_173_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 173 17 18 ];
+        %tmp.10 = dup %tmp.9;
+        lputv %e.2 %tmp.10;
+        symbol [ e %e.2 173 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_173_10_173_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_173_10_173_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_173_10_173_21_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally;
+        throw %tmp.9;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_170_8_173_21_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 174 8 ]
+        %tmp.11 = 0;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_169_41_175_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 177; @symbol_functiondef = [currentStreak,177,13,26]; @symbol_return<0> = [Lang,177,32,36]; @symbol_return<1> = [Number,177,37,43]; ]
+    function currentStreak() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_177_44_181_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 178 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_177_44_181_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_177_44_181_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 178 12 13 ];
+        %tmp.1 = self;
+        symbol [ _getDict %tmp.2 178 16 24 ];
+        %tmp.2 = getv function %tmp.1 :_getDict;
+        symbol [ STREAK_KEY %tmp.4 178 25 35 ];
+        %tmp.4 = getv ? :STREAK_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %d.1 %tmp.5;
+        symbol [ d %d.1 178 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 179 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_12_179_85_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 179 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_18_179_58_begin:
+        %tmp.6 = lgetv %d.1;
+        symbol [ d %tmp.6 179 18 19 ];
+        symbol [ hasKey %tmp.7 179 20 26 ];
+        %tmp.7 = getv function %tmp.6 :hasKey;
+        %tmp.8 = "n";
+        %tmp.9 = invoke %tmp.6 %tmp.7(%tmp.8);
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_35_179_58_true:
+        %tmp.10 = lgetv %d.1;
+        symbol [ d %tmp.10 179 35 36 ];
+        %tmp.11 = "n";
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        symbol [ Lang %tmp.13 179 53 57 ];
+        %tmp.13 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.14 179 58 64 ];
+        %tmp.14 = getv %tmp.13 :Number;
+        %tmp.15 = isa %tmp.12 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_35_179_58_end:
+        %tmp.16 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_18_179_58_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_35_179_58_true] [%tmp.16 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_35_179_58_end];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_66_179_83_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 179 68 ]
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 179 75 76 ];
+        %tmp.18 = "n";
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_66_179_83_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_14_179_83_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_12_179_85_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_catch:
+        %tmp.20 = exception;
+        push %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 179 87 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_87_179_98_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 179 94 95 ];
+        %tmp.21 = dup %tmp.20;
+        lputv %e.2 %tmp.21;
+        symbol [ e %e.2 179 94 95 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_87_179_98_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_87_179_98_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_87_179_98_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally;
+        throw %tmp.20;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_179_8_179_98_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 180 8 ]
+        %tmp.22 = 0;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_177_44_181_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 183; @symbol_functiondef = [bestStreak,183,13,23]; @symbol_return<0> = [Lang,183,29,33]; @symbol_return<1> = [Number,183,34,40]; ]
+    function bestStreak() as Lang.Number {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_183_41_187_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_183_41_187_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_183_41_187_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 184 12 13 ];
+        %tmp.1 = self;
+        symbol [ _getDict %tmp.2 184 16 24 ];
+        %tmp.2 = getv function %tmp.1 :_getDict;
+        symbol [ STREAK_KEY %tmp.4 184 25 35 ];
+        %tmp.4 = getv ? :STREAK_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %d.1 %tmp.5;
+        symbol [ d %d.1 184 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 185 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_12_185_94_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 185 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_18_185_64_begin:
+        %tmp.6 = lgetv %d.1;
+        symbol [ d %tmp.6 185 18 19 ];
+        symbol [ hasKey %tmp.7 185 20 26 ];
+        %tmp.7 = getv function %tmp.6 :hasKey;
+        %tmp.8 = "best";
+        %tmp.9 = invoke %tmp.6 %tmp.7(%tmp.8);
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_38_185_64_true:
+        %tmp.10 = lgetv %d.1;
+        symbol [ d %tmp.10 185 38 39 ];
+        %tmp.11 = "best";
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        symbol [ Lang %tmp.13 185 59 63 ];
+        %tmp.13 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.14 185 64 70 ];
+        %tmp.14 = getv %tmp.13 :Number;
+        %tmp.15 = isa %tmp.12 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_38_185_64_end:
+        %tmp.16 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_18_185_64_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_38_185_64_true] [%tmp.16 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_38_185_64_end];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_72_185_92_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 185 74 ]
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 185 81 82 ];
+        %tmp.18 = "best";
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_72_185_92_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_14_185_92_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_12_185_94_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_catch:
+        %tmp.20 = exception;
+        push %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 185 96 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_96_185_107_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 185 103 104 ];
+        %tmp.21 = dup %tmp.20;
+        lputv %e.2 %tmp.21;
+        symbol [ e %e.2 185 103 104 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_96_185_107_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_96_185_107_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_96_185_107_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally;
+        throw %tmp.20;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_185_8_185_107_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 186 8 ]
+        %tmp.22 = 0;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_183_41_187_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 194; @symbol_functiondef = [checkIn,194,13,20]; @symbol_return<0> = [Lang,194,26,30]; @symbol_return<1> = [Dictionary,194,31,41]; ]
+    function checkIn() as Lang.Dictionary {
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 195 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 195 12 13 ];
+        %tmp.1 = self;
+        symbol [ _getDict %tmp.2 195 22 30 ];
+        %tmp.2 = getv function %tmp.1 :_getDict;
+        symbol [ STREAK_KEY %tmp.4 195 31 41 ];
+        %tmp.4 = getv ? :STREAK_KEY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %d.1 %tmp.5;
+        symbol [ d %d.1 195 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 196 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %todayS.2 = local;
+        symbol [ todayS %todayS.2 196 12 18 ];
+        %tmp.6 = self;
+        symbol [ _todayKey %tmp.7 196 22 31 ];
+        %tmp.7 = getv function %tmp.6 :_todayKey;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %todayS.2 %tmp.8;
+        symbol [ todayS %todayS.2 196 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 197 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %todayN.3 = local;
+        symbol [ todayN %todayN.3 197 12 18 ];
+        %tmp.9 = self;
+        symbol [ _dayNumber %tmp.10 197 22 32 ];
+        %tmp.10 = getv function %tmp.9 :_dayNumber;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %todayN.3 %tmp.11;
+        symbol [ todayN %todayN.3 197 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 199 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %last.4 = local;
+        symbol [ last %last.4 199 12 16 ];
+        %tmp.12 = null;
+        lputv %last.4 %tmp.12;
+        symbol [ last %last.4 199 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 200 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %lastN.5 = local;
+        symbol [ lastN %lastN.5 200 12 17 ];
+        %tmp.13 = -1;
+        lputv %lastN.5 %tmp.13;
+        symbol [ lastN %lastN.5 200 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 201 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %n.6 = local;
+        symbol [ n %n.6 201 12 13 ];
+        %tmp.14 = 0;
+        lputv %n.6 %tmp.14;
+        symbol [ n %n.6 201 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 202 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %best.7 = local;
+        symbol [ best %best.7 202 12 16 ];
+        %tmp.15 = 0;
+        lputv %best.7 %tmp.15;
+        symbol [ best %best.7 202 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 203 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_12_203_95_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 203 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_18_203_64_begin:
+        %tmp.16 = lgetv %d.1;
+        symbol [ d %tmp.16 203 18 19 ];
+        symbol [ hasKey %tmp.17 203 20 26 ];
+        %tmp.17 = getv function %tmp.16 :hasKey;
+        %tmp.18 = "last";
+        %tmp.19 = invoke %tmp.16 %tmp.17(%tmp.18);
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_38_203_64_true:
+        %tmp.20 = lgetv %d.1;
+        symbol [ d %tmp.20 203 38 39 ];
+        %tmp.21 = "last";
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        symbol [ Lang %tmp.23 203 59 63 ];
+        %tmp.23 = getm $.Toybox.Lang;
+        symbol [ String %tmp.24 203 64 70 ];
+        %tmp.24 = getv %tmp.23 :String;
+        %tmp.25 = isa %tmp.22 %tmp.24;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_38_203_64_end:
+        %tmp.26 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_18_203_64_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_38_203_64_true] [%tmp.26 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_38_203_64_end];
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_72_203_93_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 203 74 ]
+        %tmp.27 = lgetv %d.1;
+        symbol [ d %tmp.27 203 82 83 ];
+        %tmp.28 = "last";
+        %tmp.29 = agetv %tmp.27 %tmp.28;
+        lputv %last.4 %tmp.29;
+        symbol [ last %last.4 203 74 78 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_72_203_93_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_14_203_93_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_12_203_95_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_catch:
+        %tmp.30 = exception;
+        push %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 203 97 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_97_203_108_end" ]
+        %e.8 = local;
+        symbol [ e %e.8 203 104 105 ];
+        %tmp.31 = dup %tmp.30;
+        lputv %e.8 %tmp.31;
+        symbol [ e %e.8 203 104 105 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_97_203_108_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_97_203_108_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_97_203_108_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally;
+        throw %tmp.30;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_203_8_203_108_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 204 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_12_204_93_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 204 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_18_204_64_begin:
+        %tmp.32 = lgetv %d.1;
+        symbol [ d %tmp.32 204 18 19 ];
+        symbol [ hasKey %tmp.33 204 20 26 ];
+        %tmp.33 = getv function %tmp.32 :hasKey;
+        %tmp.34 = "ln";
+        %tmp.35 = invoke %tmp.32 %tmp.33(%tmp.34);
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_38_204_64_true:
+        %tmp.36 = lgetv %d.1;
+        symbol [ d %tmp.36 204 38 39 ];
+        %tmp.37 = "ln";
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        symbol [ Lang %tmp.39 204 59 63 ];
+        %tmp.39 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.40 204 64 70 ];
+        %tmp.40 = getv %tmp.39 :Number;
+        %tmp.41 = isa %tmp.38 %tmp.40;
+        push %tmp.41;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_38_204_64_end:
+        %tmp.42 = phi [%tmp.35 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_18_204_64_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_38_204_64_true] [%tmp.42 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_38_204_64_end];
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_72_204_91_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 204 74 ]
+        %tmp.43 = lgetv %d.1;
+        symbol [ d %tmp.43 204 82 83 ];
+        %tmp.44 = "ln";
+        %tmp.45 = agetv %tmp.43 %tmp.44;
+        lputv %lastN.5 %tmp.45;
+        symbol [ lastN %lastN.5 204 74 79 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_72_204_91_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_14_204_91_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_12_204_93_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_catch:
+        %tmp.46 = exception;
+        push %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 204 95 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_95_204_106_end" ]
+        %e.9 = local;
+        symbol [ e %e.9 204 102 103 ];
+        %tmp.47 = dup %tmp.46;
+        lputv %e.9 %tmp.47;
+        symbol [ e %e.9 204 102 103 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_95_204_106_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_95_204_106_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_95_204_106_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally;
+        throw %tmp.46;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_204_8_204_106_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 205 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_12_205_92_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 205 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_18_205_64_begin:
+        %tmp.48 = lgetv %d.1;
+        symbol [ d %tmp.48 205 18 19 ];
+        symbol [ hasKey %tmp.49 205 20 26 ];
+        %tmp.49 = getv function %tmp.48 :hasKey;
+        %tmp.50 = "n";
+        %tmp.51 = invoke %tmp.48 %tmp.49(%tmp.50);
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_38_205_64_true:
+        %tmp.52 = lgetv %d.1;
+        symbol [ d %tmp.52 205 38 39 ];
+        %tmp.53 = "n";
+        %tmp.54 = agetv %tmp.52 %tmp.53;
+        symbol [ Lang %tmp.55 205 59 63 ];
+        %tmp.55 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.56 205 64 70 ];
+        %tmp.56 = getv %tmp.55 :Number;
+        %tmp.57 = isa %tmp.54 %tmp.56;
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_38_205_64_end:
+        %tmp.58 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_18_205_64_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_38_205_64_true] [%tmp.58 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_38_205_64_end];
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_72_205_90_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 205 74 ]
+        %tmp.59 = lgetv %d.1;
+        symbol [ d %tmp.59 205 82 83 ];
+        %tmp.60 = "n";
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        lputv %n.6 %tmp.61;
+        symbol [ n %n.6 205 74 75 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_72_205_90_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_14_205_90_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_12_205_92_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_catch:
+        %tmp.62 = exception;
+        push %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 205 94 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_94_205_105_end" ]
+        %e.10 = local;
+        symbol [ e %e.10 205 101 102 ];
+        %tmp.63 = dup %tmp.62;
+        lputv %e.10 %tmp.63;
+        symbol [ e %e.10 205 101 102 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_94_205_105_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_94_205_105_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_94_205_105_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally;
+        throw %tmp.62;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_205_8_205_105_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 206 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_beginTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_endTry @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_beginTry:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_12_206_95_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 206 14 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_18_206_64_begin:
+        %tmp.64 = lgetv %d.1;
+        symbol [ d %tmp.64 206 18 19 ];
+        symbol [ hasKey %tmp.65 206 20 26 ];
+        %tmp.65 = getv function %tmp.64 :hasKey;
+        %tmp.66 = "best";
+        %tmp.67 = invoke %tmp.64 %tmp.65(%tmp.66);
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_38_206_64_true:
+        %tmp.68 = lgetv %d.1;
+        symbol [ d %tmp.68 206 38 39 ];
+        %tmp.69 = "best";
+        %tmp.70 = agetv %tmp.68 %tmp.69;
+        symbol [ Lang %tmp.71 206 59 63 ];
+        %tmp.71 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.72 206 64 70 ];
+        %tmp.72 = getv %tmp.71 :Number;
+        %tmp.73 = isa %tmp.70 %tmp.72;
+        push %tmp.73;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_38_206_64_end:
+        %tmp.74 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_18_206_64_begin] [%tmp.73 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_38_206_64_true] [%tmp.74 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_38_206_64_end];
+        bf %tmp.74 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_72_206_93_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 206 74 ]
+        %tmp.75 = lgetv %d.1;
+        symbol [ d %tmp.75 206 82 83 ];
+        %tmp.76 = "best";
+        %tmp.77 = agetv %tmp.75 %tmp.76;
+        lputv %best.7 %tmp.77;
+        symbol [ best %best.7 206 74 78 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_72_206_93_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_14_206_93_if_end:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_12_206_95_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_catch:
+        %tmp.78 = exception;
+        push %tmp.78;
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 206 97 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_catch" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_97_206_108_end" ]
+        %e.11 = local;
+        symbol [ e %e.11 206 104 105 ];
+        %tmp.79 = dup %tmp.78;
+        lputv %e.11 %tmp.79;
+        symbol [ e %e.11 206 104 105 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_97_206_108_end:
+        try @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_catch @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_97_206_108_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_97_206_108_end @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally;
+        throw %tmp.78;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_206_8_206_108_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 209 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_12_209_46_begin:
+        %tmp.80 = lgetv %last.4;
+        symbol [ last %tmp.80 209 12 16 ];
+        %tmp.81 = null;
+        %tmp.82 = ne %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_28_209_46_true:
+        %tmp.83 = lgetv %last.4;
+        symbol [ last %tmp.83 209 28 32 ];
+        %tmp.84 = as %tmp.83 { (!Null) };
+        symbol [ equals %tmp.85 209 33 39 ];
+        %tmp.85 = getv function %tmp.84 :equals;
+        %tmp.86 = lgetv %todayS.2;
+        symbol [ todayS %tmp.86 209 40 46 ];
+        %tmp.87 = invoke %tmp.84 %tmp.85(%tmp.86);
+        push %tmp.87;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_28_209_46_end:
+        %tmp.88 = phi [%tmp.82 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_12_209_46_begin] [%tmp.87 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_28_209_46_true] [%tmp.88 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_28_209_46_end];
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_49_211_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 210 12 ]
+        %tmp.89 = newd 4;
+        %tmp.90 = "first";
+        %tmp.91 = false;
+        %tmp.92 = dup %tmp.89;
+        %tmp.93 = aputv %tmp.92 %tmp.90 %tmp.91;
+        %tmp.94 = "streak";
+        %tmp.95 = lgetv %n.6;
+        symbol [ n %tmp.95 210 51 52 ];
+        %tmp.96 = dup %tmp.93;
+        %tmp.97 = aputv %tmp.96 %tmp.94 %tmp.95;
+        %tmp.98 = "best";
+        %tmp.99 = lgetv %best.7;
+        symbol [ best %tmp.99 210 64 68 ];
+        %tmp.100 = dup %tmp.97;
+        %tmp.101 = aputv %tmp.100 %tmp.98 %tmp.99;
+        %tmp.102 = "bonus";
+        %tmp.103 = 0;
+        %tmp.104 = dup %tmp.101;
+        %tmp.105 = aputv %tmp.104 %tmp.102 %tmp.103;
+        ret %tmp.105;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_49_211_8_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_209_8_211_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 215 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_stmt:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_12_215_46_begin:
+        %tmp.106 = lgetv %lastN.5;
+        symbol [ lastN %tmp.106 215 12 17 ];
+        %tmp.107 = 0;
+        %tmp.108 = gte %tmp.106 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_else_false;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_26_215_46_true:
+        %tmp.109 = lgetv %todayN.3;
+        symbol [ todayN %tmp.109 215 27 33 ];
+        %tmp.110 = lgetv %lastN.5;
+        symbol [ lastN %tmp.110 215 36 41 ];
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = 1;
+        %tmp.113 = eq %tmp.111 %tmp.112;
+        push %tmp.113;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_26_215_46_end:
+        %tmp.114 = phi [%tmp.108 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_12_215_46_begin] [%tmp.113 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_26_215_46_true] [%tmp.114 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_26_215_46_end];
+        bf %tmp.114 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_else_false;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_49_215_62_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 215 51 ]
+        %tmp.115 = lgetv %n.6;
+        symbol [ n %tmp.115 215 55 56 ];
+        %tmp.116 = 1;
+        %tmp.117 = add %tmp.115 %tmp.116;
+        lputv %n.6 %tmp.117;
+        symbol [ n %n.6 215 51 52 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_49_215_62_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_else_false:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_216_49_216_58_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 216 51 ]
+        %tmp.118 = 1;
+        lputv %n.6 %tmp.118;
+        symbol [ n %n.6 216 51 52 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_216_49_216_58_stop:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_215_8_216_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 217 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_8_217_34_if_stmt:
+        %tmp.119 = lgetv %n.6;
+        symbol [ n %tmp.119 217 12 13 ];
+        %tmp.120 = lgetv %best.7;
+        symbol [ best %tmp.120 217 16 20 ];
+        %tmp.121 = gt %tmp.119 %tmp.120;
+        bf %tmp.121 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_8_217_34_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_8_217_34_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_22_217_34_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 217 24 ]
+        %tmp.122 = lgetv %n.6;
+        symbol [ n %tmp.122 217 31 32 ];
+        lputv %best.7 %tmp.122;
+        symbol [ best %best.7 217 24 28 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_22_217_34_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_8_217_34_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_217_8_217_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 220 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_start" "_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop" ]
+        %bonus.12 = local;
+        symbol [ bonus %bonus.12 220 12 17 ];
+        %tmp.123 = 10;
+        %tmp.124 = lgetv %n.6;
+        symbol [ n %tmp.124 220 26 27 ];
+        %tmp.125 = 1;
+        %tmp.126 = sub %tmp.124 %tmp.125;
+        %tmp.127 = 5;
+        %tmp.128 = mul %tmp.126 %tmp.127;
+        %tmp.129 = add %tmp.123 %tmp.128;
+        lputv %bonus.12 %tmp.129;
+        symbol [ bonus %bonus.12 220 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 221 8 ]
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_8_221_38_if_stmt:
+        %tmp.130 = lgetv %bonus.12;
+        symbol [ bonus %tmp.130 221 12 17 ];
+        %tmp.131 = 60;
+        %tmp.132 = gt %tmp.130 %tmp.131;
+        bf %tmp.132 @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_8_221_38_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_8_221_38_if_true:
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_24_221_38_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 221 26 ]
+        %tmp.133 = 60;
+        lputv %bonus.12 %tmp.133;
+        symbol [ bonus %bonus.12 221 26 31 ];
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_24_221_38_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_8_221_38_if_end;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_221_8_221_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 222 8 ]
+        %tmp.134 = self;
+        symbol [ addCoins %tmp.135 222 8 16 ];
+        %tmp.135 = getv function %tmp.134 :addCoins;
+        %tmp.136 = lgetv %bonus.12;
+        symbol [ bonus %tmp.136 222 17 22 ];
+        invoke %tmp.134 %tmp.135(%tmp.136);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 224 8 ]
+        %tmp.137 = self;
+        symbol [ _setDict %tmp.138 224 8 16 ];
+        %tmp.138 = getv function %tmp.137 :_setDict;
+        symbol [ STREAK_KEY %tmp.140 224 17 27 ];
+        %tmp.140 = getv ? :STREAK_KEY;
+        %tmp.141 = newd 4;
+        %tmp.142 = "last";
+        %tmp.143 = lgetv %todayS.2;
+        symbol [ todayS %tmp.143 225 24 30 ];
+        %tmp.144 = dup %tmp.141;
+        %tmp.145 = aputv %tmp.144 %tmp.142 %tmp.143;
+        %tmp.146 = "ln";
+        %tmp.147 = lgetv %todayN.3;
+        symbol [ todayN %tmp.147 225 40 46 ];
+        %tmp.148 = dup %tmp.145;
+        %tmp.149 = aputv %tmp.148 %tmp.146 %tmp.147;
+        %tmp.150 = "n";
+        %tmp.151 = lgetv %n.6;
+        symbol [ n %tmp.151 225 55 56 ];
+        %tmp.152 = dup %tmp.149;
+        %tmp.153 = aputv %tmp.152 %tmp.150 %tmp.151;
+        %tmp.154 = "best";
+        %tmp.155 = lgetv %best.7;
+        symbol [ best %tmp.155 225 68 72 ];
+        %tmp.156 = dup %tmp.153;
+        %tmp.157 = aputv %tmp.156 %tmp.154 %tmp.155;
+        invoke %tmp.137 %tmp.138(%tmp.140, %tmp.157);
+[ "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc" 227 8 ]
+        %tmp.158 = newd 4;
+        %tmp.159 = "first";
+        %tmp.160 = true;
+        %tmp.161 = dup %tmp.158;
+        %tmp.162 = aputv %tmp.161 %tmp.159 %tmp.160;
+        %tmp.163 = "streak";
+        %tmp.164 = lgetv %n.6;
+        symbol [ n %tmp.164 227 46 47 ];
+        %tmp.165 = dup %tmp.162;
+        %tmp.166 = aputv %tmp.165 %tmp.163 %tmp.164;
+        %tmp.167 = "best";
+        %tmp.168 = lgetv %best.7;
+        symbol [ best %tmp.168 227 59 63 ];
+        %tmp.169 = dup %tmp.166;
+        %tmp.170 = aputv %tmp.169 %tmp.167 %tmp.168;
+        %tmp.171 = "bonus";
+        %tmp.172 = lgetv %bonus.12;
+        symbol [ bonus %tmp.172 227 76 81 ];
+        %tmp.173 = dup %tmp.170;
+        %tmp.174 = aputv %tmp.173 %tmp.171 %tmp.172;
+        ret %tmp.174;
+_Users_kkorolczuk_work_garmin__shared_progress_Progress_mc_194_42_228_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/progress/Progress.mc"; @line = 27; ]
+<init> {
+}

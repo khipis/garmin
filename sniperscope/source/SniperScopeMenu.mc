@@ -66,7 +66,8 @@ function buildSniperScopeMenu() as Lang.Array {
         :hooks   => new SniperScopeHooks(),
         :options => [
             new GmOption(SS_K_SENS, "Sensitivity", ["LOW", "NORM", "HIGH"], 1),
-            new GmOption(SS_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1)
+            new GmOption(SS_K_DIFF, "Difficulty",  ["EASY", "NORM", "HARD"], 1),
+            new GmOption(SS_FX_KEY, "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

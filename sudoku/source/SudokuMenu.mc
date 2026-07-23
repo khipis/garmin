@@ -70,7 +70,8 @@ function buildSudokuMenu() as Lang.Array {
         :options => [
             new GmOption("sk_mode", "Mode",   ["QUICK 4x4", "CLASSIC 9x9"], 1),
             new GmOption("sk_diff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 0),
-            new GmOption("sk_val",  "Errors", ["RELAX", "STRICT"], 0)
+            new GmOption("sk_val",  "Errors", ["RELAX", "STRICT"], 0),
+            new GmOption("sk_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

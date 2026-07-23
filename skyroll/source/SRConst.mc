@@ -107,7 +107,15 @@ const SR_BALL_Y_OFFSET = 18;  // px the ball sits BELOW screen centre
 // ── Tick ────────────────────────────────────────────────────────
 const SR_TICK_MS = 50;
 
+// ── Milestones ──────────────────────────────────────────────────
+// Every SR_MILESTONE_M metres the player crosses, a celebratory
+// banner + gem bonus + FX fires — a small "just a bit further" hook.
+const SR_MILESTONE_M = 100;
+const SR_MILESTONE_GEMS = 3;
+
 // ── Persistence ────────────────────────────────────────────────
 const SR_K_SENS = "sr_sens";
 const SR_K_DIFF = "sr_diff";
 const SR_K_BEST = "sr_best";
+const SR_K_GEMS = "sr_gems";   // best single-run gem haul (secondary board)
+const SR_K_FX   = "sr_fx";     // 0 = sound + haptics ON, 1 = OFF

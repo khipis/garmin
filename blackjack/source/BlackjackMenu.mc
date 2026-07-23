@@ -62,7 +62,11 @@ function buildBlackjackMenu() as Lang.Array {
         :lbTitle => "BLACKJACK",
         :hooks   => new BlackjackHooks(),
         :options => [
-            new GmOption("bj_decks", "Decks", ["1 DECK", "2 DECKS", "6 DECKS"], 2)
+            new GmOption("bj_decks", "Decks", ["1 DECK", "2 DECKS", "6 DECKS"], 2),
+            new GmOption("bj_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic card-back — unlocked by rank, shop-ready. A locked pick
+            // simply renders as the classic back until it's owned.
+            new GmOption("bj_skin", "Card Back", ["CLASSIC", "NEON"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -12,6 +12,7 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Application;
 
 class MainView extends WatchUi.View {
 
@@ -23,6 +24,8 @@ class MainView extends WatchUi.View {
     hidden var _oy;
     hidden var _cell;
     hidden var _started;   // auto-start the run on first layout
+    hidden var _dailyMsg;  // one-shot login-streak toast (or null)
+    hidden var _dailyMsgT; // frames the toast stays visible
 
     function initialize() {
         View.initialize();
@@ -30,11 +33,21 @@ class MainView extends WatchUi.View {
         _timer = null;
         _sw = 0; _sh = 0; _ox = 0; _oy = 0; _cell = 0;
         _started = false;
+        _dailyMsg = null; _dailyMsgT = 0;
     }
 
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:onTick), 80, true);
+        // Surface today's login-streak bonus as a one-shot toast (queued by the
+        // App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("pi_daily_msg");
+            if (dm != null) {
+                _dailyMsg = dm; _dailyMsgT = 45;
+                Application.Storage.deleteValue("pi_daily_msg");
+            }
+        } catch (e) {}
     }
     function onHide() { if (_timer != null) { _timer.stop(); } }
     function onTick() {
@@ -60,12 +73,30 @@ class MainView extends WatchUi.View {
         UIManager.drawBullets(dc, _ox, _oy, _cell,
                               ctrl.bullets.pShots,
                               ctrl.bullets.eShots);
-        UIManager.drawPlayer(dc, _ox, _oy, _cell, ctrl.player);
+        UIManager.drawPlayer(dc, _ox, _oy, _cell, ctrl.player, ctrl.shipColor());
         UIManager.drawGroundLine(dc, _ox, _oy, _cell, _sw);
         _drawFooter(dc);
+        if (_dailyMsgT > 0 && _dailyMsg != null) {
+            _drawDailyToast(dc);
+            _dailyMsgT--;
+        }
         if (ctrl.state == PI_OVER) {
             UIManager.drawResult(dc, _sw, _sh, ctrl);
         }
+    }
+
+    // Lightweight one-shot login-streak toast (no blocking view): a small
+    // centred banner over the playfield for a few dozen frames.
+    hidden function _drawDailyToast(dc) {
+        var ty = (_sh * 40) / 100;
+        var bw = (_sw * 74) / 100;
+        var bx = (_sw - bw) / 2;
+        dc.setColor(0x061018, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bx, ty - 11, bw, 22, 5);
+        dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bx, ty - 11, bw, 22, 5);
+        dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, _dailyMsg,
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     hidden function _layout() {

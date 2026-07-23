@@ -122,6 +122,12 @@ class BitochiBoxingView extends WatchUi.View {
     // hard). Scales opponent damage and speed, and segments the leaderboard.
     hidden var _diff;
 
+    // Meta-progression: one-shot login-streak toast + one-shot cosmetic-unlock
+    // banner (shown on the run-end cards). Both cleared after being shown.
+    hidden var _dailyMsg;
+    hidden var _dailyMsgTick;
+    hidden var _pgUnlockMsg;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -175,6 +181,8 @@ class BitochiBoxingView extends WatchUi.View {
         var dv = Application.Storage.getValue("box_diff");
         if (dv instanceof Number && dv >= 0 && dv <= 2) { _diff = dv; }
 
+        _dailyMsg = null; _dailyMsgTick = 0; _pgUnlockMsg = null;
+
         gameState = GS_MENU;
     }
 
@@ -183,8 +191,47 @@ class BitochiBoxingView extends WatchUi.View {
         return ["easy", "normal", "hard"][_diff];
     }
 
+    // ── Meta-progression (shared, shop-ready via Progress module) ────────────
+    // Grants coins + XP proportional to the finished run's score and unlocks the
+    // NEON trunks at rank 3. Coins are the future shop's currency; the skin's
+    // ownership is exactly what a shop purchase would grant.
+    hidden function _awardProgress() {
+        try {
+            var g = _score / 60;     // ~1 coin/xp per 60 points
+            if (g > 40) { g = 40; }  // cap so a run is a nudge, not a grind
+            if (g > 0) {
+                Progress.addCoins(g);
+                Progress.addXp(g);
+            }
+            if (Progress.unlockIfReached("boxing_skin2", Progress.level(), 3)) {
+                _pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned trunk colour for the player boxer. Falls back to the
+    // classic blue until the NEON skin is owned, so a locked pick never renders.
+    hidden function _trunkColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("box_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("boxing_skin2")) { return 0x22DD88; }
+        return 0x2244AA;
+    }
+
     function onShow() {
         _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true);
+        // Surface today's login-streak bonus as a one-shot toast (queued by the
+        // App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("box_daily_msg");
+            if (dm != null) {
+                _dailyMsg = dm; _dailyMsgTick = 70;
+                Application.Storage.deleteValue("box_daily_msg");
+            }
+        } catch (e) {}
         // Root view is the shared menu; drop straight into a fresh match.
         // Only auto-start from the initial GS_MENU state (returning from the
         // post-game leaderboard card leaves us in WIN/LOSE/CHAMPION, not MENU).
@@ -267,6 +314,7 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (gameState == GS_WIN) {
             _rematchUsed = false;
             if (_wins >= 20) {
+                _awardProgress();
                 Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
                 Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");
                 gameState = GS_CHAMPION;
@@ -426,6 +474,7 @@ class BitochiBoxingView extends WatchUi.View {
                     // once the free rematch has been used — a first loss still
                     // offers a rematch, so the run isn't over yet.
                     if (_rematchUsed) {
+                        _awardProgress();
                         Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
                         Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");
                     }
@@ -762,6 +811,19 @@ class BitochiBoxingView extends WatchUi.View {
             dc.setColor(comboC, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w / 2, _h * 57 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // One-shot login-streak toast (no blocking view) — a small banner near
+        // the top for a few dozen frames on the day's first launch.
+        if (_dailyMsgTick > 0 && _dailyMsg != null) {
+            var bw = _w * 78 / 100; var bx = (_w - bw) / 2; var by = _h * 30 / 100;
+            dc.setColor(0x08121C, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(bx, by - 11, bw, 22, 5);
+            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(bx, by - 11, bw, 22, 5);
+            dc.drawText(_w / 2, by, Graphics.FONT_XTINY, _dailyMsg,
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            _dailyMsgTick--;
+        }
     }
 
     hidden function drawArena(dc, ox, oy) {
@@ -954,7 +1016,7 @@ class BitochiBoxingView extends WatchUi.View {
             skin = (pr << 16) | (pg << 8) | 0x77;
         }
 
-        dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_trunkColor(), Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - bodyW / 2, baseY, bodyW, bodyH);
         dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - bodyW / 2 + 2, baseY + 1, bodyW - 4, bodyH / 5);
@@ -1325,7 +1387,12 @@ class BitochiBoxingView extends WatchUi.View {
             ["Hits " + _totalHits + " Score " + _score, 0x88CCFF]
         ];
         if (_bestScore > 0) { lines.add(["Best " + _bestScore, 0xFFCC44]); }
-        if (_bestRound > 0) { lines.add(["Best Round " + _bestRound, 0x8899AA]); }
+        // Shared progression summary: rank/level + coin balance + login streak,
+        // plus a one-shot gold banner when this run crossed an unlock milestone.
+        var lvl = Progress.level();
+        lines.add(["Lv " + lvl + " " + Progress.rankName() + " - " + Progress.coins() + "c", 0xBFD8C4]);
+        lines.add(["Streak " + Progress.currentStreak(), 0x88CCAA]);
+        if (_pgUnlockMsg != null) { lines.add([_pgUnlockMsg, 0xFFD24A]); }
         var footer = (!_rematchUsed) ? "Tap: REMATCH!" : "Tap to play again";
         GameOverCard.draw(dc, _w, _h, "DEFEATED", 0xFF4444, lines, footer, 0xFF4444);
     }
@@ -1370,8 +1437,11 @@ class BitochiBoxingView extends WatchUi.View {
         // Stats
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _h * 78 / 100, Graphics.FONT_XTINY, "Score: " + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 84 / 100, Graphics.FONT_XTINY, "20 Wins! Hits: " + _totalHits, Graphics.TEXT_JUSTIFY_CENTER);
+        // Shared progression summary: rank/level + coin balance + login streak.
+        dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 84 / 100, Graphics.FONT_XTINY,
+                    "Lv " + Progress.level() + " " + Progress.rankName() + " - " + Progress.coins() + "c  Str " + Progress.currentStreak(),
+                    Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 20 < 10) ? 0x44FF44 : 0x22BB44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _h * 91 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }

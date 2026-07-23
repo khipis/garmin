@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
+using Toybox.Attention;
 
 // ── game states ───────────────────────────────────────────────────────────────
 const GS_TITLE = 0;
@@ -31,6 +32,7 @@ const COIN_COMBO_CAP  = 8;
 
 // Storage keys
 const SK_BEST = "dinoBest";
+const SK_FX   = "dino_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 // ── Global leaderboard ────────────────────────────────────────────────────────
 // Shared library (../_shared/leaderboard) game id — matches the web id.
@@ -138,6 +140,9 @@ class DinosaurView extends WatchUi.View {
     // ── title-screen menu selection (START / LEADERBOARD) ─────────────────────
     hidden var _menuSel;
 
+    // ── sound + haptics master switch (OPTIONS: dino_fx) ──────────────────────
+    hidden var _fxOn;
+
     // ── init ──────────────────────────────────────────────────────────────────
 
     function initialize() {
@@ -159,6 +164,7 @@ class DinosaurView extends WatchUi.View {
         _shakeT    = 0;
         _demoIdle  = 0;
         _menuSel   = DINO_ROW_START;
+        _fxOn      = _loadFx();
 
         // Restore best score from storage so it survives app restarts.
         var stored = Application.Storage.getValue(SK_BEST);
@@ -298,6 +304,13 @@ class DinosaurView extends WatchUi.View {
                 _sparkT = 14;
                 _sparkX = _dinoX + _dw / 2;
                 _sparkY = _dy + _dh / 4;
+                // Mid-air double jump — a brighter blip + a little kick.
+                _tone(1);
+                _vibe(35, 40);
+            } else {
+                // Ground launch — soft hop.
+                _tone(0);
+                _vibe(20, 25);
             }
         }
     }
@@ -307,10 +320,14 @@ class DinosaurView extends WatchUi.View {
             _crouching = 1;
             _crouchT   = 42;
             _dy = _grdY - _dh * 55 / 100;
+            _tone(0);
+            _vibe(18, 20);
         } else if (_onGrd == 0) {
             // ground pound — slam down
             _crouching = 0;
             if (_vy < 12) { _vy = 12; }
+            _tone(0);
+            _vibe(30, 40);
         }
     }
 
@@ -341,6 +358,34 @@ class DinosaurView extends WatchUi.View {
     // Persist hi-score to storage so it survives app restart.
     hidden function _saveHiScore() {
         Application.Storage.setValue(SK_BEST, _hiScore);
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 light · 1 coin/collect · 2 alert · 3 unlock/win · 4 crash.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(SK_FX);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // Leaderboard variant = base speed, so NORMAL/FAST/INSANE rank separately.
@@ -434,6 +479,7 @@ class DinosaurView extends WatchUi.View {
         _theme     = 0;
         _lastObsType   = -1;
         _lastObsHeight = 0;
+        _fxOn      = _loadFx();
         for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; _obsScored[i] = 0; }
 
         for (var i = 0; i < COIN_MAX; i++) { _coinA[i] = 0; }
@@ -485,6 +531,9 @@ class DinosaurView extends WatchUi.View {
             if (_state == GS_RUN) {
                 if (_phase == 1) { _notifyStr = "x2 JUMP!";  _notifyT = 110; }
                 if (_phase == 2) { _notifyStr = "DUCK!  [v]"; _notifyT = 110; }
+                // New ability unlocked — celebratory chime.
+                _tone(3);
+                _vibe(60, 120);
             }
         }
 
@@ -551,6 +600,9 @@ class DinosaurView extends WatchUi.View {
             _state  = GS_OVER;
             _shakeT = 8;
             if (!wasDemo) {
+                // Crash — heavy fail sting + long jolt.
+                _tone(4);
+                _vibe(100, 250);
                 if (_score > _hiScore) {
                     _hiScore = _score;
                     _flash   = 70;
@@ -699,8 +751,17 @@ class DinosaurView extends WatchUi.View {
         _coinSparkT = 12; _coinSparkX = _coinX[i]; _coinSparkY = _coinY[i];
         _coinTxtT = 20; _coinTxtX = _coinX[i]; _coinTxtY = _coinY[i]; _coinTxtV = bonus;
 
+        // Coin pickup chime + tick.
+        _tone(1);
+        _vibe(30, 35);
+
         // Milestone flash every 3rd consecutive coin — a bright, eye-catching payoff.
-        if (_comboCoins % 3 == 0) { _comboFlashT = 16; }
+        if (_comboCoins % 3 == 0) {
+            _comboFlashT = 16;
+            // Combo milestone — extra celebratory burst.
+            _tone(3);
+            _vibe(55, 90);
+        }
     }
 
     // Hitboxes are intentionally tighter than the rendered sprite so the

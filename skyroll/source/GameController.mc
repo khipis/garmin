@@ -16,6 +16,7 @@ using Toybox.Application;
 using Toybox.System;
 using Toybox.Math;
 using Toybox.WatchUi;
+using Toybox.Attention;
 
 class GameController {
 
@@ -24,6 +25,7 @@ class GameController {
     var physics;
     var path;
     var cam;
+    var fx;         // particle pool (juice)
 
     // Screen geometry (filled in by MainView.onLayout).
     var sw;     var sh;
@@ -39,6 +41,19 @@ class GameController {
     var boostFlash;
     var fallT;
     var startY;
+
+    // Engagement + juice runtime.
+    var fxOn;           // sound + haptics enabled (sr_fx option)
+    var gemsRun;        // gems collected this run
+    var bestGems;       // best single-run gem haul (secondary board)
+    var gemFlash;       // ticks remaining for the "+gem" pop
+    var shake;          // screen-shake ticks
+    var warnFlash;      // near-edge danger flash ticks
+    var milestoneMsg;   // milestone banner text
+    var milestoneFlash; // milestone banner ticks
+    hidden var _lastMilestone;
+    hidden var _newGemsFlag;
+
     // Grace period counter — how many consecutive ticks the ball
     // has been "off" the path.  We only enter SR_FALL after 2+
     // consecutive misses so a single numerical edge-of-tile artefact
@@ -50,6 +65,7 @@ class GameController {
         physics   = new PhysicsSystem();
         path      = new PathGenerator();
         cam       = new CameraSystem();
+        fx        = new ParticlePool();
         sw        = 260; sh = 260;
         cx        = 130; cy = 130;
         state     = SR_MENU;
@@ -61,6 +77,16 @@ class GameController {
         boostFlash= 0;
         fallT     = 0;
         startY    = 0;
+        fxOn      = true;
+        gemsRun   = 0;
+        bestGems  = 0;
+        gemFlash  = 0;
+        shake     = 0;
+        warnFlash = 0;
+        milestoneMsg = "";
+        milestoneFlash = 0;
+        _lastMilestone = 0;
+        _newGemsFlag = false;
         _loadPersist();
         gyro.setSensitivity(sensMode);
     }
@@ -77,11 +103,41 @@ class GameController {
         if (d instanceof Number && d >= 0 && d <= 2) { diffMode = d; }
         var b = Application.Storage.getValue(SR_K_BEST);
         if (b instanceof Number && b >= 0) { bestScore = b; }
+        var g = Application.Storage.getValue(SR_K_GEMS);
+        if (g instanceof Number && g >= 0) { bestGems = g; }
+        var f = Application.Storage.getValue(SR_K_FX);
+        // 0 = ON (default), 1 = OFF.
+        fxOn = !(f instanceof Number && f == 1);
     }
     hidden function _savePersist() {
         Application.Storage.setValue(SR_K_SENS, sensMode);
         Application.Storage.setValue(SR_K_DIFF, diffMode);
         Application.Storage.setValue(SR_K_BEST, bestScore);
+        Application.Storage.setValue(SR_K_GEMS, bestGems);
+    }
+
+    // ── Sound + haptics (gated by sr_fx, guarded for devices with
+    //    no Attention support). ────────────────────────────────
+    hidden function _tone(kind) {
+        if (!fxOn) { return; }
+        if (!(Attention has :playTone)) { return; }
+        try {
+            var t = Attention.TONE_KEY;
+            if      (kind == 0) { t = Attention.TONE_LOUD_BEEP; }   // boost
+            else if (kind == 1) { t = Attention.TONE_KEY;       }   // gem
+            else if (kind == 2) { t = Attention.TONE_SUCCESS;   }   // milestone
+            else if (kind == 3) { t = Attention.TONE_FAILURE;   }   // death
+            else if (kind == 4) { t = Attention.TONE_ALERT_HI;  }   // warning
+            Attention.playTone(t);
+        } catch (e) {}
+    }
+    hidden function _vibe(dur, inten) {
+        if (!fxOn) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try {
+            var p = [new Attention.VibeProfile(inten, dur)];
+            Attention.vibrate(p);
+        } catch (e) {}
     }
 
     // ── Menu helpers ────────────────────────────────────────
@@ -153,7 +209,20 @@ class GameController {
         fallT     = 0;
         distance  = 0;
         _missStreak = 0;
+        gemsRun   = 0;
+        gemFlash  = 0;
+        shake     = 0;
+        warnFlash = 0;
+        milestoneFlash = 0;
+        _lastMilestone = 0;
+        _newGemsFlag = false;
+        fx.clear();
         state     = SR_PLAY;
+    }
+
+    // Screen position of the ball right now (for spawning bursts).
+    hidden function _ballScreen() {
+        return cam.worldToScreen(physics.px, physics.py, cx, cy);
     }
 
     function backToMenu() {
@@ -168,6 +237,13 @@ class GameController {
 
         // Update tilt every tick so play and fall both respond.
         gyro.feed(ax, ay);
+
+        // Particles run on every live state so the death burst animates.
+        fx.step();
+        if (gemFlash > 0)       { gemFlash = gemFlash - 1; }
+        if (shake > 0)          { shake = shake - 1; }
+        if (warnFlash > 0)      { warnFlash = warnFlash - 1; }
+        if (milestoneFlash > 0) { milestoneFlash = milestoneFlash - 1; }
 
         if (state == SR_PLAY) {
             physics.tick(gyro.tiltX, gyro.tiltY, path.speedMul());
@@ -185,29 +261,85 @@ class GameController {
             // Collision sample.
             var r = CollisionSystem.sample(physics.px, physics.py,
                                             path, physics);
-            var fell = r[0]; var boosted = r[2];
-            if (boosted)             { boostFlash = 12; }
-            if (boostFlash > 0)      { boostFlash = boostFlash - 1; }
+            var fell = r[0]; var boosted = r[2]; var gotGem = r[5];
+            var bp = _ballScreen();
+
+            if (boosted) {
+                boostFlash = 12;
+                shake = 5;
+                fx.burst(bp[0], bp[1] - 6, 8, 0xFFD24A, 3.0, false, 12, 2, -1.2);
+                _tone(0);
+                _vibe(70, 60);
+            }
+            if (boostFlash > 0) { boostFlash = boostFlash - 1; }
+
+            if (gotGem) {
+                gemsRun = gemsRun + 1;
+                gemFlash = 10;
+                fx.burst(bp[0], bp[1] - 10, 6, 0x33E0FF, 2.4, false, 10, 2, -0.8);
+                _tone(1);
+                _vibe(30, 40);
+            }
+
+            // Milestone celebration every SR_MILESTONE_M metres.
+            var ms = distance / SR_MILESTONE_M;
+            if (ms > _lastMilestone) {
+                _lastMilestone = ms;
+                gemsRun = gemsRun + SR_MILESTONE_GEMS;
+                milestoneMsg = (ms * SR_MILESTONE_M).format("%d") + " m!";
+                milestoneFlash = 22;
+                shake = 6;
+                fx.burst(cx, cy - 10, 12, 0xFFF3B0, 3.4, true, 20, 3, -2.0);
+                _tone(2);
+                _vibe(120, 70);
+            }
 
             // Grace period: require 2 consecutive missed-tile ticks
             // before triggering SR_FALL.  A single artefact tick at
             // a turn-segment boundary is absorbed silently.
             if (fell) {
                 _missStreak = _missStreak + 1;
+                // First off-path tick = a warning (we still have grace).
+                if (_missStreak == 1) {
+                    warnFlash = 6;
+                    _tone(4);
+                    _vibe(50, 50);
+                }
             } else {
                 _missStreak = 0;
             }
+
+            // Speed-proportional trail behind the ball.
+            if (physics.vy > 0.16) {
+                fx.emit(bp[0], bp[1] - 4, 0, 1.0, 0x88AEDC, 6, 1, false);
+            }
+
             if (_missStreak >= 2) {
                 state = SR_FALL;
                 fallT = 0;
                 _missStreak = 0;
+                shake = 8;
+                fx.burst(bp[0], bp[1] - 6, 14, 0xDCE6F8, 3.6, true, 22, 3, -1.5);
+                _tone(3);
+                _vibe(300, 90);
+
                 if (distance > bestScore) {
                     bestScore = distance;
-                    _savePersist();
+                    _newGemsFlag = true;   // force a save below
                 }
+                if (gemsRun > bestGems) {
+                    bestGems = gemsRun;
+                    _newGemsFlag = true;
+                }
+                if (_newGemsFlag) { _savePersist(); }
+
                 // Run ended — submit distance to the global leaderboard
                 // once, split by difficulty variant. Higher is better.
+                // A second submit records the gem haul on its own board.
                 Leaderboard.submitScore(LB_GAME_ID, distance, diffName());
+                if (gemsRun > 0) {
+                    Leaderboard.submitScore(LB_GAME_ID, gemsRun, "Gems");
+                }
                 Leaderboard.showPostGame(LB_GAME_ID, diffName(), "SKY ROLL");
             }
         } else if (state == SR_FALL) {

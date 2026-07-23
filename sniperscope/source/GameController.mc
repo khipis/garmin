@@ -30,6 +30,7 @@
 using Toybox.Application;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Attention;
 
 class GameController {
 
@@ -105,6 +106,9 @@ class GameController {
     var tick;
     hidden var _spawnSeed;     // bumped each round for variety
 
+    // Sound + haptics master switch (OPTIONS: ss_fx).
+    hidden var _fxOn;
+
     function initialize() {
         sw = 260; sh = 260; cx = 130; cy = 130;
         gyro    = new GyroInput();
@@ -148,6 +152,8 @@ class GameController {
         tick    = 0;
         _spawnSeed = 1729;
 
+        _fxOn = _loadFx();
+
         _loadPrefs();
         gyro.setSensitivity(sens);
         aim.setSensitivity(sens);
@@ -155,6 +161,34 @@ class GameController {
     }
 
     function syncDims(w, h) { sw = w; sh = h; cx = w / 2; cy = h / 2; }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 light · 1 good hit · 2 miss/penalty · 3 mission clear · 4 fail.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(SS_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
 
     // Optical-scope projection. The watch face is the glass: the reticle stays
     // at its optical centre while the complete world moves beneath it. Scale
@@ -250,6 +284,7 @@ class GameController {
 
     // ── Mission lifecycle ────────────────────────────────────
     hidden function _startMission() {
+        _fxOn     = _loadFx();
         round     = 0;
         score     = 0;
         headshots = 0;
@@ -304,6 +339,14 @@ class GameController {
         if (_newDistFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestDistance, "longest-shot"); }
         if (_newShotFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestShotPts,  "best-shot"); }
         if (_newHeadFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestHeadshots, "headshots"); }
+        // Mission-complete fanfare — bigger celebration on a new record.
+        if (_newDistFlag || _newShotFlag || _newHeadFlag) {
+            _tone(3);
+            _vibe(100, 320);
+        } else {
+            _tone(3);
+            _vibe(70, 160);
+        }
         state = SS_OVER;
     }
 
@@ -359,6 +402,9 @@ class GameController {
         recoilT = SS_RECOIL_TICKS;
         shakeT  = 2;
         muzzleFlashT = 3;
+        // Rifle report + recoil kick.
+        _tone(1);
+        _vibe(60, 70);
         state   = SS_FIRED;
     }
 
@@ -506,6 +552,23 @@ class GameController {
 
         score = score + pts;
 
+        // Impact feedback — the harder the zone, the meatier the kick.
+        if (zone == SS_ZONE_HEAD) {
+            _tone(3);
+            _vibe(100, 200);
+        } else if (zone == SS_ZONE_CHEST) {
+            _tone(1);
+            _vibe(55, 90);
+        } else {
+            _tone(0);
+            _vibe(35, 55);
+        }
+        // Extra celebratory blip for a multi-headshot streak callout.
+        if (streakBonus > 0) {
+            _tone(1);
+            _vibe(80, 120);
+        }
+
         // Persistent spectacular-shot stats.
         lifetimeKills = lifetimeKills + 1;
         var flush = false;
@@ -529,6 +592,9 @@ class GameController {
         score = score - 100;
         if (score < 0) { score = 0; }
         headStreak = 0; streakMsg = ""; streakBonus = 0;
+        // Hit a civilian/decoy — harsh penalty buzz.
+        _tone(4);
+        _vibe(90, 220);
     }
     hidden function _registerMiss(timeout) {
         if (timeout) {
@@ -536,6 +602,9 @@ class GameController {
             lastWasPrimary = false;
         }
         headStreak = 0; streakMsg = ""; streakBonus = 0;
+        // Clean miss — a low, disappointed thud.
+        _tone(2);
+        _vibe(40, 90);
         state   = SS_RESULT;
         resultT = SS_RESULT_TICKS;
     }

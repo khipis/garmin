@@ -17,6 +17,9 @@
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
+
+const PP_FX_KEY = "pp_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const GS_MENU  = 0;
 const GS_SERVE = 1;
@@ -85,6 +88,9 @@ class GameController {
     hidden var _tiltSmoothY;  // EMA of the calibrated Y tilt (noise filter)
     hidden var _tiltCenter;   // smoothed paddle centre target (Float, anti-jump)
 
+    hidden var _fxOn;      // sound + haptics master switch (OPTIONS: pp_fx)
+    hidden var _wallFxCd;  // cooldown so rapid wall bounces don't machine-gun the buzzer
+
     function initialize() {
         state    = GS_MENU;
         menuRow  = MI_START;
@@ -119,7 +125,35 @@ class GameController {
         growSide     = -1; growTimer   = 0;
         shrinkSide   = -1; shrinkTimer = 0;
 
+        _fxOn     = _loadFx();
+        _wallFxCd = 0;
+
         _loadSettings();
+    }
+
+    // ── Best-effort sound + haptics (guarded; silent hardware is fine) ──
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(PP_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _randSpawnGap() {
@@ -233,6 +267,8 @@ class GameController {
     function startMatch() {
         scoreP = 0; scoreCpu = 0;
         lastWinner = -1;
+        _fxOn     = _loadFx();
+        _wallFxCd = 0;
         setDifficulty(difficulty);  // reapply
         growSide = -1; growTimer = 0;
         shrinkSide = -1; shrinkTimer = 0;
@@ -317,6 +353,7 @@ class GameController {
     function step() {
         if (state == GS_MENU)  { return; }
         if (state == GS_OVER)  { return; }
+        if (_wallFxCd > 0) { _wallFxCd = _wallFxCd - 1; }
         if (state == GS_SERVE) {
             serveCounter = serveCounter - 1;
             if (serveCounter <= 0) {
@@ -356,10 +393,16 @@ class GameController {
             // ball passed left wall — CPU scored
             scoreCpu = scoreCpu + 1;
             lastWinner = 1;
+            // Conceded a point — a low blip.
+            _tone(2);
+            _vibe(45, 80);
             _afterPoint();
         } else if (scored == 1) {
             scoreP = scoreP + 1;
             lastWinner = 0;
+            // Player scored — a bright beep.
+            _tone(1);
+            _vibe(45, 80);
             _afterPoint();
         }
     }
@@ -369,11 +412,22 @@ class GameController {
     hidden function _advanceBall(b) {
         var res = b.step(playX0, playY0, playX1, playY1);
 
+        // Wall bounce — a soft tick, rate-limited so fast rallies don't buzz nonstop.
+        if (b.wallBounced && _wallFxCd <= 0) {
+            _tone(0);
+            _wallFxCd = 3;
+        }
+
         if (b.tryPaddleBounce(pPlayer.x, pPlayer.y, pPlayer.w, pPlayer.h, -1)) {
             lastHitSide = 0;
+            // Crisp paddle "pock".
+            _tone(0);
+            _vibe(22, 25);
         }
         if (b.tryPaddleBounce(pCpu.x, pCpu.y, pCpu.w, pCpu.h, +1)) {
             lastHitSide = 1;
+            _tone(0);
+            _vibe(18, 20);
         }
 
         if (powerUp.active) {
@@ -472,11 +526,18 @@ class GameController {
             if (scoreP > scoreCpu) {
                 hiPlayerWins = hiPlayerWins + 1;
                 _saveStat();
+                // Match won — victory fanfare.
+                _tone(1);
+                _vibe(100, 250);
                 // Submit the win margin to the global leaderboard, split
                 // by AI difficulty. A 7-0 sweep scores higher than a 7-6
                 // nail-biter. Only single-player vs-AI wins are recorded.
                 Leaderboard.submitScore(LB_GAME_ID, scoreP - scoreCpu, diffName());
                 Leaderboard.showPostGame(LB_GAME_ID, diffName(), "PONG PRO");
+            } else {
+                // Match lost — defeat sting.
+                _tone(2);
+                _vibe(100, 200);
             }
             state = GS_OVER;
             return;

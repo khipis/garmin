@@ -629,9 +629,9 @@ _Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_58_49_64_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc"; @line = 67; @symbol_functiondef = [buildSerpentMenu,67,9,25]; @symbol_return<0> = [Lang,67,31,35]; @symbol_return<1> = [Array,67,36,41]; ]
 function buildSerpentMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_start:
+_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_start:
 [ "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc" 68 4 ]
-    [ "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_start" "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_start" "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 68 8 11 ];
     symbol [ MenuConfig %tmp.4 68 18 28 ];
@@ -686,7 +686,7 @@ _Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
     symbol [ options %tmp.55 78 9 16 const ];
-    %tmp.56 = newa 1;
+    %tmp.56 = newa 2;
     symbol [ GmOption %tmp.60 79 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "sp_spd";
@@ -705,37 +705,55 @@ _Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_start:
     %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
     %tmp.74 = dup %tmp.56;
     %tmp.75 = aputv %tmp.74 0 %tmp.57;
-    %tmp.76 = dup %tmp.53;
-    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
-    %tmp.1 = newc %tmp.4 (%tmp.77);
+    symbol [ GmOption %tmp.79 83 16 24 ];
+    %tmp.79 = getv ? :GmOption;
+    %tmp.80 = "sp_skin";
+    %tmp.81 = "Skin";
+    %tmp.82 = newa 3;
+    %tmp.83 = "CLASSIC";
+    %tmp.84 = dup %tmp.82;
+    %tmp.85 = aputv %tmp.84 0 %tmp.83;
+    %tmp.86 = "NEON";
+    %tmp.87 = dup %tmp.85;
+    %tmp.88 = aputv %tmp.87 1 %tmp.86;
+    %tmp.89 = "GOLD";
+    %tmp.90 = dup %tmp.88;
+    %tmp.91 = aputv %tmp.90 2 %tmp.89;
+    %tmp.92 = 0;
+    %tmp.76 = newc %tmp.79 (%tmp.80, %tmp.81, %tmp.91, %tmp.92);
+    %tmp.93 = dup %tmp.75;
+    %tmp.94 = aputv %tmp.93 1 %tmp.76;
+    %tmp.95 = dup %tmp.53;
+    %tmp.96 = aputv %tmp.95 %tmp.55 %tmp.94;
+    %tmp.1 = newc %tmp.4 (%tmp.96);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 68 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc" 82 4 ]
-    [ "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_start" "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc" 86 4 ]
+    [ "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_start" "_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 82 8 9 ];
-    symbol [ GameMenuView %tmp.81 82 16 28 ];
-    %tmp.81 = getv ? :GameMenuView;
-    %tmp.82 = lgetv %cfg.1;
-    symbol [ cfg %tmp.82 82 29 32 ];
-    %tmp.78 = newc %tmp.81 (%tmp.82);
-    lputv %v.2 %tmp.78;
-    symbol [ v %v.2 82 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc" 83 4 ]
-    %tmp.83 = newa 2;
-    %tmp.84 = lgetv %v.2;
-    symbol [ v %tmp.84 83 12 13 ];
-    %tmp.85 = dup %tmp.83;
-    %tmp.86 = aputv %tmp.85 0 %tmp.84;
-    symbol [ GameMenuDelegate %tmp.90 83 19 35 ];
-    %tmp.90 = getv ? :GameMenuDelegate;
-    %tmp.91 = lgetv %v.2;
-    symbol [ v %tmp.91 83 36 37 ];
-    %tmp.87 = newc %tmp.90 (%tmp.91);
-    %tmp.92 = dup %tmp.86;
-    %tmp.93 = aputv %tmp.92 1 %tmp.87;
-    ret %tmp.93;
-_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_84_0_stop:
+    symbol [ v %v.2 86 8 9 ];
+    symbol [ GameMenuView %tmp.100 86 16 28 ];
+    %tmp.100 = getv ? :GameMenuView;
+    %tmp.101 = lgetv %cfg.1;
+    symbol [ cfg %tmp.101 86 29 32 ];
+    %tmp.97 = newc %tmp.100 (%tmp.101);
+    lputv %v.2 %tmp.97;
+    symbol [ v %v.2 86 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc" 87 4 ]
+    %tmp.102 = newa 2;
+    %tmp.103 = lgetv %v.2;
+    symbol [ v %tmp.103 87 12 13 ];
+    %tmp.104 = dup %tmp.102;
+    %tmp.105 = aputv %tmp.104 0 %tmp.103;
+    symbol [ GameMenuDelegate %tmp.109 87 19 35 ];
+    %tmp.109 = getv ? :GameMenuDelegate;
+    %tmp.110 = lgetv %v.2;
+    symbol [ v %tmp.110 87 36 37 ];
+    %tmp.106 = newc %tmp.109 (%tmp.110);
+    %tmp.111 = dup %tmp.105;
+    %tmp.112 = aputv %tmp.111 1 %tmp.106;
+    ret %tmp.112;
+_Users_kkorolczuk_work_garmin_serpent_source_SerpentMenu_mc_67_42_88_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/serpent/source/SerpentMenu.mc"; @line = 4; ]
 <init> {

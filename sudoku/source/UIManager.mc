@@ -28,15 +28,19 @@ class UIManager {
     var cellPx;       // pixel size of one grid cell
     var boardX;       // top-left X of the grid
     var boardY;       // top-left Y of the grid
+    var boardBottom;  // Y just past the last grid row (top of footer band)
 
-    // Exit (✕) button hit-box, recomputed each frame in drawHUD.
-    var exitX;
-    var exitY;
-    var exitR;
+    // 5%-inset virtual viewport (origin + size). Everything is drawn inside
+    // this box so no element ever hugs the (often curved / hard-to-tap) screen
+    // edge. This is the "whole screen scaled ~5% smaller" the layout uses.
+    var ox;
+    var oy;
+    var vw;
+    var vh;
 
     function initialize() {
-        sw = 0; sh = 0; cellPx = 0; boardX = 0; boardY = 0;
-        exitX = 0; exitY = 0; exitR = 0;
+        sw = 0; sh = 0; cellPx = 0; boardX = 0; boardY = 0; boardBottom = 0;
+        ox = 0; oy = 0; vw = 0; vh = 0;
     }
 
     // Compute layout for a given grid side n and the active state.
@@ -45,24 +49,32 @@ class UIManager {
     function layout(dc, n, state) {
         sw = dc.getWidth();
         sh = dc.getHeight();
-        var minDim = (sw < sh) ? sw : sh;
-        // Reserve room above (HUD) and below (controls / time). The 9x9 grid
-        // is dense, so give it a little more vertical room than the 4x4.
-        var topPad = (n >= 9) ? (sh * 13 / 100) : (sh * 14 / 100);
-        var botPad = (n >= 9) ? (sh * 15 / 100) : (sh * 16 / 100);
-        var avail  = sh - topPad - botPad;
-        // Keep the whole square inside the screen width — critical on round
+        // Shrink the working area ~5% (2.5% margin each side) so the whole UI
+        // sits inside the screen with breathing room — critical on round
+        // watches where the outer ring is curved and hard to touch.
+        ox = sw * 25 / 1000;
+        oy = sh * 25 / 1000;
+        vw = sw - ox * 2;
+        vh = sh - oy * 2;
+
+        // Reserve room above (clock) and below (hint / best time). The 9x9
+        // grid is dense, so give it a little more vertical room than the 4x4.
+        var topPad = (n >= 9) ? (vh * 14 / 100) : (vh * 15 / 100);
+        var botPad = (n >= 9) ? (vh * 15 / 100) : (vh * 16 / 100);
+        var avail  = vh - topPad - botPad;
+        // Keep the whole square inside the viewport width — critical on round
         // watches so digit cells near the edges are never clipped.
-        var widthCap = sw * 92 / 100;
+        var widthCap = vw;
         if (avail > widthCap) { avail = widthCap; }
         // Snap the board side to an exact multiple of n so every cell is the
         // same integer width and grid lines land on clean pixels.
         cellPx = avail / n;
         if (cellPx < 8) { cellPx = 8; }
         var boardSide = cellPx * n;
-        boardX = (sw - boardSide) / 2;
-        boardY = topPad + (avail - boardSide) / 2;
-        if (boardY < topPad) { boardY = topPad; }
+        boardX = ox + (vw - boardSide) / 2;
+        boardY = oy + topPad + (avail - boardSide) / 2;
+        if (boardY < oy + topPad) { boardY = oy + topPad; }
+        boardBottom = boardY + boardSide;
     }
 
     // ── Menu ─────────────────────────────────────────────────────────
@@ -215,94 +227,45 @@ class UIManager {
         }
     }
 
-    // ── Top HUD: exit button + time + mode ───────────────────────────
+    // ── Top HUD: clock ────────────────────────────────────────────────
+    // Uses the inset viewport (ox/oy/vw/vh) computed in layout(), which
+    // drawBoard() always runs first, so the HUD sits off the edge.
     function drawHUD(dc, ctrl) {
-        var w  = dc.getWidth();
-        var cx = w / 2;
-        var ty = dc.getHeight() * 3 / 100;
-        if (ty < 4) { ty = 4; }
-
-        // Vertical centre of the clock text — used to align the HUD row.
-        var midY = ty + dc.getFontHeight(Graphics.FONT_XTINY) / 2;
-
-        // Exit (✕) button — sits just LEFT of the clock, inside the round
-        // safe zone so it's never clipped, giving touch-only watches a
-        // clear, always-visible way out.
-        if (ctrl.state == GS_PLAY || ctrl.state == GS_PAUSED) {
-            exitR = 11;
-            exitX = w * 30 / 100;
-            exitY = midY;
-            dc.setColor(0x2A1010, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(exitX, exitY, exitR);
-            dc.setColor(0xFF6666, Graphics.COLOR_TRANSPARENT);
-            dc.drawCircle(exitX, exitY, exitR);
-            dc.drawCircle(exitX, exitY, exitR - 1);
-            var d = exitR / 2;
-            dc.drawLine(exitX - d, exitY - d, exitX + d, exitY + d);
-            dc.drawLine(exitX - d, exitY + d, exitX + d, exitY - d);
-        } else {
-            exitR = 0;
-        }
-
-        // Time (centre). Mode/difficulty is intentionally NOT shown here —
-        // the round safe zone is too narrow for ✕ + clock + mode without
-        // crowding. It lives in the footer and on the results screen.
+        var cxs     = sw / 2;
+        var bandMid = (oy + boardY) / 2;
         dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ty, Graphics.FONT_XTINY,
-                    ctrl.fmtMs(ctrl.elapsedMs), Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    // Hit-test the exit (✕) button. Returns true if (x,y) lands on it.
-    // The hit-box is deliberately generous (fat-finger friendly) and biased
-    // downward so a tap that lands slightly below the small glyph still
-    // counts — the whole top-left corner above the board is "exit".
-    function tapInExit(x, y) {
-        if (exitR <= 0) { return false; }
-        // Everything in the top-left quadrant above the board and left of
-        // the clock is treated as the exit zone.
-        if (y <= boardY && x <= exitX + exitR + 14) { return true; }
-        var dx = x - exitX;
-        var dy = y - exitY;
-        var pad = exitR + 16;
-        return (dx > -pad && dx < pad && dy > -pad && dy < pad);
+        dc.drawText(cxs, bandMid, Graphics.FONT_XTINY,
+                    ctrl.fmtMs(ctrl.elapsedMs),
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // ── Bottom hint bar ──────────────────────────────────────────────
-    // Kept inside the round safe zone (centred, pulled up from the very
-    // bottom) so text is never clipped by the display bezel.
+    // Plain text only — no drawn buttons. Exiting is handled by the
+    // hardware BACK key / native back gesture (see InputHandler.onBack).
     function drawFooter(dc, ctrl) {
-        var w  = dc.getWidth();
-        var cx = w / 2;
+        var cx = ox + vw / 2;
         var fh = dc.getFontHeight(Graphics.FONT_XTINY);
-        var fy = dc.getHeight() - dc.getHeight() * 8 / 100 - fh / 2;
+        var bandTop = boardBottom;
+        var bandBot = oy + vh;
+        var midB    = (bandTop + bandBot) / 2;
+
         if (ctrl.state == GS_PLAY) {
             var hasBest = (ctrl.bestMs > 0);
             if (hasBest) {
                 dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx, fy - fh, Graphics.FONT_XTINY,
+                dc.drawText(cx, midB - fh / 2 - 1, Graphics.FONT_XTINY,
                             "Best " + ctrl.fmtMs(ctrl.bestMs),
-                            Graphics.TEXT_JUSTIFY_CENTER);
+                            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            var msg = (ctrl.valMode == VAL_STRICT) ? "tap X to submit"
-                                                   : "tap X to exit";
-            // Fold mode+difficulty into the hint so it stays visible without
-            // crowding the top HUD.
-            if (!hasBest) {
-                var diff = (ctrl.diff == DIFF_EASY) ? "E"
-                         : (ctrl.diff == DIFF_MED)  ? "M" : "H";
-                var mLbl = ((ctrl.mode == MODE_QUICK) ? "4x4" : "9x9") + " " + diff;
-                dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx, fy - fh, Graphics.FONT_XTINY, mLbl,
-                            Graphics.TEXT_JUSTIFY_CENTER);
-                dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            }
-            dc.drawText(cx, fy, Graphics.FONT_XTINY, msg,
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            var msg = (ctrl.valMode == VAL_STRICT) ? "BACK to submit" : "BACK to exit";
+            dc.drawText(cx, hasBest ? midB + fh / 2 + 1 : midB, Graphics.FONT_XTINY,
+                        msg, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         } else if (ctrl.state == GS_PAUSED) {
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, fy, Graphics.FONT_XTINY,
-                        "Tap or any key to resume", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, midB, Graphics.FONT_XTINY,
+                        "Tap or any key to resume",
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
     }
 

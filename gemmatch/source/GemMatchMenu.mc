@@ -57,7 +57,8 @@ function buildGemMatchMenu() as Lang.Array {
         :options => [
             new GmOption("gm_mode", "Mode", ["TIME", "ZEN", "MOVES"], 0),
             new GmOption("gm_tidx", "Time", ["30s", "1min", "90s", "2min", "3min"], 2),
-            new GmOption("gm_midx", "Moves", ["10", "15", "20", "30"], 2)
+            new GmOption("gm_midx", "Moves", ["10", "15", "20", "30"], 2),
+            new GmOption("gm_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

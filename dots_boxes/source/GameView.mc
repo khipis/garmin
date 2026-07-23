@@ -4,6 +4,10 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
+
+// Sound + haptics master switch (OPTIONS: db_fx). 0/unset = ON, 1 = OFF.
+const DB_FX_KEY = "db_fx";
 
 // ── Dots & Boxes — grid layout ────────────────────────────────────────────
 //
@@ -87,6 +91,10 @@ class GameView extends WatchUi.View {
     hidden var _menuSel;
     hidden var _playerFirst;
 
+    // ── Sound + haptics (OPTIONS: db_fx) ──────────────────────────────────
+    hidden var _fxOn;
+    hidden var _overFxDone;
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -101,9 +109,37 @@ class GameView extends WatchUi.View {
         _diff    = DIFF_MED;
         _menuSel = 0;
         _playerFirst = true;
+        _fxOn        = _loadFx();
+        _overFxDone  = false;
         // Settings come from the shared OPTIONS screen (persisted in Storage).
         _applySettings();
         _startGame();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(DB_FX_KEY);
+            if (v instanceof Lang.Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 line placed · 1 box/win · 2 illegal/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
@@ -210,7 +246,7 @@ class GameView extends WatchUi.View {
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
             else if (_menuSel == 3) { openLeaderboard(); return; }
-            else if (_menuSel == 4) { _startGame(); }
+            else if (_menuSel == 4) { _tone(0); _startGame(); }
             WatchUi.requestUpdate();
             return;
         }
@@ -218,9 +254,11 @@ class GameView extends WatchUi.View {
         if (_state == DBS_AI && _mode != MODE_PVP) { return; }
         if (_state != DBS_PLAYER && _state != DBS_AI) { return; }
         var e = _cursor;
-        if (_edges[e] != DC_NONE) { return; }
+        if (_edges[e] != DC_NONE) { _tone(2); return; }
         var who = (_state == DBS_AI) ? DC_AI : DC_PLAYER;
         var got = _claimBoxes(e, who);
+        if (got > 0) { _tone(1); _vibe(60, 80); }   // completed a box!
+        else         { _tone(0); _vibe(18, 22); }   // line placed
         if (_state == DBS_AI) {
             _aiScore = _aiScore + got;
             if (_pScore + _aiScore == DB_B) { _endGame(); return; }
@@ -239,6 +277,10 @@ class GameView extends WatchUi.View {
             var e = _aiChooseEdge();
             if (e < 0) { _state = DBS_PLAYER; WatchUi.requestUpdate(); return; }
             var got = _claimBoxes(e, DC_AI);
+            if (_mode != MODE_AIAI) {
+                if (got > 0) { _tone(1); _vibe(45, 60); }   // AI closed a box
+                else         { _tone(0); }                   // AI drew a line
+            }
             _aiScore = _aiScore + got;
             if (_pScore + _aiScore == DB_B) { _endGame(); }
             else if (got == 0) { _state = DBS_PLAYER; }
@@ -264,6 +306,8 @@ class GameView extends WatchUi.View {
         _aiScore  = 0;
         _overType = 0;
         _cursor   = 0;
+        _fxOn       = _loadFx();
+        _overFxDone = false;
         if (_mode == MODE_AIAI) {
             _state = DBS_AI;
         } else if (_mode == MODE_PVAI && !_playerFirst) {
@@ -278,6 +322,12 @@ class GameView extends WatchUi.View {
         else if (_aiScore > _pScore)  { _overType = DOV_AIWIN; _sAI = _sAI + 1; }
         else                          { _overType = DOV_TIE; }
         _state = DBS_OVER;
+        if (!_overFxDone) {
+            _overFxDone = true;
+            if      (_overType == DOV_PWIN)  { _tone(1); _vibe(100, 220); }   // win!
+            else if (_overType == DOV_AIWIN) { _tone(2); _vibe(100, 200); }   // lose
+            else                             { _tone(0); _vibe(60, 120); }    // tie
+        }
         _reportResult();
     }
 

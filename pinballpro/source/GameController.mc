@@ -1,37 +1,35 @@
 // ═══════════════════════════════════════════════════════════════
-// GameController.mc — State machine, score, lives, multi-ball,
-// table selection.
+// GameController.mc — State machine, scoring, multi-ball, tables,
+// and the premium "juice" systems layered on top of v1:
 //
-// States:
-//   GS_MENU    main menu — pick TABLE, then START
-//   GS_LAUNCH  ball parked at the launcher; tap = release
-//   GS_PLAY    one or more balls in play
-//   GS_OVER    out of lives, score frozen
+//   • COMBOS + MULTIPLIER  — chained hits ramp a x1..x6 multiplier
+//     that scales every award; the chain decays if you stop scoring.
+//   • SKILL SHOT           — releasing the plunger inside the lit
+//     band on the power meter pays a big bonus.
+//   • BALL SAVE            — a drain in the first few seconds after a
+//     launch kicks the ball straight back into play (once per ball).
+//   • MISSIONS             — a per-table 3-step objective chain; each
+//     step pays out, the final step grants an EXTRA BALL, then loops.
+//   • JACKPOT              — builds during multi-ball, collected by
+//     clearing the drop bank while 2+ balls are live.
+//   • END-OF-BALL BONUS    — banked points × a bonus multiplier that
+//     grows each time you clear the drop bank, cashed on drain.
+//   • NUDGE + TILT         — SELECT during play shoves the ball; over-
+//     nudge and the table TILTS (flippers die briefly, bonus lost).
+//   • FX                   — spark particles, floating score popups,
+//     screen shake, event banners, guarded tone/vibe feedback.
 //
-// Multi-ball
-//   • Up to MAX_BALLS = 3 balls can be in play simultaneously.
-//   • Drop-target bank cleared → +500, all drops respawn, **extra
-//     ball spawns** at the launcher with an automatic kick (no need
-//     to tap to release).
-//   • A drained ball costs a LIFE only when it was the last one
-//     alive; losing a ball while siblings are still bouncing just
-//     removes it without touching the life counter.
-//   • Every 10 000 points → +1 life (classic "extra ball" rule).
-//
-// Tables
-//   Three handcrafted layouts (CLASSIC / NOVA / DERBY) built by
-//   TableLibrary based on the play-area rectangle. The same flipper
-//   geometry is reused across all tables so the player's muscle
-//   memory carries over.
-//
-// Persistence
-//   • `hi`       — global best score across every table
-//   • `lastTable`— remembered table choice for next launch
+// Persistence (unchanged keys + additive):
+//   • `hi`        — global best score across every table
+//   • `table`     — remembered table choice for next launch
+//   • `fx`        — effects on/off option index (0 = ON)
+//   • `pbCombo`   — best combo achieved (new, additive)
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Application;
 using Toybox.System;
 using Toybox.Math;
+using Toybox.Attention;
 
 const GS_MENU   = 0;
 const GS_LAUNCH = 1;
@@ -42,11 +40,16 @@ const MAX_BALLS       = 3;
 const STARTING_LIVES  = 3;
 const EXTRA_BALL_EVERY = 10000;
 
-// Menu items
+// Menu items (retained for the legacy in-view menu draw path).
 const MI_TABLE = 0;
 const MI_START = 1;
-const MI_LB    = 2;   // global leaderboard (pushed by MainView)
+const MI_LB    = 2;
 const MI_ITEMS = 3;
+
+// Mission types.
+const MT_BUMPERS = 0;
+const MT_DROPS   = 1;
+const MT_SLINGS  = 2;
 
 // Global leaderboard game id (matches _LOGOS / web id).
 const LB_GAME_ID = "pinballpro";
@@ -55,7 +58,7 @@ class GameController {
     var state;
 
     // ── Balls + flippers ────────────────────────────────────────────
-    var balls;          // Ball[MAX_BALLS] (alive flag tells if in play)
+    var balls;
     var fLeft;
     var fRight;
 
@@ -63,33 +66,72 @@ class GameController {
     var score;
     var hi;
     var lives;
-    var nextExtraBallAt;   // score threshold for next +1 life
+    var nextExtraBallAt;
 
     // ── Table selection ─────────────────────────────────────────────
     var tableIdx;
     var menuCursor;
 
-    // ── Table contents (rebuilt by _loadTable) ──────────────────────
-    var bumpers;       // Array of [x, y, r, color, flash] entries
-    var drops;         // Array of DropTarget
-    var slings;        // Array of Slingshot
+    // ── Table contents ──────────────────────────────────────────────
+    var bumpers;       // [x, y, r, color, flash]
+    var drops;
+    var slings;
 
     // ── Screen / play area ──────────────────────────────────────────
-    var screenW;
-    var screenH;
+    var screenW; var screenH;
     var playX0; var playY0;
     var playX1; var playY1;
-    var floorY;        // ball below this → drained
+    var floorY;
 
-    // ── Launcher ────────────────────────────────────────────────────
-    var launchX;
-    var launchY;
+    // ── Launcher + power meter ──────────────────────────────────────
+    var launchX; var launchY;
+    var launchPower;
+    var _launchDir;
+    var skillLo; var skillHi;   // lit skill-shot band (percent)
 
-    // ── Launch power meter (GS_LAUNCH only) ─────────────────────────
-    // Power oscillates between LAUNCH_MIN and LAUNCH_MAX every tick;
-    // tap/SELECT locks in the current value and fires the ball.
-    var launchPower;        // 0..100 (current charge)
-    var _launchDir;         // +1 going up, -1 going down
+    // ── Combo / multiplier ──────────────────────────────────────────
+    static var COMBO_WINDOW = 80;
+    var combo;
+    var comboTimer;
+    var multiplier;
+    var bestCombo;
+
+    // ── Missions ────────────────────────────────────────────────────
+    var missionList;
+    var missionIndex;
+    var missionType;
+    var missionTarget;
+    var missionProgress;
+
+    // ── Jackpot / bonus ─────────────────────────────────────────────
+    var jackpot;
+    var ballBonus;
+    var bonusMult;
+
+    // ── Ball save ───────────────────────────────────────────────────
+    static var BALL_SAVE_FRAMES = 150;   // ~3.75 s at 40 Hz
+    var ballSaveTimer;
+
+    // ── Nudge / tilt ────────────────────────────────────────────────
+    static var TILT_MAX      = 100;
+    static var TILT_PER_NUDGE = 34;
+    static var TILT_FRAMES   = 70;
+    var tiltMeter;
+    var tiltActive;
+    var _nudgeDir;
+
+    // ── Screen shake ────────────────────────────────────────────────
+    var shakeFrames;
+    var shakeMag;
+
+    // ── Event banner ────────────────────────────────────────────────
+    var bannerText;
+    var bannerColor;
+    var bannerTimer;
+
+    // ── Effects ─────────────────────────────────────────────────────
+    var fx;
+    var fxOn;
 
     function initialize() {
         state    = GS_MENU;
@@ -118,6 +160,22 @@ class GameController {
 
         launchPower = 30;
         _launchDir  = 1;
+        skillLo = 76; skillHi = 92;
+
+        combo = 0; comboTimer = 0; multiplier = 1;
+        bestCombo = _loadInt("pbCombo", 0);
+
+        missionList = TableLibrary.missions(tableIdx);
+        missionIndex = 0; missionType = 0; missionTarget = 1; missionProgress = 0;
+
+        jackpot = 5000; ballBonus = 0; bonusMult = 1;
+        ballSaveTimer = 0;
+        tiltMeter = 0; tiltActive = 0; _nudgeDir = 1;
+        shakeFrames = 0; shakeMag = 0;
+        bannerText = ""; bannerColor = 0xFFFFFF; bannerTimer = 0;
+
+        fx = new FxSystem();
+        fxOn = (_loadInt("fx", 0) == 0);
     }
 
     hidden function _loadInt(key, dflt) {
@@ -140,12 +198,6 @@ class GameController {
     }
 
     hidden function _buildPlayArea() {
-        // Play area shrunk ~10 % on each axis vs the v1 layout so the
-        // whole table fits comfortably inside the round-watch visible
-        // region — players reported the corners of the table being
-        // clipped on fenix8solar51mm. Adding ~5 % padding to each side
-        // and each top/bottom margin reduces the inscribed rectangle
-        // by ~10 % on width and height.
         var topPad = (screenH * 13) / 100; if (topPad < 22) { topPad = 22; }
         var botPad = (screenH * 9)  / 100; if (botPad < 14) { botPad = 14; }
         var sideInset;
@@ -167,8 +219,6 @@ class GameController {
                                   if (br > 7) { br = 7; }
         for (var i = 0; i < MAX_BALLS; i++) { balls[i].radius = br; }
 
-        // Launcher sits in a narrow lane against the right edge,
-        // a bit above the right flipper.
         launchX = playX1 - br - 2;
         launchY = playY1 - (playY1 - playY0) / 3;
     }
@@ -178,11 +228,6 @@ class GameController {
         var ph = playY1 - playY0;
         var br = balls[0].radius;
         var flLen   = (pw * 22) / 100; if (flLen < 24) { flLen = 24; }
-        // Collision capsule radius. Kept close to ball.r so that the
-        // ball appears to actually touch the (thinly drawn) paddle on
-        // contact. The substep rotation + per-tick ball substepping
-        // below give us enough temporal resolution that we no longer
-        // need an oversized hit-box to catch fast balls.
         var flRad   = br;  if (flRad < 5) { flRad = 5; }
         var gap     = br * 7;
         var pivY    = playY1 - ph / 14;
@@ -211,21 +256,18 @@ class GameController {
     }
 
     hidden function _loadTable(idx) {
-        // TableLibrary.build returns a Dictionary with bumpers/drops/slings
-        // lists — keeps the library pure and avoids passing a self-reference
-        // (Monkey C resolves it via the explicit setters below).
         var data = TableLibrary.build(idx, playX0, playY0, playX1, playY1);
         setBumpers(data[:bumpers]);
         setDrops  (data[:drops]);
         setSlings (data[:slings]);
+        missionList = TableLibrary.missions(idx);
     }
 
-    // ── Table setters used by TableLibrary ──────────────────────────
+    // ── Table setters ───────────────────────────────────────────────
     function setBumpers(list) {
         bumpers = new [list.size()];
         for (var i = 0; i < list.size(); i++) {
             var b = list[i];
-            // [x, y, r, color, flash]
             bumpers[i] = [b[0], b[1], b[2], b[3], 0];
         }
     }
@@ -248,13 +290,9 @@ class GameController {
         }
     }
 
-    // ── Menu actions ────────────────────────────────────────────────
-    function menuPrev() {
-        menuCursor = (menuCursor + MI_ITEMS - 1) % MI_ITEMS;
-    }
-    function menuNext() {
-        menuCursor = (menuCursor + 1) % MI_ITEMS;
-    }
+    // ── Menu actions (legacy in-view path) ──────────────────────────
+    function menuPrev() { menuCursor = (menuCursor + MI_ITEMS - 1) % MI_ITEMS; }
+    function menuNext() { menuCursor = (menuCursor + 1) % MI_ITEMS; }
     function menuActivate() {
         if (menuCursor == MI_TABLE) { cycleTable();  return; }
         if (menuCursor == MI_START) { startMatch();  return; }
@@ -265,23 +303,39 @@ class GameController {
         score      = 0;
         lives      = STARTING_LIVES;
         nextExtraBallAt = EXTRA_BALL_EVERY;
+        combo = 0; comboTimer = 0; multiplier = 1;
+        jackpot = 5000; ballBonus = 0; bonusMult = 1;
+        ballSaveTimer = 0;
+        tiltMeter = 0; tiltActive = 0;
+        shakeFrames = 0; bannerTimer = 0;
+        missionIndex = 0;
+        fx.reset();
+        _loadMissionStep();
         for (var i = 0; i < MAX_BALLS; i++) { balls[i].kill(); }
         for (var j = 0; j < drops.size(); j++) { drops[j].reset(); }
         _parkBallForLaunch();
         state      = GS_LAUNCH;
     }
 
+    hidden function _loadMissionStep() {
+        if (missionList == null || missionList.size() == 0) {
+            missionType = 0; missionTarget = 999999; missionProgress = 0;
+            return;
+        }
+        var m = missionList[missionIndex];
+        missionType = m[0];
+        missionTarget = m[1];
+        missionProgress = 0;
+    }
+
     hidden function _parkBallForLaunch() {
-        // First available slot (always 0 at this point).
         balls[0].reset(launchX, launchY, balls[0].radius);
-        launchPower = 20;     // start near the bottom of the meter
+        launchPower = 20;
         _launchDir  = 1;
     }
 
-    // Push power up/down between LAUNCH_MIN and LAUNCH_MAX while the
-    // ball is parked. Called from `step()` every tick during GS_LAUNCH.
     hidden function _tickLaunchMeter() {
-        var step = 5;          // px/tick of meter motion
+        var step = 5;
         launchPower = launchPower + _launchDir * step;
         if (launchPower >= 100) { launchPower = 100; _launchDir = -1; }
         if (launchPower <=  10) { launchPower =  10; _launchDir =  1; }
@@ -289,73 +343,159 @@ class GameController {
 
     function launchBall() {
         if (state != GS_LAUNCH) { return; }
-        // Map the current meter (10..100) to a velocity factor 0.42..1.0.
         var factor = (launchPower * 1.0) / 100.0;
         if (factor < 0.42) { factor = 0.42; }
         balls[0].vy = -11.5 * factor;
         balls[0].vx = -1.8  * factor;
         state = GS_PLAY;
+        ballSaveTimer = BALL_SAVE_FRAMES;
+
+        // Skill shot — plunger released inside the lit band.
+        if (launchPower >= skillLo && launchPower <= skillHi) {
+            var bonus = 2500;
+            score = score + bonus;
+            if (score > hi) { hi = score; }
+            fx.popup("SKILL +" + bonus.toString(), launchX - 30, launchY, 0x44FFEE);
+            fx.burst(launchX, launchY, 0x44FFEE, 12, 3.5, true);
+            setBanner("SKILL SHOT!", 0x44FFEE, 45);
+            addShake(3, 8);
+            _tone(3); _vibe(60, 120);
+            combo = 2; comboTimer = COMBO_WINDOW; _recalcMultiplier();
+        }
     }
 
     function gotoMenu() { state = GS_MENU; }
 
-    // ── Input → flippers ────────────────────────────────────────────
-    // Held inputs (button hold, touch hold) — straight press / release.
-    function pressLeft()    { fLeft.press();   }
+    // ── Input → flippers (blocked while tilted) ─────────────────────
+    function pressLeft()    { if (tiltActive == 0) { fLeft.press();  } }
     function releaseLeft()  { fLeft.release(); }
-    function pressRight()   { fRight.press();  }
-    function releaseRight() { fRight.release();}
-    // Unified hold helpers (touch / button both fire BOTH flippers).
-    function holdBothFlippers()    { fLeft.press();   fRight.press();   }
+    function pressRight()   { if (tiltActive == 0) { fRight.press(); } }
+    function releaseRight() { fRight.release(); }
+    function holdBothFlippers() {
+        if (tiltActive == 0) { fLeft.press(); fRight.press(); }
+    }
     function releaseBothFlippers() { fLeft.release(); fRight.release(); }
-    // Shotgun pulse — for the `onTap` fallback path that has no
-    // touch-up event. The flipper self-releases after `ticks` frames
-    // (see Flipper.tickPulse). 16 frames @ 40 Hz ≈ 400 ms.
     function tapPulseFlippers(ticks) {
+        if (tiltActive > 0) { return; }
         fLeft.pulse(ticks);
         fRight.pulse(ticks);
     }
 
+    // ── Nudge ───────────────────────────────────────────────────────
+    // SELECT during play shoves every live ball upward with a small
+    // sideways bias. Repeated shoves fill the tilt meter; overflow =
+    // TILT (flippers dead + end-of-ball bonus wiped).
+    function nudge() {
+        if (state != GS_PLAY || tiltActive > 0) { return; }
+        var dvx = 1.4 * _nudgeDir;
+        _nudgeDir = -_nudgeDir;
+        for (var i = 0; i < MAX_BALLS; i++) {
+            if (balls[i].alive) { PhysicsEngine.applyNudge(balls[i], dvx, -1.7); }
+        }
+        addShake(2, 5);
+        tiltMeter = tiltMeter + TILT_PER_NUDGE;
+        _vibe(30, 40);
+        if (tiltMeter >= TILT_MAX) {
+            tiltActive = TILT_FRAMES;
+            tiltMeter = TILT_MAX;
+            releaseBothFlippers();
+            ballBonus = 0;
+            combo = 0; multiplier = 1; comboTimer = 0;
+            setBanner("TILT!", 0xFF3333, TILT_FRAMES);
+            addShake(5, 12);
+            _tone(2); _vibe(90, 250);
+        }
+    }
+
     function selectAction() {
         if (state == GS_MENU)   { menuActivate(); return; }
-        if (state == GS_OVER)   { startMatch();   return; }   // replay in place
+        if (state == GS_OVER)   { startMatch();   return; }
         if (state == GS_LAUNCH) { launchBall();   return; }
+        if (state == GS_PLAY)   { nudge();        return; }
+    }
+
+    // ── Scoring helpers ─────────────────────────────────────────────
+    hidden function _recalcMultiplier() {
+        var m = 1 + (combo / 4);
+        if (m > 6) { m = 6; }
+        multiplier = m;
+    }
+
+    // Award `base` points scaled by the live multiplier, bank the raw
+    // value toward the end-of-ball bonus, bump the combo, and float a
+    // popup. Returns the scaled gain.
+    hidden function _award(base, x, y, popupCol, showPopup) {
+        var gain = base * multiplier;
+        score = score + gain;
+        ballBonus = ballBonus + base;
+        if (score > hi) { hi = score; }
+        combo = combo + 1;
+        if (combo > bestCombo) { bestCombo = combo; }
+        comboTimer = COMBO_WINDOW;
+        _recalcMultiplier();
+        if (showPopup) {
+            fx.popup("+" + gain.toString(), x, y - 6, popupCol);
+        }
+        return gain;
+    }
+
+    function setBanner(text, color, frames) {
+        bannerText = text; bannerColor = color; bannerTimer = frames;
+    }
+
+    function addShake(mag, frames) {
+        if (frames > shakeFrames) { shakeFrames = frames; }
+        if (mag > shakeMag) { shakeMag = mag; }
+    }
+
+    // Current shake offsets (0 when idle). Math.rand() may be negative,
+    // so take |rand| before the (Number) modulo → symmetric ±mag.
+    function shakeX() {
+        if (shakeFrames <= 0) { return 0; }
+        var m = shakeMag;
+        var r = Math.rand(); if (r < 0) { r = -r; }
+        return (r % (2 * m + 1)) - m;
+    }
+    function shakeY() {
+        if (shakeFrames <= 0) { return 0; }
+        var m = shakeMag;
+        var r = Math.rand(); if (r < 0) { r = -r; }
+        return (r % (2 * m + 1)) - m;
     }
 
     // ── Per-tick step ───────────────────────────────────────────────
-    // Physics is integrated in `SUBSTEPS` slices per tick. Within a
-    // tick we:
-    //   1. Step the flippers ONCE (so angVel reflects per-tick speed).
-    //   2. Apply forces (gravity + speed clamp) ONCE per ball.
-    //   3. Loop SUBSTEPS times: advance ball by 1/N of its velocity,
-    //      resolve walls + every primitive (bumpers / drops / slings
-    //      / flippers). With SUBSTEPS=3 the max travel per slice is
-    //      ~4.7 px — much smaller than the flipper capsule diameter
-    //      so the ball can no longer tunnel through paddles.
-    //   4. Roll the visual trail ONCE per tick (post-collision).
     static var SUBSTEPS = 3;
 
     function step() {
-        // Tick flash counters (independent of game state)
+        // Animation + timer counters.
         for (var i = 0; i < bumpers.size(); i++) {
             if (bumpers[i][4] > 0) { bumpers[i][4] = bumpers[i][4] - 1; }
         }
         for (var j = 0; j < drops.size(); j++) { drops[j].tickFlash(); }
         for (var k = 0; k < slings.size(); k++){ slings[k].tickFlash(); }
 
-        // Drive flipper pulse self-release exactly ONCE per frame —
-        // not per substep — so the auto-release timing is independent
-        // of the physics sub-step count.
+        if (bannerTimer > 0) { bannerTimer = bannerTimer - 1; }
+        if (shakeFrames > 0) {
+            shakeFrames = shakeFrames - 1;
+            if (shakeFrames == 0) { shakeMag = 0; }
+        }
+        fx.step();
+
         fLeft.tickPulse();
         fRight.tickPulse();
 
-        // Launch power meter — ticks only while the ball is parked.
         if (state == GS_LAUNCH) { _tickLaunchMeter(); }
+
+        // Tilt cooldown.
+        if (tiltActive > 0) {
+            tiltActive = tiltActive - 1;
+            if (tiltActive == 0) { tiltMeter = 0; }
+        } else if (tiltMeter > 0) {
+            tiltMeter = tiltMeter - 1;
+        }
 
         var dtFrac = 1.0 / SUBSTEPS;
 
-        // When not playing, just animate the flippers (menu / launch /
-        // game-over) so they're visible if drawn.
         if (state != GS_PLAY) {
             for (var sf = 0; sf < SUBSTEPS; sf++) {
                 fLeft.step(dtFrac);
@@ -364,17 +504,18 @@ class GameController {
             return;
         }
 
-        // Apply forces once per tick.
+        // Combo decay.
+        if (comboTimer > 0) {
+            comboTimer = comboTimer - 1;
+            if (comboTimer == 0) { combo = 0; multiplier = 1; }
+        }
+        // Ball-save countdown.
+        if (ballSaveTimer > 0) { ballSaveTimer = ballSaveTimer - 1; }
+
         for (var bi0 = 0; bi0 < MAX_BALLS; bi0++) {
             if (balls[bi0].alive) { PhysicsEngine.applyForces(balls[bi0]); }
         }
 
-        // ── Substep loop ────────────────────────────────────────────
-        // We rotate the flippers AND advance every ball by 1/N of a
-        // tick on each iteration. Critically the flipper sweep is
-        // sampled at N intermediate angles, so a fast paddle stroke
-        // can't sweep past the ball without registering contact at
-        // some point along the arc.
         for (var s = 0; s < SUBSTEPS; s++) {
             fLeft.step(dtFrac);
             fRight.step(dtFrac);
@@ -389,8 +530,15 @@ class GameController {
                 for (var iB = 0; iB < bumpers.size(); iB++) {
                     var bd = bumpers[iB];
                     if (PhysicsEngine.collideBumper(b, bd[0], bd[1], bd[2])) {
-                        score = score + 100;
-                        bd[4] = 5;
+                        bd[4] = 8;
+                        _award(100, bd[0], bd[1], 0xFFDD44, true);
+                        fx.burst(bd[0], bd[1], bd[3], 6, 2.6, false);
+                        addShake(1, 3);
+                        if (isMultiball()) {
+                            jackpot = jackpot + 100 * multiplier;
+                            if (jackpot > 25000) { jackpot = 25000; }
+                        }
+                        if (missionType == MT_BUMPERS) { _missionTick(1); }
                     }
                 }
                 for (var iD = 0; iD < drops.size(); iD++) {
@@ -398,26 +546,35 @@ class GameController {
                     if (dt.down) { continue; }
                     if (PhysicsEngine.collideRect(b, dt.x, dt.y, dt.w, dt.h)) {
                         dt.knockDown();
-                        score = score + 50;
+                        _award(50, dt.x + dt.w / 2, dt.y, 0x66FF88, true);
+                        fx.burst(dt.x + dt.w / 2, dt.y + dt.h / 2, dt.color, 6, 2.4, false);
+                        addShake(1, 3);
                     }
                 }
                 for (var iS = 0; iS < slings.size(); iS++) {
                     var sl = slings[iS];
                     if (PhysicsEngine.collideSlingshot(b, sl)) {
                         sl.hit();
-                        score = score + 25;
+                        _award(25, sl.ax, sl.ay, 0xFFAACC, false);
+                        fx.burst((sl.ax + sl.bx) / 2, (sl.ay + sl.by) / 2,
+                                 sl.color, 4, 2.2, false);
+                        if (missionType == MT_SLINGS) { _missionTick(1); }
                     }
                 }
-                // Flippers — checked at every substep, at the right
-                // intermediate angle.
-                PhysicsEngine.collideFlipper(b, fLeft);
-                PhysicsEngine.collideFlipper(b, fRight);
+
+                var hitL = PhysicsEngine.collideFlipper(b, fLeft);
+                var hitR = PhysicsEngine.collideFlipper(b, fRight);
+                if (hitL && fLeft.active) {
+                    fx.spray(b.x, b.y, 0.2, -1.0, 0xFF8866, 3, 3.0);
+                }
+                if (hitR && fRight.active) {
+                    fx.spray(b.x, b.y, -0.2, -1.0, 0xFFEE66, 3, 3.0);
+                }
 
                 if (b.y > floorY) { b.kill(); }
             }
         }
 
-        // Roll the visual trail once per tick (post-substeps).
         for (var bi2 = 0; bi2 < MAX_BALLS; bi2++) {
             if (balls[bi2].alive) { balls[bi2].rollTrail(); }
         }
@@ -428,27 +585,88 @@ class GameController {
         if (score > hi) { hi = score; }
     }
 
-    // If every drop target is down → award bonus, respawn all, spawn
-    // an extra ball (if room).
+    // ── Mission progress ────────────────────────────────────────────
+    hidden function _missionTick(n) {
+        missionProgress = missionProgress + n;
+        if (missionProgress >= missionTarget) { _completeMission(); }
+    }
+
+    hidden function _completeMission() {
+        var payout = 2000 * (missionIndex + 1);
+        score = score + payout * multiplier;
+        if (score > hi) { hi = score; }
+        var last = (missionList != null) && (missionIndex >= missionList.size() - 1);
+        fx.burst((playX0 + playX1) / 2, (playY0 + playY1) / 2,
+                 0xFFEE44, 14, 3.6, true);
+        addShake(3, 8);
+        if (last) {
+            setBanner("TABLE MASTER!", 0xFFEE44, 55);
+            _tone(3); _vibe(80, 200);
+            _spawnExtraBall();
+            missionIndex = 0;
+        } else {
+            setBanner("MISSION CLEAR!", 0x66FF88, 45);
+            _tone(3); _vibe(50, 100);
+            missionIndex = missionIndex + 1;
+        }
+        _loadMissionStep();
+    }
+
+    // Human-readable current objective for the HUD.
+    function missionLabel() {
+        if (missionType == MT_DROPS) {
+            return "CLEAR BANK " + missionProgress.toString() + "/"
+                   + missionTarget.toString();
+        }
+        if (missionType == MT_SLINGS) {
+            return "SLINGS " + missionProgress.toString() + "/"
+                   + missionTarget.toString();
+        }
+        return "BUMPERS " + missionProgress.toString() + "/"
+               + missionTarget.toString();
+    }
+
+    // ── Drop bank clear ─────────────────────────────────────────────
     hidden function _checkDropsCleared() {
         if (drops.size() == 0) { return; }
         for (var i = 0; i < drops.size(); i++) {
             if (!drops[i].down) { return; }
         }
-        score = score + 500;
+        var cx = (playX0 + playX1) / 2;
+        var cy = drops[0].y;
+        _award(500, cx, cy, 0x66FF88, true);
+        if (bonusMult < 5) { bonusMult = bonusMult + 1; }
+        fx.burst(cx, cy, 0x66FF88, 12, 3.2, true);
+        addShake(2, 6);
+
+        if (isMultiball()) {
+            score = score + jackpot;
+            if (score > hi) { hi = score; }
+            fx.popup("JACKPOT " + jackpot.toString(), cx - 20, cy - 14, 0xFFDD22);
+            setBanner("JACKPOT!", 0xFFDD22, 45);
+            _tone(1); _vibe(70, 160);
+            jackpot = 5000;
+        }
+
+        if (missionType == MT_DROPS) { _missionTick(1); }
+
         for (var j = 0; j < drops.size(); j++) { drops[j].reset(); }
         _spawnExtraBall();
     }
 
-    // Find a dead ball slot and inject a new ball auto-launched from
-    // the launcher lane. No-op if no slot is free.
     hidden function _spawnExtraBall() {
+        var wasMulti = _aliveCount() >= 1;
         for (var i = 0; i < MAX_BALLS; i++) {
             var b = balls[i];
             if (!b.alive) {
                 b.reset(launchX, launchY, b.radius);
                 b.vy = -8.0;
                 b.vx = -1.6;
+                if (wasMulti && _aliveCount() >= 2) {
+                    setBanner("MULTIBALL!", 0x44CCFF, 45);
+                    fx.burst(launchX, launchY, 0x44CCFF, 12, 3.2, true);
+                    _tone(1); _vibe(60, 140);
+                }
                 return;
             }
         }
@@ -458,18 +676,44 @@ class GameController {
         while (score >= nextExtraBallAt) {
             lives = lives + 1;
             nextExtraBallAt = nextExtraBallAt + EXTRA_BALL_EVERY;
+            setBanner("EXTRA BALL!", 0x66FF88, 40);
+            _tone(3);
         }
     }
 
     hidden function _resolveDrains() {
         var alive = _aliveCount();
-        if (alive > 0) { return; }     // multiball still rolling
-        // Last ball drained.
+        if (alive > 0) { return; }
+
+        // Ball save — kick a fresh ball straight back into play.
+        if (ballSaveTimer > 0) {
+            ballSaveTimer = 0;
+            balls[0].reset(launchX, launchY, balls[0].radius);
+            balls[0].vy = -9.5;
+            balls[0].vx = -1.6;
+            setBanner("BALL SAVED", 0x44FFAA, 40);
+            fx.burst(launchX, launchY, 0x44FFAA, 10, 3.0, false);
+            _tone(0); _vibe(40, 80);
+            state = GS_PLAY;
+            return;
+        }
+
+        // Cash the end-of-ball bonus.
+        var payout = ballBonus * bonusMult;
+        if (payout > 0) {
+            score = score + payout;
+            if (score > hi) { hi = score; }
+            setBanner("BONUS +" + payout.toString(), 0xFFCC22, 40);
+        }
+        ballBonus = 0; bonusMult = 1;
+        combo = 0; multiplier = 1; comboTimer = 0;
+
         lives = lives - 1;
         if (score > hi) { hi = score; _saveInt("hi", hi); }
+        if (bestCombo > _loadInt("pbCombo", 0)) { _saveInt("pbCombo", bestCombo); }
+
         if (lives <= 0) {
             state = GS_OVER;
-            // Submit to the global leaderboard, split by table variant.
             Leaderboard.submitScore(LB_GAME_ID, score, TableLibrary.NAMES[tableIdx]);
             Leaderboard.showPostGame(LB_GAME_ID, TableLibrary.NAMES[tableIdx], "PINBALL PRO");
             return;
@@ -488,4 +732,24 @@ class GameController {
     }
 
     function isMultiball() { return _aliveCount() >= 2; }
+
+    // ── Best-effort tone / vibe (silent hardware is fine) ───────────
+    // kind: 0 key · 1 loud beep · 2 failure · 3 success.
+    hidden function _tone(kind) {
+        if (!fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_FAILURE; }
+        else                { t = Attention.TONE_SUCCESS; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
 }

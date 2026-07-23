@@ -19,17 +19,33 @@ class DrwalHooks extends GameHooks {
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }
 
-    // Signature mini-graphic: a lumberjack axe.
+    // Signature mini-graphic: an axe buried in a chopping log, chips flying.
     function drawArt(dc, cx, cy, w, h) as Void {
-        // Handle.
+        // Log lying on its side.
+        dc.setColor(0x7A4A24, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - 22, cy + 4, 44, 13, 3);
+        dc.setColor(0x9A6636, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - 22, cy + 4, 44, 3);
+        dc.setColor(0xB98A54, Graphics.COLOR_TRANSPARENT);   // end-grain rings
+        dc.fillCircle(cx - 20, cy + 10, 4);
+        dc.setColor(0x7A4A24, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - 20, cy + 10, 2);
+
+        // Axe handle at an angle, head bitten into the log.
         dc.setColor(0x8A5A2E, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - 2, cy - 12, 4, 26);
-        // Axe head.
-        dc.setColor(0xC0C0C8, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[cx + 2, cy - 13], [cx + 18, cy - 16],
-                        [cx + 18, cy - 2], [cx + 2, cy - 5]]);
-        dc.setColor(0xE8E8F0, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx + 18, cy - 16, cx + 18, cy - 2);
+        dc.fillPolygon([[cx + 16, cy - 18], [cx + 20, cy - 16],
+                        [cx + 4, cy + 5], [cx, cy + 3]]);
+        dc.setColor(0xC8C8D0, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[cx - 6, cy - 2], [cx + 6, cy - 8],
+                        [cx + 9, cy + 2], [cx - 2, cy + 6]]);
+        dc.setColor(0xEDEDF4, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(cx - 6, cy - 2, cx - 2, cy + 6);
+
+        // Wood chips.
+        dc.setColor(0xE0C070, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - 26, cy - 6, 3, 3);
+        dc.fillRectangle(cx + 22, cy - 10, 3, 3);
+        dc.fillRectangle(cx - 14, cy - 12, 2, 2);
     }
 
     // Leaderboard is split by difficulty (mirrors GameController.diffName()).
@@ -64,7 +80,12 @@ function buildDrwalMenu() as Lang.Array {
         :lbTitle => "DRWAL",
         :hooks   => new DrwalHooks(),
         :options => [
-            new GmOption("dr_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("dr_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("dr_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic axe skin — escalates the chop FX only. Unlocked by rank
+            // (Iron @ Lv3, Golden @ Lv6), shop-ready. A locked pick simply
+            // renders as the default Oak axe until it's owned.
+            new GmOption("dr_axe", "Axe", ["OAK", "IRON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

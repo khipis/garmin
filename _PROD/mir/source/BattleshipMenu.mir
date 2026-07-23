@@ -1,0 +1,598 @@
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Application,10,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 13; @symbol_classdef = [BattleshipHooks,13,6,21]; @symbol_extends<0> = [GameHooks,13,30,39]; ]
+class BattleshipHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_14_26_14_52_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 14 28 ]
+        symbol [ GameHooks %tmp.2 14 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 14 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_14_26_14_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 17; @symbol_functiondef = [startGame,17,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_17_33_20_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 18 8 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_17_33_20_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_17_33_20_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 18 12 13 ];
+        symbol [ MainView %tmp.4 18 20 28 ];
+        %tmp.4 = getv ? :MainView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 18 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 19 8 ]
+        symbol [ WatchUi %tmp.5 19 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 19 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 19 25 26 ];
+        symbol [ InputHandler %tmp.11 19 32 44 ];
+        %tmp.11 = getv ? :InputHandler;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 19 45 46 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 19 49 56 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 19 57 67 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_17_33_20_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 23; @symbol_functiondef = [drawArt,23,13,20]; @symbol_param<0> = [dc,23,21,23]; @symbol_param<1> = [cx,23,25,27]; @symbol_param<2> = [cy,23,29,31]; @symbol_param<3> = [w,23,33,34]; @symbol_param<4> = [h,23,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_23_47_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 25 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 25 8 10 ];
+        symbol [ setColor %tmp.2 25 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x143A6D;
+        symbol [ Graphics %tmp.4 25 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 25 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 26 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 26 8 10 ];
+        symbol [ fillRectangle %tmp.7 26 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %cx;
+        symbol [ cx %tmp.8 26 25 27 ];
+        %tmp.9 = 30;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %cy;
+        symbol [ cy %tmp.11 26 34 36 ];
+        %tmp.12 = 9;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = 60;
+        %tmp.15 = 4;
+        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 28 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 28 8 10 ];
+        symbol [ setColor %tmp.17 28 11 19 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0x4FA0E6;
+        symbol [ Graphics %tmp.19 28 30 38 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 28 39 56 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 29 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 29 8 10 ];
+        symbol [ fillPolygon %tmp.22 29 11 22 ];
+        %tmp.22 = getv function %tmp.21 :fillPolygon;
+        %tmp.23 = newa 4;
+        %tmp.24 = newa 2;
+        %tmp.25 = lgetv %cx;
+        symbol [ cx %tmp.25 29 25 27 ];
+        %tmp.26 = 24;
+        %tmp.27 = sub %tmp.25 %tmp.26;
+        %tmp.28 = dup %tmp.24;
+        %tmp.29 = aputv %tmp.28 0 %tmp.27;
+        %tmp.30 = lgetv %cy;
+        symbol [ cy %tmp.30 29 34 36 ];
+        %tmp.31 = 2;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = dup %tmp.29;
+        %tmp.34 = aputv %tmp.33 1 %tmp.32;
+        %tmp.35 = dup %tmp.23;
+        %tmp.36 = aputv %tmp.35 0 %tmp.34;
+        %tmp.37 = newa 2;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 29 44 46 ];
+        %tmp.39 = 24;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        %tmp.41 = dup %tmp.37;
+        %tmp.42 = aputv %tmp.41 0 %tmp.40;
+        %tmp.43 = lgetv %cy;
+        symbol [ cy %tmp.43 29 53 55 ];
+        %tmp.44 = 2;
+        %tmp.45 = add %tmp.43 %tmp.44;
+        %tmp.46 = dup %tmp.42;
+        %tmp.47 = aputv %tmp.46 1 %tmp.45;
+        %tmp.48 = dup %tmp.36;
+        %tmp.49 = aputv %tmp.48 1 %tmp.47;
+        %tmp.50 = newa 2;
+        %tmp.51 = lgetv %cx;
+        symbol [ cx %tmp.51 30 25 27 ];
+        %tmp.52 = 17;
+        %tmp.53 = add %tmp.51 %tmp.52;
+        %tmp.54 = dup %tmp.50;
+        %tmp.55 = aputv %tmp.54 0 %tmp.53;
+        %tmp.56 = lgetv %cy;
+        symbol [ cy %tmp.56 30 34 36 ];
+        %tmp.57 = 9;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        %tmp.59 = dup %tmp.55;
+        %tmp.60 = aputv %tmp.59 1 %tmp.58;
+        %tmp.61 = dup %tmp.49;
+        %tmp.62 = aputv %tmp.61 2 %tmp.60;
+        %tmp.63 = newa 2;
+        %tmp.64 = lgetv %cx;
+        symbol [ cx %tmp.64 30 44 46 ];
+        %tmp.65 = 17;
+        %tmp.66 = sub %tmp.64 %tmp.65;
+        %tmp.67 = dup %tmp.63;
+        %tmp.68 = aputv %tmp.67 0 %tmp.66;
+        %tmp.69 = lgetv %cy;
+        symbol [ cy %tmp.69 30 53 55 ];
+        %tmp.70 = 9;
+        %tmp.71 = add %tmp.69 %tmp.70;
+        %tmp.72 = dup %tmp.68;
+        %tmp.73 = aputv %tmp.72 1 %tmp.71;
+        %tmp.74 = dup %tmp.62;
+        %tmp.75 = aputv %tmp.74 3 %tmp.73;
+        invoke %tmp.21 %tmp.22(%tmp.75);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 32 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 32 8 10 ];
+        symbol [ setColor %tmp.77 32 11 19 ];
+        %tmp.77 = getv function %tmp.76 :setColor;
+        %tmp.78 = 0x2D6BAF;
+        symbol [ Graphics %tmp.79 32 30 38 ];
+        %tmp.79 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.80 32 39 56 ];
+        %tmp.80 = getv %tmp.79 :COLOR_TRANSPARENT;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.80);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 33 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 33 8 10 ];
+        symbol [ fillRectangle %tmp.82 33 11 24 ];
+        %tmp.82 = getv function %tmp.81 :fillRectangle;
+        %tmp.83 = lgetv %cx;
+        symbol [ cx %tmp.83 33 25 27 ];
+        %tmp.84 = 6;
+        %tmp.85 = sub %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %cy;
+        symbol [ cy %tmp.86 33 33 35 ];
+        %tmp.87 = 7;
+        %tmp.88 = sub %tmp.86 %tmp.87;
+        %tmp.89 = 12;
+        %tmp.90 = 9;
+        invoke %tmp.81 %tmp.82(%tmp.85, %tmp.88, %tmp.89, %tmp.90);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 34 8 ]
+        %tmp.91 = lgetv %dc;
+        symbol [ dc %tmp.91 34 8 10 ];
+        symbol [ fillRectangle %tmp.92 34 11 24 ];
+        %tmp.92 = getv function %tmp.91 :fillRectangle;
+        %tmp.93 = lgetv %cx;
+        symbol [ cx %tmp.93 34 25 27 ];
+        %tmp.94 = 2;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %cy;
+        symbol [ cy %tmp.96 34 33 35 ];
+        %tmp.97 = 12;
+        %tmp.98 = sub %tmp.96 %tmp.97;
+        %tmp.99 = 4;
+        %tmp.100 = 5;
+        invoke %tmp.91 %tmp.92(%tmp.95, %tmp.98, %tmp.99, %tmp.100);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 36 8 ]
+        %tmp.101 = lgetv %dc;
+        symbol [ dc %tmp.101 36 8 10 ];
+        symbol [ drawLine %tmp.102 36 11 19 ];
+        %tmp.102 = getv function %tmp.101 :drawLine;
+        %tmp.103 = lgetv %cx;
+        symbol [ cx %tmp.103 36 20 22 ];
+        %tmp.104 = 6;
+        %tmp.105 = add %tmp.103 %tmp.104;
+        %tmp.106 = lgetv %cy;
+        symbol [ cy %tmp.106 36 28 30 ];
+        %tmp.107 = 3;
+        %tmp.108 = sub %tmp.106 %tmp.107;
+        %tmp.109 = lgetv %cx;
+        symbol [ cx %tmp.109 36 36 38 ];
+        %tmp.110 = 17;
+        %tmp.111 = add %tmp.109 %tmp.110;
+        %tmp.112 = lgetv %cy;
+        symbol [ cy %tmp.112 36 45 47 ];
+        %tmp.113 = 8;
+        %tmp.114 = sub %tmp.112 %tmp.113;
+        invoke %tmp.101 %tmp.102(%tmp.105, %tmp.108, %tmp.111, %tmp.114);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 38 8 ]
+        %tmp.115 = lgetv %dc;
+        symbol [ dc %tmp.115 38 8 10 ];
+        symbol [ setColor %tmp.116 38 11 19 ];
+        %tmp.116 = getv function %tmp.115 :setColor;
+        %tmp.117 = 0xFF3B47;
+        symbol [ Graphics %tmp.118 38 30 38 ];
+        %tmp.118 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.119 38 39 56 ];
+        %tmp.119 = getv %tmp.118 :COLOR_TRANSPARENT;
+        invoke %tmp.115 %tmp.116(%tmp.117, %tmp.119);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 39 8 ]
+        %tmp.120 = lgetv %dc;
+        symbol [ dc %tmp.120 39 8 10 ];
+        symbol [ fillCircle %tmp.121 39 11 21 ];
+        %tmp.121 = getv function %tmp.120 :fillCircle;
+        %tmp.122 = lgetv %cx;
+        symbol [ cx %tmp.122 39 22 24 ];
+        %tmp.123 = 20;
+        %tmp.124 = sub %tmp.122 %tmp.123;
+        %tmp.125 = lgetv %cy;
+        symbol [ cy %tmp.125 39 31 33 ];
+        %tmp.126 = 6;
+        %tmp.127 = sub %tmp.125 %tmp.126;
+        %tmp.128 = 3;
+        invoke %tmp.120 %tmp.121(%tmp.124, %tmp.127, %tmp.128);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_23_47_40_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 43; @symbol_functiondef = [lbVariant,43,13,22]; @symbol_return<0> = [Lang,43,28,32]; @symbol_return<1> = [String,43,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_43_40_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_43_40_52_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_43_40_52_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 44 12 13 ];
+        %tmp.1 = 1;
+        lputv %d.1 %tmp.1;
+        symbol [ d %d.1 44 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_12_48_8_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 46 16 17 ];
+        symbol [ Application %tmp.2 46 20 31 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.3 46 32 39 ];
+        %tmp.3 = getv %tmp.2 :Storage;
+        symbol [ getValue %tmp.4 46 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "bs_diff";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.2 %tmp.6;
+        symbol [ v %v.2 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_12_47_51_if_stmt:
+        %tmp.7 = lgetv %v.2;
+        symbol [ v %tmp.7 47 16 17 ];
+        symbol [ Lang %tmp.8 47 29 33 ];
+        %tmp.8 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.9 47 34 40 ];
+        %tmp.9 = getv %tmp.8 :Number;
+        %tmp.10 = isa %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_12_47_51_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_12_47_51_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_42_47_51_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 47 44 ]
+        %tmp.11 = lgetv %v.2;
+        symbol [ v %tmp.11 47 48 49 ];
+        %tmp.12 = as %tmp.11 { (Lang.Number) };
+        lputv %d.1 %tmp.12;
+        symbol [ d %d.1 47 44 45 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_42_47_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_12_47_51_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_47_12_47_51_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_catch:
+        %tmp.13 = exception;
+        push %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_48_10_48_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 48 17 18 ];
+        %tmp.14 = dup %tmp.13;
+        lputv %e.3 %tmp.14;
+        symbol [ e %e.3 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally;
+        throw %tmp.13;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_45_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_8_49_37_if_stmt:
+        %tmp.15 = lgetv %d.1;
+        symbol [ d %tmp.15 49 12 13 ];
+        %tmp.16 = 0;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_8_49_37_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_8_49_37_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_20_49_37_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 49 22 ]
+        %tmp.18 = "easy";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_20_49_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_8_49_37_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_49_8_49_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_8_50_37_if_stmt:
+        %tmp.19 = lgetv %d.1;
+        symbol [ d %tmp.19 50 12 13 ];
+        %tmp.20 = 2;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_8_50_37_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_8_50_37_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_20_50_37_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 50 22 ]
+        %tmp.22 = "hard";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_20_50_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_8_50_37_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_50_8_50_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 51 8 ]
+        %tmp.23 = "medium";
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_43_40_52_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 54; @symbol_functiondef = [footerText,54,13,23]; @symbol_return<0> = [Lang,54,29,33]; @symbol_return<1> = [String,54,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_54_49_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 55 8 ]
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_beginTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_endTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_beginTry:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_12_58_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 56 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_12_58_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_12_58_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 56 16 17 ];
+        symbol [ Application %tmp.1 56 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 56 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 56 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "winsTotal";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 56 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 57 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_stmt:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_16_57_48_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 57 16 17 ];
+        symbol [ Lang %tmp.7 57 29 33 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 57 34 40 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_44_57_48_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 57 44 45 ];
+        %tmp.11 = as %tmp.10 { (Lang.Number) };
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_44_57_48_end:
+        %tmp.14 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_16_57_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_44_57_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_44_57_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_51_57_86_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 57 53 ]
+        %tmp.15 = "WINS ";
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 57 70 71 ];
+        %tmp.17 = as %tmp.16 { (Lang.Number) };
+        symbol [ format %tmp.18 57 72 78 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.15 %tmp.20;
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_51_57_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_57_12_57_86_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_12_58_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 58 10 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_catch" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_58_10_58_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 58 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 58 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_58_10_58_21_end:
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_58_10_58_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_55_8_58_21_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 59 8 ]
+        %tmp.24 = null;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_54_49_60_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 63; @symbol_functiondef = [buildBattleshipMenu,63,9,28]; @symbol_return<0> = [Lang,63,34,38]; @symbol_return<1> = [Array,63,39,44]; ]
+function buildBattleshipMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 64 4 ]
+    [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 64 8 11 ];
+    symbol [ MenuConfig %tmp.4 64 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 65 9 15 const ];
+    %tmp.8 = "battleship";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 66 9 15 const ];
+    %tmp.13 = "BATTLESHIP";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 67 9 13 const ];
+    %tmp.18 = 0x32D4FF;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 68 9 11 const ];
+    %tmp.23 = 0x080808;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 69 9 15 const ];
+    %tmp.28 = 0x101418;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 70 9 15 const ];
+    %tmp.33 = 0x44BB22;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 71 9 16 const ];
+    %tmp.38 = "BATTLESHIP";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 72 9 14 const ];
+    symbol [ BattleshipHooks %tmp.46 72 24 39 ];
+    %tmp.46 = getv ? :BattleshipHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 73 9 16 const ];
+    %tmp.51 = newa 3;
+    symbol [ GmOption %tmp.55 74 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "bs_diff";
+    %tmp.57 = "Difficulty";
+    %tmp.58 = newa 3;
+    %tmp.59 = "EASY";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "MEDIUM";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "HARD";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = 1;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
+    %tmp.69 = dup %tmp.51;
+    %tmp.70 = aputv %tmp.69 0 %tmp.52;
+    symbol [ GmOption %tmp.74 75 16 24 ];
+    %tmp.74 = getv ? :GmOption;
+    %tmp.75 = "bs_shots";
+    %tmp.76 = "Shots";
+    %tmp.77 = newa 2;
+    %tmp.78 = "SINGLE";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 0 %tmp.78;
+    %tmp.81 = "BURST x3";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 1 %tmp.81;
+    %tmp.84 = 0;
+    %tmp.71 = newc %tmp.74 (%tmp.75, %tmp.76, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.70;
+    %tmp.86 = aputv %tmp.85 1 %tmp.71;
+    symbol [ GmOption %tmp.90 78 16 24 ];
+    %tmp.90 = getv ? :GmOption;
+    %tmp.91 = "bs_skin";
+    %tmp.92 = "Fleet";
+    %tmp.93 = newa 3;
+    %tmp.94 = "CLASSIC";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 0 %tmp.94;
+    %tmp.97 = "NEON";
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 1 %tmp.97;
+    %tmp.100 = "GOLD";
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 2 %tmp.100;
+    %tmp.103 = 0;
+    %tmp.87 = newc %tmp.90 (%tmp.91, %tmp.92, %tmp.102, %tmp.103);
+    %tmp.104 = dup %tmp.86;
+    %tmp.105 = aputv %tmp.104 2 %tmp.87;
+    %tmp.106 = dup %tmp.48;
+    %tmp.107 = aputv %tmp.106 %tmp.50 %tmp.105;
+    %tmp.1 = newc %tmp.4 (%tmp.107);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 64 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 81 4 ]
+    [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 81 8 9 ];
+    symbol [ GameMenuView %tmp.111 81 16 28 ];
+    %tmp.111 = getv ? :GameMenuView;
+    %tmp.112 = lgetv %cfg.1;
+    symbol [ cfg %tmp.112 81 29 32 ];
+    %tmp.108 = newc %tmp.111 (%tmp.112);
+    lputv %v.2 %tmp.108;
+    symbol [ v %v.2 81 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc" 82 4 ]
+    %tmp.113 = newa 2;
+    %tmp.114 = lgetv %v.2;
+    symbol [ v %tmp.114 82 12 13 ];
+    %tmp.115 = dup %tmp.113;
+    %tmp.116 = aputv %tmp.115 0 %tmp.114;
+    symbol [ GameMenuDelegate %tmp.120 82 19 35 ];
+    %tmp.120 = getv ? :GameMenuDelegate;
+    %tmp.121 = lgetv %v.2;
+    symbol [ v %tmp.121 82 36 37 ];
+    %tmp.117 = newc %tmp.120 (%tmp.121);
+    %tmp.122 = dup %tmp.116;
+    %tmp.123 = aputv %tmp.122 1 %tmp.117;
+    ret %tmp.123;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipMenu_mc_63_45_83_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipMenu.mc"; @line = 8; ]
+<init> {
+}

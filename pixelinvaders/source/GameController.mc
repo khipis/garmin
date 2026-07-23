@@ -32,6 +32,7 @@
 
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
 
 const PI_MENU = 0;
 const PI_PLAY = 1;
@@ -52,6 +53,7 @@ const PI_LB_GAME_ID = "pixelinvaders";
 const PI_BEST_KEY  = "pi_best";
 const PI_DIFF_KEY  = "pi_diff";
 const PI_LIVES_KEY = "pi_lives";
+const PI_FX_KEY    = "pi_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const PI_DIFF_EASY   = 0;
 const PI_DIFF_NORMAL = 1;
@@ -72,6 +74,12 @@ class GameController {
     var score;
     var bestScore;
 
+    // One-shot "cosmetic unlocked" banner for the game-over card. Set by the
+    // progression layer on the run that first crosses the unlock milestone.
+    var pgUnlockMsg;
+
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: pi_fx)
+
     function initialize() {
         state     = PI_MENU;
         menuRow   = 0;
@@ -83,6 +91,8 @@ class GameController {
         swarm   = new EnemyManager();
 
         wave = 1; lives = 3; score = 0; bestScore = 0;
+        pgUnlockMsg = null;
+        _fxOn = _loadFx();
         _loadAll();
     }
 
@@ -108,6 +118,34 @@ class GameController {
     hidden function _saveSettings() {
         try { Application.Storage.setValue(PI_DIFF_KEY,  menuDiff);  } catch (e) {}
         try { Application.Storage.setValue(PI_LIVES_KEY, menuLives); } catch (e) {}
+    }
+
+    // ── Sound + haptics (best-effort; silent hardware is fine) ────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(PI_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 fire · 1 kill · 2 wave · 3 hit · 4 game-over
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_HI; }
+        else if (kind == 3) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 4) { t = Attention.TONE_FAILURE; }
+        else                { t = Attention.TONE_KEY; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Menu ────────────────────────────────────────────────────
@@ -164,6 +202,8 @@ class GameController {
         wave  = 1;
         lives = menuLives;
         score = 0;
+        pgUnlockMsg = null;
+        _fxOn = _loadFx();
         _spawnWave();
         state = PI_PLAY;
     }
@@ -179,7 +219,9 @@ class GameController {
     function moveRight() { if (state == PI_PLAY) { player.nudge( 1); } }
     function fire() {
         if (state != PI_PLAY) { return; }
-        bullets.playerFire(player.col, PI_PLAYER_ROW);
+        // playerFire is capped at ONE live shot, so this naturally gates
+        // the tone — no machine-gun buzzer even on rapid taps.
+        if (bullets.playerFire(player.col, PI_PLAYER_ROW)) { _tone(0); }
     }
 
     // ── Tick (80 ms) ────────────────────────────────────────────
@@ -195,7 +237,12 @@ class GameController {
         // 3. Player bullets → enemies.
         var pts = CollisionSystem.playerBulletsVsEnemies(bullets.pShots,
                                                           swarm.enemies);
-        if (pts > 0) { score = score + pts; }
+        if (pts > 0) {
+            score = score + pts;
+            // Invader vaporised — crisp beep + tiny kick.
+            _tone(1);
+            _vibe(35, 40);
+        }
 
         // 4. Enemy bullets → player.
         if (CollisionSystem.enemyBulletsVsPlayer(bullets.eShots, player)) {
@@ -222,6 +269,9 @@ class GameController {
         if (swarm.allDead()) {
             score = score + 100 + wave * 50;
             wave  = wave + 1;
+            // Wave cleared — bright rising alert + solid pulse.
+            _tone(2);
+            _vibe(60, 110);
             _spawnWave();
         }
     }
@@ -229,6 +279,9 @@ class GameController {
     hidden function _onPlayerHit() {
         lives = lives - 1;
         if (lives <= 0) { _gameOver(); return; }
+        // Took a hit but still have lives — warning tone + sharp jolt.
+        _tone(3);
+        _vibe(80, 150);
         // Soft restart: respawn ship + clear bullets.  Formation
         // keeps marching (much more tense than a full reset).
         player.spawn();
@@ -237,9 +290,43 @@ class GameController {
 
     hidden function _gameOver() {
         state = PI_OVER;
+        // Cannon down — harsh failure tone + long, heavy rumble.
+        _tone(4);
+        _vibe(100, 300);
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        _awardProgress();
         // Submit to the global leaderboard, split by difficulty variant.
         Leaderboard.submitScore(PI_LB_GAME_ID, score, difficultyName());
         Leaderboard.showPostGame(PI_LB_GAME_ID, difficultyName(), "PIXEL INVADERS");
+    }
+
+    // ── Meta-progression (shared, shop-ready via Progress module) ────────────
+    // Grants coins + XP proportional to the run's score and unlocks the NEON
+    // ship skin at rank 3. Coins are the future shop's currency; the skin's
+    // ownership is exactly what a shop purchase would grant.
+    hidden function _awardProgress() {
+        try {
+            var g = score / 30;      // ~1 coin/xp per 30 points
+            if (g > 40) { g = 40; }  // cap so a run is a nudge, not a grind
+            if (g > 0) {
+                Progress.addCoins(g);
+                Progress.addXp(g);
+            }
+            if (Progress.unlockIfReached("pixelinvaders_skin2", Progress.level(), 3)) {
+                pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned ship colour. Falls back to the classic teal until the
+    // NEON skin is owned, so a locked pick never renders — safe pre/post-shop.
+    function shipColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("pi_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("pixelinvaders_skin2")) { return 0xFF33CC; }
+        return 0x55FFAA;
     }
 }

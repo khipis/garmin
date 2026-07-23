@@ -6,6 +6,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Math;
 using Toybox.Timer;
+using Toybox.Application;
 
 class BilliardView extends WatchUi.View {
 
@@ -75,7 +76,18 @@ class BilliardView extends WatchUi.View {
         _timer.start(method(:onTick), 33, true);
         // Root menu is the shared view; drop straight into a game. Only auto-start
         // from a fresh launch so returning from the post-game card doesn't reset.
-        if (_game.gs == BS_MENU) { _game.startGame(); }
+        if (_game.gs == BS_MENU) {
+            _game.startGame();
+            // Surface today's login-streak bonus as a one-shot table toast
+            // (queued by the App's checkIn on the day's first launch).
+            try {
+                var dm = Application.Storage.getValue("bill_daily_msg");
+                if (dm != null) {
+                    _game.msg = dm; _game.msgT = 90;
+                    Application.Storage.deleteValue("bill_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
@@ -502,7 +514,8 @@ class BilliardView extends WatchUi.View {
         var dirx = Math.cos(rad); var diry = Math.sin(rad);
         var csx0 = g.csx(g.bx[0]); var csy0 = g.csy(g.by[0]);
         var flash = (_tick % 6 < 3);
-        var lineClr = flash ? 0xEEEEEE : 0xAAAAAA;
+        var baseCue = g.cueColor();
+        var lineClr = flash ? baseCue : _dim(baseCue);
 
         if (g.aimHitBall >= 0) {
             // Cue → ghost-ball line
@@ -771,6 +784,7 @@ class BilliardView extends WatchUi.View {
             dc.drawText(w/2, h*52/100, Graphics.FONT_XTINY,
                         "balls potted - " + g.timeAttackLimitSecs() + "s clock",
                         Graphics.TEXT_JUSTIFY_CENTER);
+            _drawProgressLine(dc, g, w, h);
             var taBright = (_tick % 14 < 7);
             dc.setColor(taBright ? 0x44FF88 : 0x226633, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w/2, h*76/100, Graphics.FONT_XTINY, "Tap for menu",
@@ -824,13 +838,41 @@ class BilliardView extends WatchUi.View {
         // Mode + difficulty reminder
         var dLabels = ["EASY", "MEDIUM", "HARD"];
         dc.setColor(0x778877, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*58/100, Graphics.FONT_XTINY,
+        dc.drawText(w/2, h*57/100, Graphics.FONT_XTINY,
                     g.gameTypeLabel() + " - " + dLabels[g.diff], Graphics.TEXT_JUSTIFY_CENTER);
+
+        _drawProgressLine(dc, g, w, h);
 
         // Blinking tap to return
         var bright = (_tick % 14 < 7);
         dc.setColor(bright ? 0x44FF88 : 0x226633, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, h*76/100, Graphics.FONT_XTINY, "Tap for menu",
                     Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── PROGRESSION SUMMARY (game-over) ───────────────────────
+    // One compact line: rank/level + coin balance, plus a one-shot gold
+    // "new cue" banner when the last game crossed an unlock milestone.
+    hidden function _drawProgressLine(dc, g, w, h) {
+        var lvl = Progress.level();
+        dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w/2, h*65/100, Graphics.FONT_XTINY,
+                    "Lv " + lvl + " " + _cueRank(lvl) + " - " + Progress.coins() + "c",
+                    Graphics.TEXT_JUSTIFY_CENTER);
+        if (g.pgUnlockMsg != null) {
+            dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h*70/100, Graphics.FONT_XTINY, g.pgUnlockMsg,
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // Themed billiards rank ladder derived from the shared XP level.
+    hidden function _cueRank(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Master"; }
+        if (lvl >= 10) { return "Hustler"; }
+        if (lvl >= 6)  { return "Sharpshooter"; }
+        if (lvl >= 3)  { return "Amateur"; }
+        return "Rookie";
     }
 }

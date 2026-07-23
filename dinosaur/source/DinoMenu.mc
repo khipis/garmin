@@ -73,7 +73,8 @@ function buildDinoMenu() as Lang.Array {
         :lbTitle => "DINOSAUR",
         :hooks   => new DinoHooks(),
         :options => [
-            new GmOption("dino_spd", "Speed", ["NORMAL", "FAST", "INSANE"], 0)
+            new GmOption("dino_spd", "Speed", ["NORMAL", "FAST", "INSANE"], 0),
+            new GmOption("dino_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

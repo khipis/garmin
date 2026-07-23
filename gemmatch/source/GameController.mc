@@ -44,6 +44,9 @@
 
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Attention;
+
+const GM_FX_KEY = "gm_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const GS_MENU = 0;
 const GS_PLAY = 1;
@@ -152,6 +155,8 @@ class GameController {
     var pendActive;
     var pendR; var pendC; var pendDR; var pendDC;
 
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: gm_fx)
+
     function initialize() {
         state    = GS_MENU;
         grid     = new GridManager();
@@ -208,6 +213,34 @@ class GameController {
         var mi = _load("gm_midx"); if (mi >= 0 && mi < MOVES_COUNT)  { movesIdx = mi; }
         roundMs    = TIME_MS[timeIdx];
         movesTotal = MOVES_VALS[movesIdx];
+
+        _fxOn = _loadFx();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(GM_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 tap/move/swap · 1 match/cascade/boom · 2 invalid/game-over.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ─────────────────────────────────────────────────
@@ -333,6 +366,7 @@ class GameController {
         lastTickMs = now;
         elapsedMs  = 0;
         state      = GS_PLAY;
+        _fxOn      = _loadFx();
     }
 
     // Ends a ZEN session (called when back is pressed during ZEN play).
@@ -400,6 +434,8 @@ class GameController {
             animReverse  = true;
             animFrame    = 0;
             invalidFlash = 20;
+            _tone(2);
+            _vibe(45, 70);
             return;
         }
         // Successful match — cost one move in GM_MOVES
@@ -445,12 +481,18 @@ class GameController {
         lastClearScore = added;
         chainPopT      = 700;
 
+        // One pleasant tone per resolved cascade step (never per tile).
+        _tone(1);
         if (boomed) {
             bombsPopped = bombsPopped + 1;
             boomT  = 650;
             shakeT = 14;
+            _vibe(90, 180);
         } else if (cascadeDepth >= 3) {
             shakeT = 4 + cascadeDepth; if (shakeT > 12) { shakeT = 12; }
+            _vibe(55, 90);
+        } else {
+            _vibe(35, 45);
         }
 
         if (fallFrom == null || fallFrom.size() != total) { fallFrom = new [total]; }
@@ -510,6 +552,8 @@ class GameController {
 
     hidden function _endGame() {
         state = GS_OVER;
+        _tone(2);
+        _vibe(100, 220);
         _updateBest();
         // Submit the finished round's score to the global leaderboard,
         // plus the fun secondary chain-reaction stats for this run.
@@ -542,6 +586,8 @@ class GameController {
         curR = r1; curC = c1;
         selR = -1; selC = -1;
         dragR = -1; dragC = -1; dragDR = 0; dragDC = 0;
+        _tone(0);
+        _vibe(25, 25);
     }
 
     // ── Unified touch model ──────────────────────────────────────────
@@ -659,6 +705,7 @@ class GameController {
         if (nc < 0)          { nc = grid.cols - 1; }
         if (nc >= grid.cols) { nc = 0; }
         curR = nr; curC = nc;
+        _tone(0);
     }
 
     // SELECT: pick/swap at cursor (button workflow).

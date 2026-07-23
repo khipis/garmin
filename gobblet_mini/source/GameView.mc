@@ -4,6 +4,10 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
+
+// Sound + haptics master switch (OPTIONS: gob_fx). 0/unset = ON, 1 = OFF.
+const GOB_FX_KEY = "gob_fx";
 
 // ── Gobblet Mini ──────────────────────────────────────────────────────────
 //
@@ -92,6 +96,10 @@ class GameView extends WatchUi.View {
     hidden var _playerFirst;
     hidden var _activePlayer;   // 1 = P1 / human, 2 = AI / P2
 
+    // ── Sound + haptics (OPTIONS: gob_fx) ─────────────────────────────────
+    hidden var _fxOn;
+    hidden var _overFxDone;
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -110,10 +118,38 @@ class GameView extends WatchUi.View {
         _menuSel = 0;
         _playerFirst = true;
         _activePlayer = 1;
+        _fxOn        = _loadFx();
+        _overFxDone  = false;
         _initLines();
         // Settings come from the shared OPTIONS screen (persisted in Storage).
         _applySettings();
         _startGame();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(GOB_FX_KEY);
+            if (v instanceof Lang.Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 select/place · 1 gobble/win · 2 illegal/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Settings (driven by the shared OPTIONS screen) ─────────────────────
@@ -214,7 +250,7 @@ class GameView extends WatchUi.View {
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
             else if (_menuSel == 3) { _openLeaderboard(); return; }
-            else if (_menuSel == 4) { _startGame(); }
+            else if (_menuSel == 4) { _tone(0); _startGame(); }
             WatchUi.requestUpdate();
             return;
         }
@@ -240,6 +276,7 @@ class GameView extends WatchUi.View {
         if (_mode == MODE_PVP) { WatchUi.requestUpdate(); return; }
         if (_state == GMS_AI) {
             _aiDoMoveFor(2);
+            if (_mode != MODE_AIAI) { _tone(0); }   // AI moved
             if (_checkWin(2)) {
                 _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER; _reportResult();
             } else if (_checkWin(1)) {
@@ -277,6 +314,8 @@ class GameView extends WatchUi.View {
         _overWho  = 0;
         _lbHandled = false;
         _activePlayer = 1;
+        _fxOn       = _loadFx();
+        _overFxDone = false;
         if (_mode == MODE_AIAI) {
             _state = GMS_AI;
         } else if (_mode == MODE_PVAI && !_playerFirst) {
@@ -362,12 +401,14 @@ class GameView extends WatchUi.View {
             _selSize = _topSize(cell);
             _selCell = cell;
             _state   = GMS_P_DST;
+            _tone(0);
         } else {
             // Try to pick from hand → open size-picker overlay
             var firstSz = _firstValidHandSize(cell);
             if (firstSz > 0) {
                 _sizePick = firstSz;
                 _state    = GMS_P_SIZE;
+                _tone(0);
             }
             // else: no hand piece can go here; ignore input
         }
@@ -401,25 +442,30 @@ class GameView extends WatchUi.View {
         _selFrom = 0;
         _selSize = _sizePick;
         _state   = GMS_P_DST;
+        _tone(0);
     }
 
     // Player commits to placing/moving at the current grid cursor.
     hidden function _doDest() {
         var dst = _gridCur;
+        // A gobble = placing on top of an occupied cell (covering a piece).
+        var gobble = (_depth[dst] > 0);
         if (_selFrom == 1) {
             // Moving a board piece
             if (dst == _selCell) { _state = GMS_P_SEL; _selFrom = -1; return; }
-            if (!_canPlace(_selSize, dst)) { return; }
+            if (!_canPlace(_selSize, dst)) { _tone(2); return; }
             var val = _pop(_selCell);
             _place(val, dst);
         } else {
             // Placing a new piece from hand
-            if (!_canPlace(_selSize, dst)) { return; }
+            if (!_canPlace(_selSize, dst)) { _tone(2); return; }
             var hand = (_activePlayer == 1) ? _ph : _aih;
             hand[_selSize - 1] = hand[_selSize - 1] - 1;
             _place(_makeVal(_activePlayer, _selSize), dst);
         }
         _selFrom = -1;
+        if (gobble) { _tone(1); _vibe(60, 80); }   // gobbled a piece!
+        else        { _tone(0); _vibe(22, 28); }   // placed / moved
         if (_checkWin(1)) {
             _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER; _reportResult();
         } else if (_checkWin(2)) {
@@ -784,6 +830,11 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_MENU) { _startGame(); }
+        if (_state == GMS_OVER && !_overFxDone) {
+            _overFxDone = true;
+            if (_overWho == GOM_PWIN) { _tone(1); _vibe(100, 220); }   // win!
+            else                      { _tone(2); _vibe(100, 200); }   // lose
+        }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
         _drawGrid(dc);

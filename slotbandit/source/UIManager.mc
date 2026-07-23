@@ -31,10 +31,38 @@ class UIManager {
                   0xFFCC33, Graphics.TEXT_JUSTIFY_RIGHT, sw);
         }
 
-        if (ctrl.autoPlay) {
+        // Combo/multiplier badge takes priority over the AUTO label — a hot
+        // streak is the thing we most want the player to feel.
+        if (ctrl.combo >= 2) {
+            var mv = ctrl.mult;
+            var flame = (System.getTimer() / 200) % 2 == 0;
+            var mc = (mv >= 5) ? 0xFF3344 : (mv >= 3 ? 0xFF8822 : 0xFFCC44);
+            dc.setColor(GfxUtil.shade(mc, 45), Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx + 1, hudTop + 27, Graphics.FONT_XTINY,
+                        (flame ? "\u25B2 " : "  ") + "COMBO x" + mv.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, hudTop + 26, Graphics.FONT_XTINY,
+                        (flame ? "\u25B2 " : "  ") + "COMBO x" + mv.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (ctrl.autoPlay) {
             dc.setColor(0x66DDFF, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, hudTop + 27, Graphics.FONT_XTINY, "AUTO", Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    // ── Free-spin bonus banner — flashes briefly after a triple/jackpot ──
+    static function drawBonus(dc, ctrl, sw, sh) {
+        if (ctrl.bonusFlash <= 0) { return; }
+        var cx = sw / 2;
+        var by = sh * 30 / 100;
+        var on = (ctrl.bonusFlash % 6 < 3);
+        var col = on ? 0x8CFF44 : 0xFFDD55;
+        var bw = sw * 62 / 100; if (bw < 128) { bw = 128; }
+        GfxUtil.vGradientRounded(dc, cx - bw / 2, by, bw, 22, 0x14400A, 0x081F05, 4, 6);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cx - bw / 2, by, bw, 22, 6);
+        dc.drawText(cx, by + 2, Graphics.FONT_XTINY, ctrl.bonusText, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden static function _chip(dc, x, y, label, val, col, justify, sw) {
@@ -50,17 +78,18 @@ class UIManager {
         var r = ctrl.lastResult;
         if (r != null && r["kind"] != "NONE") {
             var label = r["label"];
-            var pts   = r["payout"];
+            var pts   = r.hasKey("gain") ? r["gain"] : r["payout"];
+            var mv    = r.hasKey("mult") ? r["mult"] : 1;
             var col = 0xFFCC22;
             if (r["kind"] == "JACKPOT") { col = 0xFF44BB; }
             else if (r["kind"] == "TRIPLE") { col = 0x55DD77; }
+            var txt = label.toUpper() + "  +" + pts.format("%d");
+            if (mv > 1) { txt = txt + " x" + mv.format("%d"); }
             // glow shadow then text
             dc.setColor(GfxUtil.shade(col, 35), Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx + 1, y + 1, Graphics.FONT_SMALL,
-                        label.toUpper() + "  +" + pts.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx + 1, y + 1, Graphics.FONT_SMALL, txt, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, y, Graphics.FONT_SMALL,
-                        label.toUpper() + "  +" + pts.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, y, Graphics.FONT_SMALL, txt, Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
@@ -212,11 +241,28 @@ class UIManager {
             lines.add([ctrl.scoreSys.jackpots.format("%d") + " jackpot" +
                        (ctrl.scoreSys.jackpots > 1 ? "s" : "") + " hit!", 0xFF66CC]);
         }
+        if (ctrl.bestCombo >= 3) {
+            lines.add(["Best streak x" + ctrl.bestCombo.format("%d"), 0xFFAA44]);
+        }
         if (ctrl.hasNewBest()) {
             lines.add(["★ NEW BEST! ★", 0x44FF66]);
         } else if (ctrl.scoreSys.hi > 0) {
             lines.add(["Best " + ctrl.scoreSys.hi.format("%d"), 0x88AABB]);
         }
+
+        // ── Meta-progression summary (shared, shop-ready) ──
+        lines.add(["Lv " + ctrl.metaLevel().format("%d") + " " + ctrl.metaRank() +
+                   " - " + ctrl.metaCoins().format("%d") + "c", 0xBFD8C4]);
+        var stk = ctrl.metaStreak();
+        if (stk >= 1) {
+            lines.add(["Streak " + stk.format("%d"), 0x66CCFF]);
+        }
+        lines.add(["Symbols " + ctrl.symbolsOwned().format("%d") + "/" +
+                   ctrl.symbolsTotal().format("%d"), 0xFFDD88]);
+        if (ctrl.pgUnlockMsg != null) {
+            lines.add([ctrl.pgUnlockMsg, 0x8CFF44]);
+        }
+
         GameOverCard.draw(dc, sw, sh,
             jackTitle ? "JACKPOT RUN!" : "ROUND OVER",
             jackTitle ? 0xFF44BB : 0xFFCC33,

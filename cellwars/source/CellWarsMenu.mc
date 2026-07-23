@@ -55,7 +55,8 @@ function buildCellWarsMenu() as Lang.Array {
             new GmOption("cw_teams", "Teams", ["2", "3", "4"], 1),
             new GmOption("cw_speed", "Speed", ["1", "2", "3", "4", "5"], 2),
             new GmOption("cw_fill",  "Fill",  ["LOW", "MED", "HIGH"], 1),
-            new GmOption("cw_theme", "Theme", ["NEON", "OCEAN", "FIRE", "FOREST"], 0)
+            new GmOption("cw_theme", "Theme", ["NEON", "OCEAN", "FIRE", "FOREST"], 0),
+            new GmOption("cw_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

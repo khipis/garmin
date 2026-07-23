@@ -525,9 +525,9 @@ _Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_55_49_61_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc"; @line = 64; @symbol_functiondef = [buildDinoMenu,64,9,22]; @symbol_return<0> = [Lang,64,28,32]; @symbol_return<1> = [Array,64,33,38]; ]
 function buildDinoMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_start:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_start:
 [ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc" 65 4 ]
-    [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 65 8 11 ];
     symbol [ MenuConfig %tmp.4 65 18 28 ];
@@ -582,7 +582,7 @@ _Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
     symbol [ options %tmp.55 75 9 16 const ];
-    %tmp.56 = newa 1;
+    %tmp.56 = newa 2;
     symbol [ GmOption %tmp.60 76 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "dino_spd";
@@ -601,37 +601,52 @@ _Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_start:
     %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
     %tmp.74 = dup %tmp.56;
     %tmp.75 = aputv %tmp.74 0 %tmp.57;
-    %tmp.76 = dup %tmp.53;
-    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
-    %tmp.1 = newc %tmp.4 (%tmp.77);
+    symbol [ GmOption %tmp.79 77 16 24 ];
+    %tmp.79 = getv ? :GmOption;
+    %tmp.80 = "dino_fx";
+    %tmp.81 = "Sound & Haptics";
+    %tmp.82 = newa 2;
+    %tmp.83 = "ON";
+    %tmp.84 = dup %tmp.82;
+    %tmp.85 = aputv %tmp.84 0 %tmp.83;
+    %tmp.86 = "OFF";
+    %tmp.87 = dup %tmp.85;
+    %tmp.88 = aputv %tmp.87 1 %tmp.86;
+    %tmp.89 = 0;
+    %tmp.76 = newc %tmp.79 (%tmp.80, %tmp.81, %tmp.88, %tmp.89);
+    %tmp.90 = dup %tmp.75;
+    %tmp.91 = aputv %tmp.90 1 %tmp.76;
+    %tmp.92 = dup %tmp.53;
+    %tmp.93 = aputv %tmp.92 %tmp.55 %tmp.91;
+    %tmp.1 = newc %tmp.4 (%tmp.93);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 65 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc" 79 4 ]
-    [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_stop" ]
-    %v.2 = local;
-    symbol [ v %v.2 79 8 9 ];
-    symbol [ GameMenuView %tmp.81 79 16 28 ];
-    %tmp.81 = getv ? :GameMenuView;
-    %tmp.82 = lgetv %cfg.1;
-    symbol [ cfg %tmp.82 79 29 32 ];
-    %tmp.78 = newc %tmp.81 (%tmp.82);
-    lputv %v.2 %tmp.78;
-    symbol [ v %v.2 79 8 9 ];
 [ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc" 80 4 ]
-    %tmp.83 = newa 2;
-    %tmp.84 = lgetv %v.2;
-    symbol [ v %tmp.84 80 12 13 ];
-    %tmp.85 = dup %tmp.83;
-    %tmp.86 = aputv %tmp.85 0 %tmp.84;
-    symbol [ GameMenuDelegate %tmp.90 80 19 35 ];
-    %tmp.90 = getv ? :GameMenuDelegate;
-    %tmp.91 = lgetv %v.2;
-    symbol [ v %tmp.91 80 36 37 ];
-    %tmp.87 = newc %tmp.90 (%tmp.91);
-    %tmp.92 = dup %tmp.86;
-    %tmp.93 = aputv %tmp.92 1 %tmp.87;
-    ret %tmp.93;
-_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_81_0_stop:
+    [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 80 8 9 ];
+    symbol [ GameMenuView %tmp.97 80 16 28 ];
+    %tmp.97 = getv ? :GameMenuView;
+    %tmp.98 = lgetv %cfg.1;
+    symbol [ cfg %tmp.98 80 29 32 ];
+    %tmp.94 = newc %tmp.97 (%tmp.98);
+    lputv %v.2 %tmp.94;
+    symbol [ v %v.2 80 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc" 81 4 ]
+    %tmp.99 = newa 2;
+    %tmp.100 = lgetv %v.2;
+    symbol [ v %tmp.100 81 12 13 ];
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 0 %tmp.100;
+    symbol [ GameMenuDelegate %tmp.106 81 19 35 ];
+    %tmp.106 = getv ? :GameMenuDelegate;
+    %tmp.107 = lgetv %v.2;
+    symbol [ v %tmp.107 81 36 37 ];
+    %tmp.103 = newc %tmp.106 (%tmp.107);
+    %tmp.108 = dup %tmp.102;
+    %tmp.109 = aputv %tmp.108 1 %tmp.103;
+    ret %tmp.109;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinoMenu_mc_64_39_82_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinoMenu.mc"; @line = 4; ]
 <init> {

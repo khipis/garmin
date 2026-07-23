@@ -587,6 +587,14 @@ class MainView extends WatchUi.View {
 
     // cellAt: converts screen pixel (x, y) → [row, col] on the board,
     // or null if the point is outside the grid. Used by drag-to-cursor.
+    //
+    // Biased toward the gem the player was last focused on (_ctrl.curR/curC):
+    // on small round watches each cell can be as little as ~25-30px, well
+    // within normal fingertip-placement error, so a touch that lands just a
+    // few px across a shared border from that anchor is treated as "still
+    // the anchor cell" instead of accidentally grabbing the neighbour. A
+    // decisive touch well inside the new cell always wins — this only
+    // narrows the last _STICKY_PCT of the border band.
     function cellAt(x, y) {
         if (_cellPx <= 0) { return null; }
         if (x < _bx0 || y < _by0) { return null; }
@@ -594,6 +602,35 @@ class MainView extends WatchUi.View {
         var row = (y - _by0) / _cellPx;
         if (col < 0 || col >= _ctrl.grid.cols) { return null; }
         if (row < 0 || row >= _ctrl.grid.rows) { return null; }
+        return _stickyCell(x, y, row, col);
+    }
+
+    hidden const _STICKY_PCT = 30;   // % of cell size still counted as the anchor cell
+
+    hidden function _stickyCell(x, y, row, col) {
+        var ar = _ctrl.curR;
+        var ac = _ctrl.curC;
+        if (ar < 0) { return [row, col]; }
+        var dr = row - ar;
+        var dc = col - ac;
+        if (dr == 0 && dc == 0) { return [row, col]; }
+        if (dr < -1 || dr > 1 || dc < -1 || dc > 1) { return [row, col]; }
+        if (dr != 0 && dc != 0) { return [row, col]; }   // diagonal jump — no bias
+
+        var margin = _cellPx * _STICKY_PCT / 100;
+        if (dc == 1) {
+            var bx = _bx0 + col * _cellPx;
+            if (x - bx < margin) { return [ar, ac]; }
+        } else if (dc == -1) {
+            var bx2 = _bx0 + (col + 1) * _cellPx;
+            if (bx2 - x < margin) { return [ar, ac]; }
+        } else if (dr == 1) {
+            var by = _by0 + row * _cellPx;
+            if (y - by < margin) { return [ar, ac]; }
+        } else if (dr == -1) {
+            var by2 = _by0 + (row + 1) * _cellPx;
+            if (by2 - y < margin) { return [ar, ac]; }
+        }
         return [row, col];
     }
 

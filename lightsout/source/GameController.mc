@@ -28,6 +28,9 @@ using Toybox.Application;
 using Toybox.System;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
+using Toybox.Attention;
+
+const LO_FX_KEY = "lo_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const LS_MENU = 0;
 const LS_PLAY = 1;
@@ -71,6 +74,8 @@ class GameController {
 
     var dirty;
 
+    hidden var _fxOn;     // sound + haptics master switch (OPTIONS: lo_fx)
+
     function initialize() {
         state         = LS_MENU;
         menuRow       = 0;
@@ -92,9 +97,36 @@ class GameController {
         dailyBestMoves = -1;
         streak        = 0;
         dirty         = true;
+        _fxOn         = _loadFx();
 
         _loadAll();
         _refreshDailyStatus();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(LO_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 tap/move/toggle · 1 win/solve · 2 mistake.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ─────────────────────────────────────────────
@@ -220,6 +252,7 @@ class GameController {
     function startGame() { _loadAll(); _refreshDailyStatus(); _startGame(); }
 
     hidden function _startGame() {
+        _fxOn = _loadFx();
         _refreshDailyStatus();
         var lvl;
         var rec;
@@ -279,6 +312,7 @@ class GameController {
         curR = ((curR + dr) + n) % n;
         curC = ((curC + dc) + n) % n;
         dirty = true;
+        _tone(0);
     }
     function setCursor(r, c) {
         if (state != LS_PLAY) { return; }
@@ -300,6 +334,8 @@ class GameController {
         grid.toggle(r, c);
         moves = moves + 1;
         dirty = true;
+        _tone(0);
+        _vibe(30, 30);
         if (grid.isAllOff()) { _finishWin(); }
     }
 
@@ -349,5 +385,7 @@ class GameController {
         }
         state = LS_WIN;
         dirty = true;
+        _tone(1);
+        _vibe(100, 250);
     }
 }

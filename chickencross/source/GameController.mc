@@ -28,6 +28,7 @@
 
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
 
 const CS_MENU = 0;
 const CS_PLAY = 1;
@@ -43,6 +44,7 @@ const CC_ROW_LB    = 3;   // shared global leaderboard
 const CC_BEST_KEY  = "cc_best";
 const CC_DIFF_KEY  = "cc_diff";
 const CC_LIVES_KEY = "cc_lives";
+const CC_FX_KEY    = "cc_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 // Shared global-leaderboard game id (matches _LOGOS / web id).
 const LB_GAME_ID = "chickencross";
@@ -68,6 +70,7 @@ class GameController {
     // Hidden tick counter used to scale obstacle motion smoothly.
     hidden var _highestRow;   // chicken's best row this *life*
     hidden var _submitted;    // guards against a double leaderboard submit
+    hidden var _fxOn;         // sound + haptics master switch (OPTIONS: cc_fx)
 
     function initialize() {
         state = CS_MENU;
@@ -81,7 +84,36 @@ class GameController {
         level = 1; lives = 3; score = 0; bestScore = 0;
         _highestRow = 0;
         _submitted  = false;
+        _fxOn       = _loadFx();
         _loadAll();
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 hop · 1 good · 2 alert · 3 crossing/win · 4 death.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(CC_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ──────────────────────────────────────────────
@@ -155,6 +187,7 @@ class GameController {
         lives = menuLives;
         score = 0;
         _submitted = false;
+        _fxOn = _loadFx();
         _spawnRound();
         state = CS_PLAY;
     }
@@ -183,6 +216,9 @@ class GameController {
     hidden function _playerStep(dr, dc) {
         if (state != CS_PLAY) { return; }
         if (!player.step(dr, dc)) { return; }
+        // Every valid hop gets a light, snappy tick.
+        _tone(0);
+        _vibe(18, 20);
         // Distance score: +10 per new row reached.
         if (player.row > _highestRow) {
             score = score + 10 * (player.row - _highestRow);
@@ -225,9 +261,15 @@ class GameController {
         if (lives <= 0) {
             state = CS_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Final splat — heavy fail sting + long jolt.
+            _tone(4);
+            _vibe(100, 250);
             _submitToLeaderboard();
             return;
         }
+        // Lost a life but still in it — sharp alert + firm buzz.
+        _tone(2);
+        _vibe(80, 140);
         _spawnRound();
     }
 
@@ -237,10 +279,16 @@ class GameController {
         if (level >= 9) {
             state = CS_WIN;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Victory fanfare.
+            _tone(3);
+            _vibe(100, 320);
             _submitToLeaderboard();
             return;
         }
         level = level + 1;
+        // Safe crossing — happy chime + celebratory buzz.
+        _tone(3);
+        _vibe(60, 120);
         _spawnRound();
     }
 }

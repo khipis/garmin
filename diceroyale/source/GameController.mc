@@ -37,6 +37,7 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.System;
+using Toybox.Attention;
 
 const DR_MENU = 0;
 const DR_PLAY = 1;
@@ -72,6 +73,8 @@ const DR_KEY_BEST_DAILY   = "dr_best_daily";
 const DR_KEY_DAILY_DATE   = "dr_daily_date";
 const DR_KEY_GAMES        = "dr_games";
 const DR_KEY_STREAK       = "dr_streak";
+// Unique FX key (distinct from drwal's "dr_fx"). 0/unset = ON, 1 = OFF.
+const DR_DICE_FX_KEY      = "dr_dice_fx";
 
 class GameController {
     var state;
@@ -97,6 +100,9 @@ class GameController {
     var gamesPlayed;
     var streak;
 
+    // Sound + haptics master switch (OPTIONS: dr_dice_fx). 0/unset = ON, 1 = OFF.
+    hidden var _fxOn;
+
     function initialize() {
         state         = DR_MENU;
         menuRow       = 0;
@@ -120,8 +126,35 @@ class GameController {
         gamesPlayed      = 0;
         streak           = 0;
 
+        _fxOn = _loadFx();
         _loadAll();
         _refreshDailyStatus();
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(DR_DICE_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 roll/hold/commit · 1 game complete · 2 alert.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ─────────────────────────────────────────────
@@ -224,6 +257,7 @@ class GameController {
     function beginGame() { _startGame(); }
 
     hidden function _startGame() {
+        _fxOn = _loadFx();
         _refreshDailyStatus();
         var mask = DR_MODE_CLASSIC_MASK;
         if (menuMode == DR_MODE_QUICK) { mask = DR_MODE_QUICK_MASK; }
@@ -244,6 +278,7 @@ class GameController {
             dice.clearSeed();
         }
         dice.rollInitial();
+        _tone(0); _vibe(35, 55);           // opening dice roll
 
         roundsPlayed = 0;
         phase        = DR_PHASE_ROLL;
@@ -309,19 +344,24 @@ class GameController {
         if (phase == DR_PHASE_ROLL) {
             if (rollCursor < DR_DICE_COUNT) {
                 dice.toggleHold(rollCursor);
+                _tone(0); _vibe(12, 12);   // hold / release a die
             } else if (rollCursor == DR_POS_ROLL) {
-                if (dice.reroll() && dice.rerollsLeft == 0
-                    && rollCursor == DR_POS_ROLL) {
-                    rollCursor = DR_POS_SCORE;
+                if (dice.reroll()) {
+                    _tone(0); _vibe(35, 55);   // dice tumble
+                    if (dice.rerollsLeft == 0 && rollCursor == DR_POS_ROLL) {
+                        rollCursor = DR_POS_SCORE;
+                    }
                 }
             } else if (rollCursor == DR_POS_SCORE) {
                 phase       = DR_PHASE_SCORE;
                 scoreCursor = _firstAvailableCategory();
+                _tone(0); _vibe(12, 15);   // switch to scoring
             }
         } else {
             // PHASE_SCORE: commit current category, advance round.
             if (scores.isAvailable(scoreCursor) && !scores.isUsed(scoreCursor)) {
                 scores.commit(scoreCursor, dice.dice);
+                _tone(0); _vibe(30, 45);   // lock in a category score
                 _advanceRound();
             }
         }
@@ -347,6 +387,7 @@ class GameController {
             return;
         }
         dice.rollInitial();
+        _tone(0); _vibe(35, 55);           // next round — fresh roll
         phase      = DR_PHASE_ROLL;
         rollCursor = 0;
     }
@@ -388,6 +429,7 @@ class GameController {
         Leaderboard.submitScore(LB_GAME_ID, final, variantName());
         Leaderboard.showPostGame(LB_GAME_ID, variantName(), "DICE ROYALE");
 
+        _tone(1); _vibe(95, 240);          // full scorecard done
         state = DR_OVER;
     }
 

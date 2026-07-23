@@ -20,6 +20,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Application;
+using Toybox.Attention;
 
 class GameController {
     // ── Public state ──────────────────────────────────────────
@@ -118,6 +119,9 @@ class GameController {
     var lastAx;
     var lastAy;
 
+    // Sound + haptics master switch (OPTIONS: ar_fx).
+    hidden var _fxOn;
+
     // ── Init ──────────────────────────────────────────────────
     function initialize() {
         sw = 260; sh = 260; cx = 130; cy = 130;
@@ -179,9 +183,38 @@ class GameController {
         demoCaption  = "";
         lastAx = 0; lastAy = 0;
         retX = 130; retY = 109; horizonY = 109;
+        _fxOn = _loadFx();
 
         _loadPrefs();
         gyro.setSensitivity(sens);
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 light · 1 good hit/score · 2 damage · 3 win · 4 game-over.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(AR_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Screen sync ───────────────────────────────────────────
@@ -306,6 +339,7 @@ class GameController {
     function beginGame() { _startTournament(); }
 
     hidden function _startTournament() {
+        _fxOn    = _loadFx();
         score    = 0;
         combo    = 0;
         maxCombo = 0;
@@ -458,8 +492,16 @@ class GameController {
         if (zone == AR_HZ_HEAD) {
             headshotT = 8;
             shakeT    = 4;
+            _tone(1);
+            _vibe(70, 90);
+        } else if (zone == AR_HZ_CHEST) {
+            shakeT    = 2;
+            _tone(1);
+            _vibe(40, 50);
         } else {
             shakeT    = 2;
+            _tone(0);
+            _vibe(25, 35);
         }
 
         // Damage enemy.
@@ -493,6 +535,9 @@ class GameController {
             savePrefs();
             Leaderboard.submitScore(LB_GAME_ID, score, diffName());
             Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
+            // Tournament victory fanfare.
+            _tone(3);
+            _vibe(100, 300);
             state = AR_WIN;
             return;
         }
@@ -500,6 +545,9 @@ class GameController {
         if (roundIdx + 1 > bestRound) { bestRound = roundIdx + 1; }
         roundIdx++;
         combo = 0;
+        // Round-clear cheer.
+        _tone(3);
+        _vibe(60, 120);
         _beginRound();
     }
 
@@ -508,6 +556,9 @@ class GameController {
         savePrefs();
         Leaderboard.submitScore(LB_GAME_ID, score, diffName());
         Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
+        // Defeat sting.
+        _tone(4);
+        _vibe(100, 250);
         state = AR_OVER;
     }
 
@@ -525,6 +576,9 @@ class GameController {
         var by = (sh * 88) / 100;
         // Fire at the crosshair, wherever the player has aimed it.
         bow.release(bx, by, retX, retY);
+        // Bow-string twang.
+        _tone(0);
+        _vibe(20, 25);
     }
     function restart() { _startTournament(); }
     function recalibrate() { gyro.recalibrate(); }
@@ -592,6 +646,9 @@ class GameController {
         shakeT    = 6;
         combo     = 0;
         shields--;
+        // Getting hit hurts — sharp warning + strong jolt.
+        _tone(2);
+        _vibe(90, 160);
         if (shields <= 0) { _gameOver(); }
     }
 }

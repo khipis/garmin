@@ -4,6 +4,9 @@
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
+
+const BILL_FX_KEY = "bill_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 // ── Leaderboard (win-streak vs AI; variant = game type) ──────
 const LB_GAME_ID    = "billiards";
@@ -133,6 +136,10 @@ class BilliardGame {
     // ── Notifications ─────────────────────────────────────────
     var msg; var msgT;
 
+    // One-shot "new cosmetic unlocked" banner for the game-over screen.
+    // Set by the progression layer, cleared at the start of each game.
+    var pgUnlockMsg;
+
     // ── Extra-turn flag ───────────────────────────────────────
     var pocketedThisTurn;
 
@@ -152,6 +159,8 @@ class BilliardGame {
     // ── TIME ATTACK arcade mode ───────────────────────────────
     var arcadeTicks;  // countdown, in ~33 ms ticks, while gameType == GT_TIMEATTACK
 
+    hidden var _fxOn;    // sound + haptics master switch (OPTIONS: bill_fx)
+
     // ─────────────────────────────────────────────────────────
     function initialize() {
         gs = BS_MENU; diff = DIFF_MED; turn = TURN_PLAYER;
@@ -162,6 +171,7 @@ class BilliardGame {
         playerScore = 0; aiScore = 0;
         aiDelay = 0; aiAimAngle = 0.0; aiPower = 50;
         msg = ""; msgT = 0; pocketedThisTurn = false;
+        pgUnlockMsg = null;
         sw = 260; sh = 260; aimHitT = -1.0; aimHitBall = -1;
         firstHit = -1; cueScratched = false;
         pottedList = new [16]; pottedCnt = 0;
@@ -193,6 +203,7 @@ class BilliardGame {
         }
         _bounceFxNext = 0;
         arcadeTicks = 0;
+        _fxOn = _loadFx();
 
         var sd = Application.Storage.getValue("billDiff");
         if (sd instanceof Lang.Number && sd >= 0 && sd <= DIFF_HARD) { diff = sd; }
@@ -204,6 +215,31 @@ class BilliardGame {
 
         _applyGameType();
         _setupVP(260, 260);
+    }
+
+    // ── Best-effort sound + haptics (guarded; silent hardware is fine) ──
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(BILL_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Game-type palette + ball count ───────────────────────
@@ -373,7 +409,9 @@ class BilliardGame {
         playerGroup[0] = 0; playerGroup[1] = 0;
         winReason = 0;
         _lbHandled = false;
+        pgUnlockMsg = null;
         arcadeTicks = timeAttackLimitSecs() * 30;  // ~30 ticks/sec (33 ms loop)
+        _fxOn = _loadFx();
         gs = BS_AIM;
         _computeAimIntersect();
     }
@@ -405,12 +443,23 @@ class BilliardGame {
     function reportResult() {
         if (_lbHandled) { return; }
         _lbHandled = true;
+        // Game-over feedback (win fanfare / loss sting), independent of the
+        // leaderboard rules below. winReason: 1=player win, 2=AI win,
+        // 3=player lost, 4=AI lost (→player wins), 5=time up, 6=cleared.
+        if (winReason == 1 || winReason == 4 || winReason == 6) {
+            _tone(1); _vibe(100, 250);
+        } else if (winReason == 2 || winReason == 3) {
+            _tone(2); _vibe(100, 200);
+        } else {
+            _tone(2); _vibe(60, 120);
+        }
         if (gameType == GT_TIMEATTACK) {
             // Arcade high-score board — every run with a non-zero score
             // is worth submitting (no win/lose framing here).
             if (playerScore > 0) {
                 Leaderboard.submitScore(LB_GAME_ID, playerScore, "timeattack");
                 Leaderboard.showPostGame(LB_GAME_ID, "timeattack", "BILLIARDS");
+                _awardProgress(false, playerScore);
             }
             return;
         }
@@ -421,9 +470,51 @@ class BilliardGame {
             _saveStreak(s);
             Leaderboard.submitScore(LB_GAME_ID, s, lbVariant());
             Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "BILLIARDS");
+            _awardProgress(true, s);
         } else {
             _saveStreak(0);
         }
+    }
+
+    // ── Meta-progression (shared, shop-ready via Progress module) ────────────
+    // Grants coins + XP for a completed game and unlocks cosmetic cues at
+    // rank milestones. Coins are the future shop's currency; cue ownership is
+    // the exact set a shop purchase would grant, so nothing here blocks
+    // monetising better cues later.
+    hidden function _awardProgress(win, scoreVal) {
+        var coinsGain = 0;
+        var xpGain = 0;
+        if (gameType == GT_TIMEATTACK) {
+            coinsGain = scoreVal;              // ~1 coin per ball potted
+            xpGain    = 5 + scoreVal / 2;
+        } else if (win) {
+            var s = _loadStreak();             // already incremented before call
+            coinsGain = 25 + (s - 1) * 5;
+            if (coinsGain > 60) { coinsGain = 60; }
+            xpGain = 30;
+        }
+        if (coinsGain <= 0 && xpGain <= 0) { return; }
+        Progress.addCoins(coinsGain);
+        Progress.addXp(xpGain);
+        var lvl = Progress.level();
+        var uGold = Progress.unlockIfReached("cue_gold", lvl, 3);
+        var uNeon = Progress.unlockIfReached("cue_neon", lvl, 6);
+        if (uNeon)      { pgUnlockMsg = "New cue: NEON"; }
+        else if (uGold) { pgUnlockMsg = "New cue: GOLD"; }
+    }
+
+    // Selected-and-owned cue colour (drives the aim line + tip). Falls back to
+    // the classic cue when the chosen skin isn't owned yet — a locked pick
+    // never renders, keeping selection safe pre-shop and post-shop alike.
+    function cueColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("bill_cue");
+            if (v instanceof Lang.Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 2 && Progress.owns("cue_neon")) { return 0x33FFFF; }
+        if (sel == 1 && Progress.owns("cue_gold")) { return 0xFFD24A; }
+        return 0xEEEEEE;
     }
 
     // ── Ball-group classification (8-ball mode) ─────────────
@@ -862,11 +953,17 @@ class BilliardGame {
         bAlive[i] = false; bvx[i] = 0.0; bvy[i] = 0.0;
         if (i == 0) {
             cueScratched = true;
+            // Scratch — a low warning buzz.
+            _tone(2);
+            _vibe(50, 90);
         } else {
             if (pottedCnt < 16) {
                 pottedList[pottedCnt] = i;
                 pottedCnt++;
             }
+            // Satisfying "clunk" as a ball drops.
+            _tone(1);
+            _vibe(35, 40);
         }
     }
 
@@ -1309,6 +1406,9 @@ class BilliardGame {
         var spd = power.toFloat() * 1.25 + 12.0;
         bvx[0] = Math.cos(rad) * spd;
         bvy[0] = Math.sin(rad) * spd;
+        // Cue strike — a crisp click scaled subtly by shot power.
+        _tone(0);
+        _vibe(power > 60 ? 45 : 25, 30);
         // Reset per-shot trackers
         firstHit = -1; cueScratched = false; pottedCnt = 0;
         // For 9-ball: snapshot the lowest live ball BEFORE the shot

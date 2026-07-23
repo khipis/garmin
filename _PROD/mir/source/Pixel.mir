@@ -1,0 +1,1812 @@
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Graphics,10,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 12; @symbol_moduledef = [Px,12,7,9]; ]
+module Px {
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 12; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 13; @symbol_functiondef = [spr,13,13,16]; @symbol_param<0> = [dc,13,17,19]; @symbol_param<1> = [rows,13,21,25]; @symbol_param<2> = [pal,13,27,30]; @symbol_param<3> = [ox,13,32,34]; @symbol_param<4> = [oy,13,36,38]; @symbol_param<5> = [px,13,40,42]; @symbol_param<6> = [flipX,13,44,49]; ]
+    function spr(dc, rows, pal, ox, oy, px, flipX) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_13_51_26_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 14 8 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_8_14_36_if_stmt:
+        %tmp.1 = lgetv %rows;
+        symbol [ rows %tmp.1 14 12 16 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_8_14_36_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_8_14_36_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_26_14_36_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 14 28 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_26_14_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_8_14_36_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_14_8_14_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 15 8 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_end" ]
+        %r.1 = local;
+        symbol [ r %r.1 15 17 18 ];
+        %tmp.4 = 0;
+        lputv %r.1 %tmp.4;
+        symbol [ r %r.1 15 17 18 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_test:
+        %tmp.5 = lgetv %r.1;
+        symbol [ r %tmp.5 15 24 25 ];
+        %tmp.6 = lgetv %rows;
+        symbol [ rows %tmp.6 15 28 32 ];
+        symbol [ size %tmp.7 15 33 37 ];
+        %tmp.7 = getv function %tmp.6 :size;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = lt %tmp.5 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 16 12 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_stop" ]
+        %row.2 = local;
+        symbol [ row %row.2 16 16 19 ];
+        %tmp.10 = lgetv %rows;
+        symbol [ rows %tmp.10 16 22 26 ];
+        %tmp.11 = lgetv %r.1;
+        symbol [ r %tmp.11 16 27 28 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %row.2 %tmp.12;
+        symbol [ row %row.2 16 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 16 31 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_stop" ]
+        %w.3 = local;
+        symbol [ w %w.3 16 35 36 ];
+        %tmp.13 = lgetv %row.2;
+        symbol [ row %tmp.13 16 39 42 ];
+        symbol [ length %tmp.14 16 43 49 ];
+        %tmp.14 = getv function %tmp.13 :length;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        lputv %w.3 %tmp.15;
+        symbol [ w %w.3 16 35 36 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 17 12 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_end" ]
+        %c.4 = local;
+        symbol [ c %c.4 17 21 22 ];
+        %tmp.16 = 0;
+        lputv %c.4 %tmp.16;
+        symbol [ c %c.4 17 21 22 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_test:
+        %tmp.17 = lgetv %c.4;
+        symbol [ c %tmp.17 17 28 29 ];
+        %tmp.18 = lgetv %w.3;
+        symbol [ w %tmp.18 17 32 33 ];
+        %tmp.19 = lt %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 18 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_stop" ]
+        %ch.5 = local;
+        symbol [ ch %ch.5 18 20 22 ];
+        %tmp.20 = lgetv %row.2;
+        symbol [ row %tmp.20 18 25 28 ];
+        symbol [ substring %tmp.21 18 29 38 ];
+        %tmp.21 = getv function %tmp.20 :substring;
+        %tmp.22 = lgetv %c.4;
+        symbol [ c %tmp.22 18 39 40 ];
+        %tmp.23 = lgetv %c.4;
+        symbol [ c %tmp.23 18 42 43 ];
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = invoke %tmp.20 %tmp.21(%tmp.22, %tmp.25);
+        lputv %ch.5 %tmp.26;
+        symbol [ ch %ch.5 18 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 19 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_20_19_51_begin:
+        %tmp.27 = lgetv %ch.5;
+        symbol [ ch %tmp.27 19 20 22 ];
+        symbol [ equals %tmp.28 19 23 29 ];
+        %tmp.28 = getv function %tmp.27 :equals;
+        %tmp.29 = ".";
+        %tmp.30 = invoke %tmp.27 %tmp.28(%tmp.29);
+        bt %tmp.30 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_true;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_38_19_51_false:
+        %tmp.31 = lgetv %ch.5;
+        symbol [ ch %tmp.31 19 38 40 ];
+        symbol [ equals %tmp.32 19 41 47 ];
+        %tmp.32 = getv function %tmp.31 :equals;
+        %tmp.33 = " ";
+        %tmp.34 = invoke %tmp.31 %tmp.32(%tmp.33);
+        push %tmp.34;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_38_19_51_end:
+        %tmp.35 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_20_19_51_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_38_19_51_false] [%tmp.35 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_38_19_51_end];
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_54_19_66_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 19 56 ]
+        goto break @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_incr;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_54_19_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_19_16_19_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 20 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_stop" ]
+        %col.6 = local;
+        symbol [ col %col.6 20 20 23 ];
+        %tmp.36 = lgetv %pal;
+        symbol [ pal %tmp.36 20 26 29 ];
+        symbol [ get %tmp.37 20 30 33 ];
+        %tmp.37 = getv function %tmp.36 :get;
+        %tmp.38 = lgetv %ch.5;
+        symbol [ ch %tmp.38 20 34 36 ];
+        %tmp.39 = invoke %tmp.36 %tmp.37(%tmp.38);
+        lputv %col.6 %tmp.39;
+        symbol [ col %col.6 20 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 20 39 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_39_20_68_if_stmt:
+        %tmp.40 = lgetv %col.6;
+        symbol [ col %tmp.40 20 43 46 ];
+        %tmp.41 = null;
+        %tmp.42 = eq %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_39_20_68_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_39_20_68_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_56_20_68_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 20 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_incr;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_56_20_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_39_20_68_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_20_39_20_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 21 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_stop" ]
+        %cc.7 = local;
+        symbol [ cc %cc.7 21 20 22 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_begin:
+        %tmp.43 = lgetv %flipX;
+        symbol [ flipX %tmp.43 21 25 30 ];
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_else_false;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_true:
+        %tmp.44 = lgetv %w.3;
+        symbol [ w %tmp.44 21 34 35 ];
+        %tmp.45 = 1;
+        %tmp.46 = sub %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %c.4;
+        symbol [ c %tmp.47 21 42 43 ];
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        push %tmp.48;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_else_false:
+        %tmp.49 = lgetv %c.4;
+        symbol [ c %tmp.49 21 47 48 ];
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_end:
+        %tmp.50 = phi [%tmp.43 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_begin] [%tmp.48 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_else_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_21_25_21_47_end];
+        lputv %cc.7 %tmp.50;
+        symbol [ cc %cc.7 21 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 22 16 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 22 16 18 ];
+        symbol [ setColor %tmp.52 22 19 27 ];
+        %tmp.52 = getv function %tmp.51 :setColor;
+        %tmp.53 = lgetv %col.6;
+        symbol [ col %tmp.53 22 28 31 ];
+        symbol [ Graphics %tmp.54 22 33 41 ];
+        %tmp.54 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.55 22 42 59 ];
+        %tmp.55 = getv %tmp.54 :COLOR_TRANSPARENT;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 23 16 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 23 16 18 ];
+        symbol [ fillRectangle %tmp.57 23 19 32 ];
+        %tmp.57 = getv function %tmp.56 :fillRectangle;
+        %tmp.58 = lgetv %ox;
+        symbol [ ox %tmp.58 23 33 35 ];
+        %tmp.59 = lgetv %cc.7;
+        symbol [ cc %tmp.59 23 38 40 ];
+        %tmp.60 = lgetv %px;
+        symbol [ px %tmp.60 23 43 45 ];
+        %tmp.61 = mul %tmp.59 %tmp.60;
+        %tmp.62 = add %tmp.58 %tmp.61;
+        %tmp.63 = lgetv %oy;
+        symbol [ oy %tmp.63 23 47 49 ];
+        %tmp.64 = lgetv %r.1;
+        symbol [ r %tmp.64 23 52 53 ];
+        %tmp.65 = lgetv %px;
+        symbol [ px %tmp.65 23 56 58 ];
+        %tmp.66 = mul %tmp.64 %tmp.65;
+        %tmp.67 = add %tmp.63 %tmp.66;
+        %tmp.68 = lgetv %px;
+        symbol [ px %tmp.68 23 60 62 ];
+        %tmp.69 = lgetv %px;
+        symbol [ px %tmp.69 23 64 66 ];
+        invoke %tmp.56 %tmp.57(%tmp.62, %tmp.67, %tmp.68, %tmp.69);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_40_24_12_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 17 ]
+        %tmp.72 = lgetv %c.4;
+        symbol [ c %tmp.72 17 35 36 ];
+        %tmp.73 = add %tmp.72 1;
+        lputv %c.4 %tmp.73;
+        symbol [ c %c.4 17 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_17_12_24_12_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_46_25_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 15 ]
+        %tmp.76 = lgetv %r.1;
+        symbol [ r %tmp.76 15 41 42 ];
+        %tmp.77 = add %tmp.76 1;
+        lputv %r.1 %tmp.77;
+        symbol [ r %r.1 15 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_15_8_25_8_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_13_51_26_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 27; @symbol_functiondef = [rect,27,13,17]; @symbol_param<0> = [dc,27,18,20]; @symbol_param<1> = [x,27,22,23]; @symbol_param<2> = [y,27,25,26]; @symbol_param<3> = [w,27,28,29]; @symbol_param<4> = [h,27,31,32]; @symbol_param<5> = [col,27,34,37]; ]
+    function rect(dc, x, y, w, h, col) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_27_39_27_117_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 27 41 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 27 41 43 ];
+        symbol [ setColor %tmp.2 27 44 52 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = lgetv %col;
+        symbol [ col %tmp.3 27 53 56 ];
+        symbol [ Graphics %tmp.4 27 58 66 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 27 67 84 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 27 87 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 27 87 89 ];
+        symbol [ fillRectangle %tmp.7 27 90 103 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = lgetv %x;
+        symbol [ x %tmp.8 27 104 105 ];
+        %tmp.9 = lgetv %y;
+        symbol [ y %tmp.9 27 107 108 ];
+        %tmp.10 = lgetv %w;
+        symbol [ w %tmp.10 27 110 111 ];
+        %tmp.11 = lgetv %h;
+        symbol [ h %tmp.11 27 113 114 ];
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9, %tmp.10, %tmp.11);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_27_39_27_117_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 34; @position = 8; @symbol_vardef = [_F,34,8,10]; ]
+    var _F = null;
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 35; @symbol_functiondef = [_font,35,13,18]; ]
+    function _font() {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_35_21_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_8_36_37_if_stmt:
+        symbol [ _F %tmp.2 36 12 14 ];
+        %tmp.2 = getv ? :_F;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_8_36_37_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_8_36_37_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_24_36_37_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 36 26 ]
+        symbol [ _F %tmp.6 36 33 35 ];
+        %tmp.6 = getv ? :_F;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_24_36_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_8_36_37_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_36_8_36_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 37 8 ]
+        %tmp.8 = newd 45;
+        %tmp.9 = "0";
+        %tmp.10 = newa 5;
+        %tmp.11 = "###";
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 0 %tmp.11;
+        %tmp.14 = "#.#";
+        %tmp.15 = dup %tmp.13;
+        %tmp.16 = aputv %tmp.15 1 %tmp.14;
+        %tmp.17 = "#.#";
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 2 %tmp.17;
+        %tmp.20 = "#.#";
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 3 %tmp.20;
+        %tmp.23 = "###";
+        %tmp.24 = dup %tmp.22;
+        %tmp.25 = aputv %tmp.24 4 %tmp.23;
+        %tmp.26 = dup %tmp.8;
+        %tmp.27 = aputv %tmp.26 %tmp.9 %tmp.25;
+        %tmp.28 = "1";
+        %tmp.29 = newa 5;
+        %tmp.30 = ".#.";
+        %tmp.31 = dup %tmp.29;
+        %tmp.32 = aputv %tmp.31 0 %tmp.30;
+        %tmp.33 = "##.";
+        %tmp.34 = dup %tmp.32;
+        %tmp.35 = aputv %tmp.34 1 %tmp.33;
+        %tmp.36 = ".#.";
+        %tmp.37 = dup %tmp.35;
+        %tmp.38 = aputv %tmp.37 2 %tmp.36;
+        %tmp.39 = ".#.";
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 3 %tmp.39;
+        %tmp.42 = "###";
+        %tmp.43 = dup %tmp.41;
+        %tmp.44 = aputv %tmp.43 4 %tmp.42;
+        %tmp.45 = dup %tmp.27;
+        %tmp.46 = aputv %tmp.45 %tmp.28 %tmp.44;
+        %tmp.47 = "2";
+        %tmp.48 = newa 5;
+        %tmp.49 = "###";
+        %tmp.50 = dup %tmp.48;
+        %tmp.51 = aputv %tmp.50 0 %tmp.49;
+        %tmp.52 = "..#";
+        %tmp.53 = dup %tmp.51;
+        %tmp.54 = aputv %tmp.53 1 %tmp.52;
+        %tmp.55 = "###";
+        %tmp.56 = dup %tmp.54;
+        %tmp.57 = aputv %tmp.56 2 %tmp.55;
+        %tmp.58 = "#..";
+        %tmp.59 = dup %tmp.57;
+        %tmp.60 = aputv %tmp.59 3 %tmp.58;
+        %tmp.61 = "###";
+        %tmp.62 = dup %tmp.60;
+        %tmp.63 = aputv %tmp.62 4 %tmp.61;
+        %tmp.64 = dup %tmp.46;
+        %tmp.65 = aputv %tmp.64 %tmp.47 %tmp.63;
+        %tmp.66 = "3";
+        %tmp.67 = newa 5;
+        %tmp.68 = "###";
+        %tmp.69 = dup %tmp.67;
+        %tmp.70 = aputv %tmp.69 0 %tmp.68;
+        %tmp.71 = "..#";
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 1 %tmp.71;
+        %tmp.74 = "###";
+        %tmp.75 = dup %tmp.73;
+        %tmp.76 = aputv %tmp.75 2 %tmp.74;
+        %tmp.77 = "..#";
+        %tmp.78 = dup %tmp.76;
+        %tmp.79 = aputv %tmp.78 3 %tmp.77;
+        %tmp.80 = "###";
+        %tmp.81 = dup %tmp.79;
+        %tmp.82 = aputv %tmp.81 4 %tmp.80;
+        %tmp.83 = dup %tmp.65;
+        %tmp.84 = aputv %tmp.83 %tmp.66 %tmp.82;
+        %tmp.85 = "4";
+        %tmp.86 = newa 5;
+        %tmp.87 = "#.#";
+        %tmp.88 = dup %tmp.86;
+        %tmp.89 = aputv %tmp.88 0 %tmp.87;
+        %tmp.90 = "#.#";
+        %tmp.91 = dup %tmp.89;
+        %tmp.92 = aputv %tmp.91 1 %tmp.90;
+        %tmp.93 = "###";
+        %tmp.94 = dup %tmp.92;
+        %tmp.95 = aputv %tmp.94 2 %tmp.93;
+        %tmp.96 = "..#";
+        %tmp.97 = dup %tmp.95;
+        %tmp.98 = aputv %tmp.97 3 %tmp.96;
+        %tmp.99 = "..#";
+        %tmp.100 = dup %tmp.98;
+        %tmp.101 = aputv %tmp.100 4 %tmp.99;
+        %tmp.102 = dup %tmp.84;
+        %tmp.103 = aputv %tmp.102 %tmp.85 %tmp.101;
+        %tmp.104 = "5";
+        %tmp.105 = newa 5;
+        %tmp.106 = "###";
+        %tmp.107 = dup %tmp.105;
+        %tmp.108 = aputv %tmp.107 0 %tmp.106;
+        %tmp.109 = "#..";
+        %tmp.110 = dup %tmp.108;
+        %tmp.111 = aputv %tmp.110 1 %tmp.109;
+        %tmp.112 = "###";
+        %tmp.113 = dup %tmp.111;
+        %tmp.114 = aputv %tmp.113 2 %tmp.112;
+        %tmp.115 = "..#";
+        %tmp.116 = dup %tmp.114;
+        %tmp.117 = aputv %tmp.116 3 %tmp.115;
+        %tmp.118 = "###";
+        %tmp.119 = dup %tmp.117;
+        %tmp.120 = aputv %tmp.119 4 %tmp.118;
+        %tmp.121 = dup %tmp.103;
+        %tmp.122 = aputv %tmp.121 %tmp.104 %tmp.120;
+        %tmp.123 = "6";
+        %tmp.124 = newa 5;
+        %tmp.125 = "###";
+        %tmp.126 = dup %tmp.124;
+        %tmp.127 = aputv %tmp.126 0 %tmp.125;
+        %tmp.128 = "#..";
+        %tmp.129 = dup %tmp.127;
+        %tmp.130 = aputv %tmp.129 1 %tmp.128;
+        %tmp.131 = "###";
+        %tmp.132 = dup %tmp.130;
+        %tmp.133 = aputv %tmp.132 2 %tmp.131;
+        %tmp.134 = "#.#";
+        %tmp.135 = dup %tmp.133;
+        %tmp.136 = aputv %tmp.135 3 %tmp.134;
+        %tmp.137 = "###";
+        %tmp.138 = dup %tmp.136;
+        %tmp.139 = aputv %tmp.138 4 %tmp.137;
+        %tmp.140 = dup %tmp.122;
+        %tmp.141 = aputv %tmp.140 %tmp.123 %tmp.139;
+        %tmp.142 = "7";
+        %tmp.143 = newa 5;
+        %tmp.144 = "###";
+        %tmp.145 = dup %tmp.143;
+        %tmp.146 = aputv %tmp.145 0 %tmp.144;
+        %tmp.147 = "..#";
+        %tmp.148 = dup %tmp.146;
+        %tmp.149 = aputv %tmp.148 1 %tmp.147;
+        %tmp.150 = "..#";
+        %tmp.151 = dup %tmp.149;
+        %tmp.152 = aputv %tmp.151 2 %tmp.150;
+        %tmp.153 = "..#";
+        %tmp.154 = dup %tmp.152;
+        %tmp.155 = aputv %tmp.154 3 %tmp.153;
+        %tmp.156 = "..#";
+        %tmp.157 = dup %tmp.155;
+        %tmp.158 = aputv %tmp.157 4 %tmp.156;
+        %tmp.159 = dup %tmp.141;
+        %tmp.160 = aputv %tmp.159 %tmp.142 %tmp.158;
+        %tmp.161 = "8";
+        %tmp.162 = newa 5;
+        %tmp.163 = "###";
+        %tmp.164 = dup %tmp.162;
+        %tmp.165 = aputv %tmp.164 0 %tmp.163;
+        %tmp.166 = "#.#";
+        %tmp.167 = dup %tmp.165;
+        %tmp.168 = aputv %tmp.167 1 %tmp.166;
+        %tmp.169 = "###";
+        %tmp.170 = dup %tmp.168;
+        %tmp.171 = aputv %tmp.170 2 %tmp.169;
+        %tmp.172 = "#.#";
+        %tmp.173 = dup %tmp.171;
+        %tmp.174 = aputv %tmp.173 3 %tmp.172;
+        %tmp.175 = "###";
+        %tmp.176 = dup %tmp.174;
+        %tmp.177 = aputv %tmp.176 4 %tmp.175;
+        %tmp.178 = dup %tmp.160;
+        %tmp.179 = aputv %tmp.178 %tmp.161 %tmp.177;
+        %tmp.180 = "9";
+        %tmp.181 = newa 5;
+        %tmp.182 = "###";
+        %tmp.183 = dup %tmp.181;
+        %tmp.184 = aputv %tmp.183 0 %tmp.182;
+        %tmp.185 = "#.#";
+        %tmp.186 = dup %tmp.184;
+        %tmp.187 = aputv %tmp.186 1 %tmp.185;
+        %tmp.188 = "###";
+        %tmp.189 = dup %tmp.187;
+        %tmp.190 = aputv %tmp.189 2 %tmp.188;
+        %tmp.191 = "..#";
+        %tmp.192 = dup %tmp.190;
+        %tmp.193 = aputv %tmp.192 3 %tmp.191;
+        %tmp.194 = "###";
+        %tmp.195 = dup %tmp.193;
+        %tmp.196 = aputv %tmp.195 4 %tmp.194;
+        %tmp.197 = dup %tmp.179;
+        %tmp.198 = aputv %tmp.197 %tmp.180 %tmp.196;
+        %tmp.199 = "A";
+        %tmp.200 = newa 5;
+        %tmp.201 = "###";
+        %tmp.202 = dup %tmp.200;
+        %tmp.203 = aputv %tmp.202 0 %tmp.201;
+        %tmp.204 = "#.#";
+        %tmp.205 = dup %tmp.203;
+        %tmp.206 = aputv %tmp.205 1 %tmp.204;
+        %tmp.207 = "###";
+        %tmp.208 = dup %tmp.206;
+        %tmp.209 = aputv %tmp.208 2 %tmp.207;
+        %tmp.210 = "#.#";
+        %tmp.211 = dup %tmp.209;
+        %tmp.212 = aputv %tmp.211 3 %tmp.210;
+        %tmp.213 = "#.#";
+        %tmp.214 = dup %tmp.212;
+        %tmp.215 = aputv %tmp.214 4 %tmp.213;
+        %tmp.216 = dup %tmp.198;
+        %tmp.217 = aputv %tmp.216 %tmp.199 %tmp.215;
+        %tmp.218 = "B";
+        %tmp.219 = newa 5;
+        %tmp.220 = "##.";
+        %tmp.221 = dup %tmp.219;
+        %tmp.222 = aputv %tmp.221 0 %tmp.220;
+        %tmp.223 = "#.#";
+        %tmp.224 = dup %tmp.222;
+        %tmp.225 = aputv %tmp.224 1 %tmp.223;
+        %tmp.226 = "##.";
+        %tmp.227 = dup %tmp.225;
+        %tmp.228 = aputv %tmp.227 2 %tmp.226;
+        %tmp.229 = "#.#";
+        %tmp.230 = dup %tmp.228;
+        %tmp.231 = aputv %tmp.230 3 %tmp.229;
+        %tmp.232 = "##.";
+        %tmp.233 = dup %tmp.231;
+        %tmp.234 = aputv %tmp.233 4 %tmp.232;
+        %tmp.235 = dup %tmp.217;
+        %tmp.236 = aputv %tmp.235 %tmp.218 %tmp.234;
+        %tmp.237 = "C";
+        %tmp.238 = newa 5;
+        %tmp.239 = "###";
+        %tmp.240 = dup %tmp.238;
+        %tmp.241 = aputv %tmp.240 0 %tmp.239;
+        %tmp.242 = "#..";
+        %tmp.243 = dup %tmp.241;
+        %tmp.244 = aputv %tmp.243 1 %tmp.242;
+        %tmp.245 = "#..";
+        %tmp.246 = dup %tmp.244;
+        %tmp.247 = aputv %tmp.246 2 %tmp.245;
+        %tmp.248 = "#..";
+        %tmp.249 = dup %tmp.247;
+        %tmp.250 = aputv %tmp.249 3 %tmp.248;
+        %tmp.251 = "###";
+        %tmp.252 = dup %tmp.250;
+        %tmp.253 = aputv %tmp.252 4 %tmp.251;
+        %tmp.254 = dup %tmp.236;
+        %tmp.255 = aputv %tmp.254 %tmp.237 %tmp.253;
+        %tmp.256 = "D";
+        %tmp.257 = newa 5;
+        %tmp.258 = "##.";
+        %tmp.259 = dup %tmp.257;
+        %tmp.260 = aputv %tmp.259 0 %tmp.258;
+        %tmp.261 = "#.#";
+        %tmp.262 = dup %tmp.260;
+        %tmp.263 = aputv %tmp.262 1 %tmp.261;
+        %tmp.264 = "#.#";
+        %tmp.265 = dup %tmp.263;
+        %tmp.266 = aputv %tmp.265 2 %tmp.264;
+        %tmp.267 = "#.#";
+        %tmp.268 = dup %tmp.266;
+        %tmp.269 = aputv %tmp.268 3 %tmp.267;
+        %tmp.270 = "##.";
+        %tmp.271 = dup %tmp.269;
+        %tmp.272 = aputv %tmp.271 4 %tmp.270;
+        %tmp.273 = dup %tmp.255;
+        %tmp.274 = aputv %tmp.273 %tmp.256 %tmp.272;
+        %tmp.275 = "E";
+        %tmp.276 = newa 5;
+        %tmp.277 = "###";
+        %tmp.278 = dup %tmp.276;
+        %tmp.279 = aputv %tmp.278 0 %tmp.277;
+        %tmp.280 = "#..";
+        %tmp.281 = dup %tmp.279;
+        %tmp.282 = aputv %tmp.281 1 %tmp.280;
+        %tmp.283 = "##.";
+        %tmp.284 = dup %tmp.282;
+        %tmp.285 = aputv %tmp.284 2 %tmp.283;
+        %tmp.286 = "#..";
+        %tmp.287 = dup %tmp.285;
+        %tmp.288 = aputv %tmp.287 3 %tmp.286;
+        %tmp.289 = "###";
+        %tmp.290 = dup %tmp.288;
+        %tmp.291 = aputv %tmp.290 4 %tmp.289;
+        %tmp.292 = dup %tmp.274;
+        %tmp.293 = aputv %tmp.292 %tmp.275 %tmp.291;
+        %tmp.294 = "F";
+        %tmp.295 = newa 5;
+        %tmp.296 = "###";
+        %tmp.297 = dup %tmp.295;
+        %tmp.298 = aputv %tmp.297 0 %tmp.296;
+        %tmp.299 = "#..";
+        %tmp.300 = dup %tmp.298;
+        %tmp.301 = aputv %tmp.300 1 %tmp.299;
+        %tmp.302 = "##.";
+        %tmp.303 = dup %tmp.301;
+        %tmp.304 = aputv %tmp.303 2 %tmp.302;
+        %tmp.305 = "#..";
+        %tmp.306 = dup %tmp.304;
+        %tmp.307 = aputv %tmp.306 3 %tmp.305;
+        %tmp.308 = "#..";
+        %tmp.309 = dup %tmp.307;
+        %tmp.310 = aputv %tmp.309 4 %tmp.308;
+        %tmp.311 = dup %tmp.293;
+        %tmp.312 = aputv %tmp.311 %tmp.294 %tmp.310;
+        %tmp.313 = "G";
+        %tmp.314 = newa 5;
+        %tmp.315 = "###";
+        %tmp.316 = dup %tmp.314;
+        %tmp.317 = aputv %tmp.316 0 %tmp.315;
+        %tmp.318 = "#..";
+        %tmp.319 = dup %tmp.317;
+        %tmp.320 = aputv %tmp.319 1 %tmp.318;
+        %tmp.321 = "#.#";
+        %tmp.322 = dup %tmp.320;
+        %tmp.323 = aputv %tmp.322 2 %tmp.321;
+        %tmp.324 = "#.#";
+        %tmp.325 = dup %tmp.323;
+        %tmp.326 = aputv %tmp.325 3 %tmp.324;
+        %tmp.327 = "###";
+        %tmp.328 = dup %tmp.326;
+        %tmp.329 = aputv %tmp.328 4 %tmp.327;
+        %tmp.330 = dup %tmp.312;
+        %tmp.331 = aputv %tmp.330 %tmp.313 %tmp.329;
+        %tmp.332 = "H";
+        %tmp.333 = newa 5;
+        %tmp.334 = "#.#";
+        %tmp.335 = dup %tmp.333;
+        %tmp.336 = aputv %tmp.335 0 %tmp.334;
+        %tmp.337 = "#.#";
+        %tmp.338 = dup %tmp.336;
+        %tmp.339 = aputv %tmp.338 1 %tmp.337;
+        %tmp.340 = "###";
+        %tmp.341 = dup %tmp.339;
+        %tmp.342 = aputv %tmp.341 2 %tmp.340;
+        %tmp.343 = "#.#";
+        %tmp.344 = dup %tmp.342;
+        %tmp.345 = aputv %tmp.344 3 %tmp.343;
+        %tmp.346 = "#.#";
+        %tmp.347 = dup %tmp.345;
+        %tmp.348 = aputv %tmp.347 4 %tmp.346;
+        %tmp.349 = dup %tmp.331;
+        %tmp.350 = aputv %tmp.349 %tmp.332 %tmp.348;
+        %tmp.351 = "I";
+        %tmp.352 = newa 5;
+        %tmp.353 = "###";
+        %tmp.354 = dup %tmp.352;
+        %tmp.355 = aputv %tmp.354 0 %tmp.353;
+        %tmp.356 = ".#.";
+        %tmp.357 = dup %tmp.355;
+        %tmp.358 = aputv %tmp.357 1 %tmp.356;
+        %tmp.359 = ".#.";
+        %tmp.360 = dup %tmp.358;
+        %tmp.361 = aputv %tmp.360 2 %tmp.359;
+        %tmp.362 = ".#.";
+        %tmp.363 = dup %tmp.361;
+        %tmp.364 = aputv %tmp.363 3 %tmp.362;
+        %tmp.365 = "###";
+        %tmp.366 = dup %tmp.364;
+        %tmp.367 = aputv %tmp.366 4 %tmp.365;
+        %tmp.368 = dup %tmp.350;
+        %tmp.369 = aputv %tmp.368 %tmp.351 %tmp.367;
+        %tmp.370 = "J";
+        %tmp.371 = newa 5;
+        %tmp.372 = "..#";
+        %tmp.373 = dup %tmp.371;
+        %tmp.374 = aputv %tmp.373 0 %tmp.372;
+        %tmp.375 = "..#";
+        %tmp.376 = dup %tmp.374;
+        %tmp.377 = aputv %tmp.376 1 %tmp.375;
+        %tmp.378 = "..#";
+        %tmp.379 = dup %tmp.377;
+        %tmp.380 = aputv %tmp.379 2 %tmp.378;
+        %tmp.381 = "#.#";
+        %tmp.382 = dup %tmp.380;
+        %tmp.383 = aputv %tmp.382 3 %tmp.381;
+        %tmp.384 = "###";
+        %tmp.385 = dup %tmp.383;
+        %tmp.386 = aputv %tmp.385 4 %tmp.384;
+        %tmp.387 = dup %tmp.369;
+        %tmp.388 = aputv %tmp.387 %tmp.370 %tmp.386;
+        %tmp.389 = "K";
+        %tmp.390 = newa 5;
+        %tmp.391 = "#.#";
+        %tmp.392 = dup %tmp.390;
+        %tmp.393 = aputv %tmp.392 0 %tmp.391;
+        %tmp.394 = "#.#";
+        %tmp.395 = dup %tmp.393;
+        %tmp.396 = aputv %tmp.395 1 %tmp.394;
+        %tmp.397 = "##.";
+        %tmp.398 = dup %tmp.396;
+        %tmp.399 = aputv %tmp.398 2 %tmp.397;
+        %tmp.400 = "#.#";
+        %tmp.401 = dup %tmp.399;
+        %tmp.402 = aputv %tmp.401 3 %tmp.400;
+        %tmp.403 = "#.#";
+        %tmp.404 = dup %tmp.402;
+        %tmp.405 = aputv %tmp.404 4 %tmp.403;
+        %tmp.406 = dup %tmp.388;
+        %tmp.407 = aputv %tmp.406 %tmp.389 %tmp.405;
+        %tmp.408 = "L";
+        %tmp.409 = newa 5;
+        %tmp.410 = "#..";
+        %tmp.411 = dup %tmp.409;
+        %tmp.412 = aputv %tmp.411 0 %tmp.410;
+        %tmp.413 = "#..";
+        %tmp.414 = dup %tmp.412;
+        %tmp.415 = aputv %tmp.414 1 %tmp.413;
+        %tmp.416 = "#..";
+        %tmp.417 = dup %tmp.415;
+        %tmp.418 = aputv %tmp.417 2 %tmp.416;
+        %tmp.419 = "#..";
+        %tmp.420 = dup %tmp.418;
+        %tmp.421 = aputv %tmp.420 3 %tmp.419;
+        %tmp.422 = "###";
+        %tmp.423 = dup %tmp.421;
+        %tmp.424 = aputv %tmp.423 4 %tmp.422;
+        %tmp.425 = dup %tmp.407;
+        %tmp.426 = aputv %tmp.425 %tmp.408 %tmp.424;
+        %tmp.427 = "M";
+        %tmp.428 = newa 5;
+        %tmp.429 = "#.#";
+        %tmp.430 = dup %tmp.428;
+        %tmp.431 = aputv %tmp.430 0 %tmp.429;
+        %tmp.432 = "###";
+        %tmp.433 = dup %tmp.431;
+        %tmp.434 = aputv %tmp.433 1 %tmp.432;
+        %tmp.435 = "###";
+        %tmp.436 = dup %tmp.434;
+        %tmp.437 = aputv %tmp.436 2 %tmp.435;
+        %tmp.438 = "#.#";
+        %tmp.439 = dup %tmp.437;
+        %tmp.440 = aputv %tmp.439 3 %tmp.438;
+        %tmp.441 = "#.#";
+        %tmp.442 = dup %tmp.440;
+        %tmp.443 = aputv %tmp.442 4 %tmp.441;
+        %tmp.444 = dup %tmp.426;
+        %tmp.445 = aputv %tmp.444 %tmp.427 %tmp.443;
+        %tmp.446 = "N";
+        %tmp.447 = newa 5;
+        %tmp.448 = "#.#";
+        %tmp.449 = dup %tmp.447;
+        %tmp.450 = aputv %tmp.449 0 %tmp.448;
+        %tmp.451 = "##.";
+        %tmp.452 = dup %tmp.450;
+        %tmp.453 = aputv %tmp.452 1 %tmp.451;
+        %tmp.454 = "#.#";
+        %tmp.455 = dup %tmp.453;
+        %tmp.456 = aputv %tmp.455 2 %tmp.454;
+        %tmp.457 = ".##";
+        %tmp.458 = dup %tmp.456;
+        %tmp.459 = aputv %tmp.458 3 %tmp.457;
+        %tmp.460 = "#.#";
+        %tmp.461 = dup %tmp.459;
+        %tmp.462 = aputv %tmp.461 4 %tmp.460;
+        %tmp.463 = dup %tmp.445;
+        %tmp.464 = aputv %tmp.463 %tmp.446 %tmp.462;
+        %tmp.465 = "O";
+        %tmp.466 = newa 5;
+        %tmp.467 = "###";
+        %tmp.468 = dup %tmp.466;
+        %tmp.469 = aputv %tmp.468 0 %tmp.467;
+        %tmp.470 = "#.#";
+        %tmp.471 = dup %tmp.469;
+        %tmp.472 = aputv %tmp.471 1 %tmp.470;
+        %tmp.473 = "#.#";
+        %tmp.474 = dup %tmp.472;
+        %tmp.475 = aputv %tmp.474 2 %tmp.473;
+        %tmp.476 = "#.#";
+        %tmp.477 = dup %tmp.475;
+        %tmp.478 = aputv %tmp.477 3 %tmp.476;
+        %tmp.479 = "###";
+        %tmp.480 = dup %tmp.478;
+        %tmp.481 = aputv %tmp.480 4 %tmp.479;
+        %tmp.482 = dup %tmp.464;
+        %tmp.483 = aputv %tmp.482 %tmp.465 %tmp.481;
+        %tmp.484 = "P";
+        %tmp.485 = newa 5;
+        %tmp.486 = "###";
+        %tmp.487 = dup %tmp.485;
+        %tmp.488 = aputv %tmp.487 0 %tmp.486;
+        %tmp.489 = "#.#";
+        %tmp.490 = dup %tmp.488;
+        %tmp.491 = aputv %tmp.490 1 %tmp.489;
+        %tmp.492 = "###";
+        %tmp.493 = dup %tmp.491;
+        %tmp.494 = aputv %tmp.493 2 %tmp.492;
+        %tmp.495 = "#..";
+        %tmp.496 = dup %tmp.494;
+        %tmp.497 = aputv %tmp.496 3 %tmp.495;
+        %tmp.498 = "#..";
+        %tmp.499 = dup %tmp.497;
+        %tmp.500 = aputv %tmp.499 4 %tmp.498;
+        %tmp.501 = dup %tmp.483;
+        %tmp.502 = aputv %tmp.501 %tmp.484 %tmp.500;
+        %tmp.503 = "Q";
+        %tmp.504 = newa 5;
+        %tmp.505 = "###";
+        %tmp.506 = dup %tmp.504;
+        %tmp.507 = aputv %tmp.506 0 %tmp.505;
+        %tmp.508 = "#.#";
+        %tmp.509 = dup %tmp.507;
+        %tmp.510 = aputv %tmp.509 1 %tmp.508;
+        %tmp.511 = "#.#";
+        %tmp.512 = dup %tmp.510;
+        %tmp.513 = aputv %tmp.512 2 %tmp.511;
+        %tmp.514 = "###";
+        %tmp.515 = dup %tmp.513;
+        %tmp.516 = aputv %tmp.515 3 %tmp.514;
+        %tmp.517 = "..#";
+        %tmp.518 = dup %tmp.516;
+        %tmp.519 = aputv %tmp.518 4 %tmp.517;
+        %tmp.520 = dup %tmp.502;
+        %tmp.521 = aputv %tmp.520 %tmp.503 %tmp.519;
+        %tmp.522 = "R";
+        %tmp.523 = newa 5;
+        %tmp.524 = "##.";
+        %tmp.525 = dup %tmp.523;
+        %tmp.526 = aputv %tmp.525 0 %tmp.524;
+        %tmp.527 = "#.#";
+        %tmp.528 = dup %tmp.526;
+        %tmp.529 = aputv %tmp.528 1 %tmp.527;
+        %tmp.530 = "##.";
+        %tmp.531 = dup %tmp.529;
+        %tmp.532 = aputv %tmp.531 2 %tmp.530;
+        %tmp.533 = "#.#";
+        %tmp.534 = dup %tmp.532;
+        %tmp.535 = aputv %tmp.534 3 %tmp.533;
+        %tmp.536 = "#.#";
+        %tmp.537 = dup %tmp.535;
+        %tmp.538 = aputv %tmp.537 4 %tmp.536;
+        %tmp.539 = dup %tmp.521;
+        %tmp.540 = aputv %tmp.539 %tmp.522 %tmp.538;
+        %tmp.541 = "S";
+        %tmp.542 = newa 5;
+        %tmp.543 = "###";
+        %tmp.544 = dup %tmp.542;
+        %tmp.545 = aputv %tmp.544 0 %tmp.543;
+        %tmp.546 = "#..";
+        %tmp.547 = dup %tmp.545;
+        %tmp.548 = aputv %tmp.547 1 %tmp.546;
+        %tmp.549 = "###";
+        %tmp.550 = dup %tmp.548;
+        %tmp.551 = aputv %tmp.550 2 %tmp.549;
+        %tmp.552 = "..#";
+        %tmp.553 = dup %tmp.551;
+        %tmp.554 = aputv %tmp.553 3 %tmp.552;
+        %tmp.555 = "###";
+        %tmp.556 = dup %tmp.554;
+        %tmp.557 = aputv %tmp.556 4 %tmp.555;
+        %tmp.558 = dup %tmp.540;
+        %tmp.559 = aputv %tmp.558 %tmp.541 %tmp.557;
+        %tmp.560 = "T";
+        %tmp.561 = newa 5;
+        %tmp.562 = "###";
+        %tmp.563 = dup %tmp.561;
+        %tmp.564 = aputv %tmp.563 0 %tmp.562;
+        %tmp.565 = ".#.";
+        %tmp.566 = dup %tmp.564;
+        %tmp.567 = aputv %tmp.566 1 %tmp.565;
+        %tmp.568 = ".#.";
+        %tmp.569 = dup %tmp.567;
+        %tmp.570 = aputv %tmp.569 2 %tmp.568;
+        %tmp.571 = ".#.";
+        %tmp.572 = dup %tmp.570;
+        %tmp.573 = aputv %tmp.572 3 %tmp.571;
+        %tmp.574 = ".#.";
+        %tmp.575 = dup %tmp.573;
+        %tmp.576 = aputv %tmp.575 4 %tmp.574;
+        %tmp.577 = dup %tmp.559;
+        %tmp.578 = aputv %tmp.577 %tmp.560 %tmp.576;
+        %tmp.579 = "U";
+        %tmp.580 = newa 5;
+        %tmp.581 = "#.#";
+        %tmp.582 = dup %tmp.580;
+        %tmp.583 = aputv %tmp.582 0 %tmp.581;
+        %tmp.584 = "#.#";
+        %tmp.585 = dup %tmp.583;
+        %tmp.586 = aputv %tmp.585 1 %tmp.584;
+        %tmp.587 = "#.#";
+        %tmp.588 = dup %tmp.586;
+        %tmp.589 = aputv %tmp.588 2 %tmp.587;
+        %tmp.590 = "#.#";
+        %tmp.591 = dup %tmp.589;
+        %tmp.592 = aputv %tmp.591 3 %tmp.590;
+        %tmp.593 = "###";
+        %tmp.594 = dup %tmp.592;
+        %tmp.595 = aputv %tmp.594 4 %tmp.593;
+        %tmp.596 = dup %tmp.578;
+        %tmp.597 = aputv %tmp.596 %tmp.579 %tmp.595;
+        %tmp.598 = "V";
+        %tmp.599 = newa 5;
+        %tmp.600 = "#.#";
+        %tmp.601 = dup %tmp.599;
+        %tmp.602 = aputv %tmp.601 0 %tmp.600;
+        %tmp.603 = "#.#";
+        %tmp.604 = dup %tmp.602;
+        %tmp.605 = aputv %tmp.604 1 %tmp.603;
+        %tmp.606 = "#.#";
+        %tmp.607 = dup %tmp.605;
+        %tmp.608 = aputv %tmp.607 2 %tmp.606;
+        %tmp.609 = "#.#";
+        %tmp.610 = dup %tmp.608;
+        %tmp.611 = aputv %tmp.610 3 %tmp.609;
+        %tmp.612 = ".#.";
+        %tmp.613 = dup %tmp.611;
+        %tmp.614 = aputv %tmp.613 4 %tmp.612;
+        %tmp.615 = dup %tmp.597;
+        %tmp.616 = aputv %tmp.615 %tmp.598 %tmp.614;
+        %tmp.617 = "W";
+        %tmp.618 = newa 5;
+        %tmp.619 = "#.#";
+        %tmp.620 = dup %tmp.618;
+        %tmp.621 = aputv %tmp.620 0 %tmp.619;
+        %tmp.622 = "#.#";
+        %tmp.623 = dup %tmp.621;
+        %tmp.624 = aputv %tmp.623 1 %tmp.622;
+        %tmp.625 = "###";
+        %tmp.626 = dup %tmp.624;
+        %tmp.627 = aputv %tmp.626 2 %tmp.625;
+        %tmp.628 = "###";
+        %tmp.629 = dup %tmp.627;
+        %tmp.630 = aputv %tmp.629 3 %tmp.628;
+        %tmp.631 = "#.#";
+        %tmp.632 = dup %tmp.630;
+        %tmp.633 = aputv %tmp.632 4 %tmp.631;
+        %tmp.634 = dup %tmp.616;
+        %tmp.635 = aputv %tmp.634 %tmp.617 %tmp.633;
+        %tmp.636 = "X";
+        %tmp.637 = newa 5;
+        %tmp.638 = "#.#";
+        %tmp.639 = dup %tmp.637;
+        %tmp.640 = aputv %tmp.639 0 %tmp.638;
+        %tmp.641 = "#.#";
+        %tmp.642 = dup %tmp.640;
+        %tmp.643 = aputv %tmp.642 1 %tmp.641;
+        %tmp.644 = ".#.";
+        %tmp.645 = dup %tmp.643;
+        %tmp.646 = aputv %tmp.645 2 %tmp.644;
+        %tmp.647 = "#.#";
+        %tmp.648 = dup %tmp.646;
+        %tmp.649 = aputv %tmp.648 3 %tmp.647;
+        %tmp.650 = "#.#";
+        %tmp.651 = dup %tmp.649;
+        %tmp.652 = aputv %tmp.651 4 %tmp.650;
+        %tmp.653 = dup %tmp.635;
+        %tmp.654 = aputv %tmp.653 %tmp.636 %tmp.652;
+        %tmp.655 = "Y";
+        %tmp.656 = newa 5;
+        %tmp.657 = "#.#";
+        %tmp.658 = dup %tmp.656;
+        %tmp.659 = aputv %tmp.658 0 %tmp.657;
+        %tmp.660 = "#.#";
+        %tmp.661 = dup %tmp.659;
+        %tmp.662 = aputv %tmp.661 1 %tmp.660;
+        %tmp.663 = ".#.";
+        %tmp.664 = dup %tmp.662;
+        %tmp.665 = aputv %tmp.664 2 %tmp.663;
+        %tmp.666 = ".#.";
+        %tmp.667 = dup %tmp.665;
+        %tmp.668 = aputv %tmp.667 3 %tmp.666;
+        %tmp.669 = ".#.";
+        %tmp.670 = dup %tmp.668;
+        %tmp.671 = aputv %tmp.670 4 %tmp.669;
+        %tmp.672 = dup %tmp.654;
+        %tmp.673 = aputv %tmp.672 %tmp.655 %tmp.671;
+        %tmp.674 = "Z";
+        %tmp.675 = newa 5;
+        %tmp.676 = "###";
+        %tmp.677 = dup %tmp.675;
+        %tmp.678 = aputv %tmp.677 0 %tmp.676;
+        %tmp.679 = "..#";
+        %tmp.680 = dup %tmp.678;
+        %tmp.681 = aputv %tmp.680 1 %tmp.679;
+        %tmp.682 = ".#.";
+        %tmp.683 = dup %tmp.681;
+        %tmp.684 = aputv %tmp.683 2 %tmp.682;
+        %tmp.685 = "#..";
+        %tmp.686 = dup %tmp.684;
+        %tmp.687 = aputv %tmp.686 3 %tmp.685;
+        %tmp.688 = "###";
+        %tmp.689 = dup %tmp.687;
+        %tmp.690 = aputv %tmp.689 4 %tmp.688;
+        %tmp.691 = dup %tmp.673;
+        %tmp.692 = aputv %tmp.691 %tmp.674 %tmp.690;
+        %tmp.693 = " ";
+        %tmp.694 = newa 5;
+        %tmp.695 = "...";
+        %tmp.696 = dup %tmp.694;
+        %tmp.697 = aputv %tmp.696 0 %tmp.695;
+        %tmp.698 = "...";
+        %tmp.699 = dup %tmp.697;
+        %tmp.700 = aputv %tmp.699 1 %tmp.698;
+        %tmp.701 = "...";
+        %tmp.702 = dup %tmp.700;
+        %tmp.703 = aputv %tmp.702 2 %tmp.701;
+        %tmp.704 = "...";
+        %tmp.705 = dup %tmp.703;
+        %tmp.706 = aputv %tmp.705 3 %tmp.704;
+        %tmp.707 = "...";
+        %tmp.708 = dup %tmp.706;
+        %tmp.709 = aputv %tmp.708 4 %tmp.707;
+        %tmp.710 = dup %tmp.692;
+        %tmp.711 = aputv %tmp.710 %tmp.693 %tmp.709;
+        %tmp.712 = ".";
+        %tmp.713 = newa 5;
+        %tmp.714 = "...";
+        %tmp.715 = dup %tmp.713;
+        %tmp.716 = aputv %tmp.715 0 %tmp.714;
+        %tmp.717 = "...";
+        %tmp.718 = dup %tmp.716;
+        %tmp.719 = aputv %tmp.718 1 %tmp.717;
+        %tmp.720 = "...";
+        %tmp.721 = dup %tmp.719;
+        %tmp.722 = aputv %tmp.721 2 %tmp.720;
+        %tmp.723 = "...";
+        %tmp.724 = dup %tmp.722;
+        %tmp.725 = aputv %tmp.724 3 %tmp.723;
+        %tmp.726 = ".#.";
+        %tmp.727 = dup %tmp.725;
+        %tmp.728 = aputv %tmp.727 4 %tmp.726;
+        %tmp.729 = dup %tmp.711;
+        %tmp.730 = aputv %tmp.729 %tmp.712 %tmp.728;
+        %tmp.731 = "/";
+        %tmp.732 = newa 5;
+        %tmp.733 = "..#";
+        %tmp.734 = dup %tmp.732;
+        %tmp.735 = aputv %tmp.734 0 %tmp.733;
+        %tmp.736 = "..#";
+        %tmp.737 = dup %tmp.735;
+        %tmp.738 = aputv %tmp.737 1 %tmp.736;
+        %tmp.739 = ".#.";
+        %tmp.740 = dup %tmp.738;
+        %tmp.741 = aputv %tmp.740 2 %tmp.739;
+        %tmp.742 = "#..";
+        %tmp.743 = dup %tmp.741;
+        %tmp.744 = aputv %tmp.743 3 %tmp.742;
+        %tmp.745 = "#..";
+        %tmp.746 = dup %tmp.744;
+        %tmp.747 = aputv %tmp.746 4 %tmp.745;
+        %tmp.748 = dup %tmp.730;
+        %tmp.749 = aputv %tmp.748 %tmp.731 %tmp.747;
+        %tmp.750 = "%";
+        %tmp.751 = newa 5;
+        %tmp.752 = "#.#";
+        %tmp.753 = dup %tmp.751;
+        %tmp.754 = aputv %tmp.753 0 %tmp.752;
+        %tmp.755 = "..#";
+        %tmp.756 = dup %tmp.754;
+        %tmp.757 = aputv %tmp.756 1 %tmp.755;
+        %tmp.758 = ".#.";
+        %tmp.759 = dup %tmp.757;
+        %tmp.760 = aputv %tmp.759 2 %tmp.758;
+        %tmp.761 = "#..";
+        %tmp.762 = dup %tmp.760;
+        %tmp.763 = aputv %tmp.762 3 %tmp.761;
+        %tmp.764 = "#.#";
+        %tmp.765 = dup %tmp.763;
+        %tmp.766 = aputv %tmp.765 4 %tmp.764;
+        %tmp.767 = dup %tmp.749;
+        %tmp.768 = aputv %tmp.767 %tmp.750 %tmp.766;
+        %tmp.769 = "+";
+        %tmp.770 = newa 5;
+        %tmp.771 = "...";
+        %tmp.772 = dup %tmp.770;
+        %tmp.773 = aputv %tmp.772 0 %tmp.771;
+        %tmp.774 = ".#.";
+        %tmp.775 = dup %tmp.773;
+        %tmp.776 = aputv %tmp.775 1 %tmp.774;
+        %tmp.777 = "###";
+        %tmp.778 = dup %tmp.776;
+        %tmp.779 = aputv %tmp.778 2 %tmp.777;
+        %tmp.780 = ".#.";
+        %tmp.781 = dup %tmp.779;
+        %tmp.782 = aputv %tmp.781 3 %tmp.780;
+        %tmp.783 = "...";
+        %tmp.784 = dup %tmp.782;
+        %tmp.785 = aputv %tmp.784 4 %tmp.783;
+        %tmp.786 = dup %tmp.768;
+        %tmp.787 = aputv %tmp.786 %tmp.769 %tmp.785;
+        %tmp.788 = "-";
+        %tmp.789 = newa 5;
+        %tmp.790 = "...";
+        %tmp.791 = dup %tmp.789;
+        %tmp.792 = aputv %tmp.791 0 %tmp.790;
+        %tmp.793 = "...";
+        %tmp.794 = dup %tmp.792;
+        %tmp.795 = aputv %tmp.794 1 %tmp.793;
+        %tmp.796 = "###";
+        %tmp.797 = dup %tmp.795;
+        %tmp.798 = aputv %tmp.797 2 %tmp.796;
+        %tmp.799 = "...";
+        %tmp.800 = dup %tmp.798;
+        %tmp.801 = aputv %tmp.800 3 %tmp.799;
+        %tmp.802 = "...";
+        %tmp.803 = dup %tmp.801;
+        %tmp.804 = aputv %tmp.803 4 %tmp.802;
+        %tmp.805 = dup %tmp.787;
+        %tmp.806 = aputv %tmp.805 %tmp.788 %tmp.804;
+        %tmp.807 = ":";
+        %tmp.808 = newa 5;
+        %tmp.809 = "...";
+        %tmp.810 = dup %tmp.808;
+        %tmp.811 = aputv %tmp.810 0 %tmp.809;
+        %tmp.812 = ".#.";
+        %tmp.813 = dup %tmp.811;
+        %tmp.814 = aputv %tmp.813 1 %tmp.812;
+        %tmp.815 = "...";
+        %tmp.816 = dup %tmp.814;
+        %tmp.817 = aputv %tmp.816 2 %tmp.815;
+        %tmp.818 = ".#.";
+        %tmp.819 = dup %tmp.817;
+        %tmp.820 = aputv %tmp.819 3 %tmp.818;
+        %tmp.821 = "...";
+        %tmp.822 = dup %tmp.820;
+        %tmp.823 = aputv %tmp.822 4 %tmp.821;
+        %tmp.824 = dup %tmp.806;
+        %tmp.825 = aputv %tmp.824 %tmp.807 %tmp.823;
+        %tmp.826 = "*";
+        %tmp.827 = newa 5;
+        %tmp.828 = "#.#";
+        %tmp.829 = dup %tmp.827;
+        %tmp.830 = aputv %tmp.829 0 %tmp.828;
+        %tmp.831 = ".#.";
+        %tmp.832 = dup %tmp.830;
+        %tmp.833 = aputv %tmp.832 1 %tmp.831;
+        %tmp.834 = "###";
+        %tmp.835 = dup %tmp.833;
+        %tmp.836 = aputv %tmp.835 2 %tmp.834;
+        %tmp.837 = ".#.";
+        %tmp.838 = dup %tmp.836;
+        %tmp.839 = aputv %tmp.838 3 %tmp.837;
+        %tmp.840 = "#.#";
+        %tmp.841 = dup %tmp.839;
+        %tmp.842 = aputv %tmp.841 4 %tmp.840;
+        %tmp.843 = dup %tmp.825;
+        %tmp.844 = aputv %tmp.843 %tmp.826 %tmp.842;
+        %tmp.845 = "|";
+        %tmp.846 = newa 5;
+        %tmp.847 = ".#.";
+        %tmp.848 = dup %tmp.846;
+        %tmp.849 = aputv %tmp.848 0 %tmp.847;
+        %tmp.850 = ".#.";
+        %tmp.851 = dup %tmp.849;
+        %tmp.852 = aputv %tmp.851 1 %tmp.850;
+        %tmp.853 = ".#.";
+        %tmp.854 = dup %tmp.852;
+        %tmp.855 = aputv %tmp.854 2 %tmp.853;
+        %tmp.856 = ".#.";
+        %tmp.857 = dup %tmp.855;
+        %tmp.858 = aputv %tmp.857 3 %tmp.856;
+        %tmp.859 = ".#.";
+        %tmp.860 = dup %tmp.858;
+        %tmp.861 = aputv %tmp.860 4 %tmp.859;
+        %tmp.862 = dup %tmp.844;
+        %tmp.863 = aputv %tmp.862 %tmp.845 %tmp.861;
+        symbol [ _F ? 37 8 10 ];
+        putv self :_F %tmp.863;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 62 8 ]
+        symbol [ _F %tmp.865 62 15 17 ];
+        %tmp.865 = getv ? :_F;
+        ret %tmp.865;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_35_21_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 64; @symbol_functiondef = [gtxtW,64,13,18]; @symbol_param<0> = [s,64,19,20]; @symbol_param<1> = [sc,64,22,24]; ]
+    function gtxtW(s, sc) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_26_64_85_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 64 28 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_28_64_55_if_stmt:
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 64 32 33 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_28_64_55_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_28_64_55_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_43_64_55_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 64 45 ]
+        %tmp.4 = 0;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_43_64_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_28_64_55_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_28_64_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 64 57 ]
+        %tmp.5 = lgetv %s;
+        symbol [ s %tmp.5 64 64 65 ];
+        symbol [ length %tmp.6 64 66 72 ];
+        %tmp.6 = getv function %tmp.5 :length;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 4;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %sc;
+        symbol [ sc %tmp.10 64 81 83 ];
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_64_26_64_85_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 65; @symbol_functiondef = [gtxt,65,13,17]; @symbol_param<0> = [dc,65,18,20]; @symbol_param<1> = [s,65,22,23]; @symbol_param<2> = [x,65,25,26]; @symbol_param<3> = [y,65,28,29]; @symbol_param<4> = [sc,65,31,33]; @symbol_param<5> = [col,65,35,38]; ]
+    function gtxt(dc, s, x, y, sc, col) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 66 8 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_8_66_33_if_stmt:
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 66 12 13 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_8_66_33_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_8_66_33_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_23_66_33_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 66 25 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_23_66_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_8_66_33_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_66_8_66_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 67 8 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_stop" ]
+        %f.1 = local;
+        symbol [ f %f.1 67 12 13 ];
+        %tmp.4 = self;
+        symbol [ _font %tmp.5 67 16 21 ];
+        %tmp.5 = getv function %tmp.4 :_font;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %f.1 %tmp.6;
+        symbol [ f %f.1 67 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 68 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 68 8 10 ];
+        symbol [ setColor %tmp.8 68 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = lgetv %col;
+        symbol [ col %tmp.9 68 20 23 ];
+        symbol [ Graphics %tmp.10 68 25 33 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 68 34 51 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 69 8 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_stop" ]
+        %cxp.2 = local;
+        symbol [ cxp %cxp.2 69 12 15 ];
+        %tmp.12 = lgetv %x;
+        symbol [ x %tmp.12 69 18 19 ];
+        lputv %cxp.2 %tmp.12;
+        symbol [ cxp %cxp.2 69 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 70 8 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 70 17 18 ];
+        %tmp.13 = 0;
+        lputv %i.3 %tmp.13;
+        symbol [ i %i.3 70 17 18 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_test:
+        %tmp.14 = lgetv %i.3;
+        symbol [ i %tmp.14 70 24 25 ];
+        %tmp.15 = lgetv %s;
+        symbol [ s %tmp.15 70 28 29 ];
+        symbol [ length %tmp.16 70 30 36 ];
+        %tmp.16 = getv function %tmp.15 :length;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = lt %tmp.14 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 71 12 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_stop" ]
+        %ch.4 = local;
+        symbol [ ch %ch.4 71 16 18 ];
+        %tmp.19 = lgetv %s;
+        symbol [ s %tmp.19 71 21 22 ];
+        symbol [ substring %tmp.20 71 23 32 ];
+        %tmp.20 = getv function %tmp.19 :substring;
+        %tmp.21 = lgetv %i.3;
+        symbol [ i %tmp.21 71 33 34 ];
+        %tmp.22 = lgetv %i.3;
+        symbol [ i %tmp.22 71 36 37 ];
+        %tmp.23 = 1;
+        %tmp.24 = add %tmp.22 %tmp.23;
+        %tmp.25 = invoke %tmp.19 %tmp.20(%tmp.21, %tmp.24);
+        symbol [ toUpper %tmp.26 71 43 50 ];
+        %tmp.26 = getv function %tmp.25 :toUpper;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        lputv %ch.4 %tmp.27;
+        symbol [ ch %ch.4 71 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 72 12 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_stop" ]
+        %g.5 = local;
+        symbol [ g %g.5 72 16 17 ];
+        %tmp.28 = lgetv %f.1;
+        symbol [ f %tmp.28 72 20 21 ];
+        symbol [ get %tmp.29 72 22 25 ];
+        %tmp.29 = getv function %tmp.28 :get;
+        %tmp.30 = lgetv %ch.4;
+        symbol [ ch %tmp.30 72 26 28 ];
+        %tmp.31 = invoke %tmp.28 %tmp.29(%tmp.30);
+        lputv %g.5 %tmp.31;
+        symbol [ g %g.5 72 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 73 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_12_82_12_if_stmt:
+        %tmp.32 = lgetv %g.5;
+        symbol [ g %tmp.32 73 16 17 ];
+        %tmp.33 = null;
+        %tmp.34 = ne %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_12_82_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_12_82_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_27_82_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 74 16 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_end" ]
+        %r.6 = local;
+        symbol [ r %r.6 74 25 26 ];
+        %tmp.35 = 0;
+        lputv %r.6 %tmp.35;
+        symbol [ r %r.6 74 25 26 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_test:
+        %tmp.36 = lgetv %r.6;
+        symbol [ r %tmp.36 74 32 33 ];
+        %tmp.37 = 5;
+        %tmp.38 = lt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_44_81_16_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 75 20 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_44_81_16_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_44_81_16_stop" ]
+        %row.7 = local;
+        symbol [ row %row.7 75 24 27 ];
+        %tmp.39 = lgetv %g.5;
+        symbol [ g %tmp.39 75 30 31 ];
+        %tmp.40 = as %tmp.39 { (!Null) };
+        %tmp.41 = lgetv %r.6;
+        symbol [ r %tmp.41 75 32 33 ];
+        %tmp.42 = agetv %tmp.40 %tmp.41;
+        lputv %row.7 %tmp.42;
+        symbol [ row %row.7 75 24 27 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 76 20 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_end" ]
+        %c.8 = local;
+        symbol [ c %c.8 76 29 30 ];
+        %tmp.43 = 0;
+        lputv %c.8 %tmp.43;
+        symbol [ c %c.8 76 29 30 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_test:
+        %tmp.44 = lgetv %c.8;
+        symbol [ c %tmp.44 76 36 37 ];
+        %tmp.45 = 3;
+        %tmp.46 = lt %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_48_80_20_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 77 24 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_24_79_24_if_stmt:
+        %tmp.47 = lgetv %row.7;
+        symbol [ row %tmp.47 77 28 31 ];
+        symbol [ substring %tmp.48 77 32 41 ];
+        %tmp.48 = getv function %tmp.47 :substring;
+        %tmp.49 = lgetv %c.8;
+        symbol [ c %tmp.49 77 42 43 ];
+        %tmp.50 = lgetv %c.8;
+        symbol [ c %tmp.50 77 45 46 ];
+        %tmp.51 = 1;
+        %tmp.52 = add %tmp.50 %tmp.51;
+        %tmp.53 = invoke %tmp.47 %tmp.48(%tmp.49, %tmp.52);
+        symbol [ equals %tmp.54 77 52 58 ];
+        %tmp.54 = getv function %tmp.53 :equals;
+        %tmp.55 = "#";
+        %tmp.56 = invoke %tmp.53 %tmp.54(%tmp.55);
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_24_79_24_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_24_79_24_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_65_79_24_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 78 28 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 78 28 30 ];
+        symbol [ fillRectangle %tmp.58 78 31 44 ];
+        %tmp.58 = getv function %tmp.57 :fillRectangle;
+        %tmp.59 = lgetv %cxp.2;
+        symbol [ cxp %tmp.59 78 45 48 ];
+        %tmp.60 = lgetv %c.8;
+        symbol [ c %tmp.60 78 51 52 ];
+        %tmp.61 = lgetv %sc;
+        symbol [ sc %tmp.61 78 55 57 ];
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = add %tmp.59 %tmp.62;
+        %tmp.64 = lgetv %y;
+        symbol [ y %tmp.64 78 59 60 ];
+        %tmp.65 = lgetv %r.6;
+        symbol [ r %tmp.65 78 63 64 ];
+        %tmp.66 = lgetv %sc;
+        symbol [ sc %tmp.66 78 67 69 ];
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.64 %tmp.67;
+        %tmp.69 = lgetv %sc;
+        symbol [ sc %tmp.69 78 71 73 ];
+        %tmp.70 = lgetv %sc;
+        symbol [ sc %tmp.70 78 75 77 ];
+        invoke %tmp.57 %tmp.58(%tmp.63, %tmp.68, %tmp.69, %tmp.70);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_65_79_24_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_24_79_24_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_77_24_79_24_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_48_80_20_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 76 ]
+        %tmp.73 = lgetv %c.8;
+        symbol [ c %tmp.73 76 43 44 ];
+        %tmp.74 = add %tmp.73 1;
+        lputv %c.8 %tmp.74;
+        symbol [ c %c.8 76 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_76_20_80_20_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_44_81_16_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 74 ]
+        %tmp.77 = lgetv %r.6;
+        symbol [ r %tmp.77 74 39 40 ];
+        %tmp.78 = add %tmp.77 1;
+        lputv %r.6 %tmp.78;
+        symbol [ r %r.6 74 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_74_16_81_16_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_27_82_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_12_82_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_73_12_82_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 83 12 ]
+        %tmp.79 = lgetv %cxp.2;
+        symbol [ cxp %tmp.79 83 12 15 ];
+        %tmp.80 = 4;
+        %tmp.81 = lgetv %sc;
+        symbol [ sc %tmp.81 83 23 25 ];
+        %tmp.82 = mul %tmp.80 %tmp.81;
+        %tmp.83 = add %tmp.79 %tmp.82;
+        lputv %cxp.2 %tmp.83;
+        symbol [ cxp %cxp.2 83 12 15 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_45_84_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 70 ]
+        %tmp.86 = lgetv %i.3;
+        symbol [ i %tmp.86 70 40 41 ];
+        %tmp.87 = add %tmp.86 1;
+        lputv %i.3 %tmp.87;
+        symbol [ i %i.3 70 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_70_8_84_8_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_65_40_85_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 87; @symbol_functiondef = [gtxtC,87,13,18]; @symbol_param<0> = [dc,87,19,21]; @symbol_param<1> = [s,87,23,24]; @symbol_param<2> = [cxc,87,26,29]; @symbol_param<3> = [y,87,31,32]; @symbol_param<4> = [sc,87,34,36]; @symbol_param<5> = [col,87,38,41]; ]
+    function gtxtC(dc, s, cxc, y, sc, col) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_87_43_87_94_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 87 45 ]
+        %tmp.1 = self;
+        symbol [ gtxt %tmp.2 87 45 49 ];
+        %tmp.2 = getv function %tmp.1 :gtxt;
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 87 50 52 ];
+        %tmp.4 = lgetv %s;
+        symbol [ s %tmp.4 87 54 55 ];
+        %tmp.5 = lgetv %cxc;
+        symbol [ cxc %tmp.5 87 57 60 ];
+        %tmp.6 = self;
+        symbol [ gtxtW %tmp.7 87 63 68 ];
+        %tmp.7 = getv function %tmp.6 :gtxtW;
+        %tmp.8 = lgetv %s;
+        symbol [ s %tmp.8 87 69 70 ];
+        %tmp.9 = lgetv %sc;
+        symbol [ sc %tmp.9 87 72 74 ];
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9);
+        %tmp.11 = 2;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        %tmp.13 = sub %tmp.5 %tmp.12;
+        %tmp.14 = lgetv %y;
+        symbol [ y %tmp.14 87 81 82 ];
+        %tmp.15 = lgetv %sc;
+        symbol [ sc %tmp.15 87 84 86 ];
+        %tmp.16 = lgetv %col;
+        symbol [ col %tmp.16 87 88 91 ];
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.13, %tmp.14, %tmp.15, %tmp.16);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_87_43_87_94_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 89; @symbol_functiondef = [gsh,89,13,16]; @symbol_param<0> = [dc,89,17,19]; @symbol_param<1> = [s,89,21,22]; @symbol_param<2> = [x,89,24,25]; @symbol_param<3> = [y,89,27,28]; @symbol_param<4> = [sc,89,30,32]; @symbol_param<5> = [col,89,34,37]; ]
+    function gsh(dc, s, x, y, sc, col) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_89_39_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 90 8 ]
+        %tmp.1 = self;
+        symbol [ gtxt %tmp.2 90 8 12 ];
+        %tmp.2 = getv function %tmp.1 :gtxt;
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 90 13 15 ];
+        %tmp.4 = lgetv %s;
+        symbol [ s %tmp.4 90 17 18 ];
+        %tmp.5 = lgetv %x;
+        symbol [ x %tmp.5 90 20 21 ];
+        %tmp.6 = 1;
+        %tmp.7 = add %tmp.5 %tmp.6;
+        %tmp.8 = lgetv %y;
+        symbol [ y %tmp.8 90 27 28 ];
+        %tmp.9 = 1;
+        %tmp.10 = add %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %sc;
+        symbol [ sc %tmp.11 90 34 36 ];
+        %tmp.12 = 0x000000;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.7, %tmp.10, %tmp.11, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 91 8 ]
+        %tmp.13 = self;
+        symbol [ gtxt %tmp.14 91 8 12 ];
+        %tmp.14 = getv function %tmp.13 :gtxt;
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 91 13 15 ];
+        %tmp.16 = lgetv %s;
+        symbol [ s %tmp.16 91 17 18 ];
+        %tmp.17 = lgetv %x;
+        symbol [ x %tmp.17 91 20 21 ];
+        %tmp.18 = lgetv %y;
+        symbol [ y %tmp.18 91 23 24 ];
+        %tmp.19 = lgetv %sc;
+        symbol [ sc %tmp.19 91 26 28 ];
+        %tmp.20 = lgetv %col;
+        symbol [ col %tmp.20 91 30 33 ];
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.17, %tmp.18, %tmp.19, %tmp.20);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_89_39_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 93; @symbol_functiondef = [gshC,93,13,17]; @symbol_param<0> = [dc,93,18,20]; @symbol_param<1> = [s,93,22,23]; @symbol_param<2> = [cxc,93,25,28]; @symbol_param<3> = [y,93,30,31]; @symbol_param<4> = [sc,93,33,35]; @symbol_param<5> = [col,93,37,40]; ]
+    function gshC(dc, s, cxc, y, sc, col) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_93_42_93_92_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 93 44 ]
+        %tmp.1 = self;
+        symbol [ gsh %tmp.2 93 44 47 ];
+        %tmp.2 = getv function %tmp.1 :gsh;
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 93 48 50 ];
+        %tmp.4 = lgetv %s;
+        symbol [ s %tmp.4 93 52 53 ];
+        %tmp.5 = lgetv %cxc;
+        symbol [ cxc %tmp.5 93 55 58 ];
+        %tmp.6 = self;
+        symbol [ gtxtW %tmp.7 93 61 66 ];
+        %tmp.7 = getv function %tmp.6 :gtxtW;
+        %tmp.8 = lgetv %s;
+        symbol [ s %tmp.8 93 67 68 ];
+        %tmp.9 = lgetv %sc;
+        symbol [ sc %tmp.9 93 70 72 ];
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9);
+        %tmp.11 = 2;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        %tmp.13 = sub %tmp.5 %tmp.12;
+        %tmp.14 = lgetv %y;
+        symbol [ y %tmp.14 93 79 80 ];
+        %tmp.15 = lgetv %sc;
+        symbol [ sc %tmp.15 93 82 84 ];
+        %tmp.16 = lgetv %col;
+        symbol [ col %tmp.16 93 86 89 ];
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.13, %tmp.14, %tmp.15, %tmp.16);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_93_42_93_92_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 94; @symbol_functiondef = [vgrad,94,13,18]; @symbol_param<0> = [dc,94,19,21]; @symbol_param<1> = [x,94,23,24]; @symbol_param<2> = [y,94,26,27]; @symbol_param<3> = [w,94,29,30]; @symbol_param<4> = [h,94,32,33]; @symbol_param<5> = [c0,94,35,37]; @symbol_param<6> = [c1,94,39,41]; @symbol_param<7> = [n,94,43,44]; ]
+    function vgrad(dc, x, y, w, h, c0, c1, n) {
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_8_95_28_if_stmt:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 95 12 13 ];
+        %tmp.2 = 1;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_8_95_28_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_8_95_28_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_19_95_28_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 95 21 ]
+        %tmp.4 = 1;
+        lputv %n %tmp.4;
+        symbol [ n %n 95 21 22 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_19_95_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_8_95_28_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_95_8_95_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %r0.1 = local;
+        symbol [ r0 %r0.1 96 12 14 ];
+        %tmp.5 = lgetv %c0;
+        symbol [ c0 %tmp.5 96 16 18 ];
+        %tmp.6 = 16;
+        %tmp.7 = shr %tmp.5 %tmp.6;
+        %tmp.8 = 0xFF;
+        %tmp.9 = bitand %tmp.7 %tmp.8;
+        lputv %r0.1 %tmp.9;
+        symbol [ r0 %r0.1 96 12 14 ];
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %g0.2 = local;
+        symbol [ g0 %g0.2 96 29 31 ];
+        %tmp.10 = lgetv %c0;
+        symbol [ c0 %tmp.10 96 33 35 ];
+        %tmp.11 = 8;
+        %tmp.12 = shr %tmp.10 %tmp.11;
+        %tmp.13 = 0xFF;
+        %tmp.14 = bitand %tmp.12 %tmp.13;
+        lputv %g0.2 %tmp.14;
+        symbol [ g0 %g0.2 96 29 31 ];
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %b0.3 = local;
+        symbol [ b0 %b0.3 96 45 47 ];
+        %tmp.15 = lgetv %c0;
+        symbol [ c0 %tmp.15 96 48 50 ];
+        %tmp.16 = 0xFF;
+        %tmp.17 = bitand %tmp.15 %tmp.16;
+        lputv %b0.3 %tmp.17;
+        symbol [ b0 %b0.3 96 45 47 ];
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %r1.4 = local;
+        symbol [ r1 %r1.4 96 57 59 ];
+        %tmp.18 = lgetv %c1;
+        symbol [ c1 %tmp.18 96 61 63 ];
+        %tmp.19 = 16;
+        %tmp.20 = shr %tmp.18 %tmp.19;
+        %tmp.21 = 0xFF;
+        %tmp.22 = bitand %tmp.20 %tmp.21;
+        lputv %r1.4 %tmp.22;
+        symbol [ r1 %r1.4 96 57 59 ];
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %g1.5 = local;
+        symbol [ g1 %g1.5 96 74 76 ];
+        %tmp.23 = lgetv %c1;
+        symbol [ c1 %tmp.23 96 78 80 ];
+        %tmp.24 = 8;
+        %tmp.25 = shr %tmp.23 %tmp.24;
+        %tmp.26 = 0xFF;
+        %tmp.27 = bitand %tmp.25 %tmp.26;
+        lputv %g1.5 %tmp.27;
+        symbol [ g1 %g1.5 96 74 76 ];
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop" ]
+        %b1.6 = local;
+        symbol [ b1 %b1.6 96 90 92 ];
+        %tmp.28 = lgetv %c1;
+        symbol [ c1 %tmp.28 96 93 95 ];
+        %tmp.29 = 0xFF;
+        %tmp.30 = bitand %tmp.28 %tmp.29;
+        lputv %b1.6 %tmp.30;
+        symbol [ b1 %b1.6 96 90 92 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 8 ]
+        for @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_test @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_incr @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_init:
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_begin" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_end" ]
+        %i.7 = local;
+        symbol [ i %i.7 97 17 18 ];
+        %tmp.31 = 0;
+        lputv %i.7 %tmp.31;
+        symbol [ i %i.7 97 17 18 ];
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_test:
+        %tmp.32 = lgetv %i.7;
+        symbol [ i %tmp.32 97 21 22 ];
+        %tmp.33 = lgetv %n;
+        symbol [ n %tmp.33 97 23 24 ];
+        %tmp.34 = lt %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_end;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 31 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop" ]
+        %t.8 = local;
+        symbol [ t %t.8 97 35 36 ];
+        %tmp.35 = lgetv %i.7;
+        symbol [ i %tmp.35 97 37 38 ];
+        %tmp.36 = 100;
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %n;
+        symbol [ n %tmp.38 97 43 44 ];
+        %tmp.39 = div %tmp.37 %tmp.38;
+        lputv %t.8 %tmp.39;
+        symbol [ t %t.8 97 35 36 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 46 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop" ]
+        %rr.9 = local;
+        symbol [ rr %rr.9 97 50 52 ];
+        %tmp.40 = lgetv %r0.1;
+        symbol [ r0 %tmp.40 97 54 56 ];
+        %tmp.41 = 100;
+        %tmp.42 = lgetv %t.8;
+        symbol [ t %tmp.42 97 62 63 ];
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        %tmp.44 = mul %tmp.40 %tmp.43;
+        %tmp.45 = lgetv %r1.4;
+        symbol [ r1 %tmp.45 97 65 67 ];
+        %tmp.46 = lgetv %t.8;
+        symbol [ t %tmp.46 97 68 69 ];
+        %tmp.47 = mul %tmp.45 %tmp.46;
+        %tmp.48 = add %tmp.44 %tmp.47;
+        %tmp.49 = 100;
+        %tmp.50 = div %tmp.48 %tmp.49;
+        lputv %rr.9 %tmp.50;
+        symbol [ rr %rr.9 97 50 52 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 76 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop" ]
+        %gg.10 = local;
+        symbol [ gg %gg.10 97 80 82 ];
+        %tmp.51 = lgetv %g0.2;
+        symbol [ g0 %tmp.51 97 84 86 ];
+        %tmp.52 = 100;
+        %tmp.53 = lgetv %t.8;
+        symbol [ t %tmp.53 97 92 93 ];
+        %tmp.54 = sub %tmp.52 %tmp.53;
+        %tmp.55 = mul %tmp.51 %tmp.54;
+        %tmp.56 = lgetv %g1.5;
+        symbol [ g1 %tmp.56 97 95 97 ];
+        %tmp.57 = lgetv %t.8;
+        symbol [ t %tmp.57 97 98 99 ];
+        %tmp.58 = mul %tmp.56 %tmp.57;
+        %tmp.59 = add %tmp.55 %tmp.58;
+        %tmp.60 = 100;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        lputv %gg.10 %tmp.61;
+        symbol [ gg %gg.10 97 80 82 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 106 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop" ]
+        %bb.11 = local;
+        symbol [ bb %bb.11 97 110 112 ];
+        %tmp.62 = lgetv %b0.3;
+        symbol [ b0 %tmp.62 97 114 116 ];
+        %tmp.63 = 100;
+        %tmp.64 = lgetv %t.8;
+        symbol [ t %tmp.64 97 122 123 ];
+        %tmp.65 = sub %tmp.63 %tmp.64;
+        %tmp.66 = mul %tmp.62 %tmp.65;
+        %tmp.67 = lgetv %b1.6;
+        symbol [ b1 %tmp.67 97 125 127 ];
+        %tmp.68 = lgetv %t.8;
+        symbol [ t %tmp.68 97 128 129 ];
+        %tmp.69 = mul %tmp.67 %tmp.68;
+        %tmp.70 = add %tmp.66 %tmp.69;
+        %tmp.71 = 100;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        lputv %bb.11 %tmp.72;
+        symbol [ bb %bb.11 97 110 112 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 98 12 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 98 12 14 ];
+        symbol [ setColor %tmp.74 98 15 23 ];
+        %tmp.74 = getv function %tmp.73 :setColor;
+        %tmp.75 = lgetv %rr.9;
+        symbol [ rr %tmp.75 98 25 27 ];
+        %tmp.76 = 16;
+        %tmp.77 = shl %tmp.75 %tmp.76;
+        %tmp.78 = lgetv %gg.10;
+        symbol [ gg %tmp.78 98 34 36 ];
+        %tmp.79 = 8;
+        %tmp.80 = shl %tmp.78 %tmp.79;
+        %tmp.81 = bitor %tmp.77 %tmp.80;
+        %tmp.82 = lgetv %bb.11;
+        symbol [ bb %tmp.82 98 41 43 ];
+        %tmp.83 = bitor %tmp.81 %tmp.82;
+        symbol [ Graphics %tmp.84 98 45 53 ];
+        %tmp.84 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.85 98 54 71 ];
+        %tmp.85 = getv %tmp.84 :COLOR_TRANSPARENT;
+        invoke %tmp.73 %tmp.74(%tmp.83, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 98 74 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_start" "_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop" ]
+        %by.12 = local;
+        symbol [ by %by.12 98 78 80 ];
+        %tmp.86 = lgetv %y;
+        symbol [ y %tmp.86 98 81 82 ];
+        %tmp.87 = lgetv %i.7;
+        symbol [ i %tmp.87 98 83 84 ];
+        %tmp.88 = lgetv %h;
+        symbol [ h %tmp.88 98 85 86 ];
+        %tmp.89 = mul %tmp.87 %tmp.88;
+        %tmp.90 = lgetv %n;
+        symbol [ n %tmp.90 98 87 88 ];
+        %tmp.91 = div %tmp.89 %tmp.90;
+        %tmp.92 = add %tmp.86 %tmp.91;
+        lputv %by.12 %tmp.92;
+        symbol [ by %by.12 98 78 80 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 98 90 ]
+        %tmp.93 = lgetv %dc;
+        symbol [ dc %tmp.93 98 90 92 ];
+        symbol [ fillRectangle %tmp.94 98 93 106 ];
+        %tmp.94 = getv function %tmp.93 :fillRectangle;
+        %tmp.95 = lgetv %x;
+        symbol [ x %tmp.95 98 107 108 ];
+        %tmp.96 = lgetv %by.12;
+        symbol [ by %tmp.96 98 110 112 ];
+        %tmp.97 = lgetv %w;
+        symbol [ w %tmp.97 98 114 115 ];
+        %tmp.98 = lgetv %y;
+        symbol [ y %tmp.98 98 118 119 ];
+        %tmp.99 = lgetv %i.7;
+        symbol [ i %tmp.99 98 121 122 ];
+        %tmp.100 = 1;
+        %tmp.101 = add %tmp.99 %tmp.100;
+        %tmp.102 = lgetv %h;
+        symbol [ h %tmp.102 98 126 127 ];
+        %tmp.103 = mul %tmp.101 %tmp.102;
+        %tmp.104 = lgetv %n;
+        symbol [ n %tmp.104 98 128 129 ];
+        %tmp.105 = div %tmp.103 %tmp.104;
+        %tmp.106 = add %tmp.98 %tmp.105;
+        %tmp.107 = lgetv %by.12;
+        symbol [ by %tmp.107 98 131 133 ];
+        %tmp.108 = sub %tmp.106 %tmp.107;
+        invoke %tmp.93 %tmp.94(%tmp.95, %tmp.96, %tmp.97, %tmp.108);
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_29_98_136_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_incr:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc" 97 ]
+        %tmp.111 = lgetv %i.7;
+        symbol [ i %tmp.111 97 25 26 ];
+        %tmp.112 = add %tmp.111 1;
+        lputv %i.7 %tmp.112;
+        symbol [ i %i.7 97 25 26 ];
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_test;
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_97_8_98_136_for_end:
+_Users_kkorolczuk_work_garmin_farm_source_Pixel_mc_94_46_99_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Pixel.mc"; @line = 10; ]
+<init> {
+}

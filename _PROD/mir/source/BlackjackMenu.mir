@@ -1,0 +1,741 @@
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [WatchUi,4,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Graphics,5,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Application,6,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Lang,7,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 9; @symbol_classdef = [BlackjackHooks,9,6,20]; @symbol_extends<0> = [GameHooks,9,29,38]; ]
+class BlackjackHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 10; @symbol_functiondef = [initialize,10,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_10_26_10_52_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 10 28 ]
+        symbol [ GameHooks %tmp.2 10 28 37 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 10 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_10_26_10_52_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 12; @symbol_functiondef = [startGame,12,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_12_33_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 13 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_12_33_15_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_12_33_15_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 13 12 13 ];
+        symbol [ BitochiBlackjackView %tmp.4 13 20 40 ];
+        %tmp.4 = getv ? :BitochiBlackjackView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 13 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 14 8 ]
+        symbol [ WatchUi %tmp.5 14 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 14 16 24 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 14 25 26 ];
+        symbol [ BitochiBlackjackDelegate %tmp.11 14 32 56 ];
+        %tmp.11 = getv ? :BitochiBlackjackDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 14 57 58 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 14 61 68 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.14 14 69 79 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_12_33_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 19; @symbol_functiondef = [drawArt,19,13,20]; @symbol_param<0> = [dc,19,21,23]; @symbol_param<1> = [cx,19,25,27]; @symbol_param<2> = [cy,19,29,31]; @symbol_param<3> = [w,19,33,34]; @symbol_param<4> = [h,19,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 20 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %cw.1 = local;
+        symbol [ cw %cw.1 20 12 14 ];
+        %tmp.1 = 22;
+        lputv %cw.1 %tmp.1;
+        symbol [ cw %cw.1 20 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 20 21 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %ch.2 = local;
+        symbol [ ch %ch.2 20 25 27 ];
+        %tmp.2 = 30;
+        lputv %ch.2 %tmp.2;
+        symbol [ ch %ch.2 20 25 27 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 22 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %bx.3 = local;
+        symbol [ bx %bx.3 22 12 14 ];
+        %tmp.3 = lgetv %cx;
+        symbol [ cx %tmp.3 22 17 19 ];
+        %tmp.4 = 20;
+        %tmp.5 = sub %tmp.3 %tmp.4;
+        lputv %bx.3 %tmp.5;
+        symbol [ bx %bx.3 22 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 22 26 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %by.4 = local;
+        symbol [ by %by.4 22 30 32 ];
+        %tmp.6 = lgetv %cy;
+        symbol [ cy %tmp.6 22 35 37 ];
+        %tmp.7 = lgetv %ch.2;
+        symbol [ ch %tmp.7 22 40 42 ];
+        %tmp.8 = 2;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        %tmp.10 = sub %tmp.6 %tmp.9;
+        lputv %by.4 %tmp.10;
+        symbol [ by %by.4 22 30 32 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 23 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 23 8 10 ];
+        symbol [ setColor %tmp.12 23 11 19 ];
+        %tmp.12 = getv function %tmp.11 :setColor;
+        %tmp.13 = 0x1A2E5A;
+        symbol [ Graphics %tmp.14 23 30 38 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.15 23 39 56 ];
+        %tmp.15 = getv %tmp.14 :COLOR_TRANSPARENT;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 23 59 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 23 59 61 ];
+        symbol [ fillRoundedRectangle %tmp.17 23 62 82 ];
+        %tmp.17 = getv function %tmp.16 :fillRoundedRectangle;
+        %tmp.18 = lgetv %bx.3;
+        symbol [ bx %tmp.18 23 83 85 ];
+        %tmp.19 = lgetv %by.4;
+        symbol [ by %tmp.19 23 87 89 ];
+        %tmp.20 = lgetv %cw.1;
+        symbol [ cw %tmp.20 23 91 93 ];
+        %tmp.21 = lgetv %ch.2;
+        symbol [ ch %tmp.21 23 95 97 ];
+        %tmp.22 = 3;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.20, %tmp.21, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 24 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 24 8 10 ];
+        symbol [ setColor %tmp.24 24 11 19 ];
+        %tmp.24 = getv function %tmp.23 :setColor;
+        %tmp.25 = 0x4A6AAA;
+        symbol [ Graphics %tmp.26 24 30 38 ];
+        %tmp.26 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.27 24 39 56 ];
+        %tmp.27 = getv %tmp.26 :COLOR_TRANSPARENT;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.27);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 24 59 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 24 59 61 ];
+        symbol [ drawRoundedRectangle %tmp.29 24 62 82 ];
+        %tmp.29 = getv function %tmp.28 :drawRoundedRectangle;
+        %tmp.30 = lgetv %bx.3;
+        symbol [ bx %tmp.30 24 83 85 ];
+        %tmp.31 = lgetv %by.4;
+        symbol [ by %tmp.31 24 87 89 ];
+        %tmp.32 = lgetv %cw.1;
+        symbol [ cw %tmp.32 24 91 93 ];
+        %tmp.33 = lgetv %ch.2;
+        symbol [ ch %tmp.33 24 95 97 ];
+        %tmp.34 = 3;
+        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.32, %tmp.33, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 25 8 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 25 8 10 ];
+        symbol [ fillPolygon %tmp.36 25 11 22 ];
+        %tmp.36 = getv function %tmp.35 :fillPolygon;
+        %tmp.37 = newa 4;
+        %tmp.38 = newa 2;
+        %tmp.39 = lgetv %bx.3;
+        symbol [ bx %tmp.39 25 25 27 ];
+        %tmp.40 = lgetv %cw.1;
+        symbol [ cw %tmp.40 25 30 32 ];
+        %tmp.41 = 2;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        %tmp.43 = add %tmp.39 %tmp.42;
+        %tmp.44 = dup %tmp.38;
+        %tmp.45 = aputv %tmp.44 0 %tmp.43;
+        %tmp.46 = lgetv %by.4;
+        symbol [ by %tmp.46 25 38 40 ];
+        %tmp.47 = lgetv %ch.2;
+        symbol [ ch %tmp.47 25 43 45 ];
+        %tmp.48 = 2;
+        %tmp.49 = div %tmp.47 %tmp.48;
+        %tmp.50 = add %tmp.46 %tmp.49;
+        %tmp.51 = 5;
+        %tmp.52 = sub %tmp.50 %tmp.51;
+        %tmp.53 = dup %tmp.45;
+        %tmp.54 = aputv %tmp.53 1 %tmp.52;
+        %tmp.55 = dup %tmp.37;
+        %tmp.56 = aputv %tmp.55 0 %tmp.54;
+        %tmp.57 = newa 2;
+        %tmp.58 = lgetv %bx.3;
+        symbol [ bx %tmp.58 25 57 59 ];
+        %tmp.59 = lgetv %cw.1;
+        symbol [ cw %tmp.59 25 62 64 ];
+        %tmp.60 = 2;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        %tmp.62 = add %tmp.58 %tmp.61;
+        %tmp.63 = 5;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        %tmp.65 = dup %tmp.57;
+        %tmp.66 = aputv %tmp.65 0 %tmp.64;
+        %tmp.67 = lgetv %by.4;
+        symbol [ by %tmp.67 25 74 76 ];
+        %tmp.68 = lgetv %ch.2;
+        symbol [ ch %tmp.68 25 79 81 ];
+        %tmp.69 = 2;
+        %tmp.70 = div %tmp.68 %tmp.69;
+        %tmp.71 = add %tmp.67 %tmp.70;
+        %tmp.72 = dup %tmp.66;
+        %tmp.73 = aputv %tmp.72 1 %tmp.71;
+        %tmp.74 = dup %tmp.56;
+        %tmp.75 = aputv %tmp.74 1 %tmp.73;
+        %tmp.76 = newa 2;
+        %tmp.77 = lgetv %bx.3;
+        symbol [ bx %tmp.77 26 25 27 ];
+        %tmp.78 = lgetv %cw.1;
+        symbol [ cw %tmp.78 26 30 32 ];
+        %tmp.79 = 2;
+        %tmp.80 = div %tmp.78 %tmp.79;
+        %tmp.81 = add %tmp.77 %tmp.80;
+        %tmp.82 = dup %tmp.76;
+        %tmp.83 = aputv %tmp.82 0 %tmp.81;
+        %tmp.84 = lgetv %by.4;
+        symbol [ by %tmp.84 26 38 40 ];
+        %tmp.85 = lgetv %ch.2;
+        symbol [ ch %tmp.85 26 43 45 ];
+        %tmp.86 = 2;
+        %tmp.87 = div %tmp.85 %tmp.86;
+        %tmp.88 = add %tmp.84 %tmp.87;
+        %tmp.89 = 5;
+        %tmp.90 = add %tmp.88 %tmp.89;
+        %tmp.91 = dup %tmp.83;
+        %tmp.92 = aputv %tmp.91 1 %tmp.90;
+        %tmp.93 = dup %tmp.75;
+        %tmp.94 = aputv %tmp.93 2 %tmp.92;
+        %tmp.95 = newa 2;
+        %tmp.96 = lgetv %bx.3;
+        symbol [ bx %tmp.96 26 57 59 ];
+        %tmp.97 = lgetv %cw.1;
+        symbol [ cw %tmp.97 26 62 64 ];
+        %tmp.98 = 2;
+        %tmp.99 = div %tmp.97 %tmp.98;
+        %tmp.100 = add %tmp.96 %tmp.99;
+        %tmp.101 = 5;
+        %tmp.102 = sub %tmp.100 %tmp.101;
+        %tmp.103 = dup %tmp.95;
+        %tmp.104 = aputv %tmp.103 0 %tmp.102;
+        %tmp.105 = lgetv %by.4;
+        symbol [ by %tmp.105 26 74 76 ];
+        %tmp.106 = lgetv %ch.2;
+        symbol [ ch %tmp.106 26 79 81 ];
+        %tmp.107 = 2;
+        %tmp.108 = div %tmp.106 %tmp.107;
+        %tmp.109 = add %tmp.105 %tmp.108;
+        %tmp.110 = dup %tmp.104;
+        %tmp.111 = aputv %tmp.110 1 %tmp.109;
+        %tmp.112 = dup %tmp.94;
+        %tmp.113 = aputv %tmp.112 3 %tmp.111;
+        invoke %tmp.35 %tmp.36(%tmp.113);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 28 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %ax.5 = local;
+        symbol [ ax %ax.5 28 12 14 ];
+        %tmp.114 = lgetv %cx;
+        symbol [ cx %tmp.114 28 17 19 ];
+        %tmp.115 = 2;
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        lputv %ax.5 %tmp.116;
+        symbol [ ax %ax.5 28 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 28 25 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %ay.6 = local;
+        symbol [ ay %ay.6 28 29 31 ];
+        %tmp.117 = lgetv %cy;
+        symbol [ cy %tmp.117 28 34 36 ];
+        %tmp.118 = lgetv %ch.2;
+        symbol [ ch %tmp.118 28 39 41 ];
+        %tmp.119 = 2;
+        %tmp.120 = div %tmp.118 %tmp.119;
+        %tmp.121 = sub %tmp.117 %tmp.120;
+        %tmp.122 = 4;
+        %tmp.123 = add %tmp.121 %tmp.122;
+        lputv %ay.6 %tmp.123;
+        symbol [ ay %ay.6 28 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 29 8 ]
+        %tmp.124 = lgetv %dc;
+        symbol [ dc %tmp.124 29 8 10 ];
+        symbol [ setColor %tmp.125 29 11 19 ];
+        %tmp.125 = getv function %tmp.124 :setColor;
+        %tmp.126 = 0xFCFAF6;
+        symbol [ Graphics %tmp.127 29 30 38 ];
+        %tmp.127 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.128 29 39 56 ];
+        %tmp.128 = getv %tmp.127 :COLOR_TRANSPARENT;
+        invoke %tmp.124 %tmp.125(%tmp.126, %tmp.128);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 29 59 ]
+        %tmp.129 = lgetv %dc;
+        symbol [ dc %tmp.129 29 59 61 ];
+        symbol [ fillRoundedRectangle %tmp.130 29 62 82 ];
+        %tmp.130 = getv function %tmp.129 :fillRoundedRectangle;
+        %tmp.131 = lgetv %ax.5;
+        symbol [ ax %tmp.131 29 83 85 ];
+        %tmp.132 = lgetv %ay.6;
+        symbol [ ay %tmp.132 29 87 89 ];
+        %tmp.133 = lgetv %cw.1;
+        symbol [ cw %tmp.133 29 91 93 ];
+        %tmp.134 = lgetv %ch.2;
+        symbol [ ch %tmp.134 29 95 97 ];
+        %tmp.135 = 3;
+        invoke %tmp.129 %tmp.130(%tmp.131, %tmp.132, %tmp.133, %tmp.134, %tmp.135);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 30 8 ]
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 30 8 10 ];
+        symbol [ setColor %tmp.137 30 11 19 ];
+        %tmp.137 = getv function %tmp.136 :setColor;
+        %tmp.138 = 0xCCCCCC;
+        symbol [ Graphics %tmp.139 30 30 38 ];
+        %tmp.139 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.140 30 39 56 ];
+        %tmp.140 = getv %tmp.139 :COLOR_TRANSPARENT;
+        invoke %tmp.136 %tmp.137(%tmp.138, %tmp.140);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 30 59 ]
+        %tmp.141 = lgetv %dc;
+        symbol [ dc %tmp.141 30 59 61 ];
+        symbol [ drawRoundedRectangle %tmp.142 30 62 82 ];
+        %tmp.142 = getv function %tmp.141 :drawRoundedRectangle;
+        %tmp.143 = lgetv %ax.5;
+        symbol [ ax %tmp.143 30 83 85 ];
+        %tmp.144 = lgetv %ay.6;
+        symbol [ ay %tmp.144 30 87 89 ];
+        %tmp.145 = lgetv %cw.1;
+        symbol [ cw %tmp.145 30 91 93 ];
+        %tmp.146 = lgetv %ch.2;
+        symbol [ ch %tmp.146 30 95 97 ];
+        %tmp.147 = 3;
+        invoke %tmp.141 %tmp.142(%tmp.143, %tmp.144, %tmp.145, %tmp.146, %tmp.147);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 31 8 ]
+        %tmp.148 = lgetv %dc;
+        symbol [ dc %tmp.148 31 8 10 ];
+        symbol [ setColor %tmp.149 31 11 19 ];
+        %tmp.149 = getv function %tmp.148 :setColor;
+        %tmp.150 = 0x222222;
+        symbol [ Graphics %tmp.151 31 30 38 ];
+        %tmp.151 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.152 31 39 56 ];
+        %tmp.152 = getv %tmp.151 :COLOR_TRANSPARENT;
+        invoke %tmp.148 %tmp.149(%tmp.150, %tmp.152);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 32 8 ]
+        %tmp.153 = lgetv %dc;
+        symbol [ dc %tmp.153 32 8 10 ];
+        symbol [ drawText %tmp.154 32 11 19 ];
+        %tmp.154 = getv function %tmp.153 :drawText;
+        %tmp.155 = lgetv %ax.5;
+        symbol [ ax %tmp.155 32 20 22 ];
+        %tmp.156 = 4;
+        %tmp.157 = add %tmp.155 %tmp.156;
+        %tmp.158 = lgetv %ay.6;
+        symbol [ ay %tmp.158 32 28 30 ];
+        %tmp.159 = 1;
+        %tmp.160 = add %tmp.158 %tmp.159;
+        symbol [ Graphics %tmp.161 32 36 44 ];
+        %tmp.161 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.162 32 45 55 ];
+        %tmp.162 = getv %tmp.161 :FONT_XTINY;
+        %tmp.163 = "A";
+        symbol [ Graphics %tmp.164 32 62 70 ];
+        %tmp.164 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.165 32 71 88 ];
+        %tmp.165 = getv %tmp.164 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.153 %tmp.154(%tmp.157, %tmp.160, %tmp.162, %tmp.163, %tmp.165);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 34 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %sx.7 = local;
+        symbol [ sx %sx.7 34 12 14 ];
+        %tmp.166 = lgetv %ax.5;
+        symbol [ ax %tmp.166 34 17 19 ];
+        %tmp.167 = lgetv %cw.1;
+        symbol [ cw %tmp.167 34 22 24 ];
+        %tmp.168 = 2;
+        %tmp.169 = div %tmp.167 %tmp.168;
+        %tmp.170 = add %tmp.166 %tmp.169;
+        lputv %sx.7 %tmp.170;
+        symbol [ sx %sx.7 34 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 34 30 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop" ]
+        %sy.8 = local;
+        symbol [ sy %sy.8 34 34 36 ];
+        %tmp.171 = lgetv %ay.6;
+        symbol [ ay %tmp.171 34 39 41 ];
+        %tmp.172 = lgetv %ch.2;
+        symbol [ ch %tmp.172 34 44 46 ];
+        %tmp.173 = 2;
+        %tmp.174 = div %tmp.172 %tmp.173;
+        %tmp.175 = add %tmp.171 %tmp.174;
+        lputv %sy.8 %tmp.175;
+        symbol [ sy %sy.8 34 34 36 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 35 8 ]
+        %tmp.176 = lgetv %dc;
+        symbol [ dc %tmp.176 35 8 10 ];
+        symbol [ fillPolygon %tmp.177 35 11 22 ];
+        %tmp.177 = getv function %tmp.176 :fillPolygon;
+        %tmp.178 = newa 3;
+        %tmp.179 = newa 2;
+        %tmp.180 = lgetv %sx.7;
+        symbol [ sx %tmp.180 35 25 27 ];
+        %tmp.181 = dup %tmp.179;
+        %tmp.182 = aputv %tmp.181 0 %tmp.180;
+        %tmp.183 = lgetv %sy.8;
+        symbol [ sy %tmp.183 35 29 31 ];
+        %tmp.184 = 6;
+        %tmp.185 = sub %tmp.183 %tmp.184;
+        %tmp.186 = dup %tmp.182;
+        %tmp.187 = aputv %tmp.186 1 %tmp.185;
+        %tmp.188 = dup %tmp.178;
+        %tmp.189 = aputv %tmp.188 0 %tmp.187;
+        %tmp.190 = newa 2;
+        %tmp.191 = lgetv %sx.7;
+        symbol [ sx %tmp.191 35 39 41 ];
+        %tmp.192 = 6;
+        %tmp.193 = sub %tmp.191 %tmp.192;
+        %tmp.194 = dup %tmp.190;
+        %tmp.195 = aputv %tmp.194 0 %tmp.193;
+        %tmp.196 = lgetv %sy.8;
+        symbol [ sy %tmp.196 35 47 49 ];
+        %tmp.197 = 2;
+        %tmp.198 = add %tmp.196 %tmp.197;
+        %tmp.199 = dup %tmp.195;
+        %tmp.200 = aputv %tmp.199 1 %tmp.198;
+        %tmp.201 = dup %tmp.189;
+        %tmp.202 = aputv %tmp.201 1 %tmp.200;
+        %tmp.203 = newa 2;
+        %tmp.204 = lgetv %sx.7;
+        symbol [ sx %tmp.204 35 57 59 ];
+        %tmp.205 = 6;
+        %tmp.206 = add %tmp.204 %tmp.205;
+        %tmp.207 = dup %tmp.203;
+        %tmp.208 = aputv %tmp.207 0 %tmp.206;
+        %tmp.209 = lgetv %sy.8;
+        symbol [ sy %tmp.209 35 65 67 ];
+        %tmp.210 = 2;
+        %tmp.211 = add %tmp.209 %tmp.210;
+        %tmp.212 = dup %tmp.208;
+        %tmp.213 = aputv %tmp.212 1 %tmp.211;
+        %tmp.214 = dup %tmp.202;
+        %tmp.215 = aputv %tmp.214 2 %tmp.213;
+        invoke %tmp.176 %tmp.177(%tmp.215);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 36 8 ]
+        %tmp.216 = lgetv %dc;
+        symbol [ dc %tmp.216 36 8 10 ];
+        symbol [ fillCircle %tmp.217 36 11 21 ];
+        %tmp.217 = getv function %tmp.216 :fillCircle;
+        %tmp.218 = lgetv %sx.7;
+        symbol [ sx %tmp.218 36 22 24 ];
+        %tmp.219 = 3;
+        %tmp.220 = sub %tmp.218 %tmp.219;
+        %tmp.221 = lgetv %sy.8;
+        symbol [ sy %tmp.221 36 30 32 ];
+        %tmp.222 = 3;
+        %tmp.223 = add %tmp.221 %tmp.222;
+        %tmp.224 = 3;
+        invoke %tmp.216 %tmp.217(%tmp.220, %tmp.223, %tmp.224);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 36 42 ]
+        %tmp.225 = lgetv %dc;
+        symbol [ dc %tmp.225 36 42 44 ];
+        symbol [ fillCircle %tmp.226 36 45 55 ];
+        %tmp.226 = getv function %tmp.225 :fillCircle;
+        %tmp.227 = lgetv %sx.7;
+        symbol [ sx %tmp.227 36 56 58 ];
+        %tmp.228 = 3;
+        %tmp.229 = add %tmp.227 %tmp.228;
+        %tmp.230 = lgetv %sy.8;
+        symbol [ sy %tmp.230 36 64 66 ];
+        %tmp.231 = 3;
+        %tmp.232 = add %tmp.230 %tmp.231;
+        %tmp.233 = 3;
+        invoke %tmp.225 %tmp.226(%tmp.229, %tmp.232, %tmp.233);
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 37 8 ]
+        %tmp.234 = lgetv %dc;
+        symbol [ dc %tmp.234 37 8 10 ];
+        symbol [ fillRectangle %tmp.235 37 11 24 ];
+        %tmp.235 = getv function %tmp.234 :fillRectangle;
+        %tmp.236 = lgetv %sx.7;
+        symbol [ sx %tmp.236 37 25 27 ];
+        %tmp.237 = 1;
+        %tmp.238 = sub %tmp.236 %tmp.237;
+        %tmp.239 = lgetv %sy.8;
+        symbol [ sy %tmp.239 37 33 35 ];
+        %tmp.240 = 3;
+        %tmp.241 = add %tmp.239 %tmp.240;
+        %tmp.242 = 3;
+        %tmp.243 = 4;
+        invoke %tmp.234 %tmp.235(%tmp.238, %tmp.241, %tmp.242, %tmp.243);
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_19_47_38_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 41; @symbol_functiondef = [lbVariant,41,13,22]; @symbol_return<0> = [Lang,41,28,32]; @symbol_return<1> = [String,41,33,39]; ]
+    function lbVariant() as Lang.String {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_stop" ]
+        %names.1 = local;
+        symbol [ names %names.1 42 12 17 ];
+        %tmp.1 = newa 3;
+        %tmp.2 = "d1";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "d2";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "d6";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        lputv %names.1 %tmp.10;
+        symbol [ names %names.1 42 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 43 8 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_stop" ]
+        %i.2 = local;
+        symbol [ i %i.2 43 12 13 ];
+        %tmp.11 = 2;
+        lputv %i.2 %tmp.11;
+        symbol [ i %i.2 43 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 44 8 ]
+        try @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_beginTry @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_endTry @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_catch @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_beginTry:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_12_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 45 12 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_12_47_8_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_12_47_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 45 16 17 ];
+        symbol [ Application %tmp.12 45 20 31 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 45 32 39 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ getValue %tmp.14 45 40 48 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "bj_decks";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %v.3 %tmp.16;
+        symbol [ v %v.3 45 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 46 12 ]
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_stmt:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_16_46_69_begin:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_16_46_49_begin:
+        %tmp.17 = lgetv %v.3;
+        symbol [ v %tmp.17 46 16 17 ];
+        symbol [ Lang %tmp.18 46 29 33 ];
+        %tmp.18 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.19 46 34 40 ];
+        %tmp.19 = getv %tmp.18 :Number;
+        %tmp.20 = isa %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_44_46_49_true:
+        %tmp.21 = lgetv %v.3;
+        symbol [ v %tmp.21 46 44 45 ];
+        %tmp.22 = as %tmp.21 { (Lang.Number) };
+        %tmp.23 = 0;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_44_46_49_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_16_46_49_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_44_46_49_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_44_46_49_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_54_46_69_true:
+        %tmp.26 = lgetv %v.3;
+        symbol [ v %tmp.26 46 54 55 ];
+        %tmp.27 = as %tmp.26 { (Lang.Number) };
+        %tmp.28 = lgetv %names.1;
+        symbol [ names %tmp.28 46 58 63 ];
+        symbol [ size %tmp.29 46 64 68 ];
+        %tmp.29 = getv function %tmp.28 :size;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        %tmp.31 = lt %tmp.27 %tmp.30;
+        push %tmp.31;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_54_46_69_end:
+        %tmp.32 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_16_46_69_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_54_46_69_true] [%tmp.32 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_54_46_69_end];
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_true:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_72_46_81_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 46 74 ]
+        %tmp.33 = lgetv %v.3;
+        symbol [ v %tmp.33 46 78 79 ];
+        %tmp.34 = as %tmp.33 { (Lang.Number) };
+        lputv %i.2 %tmp.34;
+        symbol [ i %i.2 46 74 75 ];
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_72_46_81_stop:
+        goto @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_46_12_46_81_if_end:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_12_47_8_stop:
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_catch:
+        %tmp.35 = exception;
+        push %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 47 10 ]
+        [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_catch" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_47_10_47_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 47 17 18 ];
+        %tmp.36 = dup %tmp.35;
+        lputv %e.4 %tmp.36;
+        symbol [ e %e.4 47 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_end;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_47_10_47_21_end:
+        try @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_catch @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_47_10_47_21_end @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_47_10_47_21_end @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally;
+        throw %tmp.35;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_44_8_47_21_end:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 48 8 ]
+        %tmp.37 = lgetv %names.1;
+        symbol [ names %tmp.37 48 15 20 ];
+        %tmp.38 = lgetv %i.2;
+        symbol [ i %tmp.38 48 21 22 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_41_40_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 51; @symbol_functiondef = [footerText,51,13,23]; @symbol_return<0> = [Lang,51,29,33]; @symbol_return<1> = [String,51,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_51_49_51_64_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 51 51 ]
+        %tmp.1 = null;
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_51_49_51_64_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 54; @symbol_functiondef = [buildBlackjackMenu,54,9,27]; @symbol_return<0> = [Lang,54,33,37]; @symbol_return<1> = [Array,54,38,43]; ]
+function buildBlackjackMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_start:
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 55 4 ]
+    [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 55 8 11 ];
+    symbol [ MenuConfig %tmp.4 55 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 9;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 56 9 15 const ];
+    %tmp.8 = "blackjack";
+    %tmp.9 = dup %tmp.5;
+    %tmp.10 = aputv %tmp.9 %tmp.7 %tmp.8;
+    %tmp.12 = const :title1;
+    symbol [ title1 %tmp.12 57 9 15 const ];
+    %tmp.13 = "BLACKJACK";
+    %tmp.14 = dup %tmp.10;
+    %tmp.15 = aputv %tmp.14 %tmp.12 %tmp.13;
+    %tmp.17 = const :col1;
+    symbol [ col1 %tmp.17 58 9 13 const ];
+    %tmp.18 = 0x22AA44;
+    %tmp.19 = dup %tmp.15;
+    %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+    %tmp.22 = const :bg;
+    symbol [ bg %tmp.22 59 9 11 const ];
+    %tmp.23 = 0x041004;
+    %tmp.24 = dup %tmp.20;
+    %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+    %tmp.27 = const :circle;
+    symbol [ circle %tmp.27 60 9 15 const ];
+    %tmp.28 = 0x0A2A12;
+    %tmp.29 = dup %tmp.25;
+    %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+    %tmp.32 = const :accent;
+    symbol [ accent %tmp.32 61 9 15 const ];
+    %tmp.33 = 0x44CC66;
+    %tmp.34 = dup %tmp.30;
+    %tmp.35 = aputv %tmp.34 %tmp.32 %tmp.33;
+    %tmp.37 = const :lbTitle;
+    symbol [ lbTitle %tmp.37 62 9 16 const ];
+    %tmp.38 = "BLACKJACK";
+    %tmp.39 = dup %tmp.35;
+    %tmp.40 = aputv %tmp.39 %tmp.37 %tmp.38;
+    %tmp.42 = const :hooks;
+    symbol [ hooks %tmp.42 63 9 14 const ];
+    symbol [ BlackjackHooks %tmp.46 63 24 38 ];
+    %tmp.46 = getv ? :BlackjackHooks;
+    %tmp.43 = newc %tmp.46 ();
+    %tmp.47 = dup %tmp.40;
+    %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
+    %tmp.50 = const :options;
+    symbol [ options %tmp.50 64 9 16 const ];
+    %tmp.51 = newa 2;
+    symbol [ GmOption %tmp.55 65 16 24 ];
+    %tmp.55 = getv ? :GmOption;
+    %tmp.56 = "bj_decks";
+    %tmp.57 = "Decks";
+    %tmp.58 = newa 3;
+    %tmp.59 = "1 DECK";
+    %tmp.60 = dup %tmp.58;
+    %tmp.61 = aputv %tmp.60 0 %tmp.59;
+    %tmp.62 = "2 DECKS";
+    %tmp.63 = dup %tmp.61;
+    %tmp.64 = aputv %tmp.63 1 %tmp.62;
+    %tmp.65 = "6 DECKS";
+    %tmp.66 = dup %tmp.64;
+    %tmp.67 = aputv %tmp.66 2 %tmp.65;
+    %tmp.68 = 2;
+    %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
+    %tmp.69 = dup %tmp.51;
+    %tmp.70 = aputv %tmp.69 0 %tmp.52;
+    symbol [ GmOption %tmp.74 68 16 24 ];
+    %tmp.74 = getv ? :GmOption;
+    %tmp.75 = "bj_skin";
+    %tmp.76 = "Card Back";
+    %tmp.77 = newa 2;
+    %tmp.78 = "CLASSIC";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 0 %tmp.78;
+    %tmp.81 = "NEON";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 1 %tmp.81;
+    %tmp.84 = 0;
+    %tmp.71 = newc %tmp.74 (%tmp.75, %tmp.76, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.70;
+    %tmp.86 = aputv %tmp.85 1 %tmp.71;
+    %tmp.87 = dup %tmp.48;
+    %tmp.88 = aputv %tmp.87 %tmp.50 %tmp.86;
+    %tmp.1 = newc %tmp.4 (%tmp.88);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 55 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 71 4 ]
+    [ "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_start" "_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 71 8 9 ];
+    symbol [ GameMenuView %tmp.92 71 16 28 ];
+    %tmp.92 = getv ? :GameMenuView;
+    %tmp.93 = lgetv %cfg.1;
+    symbol [ cfg %tmp.93 71 29 32 ];
+    %tmp.89 = newc %tmp.92 (%tmp.93);
+    lputv %v.2 %tmp.89;
+    symbol [ v %v.2 71 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc" 72 4 ]
+    %tmp.94 = newa 2;
+    %tmp.95 = lgetv %v.2;
+    symbol [ v %tmp.95 72 12 13 ];
+    %tmp.96 = dup %tmp.94;
+    %tmp.97 = aputv %tmp.96 0 %tmp.95;
+    symbol [ GameMenuDelegate %tmp.101 72 19 35 ];
+    %tmp.101 = getv ? :GameMenuDelegate;
+    %tmp.102 = lgetv %v.2;
+    symbol [ v %tmp.102 72 36 37 ];
+    %tmp.98 = newc %tmp.101 (%tmp.102);
+    %tmp.103 = dup %tmp.97;
+    %tmp.104 = aputv %tmp.103 1 %tmp.98;
+    ret %tmp.104;
+_Users_kkorolczuk_work_garmin_blackjack_source_BlackjackMenu_mc_54_44_73_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/blackjack/source/BlackjackMenu.mc"; @line = 4; ]
+<init> {
+}

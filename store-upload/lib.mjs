@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
 import {
-  HERE, REPO_ROOT, STORE_DIR, AUTH_FILE, CONFIG_FILE, ARTIFACTS,
+  HERE, REPO_ROOT, STORE_DIR, AUTH_FILE, CONFIG_FILE, DESCRIPTIONS_FILE, ARTIFACTS,
 } from "./config.mjs";
 
 export const log  = (...a) => console.log(...a);
@@ -105,6 +105,12 @@ export function loadConfig() {
 
 export function saveConfig(cfg) {
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(cfg, null, 2) + "\n");
+}
+
+// slug → store description text (used by the `describe` command).
+export function loadDescriptions() {
+  if (!fs.existsSync(DESCRIPTIONS_FILE)) return {};
+  return JSON.parse(fs.readFileSync(DESCRIPTIONS_FILE, "utf8"));
 }
 
 // Normalise a name for fuzzy matching (lowercase alphanumerics only).

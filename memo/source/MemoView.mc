@@ -38,6 +38,7 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Attention;
 
 // ── Game states ─────────────────────────────────────────────────────────────
 const MG_MENU   = 0;
@@ -123,6 +124,15 @@ class MemoView extends WatchUi.View {
     // Double-tap
     hidden var _dtR; hidden var _dtC; hidden var _dtMs;
 
+    // Juice + engagement (all cosmetic — never affects the submitted score).
+    hidden var _fxOn;        // sound + haptics (memo_fx)
+    hidden var _fx;          // particle pool
+    hidden var _shake;       // screen-shake ticks
+    hidden var _streak;      // consecutive matches this run
+    hidden var _bestStreak;  // best streak this run
+    hidden var _comboFlash;  // combo banner ticks
+    hidden var _winT;        // win-celebration animation clock (ticks)
+
     // ─────────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -154,11 +164,48 @@ class MemoView extends WatchUi.View {
         _submitted = false;
         _diffVariants = ["Easy", "Normal", "Hard"];
 
+        _fx = new MgParticles();
+        _fxOn = _loadFx();
+        _shake = 0; _streak = 0; _bestStreak = 0; _comboFlash = 0; _winT = 0;
+
         _loadBest();
 
         // Difficulty now comes from the shared OPTIONS screen (memo_diff: 0/1/2).
         var dv = Application.Storage.getValue("memo_diff");
         if (dv instanceof Number && dv >= 0 && dv <= 2) { _diff = dv; }
+    }
+
+    // ── Sound + haptics (gated by memo_fx, guarded for devices without
+    //    Attention support). 0/unset = ON, 1 = OFF. ─────────────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue("memo_fx");
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) {}
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        try {
+            var t = Attention.TONE_KEY;
+            if      (kind == 0) { t = Attention.TONE_KEY;        }   // flip
+            else if (kind == 1) { t = Attention.TONE_SUCCESS;    }   // match
+            else if (kind == 2) { t = Attention.TONE_FAILURE;    }   // mismatch
+            else if (kind == 3) { t = Attention.TONE_LOUD_BEEP;  }   // combo
+            else if (kind == 4) { t = Attention.TONE_SUCCESS;    }   // win
+            else if (kind == 5) { t = Attention.TONE_ALARM;      }   // new best
+            Attention.playTone(t);
+        } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try {
+            Attention.vibrate([new Attention.VibeProfile(intensity, duration)]);
+        } catch (e) {}
     }
 
     function onShow() {
@@ -223,6 +270,9 @@ class MemoView extends WatchUi.View {
     // ── Timer tick ───────────────────────────────────────────────────────────
     function onTick() as Void {
         _tick++;
+        _fx.step();
+        if (_shake > 0)      { _shake--; }
+        if (_comboFlash > 0) { _comboFlash--; }
         if (_gs == MG_PLAY) {
             _elapsed++;
             if (_matchFlash > 0) { _matchFlash--; }
@@ -237,6 +287,8 @@ class MemoView extends WatchUi.View {
             for (var i = 0; i < _n; i++) {
                 if (_anim[i] > 0) { _anim[i]--; }
             }
+        } else if (_gs == MG_RESULT) {
+            _winT++;
         }
         WatchUi.requestUpdate();
     }
@@ -270,8 +322,19 @@ class MemoView extends WatchUi.View {
         _moves = 0; _matched = 0; _elapsed = 0; _isNewBest = false;
         _submitted = false;
         _dtR = -1; _dtC = -1; _dtMs = 0;
+        _fxOn = _loadFx();
+        _shake = 0; _streak = 0; _bestStreak = 0; _comboFlash = 0; _winT = 0;
+        _fx.clear();
         _layout();
         _gs = MG_PLAY;
+    }
+
+    // Screen-centre of tile idx (for spawning bursts).
+    hidden function _tileCenter(idx) {
+        var r = idx / _cols; var c = idx % _cols;
+        var tx = _gx + c * (_tW + _gap);
+        var ty = _gy + r * (_tH + _gap);
+        return [tx + _tW / 2, ty + _tH / 2];
     }
 
     // ── Game logic ───────────────────────────────────────────────────────────
@@ -287,18 +350,45 @@ class MemoView extends WatchUi.View {
         if (_state[idx] != MG_HIDDEN) { return; }
 
         _state[idx] = MG_OPEN; _anim[idx] = 5;
+        _tone(0);
+        _vibe(20, 30);
 
         if (_fst < 0) {
             _fst = idx;
         } else {
             _snd = idx; _moves++;
             if (_sym[_fst] == _sym[_snd]) {
+                var mSym = _sym[_fst];
                 _state[_fst] = MG_MATCHED; _state[_snd] = MG_MATCHED;
                 _matchFlash = 12; _matched++;
+                _streak++;
+                if (_streak > _bestStreak) { _bestStreak = _streak; }
+
+                // Spark burst on both matched tiles in the symbol's colour.
+                var col = MG_COLORS[mSym];
+                var p1 = _tileCenter(_fst);
+                var p2 = _tileCenter(_snd);
+                _fx.burst(p1[0], p1[1], 6, col, 4.0, false, 9, 2, 0.0);
+                _fx.burst(p2[0], p2[1], 6, col, 4.0, false, 9, 2, 0.0);
+
+                // Combo: rising feedback for consecutive matches.
+                if (_streak >= 2) {
+                    _comboFlash = 12;
+                    _tone(3);
+                    _vibe(45 + _streak * 6, 60);
+                } else {
+                    _tone(1);
+                    _vibe(50, 60);
+                }
+
                 _fst = -1; _snd = -1;
                 if (_matched == _n / 2) { _endGame(); }
             } else {
                 _flipBack = 15;
+                _streak = 0;
+                _shake = 4;
+                _tone(2);
+                _vibe(60, 90);
             }
         }
     }
@@ -316,6 +406,16 @@ class MemoView extends WatchUi.View {
             Leaderboard.submitScore(MG_LB_GAME_ID, m, variant);
             Leaderboard.showPostGame(MG_LB_GAME_ID, variant, variant + " MEMO");
         }
+
+        // Win celebration — confetti fountain + fanfare.
+        _winT = 0;
+        var cx = _w / 2;
+        _fx.burst(cx, _h * 30 / 100, 16, 0xFFCC00, 6.0, true, 16, 3, -3.0);
+        _fx.burst(cx, _h * 30 / 100, 12, 0x44FF88, 6.0, true, 16, 3, -3.0);
+        _tone(4);
+        _vibe(90, 120);
+        if (_isNewBest) { _tone(5); _vibe(80, 200); }
+
         _gs = MG_RESULT;
     }
 
@@ -437,8 +537,20 @@ class MemoView extends WatchUi.View {
         dc.setColor(0x080818, 0x080818); dc.clear();
         // Never render an in-game menu — the shared menu is the root view.
         if (_gs == MG_MENU)   { _startGame(); }
-        if (_gs == MG_PLAY)   { _drPlay(dc);   return; }
-        if (_gs == MG_RESULT) { _drResult(dc); return; }
+
+        var shx = 0; var shy = 0;
+        if (_shake > 0) { shx = (Math.rand() % 5) - 2; shy = (Math.rand() % 5) - 2; }
+
+        if (_gs == MG_PLAY) {
+            _drPlay(dc, shx, shy);
+            _fx.draw(dc, shx, shy);
+            return;
+        }
+        if (_gs == MG_RESULT) {
+            _drResult(dc);
+            _fx.draw(dc, 0, 0);
+            return;
+        }
     }
 
     // ── Menu (chess style) ────────────────────────────────────────────────────
@@ -519,7 +631,7 @@ class MemoView extends WatchUi.View {
     }
 
     // ── Play ─────────────────────────────────────────────────────────────────
-    hidden function _drPlay(dc) {
+    hidden function _drPlay(dc, shx, shy) {
         var cx    = _w / 2;
         var pairs = _n / 2;
         var secs  = _elapsed / 10;
@@ -535,13 +647,38 @@ class MemoView extends WatchUi.View {
         dc.drawText(_w * 92 / 100, _h * 3 / 100, Graphics.FONT_XTINY,
             _moves + "m", Graphics.TEXT_JUSTIFY_RIGHT);
 
+        // Progress bar under the HUD.
+        var pbW = _w * 60 / 100;
+        var pbX = cx - pbW / 2;
+        var pbY = _h * 10 / 100;
+        dc.setColor(0x162030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(pbX, pbY, pbW, 4, 2);
+        var fillW = pbW * _matched / pairs;
+        if (fillW > 0) {
+            dc.setColor(0x33CC66, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(pbX, pbY, fillW, 4, 2);
+        }
+
         for (var r = 0; r < _rows; r++) {
             for (var c = 0; c < _cols; c++) {
                 var idx = r * _cols + c;
-                var tx  = _gx + c * (_tW + _gap);
-                var ty  = _gy + r * (_tH + _gap);
+                var tx  = _gx + c * (_tW + _gap) + shx;
+                var ty  = _gy + r * (_tH + _gap) + shy;
                 _drTile(dc, tx, ty, idx, (r == _cr && c == _cc));
             }
+        }
+
+        // Combo banner — pops when a 2+ match streak is running.
+        if (_comboFlash > 0 && _streak >= 2) {
+            var by = _h * 84 / 100;
+            var bw = _w * 46 / 100; if (bw < 108) { bw = 108; }
+            var bx = cx - bw / 2;
+            dc.setColor(0x2A1A00, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(bx, by, bw, 22, 7);
+            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(bx, by, bw, 22, 7);
+            dc.drawText(cx, by + 2, Graphics.FONT_XTINY,
+                "COMBO x" + _streak.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -567,6 +704,11 @@ class MemoView extends WatchUi.View {
         if (st == MG_HIDDEN) {
             dc.setColor(0x1A2255, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(dx, ty, dw, _tH, rad);
+            // Top sheen — a lighter band across the upper third for depth.
+            if (_tW >= 12 && dw > _tW / 2) {
+                dc.setColor(0x2C3A80, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(dx + 1, ty + 1, dw - 2, _tH / 3, rad);
+            }
             dc.setColor(0x2A3A77, Graphics.COLOR_TRANSPARENT);
             dc.drawRoundedRectangle(dx, ty, dw, _tH, rad);
             if (dw > _tW / 2 && _tW >= 14) {
@@ -582,8 +724,16 @@ class MemoView extends WatchUi.View {
             dc.setColor(flash ? 0x0A4A20 : (isMatch ? 0x0A2218 : 0x0C1020),
                 Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(dx, ty, dw, _tH, rad);
-            dc.setColor(isMatch ? 0x22AA44 : 0x1A2A44, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(dx, ty, dw, _tH, rad);
+            // Matched glow — a brighter border pulse while the flash is live.
+            if (isMatch && _matchFlash > 0) {
+                dc.setColor(flash ? 0x66FF99 : 0x33CC66, Graphics.COLOR_TRANSPARENT);
+                dc.setPenWidth(2);
+                dc.drawRoundedRectangle(dx, ty, dw, _tH, rad);
+                dc.setPenWidth(1);
+            } else {
+                dc.setColor(isMatch ? 0x22AA44 : 0x1A2A44, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(dx, ty, dw, _tH, rad);
+            }
 
             if (dw > _tW * 5 / 10) {
                 var ss = _tW * 36 / 100; if (ss < 4) { ss = 4; }
@@ -610,23 +760,36 @@ class MemoView extends WatchUi.View {
         dc.drawText(cx, _h * 12 / 100, Graphics.FONT_LARGE,
             "MATCHED!", Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Stars pop in one at a time over the first ~1 s of the result.
         var s  = _stars();
         var sp = _w * 14 / 100;
         for (var i = 0; i < 3; i++) {
-            dc.setColor((i < s) ? 0xFFCC00 : 0x333322, Graphics.COLOR_TRANSPARENT);
-            _drSym(dc, cx - sp + i * sp, _h * 33 / 100, 3, (i < s) ? 13 : 9);
+            var shown = (i < s) && (_winT >= (i + 1) * 3);
+            var full  = shown;
+            var sz    = full ? 14 : ((i < s) ? 9 : 9);
+            // Little overshoot bounce right as it appears.
+            if (full && _winT < (i + 1) * 3 + 3) { sz = 17; }
+            dc.setColor(full ? 0xFFCC00 : 0x333322, Graphics.COLOR_TRANSPARENT);
+            _drSym(dc, cx - sp + i * sp, _h * 33 / 100, 3, sz);
         }
 
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 47 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _h * 46 / 100, Graphics.FONT_SMALL,
             "Time: " + (_elapsed / 10) + "." + (_elapsed % 10) + "s",
             Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, _h * 58 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _h * 56 / 100, Graphics.FONT_SMALL,
             "Moves: " + _moves, Graphics.TEXT_JUSTIFY_CENTER);
 
+        if (_bestStreak >= 2) {
+            dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h * 66 / 100, Graphics.FONT_XTINY,
+                "Best combo x" + _bestStreak.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         if (_isNewBest) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 70 / 100, Graphics.FONT_XTINY,
+            var nb = (_tick % 8 < 4) ? 0xFFDD66 : 0xFFCC44;
+            dc.setColor(nb, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h * 74 / 100, Graphics.FONT_XTINY,
                 "* NEW BEST *", Graphics.TEXT_JUSTIFY_CENTER);
         }
 

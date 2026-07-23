@@ -23,20 +23,28 @@ class RenderSystem {
     }
 
     // ── Brass cabinet frame around the reel window ────────────────────
-    static function drawCabinet(dc, sw, sh, cabX, cabY, cabW, cabH) {
+    // `gold` selects the unlockable premium colour theme (a brighter, richer
+    // gold cabinet); false renders the classic brass. CLAMPED to ownership by
+    // the caller so a locked pick always falls back to classic.
+    static function drawCabinet(dc, sw, sh, cabX, cabY, cabW, cabH, gold) {
         var fx = cabX - 12; var fy = cabY - 12;
         var fw = cabW + 24; var fh = cabH + 24;
+
+        var fTop  = gold ? 0xFFE873 : 0xF2C94C;
+        var fBot  = gold ? 0xC79A17 : 0x6E4E12;
+        var bevel = gold ? 0xFFF6C8 : 0xFFE9A0;
+        var edge  = gold ? 0x8A6508 : 0x5A3E0E;
 
         // drop shadow
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(fx + 3, fy + 4, fw, fh, 14);
 
-        // brass frame with a vertical gradient (bright top -> dark bottom)
-        GfxUtil.vGradientRounded(dc, fx, fy, fw, fh, 0xF2C94C, 0x6E4E12, 10, 14);
+        // frame with a vertical gradient (bright top -> dark bottom)
+        GfxUtil.vGradientRounded(dc, fx, fy, fw, fh, fTop, fBot, 10, 14);
         // inner bevel highlight
-        dc.setColor(0xFFE9A0, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(bevel, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(fx + 2, fy + 2, fw - 4, fh - 4, 12);
-        dc.setColor(0x5A3E0E, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(edge, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(fx, fy, fw, fh, 14);
 
         // corner rivets
@@ -61,17 +69,19 @@ class RenderSystem {
     }
 
     // ── Reel columns + payline ────────────────────────────────────────
-    static function drawReels(dc, ctrl, cabX, cabY, colW, rowH, gap) {
+    static function drawReels(dc, ctrl, cabX, cabY, colW, rowH, gap, gold) {
         for (var i = 0; i < 3; i++) {
             var colX = cabX + i * (colW + gap);
             _drawColumn(dc, ctrl, i, colX, cabY, colW, rowH);
         }
         dc.clearClip();
 
-        // brass dividers between reels
+        // dividers between reels (gold skin brightens them)
+        var dTop = gold ? 0xFFE873 : 0xF2C94C;
+        var dBot = gold ? 0xC79A17 : 0x6E4E12;
         for (var d = 1; d < 3; d++) {
             var dxp = cabX + d * (colW + gap) - gap;
-            GfxUtil.vGradient(dc, dxp, cabY, gap, rowH * 3, 0xF2C94C, 0x6E4E12, 6);
+            GfxUtil.vGradient(dc, dxp, cabY, gap, rowH * 3, dTop, dBot, 6);
         }
 
         _drawPayline(dc, cabX, cabY, colW, rowH, gap);
@@ -181,6 +191,26 @@ class RenderSystem {
         dc.fillCircle(baseX - 3, baseY + pull - 3, 3);
     }
 
+    // ── Near-miss anticipation glow — pulsing frame on the crawling reel ──
+    static function drawAntic(dc, ctrl, cabX, cabY, colW, rowH, gap) {
+        var idx = ctrl.anticIdx;
+        if (idx < 0) { return; }
+        var colX = cabX + idx * (colW + gap);
+        var winH = rowH * 3;
+        var t = (System.getTimer() / 90) % 4;
+        var col = (t < 2) ? 0xFF3344 : 0xFFDD33;   // red<->gold throb
+        for (var k = 0; k < 3; k++) {
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(colX - 2 - k, cabY - 2 - k, colW + 4 + k * 2, winH + 4 + k * 2, 5);
+        }
+        // little upward chevrons flanking the reel to draw the eye
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var my = cabY + winH / 2;
+        dc.fillPolygon([[colX - 10, my - 6], [colX - 10, my + 6], [colX - 3, my]]);
+        var rx = colX + colW;
+        dc.fillPolygon([[rx + 10, my - 6], [rx + 10, my + 6], [rx + 3, my]]);
+    }
+
     // ── Win / jackpot FX ──────────────────────────────────────────────
     static function drawResultFlash(dc, ctrl, cabX, cabY, cabW, cabH) {
         var r = ctrl.lastResult;
@@ -192,6 +222,14 @@ class RenderSystem {
         var col = 0xFFCC22;
         if (kind == "JACKPOT") { col = pulse ? 0xFF33AA : 0xFFDD33; }
         else if (kind == "TRIPLE") { col = pulse ? 0x33CC55 : 0xAAFF66; }
+
+        // bright pulse across the winning payline row
+        if (ctrl.winPulseT > 0 && pulse) {
+            var rowH = cabH / 3;
+            dc.setColor(GfxUtil.shade(col, 70), Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(cabX - 2, cabY + rowH, cabW + 4, rowH);
+            dc.drawRectangle(cabX - 1, cabY + rowH + 1, cabW + 2, rowH - 2);
+        }
 
         // pulsing thick frame around the whole cabinet
         var fx = cabX - 14; var fy = cabY - 14;
@@ -209,26 +247,28 @@ class RenderSystem {
     }
 
     hidden static function _burst(dc, cx, cy, cabW, cabH, age, big) {
-        var n = big ? 10 : 6;
-        var spread = cabW * 60 / 100;
+        var n = big ? 16 : 9;
+        var spread = cabW * 72 / 100;
         for (var i = 0; i < n; i++) {
             // deterministic pseudo-random angle per index
             var ang = (i * 2617) % 360;
             var rad = ang * Math.PI / 180;
-            var dist = (age * 5) + (i * 3);
+            var dist = (age * 6) + (i * 3);
             if (dist > spread) { dist = spread; }
             var px = cx + (Math.cos(rad) * dist).toNumber();
-            var py = cy + (Math.sin(rad) * dist).toNumber() - age;   // slight upward drift
+            // stronger upward drift so coins "fountain" up before scattering
+            var py = cy + (Math.sin(rad) * dist).toNumber() - age * 2;
             if (i % 2 == 0 || big) {
+                var cr = big ? 6 : 5;
                 // gold coin
                 dc.setColor(0xB8860B, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px, py, 5);
+                dc.fillCircle(px, py, cr);
                 dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px, py, 4);
+                dc.fillCircle(px, py, cr - 1);
                 dc.setColor(0x8A6508, Graphics.COLOR_TRANSPARENT);
                 dc.drawLine(px - 1, py - 2, px - 1, py + 2);
             } else {
-                GfxUtil.sparkle(dc, px, py, 5, 0xFFF3B0);
+                GfxUtil.sparkle(dc, px, py, 6, 0xFFF3B0);
             }
         }
     }

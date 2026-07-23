@@ -18,9 +18,14 @@ class UIManager {
                         "B " + ctrl.scoreSys.hi.format("%d"), Graphics.TEXT_JUSTIFY_RIGHT);
         }
         if (ctrl.scoreSys.combo >= 2) {
-            dc.setColor(0x66DDFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(6, hudTop + 2, Graphics.FONT_XTINY,
-                        "x" + (ctrl.scoreSys.combo + 1).format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
+            var combo = ctrl.scoreSys.combo;
+            var cc; var cf;
+            if (combo >= 5) { cc = 0xFF7A2A; cf = Graphics.FONT_TINY; }   // on fire
+            else            { cc = 0x66DDFF; cf = Graphics.FONT_XTINY; }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(7, hudTop + 3, cf, "x" + (combo + 1).format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
+            dc.setColor(cc, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(6, hudTop + 2, cf, "x" + (combo + 1).format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         // Energy bar — depletes over time, refills on chop; colour
@@ -35,12 +40,60 @@ class UIManager {
         else if (pct > 25) { col = 0xFFCC22; }
         else               { col = 0xFF3333; }
 
-        dc.setColor(0x1A1A1A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(barX, energyBarY, barW, barH, 4);
+        dc.setColor(0x0E0E12, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(barX - 1, energyBarY - 1, barW + 2, barH + 2, 4);
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(barX, energyBarY, fillW, barH, 4);
-        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        // Glossy highlight on the filled portion.
+        if (fillW > 4) {
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(barX + 2, energyBarY + 1, fillW - 4, 1);
+        }
+        // Low-energy pulse: flash the frame when the run is about to end.
+        var frameC = 0x445566;
+        if (pct <= 25 && (ctrl.frame % 6 < 3)) { frameC = 0xFF5555; }
+        dc.setColor(frameC, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(barX, energyBarY, barW, barH, 4);
+    }
+
+    // ── Milestone banner — a gold pill toast on chop/combo milestones ──
+    static function drawMilestone(dc, ctrl, sw, sh) {
+        var cx = sw / 2;
+        var y  = sh * 36 / 100;
+        var w  = sw * 50 / 100; if (w < 116) { w = 116; }
+        var x  = cx - w / 2;
+        dc.setColor(0x2A2200, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(x, y, w, 24, 7);
+        dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(x, y, w, 24, 7);
+        dc.drawText(cx, y + 3, Graphics.FONT_XTINY,
+                    ctrl.milestoneText, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── Daily-login toast — a green pill under the HUD on the first frame ──
+    static function drawDailyToast(dc, ctrl, sw, sh) {
+        if (ctrl.dailyText == null) { return; }
+        var cx = sw / 2;
+        var y  = sh * 22 / 100;
+        var w  = sw * 66 / 100; if (w < 132) { w = 132; }
+        var x  = cx - w / 2;
+        dc.setColor(0x0C2A12, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(x, y, w, 22, 7);
+        dc.setColor(0x44BB22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(x, y, w, 22, 7);
+        dc.setColor(0xCFF0C0, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, y + 2, Graphics.FONT_XTINY,
+                    ctrl.dailyText, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Themed lumberjack rank ladder derived from the shared XP level.
+    hidden static function _axeRank(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Timber Boss"; }
+        if (lvl >= 10) { return "Lumberjack"; }
+        if (lvl >= 6)  { return "Woodsman"; }
+        if (lvl >= 3)  { return "Splitter"; }
+        return "Rookie";
     }
 
     // ── Chess-style menu — title, decorative axe-in-log, three rows:
@@ -142,6 +195,26 @@ class UIManager {
         } else if (ctrl.scoreSys.hi > 0) {
             lines.add(["Best " + ctrl.scoreSys.hi.format("%d"), 0x88AABB]);
         }
+        if (ctrl.maxCombo >= 2) {
+            lines.add(["Max combo x" + (ctrl.maxCombo + 1).format("%d"), 0xFFAA44]);
+        }
+
+        // ── Shared meta-progression summary (level/rank + coin balance) ──
+        // Fully guarded — Progress never throws, but keep the whole block safe.
+        try {
+            var lvl = Progress.level();
+            lines.add(["Lv " + lvl.format("%d") + " " + _axeRank(lvl)
+                       + " - " + Progress.coins().format("%d") + "c", 0xBFD8C4]);
+            var stk = Progress.currentStreak();
+            if (stk >= 2) {
+                lines.add(["Day streak " + stk.format("%d"), 0x9AD0EC]);
+            }
+            // One-shot axe-unlock banner (gold), cleared at the next run start.
+            if (ctrl.pgUnlockMsg != null) {
+                lines.add([ctrl.pgUnlockMsg, 0xFFD24A]);
+            }
+        } catch (e) {}
+
         GameOverCard.draw(dc, sw, sh, title, 0xFF6633,
             lines, "tap = again  BACK = menu", 0xFF6633);
     }

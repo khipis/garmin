@@ -29,6 +29,10 @@
 
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
+
+// Sound + haptics master switch (OPTIONS: bs_fx). 0/unset = ON, 1 = OFF.
+const BS_FX_KEY = "bs_fx";
 
 const GS_MENU         = 0;
 const GS_SETUP        = 1;
@@ -107,10 +111,30 @@ class GameController {
     // Persisted stats
     var winsTotal;
 
+    // ── Meta-progression snapshot (shared Progress module) ───────────
+    // Filled by _awardProgress() at game end so the result card can show
+    // level/rank/coins/streak without re-reading storage every frame.
+    var pgLevel;
+    var pgCoins;
+    var pgStreak;
+    var pgAcc;            // last game's shooting accuracy (%)
+    var pgUnlockMsg;      // one-shot "UNLOCKED: ..." banner, or null
+
+    // ── Lightweight, non-blocking toast (daily bonus etc.) ───────────
+    var toast;           // String or null
+    var toastT;          // frames remaining (ticked by MainView timer)
+
+    // ── Result-screen flourish animation clock ───────────────────────
+    // Counts frames since entering GS_WIN / GS_LOSE. MainView drives it
+    // via a short-lived timer and stops once it caps out.
+    var overlayTick;
+
     // Leaderboard metric — number of player shots taken this match.
     // Counts EVERY player shot (hit or miss); lower is better. Reset at
     // the start of each match (beginSetup) and submitted on a player win.
     var shotCount;
+
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: bs_fx)
 
     function initialize() {
         playerGrid   = new GridManager();
@@ -131,6 +155,15 @@ class GameController {
         animTick       = 0;
         shotCount      = 0;
 
+        pgLevel      = 1;
+        pgCoins      = 0;
+        pgStreak     = 0;
+        pgAcc        = 0;
+        pgUnlockMsg  = null;
+        toast        = null;
+        toastT       = 0;
+        overlayTick  = 0;
+
         winsTotal    = _loadInt("winsTotal", 0);
         difficulty   = _loadInt("bs_diff", AI_MEDIUM);
         if (difficulty < 0 || difficulty > 2) { difficulty = AI_MEDIUM; }
@@ -143,7 +176,40 @@ class GameController {
         playerShotsLeft = shotsPerTurn;
         aiShotsLeft     = 0;
 
+        _fxOn        = _loadFx();
+
         state        = GS_MENU;
+    }
+
+    // ── Sound + haptics (best-effort; silent hardware is fine) ────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(BS_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 place · 1 player-hit · 2 player-miss · 3 sink-enemy ·
+    //       4 you-hit · 5 win · 6 lose
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_KEY; }
+        else if (kind == 3) { t = Attention.TONE_ALERT_HI; }
+        else if (kind == 4) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 5) { t = Attention.TONE_SUCCESS; }
+        else if (kind == 6) { t = Attention.TONE_FAILURE; }
+        else                { t = Attention.TONE_KEY; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadInt(key, dflt) {
@@ -217,6 +283,9 @@ class GameController {
         playerShotsLeft  = shotsPerTurn;
         aiShotsLeft      = 0;
         shotCount        = 0;          // fresh move counter for this match
+        pgUnlockMsg      = null;       // clear last game's unlock banner
+        overlayTick      = 0;
+        _fxOn            = _loadFx();
         state      = GS_SETUP;
     }
 
@@ -311,6 +380,9 @@ class GameController {
         if (!setupCanPlace()) { return false; }
         playerGrid.placeShip(cursor[0], cursor[1],
                              SHIP_LENS[setupIdx], setupHoriz, setupIdx);
+        // Ship anchored — crisp confirm click + tiny tick.
+        _tone(0);
+        _vibe(25, 30);
         setupIdx = setupIdx + 1;
         if (setupIdx >= NUM_SHIPS) {
             cursor = [GRID_SIZE / 2, GRID_SIZE / 2];
@@ -390,6 +462,16 @@ class GameController {
             lastSinkText = (lastSinkText.length() == 0)
                             ? msg
                             : (lastSinkText + " " + msg);
+            // Enemy ship destroyed — bright alert + strong triumphant pulse.
+            _tone(3);
+            _vibe(80, 160);
+        } else if (pres.hit) {
+            // Direct hit on a hull — punchy beep + short kick.
+            _tone(1);
+            _vibe(45, 55);
+        } else {
+            // Splash in open water — light blip, no vibe.
+            _tone(2);
         }
         playerShotsLeft = playerShotsLeft - 1;
         animTick = 0;
@@ -425,6 +507,11 @@ class GameController {
                 Leaderboard.submitScore(LB_GAME_ID, shotCount, lbVariant());
                 Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "BATTLESHIP");
                 playerShotsLeft = shotsPerTurn;   // for next game
+                _awardProgress(true);
+                // Victory! — triumphant chime + long celebratory rumble.
+                _tone(5);
+                _vibe(90, 300);
+                overlayTick = 0;
                 state = GS_WIN;
                 return;
             }
@@ -443,6 +530,11 @@ class GameController {
         // GS_FIRE_AI just finished animating on the player board.
         if (playerShips.allSunk()) {
             playerShotsLeft = shotsPerTurn;       // for next game
+            _awardProgress(false);
+            // Fleet lost — harsh failure tone + long, heavy rumble.
+            _tone(6);
+            _vibe(100, 340);
+            overlayTick = 0;
             state = GS_LOSE;
             return;
         }
@@ -477,6 +569,109 @@ class GameController {
         state = GS_MENU;
     }
 
+    // ── Meta-progression (shared, shop-ready via Progress module) ────
+    // Grants coins + XP for a completed game, scaled by win/loss and by
+    // shooting accuracy, then unlocks cosmetic fleet skins at rank
+    // milestones. Coins are the future shop's currency; skin ownership
+    // is the exact set a shop purchase would grant. Fully guarded.
+    hidden function _awardProgress(win) {
+        try {
+            var hits  = _enemyHitsCount();
+            var shots = shotCount; if (shots < 1) { shots = 1; }
+            var acc   = hits * 100 / shots; if (acc > 100) { acc = 100; }
+            pgAcc = acc;
+
+            var coinsGain;
+            var xpGain;
+            if (win) {
+                // Base win + accuracy bonus (sharper shooting pays) +
+                // difficulty bonus (harder AI is worth more).
+                coinsGain = 30 + acc / 2 + difficulty * 10;
+                xpGain    = 40 + difficulty * 8 + acc / 5;
+            } else {
+                // Consolation payout scaled by damage dealt this match.
+                coinsGain = 5 + hits;
+                xpGain    = 10 + hits;
+            }
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+
+            pgCoins  = Progress.coins();
+            pgStreak = Progress.currentStreak();
+            var lvl  = Progress.level();
+            pgLevel  = lvl;
+
+            // Rank-gated cosmetic unlocks (NEON @ Lv3, GOLD @ Lv6).
+            var uNeon = Progress.unlockIfReached("skin_neon", lvl, 3);
+            var uGold = Progress.unlockIfReached("skin_gold", lvl, 6);
+            if (uGold)      { pgUnlockMsg = "UNLOCKED: GOLD FLEET"; }
+            else if (uNeon) { pgUnlockMsg = "UNLOCKED: NEON FLEET"; }
+        } catch (e) {}
+    }
+
+    // Count of player shots that landed on an enemy ship cell. Cheap —
+    // a single 10×10 scan run once at game end.
+    hidden function _enemyHitsCount() {
+        var n = 0;
+        for (var r = 0; r < GRID_SIZE; r++) {
+            for (var c = 0; c < GRID_SIZE; c++) {
+                if (enemyGrid.isHit(r, c)) { n = n + 1; }
+            }
+        }
+        return n;
+    }
+
+    // Naval rank ladder derived from the shared XP level.
+    function rankName() {
+        var l = pgLevel;
+        if (l >= 25) { return "Fleet Admiral"; }
+        if (l >= 15) { return "Admiral"; }
+        if (l >= 10) { return "Commander"; }
+        if (l >= 6)  { return "Captain"; }
+        if (l >= 3)  { return "Lieutenant"; }
+        return "Ensign";
+    }
+
+    // Selected-and-owned fleet hull colour. Falls back to the classic
+    // navy hull when the chosen skin isn't owned yet, so a locked pick
+    // never renders — safe pre-shop and post-shop alike.
+    function fleetColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("bs_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        try {
+            if (sel == 1 && Progress.owns("skin_neon")) { return 0x00FFAA; }
+            if (sel == 2 && Progress.owns("skin_gold")) { return 0xFFD24A; }
+        } catch (e) {}
+        return 0x4FA0E6;   // COL_SHIP — classic navy
+    }
+
+    // ── Toast + result flourish clocks (driven by MainView timer) ────
+    function showToast(msg, frames) {
+        toast  = msg;
+        toastT = frames;
+    }
+
+    // Advance the non-fire UI animations one frame (toast + result
+    // flourish). Called every timer tick alongside animAdvance().
+    function uiAdvance() {
+        if (toastT > 0) { toastT = toastT - 1; }
+        if (state == GS_WIN || state == GS_LOSE) {
+            if (overlayTick < 120) { overlayTick = overlayTick + 1; }
+        }
+    }
+
+    // True while any non-fire animation still needs the timer alive.
+    function needsUiTimer() {
+        if (toastT > 0) { return true; }
+        if ((state == GS_WIN || state == GS_LOSE) && overlayTick < 120) {
+            return true;
+        }
+        return false;
+    }
+
     // ── AI turn ─────────────────────────────────────────────────────
     hidden function _resolveAITurn() {
         var shot = ai.pickShot(playerGrid);
@@ -498,6 +693,13 @@ class GameController {
             lastSinkText = (lastSinkText.length() == 0)
                             ? msg
                             : (lastSinkText + " " + msg);
+            // One of your ships went down — warning tone + hard, long jolt.
+            _tone(4);
+            _vibe(90, 200);
+        } else if (ares.hit) {
+            // Enemy scored a hit on your fleet — warning tone + sharp jolt.
+            _tone(4);
+            _vibe(70, 120);
         }
     }
 }

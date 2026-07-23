@@ -79,7 +79,8 @@ function buildGyroMazeMenu() as Lang.Array {
         :options => [
             new GmOption("gm_diff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 0),
             new GmOption("gm_biome", "Biome",
-                ["RANDOM", "NORMAL", "ICE", "TRAP", "SPEED", "CHAOS"], 0)
+                ["RANDOM", "NORMAL", "ICE", "TRAP", "SPEED", "CHAOS"], 0),
+            new GmOption("gyr_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -42,6 +42,18 @@ class CellWarsDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+    // Touch speed control — essential on watches without UP/DOWN buttons
+    // (e.g. vivoactive 6, which only has ENTER + BACK keys plus the screen).
+    // Swipe up = faster, swipe down = slower.
+    function onSwipe(evt) {
+        var d = evt.getDirection();
+        if      (d == WatchUi.SWIPE_UP)   { _v.doUp();   }
+        else if (d == WatchUi.SWIPE_DOWN) { _v.doDown(); }
+        else                              { return true; }
+        WatchUi.requestUpdate();
+        return true;
+    }
+
     function onKey(evt) {
         var key = evt.getKey();
         if (key == WatchUi.KEY_UP)    { _v.doUp();     WatchUi.requestUpdate(); return true; }

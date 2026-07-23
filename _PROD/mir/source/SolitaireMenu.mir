@@ -595,9 +595,9 @@ _Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_48_40_48_53_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc"; @line = 51; @symbol_functiondef = [buildSolitaireMenu,51,9,27]; @symbol_return<0> = [Lang,51,33,37]; @symbol_return<1> = [Array,51,38,43]; ]
 function buildSolitaireMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_start:
+_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_start:
 [ "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc" 52 4 ]
-    [ "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_start" "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_start" "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 52 8 11 ];
     symbol [ MenuConfig %tmp.4 52 18 28 ];
@@ -652,7 +652,7 @@ _Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
     symbol [ options %tmp.55 62 9 16 const ];
-    %tmp.56 = newa 1;
+    %tmp.56 = newa 2;
     symbol [ GmOption %tmp.60 63 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "sol_draw";
@@ -668,37 +668,52 @@ _Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_start:
     %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.69, %tmp.70);
     %tmp.71 = dup %tmp.56;
     %tmp.72 = aputv %tmp.71 0 %tmp.57;
-    %tmp.73 = dup %tmp.53;
-    %tmp.74 = aputv %tmp.73 %tmp.55 %tmp.72;
-    %tmp.1 = newc %tmp.4 (%tmp.74);
+    symbol [ GmOption %tmp.76 66 16 24 ];
+    %tmp.76 = getv ? :GmOption;
+    %tmp.77 = "sol_skin";
+    %tmp.78 = "Card Back";
+    %tmp.79 = newa 2;
+    %tmp.80 = "CLASSIC";
+    %tmp.81 = dup %tmp.79;
+    %tmp.82 = aputv %tmp.81 0 %tmp.80;
+    %tmp.83 = "NEON";
+    %tmp.84 = dup %tmp.82;
+    %tmp.85 = aputv %tmp.84 1 %tmp.83;
+    %tmp.86 = 0;
+    %tmp.73 = newc %tmp.76 (%tmp.77, %tmp.78, %tmp.85, %tmp.86);
+    %tmp.87 = dup %tmp.72;
+    %tmp.88 = aputv %tmp.87 1 %tmp.73;
+    %tmp.89 = dup %tmp.53;
+    %tmp.90 = aputv %tmp.89 %tmp.55 %tmp.88;
+    %tmp.1 = newc %tmp.4 (%tmp.90);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 52 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc" 66 4 ]
-    [ "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_start" "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc" 69 4 ]
+    [ "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_start" "_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 66 8 9 ];
-    symbol [ GameMenuView %tmp.78 66 16 28 ];
-    %tmp.78 = getv ? :GameMenuView;
-    %tmp.79 = lgetv %cfg.1;
-    symbol [ cfg %tmp.79 66 29 32 ];
-    %tmp.75 = newc %tmp.78 (%tmp.79);
-    lputv %v.2 %tmp.75;
-    symbol [ v %v.2 66 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc" 67 4 ]
-    %tmp.80 = newa 2;
-    %tmp.81 = lgetv %v.2;
-    symbol [ v %tmp.81 67 12 13 ];
-    %tmp.82 = dup %tmp.80;
-    %tmp.83 = aputv %tmp.82 0 %tmp.81;
-    symbol [ GameMenuDelegate %tmp.87 67 19 35 ];
-    %tmp.87 = getv ? :GameMenuDelegate;
-    %tmp.88 = lgetv %v.2;
-    symbol [ v %tmp.88 67 36 37 ];
-    %tmp.84 = newc %tmp.87 (%tmp.88);
-    %tmp.89 = dup %tmp.83;
-    %tmp.90 = aputv %tmp.89 1 %tmp.84;
-    ret %tmp.90;
-_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_68_0_stop:
+    symbol [ v %v.2 69 8 9 ];
+    symbol [ GameMenuView %tmp.94 69 16 28 ];
+    %tmp.94 = getv ? :GameMenuView;
+    %tmp.95 = lgetv %cfg.1;
+    symbol [ cfg %tmp.95 69 29 32 ];
+    %tmp.91 = newc %tmp.94 (%tmp.95);
+    lputv %v.2 %tmp.91;
+    symbol [ v %v.2 69 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc" 70 4 ]
+    %tmp.96 = newa 2;
+    %tmp.97 = lgetv %v.2;
+    symbol [ v %tmp.97 70 12 13 ];
+    %tmp.98 = dup %tmp.96;
+    %tmp.99 = aputv %tmp.98 0 %tmp.97;
+    symbol [ GameMenuDelegate %tmp.103 70 19 35 ];
+    %tmp.103 = getv ? :GameMenuDelegate;
+    %tmp.104 = lgetv %v.2;
+    symbol [ v %tmp.104 70 36 37 ];
+    %tmp.100 = newc %tmp.103 (%tmp.104);
+    %tmp.105 = dup %tmp.99;
+    %tmp.106 = aputv %tmp.105 1 %tmp.100;
+    ret %tmp.106;
+_Users_kkorolczuk_work_garmin_solitare_source_SolitaireMenu_mc_51_44_71_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/solitare/source/SolitaireMenu.mc"; @line = 4; ]
 <init> {

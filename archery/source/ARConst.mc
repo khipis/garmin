@@ -95,3 +95,4 @@ const AR_K_SENS     = "ar_sens";
 const AR_K_DIFF     = "ar_diff";
 const AR_K_BEST     = "ar_best";        // best score across runs
 const AR_K_BESTROUND = "ar_bestround";  // best round reached
+const AR_FX_KEY     = "ar_fx";          // 0 = sound+haptics ON, 1 = OFF

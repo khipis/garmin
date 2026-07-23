@@ -65,7 +65,8 @@ function buildStarSwarmMenu() as Lang.Array {
         :hooks   => new StarSwarmHooks(),
         :options => [
             new GmOption(SS_DIFF_KEY,  "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
-            new GmOption(SS_LIVES_KEY, "Lives",      ["1", "2", "3", "4", "5"],  2)
+            new GmOption(SS_LIVES_KEY, "Lives",      ["1", "2", "3", "4", "5"],  2),
+            new GmOption("ss_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -16,6 +16,8 @@
 
 using Toybox.Application;
 using Toybox.System;
+using Toybox.Attention;
+using Toybox.Lang;
 
 const GS_MENU  = 0;
 const GS_READY = 1;
@@ -32,10 +34,26 @@ const JT_ROW_LB    = 1;
 // Global leaderboard game id (matches _LOGOS / web id).
 const LB_GAME_ID = "jumptower";
 
+// Sound + haptics master switch (OPTIONS: jt_fx; 0 = ON, 1 = OFF).
+const JT_FX_KEY = "jt_fx";
+
+// Selectable character-colour skin (OPTIONS: jt_skin). Index 0 = CLASSIC
+// (always owned), 1 = NEON, 2 = GOLD. Higher tiers are gated on the shared
+// Progress ownership set (shop-ready) and unlocked by climbing / rank.
+const JT_SKIN_KEY   = "jt_skin";
+const JT_SKIN_NEON  = "jt_neon";
+const JT_SKIN_GOLD  = "jt_gold";
+// Unlock thresholds — reached via best height (metres) OR account level.
+const JT_NEON_LEVEL = 3;
+const JT_NEON_M     = 200;
+const JT_GOLD_LEVEL = 6;
+const JT_GOLD_M     = 500;
+
 class GameController {
     var state;
     var player;
     var platforms;
+    var fx;               // particle pool (juice)
 
     // Menu state.
     var menuRow;
@@ -80,15 +98,37 @@ class GameController {
     // FX
     var lastSpringFlash;  // ticks remaining for "BOING" feedback
     var deathShake;
+    var shake;            // generic screen-shake ticks (spring/jetpack/save)
+    var fxOn;             // sound + haptics enabled (jt_fx option)
+
+    // Shield power-up — a one-hit bubble that saves you from a single
+    // fatal fall, launching you back up instead of ending the run.
+    var shieldActive;
+    var shieldFlash;      // ticks remaining for the "SHIELD!" pickup banner
+    var shieldSaveFlash;  // ticks remaining for the "SAVED!" banner
+
+    // Coin combo — grabbing coins in quick succession builds a streak
+    // shown in the HUD. Purely feedback (no score change) so the coins
+    // leaderboard stays honest.
+    var comboCount;
+    var comboTimer;
+    var comboFlash;
 
     // Bookkeeping for collision sweep
     var feetPrev;         // player feet y at start of last tick
+
+    // Shared meta-progression (coins/XP/rank/skins) — one-shot game-over
+    // unlock banner + the daily login toast queued by the App's checkIn.
+    var pgUnlockMsg;      // "New skin: NEON" etc., or null
+    var dailyMsg;         // daily-bonus toast text, or null
+    var dailyT;           // ticks remaining for the daily toast
 
     function initialize() {
         state          = GS_MENU;
         menuRow        = JT_ROW_START;
         player         = new Player();
         platforms      = new PlatformManager();
+        fx             = new ParticlePool();
         score          = 0;
         hi             = _loadHi();
         coinsRun       = 0;
@@ -106,8 +146,73 @@ class GameController {
         diffSetting    = _loadDiffSetting();
         lastSpringFlash= 0;
         deathShake     = 0;
+        shake          = 0;
+        fxOn           = _loadFx();
+        shieldActive   = false;
+        shieldFlash    = 0;
+        shieldSaveFlash= 0;
+        comboCount     = 0;
+        comboTimer     = 0;
+        comboFlash     = 0;
         feetPrev       = 0;
+        pgUnlockMsg    = null;
+        dailyMsg       = null;
+        dailyT         = 0;
         player.skin    = skinTier();
+        player.skinSel = selectedSkin();
+        // Pop the daily-bonus toast queued by the App on the day's first
+        // launch (shown once over the first frames of the first run).
+        try {
+            var dm = Application.Storage.getValue("jt_daily_msg");
+            if (dm != null) {
+                dailyMsg = dm; dailyT = 70;
+                Application.Storage.deleteValue("jt_daily_msg");
+            }
+        } catch (e) {}
+    }
+
+    // ── Shared meta-progression (shop-ready via the Progress module) ─────────
+    // Selected-and-owned character skin: 0 = CLASSIC, 1 = NEON, 2 = GOLD.
+    // A locked pick falls back to CLASSIC so selection is always safe (before
+    // and after a future shop grants ownership).
+    function selectedSkin() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue(JT_SKIN_KEY);
+            if (v instanceof Lang.Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 2 && Progress.owns(JT_SKIN_GOLD)) { return 2; }
+        if (sel == 1 && Progress.owns(JT_SKIN_NEON)) { return 1; }
+        return 0;
+    }
+
+    // Rank title for the game-over progression line.
+    function rankName() { return Progress.rankName(); }
+
+    // Grant coins + XP proportional to the height reached, and unlock the
+    // cosmetic skins the first time their milestone (height OR level) is met.
+    // Idempotent unlock calls make the "UNLOCKED" banner fire exactly once.
+    hidden function _awardProgress() {
+        var m = heightMetres();
+        var coinsGain = 5 + m / 20;
+        var xpGain    = 10 + m / 5;
+        Progress.addCoins(coinsGain);
+        Progress.addXp(xpGain);
+        var lvl = Progress.level();
+        var uNeon = Progress.unlockIfReached(JT_SKIN_NEON, lvl, JT_NEON_LEVEL)
+                 || Progress.unlockIfReached(JT_SKIN_NEON, m,   JT_NEON_M);
+        var uGold = Progress.unlockIfReached(JT_SKIN_GOLD, lvl, JT_GOLD_LEVEL)
+                 || Progress.unlockIfReached(JT_SKIN_GOLD, m,   JT_GOLD_M);
+        if (uGold)      { pgUnlockMsg = "UNLOCKED: GOLD"; }
+        else if (uNeon) { pgUnlockMsg = "UNLOCKED: NEON"; }
+    }
+
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(JT_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
     }
 
     hidden function _loadHi() {
@@ -241,6 +346,7 @@ class GameController {
         difficulty      = 0;
         lastSpringFlash = 0;
         deathShake      = 0;
+        shake           = 0;
         feetPrev        = player.y + player.h;
         coinsRun        = 0;
         coinFlash       = 0;
@@ -250,7 +356,17 @@ class GameController {
         zone            = 0;
         zoneMsg         = "";
         zoneFlashT      = 0;
+        fxOn            = _loadFx();
+        shieldActive    = false;
+        shieldFlash     = 0;
+        shieldSaveFlash = 0;
+        comboCount      = 0;
+        comboTimer      = 0;
+        comboFlash      = 0;
+        fx.clear();
         player.skin     = skinTier();
+        player.skinSel  = selectedSkin();
+        pgUnlockMsg     = null;
         state           = GS_READY;
     }
 
@@ -290,6 +406,9 @@ class GameController {
         // the menu animation simple and the first jump immediate.
         if (state == GS_READY) { state = GS_PLAY; }
 
+        // Advance particle juice.
+        fx.step();
+
         // Remember previous feet-y for the collision sweep.
         feetPrev  = player.y + player.h;
         var yPrev = player.y;
@@ -301,10 +420,16 @@ class GameController {
         if (jetpackT > 0) {
             player.vy = Physics.JUMP_VY * 1.8;
             jetpackT  = jetpackT - 1;
+            // Exhaust trail — a couple of flame flecks under the frog.
+            var fxx = player.x + ((Math.rand() % 5) - 2);
+            var fxy = player.y + player.h + 2;
+            fx.emit(fxx, fxy, (Math.rand() % 3) - 1, 1.5 + (Math.rand() % 10) / 10.0,
+                    (Math.rand() % 2 == 0) ? 0xFFAA00 : 0xFF5500, 8, 3, false);
         }
 
         // Integrate player.
         player.step(screenW);
+        player.stepFx();
         platforms.step();
 
         // Coins — collectable independent of falling/rising so the
@@ -318,6 +443,19 @@ class GameController {
             lifeCoins   = lifeCoins + got;
             coinFlash   = 14;
             player.skin = skinTier();
+            // Coin combo — chained pickups within a short window build a
+            // streak (feedback only; coin count is unchanged).
+            if (comboTimer > 0) { comboCount = comboCount + got; }
+            else                { comboCount = got; }
+            comboTimer = 55;
+            comboFlash = 16;
+            fx.burst(player.x, player.y, 7, 0xFFE066, 3.0, false, 14, 3, -1.2);
+            if (comboCount >= 3) { _tone("combo"); _vibe(20, 40); }
+            else                 { _tone("coin");  }
+        }
+        if (comboTimer > 0) {
+            comboTimer = comboTimer - 1;
+            if (comboTimer == 0) { comboCount = 0; }
         }
 
         // Collision: only when falling (vy >= 0). A negative vy means
@@ -338,17 +476,38 @@ class GameController {
             // and — worst case — a re-tunnel on the very next tick.
             player.y = platTop - player.h;
             feetPrev = platTop;
+            player.squashT = 5;
             if (hit == 1) {
                 player.bounce();
+                // Landing dust puff (no sound/haptic — hops are constant).
+                fx.burst(player.x, platTop, 4, 0xBBAA88, 1.8, true, 10, 2, -0.4);
             } else if (hit == 2) {
                 // Spring: 1.5× the normal jump.
                 player.vy = Physics.JUMP_VY * 1.5;
                 lastSpringFlash = 6;
-            } else {
+                shake = 4;
+                fx.burst(player.x, platTop, 9, 0x66CCFF, 3.2, false, 14, 3, -1.6);
+                _tone("spring"); _vibe(35, 90);
+            } else if (hit == 3) {
                 // Jetpack: launch hard and keep thrusting for ~2.2 s.
                 player.vy    = Physics.JUMP_VY * 1.8;
                 jetpackT     = 55;
                 jetpackFlash = 24;
+                shake = 6;
+                fx.burst(player.x, platTop, 10, 0xFFAA00, 3.5, false, 16, 3, 0.6);
+                _tone("jetpack"); _vibe(60, 160);
+            } else if (hit == 4) {
+                // Shield pickup: a normal bounce that also arms the bubble.
+                player.bounce();
+                shieldActive = true;
+                shieldFlash  = 24;
+                fx.burst(player.x, player.y, 10, 0x66FFCC, 3.0, false, 16, 3, -0.6);
+                _tone("shield"); _vibe(45, 110);
+            } else {
+                // Breakable rail: bounce off it as it crumbles into shards.
+                player.bounce();
+                fx.burst(player.x, platTop, 8, 0xE25075, 2.6, true, 14, 3, -0.2);
+                _tone("hop");
             }
         }
 
@@ -357,10 +516,11 @@ class GameController {
         var playerScreenY = _worldToScreen(player.y);
         if (playerScreenY < scrollLineY) {
             var dy = scrollLineY - playerScreenY;
-            // Apply scroll to player + platforms.
+            // Apply scroll to player + platforms + particles.
             player.y = player.y + dy;
             feetPrev = feetPrev + dy;
             platforms.applyScroll(dy, screenH + 20, difficulty);
+            fx.applyScroll(dy);
             score = score + dy;
             _updateDifficulty();
             if (score > hi) {
@@ -379,23 +539,46 @@ class GameController {
                 coinsRun    = coinsRun  + 8;
                 lifeCoins   = lifeCoins + 8;
                 player.skin = skinTier();
+                _tone("zone"); _vibe(50, 130);
+                fx.burst(screenW / 2, scrollLineY, 12, 0xFFEE66, 4.0, false, 18, 3, 0);
             }
         }
 
-        // Death — player fell off the bottom.
+        // Death — player fell off the bottom. A live shield spends
+        // itself to save the run: pop the frog back onto the screen with
+        // a big bounce instead of ending it.
         if (_worldToScreen(player.y) > screenH + 12) {
-            _die();
+            if (shieldActive) {
+                shieldActive    = false;
+                shieldSaveFlash = 40;
+                player.y        = scrollLineY;
+                player.vy       = Physics.JUMP_VY * 1.7;
+                player.squashT  = 5;
+                feetPrev        = player.y + player.h;
+                shake           = 8;
+                fx.burst(player.x, player.y, 14, 0x66FFCC, 4.0, false, 20, 3, 0);
+                _tone("save"); _vibe(80, 220);
+            } else {
+                _die();
+            }
         }
 
-        if (lastSpringFlash > 0) { lastSpringFlash = lastSpringFlash - 1; }
-        if (jetpackFlash    > 0) { jetpackFlash    = jetpackFlash    - 1; }
-        if (coinFlash       > 0) { coinFlash       = coinFlash       - 1; }
-        if (zoneFlashT      > 0) { zoneFlashT      = zoneFlashT      - 1; }
+        if (lastSpringFlash  > 0) { lastSpringFlash  = lastSpringFlash  - 1; }
+        if (jetpackFlash     > 0) { jetpackFlash     = jetpackFlash     - 1; }
+        if (coinFlash        > 0) { coinFlash        = coinFlash        - 1; }
+        if (zoneFlashT       > 0) { zoneFlashT       = zoneFlashT       - 1; }
+        if (shieldFlash      > 0) { shieldFlash      = shieldFlash      - 1; }
+        if (shieldSaveFlash  > 0) { shieldSaveFlash  = shieldSaveFlash  - 1; }
+        if (comboFlash       > 0) { comboFlash       = comboFlash       - 1; }
+        if (shake            > 0) { shake            = shake            - 1; }
+        if (dailyT           > 0) { dailyT           = dailyT           - 1; }
     }
 
     hidden function _die() {
         player.alive = false;
         deathShake   = 8;
+        fx.burst(player.x, player.y, 16, 0x66CC44, 3.5, true, 22, 3, -1.0);
+        _tone("die"); _vibe(90, 320);
         if (score > hi) { hi = score; }
         _saveHi();
         _saveLifeCoins();
@@ -405,6 +588,8 @@ class GameController {
             _newCoinsFlag = true;
             _saveBestCoinsRun();
         }
+        // Shared meta-progression: award coins + XP and unlock height skins.
+        _awardProgress();
         state = GS_OVER;
         // Submit the run's height (the metres value shown to the player)
         // to the global leaderboard. No variant for Jump Tower.
@@ -419,6 +604,33 @@ class GameController {
     }
 
     function hasNewCoinsRecord() { return _newCoinsFlag; }
+
+    // ── Sound & haptics (gated by the jt_fx OPTION) ─────────────────
+    hidden function _tone(kind) {
+        if (!fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t = Attention.TONE_KEY;
+        if      (kind.equals("die"))     { t = Attention.TONE_FAILURE; }
+        else if (kind.equals("save"))    { t = Attention.TONE_SUCCESS; }
+        else if (kind.equals("jetpack")) { t = Attention.TONE_SUCCESS; }
+        else if (kind.equals("shield"))  { t = Attention.TONE_INTERVAL_ALERT; }
+        else if (kind.equals("spring"))  { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind.equals("zone"))    { t = Attention.TONE_CANARY; }
+        else if (kind.equals("combo"))   { t = Attention.TONE_LAP; }
+        else if (kind.equals("coin"))    { t = Attention.TONE_KEY; }
+        else if (kind.equals("hop"))     { t = Attention.TONE_KEY; }
+        try { Attention.playTone(t); } catch (e) { }
+    }
+
+    hidden function _vibe(intensity, duration) {
+        if (!fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try {
+            Attention.vibrate([new Attention.VibeProfile(intensity, duration)]);
+        } catch (e) { }
+    }
 
     hidden function _updateDifficulty() {
         // 0..10 buckets by every ~40 metres (240 px screens).

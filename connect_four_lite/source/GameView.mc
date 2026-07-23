@@ -4,10 +4,12 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 // ── Global leaderboard ──────────────────────────────────────────────────────
 const LB_GAME_ID = "connectfour";
 const LB_STREAK_KEY = "connectfour_streak";
+const CF_FX_KEY = "cf_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 // ── Board dimensions ───────────────────────────────────────────────────────
 const COLS    = 7;
@@ -64,6 +66,10 @@ class GameView extends WatchUi.View {
     hidden var _cfMode, _cfDiff, _menuSel;
     hidden var _playerFirst;
 
+    // ── Sound + haptics (OPTIONS: cf_fx) ──────────────────────────────────
+    hidden var _fxOn;
+    hidden var _fxEndDone;   // one-shot guard for end-of-game feedback
+
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
@@ -108,6 +114,8 @@ class GameView extends WatchUi.View {
         _cfDiff  = CF_DIFF_MED;
         _menuSel = 0;
         _playerFirst = true;
+        _fxOn      = _loadFx();
+        _fxEndDone = false;
         _abCols = new [COLS];
         _abCols[0] = 3; _abCols[1] = 2; _abCols[2] = 4;
         _abCols[3] = 1; _abCols[4] = 5; _abCols[5] = 0; _abCols[6] = 6;
@@ -211,7 +219,7 @@ class GameView extends WatchUi.View {
         if (_state != GS_PLAY) { return; }
         if (_cfMode == CF_MODE_AIAI) { return; }  // AiAI: no human input
         var r = _dropRow(_curCol);
-        if (r < 0) { return; }
+        if (r < 0) { _tone(2); return; }   // column full
         _dropDisc(_curCol, r, MARK_P);
         if (_checkWin(MARK_P)) {
             _overType = OVER_PWIN; _scoreP = _scoreP + 1; _state = GS_OVER; _onGameEnd(); return;
@@ -298,6 +306,8 @@ class GameView extends WatchUi.View {
         _moveCount = 0;
         _curCol    = COLS / 2;
         _overType  = OVER_NONE;
+        _fxOn      = _loadFx();
+        _fxEndDone = false;
         // Abort any in-progress AI search from a previous game so the board
         // doesn't get marks dropped into it after a restart.
         _abActive  = false;
@@ -321,6 +331,43 @@ class GameView extends WatchUi.View {
     hidden function _dropDisc(col, row, mark) {
         _cells[row * COLS + col] = mark;
         _moveCount = _moveCount + 1;
+        _tone(0); _vibe(30, 35);   // disc dropped (player or AI)
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    // kind: 0 drop/move · 1 generic win · 2 illegal/draw · 3 win · 4 loss.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(CF_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
+
+    // End-of-game feedback (win / loss / draw), fired once per game from onUpdate.
+    hidden function _endFx() {
+        if (_overType == OVER_DRAW) { _tone(2); _vibe(40, 120); return; }
+        if (_cfMode != CF_MODE_PVAI) { _tone(1); _vibe(80, 180); return; }
+        if (_overType == OVER_PWIN) { _tone(3); _vibe(100, 250); }
+        else                        { _tone(4); _vibe(100, 350); }
     }
 
     // ── Win detection ─────────────────────────────────────────────────────
@@ -804,6 +851,7 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_MENU) { _startGame(); }
+        if (_state == GS_OVER && !_fxEndDone) { _fxEndDone = true; _endFx(); }
         dc.setColor(0x060610, 0x060610);
         dc.clear();
         _drawBoard(dc);

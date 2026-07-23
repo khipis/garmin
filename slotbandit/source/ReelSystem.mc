@@ -105,6 +105,41 @@ class ReelSystem {
         for (var i = 0; i < 3; i++) { reels[i].step(SLOT_SPIN_SPEED); }
     }
 
+    // Like step(), but the anticipated reel (idx) crawls at a fraction of the
+    // normal speed for a tension-building near-miss slowdown.
+    function stepWith(anticIdx) {
+        for (var i = 0; i < 3; i++) {
+            var sp = SLOT_SPIN_SPEED;
+            if (i == anticIdx && reels[i].state == REEL_SPINNING) {
+                sp = SLOT_SPIN_SPEED * 0.34;
+            }
+            reels[i].step(sp);
+        }
+    }
+
+    // Index of the sole still-spinning reel when exactly two reels are already
+    // stopped AND those two match — i.e. one reel away from a 3-of-a-kind.
+    // Returns -1 when there's no such near-miss tension.
+    function anticIndex() {
+        var stoppedSyms = [];
+        var spinning = -1;
+        var spinCount = 0;
+        for (var i = 0; i < 3; i++) {
+            if (reels[i].state == REEL_STOPPED) {
+                stoppedSyms.add(reels[i].paylineSymbol());
+            } else if (reels[i].state == REEL_SPINNING) {
+                spinning = i; spinCount = spinCount + 1;
+            } else {
+                return -1;   // a reel mid-decel: no clean anticipation
+            }
+        }
+        if (stoppedSyms.size() == 2 && spinCount == 1 &&
+            stoppedSyms[0] == stoppedSyms[1]) {
+            return spinning;
+        }
+        return -1;
+    }
+
     function allStopped() {
         for (var i = 0; i < 3; i++) {
             if (reels[i].state != REEL_STOPPED) { return false; }

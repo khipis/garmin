@@ -56,7 +56,8 @@ function buildHexMenu() as Lang.Array {
         :options => [
             new GmOption("hex_mode", "Mode",     ["P vs AI", "P vs P", "AI vs AI"], 0),
             new GmOption("hex_diff", "AI level",  ["EASY", "MED", "HARD"], 1),
-            new GmOption("hex_side", "You play",  ["RED", "BLUE"], 0)
+            new GmOption("hex_side", "You play",  ["RED", "BLUE"], 0),
+            new GmOption("hex_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

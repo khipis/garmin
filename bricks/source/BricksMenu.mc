@@ -62,7 +62,10 @@ function buildBricksMenu() as Lang.Array {
         :lbTitle => "BRICKS",
         :hooks   => new BricksHooks(),
         :options => [
-            new GmOption("br_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("br_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            // Cosmetic paddle/ball skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the classic skin until it's owned.
+            new GmOption("br_skin", "Skin", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

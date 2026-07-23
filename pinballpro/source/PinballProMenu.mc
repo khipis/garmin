@@ -86,7 +86,9 @@ function buildPinballProMenu() as Lang.Array {
         :hooks   => new PinballProHooks(),
         :options => [
             new GmOption("table", "Table",
-                ["CLASSIC", "NOVA", "DERBY", "STINGER", "ECLIPSE"], 0)
+                ["CLASSIC", "NOVA", "DERBY", "STINGER", "ECLIPSE",
+                 "VORTEX", "COMET"], 0),
+            new GmOption("fx", "Effects", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

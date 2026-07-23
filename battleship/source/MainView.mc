@@ -13,6 +13,7 @@
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
+using Toybox.Application;
 
 // Animation tick rate.  ~22 fps is plenty for a brief overlay and
 // keeps the rest of the (otherwise idle) battery cost negligible.
@@ -32,7 +33,18 @@ class MainView extends WatchUi.View {
         _animTimerActive  = false;
     }
 
-    function onShow() {}
+    function onShow() {
+        // Surface today's login-streak bonus once as a lightweight toast
+        // (queued by the App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("bs_daily_msg");
+            if (dm != null) {
+                ctrl.showToast(dm, 70);
+                Application.Storage.deleteValue("bs_daily_msg");
+            }
+        } catch (e) {}
+        _syncAnimTimer();
+    }
     function onHide() {
         if (_animTimer != null && _animTimerActive) {
             _animTimer.stop();
@@ -45,15 +57,17 @@ class MainView extends WatchUi.View {
     // animation states (handled by `_syncAnimTimer`).
     function onAnimTick() {
         if (ctrl == null) { return; }
-        ctrl.animAdvance();
+        ctrl.animAdvance();   // fire-state chaining (no-op outside firing)
+        ctrl.uiAdvance();     // toast + result-screen flourish clocks
         _syncAnimTimer();
         WatchUi.requestUpdate();
     }
 
-    // Start / stop the animation timer so it only runs while the
-    // controller is actually playing a fire animation.
+    // Start / stop the animation timer so it only runs while something
+    // is actually animating: a fire sequence, a toast, or the win/lose
+    // result flourish.
     hidden function _syncAnimTimer() {
-        var need = ctrl.isFiring();
+        var need = ctrl.isFiring() || ctrl.needsUiTimer();
         if (need && !_animTimerActive) {
             if (_animTimer == null) { _animTimer = new Timer.Timer(); }
             _animTimer.start(method(:onAnimTick), ANIM_TICK_MS, true);

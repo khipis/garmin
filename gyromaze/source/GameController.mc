@@ -25,6 +25,7 @@
 using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
+using Toybox.Attention;
 
 class GameController {
     var state;
@@ -55,6 +56,10 @@ class GameController {
 
     var dirty;
 
+    // Sound + haptics master switch + last special-tile cell (edge-trigger).
+    hidden var _fxOn;
+    hidden var _lastFxCell;
+
     function initialize() {
         state     = GM_MENU;
         menuRow   = 0;
@@ -78,8 +83,38 @@ class GameController {
         btnAx    = 0;
         btnAy    = 0;
         dirty    = true;
+        _fxOn    = _loadFx();
+        _lastFxCell = -1;
 
         _loadAll();
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 boost/light · 1 win chime · 2 slow/soft · 3 win · 4 death.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(GM_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ────────────────────────────────────────────
@@ -195,6 +230,8 @@ class GameController {
         elapsed = 0;
         btnAx   = 0;
         btnAy   = 0;
+        _fxOn   = _loadFx();
+        _lastFxCell = -1;
         state   = GM_PLAY;
         dirty   = true;
     }
@@ -205,6 +242,8 @@ class GameController {
         physics.vx = 0.0;
         physics.vy = 0.0;
         elapsed = 0;
+        _fxOn   = _loadFx();
+        _lastFxCell = -1;
         state   = GM_PLAY;
         dirty   = true;
     }
@@ -247,7 +286,25 @@ class GameController {
         physics.applyTile(extra);
 
         // Death check.
-        if (extra == GM_TILE_SPIKE) { state = GM_OVER; dirty = true; return; }
+        if (extra == GM_TILE_SPIKE) {
+            // Deadly spike — sharp fail sting + hard jolt.
+            _tone(4);
+            _vibe(100, 250);
+            state = GM_OVER; dirty = true; return;
+        }
+
+        // Edge-triggered special-tile FX (fires only when entering a new
+        // boost/slow cell, never every frame while sitting on it).
+        if (cell != _lastFxCell) {
+            _lastFxCell = cell;
+            if (extra == GM_TILE_BOOST) {
+                _tone(0);
+                _vibe(45, 45);
+            } else if (extra == GM_TILE_SLOW) {
+                _tone(2);
+                _vibe(25, 70);
+            }
+        }
 
         // Win check.
         if (physics.atCell(exitCell, n)) { _win(); return; }
@@ -272,6 +329,10 @@ class GameController {
         // player later quits or dies).
         Leaderboard.submitScore(GM_LB_GAME_ID, level, lbVariant());
         Leaderboard.showPostGame(GM_LB_GAME_ID, lbVariant(), "GYRO MAZE");
+
+        // Maze cleared — triumphant chime + celebratory buzz.
+        _tone(3);
+        _vibe(90, 260);
 
         state  = GM_WIN;
         dirty  = true;

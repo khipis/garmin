@@ -23,9 +23,10 @@ class DropResult {
     var overhangWidthWX; // width of overhang (0 when perfect)
     var overhangOnLeft;  // 1 = overhang sliced off the left, 0 = right
     var row;             // row index at which the block landed
+    var special;         // 0 = normal, 1 = gold block was placed
     function initialize() {
         status=0; newLeftWX=0; newWidthWX=0;
-        overhangLeftWX=0; overhangWidthWX=0; overhangOnLeft=0; row=0;
+        overhangLeftWX=0; overhangWidthWX=0; overhangOnLeft=0; row=0; special=0;
     }
 }
 
@@ -35,14 +36,17 @@ class FallingPiece {
     var widthWX;
     var row;
     var yVel;         // world-y velocity (rows / tick)  positive = downward
+    var xVel;         // horizontal drift (world-x / tick) — flings outward
     var color;
+    var special;      // 0 = normal, 1 = gold slice
     var spin;         // current rotation (degrees, decorative)
     var spinV;        // spin velocity
-    function initialize(l, w, r, c, leftSide) {
-        leftWX  = l; widthWX = w; row = r; color = c;
+    function initialize(l, w, r, c, leftSide, spec) {
+        leftWX  = l; widthWX = w; row = r; color = c; special = spec;
         yVel    = 0.4;
+        xVel    = leftSide ? -1.4 : 1.4;
         spin    = 0;
-        spinV   = leftSide ? -8 : 8;
+        spinV   = leftSide ? -9 : 9;
     }
 }
 
@@ -89,19 +93,20 @@ class TowerManager {
     // Append the foundation block (called once per game).
     function placeFoundation(width, color) {
         var left = (worldMinX + worldMaxX) / 2 - width / 2;
-        blocks.add(new Block(left, width, 0, color));
+        blocks.add(new Block(left, width, 0, color, 0));
         totalPlaced = 1;
     }
 
     // Spawn a new moving block above the current top. Width matches
     // the latest placed block (tower can only shrink, never grow).
-    function spawnMoving(color, speed) {
+    // `spec` = 1 marks a gold bonus block.
+    function spawnMoving(color, speed, spec) {
         var top = topBlock();
         if (top == null) { return; }
         var w = top.widthWX;
         // Spawn at the far left bound so it always slides into view.
         var startLeft = worldMinX;
-        moving    = new Block(startLeft, w, top.row + 1, color);
+        moving    = new Block(startLeft, w, top.row + 1, color, spec);
         moveSpeed = speed;
         moveDir   = 1;
     }
@@ -119,9 +124,10 @@ class TowerManager {
         var i = 0;
         while (i < falling.size()) {
             var f = falling[i];
-            f.row   = f.row - f.yVel;
-            f.yVel  = f.yVel + 0.18;
-            f.spin  = f.spin + f.spinV;
+            f.row    = f.row - f.yVel;
+            f.yVel   = f.yVel + 0.18;
+            f.leftWX = f.leftWX + f.xVel;
+            f.spin   = f.spin + f.spinV;
             // Discard once a few rows below the latest top → off-screen.
             var topRow = (topBlock() != null) ? topBlock().row : 0;
             if (f.row < topRow - 14) {
@@ -141,6 +147,8 @@ class TowerManager {
 
         var res = new DropResult();
         res.row = moving.row;
+        res.special = moving.special;
+        var mspec = moving.special;
 
         var movL = moving.leftWX;
         var movR = moving.leftWX + moving.widthWX;
@@ -161,7 +169,7 @@ class TowerManager {
             res.overhangWidthWX = moving.widthWX;
             res.overhangOnLeft  = (movL + moving.widthWX/2) < (topL + top.widthWX/2) ? 1 : 0;
             falling.add(new FallingPiece(movL, moving.widthWX, moving.row,
-                                         moving.color, res.overhangOnLeft == 1));
+                                         moving.color, res.overhangOnLeft == 1, mspec));
             moving = null;
             return res;
         }
@@ -172,7 +180,7 @@ class TowerManager {
             res.status     = 0;
             res.newLeftWX  = topL;
             res.newWidthWX = top.widthWX;
-            blocks.add(new Block(topL, top.widthWX, moving.row, moving.color));
+            blocks.add(new Block(topL, top.widthWX, moving.row, moving.color, mspec));
             _trimMemory();
             moving = null;
             totalPlaced = totalPlaced + 1;
@@ -197,10 +205,10 @@ class TowerManager {
             falling.add(new FallingPiece(res.overhangLeftWX,
                                          res.overhangWidthWX,
                                          moving.row, moving.color,
-                                         res.overhangOnLeft == 1));
+                                         res.overhangOnLeft == 1, mspec));
         }
         blocks.add(new Block(res.newLeftWX, res.newWidthWX,
-                             moving.row, moving.color));
+                             moving.row, moving.color, mspec));
         _trimMemory();
         moving = null;
         totalPlaced = totalPlaced + 1;

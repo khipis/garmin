@@ -66,7 +66,8 @@ function buildCheckersMenu() as Lang.Array {
         :options => [
             new GmOption("checkers_color", "Color",      ["LIGHT", "DARK"],                 0),
             new GmOption("checkers_diff",  "Difficulty", ["EASY", "NORMAL", "HARD"],        1),
-            new GmOption("checkers_mode",  "Mode",       ["P vs AI", "P vs P", "AI vs AI"], 0)
+            new GmOption("checkers_mode",  "Mode",       ["P vs AI", "P vs P", "AI vs AI"], 0),
+            new GmOption("checkers_fx",    "Sound & Haptics", ["ON", "OFF"],               0)
         ]
     });
     var v = new GameMenuView(cfg);

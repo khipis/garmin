@@ -62,7 +62,8 @@ function buildTwentyMenu() as Lang.Array {
         :lbTitle => "2048",
         :hooks   => new TwentyHooks(),
         :options => [
-            new GmOption("tf_timemode", "Mode", ["CLASSIC", "TIME"], 0)
+            new GmOption("tf_timemode", "Mode", ["CLASSIC", "TIME"], 0),
+            new GmOption("tf_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

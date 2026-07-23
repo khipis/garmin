@@ -56,7 +56,9 @@ function buildBlobsMenu() as Lang.Array {
         :lbTitle => "BLOBS",
         :hooks   => new BlobsHooks(),
         :options => [
-            new GmOption("blob_2p", "Players", ["1 PLAYER", "2 PLAYERS"], 0)
+            new GmOption("blob_2p", "Players", ["1 PLAYER", "2 PLAYERS"], 0),
+            new GmOption("blob_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("blob_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

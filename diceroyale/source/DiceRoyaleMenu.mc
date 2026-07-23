@@ -68,7 +68,8 @@ function buildDiceRoyaleMenu() as Lang.Array {
         :hooks   => new DiceRoyaleHooks(),
         :options => [
             new GmOption("dr_mode", "Mode", ["CLASSIC", "QUICK", "DAILY"], 0),
-            new GmOption("dr_rerolls", "Rerolls", ["1", "2", "3"], 1)
+            new GmOption("dr_rerolls", "Rerolls", ["1", "2", "3"], 1),
+            new GmOption("dr_dice_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

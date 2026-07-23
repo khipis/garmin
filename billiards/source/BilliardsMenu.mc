@@ -65,7 +65,11 @@ function buildBilliardsMenu() as Lang.Array {
             new GmOption("billGT", "Mode",
                 ["3-BALL", "9-BALL", "8-BALL", "SNOOKER", "TIME ATK"], 1),
             new GmOption("bill_vs", "Players", ["P vs AI", "P vs P"], 0),
-            new GmOption("billDiff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 1)
+            new GmOption("billDiff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 1),
+            // Cosmetic cue skin — unlocked by rank, shop-ready. A locked pick
+            // simply renders as the classic cue until it's owned.
+            new GmOption("bill_cue", "Cue", ["CLASSIC", "GOLD", "NEON"], 0),
+            new GmOption("bill_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

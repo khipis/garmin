@@ -5,8 +5,10 @@ using Toybox.Math;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 const LB_GAME_ID = "chess";
+const CHESS_FX_KEY = "chess_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const PC_EMPTY  = 0;
 const PC_PAWN   = 1;
@@ -65,6 +67,7 @@ class BitochiChessView extends WatchUi.View {
     hidden var _pieceVal;
     hidden var _menuRow;
     hidden var _gameResultDone;
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: chess_fx)
 
     // ── Engagement leaderboard: material captured ─────────────────────────────
     // Tracks the sum of opponent piece values captured by the player this game
@@ -109,6 +112,7 @@ class BitochiChessView extends WatchUi.View {
         _aiVsAi = (modeIdx == 2);
         _menuRow = 0;
         _gameResultDone = false;
+        _fxOn = _loadFx();
         _selSq = -1; _curSq = 36;
         _legalMoves = new [0];
         _promSq = -1; _promPick = 0;
@@ -276,6 +280,7 @@ class BitochiChessView extends WatchUi.View {
                 if (moves.size() > 0) {
                     _selSq = _curSq; _legalMoves = moves;
                     _curSq = moves[0][1];
+                    _tone(0); _vibe(20, 20);
                 }
             }
         } else {
@@ -288,6 +293,7 @@ class BitochiChessView extends WatchUi.View {
             }
             if (!moved) {
                 _selSq = -1; _legalMoves = new [0];
+                _tone(2);   // no legal target under the cursor
             }
         }
     }
@@ -431,7 +437,7 @@ class BitochiChessView extends WatchUi.View {
         if (_selSq < 0) {
             if (isOwnPiece) {
                 var moves = genLegalMovesFor(sq);
-                if (moves.size() > 0) { _selSq = sq; _legalMoves = moves; }
+                if (moves.size() > 0) { _selSq = sq; _legalMoves = moves; _tone(0); _vibe(20, 20); }
             }
         } else {
             var moved = false;
@@ -445,7 +451,10 @@ class BitochiChessView extends WatchUi.View {
                 _selSq = -1; _legalMoves = new [0];
                 if (isOwnPiece) {
                     var moves2 = genLegalMovesFor(sq);
-                    if (moves2.size() > 0) { _selSq = sq; _legalMoves = moves2; }
+                    if (moves2.size() > 0) { _selSq = sq; _legalMoves = moves2; _tone(0); _vibe(20, 20); }
+                    else { _tone(2); }
+                } else {
+                    _tone(2);   // tapped an empty / illegal square
                 }
             }
         }
@@ -461,6 +470,7 @@ class BitochiChessView extends WatchUi.View {
         _menuRow = 0;
         _selSq = -1;
         _gameResultDone = false;
+        _fxOn = _loadFx();
         _capturedMat = 0;
         _capturesSubmitted = false;
         if (_aiVsAi) {
@@ -528,6 +538,19 @@ class BitochiChessView extends WatchUi.View {
         if (_gameResultDone) { return; }
         if (_gs != CS_CHECKMATE && _gs != CS_STALEMATE) { return; }
         _gameResultDone = true;
+
+        // End-of-game feedback for every mode. In P-vs-AI a win is when it's
+        // the AI's turn to move with no reply (player delivered mate).
+        if (_gs == CS_STALEMATE) {
+            _tone(2); _vibe(40, 120);
+        } else if (!_aiVsAi && !_pvp && _whiteToMove != _playerIsWhite) {
+            _tone(3); _vibe(100, 250);   // player wins
+        } else if (!_aiVsAi && !_pvp) {
+            _tone(4); _vibe(100, 350);   // player loses
+        } else {
+            _tone(1); _vibe(80, 180);    // pvp / ai-vs-ai checkmate
+        }
+
         if (_aiVsAi || _pvp) { return; }
 
         submitCaptures();   // record material captured on EVERY outcome, win or lose
@@ -633,11 +656,42 @@ class BitochiChessView extends WatchUi.View {
         }
     }
 
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    // kind: 0 move/select · 1 capture · 2 illegal/check · 3 win · 4 loss.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(CHESS_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
+
     hidden function executeMove(mv) {
         var from = mv[0]; var to = mv[1]; var flags = mv[2];
         var piece = _board[from];
         var captured = _board[to];
         var absPiece = piece > 0 ? piece : -piece;
+        var wasCapture = (captured != PC_EMPTY) || (flags == 2);
+        if (wasCapture) { _tone(1); _vibe(60, 90); }
+        else            { _tone(0); _vibe(25, 30); }
 
         _board[to] = piece; _board[from] = PC_EMPTY;
 
@@ -701,6 +755,7 @@ class BitochiChessView extends WatchUi.View {
 
     hidden function afterMove() {
         if (_anyLegalMoveExists(_whiteToMove)) {
+            if (_inCheck) { _tone(2); _vibe(45, 70); }   // check! announced to whoever is on move
             if (_aiVsAi) {
                 _gs = CS_AI_THINK; _aiTimer = 1;
             } else if (_pvp || _whiteToMove == _playerIsWhite) {
@@ -953,6 +1008,9 @@ class BitochiChessView extends WatchUi.View {
             var bFrom = df[_aiBestIdx]; var bTo = dt[_aiBestIdx];
             var bFl = dfl[_aiBestIdx]; var bPr = dp[_aiBestIdx];
             var movingPiece = _board[bFrom];
+            var aiCapture = (_board[bTo] != PC_EMPTY) || (bFl == 2);
+            if (aiCapture) { _tone(1); _vibe(60, 90); }
+            else           { _tone(0); _vibe(25, 30); }
             applyMoveRaw(bFrom, bTo, bFl, bPr);
             _updateCR(movingPiece, bFrom, bTo);
             if (!_aiVsAi) { _whiteToMove = _playerIsWhite; }
@@ -969,6 +1027,7 @@ class BitochiChessView extends WatchUi.View {
     // Phase 2 (next tick): check player legal moves for checkmate/stalemate, snap cursor.
     hidden function _doAiFinish() {
         if (_anyLegalMoveExists(_whiteToMove)) {
+            if (_inCheck) { _tone(2); _vibe(45, 70); }   // check!
             if (_aiVsAi) {
                 _gs = CS_AI_THINK; _aiTimer = 1;
             } else {

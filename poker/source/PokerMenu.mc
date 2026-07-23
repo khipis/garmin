@@ -69,7 +69,11 @@ function buildPokerMenu() as Lang.Array {
         :lbTitle => "POKER",
         :hooks   => new PokerHooks(),
         :options => [
-            new GmOption("pk_hands", "Hands", ["10 HANDS", "20 HANDS", "40 HANDS"], 1)
+            new GmOption("pk_hands", "Hands", ["10 HANDS", "20 HANDS", "40 HANDS"], 1),
+            new GmOption("pk_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic card-back — unlocked by rank, shop-ready. A locked pick
+            // simply renders as the classic back until it's owned.
+            new GmOption("pk_skin", "Card Back", ["CLASSIC", "NEON"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

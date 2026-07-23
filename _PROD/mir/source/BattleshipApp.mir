@@ -24,46 +24,102 @@ _Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_8_29_8_53_stop:
     }
     [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 9; @symbol_functiondef = [onStart,9,13,20]; @symbol_param<0> = [state,9,21,26]; ]
     function onStart(state) {
-_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_9_29_9_68_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 9 31 ]
-        symbol [ Leaderboard %tmp.2 9 31 42 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_9_29_21_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 10 8 ]
+        symbol [ Leaderboard %tmp.2 10 8 19 ];
         %tmp.2 = getv ? :Leaderboard;
-        symbol [ logLaunch %tmp.3 9 43 52 ];
+        symbol [ logLaunch %tmp.3 10 20 29 ];
         %tmp.3 = getv function %tmp.2 :logLaunch;
         %tmp.4 = "battleship";
         invoke %tmp.2 %tmp.3(%tmp.4);
-_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_9_29_9_68_stop:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 14 8 ]
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_beginTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_endTry @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_beginTry:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_12_20_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 15 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_12_20_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_12_20_8_stop" ]
+        %ci.1 = local;
+        symbol [ ci %ci.1 15 16 18 ];
+        symbol [ Progress %tmp.6 15 21 29 ];
+        %tmp.6 = getv ? :Progress;
+        symbol [ checkIn %tmp.7 15 30 37 ];
+        %tmp.7 = getv function %tmp.6 :checkIn;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %ci.1 %tmp.8;
+        symbol [ ci %ci.1 15 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 16 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_12_19_12_if_stmt:
+        %tmp.9 = lgetv %ci.1;
+        symbol [ ci %tmp.9 16 16 18 ];
+        %tmp.10 = "first";
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_12_19_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_12_19_12_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_29_19_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 17 16 ]
+        symbol [ Application %tmp.12 17 16 27 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.13 17 28 35 ];
+        %tmp.13 = getv %tmp.12 :Storage;
+        symbol [ setValue %tmp.14 17 36 44 ];
+        %tmp.14 = getv function %tmp.13 :setValue;
+        %tmp.15 = "bs_daily_msg";
+        %tmp.16 = "Daily +";
+        %tmp.17 = lgetv %ci.1;
+        symbol [ ci %tmp.17 18 32 34 ];
+        %tmp.18 = "bonus";
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        %tmp.20 = add %tmp.16 %tmp.19;
+        %tmp.21 = "  Streak ";
+        %tmp.22 = add %tmp.20 %tmp.21;
+        %tmp.23 = lgetv %ci.1;
+        symbol [ ci %tmp.23 18 60 62 ];
+        %tmp.24 = "streak";
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = add %tmp.22 %tmp.25;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.26);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_29_19_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_12_19_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_16_12_19_12_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_12_20_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 20 10 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_catch" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_20_10_20_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 20 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 20 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_20_10_20_21_end:
+        try @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_catch @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_20_10_20_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_20_10_20_21_end @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_14_8_20_21_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_9_29_21_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 10; @symbol_functiondef = [onStop,10,13,19]; @symbol_param<0> = [state,10,20,25]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 22; @symbol_functiondef = [onStop,22,13,19]; @symbol_param<0> = [state,22,20,25]; ]
     function onStop(state) {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 12; @symbol_functiondef = [getInitialView,12,13,27]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 24; @symbol_functiondef = [getInitialView,24,13,27]; ]
     function getInitialView() {
-_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_12_30_15_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 13 8 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_12_30_15_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_12_30_15_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 13 12 13 ];
-        symbol [ MainView %tmp.4 13 20 28 ];
-        %tmp.4 = getv ? :MainView;
-        %tmp.1 = newc %tmp.4 ();
-        lputv %v.1 %tmp.1;
-        symbol [ v %v.1 13 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 14 8 ]
-        %tmp.5 = newa 2;
-        %tmp.6 = lgetv %v.1;
-        symbol [ v %tmp.6 14 16 17 ];
-        %tmp.7 = dup %tmp.5;
-        %tmp.8 = aputv %tmp.7 0 %tmp.6;
-        symbol [ InputHandler %tmp.12 14 23 35 ];
-        %tmp.12 = getv ? :InputHandler;
-        %tmp.13 = lgetv %v.1;
-        symbol [ v %tmp.13 14 36 37 ];
-        %tmp.9 = newc %tmp.12 (%tmp.13);
-        %tmp.14 = dup %tmp.8;
-        %tmp.15 = aputv %tmp.14 1 %tmp.9;
-        ret %tmp.15;
-_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_12_30_15_4_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_24_30_26_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc" 25 8 ]
+        %tmp.1 = self;
+        symbol [ buildBattleshipMenu %tmp.2 25 15 34 ];
+        %tmp.2 = getv function %tmp.1 :buildBattleshipMenu;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleshipApp_mc_24_30_26_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleshipApp.mc"; @line = 4; ]

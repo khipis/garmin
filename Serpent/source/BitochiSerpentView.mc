@@ -5,7 +5,7 @@ using Toybox.Timer;
 using Toybox.Application;
 using Toybox.Attention;
 
-enum { SS_MENU, SS_PLAY, SS_OVER }
+enum { SS_MENU, SS_PLAY, SS_DYING, SS_OVER }
 
 // Power-up types
 const SPU_SPEED  = 1;  // move faster for 10 steps
@@ -25,6 +25,15 @@ const SMAX_SNAKE = 180;
 const SMAX_PU    = 3;
 const SMAX_FOOD  = 4;
 const SPART_N    = 12;
+
+// Golden apple — a rare bonus food worth far more, but it only lives for a
+// short window (SGA_LIFE ticks) before vanishing, so grabbing it is a
+// risk/reward dash. Purely additive to the normal food economy.
+const SGA_LIFE   = 90;   // ~7.2s of life at the 80 ms loop
+
+// Death sequence length (ticks) — brief hit-flash + screen-shake before the
+// game-over card, so a crash reads with impact instead of a hard cut.
+const SDEATH_T   = 8;
 
 // Main-menu rows (navigable like a chess-style menu):
 //   row 0 = PLAY
@@ -97,13 +106,38 @@ class BitochiSerpentView extends WatchUi.View {
     hidden var _smoothAx;
     hidden var _accelCooldown;
 
-    // Snake body color palette (head→tail gradient, 6 steps)
+    // Snake body color palette (head→tail gradient, 6 steps). Points at the
+    // active skin's gradient; head colour is cached separately.
     hidden var _snakePalette;
+    hidden var _headColor;
+
+    // Skin palettes (shop-ready cosmetics). CLASSIC is the free default; NEON
+    // and GOLD unlock at rank and only render when both SELECTED and OWNED.
+    hidden var _palClassic;
+    hidden var _palNeon;
+    hidden var _palGold;
 
     // OPTIONS "Speed" (sp_spd): 0=SLOW 1=NORMAL 2=FAST. Sets the base ticks per
     // step, i.e. how fast the snake moves. NORMAL (1) is today's rate so the
     // default experience is unchanged.
     hidden var _spdSel;
+    // OPTIONS "Skin" (sp_skin): 0=CLASSIC 1=NEON 2=GOLD (see SerpentMenu).
+    hidden var _skinSel;
+
+    // ── Meta-progression surfacing ────────────────────────────────────────────
+    // One-shot login-streak toast (queued by the App's checkIn) + one-shot
+    // "skin unlocked" banner set by the game-over award pass.
+    hidden var _toastMsg; hidden var _toastT;
+    hidden var _pgUnlockMsg;
+
+    // ── Golden apple (bonus food) ─────────────────────────────────────────────
+    hidden var _gaX; hidden var _gaY; hidden var _gaLife;
+
+    // ── Eat feedback (pop ring + brief flash on eating) ───────────────────────
+    hidden var _eatFxX; hidden var _eatFxY; hidden var _eatFxLife;
+
+    // ── Death feedback (flash + screen shake) ─────────────────────────────────
+    hidden var _deathT;
 
     function initialize() {
         View.initialize();
@@ -118,8 +152,22 @@ class BitochiSerpentView extends WatchUi.View {
         if (_best == null) { _best = 0; }
 
         _spdSel = 1;
-        var sp = Application.Storage.getValue("sp_spd");
-        if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
+        try {
+            var sp = Application.Storage.getValue("sp_spd");
+            if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
+        } catch (e) {}
+
+        _skinSel = 0;
+        try {
+            var sk = Application.Storage.getValue("sp_skin");
+            if (sk instanceof Number && sk >= 0 && sk <= 2) { _skinSel = sk; }
+        } catch (e) {}
+
+        _toastMsg = null; _toastT = 0;
+        _pgUnlockMsg = null;
+        _gaX = 0; _gaY = 0; _gaLife = 0;
+        _eatFxX = 0; _eatFxY = 0; _eatFxLife = 0;
+        _deathT = 0;
 
         _sX = new [SMAX_SNAKE]; _sY = new [SMAX_SNAKE];
         _fX = new [SMAX_FOOD]; _fY = new [SMAX_FOOD];
@@ -138,8 +186,31 @@ class BitochiSerpentView extends WatchUi.View {
         _reverseOn = false; _magnetOn = false;
         _portalAx = 0; _portalAy = 0; _portalBx = 0; _portalBy = 0;
 
-        // Neon gradient: bright green head → deep teal tail
-        _snakePalette = [0x44FF88, 0x33EE77, 0x22CC66, 0x1AAA55, 0x118844, 0x0A6633];
+        // Skin gradients (head→tail, 6 steps).
+        //   CLASSIC — bright green head → deep teal tail (the original look)
+        //   NEON    — electric cyan → magenta ribbon
+        //   GOLD    — molten gold → bronze
+        _palClassic = [0x44FF88, 0x33EE77, 0x22CC66, 0x1AAA55, 0x118844, 0x0A6633];
+        _palNeon    = [0x33FFFF, 0x33CCFF, 0x6699FF, 0x9966FF, 0xCC66EE, 0xFF55CC];
+        _palGold    = [0xFFEE66, 0xFFD24A, 0xF5B820, 0xD89818, 0xB87810, 0x9A5E0A];
+        _snakePalette = _palClassic;
+        _headColor = 0x44FF88;
+    }
+
+    // Resolve the active skin gradient: honour the player's selection only when
+    // that skin is actually OWNED (progression- or shop-granted), otherwise
+    // fall back to CLASSIC so a locked pick never renders.
+    hidden function applySkin() {
+        var owned = false;
+        _snakePalette = _palClassic;
+        _headColor = 0x44FF88;
+        if (_skinSel == 1) {
+            try { owned = Progress.owns("skin_neon"); } catch (e) { owned = false; }
+            if (owned) { _snakePalette = _palNeon; _headColor = 0x66FFFF; }
+        } else if (_skinSel == 2) {
+            try { owned = Progress.owns("skin_gold"); } catch (e) { owned = false; }
+            if (owned) { _snakePalette = _palGold; _headColor = 0xFFE24A; }
+        }
     }
 
     function onLayout(dc) {}
@@ -150,7 +221,19 @@ class BitochiSerpentView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a game.
         // Only auto-start from a fresh launch (SS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the game.
-        if (_gs == SS_MENU) { startGame(); }
+        if (_gs == SS_MENU) {
+            startGame();
+            // Surface today's login-streak bonus as a one-shot, non-blocking
+            // toast over the board (queued by the App's checkIn on the day's
+            // first launch). Guarded so a missing/old value never disrupts play.
+            try {
+                var dm = Application.Storage.getValue("sp_daily_msg");
+                if (dm != null) {
+                    _toastMsg = dm; _toastT = 90;
+                    Application.Storage.deleteValue("sp_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
 
     function onHide() {
@@ -175,6 +258,12 @@ class BitochiSerpentView extends WatchUi.View {
     hidden function startGame() {
         if (_w == 0) { return; }
         setupGrid();
+        applySkin();
+
+        _pgUnlockMsg = null;
+        _gaX = 0; _gaY = 0; _gaLife = 0;
+        _eatFxX = 0; _eatFxY = 0; _eatFxLife = 0;
+        _deathT = 0;
 
         _sLen = 4;
         var mx = _gridW / 2; var my = _gridH / 2;
@@ -230,6 +319,25 @@ class BitochiSerpentView extends WatchUi.View {
         }
     }
 
+    hidden function spawnGoldenApple() {
+        for (var t = 0; t < 60; t++) {
+            var gx = (Math.rand() % _gridW).toNumber();
+            var gy = (Math.rand() % _gridH).toNumber();
+            if (!isSnake(gx, gy) && !isFood(gx, gy) && !isPu(gx, gy)
+                && !(gx == _gaX && gy == _gaY && _gaLife > 0)) {
+                _gaX = gx; _gaY = gy; _gaLife = SGA_LIFE;
+                return;
+            }
+        }
+    }
+
+    // Fire the eat feedback: a burst of particles plus a short expanding pop
+    // ring centred on the eaten cell (a brief flash of impact).
+    hidden function eatFx(cx, cy, col) {
+        spawnParticles(cx, cy, col);
+        _eatFxX = cx; _eatFxY = cy; _eatFxLife = 5;
+    }
+
     hidden function isSnake(x, y) {
         for (var i = 0; i < _sLen; i++) {
             if (_sX[i] == x && _sY[i] == y) { return true; }
@@ -259,12 +367,31 @@ class BitochiSerpentView extends WatchUi.View {
         _flashTick++;
         _puFlash = (_tick % 10 < 5) ? 1 : 0;
 
+        // Cosmetic timers tick regardless of state so flashes/toasts finish
+        // gracefully across the play → death → over transitions.
+        if (_toastT > 0)    { _toastT--; }
+        if (_eatFxLife > 0) { _eatFxLife--; }
+
         // Smooth accelerometer (60/40 — responsive but not jittery)
         _smoothAx = _smoothAx * 0.60 + accelX.toFloat() * 0.40;
+
+        // Death sequence: brief hit-flash + shake, then finalise the game over.
+        if (_gs == SS_DYING) {
+            updateParticles();
+            _deathT--;
+            if (_deathT <= 0) { finalizeGameOver(); }
+            WatchUi.requestUpdate();
+            return;
+        }
 
         if (_gs == SS_PLAY) {
             updateParticles();
             if (_accelCooldown > 0) { _accelCooldown--; }
+
+            // Golden apple: age it out, and occasionally spawn a fresh one when
+            // none is on the field — a rare, short-lived, high-value target.
+            if (_gaLife > 0) { _gaLife--; }
+            if (_gaLife <= 0 && _tick % 260 == 130) { spawnGoldenApple(); }
 
             var ticksPerStep = _stepBase;
             if (_speedOn) { ticksPerStep = ticksPerStep / 2; if (ticksPerStep < 2) { ticksPerStep = 2; } }
@@ -426,7 +553,7 @@ class BitochiSerpentView extends WatchUi.View {
                 if (hy < 0)        { hy = _gridH - 1; }
                 else if (hy >= _gridH) { hy = 0; }
             } else {
-                endGame(); return;
+                beginDeath(); return;
             }
         }
 
@@ -437,7 +564,7 @@ class BitochiSerpentView extends WatchUi.View {
                     _shieldOn = false; _effectType = 0; _effectSteps = 0;
                     doVibe(1); break;
                 } else {
-                    endGame(); return;
+                    beginDeath(); return;
                 }
             }
         }
@@ -462,10 +589,10 @@ class BitochiSerpentView extends WatchUi.View {
                     _sLen++;
                 }
 
-                spawnParticles(
+                eatFx(
                     _offX + hx * _cellSize + _cellSize / 2,
                     _offY + hy * _cellSize + _cellSize / 2,
-                    0x44FF88);
+                    _headColor);
                 doVibe(0);
 
                 // Remove eaten food, compact
@@ -481,6 +608,33 @@ class BitochiSerpentView extends WatchUi.View {
                     spawnPowerup();
                 }
                 break;
+            }
+        }
+
+        // Eat the golden apple? Bonus food — big score, grows the snake, and
+        // is only on the field briefly, so it's a rewarding risk to chase.
+        if (_gaLife > 0 && _gaX == hx && _gaY == hy) {
+            _combo++;
+            _comboTick = 12;
+            var gpts = (50 + _combo * 5) * _level;
+            if (_multiLeft > 0) { gpts = gpts * 3; _multiLeft--; }
+            _score += gpts;
+            _foodEaten++;
+            if (_sLen < SMAX_SNAKE - 1) {
+                _sX[_sLen] = _sX[_sLen - 1];
+                _sY[_sLen] = _sY[_sLen - 1];
+                _sLen++;
+            }
+            eatFx(
+                _offX + hx * _cellSize + _cellSize / 2,
+                _offY + hy * _cellSize + _cellSize / 2,
+                0xFFD24A);
+            doVibe(1);
+            _gaLife = 0;
+            if (_foodEaten % 6 == 0) {
+                _level++;
+                if (_stepBase > 3) { _stepBase--; }
+                spawnPowerup();
             }
         }
 
@@ -537,17 +691,60 @@ class BitochiSerpentView extends WatchUi.View {
         }
     }
 
-    hidden function endGame() {
+    // Kick off the short death sequence (flash + shake). The heavy lifting
+    // (best/leaderboard/progress) runs in finalizeGameOver once it elapses.
+    hidden function beginDeath() {
+        _gs = SS_DYING;
+        _deathT = SDEATH_T;
+        doVibe(2);
+    }
+
+    hidden function finalizeGameOver() {
         _gs = SS_OVER;
         if (_score > _best) {
             _best = _score;
-            Application.Storage.setValue("serpent_best", _best);
+            try { Application.Storage.setValue("serpent_best", _best); } catch (e) {}
         }
+        // Award shared meta-progression (coins + XP) before submitting so the
+        // game-over card can show the fresh balance / any new unlock.
+        awardProgress();
         // Submit the run score to the global leaderboard (fire-and-forget),
         // segmented by the chosen step-rate variant.
         Leaderboard.submitScore(SLB_GAME_ID, _score, _lbVariant());
         Leaderboard.showPostGame(SLB_GAME_ID, _lbVariant(), "SERPENT");
-        doVibe(2);
+    }
+
+    // ── Meta-progression (shared, shop-ready via Progress module) ─────────────
+    // Grants coins + XP scaled by the run's score and snake length, then unlocks
+    // cosmetic skins at rank milestones. Coins are the future shop's currency;
+    // skin ownership is exactly what a shop purchase would grant, so nothing
+    // here blocks monetising skins later. Fully guarded — never throws.
+    hidden function awardProgress() {
+        try {
+            // ~1 coin per 15 points, plus a small length bonus; min 1 for a
+            // non-trivial run so every game feels rewarded.
+            var coinsGain = _score / 15 + _sLen / 4;
+            if (coinsGain <= 0 && _score > 0) { coinsGain = 1; }
+            // XP rewards both scoring and survival (length).
+            var xpGain = 8 + _score / 30 + _sLen / 2;
+            if (coinsGain > 0) { Progress.addCoins(coinsGain); }
+            if (xpGain > 0)    { Progress.addXp(xpGain); }
+            var lvl = Progress.level();
+            var uNeon = Progress.unlockIfReached("skin_neon", lvl, 3);
+            var uGold = Progress.unlockIfReached("skin_gold", lvl, 6);
+            if (uGold)      { _pgUnlockMsg = "NEW SKIN: GOLD"; }
+            else if (uNeon) { _pgUnlockMsg = "NEW SKIN: NEON"; }
+        } catch (e) {}
+    }
+
+    // Themed serpent rank ladder derived from the shared XP level.
+    hidden function serpentRank(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Viper"; }
+        if (lvl >= 10) { return "Cobra"; }
+        if (lvl >= 6)  { return "Python"; }
+        if (lvl >= 3)  { return "Adder"; }
+        return "Hatchling";
     }
 
     // ── Direction helpers ─────────────────────────────────────────────────────
@@ -656,9 +853,10 @@ class BitochiSerpentView extends WatchUi.View {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGrid(); }
 
         // Never render an in-game menu — the shared menu is the root view.
-        if (_gs == SS_MENU)      { startGame(); }
-        if (_gs == SS_PLAY)      { drawGame(dc); }
-        else if (_gs == SS_OVER) { drawOver(dc); }
+        if (_gs == SS_MENU)       { startGame(); }
+        if (_gs == SS_PLAY)       { drawGame(dc); }
+        else if (_gs == SS_DYING) { drawGame(dc); }
+        else if (_gs == SS_OVER)  { drawOver(dc); }
     }
 
     // ── Menu screen ──────────────────────────────────────────────────────────
@@ -743,38 +941,117 @@ class BitochiSerpentView extends WatchUi.View {
     hidden function drawGame(dc) {
         dc.setColor(0x060F1A, 0x060F1A); dc.clear();
 
+        // Screen shake on death — jitter the whole board a few pixels, decaying
+        // as the sequence ends. Applied by nudging the grid offsets and restored
+        // right after so nothing leaks into the next frame.
+        var ox0 = _offX; var oy0 = _offY;
+        if (_gs == SS_DYING && _deathT > 0) {
+            var mag = _deathT; if (mag > 5) { mag = 5; }
+            _offX += (Math.rand() % (mag * 2 + 1)) - mag;
+            _offY += (Math.rand() % (mag * 2 + 1)) - mag;
+        }
+
         drawGrid(dc);
         drawFood(dc);
+        drawGoldenApple(dc);
         drawPowerups(dc);
         drawPortals(dc);
         drawSnake(dc);
+        drawEatFx(dc);
         drawParticles(dc);
-        drawHUD(dc);
 
         // Chaos overlay for REVERSE event
         if (_reverseOn && _tick % 8 < 4) {
             dc.setColor(0x330000, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(_offX, _offY, _gridW * _cellSize, _gridH * _cellSize);
         }
+
+        _offX = ox0; _offY = oy0;
+
+        drawHUD(dc);
+        if (_toastT > 0 && _toastMsg != null) { drawToast(dc); }
+
+        // Death flash — a bright red vignette frame that pulses during the
+        // brief dying window, selling the crash before the game-over card.
+        if (_gs == SS_DYING) {
+            var on = (_deathT % 2 == 0);
+            dc.setColor(on ? 0xFF3322 : 0x882211, Graphics.COLOR_TRANSPARENT);
+            for (var b = 0; b < 4; b++) {
+                dc.drawRectangle(b, b, _w - b * 2, _h - b * 2);
+            }
+        }
+    }
+
+    // Golden apple: a pulsing gold gem with a shrinking lifetime ring so the
+    // player can read how long they have to grab it.
+    hidden function drawGoldenApple(dc) {
+        if (_gaLife <= 0) { return; }
+        var cx = _offX + _gaX * _cellSize + _cellSize / 2;
+        var cy = _offY + _gaY * _cellSize + _cellSize / 2;
+        var pulse = (_tick % 8 < 4) ? 1 : 0;
+        var r = _cellSize / 2 + pulse;
+        // Lifetime ring (fades/blinks faster as it's about to expire).
+        var soon = (_gaLife < 20) && (_tick % 4 < 2);
+        dc.setColor(soon ? 0xFF6600 : 0xFFF0A0, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, r + 2);
+        // Body
+        dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, r);
+        dc.setColor(0xFFF6C0, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - 1, cy - 1, 1 + pulse);
+    }
+
+    // Eat pop: a quick expanding, fading ring at the last eaten cell.
+    hidden function drawEatFx(dc) {
+        if (_eatFxLife <= 0) { return; }
+        var age = 5 - _eatFxLife;             // 0 (new) .. 4 (old)
+        var r = _cellSize / 2 + age * 2;
+        var shade = 0xFF - age * 40;
+        if (shade < 0) { shade = 0; }
+        var clr = (shade << 16) | (shade << 8) | shade;
+        dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(_eatFxX, _eatFxY, r);
+    }
+
+    // One-shot non-blocking toast (e.g. daily bonus) near the top of the board.
+    hidden function drawToast(dc) {
+        var ty = _offY + 6;
+        var tw = _w * 84 / 100;
+        var tx = (_w - tw) / 2;
+        dc.setColor(0x0A2418, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(tx, ty, tw, 18, 5);
+        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(tx, ty, tw, 18, 5);
+        dc.drawText(_w / 2, ty + 1, Graphics.FONT_XTINY, _toastMsg,
+                    Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGrid(dc) {
+        var gw = _gridW * _cellSize;
+        var gh = _gridH * _cellSize;
+        // Play-area panel — a touch lighter than the page so the board reads
+        // as a distinct, slightly recessed surface (subtle depth).
+        dc.setColor(0x081524, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_offX, _offY, gw, gh);
         // Very faint grid lines
-        dc.setColor(0x0D1E2E, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x0D2135, Graphics.COLOR_TRANSPARENT);
         for (var gx = 0; gx <= _gridW; gx++) {
             var lx = _offX + gx * _cellSize;
-            dc.drawLine(lx, _offY, lx, _offY + _gridH * _cellSize);
+            dc.drawLine(lx, _offY, lx, _offY + gh);
         }
         for (var gy = 0; gy <= _gridH; gy++) {
             var ly = _offY + gy * _cellSize;
-            dc.drawLine(_offX, ly, _offX + _gridW * _cellSize, ly);
+            dc.drawLine(_offX, ly, _offX + gw, ly);
         }
-        // Border (color changes with active effect)
+        // Framed border (color changes with active effect) — an outer dark
+        // shadow line plus the themed inner frame for a crisp, finished edge.
         var bdrC = _ghostOn  ? 0x9944FF :
                    _shieldOn ? 0x44CCFF :
                    _speedOn  ? 0xFF8800 : 0x1A3355;
+        dc.setColor(0x030810, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(_offX - 2, _offY - 2, gw + 4, gh + 4);
         dc.setColor(bdrC, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_offX - 1, _offY - 1, _gridW * _cellSize + 2, _gridH * _cellSize + 2);
+        dc.drawRectangle(_offX - 1, _offY - 1, gw + 2, gh + 2);
     }
 
     hidden function drawFood(dc) {
@@ -828,42 +1105,46 @@ class BitochiSerpentView extends WatchUi.View {
     }
 
     hidden function drawSnake(dc) {
-        for (var i = _sLen - 1; i >= 0; i--) {
-            var sx = _offX + _sX[i] * _cellSize;
-            var sy = _offY + _sY[i] * _cellSize;
+        var r = _cellSize / 2; if (r < 2) { r = 2; }
+        var ncol = _snakePalette.size();
 
-            var col;
-            if (i == 0) {
-                // Head: bright, changes with active effect
-                col = _ghostOn  ? 0xBB88FF :
-                      _speedOn  ? 0xFFEE22 :
-                      _shieldOn ? 0x44FFFF : 0x44FF88;
-            } else {
-                // Body: gradient from palette
-                var pctIdx = (i * (_snakePalette.size() - 1) / _sLen).toNumber();
-                if (pctIdx >= _snakePalette.size()) { pctIdx = _snakePalette.size() - 1; }
-                col = _snakePalette[pctIdx];
-            }
-            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        // Body drawn tail → neck as a continuous rounded tube: a disc at each
+        // segment centre plus a connector rectangle to its predecessor fills
+        // the seams (including around turns) for a smooth snake instead of a
+        // chain of blocky squares. Head is drawn last so it sits on top.
+        for (var i = _sLen - 1; i >= 1; i--) {
+            var cx = _offX + _sX[i] * _cellSize + r;
+            var cy = _offY + _sY[i] * _cellSize + r;
+            var px = _offX + _sX[i - 1] * _cellSize + r;
+            var py = _offY + _sY[i - 1] * _cellSize + r;
 
-            if (i == 0) {
-                // Head: full cell, rounded
-                if (_cellSize >= 10) {
-                    dc.fillRoundedRectangle(sx, sy, _cellSize, _cellSize, 3);
-                } else {
-                    dc.fillRectangle(sx, sy, _cellSize, _cellSize);
-                }
-                // Eyes
-                drawEyes(dc, sx, sy);
-            } else {
-                // Body: slightly inset
-                if (_cellSize >= 10) {
-                    dc.fillRoundedRectangle(sx + 1, sy + 1, _cellSize - 2, _cellSize - 2, 2);
-                } else {
-                    dc.fillRectangle(sx + 1, sy + 1, _cellSize - 2, _cellSize - 2);
-                }
+            var pctIdx = (i * (ncol - 1) / _sLen).toNumber();
+            if (pctIdx >= ncol) { pctIdx = ncol - 1; }
+            dc.setColor(_snakePalette[pctIdx], Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy, r);
+            // Connector toward the previous segment (adjacent cell).
+            if (cy == py) {
+                var lx = (cx < px) ? cx : px;
+                dc.fillRectangle(lx, cy - r, (cx - px).abs(), r * 2);
+            } else if (cx == px) {
+                var ly = (cy < py) ? cy : py;
+                dc.fillRectangle(cx - r, ly, r * 2, (cy - py).abs());
             }
         }
+
+        // Head — bright, overridden by any active effect; base tint follows the
+        // selected skin. Slightly larger disc + a gloss highlight + eyes.
+        var hx = _offX + _sX[0] * _cellSize;
+        var hy = _offY + _sY[0] * _cellSize;
+        var hcol = _ghostOn  ? 0xBB88FF :
+                   _speedOn  ? 0xFFEE22 :
+                   _shieldOn ? 0x44FFFF : _headColor;
+        dc.setColor(hcol, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(hx + r, hy + r, r + 1);
+        // Gloss
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(hx + r - 1, hy + r - 1, 1);
+        drawEyes(dc, hx, hy);
     }
 
     hidden function drawEyes(dc, sx, sy) {
@@ -983,11 +1264,38 @@ class BitochiSerpentView extends WatchUi.View {
         }
 
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 66 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_w / 2, _h * 64 / 100, Graphics.FONT_XTINY,
             "Lv " + _level + "  |  Len " + _sLen, Graphics.TEXT_JUSTIFY_CENTER);
 
+        drawProgressCard(dc);
+
         dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 87 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 90 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── PROGRESSION SUMMARY (game-over) ───────────────────────────────────────
+    // One compact line: rank/level + coin balance, plus the login streak and a
+    // one-shot gold "new skin" banner when the last run crossed an unlock. All
+    // Progress reads are internally guarded; wrapped again here for total safety.
+    hidden function drawProgressCard(dc) {
+        try {
+            var lvl = Progress.level();
+            dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY,
+                "Lv " + lvl + " " + serpentRank(lvl) + " - " + Progress.coins() + "c",
+                Graphics.TEXT_JUSTIFY_CENTER);
+            var streak = Progress.currentStreak();
+            if (streak > 0) {
+                dc.setColor(0x6E9A6E, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 79 / 100, Graphics.FONT_XTINY,
+                    "Streak " + streak, Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        } catch (e) {}
+        if (_pgUnlockMsg != null) {
+            dc.setColor((_tick % 8 < 4) ? 0xFFD24A : 0xB8860B, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 85 / 100, Graphics.FONT_XTINY, _pgUnlockMsg,
+                Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // ── Color helpers ────────────────────────────────────────────────────────

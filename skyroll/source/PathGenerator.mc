@@ -43,6 +43,7 @@ class PathGenerator {
 
     var tile;            // int[SR_BUF_Y][SR_BUF_X]
     var breakT;          // int[SR_BUF_Y][SR_BUF_X] — break countdown
+    var gem;             // bool[SR_BUF_Y][SR_BUF_X] — floating collectible
     var nextY;           // next world.y row to fill
 
     // Per-row content bounds (world coords).  rowMinX[yi] is the
@@ -72,14 +73,17 @@ class PathGenerator {
     function initialize() {
         tile    = new [SR_BUF_Y];
         breakT  = new [SR_BUF_Y];
+        gem     = new [SR_BUF_Y];
         rowMinX = new [SR_BUF_Y];
         rowMaxX = new [SR_BUF_Y];
         for (var i = 0; i < SR_BUF_Y; i++) {
             tile[i]   = new [SR_BUF_X];
             breakT[i] = new [SR_BUF_X];
+            gem[i]    = new [SR_BUF_X];
             for (var j = 0; j < SR_BUF_X; j++) {
                 tile[i][j]   = SR_T_NONE;
                 breakT[i][j] = 0;
+                gem[i][j]    = false;
             }
             rowMinX[i] = 1;   // empty marker: min > max
             rowMaxX[i] = -1;
@@ -103,6 +107,7 @@ class PathGenerator {
             for (var j = 0; j < SR_BUF_X; j++) {
                 tile[i][j]   = SR_T_NONE;
                 breakT[i][j] = 0;
+                gem[i][j]    = false;
             }
             rowMinX[i] = 1;
             rowMaxX[i] = -1;
@@ -152,6 +157,14 @@ class PathGenerator {
     function setBreak(x, y, v) {
         if (!_inBuf(x, y)) { return; }
         breakT[_yi(y)][_xi(x)] = v;
+    }
+    function gemAt(x, y) {
+        if (!_inBuf(x, y)) { return false; }
+        return gem[_yi(y)][_xi(x)];
+    }
+    function setGem(x, y, v) {
+        if (!_inBuf(x, y)) { return; }
+        gem[_yi(y)][_xi(x)] = v;
     }
 
     // Difficulty 0..1 — driven by distScore.
@@ -271,8 +284,14 @@ class PathGenerator {
             if (x < -SR_X_HALF || x >= SR_X_HALF) { continue; }
             tile[yi][_xi(x)] = placeT;
             breakT[yi][_xi(x)] = 0;
+            gem[yi][_xi(x)]    = false;
             if (x < rMin) { rMin = x; }
             if (x > rMax) { rMax = x; }
+        }
+        // Sprinkle a collectible gem on the centre of some solid rows —
+        // never on boost/fragile so it always sits on safe ground.
+        if (placeT == SR_T_NORMAL || placeT == SR_T_SOFT) {
+            if (_rand(100) < 15) { gem[yi][_xi(centerX)] = true; }
         }
         // Make sure rest of the row is clear (e.g. a previous turn
         // segment left tiles behind that this narrower segment
@@ -280,6 +299,7 @@ class PathGenerator {
         for (var x2 = -SR_X_HALF; x2 < SR_X_HALF; x2++) {
             if (x2 < centerX - halfW || x2 > centerX + halfW) {
                 tile[yi][_xi(x2)] = SR_T_NONE;
+                gem[yi][_xi(x2)]  = false;
             }
         }
         // Publish row bounds for the renderer's inner-loop short-cut.

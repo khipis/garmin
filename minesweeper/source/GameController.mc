@@ -1,5 +1,8 @@
 using Toybox.Application;
 using Toybox.System;
+using Toybox.Attention;
+
+const MS_FX_KEY = "ms_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 // ── States ────────────────────────────────────────────────────────
 const GS_MENU = 0;
@@ -46,6 +49,8 @@ class GameController {
     var elapsedMs;
     var bestMs;
 
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: ms_fx)
+
     function initialize() {
         state       = GS_MENU;
         grid        = new GridManager();
@@ -58,6 +63,33 @@ class GameController {
         for (var i = 0; i < DIFF_COUNT; i++) { bestMs[i] = _load(SKEYS[i]); }
         var d = _load("lDiff"); if (d >= 0 && d < DIFF_COUNT) { difficulty  = d; }
         var b = _load("lDens"); if (b >= 0 && b < DENS_COUNT)  { bombDensity = b; }
+        _fxOn = _loadFx();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(MS_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 move/reveal/flag · 1 win · 2 mine/loss.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _load(k) {
@@ -107,6 +139,7 @@ class GameController {
         grid.configure(sz, m);
         curR = sz / 2; curC = sz / 2;
         startMs = 0; elapsedMs = 0;
+        _fxOn = _loadFx();
         state = GS_PLAY;
     }
 
@@ -117,11 +150,13 @@ class GameController {
     function moveCursorHoriz() {
         curC = curC + 1;
         if (curC >= grid.n) { curC = 0; }
+        _tone(0);
     }
     // Upper button: step down, wrapping within the column.
     function moveCursorVert() {
         curR = curR + 1;
         if (curR >= grid.n) { curR = 0; }
+        _tone(0);
     }
     function moveCursorTo(r, c) {
         if (r >= 0 && r < grid.n && c >= 0 && c < grid.n) {
@@ -135,7 +170,12 @@ class GameController {
         if (grid.floodPending) { return; }   // BFS still running — wait
         if (startMs == 0) { startMs = System.getTimer(); }
         var res = grid.reveal(r, c);
-        if (res == REV_BOOM) { _lose(); }
+        if (res == REV_BOOM) {
+            _lose();
+        } else {
+            _tone(0);
+            _vibe(30, 30);
+        }
         // Win is checked in floodTick() once the BFS drains
     }
     function revealCursor() { revealAt(curR, curC); }
@@ -145,6 +185,8 @@ class GameController {
         if (state != GS_PLAY) { return; }
         if (startMs == 0) { startMs = System.getTimer(); }
         grid.toggleFlag(r, c);
+        _tone(0);
+        _vibe(40, 40);
         if (grid.isWon()) { _win(); }
     }
     function flagCursor() { flagAt(curR, curC); }
@@ -194,9 +236,16 @@ class GameController {
         var s = ms / 1000; if (s > 9999) { s = 9999; } return s.format("%d");
     }
 
-    hidden function _lose() { state = GS_LOSE; grid.revealAllMines(); }
+    hidden function _lose() {
+        state = GS_LOSE;
+        grid.revealAllMines();
+        _tone(2);
+        _vibe(100, 300);
+    }
     hidden function _win() {
         state = GS_WIN;
+        _tone(1);
+        _vibe(100, 250);
         if (bestMs[difficulty] <= 0 || elapsedMs < bestMs[difficulty]) {
             bestMs[difficulty] = elapsedMs; _save(SKEYS[difficulty], elapsedMs);
         }

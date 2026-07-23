@@ -69,6 +69,20 @@ class PhysicsEngine {
         ball.y = ball.y + ball.vy * dtFrac;
     }
 
+    // Table nudge — apply a small velocity impulse to a ball (the
+    // player "shaking the machine"). Clamped to MAX_SPEED afterwards
+    // so nudging can never make the ball tunnel.
+    static function applyNudge(ball, dvx, dvy) {
+        ball.vx = ball.vx + dvx;
+        ball.vy = ball.vy + dvy;
+        var spd = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+        if (spd > MAX_SPEED) {
+            var scale = MAX_SPEED / spd;
+            ball.vx = ball.vx * scale;
+            ball.vy = ball.vy * scale;
+        }
+    }
+
     // ── Wall collision (rectangular play area) ──────────────────────
     static function clampToWalls(ball, x0, y0, x1, y1) {
         var r = ball.radius;

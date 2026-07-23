@@ -454,9 +454,9 @@ _Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_51_49_57
 }
 [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 61; @symbol_functiondef = [buildPixelInvadersMenu,61,9,31]; @symbol_return<0> = [Lang,61,37,41]; @symbol_return<1> = [Array,61,42,47]; ]
 function buildPixelInvadersMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_start:
 [ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 62 4 ]
-    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 62 8 11 ];
     symbol [ MenuConfig %tmp.4 62 18 28 ];
@@ -517,7 +517,7 @@ _Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80
     %tmp.59 = aputv %tmp.58 %tmp.53 %tmp.54;
     %tmp.61 = const :options;
     symbol [ options %tmp.61 73 9 16 const ];
-    %tmp.62 = newa 2;
+    %tmp.62 = newa 3;
     symbol [ GmOption %tmp.66 74 16 24 ];
     %tmp.66 = getv ? :GmOption;
     symbol [ PI_DIFF_KEY %tmp.68 74 25 36 ];
@@ -562,37 +562,52 @@ _Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80
     %tmp.83 = newc %tmp.86 (%tmp.88, %tmp.89, %tmp.105, %tmp.106);
     %tmp.107 = dup %tmp.82;
     %tmp.108 = aputv %tmp.107 1 %tmp.83;
-    %tmp.109 = dup %tmp.59;
-    %tmp.110 = aputv %tmp.109 %tmp.61 %tmp.108;
-    %tmp.1 = newc %tmp.4 (%tmp.110);
+    symbol [ GmOption %tmp.112 78 16 24 ];
+    %tmp.112 = getv ? :GmOption;
+    %tmp.113 = "pi_skin";
+    %tmp.114 = "Ship";
+    %tmp.115 = newa 2;
+    %tmp.116 = "CLASSIC";
+    %tmp.117 = dup %tmp.115;
+    %tmp.118 = aputv %tmp.117 0 %tmp.116;
+    %tmp.119 = "NEON";
+    %tmp.120 = dup %tmp.118;
+    %tmp.121 = aputv %tmp.120 1 %tmp.119;
+    %tmp.122 = 0;
+    %tmp.109 = newc %tmp.112 (%tmp.113, %tmp.114, %tmp.121, %tmp.122);
+    %tmp.123 = dup %tmp.108;
+    %tmp.124 = aputv %tmp.123 2 %tmp.109;
+    %tmp.125 = dup %tmp.59;
+    %tmp.126 = aputv %tmp.125 %tmp.61 %tmp.124;
+    %tmp.1 = newc %tmp.4 (%tmp.126);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 62 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 78 4 ]
-    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 81 4 ]
+    [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 78 8 9 ];
-    symbol [ GameMenuView %tmp.114 78 16 28 ];
-    %tmp.114 = getv ? :GameMenuView;
-    %tmp.115 = lgetv %cfg.1;
-    symbol [ cfg %tmp.115 78 29 32 ];
-    %tmp.111 = newc %tmp.114 (%tmp.115);
-    lputv %v.2 %tmp.111;
-    symbol [ v %v.2 78 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 79 4 ]
-    %tmp.116 = newa 2;
-    %tmp.117 = lgetv %v.2;
-    symbol [ v %tmp.117 79 12 13 ];
-    %tmp.118 = dup %tmp.116;
-    %tmp.119 = aputv %tmp.118 0 %tmp.117;
-    symbol [ GameMenuDelegate %tmp.123 79 19 35 ];
-    %tmp.123 = getv ? :GameMenuDelegate;
-    %tmp.124 = lgetv %v.2;
-    symbol [ v %tmp.124 79 36 37 ];
-    %tmp.120 = newc %tmp.123 (%tmp.124);
-    %tmp.125 = dup %tmp.119;
-    %tmp.126 = aputv %tmp.125 1 %tmp.120;
-    ret %tmp.126;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_80_0_stop:
+    symbol [ v %v.2 81 8 9 ];
+    symbol [ GameMenuView %tmp.130 81 16 28 ];
+    %tmp.130 = getv ? :GameMenuView;
+    %tmp.131 = lgetv %cfg.1;
+    symbol [ cfg %tmp.131 81 29 32 ];
+    %tmp.127 = newc %tmp.130 (%tmp.131);
+    lputv %v.2 %tmp.127;
+    symbol [ v %v.2 81 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc" 82 4 ]
+    %tmp.132 = newa 2;
+    %tmp.133 = lgetv %v.2;
+    symbol [ v %tmp.133 82 12 13 ];
+    %tmp.134 = dup %tmp.132;
+    %tmp.135 = aputv %tmp.134 0 %tmp.133;
+    symbol [ GameMenuDelegate %tmp.139 82 19 35 ];
+    %tmp.139 = getv ? :GameMenuDelegate;
+    %tmp.140 = lgetv %v.2;
+    symbol [ v %tmp.140 82 36 37 ];
+    %tmp.136 = newc %tmp.139 (%tmp.140);
+    %tmp.141 = dup %tmp.135;
+    %tmp.142 = aputv %tmp.141 1 %tmp.136;
+    ret %tmp.142;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_PixelInvadersMenu_mc_61_48_83_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/PixelInvadersMenu.mc"; @line = 8; ]
 <init> {

@@ -71,7 +71,11 @@ function buildSlotBanditMenu() as Lang.Array {
         :lbTitle => "SLOT BANDIT",
         :hooks   => new SlotBanditHooks(),
         :options => [
-            new GmOption(SB_ROUND_KEY, "Round", ["QUICK", "NORMAL", "MARATHON"], 1)
+            new GmOption(SB_ROUND_KEY, "Round", ["QUICK", "NORMAL", "MARATHON"], 1),
+            new GmOption(SB_FX_KEY,    "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic machine skin — unlocked by rank, shop-ready. A locked
+            // GOLD pick simply renders as the classic brass cabinet until owned.
+            new GmOption(SB_SKIN_KEY,  "Machine", ["CLASSIC", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

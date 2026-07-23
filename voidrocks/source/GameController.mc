@@ -29,6 +29,7 @@
 
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
 
 const VR_MENU = 0;
 const VR_PLAY = 1;
@@ -48,6 +49,7 @@ const VR_LB_GAME_ID = "voidrocks";
 const VR_BEST_KEY  = "vr_best";
 const VR_DIFF_KEY  = "vr_diff";
 const VR_LIVES_KEY = "vr_lives";
+const VR_FX_KEY    = "vr_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const VR_DIFF_EASY   = 0;
 const VR_DIFF_NORMAL = 1;
@@ -87,6 +89,9 @@ class GameController {
     var sh;
     var baseR;          // base rock radius (scaled by min dim)
 
+    // Sound + haptics master switch (OPTIONS: vr_fx).
+    hidden var _fxOn;
+
     function initialize() {
         state     = VR_MENU;
         menuRow   = 0;
@@ -99,7 +104,36 @@ class GameController {
 
         wave = 1; lives = 3; score = 0; bestScore = 0;
         sw = 0; sh = 0; baseR = 0;
+        _fxOn = _loadFx();
         _loadAll();
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 shot · 1 rock destroyed · 2 alert · 3 wave clear · 4 game-over.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(VR_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ─────────────────────────────────────────────
@@ -173,6 +207,7 @@ class GameController {
         wave  = 1;
         lives = menuLives;
         score = 0;
+        _fxOn = _loadFx();
         _ensureDims();
         ship.respawn(sw, sh, _shipRadius());
         bullets.reset();
@@ -206,7 +241,15 @@ class GameController {
     function rotL()   { if (state == VR_PLAY && ship.alive) { ship.rotateLeft();  } }
     function rotR()   { if (state == VR_PLAY && ship.alive) { ship.rotateRight(); } }
     function thrust() { if (state == VR_PLAY && ship.alive) { ship.applyThrust(); } }
-    function fire()   { if (state == VR_PLAY && ship.alive) { bullets.fire(ship); } }
+    function fire() {
+        if (state == VR_PLAY && ship.alive) {
+            // Only chirp when a shot actually leaves the barrel (weapon throttling).
+            if (bullets.fire(ship)) {
+                _tone(0);
+                _vibe(15, 20);
+            }
+        }
+    }
 
     // Wrist-tilt steering.  `ax, ay` are the accelerometer X and Y
     // components in milli-G.  We project gravity onto the watch face
@@ -249,6 +292,11 @@ class GameController {
         for (var i = 0; i < hits.size(); i++) {
             score = score + rocks.hit(hits[i], baseR);
         }
+        if (hits.size() > 0) {
+            // Satisfying crunch on every rock shattered.
+            _tone(1);
+            _vibe(40, 45);
+        }
         rocks.compact();
 
         // 3. Asteroids motion.
@@ -276,6 +324,9 @@ class GameController {
                              ship.x, ship.y);
             // Reward: ship gets a fresh invul window each new wave.
             ship.invul = 30;
+            // Wave cleared — triumphant chime + celebratory buzz.
+            _tone(3);
+            _vibe(70, 150);
         }
     }
 
@@ -284,11 +335,17 @@ class GameController {
         if (lives <= 0) {
             state = VR_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Ship destroyed for good — heavy fail sting + long jolt.
+            _tone(4);
+            _vibe(100, 260);
             // Submit to the global leaderboard, split by difficulty variant.
             Leaderboard.submitScore(VR_LB_GAME_ID, score, difficultyName());
             Leaderboard.showPostGame(VR_LB_GAME_ID, difficultyName(), "VOID ROCKS");
             return;
         }
+        // Lost a life but ship respawns — sharp alert + strong jolt.
+        _tone(2);
+        _vibe(90, 180);
         // Respawn at center with grace period.
         ship.respawn(sw, sh, _shipRadius());
         bullets.reset();

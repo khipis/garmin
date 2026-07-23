@@ -10,6 +10,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Sensor;
+using Toybox.Application;
 
 class MainView extends WatchUi.View {
 
@@ -56,6 +57,15 @@ class MainView extends WatchUi.View {
         if (!_started || ctrl.state == SC_MENU) {
             ctrl.startGame();
             _started = true;
+            // Surface today's login-streak bonus as a one-shot toast
+            // (queued by the App's checkIn on the day's first launch).
+            try {
+                var dm = Application.Storage.getValue(SC_K_DAILY);
+                if (dm != null) {
+                    ctrl.showToast(dm, 45);
+                    Application.Storage.deleteValue(SC_K_DAILY);
+                }
+            } catch (e) {}
         }
         UIManager.draw(dc, ctrl);
     }

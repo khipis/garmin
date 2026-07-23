@@ -74,7 +74,8 @@ function buildChessMenu() as Lang.Array {
         :options => [
             new GmOption("chess_color", "Color",      ["WHITE", "BLACK"],                0),
             new GmOption("chess_diff",  "Difficulty", ["EASY", "NORMAL", "HARD"],        1),
-            new GmOption("chess_mode",  "Mode",       ["P vs AI", "P vs P", "AI vs AI"], 0)
+            new GmOption("chess_mode",  "Mode",       ["P vs AI", "P vs P", "AI vs AI"], 0),
+            new GmOption("chess_fx",    "Sound & Haptics", ["ON", "OFF"],               0)
         ]
     });
     var v = new GameMenuView(cfg);

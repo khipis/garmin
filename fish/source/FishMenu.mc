@@ -50,12 +50,57 @@ class FishHooks extends GameHooks {
         return names[d];
     }
 
+    // Fish has THREE global boards, so the LEADERBOARD row opens a small picker
+    // (Top Scores · Biggest Fish · Progress) instead of a single board.
+    function openBoard() as Lang.Boolean {
+        try {
+            var m = new FishBoardPicker(lbVariant());
+            WatchUi.pushView(m, new FishBoardPickerDelegate(lbVariant()), WatchUi.SLIDE_UP);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     function footerText() as Lang.String or Null {
         try {
             var v = Application.Storage.getValue("fishBest");
             if (v instanceof Lang.Number && v > 0) { return "BEST " + v.format("%d"); }
         } catch (e) {}
         return null;
+    }
+}
+
+// ── Leaderboard category picker ──────────────────────────────────────────────
+// Fish keeps three separate global boards. This little menu lets the player
+// choose which one to view; each opens the shared LbScoresView with the right
+// variant + title.
+class FishBoardPicker extends WatchUi.Menu2 {
+    function initialize(scoreVariant as Lang.String) {
+        Menu2.initialize({:title => "LEADERBOARDS"});
+        addItem(new WatchUi.MenuItem("Top Scores",   "Session points", :scores,   null));
+        addItem(new WatchUi.MenuItem("Biggest Fish", "Heaviest catch", :biggest,  null));
+        addItem(new WatchUi.MenuItem("Progress",     "Level reached",  :progress, null));
+    }
+}
+
+class FishBoardPickerDelegate extends WatchUi.Menu2InputDelegate {
+    hidden var _scoreVariant;
+    function initialize(scoreVariant as Lang.String) {
+        Menu2InputDelegate.initialize();
+        _scoreVariant = scoreVariant;
+    }
+    function onSelect(item) {
+        var id = item.getId();
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
+        var variant; var title;
+        if (id == :biggest)       { variant = "biggest-fish"; title = "BIGGEST FISH"; }
+        else if (id == :progress) { variant = "progress";     title = "PROGRESS"; }
+        else                      { variant = _scoreVariant;  title = "FISHING"; }
+        try {
+            var v = new LbScoresView("fish", variant, title);
+            WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+        } catch (e) {}
     }
 }
 
@@ -71,7 +116,11 @@ function buildFishMenu() as Lang.Array {
         :lbTitle => "FISHING",
         :hooks   => new FishHooks(),
         :options => [
-            new GmOption("fish_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("fish_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("fish_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic rod/line skin — unlocked by rank, shop-ready. A locked
+            // pick simply renders as the classic wooden rod until it's owned.
+            new GmOption("fish_rod", "Rod", ["BASIC", "PRO", "MASTER"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

@@ -163,7 +163,11 @@ class BitochiCheckersDelegate extends WatchUi.BehaviorDelegate {
             // Only hijack drags while the board is live; elsewhere (menu, etc.)
             // let the framework handle the gesture (taps, edge-swipe back).
             if (!_view.inPlay()) { return false; }
-            _markGesture();
+            // NOTE: do NOT arm the phantom-back guard here. A plain tap goes
+            // through START/STOP too, and on 2-button touch watches (e.g.
+            // vivoactive 6) BACK is a PHYSICAL key — arming on every tap would
+            // swallow a legitimate BACK press made right after a move. The
+            // guard is armed only when a real flick/swipe commits (below).
             _dragging     = true;
             _committed    = false;
             _actedOnStart = false;
@@ -182,7 +186,6 @@ class BitochiCheckersDelegate extends WatchUi.BehaviorDelegate {
 
         if (t == WatchUi.DRAG_TYPE_CONTINUE) {
             if (!_dragging || _committed || coords == null || _downX < 0) { return true; }
-            _markGesture();
             var ddx = coords[0] - _downX;
             var ddy = coords[1] - _downY;
             var adx = (ddx < 0) ? -ddx : ddx;
@@ -191,6 +194,7 @@ class BitochiCheckersDelegate extends WatchUi.BehaviorDelegate {
             if (adx >= minPx || ady >= minPx) {
                 _committed    = true;
                 _swipeGuardMs = System.getTimer();
+                _markGesture();              // real flick — arm phantom-back guard
                 _view.flickMove(ddx, ddy);   // slide the grabbed piece that way
                 WatchUi.requestUpdate();
             }
@@ -200,7 +204,6 @@ class BitochiCheckersDelegate extends WatchUi.BehaviorDelegate {
         if (t == WatchUi.DRAG_TYPE_STOP) {
             if (!_dragging) { return false; }
             _dragging = false;
-            _markGesture();
             if (_committed) { return true; }     // flick already handled
             // Tap that never produced a valid START (null down coords): commit
             // at the lift point as a fallback so no touch is lost.

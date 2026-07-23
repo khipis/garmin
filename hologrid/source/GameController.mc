@@ -12,6 +12,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Application;
+using Toybox.Attention;
+
+const HG_FX_KEY = "hg_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const HG_S_MENU = 0;
 const HG_S_PLAY = 1;
@@ -53,6 +56,7 @@ class GameController {
     // (the corner rotates with the level).
     hidden var _spawnR;
     hidden var _spawnC;
+    hidden var _fxOn;    // sound + haptics master switch (OPTIONS: hg_fx)
 
     function initialize() {
         state          = HG_S_MENU;
@@ -69,8 +73,33 @@ class GameController {
         _spawnC        = 1;
         var lvl        = LevelGenerator.build(1);
         grid           = lvl[0];
+        _fxOn          = _loadFx();
         _loadBest();
         _loadSettings();
+    }
+
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(HG_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadBest() {
@@ -140,6 +169,7 @@ class GameController {
         level = menuStartLevel;
         lives = menuLives;
         score = 0;
+        _fxOn = _loadFx();
         _buildLevel();
         state = HG_S_PLAY;
     }
@@ -168,6 +198,9 @@ class GameController {
         if (!grid.isWalkable(nr, nc)) { return; }
         player.r = nr; player.c = nc;
         score = score + 1;
+        // Crisp step feedback each successful move.
+        _tone(0);
+        _vibe(15, 20);
 
         // If we stepped onto the exit, that's a level win — no AI
         // turn happens so the player can't be caught on the exit tile.
@@ -189,11 +222,17 @@ class GameController {
         lives = lives - 1;
         if (lives <= 0) {
             state = HG_S_OVER;
+            // Game-over sting.
+            _tone(2);
+            _vibe(100, 200);
             if (score > bestScore) { bestScore = score; _saveBest(); }
             Leaderboard.submitScore(HG_LB_GAME_ID, score, "");
             Leaderboard.showPostGame(HG_LB_GAME_ID, "", "HOLOGRID");
             return;
         }
+        // Caught but survived — a warning buzz.
+        _tone(2);
+        _vibe(60, 120);
         // Respawn at the *current level's* spawn corner.  AI keeps
         // its positions so the restart feels punitive but fair.
         player.spawnAt([_spawnR, _spawnC]);
@@ -204,11 +243,17 @@ class GameController {
         level = level + 1;
         if (level > HG_MAX_LEVEL) {
             state = HG_S_WIN;
+            // Full clear — big victory fanfare.
+            _tone(1);
+            _vibe(100, 250);
             if (score > bestScore) { bestScore = score; _saveBest(); }
             Leaderboard.submitScore(HG_LB_GAME_ID, score, "");
             Leaderboard.showPostGame(HG_LB_GAME_ID, "", "HOLOGRID");
             return;
         }
+        // Level cleared — rewarding chime.
+        _tone(1);
+        _vibe(60, 120);
         _buildLevel();
     }
 }

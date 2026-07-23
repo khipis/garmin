@@ -17,12 +17,14 @@ class Block {
     var widthWX;  // block width in world pixels (>=1)
     var row;      // 0 = base, +1 per layer
     var color;    // packed RGB
+    var special;  // 0 = normal, 1 = gold bonus block
 
-    function initialize(left, width, rowIdx, col) {
+    function initialize(left, width, rowIdx, col, spec) {
         leftWX   = left;
         widthWX  = width;
         row      = rowIdx;
         color    = col;
+        special  = spec;
     }
 
     function rightWX() { return leftWX + widthWX; }

@@ -135,22 +135,46 @@ class Flipper {
         return pivotY + length * Math.sin(rad);
     }
 
-    function draw(dc) {
-        var tx = tipX();
-        var ty = tipY();
-        var col = (side < 0) ? 0xFF4422 : 0xFFCC22;
-        var shadow = (side < 0) ? 0x882211 : 0x885511;
+    // Draw the flipper offset by (ox,oy). A glossy moulded paddle:
+    // dark under-shadow → coloured body → bright top gloss line →
+    // chrome pivot hub. Flashes brighter for a couple frames right
+    // after an active swing so a good hit reads visually.
+    function draw(dc, ox, oy) {
+        var px = pivotX + ox;
+        var py = pivotY + oy;
+        var tx = tipX() + ox;
+        var ty = tipY() + oy;
+        var hot = active && (angle != prevAngle);
+        var col;
+        if (side < 0) { col = hot ? 0xFF8866 : 0xFF4422; }
+        else          { col = hot ? 0xFFEE66 : 0xFFCC22; }
+        var shadow = (side < 0) ? 0x661A0C : 0x664008;
         var r = drawRadius;
-        // Thin capsule — visual only, doesn't affect collisions.
+
+        // Under-shadow capsule.
         dc.setColor(shadow, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(r * 2 + 1);
-        dc.drawLine(pivotX + 1, pivotY + 1, tx + 1, ty + 1);
+        dc.setPenWidth(r * 2 + 2);
+        dc.drawLine(px + 1, py + 2, tx + 1, ty + 2);
+
+        // Coloured body.
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(pivotX, pivotY, tx, ty);
+        dc.setPenWidth(r * 2 + 1);
+        dc.drawLine(px, py, tx, ty);
+
+        // Top gloss line.
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(1);
-        dc.fillCircle(pivotX, pivotY, r);
+        dc.drawLine(px, py - r + 1, tx, ty - r + 1);
+
+        dc.setPenWidth(1);
+        // Rounded caps.
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py, r);
         dc.fillCircle(tx, ty, r - 1);
-        dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(pivotX, pivotY, r / 2);
+        // Chrome pivot hub.
+        dc.setColor(0xE8EEF6, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py, r / 2 + 1);
+        dc.setColor(0x303844, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py, r / 2);
     }
 }

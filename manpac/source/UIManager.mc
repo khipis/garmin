@@ -129,12 +129,12 @@ class UIManager {
 
     // Pac-Man — yellow disc with an angled bite that points along his
     // current heading.  Mouth opens/closes via player.mouthPhase 0..3.
-    static function drawPlayer(dc, ox, oy, cell, player) {
+    static function drawPlayer(dc, ox, oy, cell, player, col) {
         var cx = ox + player.c * cell + cell / 2;
         var cy = oy + player.r * cell + cell / 2;
         var rad = cell / 2 - 1; if (rad < 3) { rad = 3; }
 
-        dc.setColor(0xFFE100, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, rad);
 
         // Closed-mouth frame: skip the bite triangle entirely.
@@ -213,6 +213,12 @@ class UIManager {
             ["Level " + ctrl.level.format("%d"), 0xFFFFFF],
             ["Best  " + ctrl.bestScore.format("%d"), 0xFFFFFF]
         ];
+        // Shared progression summary: rank/level + coin balance + login streak,
+        // plus a one-shot gold banner when this run crossed an unlock milestone.
+        var lvl = Progress.level();
+        lines.add(["Lv " + lvl + " " + Progress.rankName() + " - " + Progress.coins() + "c", 0xBFD8C4]);
+        lines.add(["Streak " + Progress.currentStreak(), 0x88CCAA]);
+        if (ctrl.pgUnlockMsg != null) { lines.add([ctrl.pgUnlockMsg, 0xFFD24A]); }
         GameOverCard.draw(dc, sw, sh, won ? "CLEARED!" : "GAME OVER",
                           titleColor, lines, "Tap = replay", titleColor);
     }

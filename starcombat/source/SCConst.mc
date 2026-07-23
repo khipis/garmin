@@ -81,6 +81,7 @@ const SC_NSTARS = 36;
 const SC_K_SENS = "sc_sens";
 const SC_K_DIFF = "sc_diff";
 const SC_K_BEST = "sc_best";
+const SC_K_FX   = "sc_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 // ── Progression ───────────────────────────────────────────────
 const SC_AMMO_MAX     = 20;
@@ -91,3 +92,26 @@ const SC_LVL_BASE     = 4;    // killTarget = SC_LVL_BASE + level * 2
 const SC_ET_DESTROYER = 0;    // basic wedge, available from lvl 1
 const SC_ET_TIE       = 1;    // fast small panel-ship, from lvl 3
 const SC_ET_CRUISER   = 2;    // tougher big wedge (HP 2), from lvl 5
+
+// ── Cosmetic ship skin (shared, shop-ready via Progress) ──────
+// Drives the player laser + reticle + muzzle-flash accent colour.
+// A locked pick simply renders as CLASSIC until it's owned.
+const SC_K_SKIN   = "sc_skin";
+const SC_SKIN_CLASSIC = 0;
+const SC_SKIN_NEON    = 1;
+const SC_SKIN_GOLD    = 2;
+
+// Daily-bonus toast queued by the App on the day's first launch.
+const SC_K_DAILY  = "sc_daily_msg";
+
+// ── Juice: particle bursts + muzzle flash ─────────────────────
+const SC_MAX_PARTS = 24;   // shared pool for explosion debris sparks
+const SC_PART_T    = 9;    // particle lifetime in ticks
+const SC_MUZZLE_T  = 2;    // player muzzle-flash lifetime in ticks
+
+// ── Power-ups (collectible, shot to grab) ─────────────────────
+const SC_MAX_POWERUPS = 2;
+const SC_PU_RAPID  = 0;    // free-fire (no ammo drain) for a while
+const SC_PU_SHIELD = 1;    // restore one shield (or score if full)
+const SC_RAPID_T   = 75;   // rapid-fire duration in ticks (~6 s)
+const SC_PU_SPAWN  = 230;  // ticks between power-up spawn attempts

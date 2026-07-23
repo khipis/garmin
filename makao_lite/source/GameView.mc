@@ -4,6 +4,7 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 // ── Makao Lite ────────────────────────────────────────────────────────────
 //
@@ -55,6 +56,9 @@ const MK_ROW_START = 3;
 const LB_GAME_ID    = "makao_lite";
 const LB_STREAK_KEY = "makao_lite_streak";
 
+// Sound + haptics master switch (OPTIONS: mk_fx). 0/unset = ON, 1 = OFF.
+const MK_FX_KEY     = "mk_fx";
+
 const MKO_PWIN  = 1;
 const MKO_AIWIN = 2;
 
@@ -102,6 +106,7 @@ class GameView extends WatchUi.View {
     hidden var _sP, _sAI;
     hidden var _timer;
     hidden var _lbHandled;   // guard so each finished game submits at most once
+    hidden var _fxOn;        // sound + haptics master switch (OPTIONS: mk_fx)
 
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
@@ -135,6 +140,33 @@ class GameView extends WatchUi.View {
     hidden function _applySettings() {
         _mode = _stgIdx("mk_mode", MODE_PVAI, 0, 2);
         _diff = _stgIdx("mk_diff", DIFF_MED, 0, 2);
+        _fxOn = _loadFx();
+    }
+
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(MK_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 play/draw/select · 1 win · 2 loss/invalid.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     function onLayout(dc) {
@@ -214,6 +246,7 @@ class GameView extends WatchUi.View {
         if (_skipNext) { return; }
         if (_state == MKS_SUIT) {
             _activeSuit = _suitPick;
+            _tone(0); _vibe(15, 18);       // suit chosen
             _state = MKS_AI;
             return;
         }
@@ -223,6 +256,7 @@ class GameView extends WatchUi.View {
         } else {
             var card = _pHand[_cursorPos];
             if (_isValid(card)) { _playerPlay(_cursorPos); }
+            else { _tone(2); _vibe(30, 40); }   // illegal card — reject buzz
         }
     }
 
@@ -278,6 +312,8 @@ class GameView extends WatchUi.View {
         _suitPick  = 0;
         _overWho   = 0;
         _lbHandled = false;
+        _fxOn      = _loadFx();
+        _tone(0); _vibe(25, 45);           // fresh deal
     }
 
     // Fisher-Yates shuffle in-place on _deck.
@@ -332,6 +368,13 @@ class GameView extends WatchUi.View {
         if (rank == MK_R3) { _pendingDraw = oldPend + 3; }
         if (rank == MK_RJ) { _skipNext = true; }
         // Ace: _activeSuit will be overwritten by caller (suit picker / aiBestSuit)
+        // Card-slap feedback: a heavier pulse for action cards (2/3/J/A).
+        _tone(0);
+        if (rank == MK_R2 || rank == MK_R3 || rank == MK_RJ || rank == MK_RA) {
+            _vibe(35, 50);
+        } else {
+            _vibe(12, 14);
+        }
         return rank;
     }
 
@@ -358,6 +401,7 @@ class GameView extends WatchUi.View {
         } else {
             _drawN(1, 1);
         }
+        _tone(0); _vibe(18, 22);           // draw from the deck
         _state = MKS_AI;
     }
 
@@ -366,8 +410,8 @@ class GameView extends WatchUi.View {
     // reports the result to the shared global leaderboard exactly once.
     hidden function _endGame(who) {
         _overWho = who;
-        if (who == MKO_PWIN) { _sP = _sP + 1; }
-        else                 { _sAI = _sAI + 1; }
+        if (who == MKO_PWIN) { _sP = _sP + 1; _tone(1); _vibe(95, 240); }
+        else                 { _sAI = _sAI + 1; _tone(2); _vibe(70, 180); }
         _state = MKS_OVER;
         _reportLeaderboard(who);
     }

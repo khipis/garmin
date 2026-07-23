@@ -1,70 +1,79 @@
-[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 10; @symbol_classdef = [Physics,10,6,13]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 13; @symbol_classdef = [Physics,13,6,13]; ]
 class Physics {
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 10; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 13; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 10; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 13; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 12; @position = 15; @symbol_vardef = [GRAVITY,12,15,22]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 15; @position = 15; @symbol_vardef = [GRAVITY,15,15,22]; ]
     static
-    var GRAVITY = 0.42;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 13; @position = 15; @symbol_vardef = [JUMP_VY,13,15,22]; ]
+    var GRAVITY = 0.55;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 16; @position = 15; @symbol_vardef = [FLAP_VY,16,15,22]; ]
     static
-    var JUMP_VY = -7.5;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 14; @position = 15; @symbol_vardef = [MAX_FALL_VY,14,15,26]; ]
+    var FLAP_VY = -4.0;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 17; @position = 15; @symbol_vardef = [MAX_FALL_VY,17,15,26]; ]
     static
-    var MAX_FALL_VY = 10.0;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 17; @position = 15; @symbol_vardef = [MOVE_VX,17,15,22]; ]
+    var MAX_FALL_VY = 6.5;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 20; @position = 15; @symbol_vardef = [BASE_SCROLL,20,15,26]; ]
     static
-    var MOVE_VX = 3.6;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 18; @position = 15; @symbol_vardef = [FRICTION,18,15,23]; ]
+    var BASE_SCROLL = 2.0;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 21; @position = 15; @symbol_vardef = [SCROLL_GAIN,21,15,26]; ]
     static
-    var FRICTION = 0.85;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 25; @position = 15; @symbol_vardef = [SCROLL_LINE_PCT,25,15,30]; ]
+    var SCROLL_GAIN = 0.04;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 22; @position = 15; @symbol_vardef = [MAX_SCROLL,22,15,25]; ]
     static
-    var SCROLL_LINE_PCT = 40;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 28; @symbol_functiondef = [applyGravity,28,20,32]; @symbol_param<0> = [vy,28,33,35]; ]
+    var MAX_SCROLL = 4.5;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 25; @position = 15; @symbol_vardef = [GAP_BASE,25,15,23]; ]
+    static
+    var GAP_BASE = 78;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 26; @position = 15; @symbol_vardef = [GAP_MIN,26,15,22]; ]
+    static
+    var GAP_MIN = 52;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 27; @position = 15; @symbol_vardef = [GAP_SHRINK,27,15,25]; ]
+    static
+    var GAP_SHRINK = 1.2;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 31; @symbol_functiondef = [applyGravity,31,20,32]; @symbol_param<0> = [vy,31,33,35]; ]
     static
     function applyGravity(vy) {
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_28_37_32_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc" 29 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_28_37_32_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_28_37_32_4_stop" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_31_37_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_31_37_35_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_31_37_35_4_stop" ]
         %v.1 = local;
-        symbol [ v %v.1 29 12 13 ];
+        symbol [ v %v.1 32 12 13 ];
         %tmp.1 = lgetv %vy;
-        symbol [ vy %tmp.1 29 16 18 ];
-        symbol [ GRAVITY %tmp.3 29 21 28 ];
+        symbol [ vy %tmp.1 32 16 18 ];
+        symbol [ GRAVITY %tmp.3 32 21 28 ];
         %tmp.3 = getv ? :GRAVITY;
         %tmp.4 = add %tmp.1 %tmp.3;
         lputv %v.1 %tmp.4;
-        symbol [ v %v.1 29 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc" 30 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_8_30_48_if_stmt:
+        symbol [ v %v.1 32 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc" 33 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_8_33_48_if_stmt:
         %tmp.5 = lgetv %v.1;
-        symbol [ v %tmp.5 30 12 13 ];
-        symbol [ MAX_FALL_VY %tmp.7 30 16 27 ];
+        symbol [ v %tmp.5 33 12 13 ];
+        symbol [ MAX_FALL_VY %tmp.7 33 16 27 ];
         %tmp.7 = getv ? :MAX_FALL_VY;
         %tmp.8 = gt %tmp.5 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_8_30_48_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_8_30_48_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_29_30_48_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc" 30 31 ]
-        symbol [ MAX_FALL_VY %tmp.10 30 35 46 ];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_8_33_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_8_33_48_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_29_33_48_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc" 33 31 ]
+        symbol [ MAX_FALL_VY %tmp.10 33 35 46 ];
         %tmp.10 = getv ? :MAX_FALL_VY;
         lputv %v.1 %tmp.10;
-        symbol [ v %v.1 30 31 32 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_29_30_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_8_30_48_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_30_8_30_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc" 31 8 ]
+        symbol [ v %v.1 33 31 32 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_29_33_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_8_33_48_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_33_8_33_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc" 34 8 ]
         %tmp.11 = lgetv %v.1;
-        symbol [ v %tmp.11 31 15 16 ];
+        symbol [ v %tmp.11 34 15 16 ];
         ret %tmp.11;
-_Users_kkorolczuk_work_garmin_jumptower_source_Physics_mc_28_37_32_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Physics_mc_31_37_35_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Physics.mc"; @line = 10; ]
+[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Physics.mc"; @line = 13; ]
 <init> {
 }

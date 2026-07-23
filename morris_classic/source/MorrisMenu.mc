@@ -56,7 +56,8 @@ function buildMorrisMenu() as Lang.Array {
         :options => [
             new GmOption("mor_mode", "Mode",     ["P vs AI", "P vs P", "AI vs AI"], 0),
             new GmOption("mor_diff", "AI level",  ["EASY", "MED", "HARD"], 1),
-            new GmOption("mor_side", "You play",  ["1ST", "2ND"], 0)
+            new GmOption("mor_side", "You play",  ["1ST", "2ND"], 0),
+            new GmOption("mor_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

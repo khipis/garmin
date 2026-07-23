@@ -209,9 +209,9 @@ _Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_23_47_35_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc"; @line = 39; @symbol_functiondef = [buildManpacMenu,39,9,24]; @symbol_return<0> = [Lang,39,30,34]; @symbol_return<1> = [Array,39,35,40]; ]
 function buildManpacMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_start:
+_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_start:
 [ "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc" 40 4 ]
-    [ "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_start" "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_start" "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 40 8 11 ];
     symbol [ MenuConfig %tmp.4 40 18 28 ];
@@ -261,7 +261,7 @@ _Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_start:
     %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
     %tmp.50 = const :options;
     symbol [ options %tmp.50 49 9 16 const ];
-    %tmp.51 = newa 3;
+    %tmp.51 = newa 4;
     symbol [ GmOption %tmp.55 50 16 24 ];
     %tmp.55 = getv ? :GmOption;
     %tmp.56 = "mp_slvl";
@@ -340,37 +340,52 @@ _Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_start:
     %tmp.114 = newc %tmp.117 (%tmp.118, %tmp.119, %tmp.129, %tmp.130);
     %tmp.131 = dup %tmp.113;
     %tmp.132 = aputv %tmp.131 2 %tmp.114;
-    %tmp.133 = dup %tmp.48;
-    %tmp.134 = aputv %tmp.133 %tmp.50 %tmp.132;
-    %tmp.1 = newc %tmp.4 (%tmp.134);
+    symbol [ GmOption %tmp.136 56 16 24 ];
+    %tmp.136 = getv ? :GmOption;
+    %tmp.137 = "mp_skin";
+    %tmp.138 = "Skin";
+    %tmp.139 = newa 2;
+    %tmp.140 = "CLASSIC";
+    %tmp.141 = dup %tmp.139;
+    %tmp.142 = aputv %tmp.141 0 %tmp.140;
+    %tmp.143 = "NEON";
+    %tmp.144 = dup %tmp.142;
+    %tmp.145 = aputv %tmp.144 1 %tmp.143;
+    %tmp.146 = 0;
+    %tmp.133 = newc %tmp.136 (%tmp.137, %tmp.138, %tmp.145, %tmp.146);
+    %tmp.147 = dup %tmp.132;
+    %tmp.148 = aputv %tmp.147 3 %tmp.133;
+    %tmp.149 = dup %tmp.48;
+    %tmp.150 = aputv %tmp.149 %tmp.50 %tmp.148;
+    %tmp.1 = newc %tmp.4 (%tmp.150);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 40 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc" 56 4 ]
-    [ "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_start" "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc" 59 4 ]
+    [ "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_start" "_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 56 8 9 ];
-    symbol [ GameMenuView %tmp.138 56 16 28 ];
-    %tmp.138 = getv ? :GameMenuView;
-    %tmp.139 = lgetv %cfg.1;
-    symbol [ cfg %tmp.139 56 29 32 ];
-    %tmp.135 = newc %tmp.138 (%tmp.139);
-    lputv %v.2 %tmp.135;
-    symbol [ v %v.2 56 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc" 57 4 ]
-    %tmp.140 = newa 2;
-    %tmp.141 = lgetv %v.2;
-    symbol [ v %tmp.141 57 12 13 ];
-    %tmp.142 = dup %tmp.140;
-    %tmp.143 = aputv %tmp.142 0 %tmp.141;
-    symbol [ GameMenuDelegate %tmp.147 57 19 35 ];
-    %tmp.147 = getv ? :GameMenuDelegate;
-    %tmp.148 = lgetv %v.2;
-    symbol [ v %tmp.148 57 36 37 ];
-    %tmp.144 = newc %tmp.147 (%tmp.148);
-    %tmp.149 = dup %tmp.143;
-    %tmp.150 = aputv %tmp.149 1 %tmp.144;
-    ret %tmp.150;
-_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_58_0_stop:
+    symbol [ v %v.2 59 8 9 ];
+    symbol [ GameMenuView %tmp.154 59 16 28 ];
+    %tmp.154 = getv ? :GameMenuView;
+    %tmp.155 = lgetv %cfg.1;
+    symbol [ cfg %tmp.155 59 29 32 ];
+    %tmp.151 = newc %tmp.154 (%tmp.155);
+    lputv %v.2 %tmp.151;
+    symbol [ v %v.2 59 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc" 60 4 ]
+    %tmp.156 = newa 2;
+    %tmp.157 = lgetv %v.2;
+    symbol [ v %tmp.157 60 12 13 ];
+    %tmp.158 = dup %tmp.156;
+    %tmp.159 = aputv %tmp.158 0 %tmp.157;
+    symbol [ GameMenuDelegate %tmp.163 60 19 35 ];
+    %tmp.163 = getv ? :GameMenuDelegate;
+    %tmp.164 = lgetv %v.2;
+    symbol [ v %tmp.164 60 36 37 ];
+    %tmp.160 = newc %tmp.163 (%tmp.164);
+    %tmp.165 = dup %tmp.159;
+    %tmp.166 = aputv %tmp.165 1 %tmp.160;
+    ret %tmp.166;
+_Users_kkorolczuk_work_garmin_manpac_source_ManpacMenu_mc_39_41_61_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/ManpacMenu.mc"; @line = 8; ]
 <init> {

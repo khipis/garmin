@@ -22,6 +22,13 @@ const N_BRK = 48;
 const MAX_B = 3;
 const MAX_PU = 6;
 
+// Brick-break particle shards (cosmetic juice — capped tiny so it's cheap).
+const MAX_SHARD = 20;
+
+// "Steel" brick sentinel HP — extra-tough, distinct metallic look, appears at
+// higher levels. Rendered from _bkSteel flag; damaged like any other brick.
+const STEEL_HP = 5;
+
 class BitochiBricksView extends WatchUi.View {
 
     var accelX;
@@ -39,6 +46,23 @@ class BitochiBricksView extends WatchUi.View {
 
     hidden var _bkHp;
     hidden var _bkPu;
+    hidden var _bkSteel;   // 1 = steel (metallic, extra-tough) brick, else 0
+
+    // ── Brick-break shards (parallel arrays; no per-hit allocation) ──
+    hidden var _shX;  hidden var _shY;
+    hidden var _shVx; hidden var _shVy;
+    hidden var _shLife; hidden var _shCol;
+
+    // ── Combo: consecutive brick hits WITHOUT the ball touching the paddle.
+    // Factored into score and shown on the HUD; resets on any paddle bounce. ──
+    hidden var _combo;
+    hidden var _comboBest;   // best combo this run (for a tiny flourish)
+
+    // ── One-shot non-blocking toast (daily bonus / unlock notices) ──
+    hidden var _msg;  hidden var _msgT;
+
+    // One-shot "new cosmetic unlocked" banner for the game-over card.
+    hidden var _pgUnlockMsg;
 
     hidden var _puX; hidden var _puY;
     hidden var _puT; hidden var _puOn;
@@ -103,10 +127,17 @@ class BitochiBricksView extends WatchUi.View {
         _bOn = new [MAX_B];
         _puX = new [MAX_PU]; _puY = new [MAX_PU];
         _puT = new [MAX_PU]; _puOn = new [MAX_PU];
-        _bkHp = new [N_BRK]; _bkPu = new [N_BRK];
+        _bkHp = new [N_BRK]; _bkPu = new [N_BRK]; _bkSteel = new [N_BRK];
+        _shX = new [MAX_SHARD]; _shY = new [MAX_SHARD];
+        _shVx = new [MAX_SHARD]; _shVy = new [MAX_SHARD];
+        _shLife = new [MAX_SHARD]; _shCol = new [MAX_SHARD];
         for (var i = 0; i < MAX_B;  i++) { _bX[i] = 0.0; _bY[i] = 0.0; _bVx[i] = 0.0; _bVy[i] = 0.0; _bOn[i] = false; }
         for (var i = 0; i < MAX_PU; i++) { _puX[i] = 0.0; _puY[i] = 0.0; _puT[i] = 0; _puOn[i] = false; }
-        for (var i = 0; i < N_BRK;  i++) { _bkHp[i] = 0; _bkPu[i] = 0; }
+        for (var i = 0; i < N_BRK;  i++) { _bkHp[i] = 0; _bkPu[i] = 0; _bkSteel[i] = 0; }
+        for (var i = 0; i < MAX_SHARD; i++) { _shX[i] = 0.0; _shY[i] = 0.0; _shVx[i] = 0.0; _shVy[i] = 0.0; _shLife[i] = 0; _shCol[i] = 0xFFFFFF; }
+        _combo = 0; _comboBest = 0;
+        _msg = ""; _msgT = 0;
+        _pgUnlockMsg = null;
         _padX = 0.0; _padWide = 0;
         _laserReady = false; _laserOn = false; _laserX = 0; _laserY = 0.0;
         _slowTick = 0; _shakeTick = 0; _shakeX = 0; _shakeY = 0;
@@ -177,8 +208,10 @@ class BitochiBricksView extends WatchUi.View {
         _slowTick   = 0;
         _shakeTick  = 0; _shakeX = 0; _shakeY = 0;
         _resultTick = 0;
+        _combo = 0;
         for (var i = 0; i < MAX_B;  i++) { _bOn[i]  = false; }
         for (var i = 0; i < MAX_PU; i++) { _puOn[i] = false; }
+        for (var i = 0; i < MAX_SHARD; i++) { _shLife[i] = 0; }
         spawnBall(-1);
         buildBricks();
     }
@@ -210,9 +243,12 @@ class BitochiBricksView extends WatchUi.View {
     }
 
     hidden function buildBricks() {
-        for (var i = 0; i < N_BRK; i++) { _bkHp[i] = 0; _bkPu[i] = 0; }
+        for (var i = 0; i < N_BRK; i++) { _bkHp[i] = 0; _bkPu[i] = 0; _bkSteel[i] = 0; }
         var rows = 4 + (_level - 1) / 2;
         if (rows > ROWS) { rows = ROWS; }
+        // Steel bricks appear from level 5, growing rarer/tougher deeper in.
+        var steelChance = (_level >= 5) ? (6 + (_level - 5) * 3) : 0;
+        if (steelChance > 22) { steelChance = 22; }
         for (var r = 0; r < rows; r++) {
             for (var c = 0; c < COLS; c++) {
                 var idx = r * COLS + c;
@@ -222,10 +258,17 @@ class BitochiBricksView extends WatchUi.View {
                 else if (_level <= 7) { hp = 1 + r * 3 / rows; }
                 else                  { hp = 1 + r * 4 / rows; }
                 if (hp < 1) { hp = 1; } if (hp > 4) { hp = 4; }
-                _bkHp[idx] = hp;
-                var chance = 12 + _level * 3; if (chance > 45) { chance = 45; }
-                if (Math.rand().abs() % 100 < chance) {
-                    _bkPu[idx] = 1 + Math.rand().abs() % 5;
+                // Steel bricks only on the top two rows (visually anchoring the
+                // fortress) and never carry a powerup.
+                if (steelChance > 0 && r < 2 && Math.rand().abs() % 100 < steelChance) {
+                    _bkSteel[idx] = 1;
+                    _bkHp[idx] = STEEL_HP;
+                } else {
+                    _bkHp[idx] = hp;
+                    var chance = 12 + _level * 3; if (chance > 45) { chance = 45; }
+                    if (Math.rand().abs() % 100 < chance) {
+                        _bkPu[idx] = 1 + Math.rand().abs() % 5;
+                    }
                 }
             }
         }
@@ -238,26 +281,67 @@ class BitochiBricksView extends WatchUi.View {
         _timer.start(method(:onTick), 50, true);
         // Root view is the shared menu; drop straight into play. Only auto-start
         // from the initial BS_MENU (returning from the post-game card is BS_OVER).
-        if (_gameState == BS_MENU) { startFromMenu(); }
+        if (_gameState == BS_MENU) {
+            startFromMenu();
+            // Surface today's login-streak bonus as a one-shot non-blocking
+            // toast (queued by the App's checkIn on the day's first launch).
+            try {
+                var dm = Application.Storage.getValue("bricks_daily_msg");
+                if (dm != null) {
+                    _msg = dm; _msgT = 90;
+                    Application.Storage.deleteValue("bricks_daily_msg");
+                }
+            } catch (e) {}
+        }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
     // Begin a fresh run from the shared main menu.
     hidden function startFromMenu() {
         _level = 1; _score = 0; _lives = 3;
+        _combo = 0; _comboBest = 0; _pgUnlockMsg = null;
         initLevel(); _gameState = BS_PLAY;
     }
 
     function onTick() as Void {
         _tick++;
+        if (_msgT > 0) { _msgT--; }
         if (_shakeTick > 0) {
             _shakeX = (Math.rand().abs() % 5) - 2;
             _shakeY = (Math.rand().abs() % 3) - 1;
             _shakeTick--;
         } else { _shakeX = 0; _shakeY = 0; }
-        if (_gameState == BS_PLAY) { update(); }
+        if (_gameState == BS_PLAY) { update(); updateShards(); }
         else if (_gameState == BS_WIN || _gameState == BS_OVER) { _resultTick++; }
         WatchUi.requestUpdate();
+    }
+
+    // Advance the brick-break shards: drift + gravity + fade. Cheap; iterates a
+    // small fixed pool and skips dead slots.
+    hidden function updateShards() {
+        for (var i = 0; i < MAX_SHARD; i++) {
+            if (_shLife[i] <= 0) { continue; }
+            _shX[i] += _shVx[i];
+            _shY[i] += _shVy[i];
+            _shVy[i] += 0.35;
+            _shLife[i]--;
+        }
+    }
+
+    // Spawn a few coloured shards at a brick's centre when it breaks.
+    hidden function spawnShards(cx, cy, col) {
+        var made = 0;
+        for (var i = 0; i < MAX_SHARD && made < 5; i++) {
+            if (_shLife[i] > 0) { continue; }
+            _shX[i] = cx.toFloat(); _shY[i] = cy.toFloat();
+            var ang = (Math.rand().abs() % 360).toFloat() * 3.14159265 / 180.0;
+            var sp  = 1.2 + (Math.rand().abs() % 100).toFloat() / 45.0;
+            _shVx[i] = sp * Math.cos(ang);
+            _shVy[i] = sp * Math.sin(ang) - 1.4;
+            _shLife[i] = 8 + Math.rand().abs() % 6;
+            _shCol[i] = col;
+            made++;
+        }
     }
 
     // ── Game logic ─────────────────────────────────────────────────────────
@@ -337,6 +421,8 @@ class BitochiBricksView extends WatchUi.View {
                     var minVy = -_spdBase * 0.2;
                     if (_bVy[bi] > minVy) { _bVy[bi] = minVy; }
                     _bY[bi] = padZoneTop;
+                    // A paddle touch ends the current brick-combo rally.
+                    _combo = 0;
                     vibe(12, 18);
                 }
             }
@@ -352,8 +438,9 @@ class BitochiBricksView extends WatchUi.View {
             if (_lives <= 0) {
                 if (_score > _bestScore) {
                     _bestScore = _score;
-                    Application.Storage.setValue("bricksBest", _bestScore);
+                    try { Application.Storage.setValue("bricksBest", _bestScore); } catch (e) {}
                 }
+                _awardProgress(_score);
                 Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
                 Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "BRICKS");
                 _gameState = BS_OVER;
@@ -413,13 +500,47 @@ class BitochiBricksView extends WatchUi.View {
     hidden function hitBrick(i) {
         _bkHp[i]--;
         _shakeTick = 2;
+        // Every brick contact extends the combo rally (see _combo docs).
+        _combo++;
+        if (_combo > _comboBest) { _comboBest = _combo; }
         if (_bkHp[i] <= 0) {
-            _score += 10 + _level * 4;
+            // Score scales with the live combo multiplier — sustained rallies
+            // (no paddle touch) are worth dramatically more.
+            _score += (10 + _level * 4) * comboMult();
             vibe(18, 28);
+            spawnBrickShards(i);
             if (_bkPu[i] > 0) { dropPowerup(_bkPu[i], i); }
         } else {
+            _shakeTick = (_bkSteel[i] == 1) ? 3 : 2;
             vibe(8, 12);
         }
+    }
+
+    // Live combo multiplier: +1x every 4 consecutive brick hits, capped at 6x.
+    hidden function comboMult() {
+        var m = 1 + _combo / 4;
+        if (m > 6) { m = 6; }
+        return m;
+    }
+
+    // Emit shards at a broken brick's centre in its own colour (steel = silver).
+    hidden function spawnBrickShards(i) {
+        var r = i / COLS; var c = i % COLS;
+        var cx = _bOffX + c * _bW + _bW / 2;
+        var cy = _startY + r * _bH + _bH / 2;
+        var col = (_bkSteel[i] == 1) ? 0xCCCCDD : rowColor(r);
+        spawnShards(cx, cy, col);
+    }
+
+    // Base rainbow palette keyed on brick row (also used for hp==1 bricks).
+    hidden function rowColor(r) {
+        var rc = r % 6;
+        if      (rc == 0) { return 0x22DDFF; }
+        else if (rc == 1) { return 0x44FF88; }
+        else if (rc == 2) { return 0xFFFF44; }
+        else if (rc == 3) { return 0xFF9944; }
+        else if (rc == 4) { return 0xFF44AA; }
+        return 0xBB44FF;
     }
 
     hidden function dropPowerup(type, idx) {
@@ -464,8 +585,7 @@ class BitochiBricksView extends WatchUi.View {
     function doAction() {
         if (_gameState == BS_MENU) {
             if (_menuSel == 1) { openLeaderboard(); return; }
-            _level = 1; _score = 0; _lives = 3;
-            initLevel(); _gameState = BS_PLAY;
+            startFromMenu();
         } else if (_gameState == BS_WIN && _resultTick > 18) {
             initLevel(); _gameState = BS_PLAY;
         } else if (_gameState == BS_OVER && _resultTick > 18) {
@@ -514,6 +634,51 @@ class BitochiBricksView extends WatchUi.View {
         return ["easy", "normal", "hard"][_diff];
     }
 
+    // ── Meta-progression (shared, shop-ready via Progress module) ─────────────
+    // Grants coins + XP scaled by the run's score and unlocks cosmetic skins at
+    // rank milestones. Coins are the future shop's currency; skin ownership is
+    // the exact set a shop purchase would grant. Fully guarded — never throws.
+    hidden function _awardProgress(scoreVal) {
+        try {
+            var coinsGain = scoreVal / 40;
+            if (coinsGain < 1 && scoreVal > 0) { coinsGain = 1; }
+            if (coinsGain > 80) { coinsGain = 80; }
+            var xpGain = 10 + scoreVal / 30;
+            if (xpGain > 90) { xpGain = 90; }
+            if (coinsGain <= 0 && xpGain <= 0) { return; }
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+            var lvl = Progress.level();
+            var uNeon = Progress.unlockIfReached("br_neon", lvl, 3);
+            var uGold = Progress.unlockIfReached("br_gold", lvl, 6);
+            if (uGold)      { _pgUnlockMsg = "UNLOCKED: GOLD"; }
+            else if (uNeon) { _pgUnlockMsg = "UNLOCKED: NEON"; }
+        } catch (e) {}
+    }
+
+    // Themed bricks rank ladder derived from the shared XP level.
+    hidden function _rankName(lvl) {
+        if (lvl >= 25) { return "Legend"; }
+        if (lvl >= 15) { return "Master"; }
+        if (lvl >= 10) { return "Demolisher"; }
+        if (lvl >= 6)  { return "Breaker"; }
+        if (lvl >= 3)  { return "Bouncer"; }
+        return "Rookie";
+    }
+
+    // Selected-and-owned skin index (0=CLASSIC,1=NEON,2=GOLD). A locked pick
+    // falls back to CLASSIC, so selection is always safe pre-shop and post-shop.
+    hidden function _skinIdx() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("br_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 2 && Progress.owns("br_gold")) { return 2; }
+        if (sel == 1 && Progress.owns("br_neon")) { return 1; }
+        return 0;
+    }
+
     // ── Rendering ──────────────────────────────────────────────────────────
 
     function onUpdate(dc) {
@@ -529,6 +694,10 @@ class BitochiBricksView extends WatchUi.View {
     hidden function drawGame(dc) {
         var ox = _shakeX; var oy = _shakeY;
         var hh = _hudH;
+
+        // Subtle animated backdrop behind the play area (drawn first so the HUD
+        // bar and everything else paints over it).
+        drawBg(dc);
 
         // HUD bar
         dc.setColor(0x0B1326, Graphics.COLOR_TRANSPARENT);
@@ -568,15 +737,13 @@ class BitochiBricksView extends WatchUi.View {
             var hp = _bkHp[i]; if (hp <= 0) { continue; }
             var r = i / COLS; var c = i % COLS;
             var bx2 = _bOffX + c * _bW + ox; var by2 = _startY + r * _bH + oy;
+            var steel = (_bkSteel[i] == 1);
             var col;
-            if (hp == 1) {
-                var rc = r % 6;
-                if      (rc == 0) { col = 0x22DDFF; }
-                else if (rc == 1) { col = 0x44FF88; }
-                else if (rc == 2) { col = 0xFFFF44; }
-                else if (rc == 3) { col = 0xFF9944; }
-                else if (rc == 4) { col = 0xFF44AA; }
-                else              { col = 0xBB44FF; }
+            if (steel) {
+                // Metallic slab: darker when freshly hit, brighter when full HP.
+                col = (hp >= STEEL_HP) ? 0x9AA4B4 : (hp >= 3 ? 0x808A9A : 0x606A7A);
+            } else if (hp == 1) {
+                col = rowColor(r);
             } else if (hp == 2) { col = 0xFF8822; }
             else if (hp == 3)   { col = 0xFF2233; }
             else                { col = 0xBB1166; }
@@ -587,21 +754,31 @@ class BitochiBricksView extends WatchUi.View {
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx2 + 1, by2, _bW - 2, _bH - 2);
             var hlH = _bH > 10 ? 2 : 1;
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(steel ? 0xEEF2FF : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx2 + 2, by2 + 1, _bW - 7, hlH);
 
-            if (hp >= 2) {
-                var dotC = (hp >= 4) ? 0xFF88BB : 0xFFBB55;
-                dc.setColor(dotC, Graphics.COLOR_TRANSPARENT);
-                var dotSz = _bH > 10 ? 3 : 2;
-                for (var d = 0; d < hp - 1; d++) {
-                    dc.fillRectangle(bx2 + _bW - 5 - d * (dotSz + 1), by2 + _bH - dotSz - 2, dotSz, dotSz);
+            if (steel) {
+                // Corner rivets + a dark seam sell the reinforced-plate look.
+                var rv = _bH > 10 ? 2 : 1;
+                dc.setColor(0x3A404C, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx2 + 3, by2 + 2, rv, rv);
+                dc.fillRectangle(bx2 + _bW - 4 - rv, by2 + 2, rv, rv);
+                dc.fillRectangle(bx2 + 3, by2 + _bH - 3 - rv, rv, rv);
+                dc.fillRectangle(bx2 + _bW - 4 - rv, by2 + _bH - 3 - rv, rv, rv);
+            } else {
+                if (hp >= 2) {
+                    var dotC = (hp >= 4) ? 0xFF88BB : 0xFFBB55;
+                    dc.setColor(dotC, Graphics.COLOR_TRANSPARENT);
+                    var dotSz = _bH > 10 ? 3 : 2;
+                    for (var d = 0; d < hp - 1; d++) {
+                        dc.fillRectangle(bx2 + _bW - 5 - d * (dotSz + 1), by2 + _bH - dotSz - 2, dotSz, dotSz);
+                    }
                 }
-            }
-            if (_bkPu[i] > 0) {
-                var gemR = _bH > 10 ? 2 : 1;
-                dc.setColor(puColor(_bkPu[i]), Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(bx2 + 4, by2 + _bH / 2, gemR);
+                if (_bkPu[i] > 0) {
+                    var gemR = _bH > 10 ? 2 : 1;
+                    dc.setColor(puColor(_bkPu[i]), Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(bx2 + 4, by2 + _bH / 2, gemR);
+                }
             }
         }
 
@@ -632,24 +809,78 @@ class BitochiBricksView extends WatchUi.View {
             dc.fillRectangle(lx - laserW / 4, ly - _ballR * 2, laserW / 2, _ballR * 3);
         }
 
-        // Balls
+        // Brick-break shards (drawn under the balls so the ball stays crisp).
+        for (var si = 0; si < MAX_SHARD; si++) {
+            if (_shLife[si] <= 0) { continue; }
+            var sx = _shX[si].toNumber() + ox;
+            var sy = _shY[si].toNumber() + oy;
+            var sr = (_shLife[si] > 6) ? 2 : 1;
+            dc.setColor(_shCol[si], Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(sx, sy, sr, sr);
+        }
+
+        // Skin-aware ball/paddle colours (CLASSIC / NEON / GOLD).
+        var skin = _skinIdx();
+        var ballDark; var ballMid; var ballLite;
+        if (skin == 2) { ballDark = 0x553300; ballMid = 0xFFCC22; ballLite = 0xFFF0AA; }
+        else if (skin == 1) { ballDark = 0x004455; ballMid = 0x22FFEE; ballLite = 0xCCFFFF; }
+        else { ballDark = 0x112244; ballMid = 0x55AAFF; ballLite = 0xCCEEFF; }
+
+        // Balls (with a short velocity-based trail).
         var br2 = _ballR * 2 / 3;
         var br3 = _ballR / 3;
         for (var bi = 0; bi < MAX_B; bi++) {
             if (!_bOn[bi]) { continue; }
             var bsx = _bX[bi].toNumber() + ox;
             var bsy = _bY[bi].toNumber() + oy;
-            dc.setColor(0x112244, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bsx, bsy, _ballR);
-            dc.setColor(0x55AAFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bsx, bsy, br2);
-            dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bsx - 1, bsy - 1, br3);
+            var vx = _bVx[bi]; var vy = _bVy[bi];
+            var v2 = vx * vx + vy * vy;
+            if (v2 > 1.0) {
+                var spd = Math.sqrt(v2);
+                var dxn = vx / spd; var dyn = vy / spd;
+                dc.setColor(ballMid, Graphics.COLOR_TRANSPARENT);
+                for (var t = 3; t >= 1; t--) {
+                    var td = t.toFloat() * (_ballR.toFloat() * 0.9 + 1.0);
+                    var tx = bsx - (dxn * td).toNumber();
+                    var ty = bsy - (dyn * td).toNumber();
+                    var trR = (_ballR * (4 - t)) / 6; if (trR < 1) { trR = 1; }
+                    dc.fillCircle(tx, ty, trR);
+                }
+            }
+            dc.setColor(ballDark, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bsx, bsy, _ballR);
+            dc.setColor(ballMid, Graphics.COLOR_TRANSPARENT);  dc.fillCircle(bsx, bsy, br2);
+            dc.setColor(ballLite, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bsx - 1, bsy - 1, br3);
         }
 
-        // Paddle
+        // Combo indicator — pulsing, in the clear zone above the paddle. Only
+        // shown once a rally is meaningfully going (2+ consecutive brick hits).
+        if (_combo >= 2) {
+            var mult = comboMult();
+            var pulse = (_tick % 8 < 4);
+            var cClr = (mult >= 4) ? (pulse ? 0xFF5566 : 0xFFAA33)
+                                   : (pulse ? 0xFFDD55 : 0xFFAA33);
+            dc.setColor(cClr, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2 + ox, _padYpos - _h * 13 / 100 + oy, Graphics.FONT_XTINY,
+                        "COMBO x" + mult, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // One-shot non-blocking toast (daily bonus / notices) — drawn in the
+        // clear zone below the bricks so it never overlaps the wall.
+        if (_msgT > 0) {
+            dc.setColor(0xFFF055, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, _msg,
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Paddle (skin-aware; the WIDE powerup keeps its green gameplay tint).
         var padW = (_padWide > 0) ? _padWideW : _padNormW;
         var half2 = padW / 2;
         var ppx = _padX.toNumber() + ox; var ppy = _padYpos + oy;
-        var padBodyC = (_padWide > 0) ? 0x22AA44 : 0x1E4E8C;
-        var padTopC  = (_padWide > 0) ? 0x55FF88 : 0x55AAFF;
+        var padBodyC; var padTopC;
+        if (_padWide > 0)   { padBodyC = 0x22AA44; padTopC = 0x55FF88; }
+        else if (skin == 2) { padBodyC = 0xAA7711; padTopC = 0xFFDD55; }
+        else if (skin == 1) { padBodyC = 0xAA22CC; padTopC = 0xFF66FF; }
+        else                { padBodyC = 0x1E4E8C; padTopC = 0x55AAFF; }
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(ppx - half2, ppy - _padH / 2 + 1, padW, _padH, _padH / 2);
         dc.setColor(padBodyC, Graphics.COLOR_TRANSPARENT);
@@ -679,6 +910,25 @@ class BitochiBricksView extends WatchUi.View {
         if (t == PU_SLOW)  { return 0x33FFAA; }
         if (t == PU_LIFE)  { return 0xFF2233; }
         return 0xFF8822;
+    }
+
+    // Subtle animated backdrop: faint parallax dots drifting slowly down the
+    // play area. Cheap (a dozen dots, no allocation) and never touches the HUD.
+    hidden function drawBg(dc) {
+        var top  = _wallTop.toNumber();
+        var span = _padYpos - top;
+        if (span < 10) { return; }
+        var wl = _bOffX;
+        var wspan = _w - 2 * _bOffX;
+        if (wspan < 10) { return; }
+        for (var i = 0; i < 14; i++) {
+            var px = wl + (i * 53) % wspan;
+            var phase = (_tick + i * 23) % 240;
+            var py = top + phase * span / 240;
+            var shade = 0x14 + (i % 3) * 6;
+            dc.setColor((shade << 16) | (shade << 8) | (shade + 12), Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px, py, 1);
+        }
     }
 
     hidden function drawMenu(dc) {
@@ -750,9 +1000,21 @@ class BitochiBricksView extends WatchUi.View {
     hidden function drawOver(dc) {
         dc.setColor(0x10080A, 0x10080A); dc.clear();
         var lines = [
-            [_score + " pts", 0xFFCC44],
-            ["Best: " + _bestScore, 0x556677]
+            [_score + " pts", 0xFFCC44]
         ];
+        // Compact progression summary + streak, plus a one-shot unlock banner.
+        // Progress calls are internally guarded, but wrap the whole build too.
+        try {
+            var lvl = Progress.level();
+            lines.add(["Lv " + lvl + " " + _rankName(lvl) + " - " + Progress.coins() + "c", 0xBFD8C4]);
+            var st = Progress.currentStreak();
+            var l3 = "Best " + _bestScore;
+            if (st > 1) { l3 = l3 + "  Streak " + st; }
+            lines.add([l3, 0x88AACC]);
+            if (_pgUnlockMsg != null) { lines.add([_pgUnlockMsg, 0xFFD24A]); }
+        } catch (e) {
+            lines.add(["Best: " + _bestScore, 0x556677]);
+        }
         var footer = (_resultTick > 22) ? "Tap to retry" : "";
         GameOverCard.draw(dc, _w, _h, "GAME OVER", 0xFF3333, lines, footer, 0xFF3333);
     }

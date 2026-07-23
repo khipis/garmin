@@ -57,6 +57,24 @@ class BitochiBombDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+    // Touch devices: tap drops the current weapon (or confirms menus); swipe
+    // up/down cycles the loadout so the whole arsenal is reachable without
+    // physical UP/DOWN keys.
+    function onTap(evt) {
+        _view.doAction();
+        WatchUi.requestUpdate();
+        return true;
+    }
+
+    function onSwipe(evt) {
+        var d = evt.getDirection();
+        if (d == WatchUi.SWIPE_UP) { _view.navigate(-1); }
+        else if (d == WatchUi.SWIPE_DOWN) { _view.navigate(1); }
+        else { return true; }
+        WatchUi.requestUpdate();
+        return true;
+    }
+
     function onBack() {
         if (_sensorEnabled) {
             Sensor.enableSensorEvents(null);

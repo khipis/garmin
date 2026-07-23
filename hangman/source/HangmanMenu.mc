@@ -63,7 +63,8 @@ function buildHangmanMenu() as Lang.Array {
             new GmOption("hm_cat", "Category",
                 ["ANIMALS", "FOOD", "TECH", "SPORTS"], 0),
             new GmOption("hm_diff", "Difficulty",
-                ["EASY", "MEDIUM", "HARD"], 0)
+                ["EASY", "MEDIUM", "HARD"], 0),
+            new GmOption("hm_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

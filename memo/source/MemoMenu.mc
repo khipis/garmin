@@ -55,6 +55,20 @@ class MemoHooks extends GameHooks {
         } catch (e) {}
         return names[d];
     }
+
+    // Best moves for the current difficulty (mgM0/1/2), shown under the menu.
+    function footerText() as Lang.String or Null {
+        try {
+            var d = 1;
+            var v = Application.Storage.getValue("memo_diff");
+            if (v instanceof Lang.Number && v >= 0 && v <= 2) { d = v; }
+            var b = Application.Storage.getValue("mgM" + d.toString());
+            if (b instanceof Lang.Number && b > 0) {
+                return "BEST " + b.format("%d") + " mv";
+            }
+        } catch (e) {}
+        return null;
+    }
 }
 
 function buildMemoMenu() as Lang.Array {
@@ -69,7 +83,8 @@ function buildMemoMenu() as Lang.Array {
         :lbTitle => "MEMO",
         :hooks   => new MemoHooks(),
         :options => [
-            new GmOption("memo_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("memo_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("memo_fx",   "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

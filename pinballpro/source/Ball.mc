@@ -53,19 +53,36 @@ class Ball {
         t1x = x;   t1y = y;
     }
 
-    function draw(dc) {
+    // Draw the ball, offset by (ox,oy) so it shakes with the field.
+    // A chrome ball look: soft comet trail → drop shadow → graded
+    // steel body → crisp specular highlight.
+    function draw(dc, ox, oy) {
         if (!alive) { return; }
-        // Trail (faded) — smaller circles to keep multi-ball cheap.
-        dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(t3x, t3y, radius - 2);
-        dc.setColor(0x4488BB, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(t2x, t2y, radius - 1);
-        // Body
-        dc.setColor(0xCCCCDD, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x, y, radius);
-        // Bright highlight pixel
+        var bx = x + ox;
+        var by = y + oy;
+        var r  = radius;
+
+        // Comet trail (faded) — smaller circles keep multi-ball cheap.
+        dc.setColor(0x1A3450, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(t3x + ox, t3y + oy, r - 2);
+        dc.setColor(0x3A6C9C, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(t2x + ox, t2y + oy, r - 1);
+
+        // Drop shadow, offset down-right for a lit-from-top-left feel.
+        dc.setColor(0x05060A, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx + 1, by + 2, r);
+
+        // Graded steel body: dark rim → mid steel → bright core.
+        dc.setColor(0x6E7A88, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx, by, r);
+        dc.setColor(0xB8C2CE, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx, by, (r * 3) / 4);
+        dc.setColor(0xE8EEF6, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx - r / 4, by - r / 4, (r * 2) / 5);
+
+        // Crisp specular highlight.
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x - radius / 3, y - radius / 3,
-                      (radius / 3 < 1) ? 1 : radius / 3);
+        var hr = r / 3; if (hr < 1) { hr = 1; }
+        dc.fillCircle(bx - r / 3, by - r / 3, hr);
     }
 }

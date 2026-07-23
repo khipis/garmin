@@ -57,7 +57,8 @@ function buildHoloGridMenu() as Lang.Array {
             new GmOption("hg_slvl", "Start Level",
                 ["1", "5", "10", "15", "20", "25", "30"], 0),
             new GmOption("hg_lives", "Lives",
-                ["1", "2", "3", "4", "5"], 2)
+                ["1", "2", "3", "4", "5"], 2),
+            new GmOption("hg_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

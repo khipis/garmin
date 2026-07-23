@@ -70,7 +70,8 @@ function buildTerritoryMenu() as Lang.Array {
         :options => [
             new GmOption("tc_mode", "Mode",    ["P vs AI", "P vs P", "AI vs AI"], 0),
             new GmOption("tc_diff", "AI level", ["EASY", "MED", "HARD"], 1),
-            new GmOption("tc_side", "You play", ["BLACK", "WHITE"], 0)
+            new GmOption("tc_side", "You play", ["BLACK", "WHITE"], 0),
+            new GmOption("tc_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

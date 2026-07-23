@@ -818,9 +818,9 @@ _Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_67_49_73_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc"; @line = 76; @symbol_functiondef = [buildArcadeMenu,76,9,24]; @symbol_return<0> = [Lang,76,30,34]; @symbol_return<1> = [Array,76,35,40]; ]
 function buildArcadeMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_start:
+_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_start:
 [ "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc" 77 4 ]
-    [ "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_start" "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_start" "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 77 8 11 ];
     symbol [ MenuConfig %tmp.4 77 18 28 ];
@@ -870,7 +870,7 @@ _Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_start:
     %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
     %tmp.50 = const :options;
     symbol [ options %tmp.50 86 9 16 const ];
-    %tmp.51 = newa 1;
+    %tmp.51 = newa 2;
     symbol [ GmOption %tmp.55 87 16 24 ];
     %tmp.55 = getv ? :GmOption;
     %tmp.56 = "arc_axes";
@@ -889,37 +889,52 @@ _Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_start:
     %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
     %tmp.69 = dup %tmp.51;
     %tmp.70 = aputv %tmp.69 0 %tmp.52;
-    %tmp.71 = dup %tmp.48;
-    %tmp.72 = aputv %tmp.71 %tmp.50 %tmp.70;
-    %tmp.1 = newc %tmp.4 (%tmp.72);
+    symbol [ GmOption %tmp.74 88 16 24 ];
+    %tmp.74 = getv ? :GmOption;
+    %tmp.75 = "arc_fx";
+    %tmp.76 = "Sound & Haptics";
+    %tmp.77 = newa 2;
+    %tmp.78 = "ON";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 0 %tmp.78;
+    %tmp.81 = "OFF";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 1 %tmp.81;
+    %tmp.84 = 0;
+    %tmp.71 = newc %tmp.74 (%tmp.75, %tmp.76, %tmp.83, %tmp.84);
+    %tmp.85 = dup %tmp.70;
+    %tmp.86 = aputv %tmp.85 1 %tmp.71;
+    %tmp.87 = dup %tmp.48;
+    %tmp.88 = aputv %tmp.87 %tmp.50 %tmp.86;
+    %tmp.1 = newc %tmp.4 (%tmp.88);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 77 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc" 90 4 ]
-    [ "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_start" "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_stop" ]
-    %v.2 = local;
-    symbol [ v %v.2 90 8 9 ];
-    symbol [ GameMenuView %tmp.76 90 16 28 ];
-    %tmp.76 = getv ? :GameMenuView;
-    %tmp.77 = lgetv %cfg.1;
-    symbol [ cfg %tmp.77 90 29 32 ];
-    %tmp.73 = newc %tmp.76 (%tmp.77);
-    lputv %v.2 %tmp.73;
-    symbol [ v %v.2 90 8 9 ];
 [ "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc" 91 4 ]
-    %tmp.78 = newa 2;
-    %tmp.79 = lgetv %v.2;
-    symbol [ v %tmp.79 91 12 13 ];
-    %tmp.80 = dup %tmp.78;
-    %tmp.81 = aputv %tmp.80 0 %tmp.79;
-    symbol [ GameMenuDelegate %tmp.85 91 19 35 ];
-    %tmp.85 = getv ? :GameMenuDelegate;
-    %tmp.86 = lgetv %v.2;
-    symbol [ v %tmp.86 91 36 37 ];
-    %tmp.82 = newc %tmp.85 (%tmp.86);
-    %tmp.87 = dup %tmp.81;
-    %tmp.88 = aputv %tmp.87 1 %tmp.82;
-    ret %tmp.88;
-_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_92_0_stop:
+    [ "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_start" "_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 91 8 9 ];
+    symbol [ GameMenuView %tmp.92 91 16 28 ];
+    %tmp.92 = getv ? :GameMenuView;
+    %tmp.93 = lgetv %cfg.1;
+    symbol [ cfg %tmp.93 91 29 32 ];
+    %tmp.89 = newc %tmp.92 (%tmp.93);
+    lputv %v.2 %tmp.89;
+    symbol [ v %v.2 91 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc" 92 4 ]
+    %tmp.94 = newa 2;
+    %tmp.95 = lgetv %v.2;
+    symbol [ v %tmp.95 92 12 13 ];
+    %tmp.96 = dup %tmp.94;
+    %tmp.97 = aputv %tmp.96 0 %tmp.95;
+    symbol [ GameMenuDelegate %tmp.101 92 19 35 ];
+    %tmp.101 = getv ? :GameMenuDelegate;
+    %tmp.102 = lgetv %v.2;
+    symbol [ v %tmp.102 92 36 37 ];
+    %tmp.98 = newc %tmp.101 (%tmp.102);
+    %tmp.103 = dup %tmp.97;
+    %tmp.104 = aputv %tmp.103 1 %tmp.98;
+    ret %tmp.104;
+_Users_kkorolczuk_work_garmin_arcade_source_ArcadeMenu_mc_76_41_93_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/arcade/source/ArcadeMenu.mc"; @line = 4; ]
 <init> {

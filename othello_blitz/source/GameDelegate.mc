@@ -1,12 +1,18 @@
 using Toybox.WatchUi;
 
-// Input routing:
-//   UP button      → cursor up
-//   DOWN button    → cursor down
-//   onPreviousPage → cursor left  (UP-scroll / back gesture)
-//   onNextPage     → cursor right (DOWN-scroll / forward gesture)
-//   SELECT         → place disc (or new game when game over)
-//   BACK           → exit
+// Input routing (portable across button-only and touch Garmin devices).
+//
+// We rely on the standard BehaviorDelegate translation instead of overriding
+// the raw onKey (which previously swallowed UP/DOWN and made horizontal cursor
+// movement impossible, and could hijack BACK). The cursor cycles through the
+// current player's VALID MOVES only, so two directional inputs are enough to
+// reach any playable square on every device.
+//
+//   UP  / swipe        → onPreviousPage → previous valid move
+//   DOWN / swipe        → onNextPage     → next valid move
+//   START / SELECT      → onSelect       → place disc (or new game when over)
+//   TAP (touch)         → onTap          → place at tapped square
+//   BACK                → onBack         → return to the shared menu
 
 class GameDelegate extends WatchUi.BehaviorDelegate {
     hidden var _v;
@@ -16,25 +22,15 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
         _v = view;
     }
 
-    function onKey(evt) {
-        if (evt.getType() != 0) { return false; }  // key-press only
-        var k = evt.getKey();
-        if      (k == WatchUi.KEY_UP)   { _v.moveCursor(0, -1); }
-        else if (k == WatchUi.KEY_DOWN) { _v.moveCursor(0,  1); }
-        else                            { _v.doAction(); }
-        WatchUi.requestUpdate();
-        return true;
-    }
+    function onSelect()       { _v.doAction();     WatchUi.requestUpdate(); return true; }
+    function onNextPage()     { _v.cycleMove( 1);  WatchUi.requestUpdate(); return true; }
+    function onPreviousPage() { _v.cycleMove(-1);  WatchUi.requestUpdate(); return true; }
 
-    function onSelect()       { _v.doAction();      WatchUi.requestUpdate(); return true; }
-    // Bottom-left: cycle RIGHT along current row (wraps)
-    function onPreviousPage() { _v.moveCursor( 1, 0); WatchUi.requestUpdate(); return true; }
-    // Bottom-right: cycle DOWN along current column (wraps)
-    function onNextPage()     { _v.moveCursor( 0, 1); WatchUi.requestUpdate(); return true; }
     function onTap(evt) {
         var xy = evt.getCoordinates();
         _v.doTap(xy[0], xy[1]);
-        WatchUi.requestUpdate(); return true;
+        WatchUi.requestUpdate();
+        return true;
     }
 
     function onBack() {

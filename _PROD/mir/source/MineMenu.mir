@@ -1,0 +1,854 @@
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [WatchUi,9,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Graphics,10,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Lang,11,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 13; @symbol_classdef = [MineHooks,13,6,15]; @symbol_extends<0> = [GameHooks,13,24,33]; ]
+class MineHooks extends GameHooks {
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 14; @position = 15; @symbol_vardef = [_preview,14,15,23]; ]
+    protected
+    var _preview;
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 15; @position = 15; @symbol_vardef = [_tick,15,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 17; @symbol_functiondef = [initialize,17,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_17_26_21_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 18 8 ]
+        symbol [ GameHooks %tmp.2 18 8 17 ];
+        %tmp.2 = getv ? :GameHooks;
+        symbol [ initialize %tmp.3 18 18 28 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 19 8 ]
+        %tmp.4 = 0;
+        symbol [ _tick ? 19 8 13 ];
+        putv self :_tick %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 20 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_12_20_42_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 20 14 ]
+        symbol [ MineModel %tmp.8 20 29 38 ];
+        %tmp.8 = getv ? :MineModel;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ _preview ? 20 14 22 ];
+        putv self :_preview %tmp.5;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_12_20_42_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_catch:
+        %tmp.9 = exception;
+        push %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 20 44 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_44_20_73_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 20 51 52 ];
+        %tmp.10 = dup %tmp.9;
+        lputv %e.1 %tmp.10;
+        symbol [ e %e.1 20 51 52 ];
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_54_20_73_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 20 56 ]
+        %tmp.11 = null;
+        symbol [ _preview ? 20 56 64 ];
+        putv self :_preview %tmp.11;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_54_20_73_stop:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_44_20_73_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_44_20_73_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_44_20_73_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally;
+        throw %tmp.9;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_20_8_20_73_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_17_26_21_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 23; @symbol_functiondef = [startGame,23,13,22]; ]
+    function startGame() as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_23_33_28_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 24 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_12_27_8_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 25 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_12_27_8_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_12_27_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 25 16 17 ];
+        symbol [ MineView %tmp.4 25 24 32 ];
+        %tmp.4 = getv ? :MineView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 25 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 26 12 ]
+        symbol [ WatchUi %tmp.5 26 12 19 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 26 20 28 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 26 29 30 ];
+        symbol [ MineDelegate %tmp.11 26 36 48 ];
+        %tmp.11 = getv ? :MineDelegate;
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 26 49 50 ];
+        %tmp.8 = newc %tmp.11 (%tmp.12);
+        symbol [ WatchUi %tmp.13 26 53 60 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.14 26 61 69 ];
+        %tmp.14 = getv %tmp.13 :SLIDE_UP;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.14);
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_12_27_8_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_catch:
+        %tmp.15 = exception;
+        push %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 27 10 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_27_10_27_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 27 17 18 ];
+        %tmp.16 = dup %tmp.15;
+        lputv %e.2 %tmp.16;
+        symbol [ e %e.2 27 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_27_10_27_21_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_27_10_27_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_27_10_27_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally;
+        throw %tmp.15;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_24_8_27_21_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_23_33_28_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 30; @symbol_functiondef = [drawArt,30,13,20]; @symbol_param<0> = [dc,30,21,23]; @symbol_param<1> = [cx,30,25,27]; @symbol_param<2> = [cy,30,29,31]; @symbol_param<3> = [w,30,33,34]; @symbol_param<4> = [h,30,36,37]; ]
+    function drawArt(dc, cx, cy, w, h) as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_30_47_36_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 31 8 ]
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_8_31_40_if_stmt:
+        symbol [ _preview %tmp.2 31 12 20 ];
+        %tmp.2 = getv ? :_preview;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_8_31_40_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_8_31_40_if_true:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_30_31_40_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 31 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_30_31_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_8_31_40_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_31_8_31_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 32 8 ]
+        symbol [ _tick %tmp.5 32 8 13 ];
+        %tmp.5 = getv self :_tick;
+        %tmp.6 = 1;
+        %tmp.7 = add %tmp.5 %tmp.6;
+        symbol [ _tick ? 32 8 13 ];
+        putv self :_tick dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 33 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_30_47_36_4_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_30_47_36_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 33 12 13 ];
+        %tmp.8 = lgetv %h;
+        symbol [ h %tmp.8 33 16 17 ];
+        %tmp.9 = 30;
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        %tmp.11 = 100;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        lputv %r.1 %tmp.12;
+        symbol [ r %r.1 33 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_8_34_30_if_stmt:
+        %tmp.13 = lgetv %r.1;
+        symbol [ r %tmp.13 34 12 13 ];
+        %tmp.14 = 18;
+        %tmp.15 = lt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_8_34_30_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_8_34_30_if_true:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_20_34_30_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 34 22 ]
+        %tmp.16 = 18;
+        lputv %r.1 %tmp.16;
+        symbol [ r %r.1 34 22 23 ];
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_20_34_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_8_34_30_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_34_8_34_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 35 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_12_35_65_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 35 14 ]
+        symbol [ MineArt %tmp.18 35 14 21 ];
+        %tmp.18 = getv ? :MineArt;
+        symbol [ drawScene %tmp.19 35 22 31 ];
+        %tmp.19 = getv function %tmp.18 :drawScene;
+        %tmp.20 = lgetv %dc;
+        symbol [ dc %tmp.20 35 32 34 ];
+        symbol [ _preview %tmp.22 35 36 44 ];
+        %tmp.22 = getv ? :_preview;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 35 46 48 ];
+        %tmp.24 = lgetv %cy;
+        symbol [ cy %tmp.24 35 50 52 ];
+        %tmp.25 = lgetv %r.1;
+        symbol [ r %tmp.25 35 54 55 ];
+        symbol [ _tick %tmp.27 35 57 62 ];
+        %tmp.27 = getv ? :_tick;
+        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.22, %tmp.23, %tmp.24, %tmp.25, %tmp.27);
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_12_35_65_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_catch:
+        %tmp.28 = exception;
+        push %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 35 67 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_67_35_78_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 35 74 75 ];
+        %tmp.29 = dup %tmp.28;
+        lputv %e.2 %tmp.29;
+        symbol [ e %e.2 35 74 75 ];
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_67_35_78_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_67_35_78_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_67_35_78_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally;
+        throw %tmp.28;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_35_8_35_78_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_30_47_36_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 38; @symbol_functiondef = [footerText,38,13,23]; @symbol_return<0> = [Lang,38,29,33]; @symbol_return<1> = [String,38,34,40]; ]
+    function footerText() as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_38_49_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 39 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_12_43_8_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 40 12 ]
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_12_40_49_if_stmt:
+        symbol [ _preview %tmp.2 40 16 24 ];
+        %tmp.2 = getv ? :_preview;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_12_40_49_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_12_40_49_if_true:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_34_40_49_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 40 36 ]
+        %tmp.5 = null;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_34_40_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_12_40_49_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_40_12_40_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 41 12 ]
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_stmt:
+        symbol [ _preview %tmp.7 41 17 25 ];
+        %tmp.7 = getv ? :_preview;
+        symbol [ started %tmp.8 41 26 33 ];
+        %tmp.8 = getv %tmp.7 :started;
+        %tmp.9 = not %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_true:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_35_41_70_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 41 37 ]
+        %tmp.10 = "Open Bitochi Mine #001";
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_35_41_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 42 12 ]
+        symbol [ _preview %tmp.12 42 19 27 ];
+        %tmp.12 = getv ? :_preview;
+        symbol [ depth %tmp.13 42 28 33 ];
+        %tmp.13 = getv %tmp.12 :depth;
+        %tmp.14 = "m · ";
+        %tmp.15 = add %tmp.13 %tmp.14;
+        symbol [ Mn %tmp.17 42 45 47 ];
+        %tmp.17 = getv ? :Mn;
+        symbol [ zName %tmp.18 42 48 53 ];
+        %tmp.18 = getv function %tmp.17 :zName;
+        symbol [ _preview %tmp.20 42 54 62 ];
+        %tmp.20 = getv ? :_preview;
+        symbol [ zone %tmp.21 42 63 67 ];
+        %tmp.21 = getv function %tmp.20 :zone;
+        %tmp.22 = invoke %tmp.20 %tmp.21();
+        %tmp.23 = invoke %tmp.17 %tmp.18(%tmp.22);
+        %tmp.24 = add %tmp.15 %tmp.23;
+        %tmp.25 = " · Lv ";
+        %tmp.26 = add %tmp.24 %tmp.25;
+        symbol [ _preview %tmp.28 42 84 92 ];
+        %tmp.28 = getv ? :_preview;
+        symbol [ mineLevel %tmp.29 42 93 102 ];
+        %tmp.29 = getv function %tmp.28 :mineLevel;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        %tmp.31 = add %tmp.26 %tmp.30;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_12_43_8_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch:
+        %tmp.32 = exception;
+        push %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 43 10 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 43 17 18 ];
+        %tmp.33 = dup %tmp.32;
+        lputv %e.1 %tmp.33;
+        symbol [ e %e.1 43 17 18 ];
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_20_43_35_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 43 22 ]
+        pop;
+        %tmp.34 = null;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        ret %tmp.34;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_20_43_35_stop:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
+        throw %tmp.32;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_38_49_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 46; @symbol_functiondef = [openBoard,46,13,22]; @symbol_return<0> = [Lang,46,28,32]; @symbol_return<1> = [Boolean,46,33,40]; ]
+    function openBoard() as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_46_41_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 47 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_12_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 48 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_12_51_8_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_12_51_8_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 48 16 17 ];
+        symbol [ MnBoardMenu %tmp.4 48 24 35 ];
+        %tmp.4 = getv ? :MnBoardMenu;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %m.1 %tmp.1;
+        symbol [ m %m.1 48 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 49 12 ]
+        symbol [ WatchUi %tmp.5 49 12 19 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.6 49 20 28 ];
+        %tmp.6 = getv function %tmp.5 :pushView;
+        %tmp.7 = lgetv %m.1;
+        symbol [ m %tmp.7 49 29 30 ];
+        symbol [ MnBoardDelegate %tmp.11 49 36 51 ];
+        %tmp.11 = getv ? :MnBoardDelegate;
+        %tmp.8 = newc %tmp.11 ();
+        symbol [ WatchUi %tmp.12 49 55 62 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.13 49 63 73 ];
+        %tmp.13 = getv %tmp.12 :SLIDE_LEFT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 50 12 ]
+        %tmp.14 = true;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_12_51_8_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_catch:
+        %tmp.15 = exception;
+        push %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 51 10 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_10_51_36_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 51 17 18 ];
+        %tmp.16 = dup %tmp.15;
+        lputv %e.2 %tmp.16;
+        symbol [ e %e.2 51 17 18 ];
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_20_51_36_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 51 22 ]
+        pop;
+        %tmp.17 = false;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_20_51_36_stop:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_10_51_36_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_10_51_36_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_51_10_51_36_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally;
+        throw %tmp.15;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_47_8_51_36_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_46_41_52_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 54; @symbol_functiondef = [hasReset,54,13,21]; @symbol_return<0> = [Lang,54,27,31]; @symbol_return<1> = [Boolean,54,32,39]; ]
+    function hasReset() as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_54_40_54_55_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 54 42 ]
+        %tmp.1 = true;
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_54_40_54_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 55; @symbol_functiondef = [resetLabel,55,13,23]; @symbol_return<0> = [Lang,55,29,33]; @symbol_return<1> = [String,55,34,40]; ]
+    function resetLabel() as Lang.String {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_55_41_55_64_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 55 43 ]
+        %tmp.1 = "Reset mine";
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_55_41_55_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 56; @symbol_functiondef = [resetProgress,56,13,26]; ]
+    function resetProgress() as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_56_37_62_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 57 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_12_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 58 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_12_61_8_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_12_61_8_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 58 16 17 ];
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_begin:
+        symbol [ _preview %tmp.2 58 21 29 ];
+        %tmp.2 = getv ? :_preview;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_else_false;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_true:
+        symbol [ _preview %tmp.6 58 41 49 ];
+        %tmp.6 = getv ? :_preview;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        push %tmp.7;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_else_false:
+        symbol [ MineModel %tmp.11 58 56 65 ];
+        %tmp.11 = getv ? :MineModel;
+        %tmp.8 = newc %tmp.11 ();
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_end:
+        %tmp.12 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_true] [%tmp.8 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_else_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_58_20_58_66_end];
+        lputv %m.1 %tmp.12;
+        symbol [ m %m.1 58 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 59 12 ]
+        %tmp.13 = lgetv %m.1;
+        symbol [ m %tmp.13 59 12 13 ];
+        symbol [ resetAll %tmp.14 59 14 22 ];
+        %tmp.14 = getv function %tmp.13 :resetAll;
+        invoke %tmp.13 %tmp.14();
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 60 12 ]
+        %tmp.15 = lgetv %m.1;
+        symbol [ m %tmp.15 60 23 24 ];
+        symbol [ _preview ? 60 12 20 ];
+        putv self :_preview %tmp.15;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_12_61_8_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_catch:
+        %tmp.16 = exception;
+        push %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 61 10 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_61_10_61_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 61 17 18 ];
+        %tmp.17 = dup %tmp.16;
+        lputv %e.2 %tmp.17;
+        symbol [ e %e.2 61 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_61_10_61_21_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally;
+        throw %tmp.16;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_57_8_61_21_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_56_37_62_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 66; @symbol_classdef = [MnBoardMenu,66,6,17]; @symbol_extends<0> = [WatchUi,66,26,33]; @symbol_extends<1> = [Menu2,66,34,39]; ]
+class MnBoardMenu extends WatchUi.Menu2 {
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 66; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 66; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 67; @symbol_functiondef = [initialize,67,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_67_26_74_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 68 8 ]
+        symbol [ Menu2 %tmp.2 68 8 13 ];
+        %tmp.2 = getv ? :Menu2;
+        symbol [ initialize %tmp.3 68 14 24 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        %tmp.4 = newd 1;
+        %tmp.6 = const :title;
+        symbol [ title %tmp.6 68 28 33 const ];
+        %tmp.7 = "LEADERBOARD";
+        %tmp.8 = dup %tmp.4;
+        %tmp.9 = aputv %tmp.8 %tmp.6 %tmp.7;
+        invoke %tmp.2 %tmp.3(%tmp.9);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 69 8 ]
+        %tmp.10 = self;
+        symbol [ addItem %tmp.11 69 8 15 ];
+        %tmp.11 = getv function %tmp.10 :addItem;
+        symbol [ WatchUi %tmp.14 69 20 27 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.15 69 28 36 ];
+        %tmp.15 = getv function ? %tmp.14 :MenuItem;
+        %tmp.16 = "Deepest Mine";
+        %tmp.17 = "Max depth";
+        symbol [ Mn %tmp.19 69 66 68 ];
+        %tmp.19 = getv ? :Mn;
+        symbol [ LB_DEPTH %tmp.20 69 69 77 ];
+        %tmp.20 = getv %tmp.19 :LB_DEPTH;
+        %tmp.21 = null;
+        %tmp.12 = newc %tmp.15 (%tmp.16, %tmp.17, %tmp.20, %tmp.21);
+        invoke %tmp.10 %tmp.11(%tmp.12);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 70 8 ]
+        %tmp.22 = self;
+        symbol [ addItem %tmp.23 70 8 15 ];
+        %tmp.23 = getv function %tmp.22 :addItem;
+        symbol [ WatchUi %tmp.26 70 20 27 ];
+        %tmp.26 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.27 70 28 36 ];
+        %tmp.27 = getv function ? %tmp.26 :MenuItem;
+        %tmp.28 = "Richest Miner";
+        %tmp.29 = "Resource value";
+        symbol [ Mn %tmp.31 70 72 74 ];
+        %tmp.31 = getv ? :Mn;
+        symbol [ LB_RICH %tmp.32 70 75 82 ];
+        %tmp.32 = getv %tmp.31 :LB_RICH;
+        %tmp.33 = null;
+        %tmp.24 = newc %tmp.27 (%tmp.28, %tmp.29, %tmp.32, %tmp.33);
+        invoke %tmp.22 %tmp.23(%tmp.24);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 71 8 ]
+        %tmp.34 = self;
+        symbol [ addItem %tmp.35 71 8 15 ];
+        %tmp.35 = getv function %tmp.34 :addItem;
+        symbol [ WatchUi %tmp.38 71 20 27 ];
+        %tmp.38 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.39 71 28 36 ];
+        %tmp.39 = getv function ? %tmp.38 :MenuItem;
+        %tmp.40 = "Legendary Finds";
+        %tmp.41 = "Rare collectibles";
+        symbol [ Mn %tmp.43 71 77 79 ];
+        %tmp.43 = getv ? :Mn;
+        symbol [ LB_LEGEND %tmp.44 71 80 89 ];
+        %tmp.44 = getv %tmp.43 :LB_LEGEND;
+        %tmp.45 = null;
+        %tmp.36 = newc %tmp.39 (%tmp.40, %tmp.41, %tmp.44, %tmp.45);
+        invoke %tmp.34 %tmp.35(%tmp.36);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 72 8 ]
+        %tmp.46 = self;
+        symbol [ addItem %tmp.47 72 8 15 ];
+        %tmp.47 = getv function %tmp.46 :addItem;
+        symbol [ WatchUi %tmp.50 72 20 27 ];
+        %tmp.50 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.51 72 28 36 ];
+        %tmp.51 = getv function ? %tmp.50 :MenuItem;
+        %tmp.52 = "Mine Level";
+        %tmp.53 = "Highest level";
+        symbol [ Mn %tmp.55 72 68 70 ];
+        %tmp.55 = getv ? :Mn;
+        symbol [ LB_LEVEL %tmp.56 72 71 79 ];
+        %tmp.56 = getv %tmp.55 :LB_LEVEL;
+        %tmp.57 = null;
+        %tmp.48 = newc %tmp.51 (%tmp.52, %tmp.53, %tmp.56, %tmp.57);
+        invoke %tmp.46 %tmp.47(%tmp.48);
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 73 8 ]
+        %tmp.58 = self;
+        symbol [ addItem %tmp.59 73 8 15 ];
+        %tmp.59 = getv function %tmp.58 :addItem;
+        symbol [ WatchUi %tmp.62 73 20 27 ];
+        %tmp.62 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.63 73 28 36 ];
+        %tmp.63 = getv function ? %tmp.62 :MenuItem;
+        %tmp.64 = "Oldest Mine";
+        %tmp.65 = "Days active";
+        symbol [ Mn %tmp.67 73 67 69 ];
+        %tmp.67 = getv ? :Mn;
+        symbol [ LB_AGE %tmp.68 73 70 76 ];
+        %tmp.68 = getv %tmp.67 :LB_AGE;
+        %tmp.69 = null;
+        %tmp.60 = newc %tmp.63 (%tmp.64, %tmp.65, %tmp.68, %tmp.69);
+        invoke %tmp.58 %tmp.59(%tmp.60);
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_67_26_74_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 77; @symbol_classdef = [MnBoardDelegate,77,6,21]; @symbol_extends<0> = [WatchUi,77,30,37]; @symbol_extends<1> = [Menu2InputDelegate,77,38,56]; ]
+class MnBoardDelegate extends WatchUi.Menu2InputDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 77; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 77; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 78; @symbol_functiondef = [initialize,78,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_78_26_78_61_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 78 28 ]
+        symbol [ Menu2InputDelegate %tmp.2 78 28 46 ];
+        %tmp.2 = getv ? :Menu2InputDelegate;
+        symbol [ initialize %tmp.3 78 47 57 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_78_26_78_61_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 79; @symbol_functiondef = [onSelect,79,13,21]; @symbol_param<0> = [item,79,22,26]; ]
+    function onSelect(item) {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 80 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_stop" ]
+        %variant.1 = local;
+        symbol [ variant %variant.1 80 12 19 ];
+        %tmp.1 = lgetv %item;
+        symbol [ item %tmp.1 80 22 26 ];
+        symbol [ getId %tmp.2 80 27 32 ];
+        %tmp.2 = getv function %tmp.1 :getId;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %variant.1 %tmp.3;
+        symbol [ variant %variant.1 80 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_stop" ]
+        %title.2 = local;
+        symbol [ title %title.2 81 12 17 ];
+        %tmp.4 = lgetv %item;
+        symbol [ item %tmp.4 81 20 24 ];
+        symbol [ getLabel %tmp.5 81 25 33 ];
+        %tmp.5 = getv function %tmp.4 :getLabel;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %title.2 %tmp.6;
+        symbol [ title %title.2 81 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 82 8 ]
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_beginTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_endTry @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_beginTry:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_12_85_8_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 83 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_12_85_8_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_12_85_8_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 83 16 17 ];
+        symbol [ LbScoresView %tmp.10 83 24 36 ];
+        %tmp.10 = getv ? :LbScoresView;
+        symbol [ Mn %tmp.12 83 37 39 ];
+        %tmp.12 = getv ? :Mn;
+        symbol [ GAME_ID %tmp.13 83 40 47 ];
+        %tmp.13 = getv %tmp.12 :GAME_ID;
+        %tmp.14 = lgetv %variant.1;
+        symbol [ variant %tmp.14 83 49 56 ];
+        %tmp.15 = lgetv %title.2;
+        symbol [ title %tmp.15 83 58 63 ];
+        %tmp.7 = newc %tmp.10 (%tmp.13, %tmp.14, %tmp.15);
+        lputv %v.3 %tmp.7;
+        symbol [ v %v.3 83 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 84 12 ]
+        symbol [ WatchUi %tmp.16 84 12 19 ];
+        %tmp.16 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.17 84 20 28 ];
+        %tmp.17 = getv function %tmp.16 :pushView;
+        %tmp.18 = lgetv %v.3;
+        symbol [ v %tmp.18 84 29 30 ];
+        symbol [ LbScoresDelegate %tmp.22 84 36 52 ];
+        %tmp.22 = getv ? :LbScoresDelegate;
+        %tmp.23 = lgetv %v.3;
+        symbol [ v %tmp.23 84 53 54 ];
+        %tmp.19 = newc %tmp.22 (%tmp.23);
+        symbol [ WatchUi %tmp.24 84 57 64 ];
+        %tmp.24 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.25 84 65 75 ];
+        %tmp.25 = getv %tmp.24 :SLIDE_LEFT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.25);
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_12_85_8_stop:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_catch:
+        %tmp.26 = exception;
+        push %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 85 10 ]
+        [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_85_10_85_21_end" ]
+        %e.4 = local;
+        symbol [ e %e.4 85 17 18 ];
+        %tmp.27 = dup %tmp.26;
+        lputv %e.4 %tmp.27;
+        symbol [ e %e.4 85 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_end;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_85_10_85_21_end:
+        try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_85_10_85_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_85_10_85_21_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally;
+        throw %tmp.26;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_82_8_85_21_end:
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_79_28_86_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 90; @symbol_functiondef = [buildMineMenu,90,9,22]; @symbol_return<0> = [Lang,90,28,32]; @symbol_return<1> = [Array,90,33,38]; ]
+function buildMineMenu() as Lang.Array {
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_start:
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 91 4 ]
+    [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_stop" ]
+    %cfg.1 = local;
+    symbol [ cfg %cfg.1 91 8 11 ];
+    symbol [ MenuConfig %tmp.4 91 18 28 ];
+    %tmp.4 = getv ? :MenuConfig;
+    %tmp.5 = newd 11;
+    %tmp.7 = const :gameId;
+    symbol [ gameId %tmp.7 92 9 15 const ];
+    symbol [ Mn %tmp.9 92 20 22 ];
+    %tmp.9 = getv ? :Mn;
+    symbol [ GAME_ID %tmp.10 92 23 30 ];
+    %tmp.10 = getv %tmp.9 :GAME_ID;
+    %tmp.11 = dup %tmp.5;
+    %tmp.12 = aputv %tmp.11 %tmp.7 %tmp.10;
+    %tmp.14 = const :title1;
+    symbol [ title1 %tmp.14 93 9 15 const ];
+    %tmp.15 = "BITOCHI";
+    %tmp.16 = dup %tmp.12;
+    %tmp.17 = aputv %tmp.16 %tmp.14 %tmp.15;
+    %tmp.19 = const :title2;
+    symbol [ title2 %tmp.19 94 9 15 const ];
+    %tmp.20 = "MINES";
+    %tmp.21 = dup %tmp.17;
+    %tmp.22 = aputv %tmp.21 %tmp.19 %tmp.20;
+    %tmp.24 = const :col1;
+    symbol [ col1 %tmp.24 95 9 13 const ];
+    %tmp.25 = 0xFFA33A;
+    %tmp.26 = dup %tmp.22;
+    %tmp.27 = aputv %tmp.26 %tmp.24 %tmp.25;
+    %tmp.29 = const :col2;
+    symbol [ col2 %tmp.29 96 9 13 const ];
+    %tmp.30 = 0x4CE6E0;
+    %tmp.31 = dup %tmp.27;
+    %tmp.32 = aputv %tmp.31 %tmp.29 %tmp.30;
+    %tmp.34 = const :bg;
+    symbol [ bg %tmp.34 97 9 11 const ];
+    symbol [ Mn %tmp.36 97 20 22 ];
+    %tmp.36 = getv ? :Mn;
+    symbol [ BG %tmp.37 97 23 25 ];
+    %tmp.37 = getv %tmp.36 :BG;
+    %tmp.38 = dup %tmp.32;
+    %tmp.39 = aputv %tmp.38 %tmp.34 %tmp.37;
+    %tmp.41 = const :circle;
+    symbol [ circle %tmp.41 98 9 15 const ];
+    symbol [ Mn %tmp.43 98 20 22 ];
+    %tmp.43 = getv ? :Mn;
+    symbol [ CIRCLE %tmp.44 98 23 29 ];
+    %tmp.44 = getv %tmp.43 :CIRCLE;
+    %tmp.45 = dup %tmp.39;
+    %tmp.46 = aputv %tmp.45 %tmp.41 %tmp.44;
+    %tmp.48 = const :accent;
+    symbol [ accent %tmp.48 99 9 15 const ];
+    symbol [ Mn %tmp.50 99 20 22 ];
+    %tmp.50 = getv ? :Mn;
+    symbol [ ACCENT %tmp.51 99 23 29 ];
+    %tmp.51 = getv %tmp.50 :ACCENT;
+    %tmp.52 = dup %tmp.46;
+    %tmp.53 = aputv %tmp.52 %tmp.48 %tmp.51;
+    %tmp.55 = const :lbTitle;
+    symbol [ lbTitle %tmp.55 100 9 16 const ];
+    %tmp.56 = "BITOCHI MINES";
+    %tmp.57 = dup %tmp.53;
+    %tmp.58 = aputv %tmp.57 %tmp.55 %tmp.56;
+    %tmp.60 = const :hooks;
+    symbol [ hooks %tmp.60 101 9 14 const ];
+    symbol [ MineHooks %tmp.64 101 24 33 ];
+    %tmp.64 = getv ? :MineHooks;
+    %tmp.61 = newc %tmp.64 ();
+    %tmp.65 = dup %tmp.58;
+    %tmp.66 = aputv %tmp.65 %tmp.60 %tmp.61;
+    %tmp.68 = const :options;
+    symbol [ options %tmp.68 102 9 16 const ];
+    %tmp.69 = newa 2;
+    symbol [ GmOption %tmp.73 103 16 24 ];
+    %tmp.73 = getv ? :GmOption;
+    %tmp.74 = "mn_fx";
+    %tmp.75 = "Sound & Haptics";
+    %tmp.76 = newa 2;
+    %tmp.77 = "ON";
+    %tmp.78 = dup %tmp.76;
+    %tmp.79 = aputv %tmp.78 0 %tmp.77;
+    %tmp.80 = "OFF";
+    %tmp.81 = dup %tmp.79;
+    %tmp.82 = aputv %tmp.81 1 %tmp.80;
+    %tmp.83 = 0;
+    %tmp.70 = newc %tmp.73 (%tmp.74, %tmp.75, %tmp.82, %tmp.83);
+    %tmp.84 = dup %tmp.69;
+    %tmp.85 = aputv %tmp.84 0 %tmp.70;
+    symbol [ GmOption %tmp.89 104 16 24 ];
+    %tmp.89 = getv ? :GmOption;
+    %tmp.90 = "mn_demo";
+    %tmp.91 = "Demo Mode";
+    %tmp.92 = newa 2;
+    %tmp.93 = "OFF";
+    %tmp.94 = dup %tmp.92;
+    %tmp.95 = aputv %tmp.94 0 %tmp.93;
+    %tmp.96 = "ON";
+    %tmp.97 = dup %tmp.95;
+    %tmp.98 = aputv %tmp.97 1 %tmp.96;
+    %tmp.99 = 0;
+    %tmp.86 = newc %tmp.89 (%tmp.90, %tmp.91, %tmp.98, %tmp.99);
+    %tmp.100 = dup %tmp.85;
+    %tmp.101 = aputv %tmp.100 1 %tmp.86;
+    %tmp.102 = dup %tmp.66;
+    %tmp.103 = aputv %tmp.102 %tmp.68 %tmp.101;
+    %tmp.1 = newc %tmp.4 (%tmp.103);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 91 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 107 4 ]
+    [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_start" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 107 8 9 ];
+    symbol [ GameMenuView %tmp.107 107 16 28 ];
+    %tmp.107 = getv ? :GameMenuView;
+    %tmp.108 = lgetv %cfg.1;
+    symbol [ cfg %tmp.108 107 29 32 ];
+    %tmp.104 = newc %tmp.107 (%tmp.108);
+    lputv %v.2 %tmp.104;
+    symbol [ v %v.2 107 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 108 4 ]
+    %tmp.109 = newa 2;
+    %tmp.110 = lgetv %v.2;
+    symbol [ v %tmp.110 108 12 13 ];
+    %tmp.111 = dup %tmp.109;
+    %tmp.112 = aputv %tmp.111 0 %tmp.110;
+    symbol [ GameMenuDelegate %tmp.116 108 19 35 ];
+    %tmp.116 = getv ? :GameMenuDelegate;
+    %tmp.117 = lgetv %v.2;
+    symbol [ v %tmp.117 108 36 37 ];
+    %tmp.113 = newc %tmp.116 (%tmp.117);
+    %tmp.118 = dup %tmp.112;
+    %tmp.119 = aputv %tmp.118 1 %tmp.113;
+    ret %tmp.119;
+_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_109_0_stop:
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc"; @line = 9; ]
+<init> {
+}

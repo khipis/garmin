@@ -17,7 +17,7 @@
 //       other play: clear selection → menu
 //       menu/over: pop view
 //
-// Touch (GS_PLAY) — grab-and-flick (v7):
+// Touch (GS_PLAY) — grab-and-flick (v8):
 //
 //   TAP on a gem        → that gem is SELECTED exactly where the finger lands.
 //   FLICK / SWIPE       → the gem under the finger moves one cell in the swipe
@@ -38,6 +38,20 @@
 //
 // A gesture becomes a SWIPE once the finger travels past _swipeMin() px, a
 // threshold scaled to the board cell size so a deliberate tap never trips it.
+//
+// Precision (v8) — on small round watches a cell can be ~25-30px, well
+// within normal fingertip placement error, which used to make the wrong
+// neighbour gem get grabbed. Two mitigations:
+//   • MainView.cellAt() is border-sticky toward the gem the player was last
+//     focused on (_ctrl.curR/curC): a touch landing just inside a
+//     neighbouring cell, close to the shared border, still resolves to the
+//     anchor cell. A decisive touch well inside the new cell always wins.
+//   • While a drag stays BELOW the swipe threshold, onDrag CONTINUE keeps
+//     re-selecting whatever cell is currently under the finger (instead of
+//     freezing the selection to the touch-down cell) and re-anchors the
+//     origin there — so nudging the finger to correct an imprecise
+//     touch-down before flicking now works, instead of silently moving the
+//     wrong gem.
 //
 // Touch (GS_MENU / GS_OVER):
 //   Tap → activate / confirm.
@@ -191,7 +205,24 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             if (_dragStartX < 0 || _committed) { return true; }
             var cdx = px - _dragStartX;
             var cdy = py - _dragStartY;
-            _maybeSwipe(cdx, cdy);
+            if (!_maybeSwipe(cdx, cdy)) {
+                // Still below the swipe threshold — let the highlight track
+                // the finger. This lets a touch-down that landed on the
+                // wrong gem be silently corrected by nudging toward the
+                // intended one before flicking, instead of being frozen to
+                // whatever cell START happened to register. Re-anchors the
+                // drag origin to the corrected cell so the swipe threshold
+                // and direction are measured from where the player is
+                // actually holding, not the original touch-down point.
+                var rc = _v.cellAt(px, py);
+                if (rc != null && (rc[0] != _startR || rc[1] != _startC)) {
+                    _startR = rc[0]; _startC = rc[1];
+                    _v.selectCell(_startR, _startC);
+                    _dragStartX = px;
+                    _dragStartY = py;
+                    WatchUi.requestUpdate();
+                }
+            }
             return true;
         }
 
@@ -215,17 +246,20 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     // Fire the grabbed gem's move if the finger has travelled far enough for a
-    // swipe. Arms the swipe-guard so the trailing onSwipe/onTap echo is dropped.
+    // swipe. Arms the swipe-guard so the trailing onSwipe/onTap echo is
+    // dropped. Returns true if it committed a swipe (false = still below
+    // threshold, so the caller may keep tracking the finger instead).
     hidden function _maybeSwipe(dx, dy) {
         var adx = (dx < 0) ? -dx : dx;
         var ady = (dy < 0) ? -dy : dy;
         var minPx = _swipeMin();
-        if (adx < minPx && ady < minPx) { return; }
+        if (adx < minPx && ady < minPx) { return false; }
         var pd = _dirFromVec(dx, dy);
         _committed    = true;
         _swipeGuardMs = System.getTimer();
         _v.swipeMoveFrom(pd[0], pd[1], _startR, _startC);
         WatchUi.requestUpdate();
+        return true;
     }
 
     function onTap(evt) {

@@ -23,6 +23,7 @@
 
 using Toybox.Application;
 using Toybox.Math;
+using Toybox.Attention;
 
 const SS_MENU = 0;
 const SS_PLAY = 1;
@@ -43,6 +44,7 @@ const SS_LB_GAME_ID = "starswarm";
 const SS_BEST_KEY  = "ss_best";
 const SS_DIFF_KEY  = "ss_diff";
 const SS_LIVES_KEY = "ss_lives";
+const SS_FX_KEY    = "ss_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const SS_DIFF_EASY   = 0;
 const SS_DIFF_NORMAL = 1;
@@ -65,6 +67,8 @@ class GameController {
     var score;
     var bestScore;
 
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: ss_fx)
+
     function initialize() {
         state     = SS_MENU;
         menuRow   = 0;
@@ -76,6 +80,7 @@ class GameController {
         swarm   = new EnemyWaveSystem();
 
         wave  = 1; lives = 3; score = 0; bestScore = 0;
+        _fxOn = _loadFx();
         _loadAll();
     }
 
@@ -101,6 +106,35 @@ class GameController {
     hidden function _saveSettings() {
         try { Application.Storage.setValue(SS_DIFF_KEY,  menuDiff);  } catch (e) {}
         try { Application.Storage.setValue(SS_LIVES_KEY, menuLives); } catch (e) {}
+    }
+
+    // ── Sound + haptics (best-effort; silent hardware is fine) ────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(SS_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 fire · 1 kill · 2 wave · 3 hit · 4 game-over · 5 win
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_HI; }
+        else if (kind == 3) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 4) { t = Attention.TONE_FAILURE; }
+        else if (kind == 5) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_KEY; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Menu ────────────────────────────────────────────────────
@@ -148,6 +182,7 @@ class GameController {
         wave  = 1;
         lives = menuLives;
         score = 0;
+        _fxOn = _loadFx();
         _spawnWave();
         state = SS_PLAY;
     }
@@ -166,6 +201,8 @@ class GameController {
         if (!player.canFire()) { return; }
         if (bullets.fire(player.intCol(), player.row)) {
             player.markFired();
+            // Shot away — light blip (already rate-limited by the fire cooldown).
+            _tone(0);
         }
     }
 
@@ -179,7 +216,12 @@ class GameController {
         // 2. Bullets.
         bullets.tick();
         var killed = bullets.collideAndKill(swarm.enemies);
-        if (killed > 0) { score = score + killed * 50; }
+        if (killed > 0) {
+            score = score + killed * 50;
+            // Enemy splattered — satisfying beep + tiny kick.
+            _tone(1);
+            _vibe(35, 40);
+        }
 
         // 3-5. Enemies.
         swarm.tickFormation();
@@ -201,12 +243,18 @@ class GameController {
             if (wave >= SS_MAX_WAVE) {
                 state = SS_WIN;
                 if (score > bestScore) { bestScore = score; _saveBest(); }
+                // Campaign cleared — triumphant chime + long celebratory buzz.
+                _tone(5);
+                _vibe(90, 260);
                 // Submit to the global leaderboard, split by difficulty variant.
                 Leaderboard.submitScore(SS_LB_GAME_ID, score, difficultyName());
                 Leaderboard.showPostGame(SS_LB_GAME_ID, difficultyName(), "STAR SWARM");
                 return;
             }
             wave = wave + 1;
+            // Wave cleared — bright rising alert + solid pulse.
+            _tone(2);
+            _vibe(60, 110);
             _spawnWave();
         }
     }
@@ -216,11 +264,17 @@ class GameController {
         if (lives <= 0) {
             state = SS_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Ship destroyed for good — harsh failure tone + long rumble.
+            _tone(4);
+            _vibe(100, 300);
             // Submit to the global leaderboard, split by difficulty variant.
             Leaderboard.submitScore(SS_LB_GAME_ID, score, difficultyName());
             Leaderboard.showPostGame(SS_LB_GAME_ID, difficultyName(), "STAR SWARM");
             return;
         }
+        // Lost a life but still flying — warning tone + sharp jolt.
+        _tone(3);
+        _vibe(80, 150);
         // Soft restart: keep the swarm but freeze divers, respawn ship.
         for (var i = 0; i < swarm.enemies.size(); i++) {
             var e = swarm.enemies[i];

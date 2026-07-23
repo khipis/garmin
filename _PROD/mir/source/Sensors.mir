@@ -1,0 +1,705 @@
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [ActivityMonitor,10,13,28]; ]
+using Toybox.ActivityMonitor;
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Activity,11,13,21]; ]
+using Toybox.Activity;
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [Lang,12,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 14; @symbol_moduledef = [Sensors,14,7,14]; ]
+module Sensors {
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 14; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 17; @symbol_functiondef = [getStepsToday,17,13,26]; @symbol_return<0> = [Lang,17,32,36]; @symbol_return<1> = [Number,17,37,43]; ]
+    function getStepsToday() as Lang.Number {
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_17_44_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 18 8 ]
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_beginTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_endTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_beginTry:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_12_23_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 19 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_12_22_12_if_stmt:
+        symbol [ Toybox %tmp.2 19 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 19 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_12_22_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_12_22_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_45_22_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 20 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_45_22_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_45_22_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 20 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 20 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 20 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 20 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 21 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_20_21_69_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_20_21_46_begin:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 21 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_36_21_46_true:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 21 36 40 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :steps;
+        symbol [ steps %tmp.15 21 46 51 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_36_21_46_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_20_21_46_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_36_21_46_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_36_21_46_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_55_21_69_true:
+        %tmp.18 = lgetv %info.1;
+        symbol [ info %tmp.18 21 55 59 ];
+        %tmp.19 = as %tmp.18 { (interface { var steps; }) && (!Null) };
+        symbol [ steps %tmp.20 21 60 65 ];
+        %tmp.20 = getv %tmp.19 :steps;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_55_21_69_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_20_21_69_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_55_21_69_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_55_21_69_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_75_21_96_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 21 77 ]
+        %tmp.24 = lgetv %info.1;
+        symbol [ info %tmp.24 21 84 88 ];
+        %tmp.25 = as %tmp.24 { (interface { var steps; }) && (!Null) };
+        symbol [ steps %tmp.26 21 89 94 ];
+        %tmp.26 = getv %tmp.25 :steps;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_75_21_96_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_21_16_21_96_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_45_22_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_12_22_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_19_12_22_12_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_12_23_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 23 10 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_catch" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_23_10_23_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 23 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 23 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_23_10_23_21_end:
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_23_10_23_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_23_10_23_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_18_8_23_21_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 24 8 ]
+        %tmp.29 = 0;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_17_44_25_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 28; @symbol_functiondef = [getHeartRate,28,13,25]; @symbol_return<0> = [Lang,28,31,35]; @symbol_return<1> = [Number,28,36,42]; ]
+    function getHeartRate() as Lang.Number {
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_28_43_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 29 8 ]
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_beginTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_endTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_beginTry:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_12_36_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 30 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_12_35_12_if_stmt:
+        symbol [ Toybox %tmp.2 30 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Activity;
+        symbol [ Activity %tmp.4 30 28 36 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_12_35_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_12_35_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_38_35_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 31 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_38_35_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_38_35_12_stop" ]
+        %a.1 = local;
+        symbol [ a %a.1 31 20 21 ];
+        symbol [ Activity %tmp.6 31 24 32 ];
+        %tmp.6 = getm $.Toybox.Activity;
+        symbol [ getActivityInfo %tmp.7 31 33 48 ];
+        %tmp.7 = getv function %tmp.6 :getActivityInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %a.1 %tmp.8;
+        symbol [ a %a.1 31 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 32 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_20_32_82_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_20_32_40_begin:
+        %tmp.9 = lgetv %a.1;
+        symbol [ a %tmp.9 32 20 21 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_33_32_40_true:
+        %tmp.12 = lgetv %a.1;
+        symbol [ a %tmp.12 32 33 34 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :currentHeartRate;
+        symbol [ currentHeartRate %tmp.15 32 40 56 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_33_32_40_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_20_32_40_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_33_32_40_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_33_32_40_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_60_32_82_true:
+        %tmp.18 = lgetv %a.1;
+        symbol [ a %tmp.18 32 60 61 ];
+        %tmp.19 = as %tmp.18 { (!Null) && (interface { var currentHeartRate; }) };
+        symbol [ currentHeartRate %tmp.20 32 62 78 ];
+        %tmp.20 = getv %tmp.19 :currentHeartRate;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_60_32_82_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_20_32_82_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_60_32_82_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_60_32_82_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_88_34_16_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 33 20 ]
+        %tmp.24 = lgetv %a.1;
+        symbol [ a %tmp.24 33 27 28 ];
+        %tmp.25 = as %tmp.24 { (!Null) && (interface { var currentHeartRate; }) };
+        symbol [ currentHeartRate %tmp.26 33 29 45 ];
+        %tmp.26 = getv %tmp.25 :currentHeartRate;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_88_34_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_32_16_34_16_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_38_35_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_12_35_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_30_12_35_12_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_12_36_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 36 10 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_catch" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_36_10_36_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 36 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 36 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_36_10_36_21_end:
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_36_10_36_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_36_10_36_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_29_8_36_21_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 37 8 ]
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_beginTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_endTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_beginTry:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_12_46_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 38 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_16_38_68_begin:
+        symbol [ Toybox %tmp.30 38 16 22 ];
+        %tmp.30 = getv ? :Toybox;
+        %tmp.32 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.32 38 28 43 const ];
+        %tmp.33 = canhazplz %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_47_38_68_true:
+        symbol [ ActivityMonitor %tmp.34 38 47 62 ];
+        %tmp.34 = getm $.Toybox.ActivityMonitor;
+        %tmp.36 = const :getHeartRateHistory;
+        symbol [ getHeartRateHistory %tmp.36 38 68 87 const ];
+        %tmp.37 = canhazplz %tmp.34 %tmp.36;
+        push %tmp.37;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_47_38_68_end:
+        %tmp.38 = phi [%tmp.33 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_16_38_68_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_47_38_68_true] [%tmp.38 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_47_38_68_end];
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_89_45_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 39 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_89_45_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_89_45_12_stop" ]
+        %it.3 = local;
+        symbol [ it %it.3 39 20 22 ];
+        symbol [ ActivityMonitor %tmp.39 39 25 40 ];
+        %tmp.39 = getm $.Toybox.ActivityMonitor;
+        symbol [ getHeartRateHistory %tmp.40 39 41 60 ];
+        %tmp.40 = getv function %tmp.39 :getHeartRateHistory;
+        %tmp.41 = 1;
+        %tmp.42 = true;
+        %tmp.43 = invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42);
+        lputv %it.3 %tmp.43;
+        symbol [ it %it.3 39 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 40 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_16_44_16_if_stmt:
+        %tmp.44 = lgetv %it.3;
+        symbol [ it %tmp.44 40 20 22 ];
+        %tmp.45 = null;
+        %tmp.46 = ne %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_16_44_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_16_44_16_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_32_44_16_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 41 20 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_32_44_16_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_32_44_16_stop" ]
+        %s.4 = local;
+        symbol [ s %s.4 41 24 25 ];
+        %tmp.47 = lgetv %it.3;
+        symbol [ it %tmp.47 41 28 30 ];
+        %tmp.48 = as %tmp.47 { (!Null) };
+        symbol [ next %tmp.49 41 31 35 ];
+        %tmp.49 = getv function %tmp.48 :next;
+        %tmp.50 = invoke %tmp.48 %tmp.49();
+        lputv %s.4 %tmp.50;
+        symbol [ s %s.4 41 24 25 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 42 20 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_24_43_55_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_24_42_52_begin:
+        %tmp.51 = lgetv %s.4;
+        symbol [ s %tmp.51 42 24 25 ];
+        %tmp.52 = null;
+        %tmp.53 = ne %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_37_42_52_true:
+        %tmp.54 = lgetv %s.4;
+        symbol [ s %tmp.54 42 37 38 ];
+        %tmp.55 = as %tmp.54 { (!Null) };
+        symbol [ heartRate %tmp.56 42 39 48 ];
+        %tmp.56 = getv %tmp.55 :heartRate;
+        %tmp.57 = null;
+        %tmp.58 = ne %tmp.56 %tmp.57;
+        push %tmp.58;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_37_42_52_end:
+        %tmp.59 = phi [%tmp.53 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_24_42_52_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_37_42_52_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_37_42_52_end];
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_24_43_55_true:
+        %tmp.60 = lgetv %s.4;
+        symbol [ s %tmp.60 43 24 25 ];
+        %tmp.61 = as %tmp.60 { (!Null) };
+        symbol [ heartRate %tmp.62 43 26 35 ];
+        %tmp.62 = getv %tmp.61 :heartRate;
+        symbol [ ActivityMonitor %tmp.63 43 39 54 ];
+        %tmp.63 = getm $.Toybox.ActivityMonitor;
+        symbol [ INVALID_HR_SAMPLE %tmp.64 43 55 72 ];
+        %tmp.64 = getv %tmp.63 :INVALID_HR_SAMPLE;
+        %tmp.65 = ne %tmp.62 %tmp.64;
+        push %tmp.65;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_24_43_55_end:
+        %tmp.66 = phi [%tmp.59 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_24_43_55_begin] [%tmp.65 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_24_43_55_true] [%tmp.66 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_24_43_55_end];
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_74_43_96_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 43 76 ]
+        %tmp.67 = lgetv %s.4;
+        symbol [ s %tmp.67 43 83 84 ];
+        %tmp.68 = as %tmp.67 { (!Null) };
+        symbol [ heartRate %tmp.69 43 85 94 ];
+        %tmp.69 = getv %tmp.68 :heartRate;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+        ret %tmp.69;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_43_74_43_96_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_42_20_43_96_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_32_44_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_16_44_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_40_16_44_16_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_89_45_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_38_12_45_12_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_12_46_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_catch:
+        %tmp.70 = exception;
+        push %tmp.70;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 46 10 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_catch" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_46_10_46_21_end" ]
+        %e.5 = local;
+        symbol [ e %e.5 46 17 18 ];
+        %tmp.71 = dup %tmp.70;
+        lputv %e.5 %tmp.71;
+        symbol [ e %e.5 46 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_46_10_46_21_end:
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_46_10_46_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_46_10_46_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally;
+        throw %tmp.70;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_37_8_46_21_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 47 8 ]
+        %tmp.72 = 0;
+        ret %tmp.72;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_28_43_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 52; @symbol_functiondef = [getSleepData,52,13,25]; @symbol_return<0> = [Lang,52,31,35]; @symbol_return<1> = [Number,52,36,42]; ]
+    function getSleepData() as Lang.Number {
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_52_43_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 53 8 ]
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_beginTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_endTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_beginTry:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_12_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_12_61_12_if_stmt:
+        symbol [ Toybox %tmp.2 54 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 54 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_12_61_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_12_61_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_45_61_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 55 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_45_61_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_45_61_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 55 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 55 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 55 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 55 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 56 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_20_56_83_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_20_56_46_begin:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 56 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_36_56_46_true:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 56 36 40 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :moveBarLevel;
+        symbol [ moveBarLevel %tmp.15 56 46 58 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_36_56_46_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_20_56_46_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_36_56_46_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_36_56_46_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_62_56_83_true:
+        %tmp.18 = lgetv %info.1;
+        symbol [ info %tmp.18 56 62 66 ];
+        %tmp.19 = as %tmp.18 { (interface { var moveBarLevel; }) && (!Null) };
+        symbol [ moveBarLevel %tmp.20 56 67 79 ];
+        %tmp.20 = getv %tmp.19 :moveBarLevel;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_62_56_83_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_20_56_83_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_62_56_83_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_62_56_83_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_89_60_16_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 57 20 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_89_60_16_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_89_60_16_stop" ]
+        %rest.2 = local;
+        symbol [ rest %rest.2 57 24 28 ];
+        symbol [ ActivityMonitor %tmp.24 57 31 46 ];
+        %tmp.24 = getm $.Toybox.ActivityMonitor;
+        symbol [ MOVE_BAR_LEVEL_MAX %tmp.25 57 47 65 ];
+        %tmp.25 = getv %tmp.24 :MOVE_BAR_LEVEL_MAX;
+        %tmp.26 = lgetv %info.1;
+        symbol [ info %tmp.26 57 68 72 ];
+        %tmp.27 = as %tmp.26 { (interface { var moveBarLevel; }) && (!Null) };
+        symbol [ moveBarLevel %tmp.28 57 73 85 ];
+        %tmp.28 = getv %tmp.27 :moveBarLevel;
+        %tmp.29 = sub %tmp.25 %tmp.28;
+        lputv %rest.2 %tmp.29;
+        symbol [ rest %rest.2 57 24 28 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 58 20 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_20_58_46_if_stmt:
+        %tmp.30 = lgetv %rest.2;
+        symbol [ rest %tmp.30 58 24 28 ];
+        %tmp.31 = 0;
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_20_58_46_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_20_58_46_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_34_58_46_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 58 36 ]
+        %tmp.33 = 0;
+        lputv %rest.2 %tmp.33;
+        symbol [ rest %rest.2 58 36 40 ];
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_34_58_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_20_58_46_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_58_20_58_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 59 20 ]
+        %tmp.34 = lgetv %rest.2;
+        symbol [ rest %tmp.34 59 27 31 ];
+        %tmp.35 = 90;
+        %tmp.36 = mul %tmp.34 %tmp.35;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_89_60_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_56_16_60_16_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_45_61_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_12_61_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_54_12_61_12_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_12_62_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_catch:
+        %tmp.37 = exception;
+        push %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 62 10 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_catch" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_62_10_62_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 62 17 18 ];
+        %tmp.38 = dup %tmp.37;
+        lputv %e.3 %tmp.38;
+        symbol [ e %e.3 62 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_62_10_62_21_end:
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_62_10_62_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_62_10_62_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally;
+        throw %tmp.37;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_53_8_62_21_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 63 8 ]
+        %tmp.39 = 0;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_52_43_64_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 67; @symbol_functiondef = [getActivityMinutes,67,13,31]; @symbol_return<0> = [Lang,67,37,41]; @symbol_return<1> = [Number,67,42,48]; ]
+    function getActivityMinutes() as Lang.Number {
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_67_49_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 68 8 ]
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_beginTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_endTry @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_beginTry:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_12_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 69 12 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_12_81_12_if_stmt:
+        symbol [ Toybox %tmp.2 69 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 69 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_12_81_12_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_45_81_12_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 70 16 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_45_81_12_start" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_45_81_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 70 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 70 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 70 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 70 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 71 16 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_16_80_16_if_stmt:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 71 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_16_80_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_16_80_16_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_34_80_16_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 72 20 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_73_91_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_73_51_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_72_79_begin:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 72 24 28 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :activeMinutesDay;
+        symbol [ activeMinutesDay %tmp.15 72 34 50 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_54_72_79_true:
+        %tmp.17 = lgetv %info.1;
+        symbol [ info %tmp.17 72 54 58 ];
+        %tmp.18 = as %tmp.17 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.19 72 59 75 ];
+        %tmp.19 = getv %tmp.18 :activeMinutesDay;
+        %tmp.20 = null;
+        %tmp.21 = ne %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_54_72_79_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_72_79_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_54_72_79_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_54_72_79_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_24_73_51_true:
+        %tmp.23 = lgetv %info.1;
+        symbol [ info %tmp.23 73 24 28 ];
+        %tmp.24 = as %tmp.23 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.25 73 29 45 ];
+        %tmp.25 = getv %tmp.24 :activeMinutesDay;
+        %tmp.27 = const :total;
+        symbol [ total %tmp.27 73 51 56 const ];
+        %tmp.28 = canhazplz %tmp.25 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_24_73_51_end:
+        %tmp.29 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_73_51_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_24_73_51_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_24_73_51_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_60_73_91_true:
+        %tmp.30 = lgetv %info.1;
+        symbol [ info %tmp.30 73 60 64 ];
+        %tmp.31 = as %tmp.30 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.32 73 65 81 ];
+        %tmp.32 = getv %tmp.31 :activeMinutesDay;
+        symbol [ total %tmp.33 73 82 87 ];
+        %tmp.33 = getv %tmp.32 :total;
+        %tmp.34 = null;
+        %tmp.35 = ne %tmp.33 %tmp.34;
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_60_73_91_end:
+        %tmp.36 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_24_73_91_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_60_73_91_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_60_73_91_end];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_97_75_20_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 74 24 ]
+        %tmp.37 = lgetv %info.1;
+        symbol [ info %tmp.37 74 31 35 ];
+        %tmp.38 = as %tmp.37 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.39 74 36 52 ];
+        %tmp.39 = getv %tmp.38 :activeMinutesDay;
+        symbol [ total %tmp.40 74 53 58 ];
+        %tmp.40 = getv %tmp.39 :total;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_73_97_75_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_72_20_75_20_if_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 76 20 ]
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_stmt:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_77_93_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_77_52_begin:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_76_81_begin:
+        %tmp.41 = lgetv %info.1;
+        symbol [ info %tmp.41 76 24 28 ];
+        %tmp.42 = as %tmp.41 { (!Null) };
+        %tmp.44 = const :activeMinutesWeek;
+        symbol [ activeMinutesWeek %tmp.44 76 34 51 const ];
+        %tmp.45 = canhazplz %tmp.42 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_55_76_81_true:
+        %tmp.46 = lgetv %info.1;
+        symbol [ info %tmp.46 76 55 59 ];
+        %tmp.47 = as %tmp.46 { (interface { var activeMinutesWeek; }) && (!Null) };
+        symbol [ activeMinutesWeek %tmp.48 76 60 77 ];
+        %tmp.48 = getv %tmp.47 :activeMinutesWeek;
+        %tmp.49 = null;
+        %tmp.50 = ne %tmp.48 %tmp.49;
+        push %tmp.50;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_55_76_81_end:
+        %tmp.51 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_76_81_begin] [%tmp.50 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_55_76_81_true] [%tmp.51 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_55_76_81_end];
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_24_77_52_true:
+        %tmp.52 = lgetv %info.1;
+        symbol [ info %tmp.52 77 24 28 ];
+        %tmp.53 = as %tmp.52 { (interface { var activeMinutesWeek; }) && (!Null) };
+        symbol [ activeMinutesWeek %tmp.54 77 29 46 ];
+        %tmp.54 = getv %tmp.53 :activeMinutesWeek;
+        %tmp.56 = const :total;
+        symbol [ total %tmp.56 77 52 57 const ];
+        %tmp.57 = canhazplz %tmp.54 %tmp.56;
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_24_77_52_end:
+        %tmp.58 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_77_52_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_24_77_52_true] [%tmp.58 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_24_77_52_end];
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_61_77_93_true:
+        %tmp.59 = lgetv %info.1;
+        symbol [ info %tmp.59 77 61 65 ];
+        %tmp.60 = as %tmp.59 { (interface { var activeMinutesWeek; }) && (!Null) };
+        symbol [ activeMinutesWeek %tmp.61 77 66 83 ];
+        %tmp.61 = getv %tmp.60 :activeMinutesWeek;
+        symbol [ total %tmp.62 77 84 89 ];
+        %tmp.62 = getv %tmp.61 :total;
+        %tmp.63 = null;
+        %tmp.64 = ne %tmp.62 %tmp.63;
+        push %tmp.64;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_61_77_93_end:
+        %tmp.65 = phi [%tmp.58 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_24_77_93_begin] [%tmp.64 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_61_77_93_true] [%tmp.65 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_61_77_93_end];
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_true:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_99_79_20_start:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 78 24 ]
+        %tmp.66 = lgetv %info.1;
+        symbol [ info %tmp.66 78 31 35 ];
+        %tmp.67 = as %tmp.66 { (interface { var activeMinutesWeek; }) && (!Null) };
+        symbol [ activeMinutesWeek %tmp.68 78 36 53 ];
+        %tmp.68 = getv %tmp.67 :activeMinutesWeek;
+        symbol [ total %tmp.69 78 54 59 ];
+        %tmp.69 = getv %tmp.68 :total;
+        %tmp.70 = 7;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        ret %tmp.71;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_77_99_79_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_76_20_79_20_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_34_80_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_16_80_16_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_71_16_80_16_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_45_81_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_69_12_81_12_if_end:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_12_82_8_stop:
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_catch:
+        %tmp.72 = exception;
+        push %tmp.72;
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 82 10 ]
+        [ "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_catch" "_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_82_10_82_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 82 17 18 ];
+        %tmp.73 = dup %tmp.72;
+        lputv %e.2 %tmp.73;
+        symbol [ e %e.2 82 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_end;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_82_10_82_21_end:
+        try @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_catch @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_82_10_82_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_82_10_82_21_end @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally;
+        throw %tmp.72;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_68_8_82_21_end:
+[ "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc" 83 8 ]
+        %tmp.74 = 0;
+        ret %tmp.74;
+_Users_kkorolczuk_work_garmin_farm_source_Sensors_mc_67_49_84_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/farm/source/Sensors.mc"; @line = 10; ]
+<init> {
+}

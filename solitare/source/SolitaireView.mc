@@ -4,9 +4,12 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Attention;
 
 // Global leaderboard game identifier (must match the backend key).
 const LB_GAME_ID = "solitaire";
+
+const SOL_FX_KEY = "sol_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const SOL_MENU    = 0;
 const SOL_PLAY    = 1;
@@ -71,6 +74,17 @@ class SolitaireView extends WatchUi.View {
     // who never finish a deal still appear on the leaderboard.
     hidden var _progressSubmitted;
 
+    // Meta-progression (shared, shop-ready via Progress module):
+    //   _toast/_toastT — one-shot daily login-bonus banner on first frame.
+    //   _pgUnlockMsg   — one-shot "UNLOCKED: <name>" shown on the win screen.
+    //   _pgAwarded     — guard so a deal awards coins/XP at most once.
+    hidden var _toast; hidden var _toastT;
+    hidden var _pgUnlockMsg;
+    hidden var _pgAwarded;
+
+    // Sound + haptics master switch (OPTIONS: sol_fx). 0/unset = ON, 1 = OFF.
+    hidden var _fxOn;
+
     function initialize() {
         View.initialize();
         _tick = 0; _gs = SOL_MENU;
@@ -93,6 +107,8 @@ class SolitaireView extends WatchUi.View {
         _winTick = 0;
         _winParts = null;
         _startMs = 0; _elapsedSecs = 0;
+        _toast = ""; _toastT = 0; _pgUnlockMsg = null; _pgAwarded = false;
+        _fxOn = _loadFx();
         _timer = null;
     }
 
@@ -110,6 +126,15 @@ class SolitaireView extends WatchUi.View {
         // Only auto-start from a fresh launch (SOL_MENU) so returning from the
         // post-game leaderboard card doesn't re-deal an in-progress win screen.
         if (_gs == SOL_MENU) { _deal(); }
+        // Surface today's login-streak bonus as a one-shot table toast (queued
+        // by the App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("sol_daily_msg");
+            if (dm != null) {
+                _toast = dm; _toastT = 32;
+                Application.Storage.deleteValue("sol_daily_msg");
+            }
+        } catch (e) {}
     }
 
     function onHide() {
@@ -133,6 +158,7 @@ class SolitaireView extends WatchUi.View {
 
     function onTick() as Void {
         _tick++;
+        if (_toastT > 0) { _toastT--; }
 
         if (_gs == SOL_PLAY && _autoFndQ) {
             _doOneAutoFnd();
@@ -334,6 +360,7 @@ class SolitaireView extends WatchUi.View {
         if (_sel < 0) {
             if (_tryFnd(p)) { return; }
             _pickUp(p);
+            if (_sel >= 0) { _tone(0); _vibe(12, 12); }   // card picked up
         } else if (_sel == p) {
             _cancel();
         } else {
@@ -359,6 +386,7 @@ class SolitaireView extends WatchUi.View {
         if (p == 1) { _wstN--; }
         else { _tN[p - 6]--; }
         _moves++;
+        _tone(0); _vibe(22, 30);           // card lands on a foundation
         _autoFlip();
         _autoFndQ = true;
         return true;
@@ -412,6 +440,7 @@ class SolitaireView extends WatchUi.View {
             _fnd[fs]++;
             _removeSrc();
             _moves++;
+            _tone(0); _vibe(22, 30);       // card placed on a foundation
             _cancel();
             _autoFlip();
             _autoFndQ = true;
@@ -438,6 +467,7 @@ class SolitaireView extends WatchUi.View {
             _tN[c] = n + _sN;
             _removeSrc();
             _moves++;
+            _tone(0); _vibe(15, 18);       // stack placed on the tableau
             _cancel();
             _autoFlip();
             _autoFndQ = true;
@@ -491,7 +521,7 @@ class SolitaireView extends WatchUi.View {
                     _fnd[tSt]++;
                     if (fromW) { _wstN--; }
                     else { _tN[fromC]--; }
-                    _moves++; _autoFlip(); _autoFndQ = true;
+                    _moves++; _tone(0); _vibe(22, 30); _autoFlip(); _autoFndQ = true;
                     return;
                 }
             }
@@ -548,7 +578,7 @@ class SolitaireView extends WatchUi.View {
                 _tN[bestCol] = n + seqLen;
                 _tN[fromC] = seqStart;
             }
-            _moves++; _autoFlip(); _autoFndQ = true;
+            _moves++; _tone(0); _vibe(15, 18); _autoFlip(); _autoFndQ = true;
             return;
         }
     }
@@ -580,6 +610,9 @@ class SolitaireView extends WatchUi.View {
         _autoFndQ = false; _winTick = 0; _winParts = null;
         _startMs = System.getTimer(); _elapsedSecs = 0;
         _progressSubmitted = false;
+        _pgAwarded = false; _pgUnlockMsg = null;
+        _fxOn = _loadFx();
+        _tone(0); _vibe(25, 45);           // fresh deal
         _gs = SOL_PLAY;
         _autoFndQ = true;
     }
@@ -600,6 +633,7 @@ class SolitaireView extends WatchUi.View {
             _stkN = _wstN; _wstN = 0;
         }
         _moves++;
+        _tone(0); _vibe(10, 12);           // flip from the stock
         _autoFndQ = true;
     }
 
@@ -652,6 +686,7 @@ class SolitaireView extends WatchUi.View {
             _autoFndQ = false;
             _gs = SOL_WINANIM;
             _winTick = 0;
+            _tone(1); _vibe(100, 260);     // full clear — you win!
             _initWinParts();
 
             // Completion time in WHOLE SECONDS (positive). LOWER is better —
@@ -660,9 +695,30 @@ class SolitaireView extends WatchUi.View {
             if (secs < 1) { secs = 1; }
             _elapsedSecs = secs;
             Leaderboard.submitScore(LB_GAME_ID, _elapsedSecs, null);
+            _awardProgress(true);   // coins/XP for the full clear
             submitProgress();   // also record 52 cards placed on the "progress" board
             Leaderboard.showPostGame(LB_GAME_ID, null, "SOLITAIRE");
         }
+    }
+
+    // ─── Meta-progression (shared, shop-ready via Progress module) ──────────────
+    // Grants coins + XP proportional to how far the deal got (cards moved to the
+    // foundations), with a win bonus, and unlocks a cosmetic card back at a rank
+    // milestone. Awards at most once per deal (guarded by _pgAwarded).
+    hidden function _awardProgress(win) {
+        if (_pgAwarded) { return; }
+        var n = _foundationTotal();
+        if (n <= 0 && !win) { return; }
+        _pgAwarded = true;
+        var coinsGain = n / 2 + (win ? 20 : 0);
+        var xpGain    = n / 2 + (win ? 20 : 0);
+        try {
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+            if (Progress.unlockIfReached("solitaire_skin2", Progress.level(), 3)) {
+                _pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
     }
 
     function openLeaderboard() {
@@ -678,6 +734,8 @@ class SolitaireView extends WatchUi.View {
     // Submit cards-placed count to "progress" variant — once per deal.
     // Called on win AND on every BACK/exit so even partial games leave a trace.
     function submitProgress() as Void {
+        // Award coins/XP for the deal's engagement even on a mid-game exit.
+        _awardProgress(false);
         if (_progressSubmitted) { return; }
         var n = _foundationTotal();
         if (n <= 0) { return; }
@@ -750,6 +808,17 @@ class SolitaireView extends WatchUi.View {
         _drTab(dc);
         _drSel(dc);
         _drCur(dc);
+        if (_toastT > 0) { _drToast(dc); }
+    }
+
+    // One-shot daily login-bonus banner, drawn over the felt on first frame.
+    hidden function _drToast(dc) {
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var ty = _h * 44 / 100;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, ty - 1, _w, fh + 2);
+        dc.setColor(0xFFEE55, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, ty, Graphics.FONT_XTINY, _toast, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // Chess-style menu geometry: [rowX, rowY0, rowW, rowH, gap]
@@ -850,14 +919,48 @@ class SolitaireView extends WatchUi.View {
     hidden function _drWin(dc) {
         var gc = (_tick % 20 < 10) ? 0x44FF88 : 0x22CC66;
         dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_LARGE,
+        dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_LARGE,
             "YOU WIN!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_SMALL,
+        dc.drawText(_w / 2, _h * 44 / 100, Graphics.FONT_SMALL,
             "Moves: " + _moves, Graphics.TEXT_JUSTIFY_CENTER);
+        _drawProgressLine(dc);
         dc.setColor(0x446644, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 66 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY,
             "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Win-screen progression summary: rank/level + coin balance + login streak,
+    // plus a one-shot gold "UNLOCKED" banner when a milestone was just crossed.
+    hidden function _drawProgressLine(dc) {
+        try {
+            dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY,
+                "Lv " + Progress.level() + " " + Progress.rankName()
+                + " - " + Progress.coins() + "c", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x668877, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY,
+                "Streak " + Progress.currentStreak(), Graphics.TEXT_JUSTIFY_CENTER);
+            if (_pgUnlockMsg != null) {
+                dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 69 / 100, Graphics.FONT_XTINY,
+                    _pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned card-back palette [bg, border, inner, pip]. Falls back
+    // to the classic navy back when the chosen skin isn't owned yet.
+    hidden function _skinBack() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("sol_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("solitaire_skin2")) {
+            return [0x2A0A3A, 0xFF33CC, 0x50206A, 0xFF66EE];
+        }
+        return [0x1A2E5A, 0x3A5A8A, 0x243A72, 0x4A6AAA];
     }
 
     hidden function _drTop(dc) {
@@ -1034,15 +1137,16 @@ class SolitaireView extends WatchUi.View {
     }
 
     hidden function _drBack(dc, x, y) {
-        dc.setColor(0x1A2E5A, Graphics.COLOR_TRANSPARENT);
+        var pal = _skinBack();  // [bg, border, inner, pip] — clamped to ownership
+        dc.setColor(pal[0], Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, _cw, _ch, 2);
-        dc.setColor(0x3A5A8A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[1], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x, y, _cw, _ch, 2);
-        dc.setColor(0x243A72, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[2], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x + 2, y + 2, _cw - 4, _ch - 4, 1);
         var mx = x + _cw / 2; var my = y + _ch / 2;
         var ds = _cw / 5; if (ds < 3) { ds = 3; }
-        dc.setColor(0x4A6AAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[3], Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([[mx, my - ds], [mx + ds, my], [mx, my + ds], [mx - ds, my]]);
     }
 
@@ -1057,5 +1161,31 @@ class SolitaireView extends WatchUi.View {
         dc.setColor(sc, Graphics.COLOR_TRANSPARENT);
         var ss = _cw * 3 / 10; if (ss < 3) { ss = 3; }
         _drSuit(dc, x + _cw / 2, y + _ch / 2, suit, ss);
+    }
+
+    // ─── Best-effort sound + haptics (silent/absent hardware is fine) ───────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(SOL_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 deal/move/select · 1 win · 2 alert.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 }

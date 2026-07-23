@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Application;
+using Toybox.Attention;
 
 // States
 const PK_MENU      = 0;
@@ -15,6 +16,8 @@ const PK_GAMEOVER  = 5;
 // Card: rank 0=2 .. 12=A  suit 0=S 1=H 2=D 3=C
 const POKER_ANTE       = 20;
 const POKER_START_CHIPS = 500;
+
+const PK_FX_KEY = "pk_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 // Main-menu rows (navigable):
 //   row 0 = PLAY
@@ -56,6 +59,15 @@ class BitochiPokerView extends WatchUi.View {
     hidden var _suitStr;
     hidden var _handNames;
 
+    // Meta-progression (shared, shop-ready via Progress module):
+    //   _toast/_toastT — one-shot daily login-bonus banner on first frame.
+    //   _pgUnlockMsg   — one-shot "UNLOCKED: <name>" shown on game-over.
+    hidden var _toast; hidden var _toastT;
+    hidden var _pgUnlockMsg;
+
+    // Sound + haptics master switch (OPTIONS: pk_fx). 0/unset = ON, 1 = OFF.
+    hidden var _fxOn;
+
     // Layout
     hidden var _cw; hidden var _ch; hidden var _gap;
     hidden var _startX; hidden var _pY; hidden var _aY;
@@ -83,6 +95,8 @@ class BitochiPokerView extends WatchUi.View {
         _handNames = ["High Card","One Pair","Two Pair","Three of a Kind",
                       "Straight","Flush","Full House","Four of a Kind",
                       "Straight Flush","Royal Flush"];
+        _toast = ""; _toastT = 0; _pgUnlockMsg = null;
+        _fxOn = _loadFx();
         _w = 240; _h = 240;
         _timer = null;
     }
@@ -101,6 +115,15 @@ class BitochiPokerView extends WatchUi.View {
         // Only auto-start from a fresh launch (PK_MENU) so returning from the
         // post-game leaderboard card doesn't restart the session.
         if (_gs == PK_MENU) { startGame(); }
+        // Surface today's login-streak bonus as a one-shot table toast (queued
+        // by the App's checkIn on the day's first launch).
+        try {
+            var dm = Application.Storage.getValue("pk_daily_msg");
+            if (dm != null) {
+                _toast = dm; _toastT = 25;
+                Application.Storage.deleteValue("pk_daily_msg");
+            }
+        } catch (e) {}
     }
 
     function onHide() {
@@ -121,6 +144,7 @@ class BitochiPokerView extends WatchUi.View {
 
     function onTick() as Void {
         _tick++;
+        if (_toastT > 0) { _toastT--; }
         if (_gs == PK_DEAL) {
             _aiDelay--;
             if (_aiDelay <= 0) { _gs = PK_EXCHANGE; _cursor = 5; }
@@ -158,6 +182,7 @@ class BitochiPokerView extends WatchUi.View {
         if (_gs == PK_EXCHANGE) {
             if (_cursor < 5) {
                 _discard[_cursor] = !_discard[_cursor];
+                _tone(0); _vibe(12, 12);   // mark/unmark a card for exchange
             } else {
                 playerDraw();
             }
@@ -180,6 +205,7 @@ class BitochiPokerView extends WatchUi.View {
             if (tx >= cx && tx < cx + _cw && ty >= _pY && ty < _pY + _ch) {
                 _cursor = i;
                 _discard[i] = !_discard[i];
+                _tone(0); _vibe(12, 12);   // tap-mark a card for exchange
                 return;
             }
         }
@@ -269,19 +295,73 @@ class BitochiPokerView extends WatchUi.View {
         return ["h10", "h20", "h40"][_handsIdx];
     }
 
+    // ─── Meta-progression (shared, shop-ready via Progress module) ──────────────
+    // Grants coins + XP for each completed hand and unlocks a cosmetic card back
+    // at a rank milestone. Coins are the future shop's currency; card-back
+    // ownership is the exact set a shop purchase would grant.
+    hidden function _awardHand(win, tie) {
+        var coinsGain; var xpGain;
+        if (win)      { coinsGain = 30; xpGain = 30; }
+        else if (tie) { coinsGain = 8;  xpGain = 10; }
+        else          { coinsGain = 3;  xpGain = 5;  }
+        try {
+            Progress.addCoins(coinsGain);
+            Progress.addXp(xpGain);
+            if (Progress.unlockIfReached("poker_skin2", Progress.level(), 3)) {
+                _pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned card-back palette [bg, border, inner, pip]. Falls back
+    // to the classic navy back when the chosen skin isn't owned yet — a locked
+    // pick never renders, keeping selection safe pre-shop and post-shop alike.
+    hidden function _skinBack() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("pk_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("poker_skin2")) {
+            return [0x2A0A3A, 0xFF33CC, 0x50206A, 0xFF66EE];
+        }
+        return [0x1A2E5A, 0x4A6AAA, 0x243A72, 0x4A6AAA];
+    }
+
+    // Game-over progression summary: rank/level + coin balance + login streak,
+    // plus a one-shot gold "UNLOCKED" banner when a milestone was just crossed.
+    hidden function _drawProgressLine(dc) {
+        try {
+            dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_XTINY,
+                "Lv " + Progress.level() + " " + Progress.rankName() + " - " + Progress.coins() + "c",
+                Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x88AA99, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 57 / 100, Graphics.FONT_XTINY,
+                "Streak " + Progress.currentStreak(), Graphics.TEXT_JUSTIFY_CENTER);
+            if (_pgUnlockMsg != null) {
+                dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 64 / 100, Graphics.FONT_XTINY,
+                    _pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        } catch (e) {}
+    }
+
     // ─── Game logic ────────────────────────────────────────────────────────────
 
     hidden function resetGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
         _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
-        _handsPlayed = 0;
+        _handsPlayed = 0; _pgUnlockMsg = null;
+        _fxOn = _loadFx();
         startRound();
     }
 
     hidden function startGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
         _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
-        _handsPlayed = 0;
+        _handsPlayed = 0; _pgUnlockMsg = null;
+        _fxOn = _loadFx();
         startRound();
     }
 
@@ -299,6 +379,7 @@ class BitochiPokerView extends WatchUi.View {
         if (ante > _aChips) { ante = _aChips; }
         _pChips -= ante; _aChips -= ante; _pot = ante * 2;
         _cursor = 5; _gs = PK_DEAL; _aiDelay = 3;
+        _tone(0); _vibe(25, 40);           // fresh deal — one light tick
     }
 
     hidden function shuffleDeck() {
@@ -319,6 +400,7 @@ class BitochiPokerView extends WatchUi.View {
             }
         }
         _gs = PK_AI_DRAW; _aiDelay = 4;
+        _tone(0); _vibe(22, 30);           // draw replacement cards
         aiDiscard();
     }
 
@@ -359,18 +441,24 @@ class BitochiPokerView extends WatchUi.View {
     hidden function doShowdown() {
         var pRank = handRank(_pHand);
         var aRank = handRank(_aHand);
+        var pWin = false; var tie = false;
         if (pRank > aRank) {
-            _pChips += _pot; _resultMsg = "YOU WIN! +" + _pot;
+            _pChips += _pot; _resultMsg = "YOU WIN! +" + _pot; pWin = true;
+            _tone(1); _vibe(70, 160);      // pot won
         } else if (aRank > pRank) {
             _aChips += _pot; _resultMsg = "AI WINS  -" + POKER_ANTE;
+            _tone(2); _vibe(60, 130);      // pot lost
         } else {
             var half = _pot / 2;
             _pChips += half; _aChips += _pot - half; _resultMsg = "TIE — chips returned";
+            tie = true;
+            _tone(0); _vibe(20, 40);       // split pot
         }
         _pot = 0;
+        _awardHand(pWin, tie);
         if (_pChips > _peakChips) { _peakChips = _pChips; }
         _handsPlayed++;
-        if (_pChips <= 0) { _resultMsg = "BROKE! GAME OVER"; _gs = PK_GAMEOVER; endSession(); return; }
+        if (_pChips <= 0) { _resultMsg = "BROKE! GAME OVER"; _tone(2); _vibe(95, 240); _gs = PK_GAMEOVER; endSession(); return; }
         if (_aChips <= 0) { _resultMsg = "AI BROKE! YOU WIN!"; _gs = PK_GAMEOVER; endSession(); return; }
         // Fixed-length session: once the hand budget is spent, the run ends.
         if (_handsPlayed >= _handLimit) {
@@ -444,6 +532,17 @@ class BitochiPokerView extends WatchUi.View {
         if (_gs == PK_EXCHANGE) { drawExchangeUI(dc); }
         if (_gs == PK_SHOWDOWN) { drawShowdown(dc); }
         if (_gs == PK_AI_DRAW || _gs == PK_DEAL) { drawWaiting(dc); }
+        if (_toastT > 0) { drawToast(dc); }
+    }
+
+    // One-shot daily login-bonus banner, drawn over the table on first frame.
+    hidden function drawToast(dc) {
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var ty = _h * 30 / 100;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, ty - 1, _w, fh + 2);
+        dc.setColor(0xFFEE55, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, ty, Graphics.FONT_XTINY, _toast, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawMenu(dc) {
@@ -496,9 +595,10 @@ class BitochiPokerView extends WatchUi.View {
         dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        _drawProgressLine(dc);
         dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_MEDIUM, "TAP TO RETRY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_MEDIUM, "TAP TO RETRY", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawAIHand(dc) {
@@ -585,21 +685,22 @@ class BitochiPokerView extends WatchUi.View {
 
     hidden function drawCardBack(dc, x, y) {
         var cr = 2 + _cw / 20;
-        // Navy background
-        dc.setColor(0x1A2E5A, Graphics.COLOR_TRANSPARENT);
+        var pal = _skinBack();  // [bg, border, inner, pip] — clamped to ownership
+        // Background
+        dc.setColor(pal[0], Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, _cw, _ch, cr);
         // Light border
-        dc.setColor(0x4A6AAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[1], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x, y, _cw, _ch, cr);
         // Inner inset rectangle
         var m = 3;
-        dc.setColor(0x243A72, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[2], Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x + m, y + m, _cw - m * 2, _ch - m * 2, 2);
         // Small center diamond
         var cx = x + _cw / 2;
         var cy = y + _ch / 2;
         var ds = _cw / 5; if (ds < 3) { ds = 3; }
-        dc.setColor(0x4A6AAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pal[3], Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([[cx, cy - ds], [cx + ds, cy], [cx, cy + ds], [cx - ds, cy]]);
     }
 
@@ -663,5 +764,31 @@ class BitochiPokerView extends WatchUi.View {
         for (var i = 0; i < (_tick % 4); i++) { dots = dots + "."; }
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _pY + _ch + 16, Graphics.FONT_XTINY, "Dealing" + dots, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ─── Best-effort sound + haptics (silent/absent hardware is fine) ───────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(PK_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 deal/select/draw · 1 win · 2 loss/broke.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 }

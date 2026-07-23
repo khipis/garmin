@@ -41,9 +41,11 @@ class DinosaurDelegate extends WatchUi.BehaviorDelegate {
     }
 
     // physical keys: on title UP/DOWN navigate, ENTER activates; in-game
-    // up = jump, down = duck.
+    // up = jump, down = duck. BACK/ESC (bottom-right button) always exits,
+    // it must never fall through to jump.
     function onKey(evt) {
         var key = evt.getKey();
+        if (key == WatchUi.KEY_ESC) { return onBack(); }
         if (_v.inTitle()) {
             if      (key == WatchUi.KEY_UP)   { _v.menuPrev(); }
             else if (key == WatchUi.KEY_DOWN) { _v.menuNext(); }
@@ -57,8 +59,16 @@ class DinosaurDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    // BACK: return to the shared menu (framework pops this pushed view).
+    // BACK (bottom-right button / bezel swipe): bail out of a run (saving
+    // score) or leave the demo attract-loop, otherwise pop back to the
+    // shared menu. Must always be consumed here — it must never fall
+    // through to a jump/duck action.
     function onBack() {
-        return false;
+        if (_v.doBack()) {
+            WatchUi.requestUpdate();
+            return true;
+        }
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
     }
 }

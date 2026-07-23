@@ -1,585 +1,1313 @@
-[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [Graphics,12,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [Graphics,18,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 14; @symbol_classdef = [Bird,14,6,10]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 20; @symbol_classdef = [Bird,20,6,10]; ]
 class Bird {
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 14; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 20; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 14; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 20; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 15; @position = 8; @symbol_vardef = [x,15,8,9]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 21; @position = 8; @symbol_vardef = [x,21,8,9]; ]
     var x;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 16; @position = 8; @symbol_vardef = [y,16,8,9]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 22; @position = 8; @symbol_vardef = [y,22,8,9]; ]
     var y;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 17; @position = 8; @symbol_vardef = [vy,17,8,10]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 23; @position = 8; @symbol_vardef = [vy,23,8,10]; ]
     var vy;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 18; @position = 8; @symbol_vardef = [radius,18,8,14]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 24; @position = 8; @symbol_vardef = [radius,24,8,14]; ]
     var radius;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 19; @position = 8; @symbol_vardef = [alive,19,8,13]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 25; @position = 8; @symbol_vardef = [alive,25,8,13]; ]
     var alive;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 20; @position = 8; @symbol_vardef = [wingPhase,20,8,17]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 26; @position = 8; @symbol_vardef = [wingPhase,26,8,17]; ]
     var wingPhase;
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 22; @symbol_functiondef = [initialize,22,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 27; @position = 8; @symbol_vardef = [skin,27,8,12]; ]
+    var skin;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 28; @position = 8; @symbol_vardef = [showTrail,28,8,17]; ]
+    var showTrail;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 30; @position = 17; @symbol_constdef = [TRAIL,30,17,22]; ]
+    protected
+    const TRAIL = 6;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 31; @position = 15; @symbol_vardef = [_tx,31,15,18]; ]
+    protected
+    var _tx;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 31; @position = 31; @symbol_vardef = [_ty,31,31,34]; ]
+    protected
+    var _ty;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 31; @position = 47; @symbol_vardef = [_tHead,31,47,53]; ]
+    protected
+    var _tHead;
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 33; @symbol_functiondef = [initialize,33,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_22_26_24_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_33_26_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 8 ]
         %tmp.1 = 0;
-        symbol [ x ? 23 8 9 ];
+        symbol [ x ? 34 8 9 ];
         putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 15 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 15 ]
         %tmp.2 = 0;
-        symbol [ y ? 23 15 16 ];
+        symbol [ y ? 34 15 16 ];
         putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 22 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 22 ]
         %tmp.3 = 0.0;
-        symbol [ vy ? 23 22 24 ];
+        symbol [ vy ? 34 22 24 ];
         putv self :vy %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 32 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 32 ]
         %tmp.4 = 10;
-        symbol [ radius ? 23 32 38 ];
+        symbol [ radius ? 34 32 38 ];
         putv self :radius %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 45 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 45 ]
         %tmp.5 = true;
-        symbol [ alive ? 23 45 50 ];
+        symbol [ alive ? 34 45 50 ];
         putv self :alive %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 23 59 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 34 59 ]
         %tmp.6 = 0;
-        symbol [ wingPhase ? 23 59 68 ];
+        symbol [ wingPhase ? 34 59 68 ];
         putv self :wingPhase %tmp.6;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_22_26_24_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 26; @symbol_functiondef = [reset,26,13,18]; @symbol_param<0> = [startX,26,19,25]; @symbol_param<1> = [startY,26,27,33]; @symbol_param<2> = [r,26,35,36]; ]
-    function reset(startX, startY, r) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_26_38_33_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 27 8 ]
-        %tmp.1 = lgetv %startX;
-        symbol [ startX %tmp.1 27 12 18 ];
-        symbol [ x ? 27 8 9 ];
-        putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 28 8 ]
-        %tmp.2 = lgetv %startY;
-        symbol [ startY %tmp.2 28 12 18 ];
-        symbol [ y ? 28 8 9 ];
-        putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 29 8 ]
-        %tmp.3 = 0.0;
-        symbol [ vy ? 29 8 10 ];
-        putv self :vy %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 30 8 ]
-        %tmp.4 = lgetv %r;
-        symbol [ r %tmp.4 30 17 18 ];
-        symbol [ radius ? 30 8 14 ];
-        putv self :radius %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 31 8 ]
-        %tmp.5 = true;
-        symbol [ alive ? 31 8 13 ];
-        putv self :alive %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 32 8 ]
-        %tmp.6 = 0;
-        symbol [ wingPhase ? 32 8 17 ];
-        putv self :wingPhase %tmp.6;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_26_38_33_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 35; @symbol_functiondef = [flap,35,13,17]; ]
-    function flap() {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_35_20_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 35 8 ]
+        %tmp.7 = 0;
+        symbol [ skin ? 35 8 12 ];
+        putv self :skin %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 35 18 ]
+        %tmp.8 = false;
+        symbol [ showTrail ? 35 18 27 ];
+        putv self :showTrail %tmp.8;
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 36 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_8_36_30_if_stmt:
-        symbol [ alive %tmp.2 36 13 18 ];
+        symbol [ TRAIL %tmp.11 36 19 24 ];
+        %tmp.11 = getv ? :TRAIL;
+        %tmp.9 = newa %tmp.11;
+        symbol [ _tx ? 36 8 11 ];
+        putv self :_tx %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 36 27 ]
+        symbol [ TRAIL %tmp.14 36 38 43 ];
+        %tmp.14 = getv ? :TRAIL;
+        %tmp.12 = newa %tmp.14;
+        symbol [ _ty ? 36 27 30 ];
+        putv self :_ty %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 36 46 ]
+        %tmp.15 = 0;
+        symbol [ _tHead ? 36 46 52 ];
+        putv self :_tHead %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 37 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 37 17 18 ];
+        %tmp.16 = 0;
+        lputv %i.1 %tmp.16;
+        symbol [ i %i.1 37 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_test:
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 37 24 25 ];
+        symbol [ TRAIL %tmp.19 37 28 33 ];
+        %tmp.19 = getv ? :TRAIL;
+        %tmp.20 = lt %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_40_37_70_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 37 42 ]
+        symbol [ _tx %tmp.21 37 42 45 ];
+        %tmp.21 = getv self :_tx;
+        %tmp.22 = 0.0;
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 37 46 47 ];
+        aputv %tmp.21 %tmp.23 %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 37 56 ]
+        symbol [ _ty %tmp.24 37 56 59 ];
+        %tmp.24 = getv self :_ty;
+        %tmp.25 = 0.0;
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 37 60 61 ];
+        aputv %tmp.24 %tmp.26 %tmp.25;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_40_37_70_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 37 ]
+        %tmp.29 = lgetv %i.1;
+        symbol [ i %tmp.29 37 35 36 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %i.1 %tmp.30;
+        symbol [ i %i.1 37 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_37_8_37_70_for_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_33_26_38_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 40; @symbol_functiondef = [reset,40,13,18]; @symbol_param<0> = [startX,40,19,25]; @symbol_param<1> = [startY,40,27,33]; @symbol_param<2> = [r,40,35,36]; ]
+    function reset(startX, startY, r) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_40_38_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 41 8 ]
+        %tmp.1 = lgetv %startX;
+        symbol [ startX %tmp.1 41 12 18 ];
+        symbol [ x ? 41 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 42 8 ]
+        %tmp.2 = lgetv %startY;
+        symbol [ startY %tmp.2 42 12 18 ];
+        symbol [ y ? 42 8 9 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 43 8 ]
+        %tmp.3 = 0.0;
+        symbol [ vy ? 43 8 10 ];
+        putv self :vy %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 44 8 ]
+        %tmp.4 = lgetv %r;
+        symbol [ r %tmp.4 44 17 18 ];
+        symbol [ radius ? 44 8 14 ];
+        putv self :radius %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 45 8 ]
+        %tmp.5 = true;
+        symbol [ alive ? 45 8 13 ];
+        putv self :alive %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 46 8 ]
+        %tmp.6 = 0;
+        symbol [ wingPhase ? 46 8 17 ];
+        putv self :wingPhase %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 47 8 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 47 17 18 ];
+        %tmp.7 = 0;
+        lputv %i.1 %tmp.7;
+        symbol [ i %i.1 47 17 18 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_test:
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 47 24 25 ];
+        symbol [ TRAIL %tmp.10 47 28 33 ];
+        %tmp.10 = getv ? :TRAIL;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_40_47_76_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 47 42 ]
+        symbol [ _tx %tmp.12 47 42 45 ];
+        %tmp.12 = getv self :_tx;
+        %tmp.13 = lgetv %startX;
+        symbol [ startX %tmp.13 47 51 57 ];
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 47 46 47 ];
+        aputv %tmp.12 %tmp.14 %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 47 59 ]
+        symbol [ _ty %tmp.15 47 59 62 ];
+        %tmp.15 = getv self :_ty;
+        %tmp.16 = lgetv %startY;
+        symbol [ startY %tmp.16 47 68 74 ];
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 47 63 64 ];
+        aputv %tmp.15 %tmp.17 %tmp.16;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_40_47_76_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 47 ]
+        %tmp.20 = lgetv %i.1;
+        symbol [ i %tmp.20 47 35 36 ];
+        %tmp.21 = add %tmp.20 1;
+        lputv %i.1 %tmp.21;
+        symbol [ i %i.1 47 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_47_8_47_76_for_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 48 8 ]
+        %tmp.22 = 0;
+        symbol [ _tHead ? 48 8 14 ];
+        putv self :_tHead %tmp.22;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_40_38_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 51; @symbol_functiondef = [flap,51,13,17]; ]
+    function flap() {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_51_20_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_8_52_30_if_stmt:
+        symbol [ alive %tmp.2 52 13 18 ];
         %tmp.2 = getv ? :alive;
         %tmp.3 = not %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_8_36_30_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_8_36_30_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_20_36_30_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 36 22 ]
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_8_52_30_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_8_52_30_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_20_52_30_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 52 22 ]
         ret ?;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_20_36_30_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_8_36_30_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_36_8_36_30_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 37 8 ]
-        symbol [ Physics %tmp.5 37 13 20 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_20_52_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_8_52_30_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_52_8_52_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 53 8 ]
+        symbol [ Physics %tmp.5 53 13 20 ];
         %tmp.5 = getv ? :Physics;
-        symbol [ FLAP_VY %tmp.6 37 21 28 ];
+        symbol [ FLAP_VY %tmp.6 53 21 28 ];
         %tmp.6 = getv %tmp.5 :FLAP_VY;
-        symbol [ vy ? 37 8 10 ];
+        symbol [ vy ? 53 8 10 ];
         putv self :vy %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 38 8 ]
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 54 8 ]
         %tmp.7 = 0;
-        symbol [ wingPhase ? 38 8 17 ];
+        symbol [ wingPhase ? 54 8 17 ];
         putv self :wingPhase %tmp.7;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_35_20_39_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_51_20_55_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 41; @symbol_functiondef = [step,41,13,17]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 57; @symbol_functiondef = [step,57,13,17]; ]
     function step() {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_41_20_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 42 8 ]
-        symbol [ Physics %tmp.2 42 13 20 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_57_20_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 58 8 ]
+        symbol [ Physics %tmp.2 58 13 20 ];
         %tmp.2 = getv ? :Physics;
-        symbol [ applyGravity %tmp.3 42 21 33 ];
+        symbol [ applyGravity %tmp.3 58 21 33 ];
         %tmp.3 = getv function %tmp.2 :applyGravity;
-        symbol [ vy %tmp.5 42 34 36 ];
+        symbol [ vy %tmp.5 58 34 36 ];
         %tmp.5 = getv ? :vy;
         %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
-        symbol [ vy ? 42 8 10 ];
+        symbol [ vy ? 58 8 10 ];
         putv self :vy %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 43 8 ]
-        symbol [ y %tmp.8 43 13 14 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 59 8 ]
+        symbol [ y %tmp.8 59 13 14 ];
         %tmp.8 = getv ? :y;
-        symbol [ vy %tmp.10 43 17 19 ];
+        symbol [ vy %tmp.10 59 17 19 ];
         %tmp.10 = getv ? :vy;
         %tmp.11 = add %tmp.8 %tmp.10;
-        symbol [ y ? 43 8 9 ];
+        symbol [ y ? 59 8 9 ];
         putv self :y %tmp.11;
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 44 8 ]
-        symbol [ wingPhase %tmp.13 44 21 30 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 60 8 ]
+        symbol [ wingPhase %tmp.13 60 21 30 ];
         %tmp.13 = getv ? :wingPhase;
         %tmp.14 = 1;
         %tmp.15 = add %tmp.13 %tmp.14;
         %tmp.16 = 6;
         %tmp.17 = mod %tmp.15 %tmp.16;
-        symbol [ wingPhase ? 44 8 17 ];
+        symbol [ wingPhase ? 60 8 17 ];
         putv self :wingPhase %tmp.17;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_41_20_45_4_stop:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 62 8 ]
+        symbol [ _tHead %tmp.19 62 18 24 ];
+        %tmp.19 = getv ? :_tHead;
+        %tmp.20 = 1;
+        %tmp.21 = add %tmp.19 %tmp.20;
+        symbol [ TRAIL %tmp.23 62 32 37 ];
+        %tmp.23 = getv ? :TRAIL;
+        %tmp.24 = mod %tmp.21 %tmp.23;
+        symbol [ _tHead ? 62 8 14 ];
+        putv self :_tHead %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 63 8 ]
+        symbol [ _tx %tmp.25 63 8 11 ];
+        %tmp.25 = getv self :_tx;
+        symbol [ x %tmp.27 63 22 23 ];
+        %tmp.27 = getv ? :x;
+        symbol [ _tHead %tmp.29 63 12 18 ];
+        %tmp.29 = getv ? :_tHead;
+        aputv %tmp.25 %tmp.29 %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 63 25 ]
+        symbol [ _ty %tmp.30 63 25 28 ];
+        %tmp.30 = getv self :_ty;
+        symbol [ y %tmp.32 63 39 40 ];
+        %tmp.32 = getv ? :y;
+        symbol [ _tHead %tmp.34 63 29 35 ];
+        %tmp.34 = getv ? :_tHead;
+        aputv %tmp.30 %tmp.34 %tmp.32;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_57_20_64_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 50; @symbol_functiondef = [bbox,50,13,17]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 69; @symbol_functiondef = [bbox,69,13,17]; ]
     function bbox() {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_50_20_53_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 51 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_50_20_53_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_50_20_53_4_stop" ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_20_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_20_72_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_20_72_4_stop" ]
         %r.1 = local;
-        symbol [ r %r.1 51 12 13 ];
-        symbol [ radius %tmp.2 51 16 22 ];
+        symbol [ r %r.1 70 12 13 ];
+        symbol [ radius %tmp.2 70 16 22 ];
         %tmp.2 = getv ? :radius;
         %tmp.3 = 1;
         %tmp.4 = sub %tmp.2 %tmp.3;
         lputv %r.1 %tmp.4;
-        symbol [ r %r.1 51 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 52 8 ]
+        symbol [ r %r.1 70 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 71 8 ]
         %tmp.5 = newa 4;
-        symbol [ x %tmp.7 52 16 17 ];
+        symbol [ x %tmp.7 71 16 17 ];
         %tmp.7 = getv ? :x;
         %tmp.8 = lgetv %r.1;
-        symbol [ r %tmp.8 52 20 21 ];
+        symbol [ r %tmp.8 71 20 21 ];
         %tmp.9 = sub %tmp.7 %tmp.8;
         %tmp.10 = dup %tmp.5;
         %tmp.11 = aputv %tmp.10 0 %tmp.9;
-        symbol [ y %tmp.13 52 23 24 ];
+        symbol [ y %tmp.13 71 23 24 ];
         %tmp.13 = getv ? :y;
         %tmp.14 = lgetv %r.1;
-        symbol [ r %tmp.14 52 27 28 ];
+        symbol [ r %tmp.14 71 27 28 ];
         %tmp.15 = sub %tmp.13 %tmp.14;
         %tmp.16 = dup %tmp.11;
         %tmp.17 = aputv %tmp.16 1 %tmp.15;
-        symbol [ x %tmp.19 52 30 31 ];
+        symbol [ x %tmp.19 71 30 31 ];
         %tmp.19 = getv ? :x;
         %tmp.20 = lgetv %r.1;
-        symbol [ r %tmp.20 52 34 35 ];
+        symbol [ r %tmp.20 71 34 35 ];
         %tmp.21 = add %tmp.19 %tmp.20;
         %tmp.22 = dup %tmp.17;
         %tmp.23 = aputv %tmp.22 2 %tmp.21;
-        symbol [ y %tmp.25 52 37 38 ];
+        symbol [ y %tmp.25 71 37 38 ];
         %tmp.25 = getv ? :y;
         %tmp.26 = lgetv %r.1;
-        symbol [ r %tmp.26 52 41 42 ];
+        symbol [ r %tmp.26 71 41 42 ];
         %tmp.27 = add %tmp.25 %tmp.26;
         %tmp.28 = dup %tmp.23;
         %tmp.29 = aputv %tmp.28 3 %tmp.27;
         ret %tmp.29;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_50_20_53_4_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_20_72_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 56; @symbol_functiondef = [draw,56,13,17]; @symbol_param<0> = [dc,56,18,20]; ]
-    function draw(dc) {
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 57 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_stop" ]
-        %tilt.1 = local;
-        symbol [ tilt %tilt.1 57 12 16 ];
-        symbol [ vy %tmp.2 57 19 21 ];
-        %tmp.2 = getv ? :vy;
-        %tmp.3 = 6;
-        %tmp.4 = mul %tmp.2 %tmp.3;
-        lputv %tilt.1 %tmp.4;
-        symbol [ tilt %tilt.1 57 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 58 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_8_58_38_if_stmt:
-        %tmp.5 = lgetv %tilt.1;
-        symbol [ tilt %tmp.5 58 12 16 ];
-        %tmp.6 = -15;
-        %tmp.7 = lt %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_8_58_38_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_8_58_38_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_24_58_38_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 58 26 ]
-        %tmp.8 = -15;
-        lputv %tilt.1 %tmp.8;
-        symbol [ tilt %tilt.1 58 26 30 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_24_58_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_8_58_38_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_58_8_58_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 59 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_8_59_38_if_stmt:
-        %tmp.9 = lgetv %tilt.1;
-        symbol [ tilt %tmp.9 59 12 16 ];
-        %tmp.10 = 70;
-        %tmp.11 = gt %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_8_59_38_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_8_59_38_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_24_59_38_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 59 26 ]
-        %tmp.12 = 70;
-        lputv %tilt.1 %tmp.12;
-        symbol [ tilt %tilt.1 59 26 30 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_24_59_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_8_59_38_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_59_8_59_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 62 8 ]
-        %tmp.13 = lgetv %dc;
-        symbol [ dc %tmp.13 62 8 10 ];
-        symbol [ setColor %tmp.14 62 11 19 ];
-        %tmp.14 = getv function %tmp.13 :setColor;
-        %tmp.15 = 0x999999;
-        symbol [ Graphics %tmp.16 62 30 38 ];
-        %tmp.16 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.17 62 39 56 ];
-        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
-        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 63 8 ]
-        %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 63 8 10 ];
-        symbol [ fillCircle %tmp.19 63 11 21 ];
-        %tmp.19 = getv function %tmp.18 :fillCircle;
-        symbol [ x %tmp.21 63 22 23 ];
-        %tmp.21 = getv ? :x;
-        symbol [ y %tmp.23 63 25 26 ];
-        %tmp.23 = getv ? :y;
-        symbol [ radius %tmp.25 63 28 34 ];
-        %tmp.25 = getv ? :radius;
-        invoke %tmp.18 %tmp.19(%tmp.21, %tmp.23, %tmp.25);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 65 8 ]
-        %tmp.26 = lgetv %dc;
-        symbol [ dc %tmp.26 65 8 10 ];
-        symbol [ setColor %tmp.27 65 11 19 ];
-        %tmp.27 = getv function %tmp.26 :setColor;
-        %tmp.28 = 0xEEEEEE;
-        symbol [ Graphics %tmp.29 65 30 38 ];
-        %tmp.29 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.30 65 39 56 ];
-        %tmp.30 = getv %tmp.29 :COLOR_TRANSPARENT;
-        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 66 8 ]
-        %tmp.31 = lgetv %dc;
-        symbol [ dc %tmp.31 66 8 10 ];
-        symbol [ fillCircle %tmp.32 66 11 21 ];
-        %tmp.32 = getv function %tmp.31 :fillCircle;
-        symbol [ x %tmp.34 66 22 23 ];
-        %tmp.34 = getv ? :x;
-        %tmp.35 = 1;
-        %tmp.36 = sub %tmp.34 %tmp.35;
-        symbol [ y %tmp.38 66 29 30 ];
-        %tmp.38 = getv ? :y;
-        symbol [ radius %tmp.40 66 33 39 ];
-        %tmp.40 = getv ? :radius;
-        %tmp.41 = 3;
-        %tmp.42 = div %tmp.40 %tmp.41;
-        %tmp.43 = add %tmp.38 %tmp.42;
-        symbol [ radius %tmp.45 66 45 51 ];
-        %tmp.45 = getv ? :radius;
-        %tmp.46 = 2;
-        %tmp.47 = mul %tmp.45 %tmp.46;
-        %tmp.48 = 3;
-        %tmp.49 = div %tmp.47 %tmp.48;
-        invoke %tmp.31 %tmp.32(%tmp.36, %tmp.43, %tmp.49);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 68 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_stop" ]
-        %wingDy.2 = local;
-        symbol [ wingDy %wingDy.2 68 12 18 ];
-        %tmp.50 = 0;
-        lputv %wingDy.2 %tmp.50;
-        symbol [ wingDy %wingDy.2 68 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 69 8 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_stmt:
-        symbol [ wingPhase %tmp.52 69 12 21 ];
-        %tmp.52 = getv ? :wingPhase;
-        %tmp.53 = 2;
-        %tmp.54 = lt %tmp.52 %tmp.53;
-        bf %tmp.54 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_false;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_34_69_49_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 69 36 ]
-        %tmp.55 = -2;
-        lputv %wingDy.2 %tmp.55;
-        symbol [ wingDy %wingDy.2 69 36 42 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_34_69_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_false:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 70 13 ]
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_stmt:
-        symbol [ wingPhase %tmp.57 70 17 26 ];
-        %tmp.57 = getv ? :wingPhase;
-        %tmp.58 = 4;
-        %tmp.59 = lt %tmp.57 %tmp.58;
-        bf %tmp.59 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_else_false;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_true:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_34_70_49_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 70 36 ]
-        %tmp.60 = 0;
-        lputv %wingDy.2 %tmp.60;
-        symbol [ wingDy %wingDy.2 70 36 42 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_34_70_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_else_false:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_71_34_71_49_start:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 71 36 ]
-        %tmp.61 = 2;
-        lputv %wingDy.2 %tmp.61;
-        symbol [ wingDy %wingDy.2 71 36 42 ];
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_71_34_71_49_stop:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_70_13_71_49_if_end:
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_69_8_71_49_if_end:
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 72 8 ]
-        %tmp.62 = lgetv %dc;
-        symbol [ dc %tmp.62 72 8 10 ];
-        symbol [ setColor %tmp.63 72 11 19 ];
-        %tmp.63 = getv function %tmp.62 :setColor;
-        %tmp.64 = 0x666666;
-        symbol [ Graphics %tmp.65 72 30 38 ];
-        %tmp.65 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.66 72 39 56 ];
-        %tmp.66 = getv %tmp.65 :COLOR_TRANSPARENT;
-        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.66);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 73 8 ]
-        %tmp.67 = lgetv %dc;
-        symbol [ dc %tmp.67 73 8 10 ];
-        symbol [ fillPolygon %tmp.68 73 11 22 ];
-        %tmp.68 = getv function %tmp.67 :fillPolygon;
-        %tmp.69 = newa 3;
-        %tmp.70 = newa 2;
-        symbol [ x %tmp.72 73 25 26 ];
-        %tmp.72 = getv ? :x;
-        %tmp.73 = 1;
-        %tmp.74 = sub %tmp.72 %tmp.73;
-        %tmp.75 = dup %tmp.70;
-        %tmp.76 = aputv %tmp.75 0 %tmp.74;
-        symbol [ y %tmp.78 73 43 44 ];
-        %tmp.78 = getv ? :y;
-        %tmp.79 = 1;
-        %tmp.80 = add %tmp.78 %tmp.79;
-        %tmp.81 = dup %tmp.76;
-        %tmp.82 = aputv %tmp.81 1 %tmp.80;
-        %tmp.83 = dup %tmp.69;
-        %tmp.84 = aputv %tmp.83 0 %tmp.82;
-        %tmp.85 = newa 2;
-        symbol [ x %tmp.87 74 25 26 ];
-        %tmp.87 = getv ? :x;
-        symbol [ radius %tmp.89 74 29 35 ];
-        %tmp.89 = getv ? :radius;
-        %tmp.90 = sub %tmp.87 %tmp.89;
-        %tmp.91 = 2;
-        %tmp.92 = sub %tmp.90 %tmp.91;
-        %tmp.93 = dup %tmp.85;
-        %tmp.94 = aputv %tmp.93 0 %tmp.92;
-        symbol [ y %tmp.96 74 43 44 ];
-        %tmp.96 = getv ? :y;
-        %tmp.97 = 1;
-        %tmp.98 = add %tmp.96 %tmp.97;
-        %tmp.99 = lgetv %wingDy.2;
-        symbol [ wingDy %tmp.99 74 51 57 ];
-        %tmp.100 = add %tmp.98 %tmp.99;
-        %tmp.101 = dup %tmp.94;
-        %tmp.102 = aputv %tmp.101 1 %tmp.100;
-        %tmp.103 = dup %tmp.84;
-        %tmp.104 = aputv %tmp.103 1 %tmp.102;
-        %tmp.105 = newa 2;
-        symbol [ x %tmp.107 75 25 26 ];
-        %tmp.107 = getv ? :x;
-        %tmp.108 = 1;
-        %tmp.109 = sub %tmp.107 %tmp.108;
-        %tmp.110 = dup %tmp.105;
-        %tmp.111 = aputv %tmp.110 0 %tmp.109;
-        symbol [ y %tmp.113 75 43 44 ];
-        %tmp.113 = getv ? :y;
-        symbol [ radius %tmp.115 75 47 53 ];
-        %tmp.115 = getv ? :radius;
-        %tmp.116 = add %tmp.113 %tmp.115;
-        %tmp.117 = dup %tmp.111;
-        %tmp.118 = aputv %tmp.117 1 %tmp.116;
-        %tmp.119 = dup %tmp.104;
-        %tmp.120 = aputv %tmp.119 2 %tmp.118;
-        invoke %tmp.67 %tmp.68(%tmp.120);
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 75; @symbol_functiondef = [_bodyCol,75,20,28]; ]
+    protected
+    function _bodyCol() {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_75_31_79_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_8_76_42_if_stmt:
+        symbol [ skin %tmp.2 76 12 16 ];
+        %tmp.2 = getv ? :skin;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_8_76_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_8_76_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_23_76_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 76 25 ]
+        %tmp.5 = 0x33E0B0;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_23_76_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_8_76_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_76_8_76_42_if_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 77 8 ]
-        %tmp.121 = lgetv %dc;
-        symbol [ dc %tmp.121 77 8 10 ];
-        symbol [ setColor %tmp.122 77 11 19 ];
-        %tmp.122 = getv function %tmp.121 :setColor;
-        %tmp.123 = 0xFFFFFF;
-        symbol [ Graphics %tmp.124 77 30 38 ];
-        %tmp.124 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.125 77 39 56 ];
-        %tmp.125 = getv %tmp.124 :COLOR_TRANSPARENT;
-        invoke %tmp.121 %tmp.122(%tmp.123, %tmp.125);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_8_77_42_if_stmt:
+        symbol [ skin %tmp.7 77 12 16 ];
+        %tmp.7 = getv ? :skin;
+        %tmp.8 = 2;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_8_77_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_8_77_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_23_77_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 77 25 ]
+        %tmp.10 = 0xFFCC22;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_23_77_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_8_77_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_77_8_77_42_if_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 78 8 ]
-        %tmp.126 = lgetv %dc;
-        symbol [ dc %tmp.126 78 8 10 ];
-        symbol [ fillCircle %tmp.127 78 11 21 ];
-        %tmp.127 = getv function %tmp.126 :fillCircle;
-        symbol [ x %tmp.129 78 22 23 ];
-        %tmp.129 = getv ? :x;
-        symbol [ radius %tmp.131 78 26 32 ];
-        %tmp.131 = getv ? :radius;
-        %tmp.132 = 3;
-        %tmp.133 = div %tmp.131 %tmp.132;
-        %tmp.134 = add %tmp.129 %tmp.133;
-        symbol [ y %tmp.136 78 38 39 ];
-        %tmp.136 = getv ? :y;
-        symbol [ radius %tmp.138 78 42 48 ];
-        %tmp.138 = getv ? :radius;
-        %tmp.139 = 3;
-        %tmp.140 = div %tmp.138 %tmp.139;
-        %tmp.141 = sub %tmp.136 %tmp.140;
-        symbol [ radius %tmp.143 78 54 60 ];
-        %tmp.143 = getv ? :radius;
-        %tmp.144 = 4;
-        %tmp.145 = div %tmp.143 %tmp.144;
-        invoke %tmp.126 %tmp.127(%tmp.134, %tmp.141, %tmp.145);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 79 8 ]
-        %tmp.146 = lgetv %dc;
-        symbol [ dc %tmp.146 79 8 10 ];
-        symbol [ setColor %tmp.147 79 11 19 ];
-        %tmp.147 = getv function %tmp.146 :setColor;
-        %tmp.148 = 0x000000;
-        symbol [ Graphics %tmp.149 79 30 38 ];
-        %tmp.149 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.150 79 39 56 ];
-        %tmp.150 = getv %tmp.149 :COLOR_TRANSPARENT;
-        invoke %tmp.146 %tmp.147(%tmp.148, %tmp.150);
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 80 8 ]
-        %tmp.151 = lgetv %dc;
-        symbol [ dc %tmp.151 80 8 10 ];
-        symbol [ fillCircle %tmp.152 80 11 21 ];
-        %tmp.152 = getv function %tmp.151 :fillCircle;
-        symbol [ x %tmp.154 80 22 23 ];
-        %tmp.154 = getv ? :x;
-        symbol [ radius %tmp.156 80 26 32 ];
-        %tmp.156 = getv ? :radius;
-        %tmp.157 = 3;
-        %tmp.158 = div %tmp.156 %tmp.157;
-        %tmp.159 = add %tmp.154 %tmp.158;
-        %tmp.160 = 1;
-        %tmp.161 = add %tmp.159 %tmp.160;
-        symbol [ y %tmp.163 80 42 43 ];
-        %tmp.163 = getv ? :y;
-        symbol [ radius %tmp.165 80 46 52 ];
-        %tmp.165 = getv ? :radius;
-        %tmp.166 = 3;
-        %tmp.167 = div %tmp.165 %tmp.166;
-        %tmp.168 = sub %tmp.163 %tmp.167;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_begin:
-        symbol [ radius %tmp.170 80 59 65 ];
-        %tmp.170 = getv ? :radius;
-        %tmp.171 = 4;
-        %tmp.172 = div %tmp.170 %tmp.171;
-        %tmp.173 = 2;
-        %tmp.174 = lt %tmp.172 %tmp.173;
-        bf %tmp.174 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_else_false;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_true:
-        %tmp.175 = 1;
-        push %tmp.175;
-        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_end;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_else_false:
-        symbol [ radius %tmp.177 80 81 87 ];
-        %tmp.177 = getv ? :radius;
-        %tmp.178 = 6;
-        %tmp.179 = div %tmp.177 %tmp.178;
-        push %tmp.179;
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_end:
-        %tmp.180 = phi [%tmp.174 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_begin] [%tmp.175 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_true] [%tmp.179 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_else_false] [%tmp.180 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_58_80_90_end];
-        invoke %tmp.151 %tmp.152(%tmp.161, %tmp.168, %tmp.180);
+        %tmp.11 = 0x999999;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_75_31_79_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 80; @symbol_functiondef = [_bellyCol,80,20,29]; ]
+    protected
+    function _bellyCol() {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_32_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 81 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_8_81_42_if_stmt:
+        symbol [ skin %tmp.2 81 12 16 ];
+        %tmp.2 = getv ? :skin;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_8_81_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_8_81_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_23_81_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 81 25 ]
+        %tmp.5 = 0xCFFCEC;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_23_81_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_8_81_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_81_8_81_42_if_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 82 8 ]
-        %tmp.181 = lgetv %dc;
-        symbol [ dc %tmp.181 82 8 10 ];
-        symbol [ setColor %tmp.182 82 11 19 ];
-        %tmp.182 = getv function %tmp.181 :setColor;
-        %tmp.183 = 0xFF8822;
-        symbol [ Graphics %tmp.184 82 30 38 ];
-        %tmp.184 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.185 82 39 56 ];
-        %tmp.185 = getv %tmp.184 :COLOR_TRANSPARENT;
-        invoke %tmp.181 %tmp.182(%tmp.183, %tmp.185);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_8_82_42_if_stmt:
+        symbol [ skin %tmp.7 82 12 16 ];
+        %tmp.7 = getv ? :skin;
+        %tmp.8 = 2;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_8_82_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_8_82_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_23_82_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 82 25 ]
+        %tmp.10 = 0xFFEEAA;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_23_82_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_8_82_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_82_8_82_42_if_end:
 [ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 83 8 ]
-        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_stop" ]
-        %beakY.3 = local;
-        symbol [ beakY %beakY.3 83 12 17 ];
-        symbol [ y %tmp.187 83 20 21 ];
-        %tmp.187 = getv ? :y;
-        %tmp.188 = lgetv %tilt.1;
-        symbol [ tilt %tmp.188 83 25 29 ];
-        %tmp.189 = 18;
-        %tmp.190 = div %tmp.188 %tmp.189;
-        %tmp.191 = add %tmp.187 %tmp.190;
-        lputv %beakY.3 %tmp.191;
-        symbol [ beakY %beakY.3 83 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 84 8 ]
-        %tmp.192 = lgetv %dc;
-        symbol [ dc %tmp.192 84 8 10 ];
-        symbol [ fillPolygon %tmp.193 84 11 22 ];
-        %tmp.193 = getv function %tmp.192 :fillPolygon;
-        %tmp.194 = newa 3;
-        %tmp.195 = newa 2;
-        symbol [ x %tmp.197 84 25 26 ];
-        %tmp.197 = getv ? :x;
-        symbol [ radius %tmp.199 84 29 35 ];
-        %tmp.199 = getv ? :radius;
-        %tmp.200 = add %tmp.197 %tmp.199;
-        %tmp.201 = dup %tmp.195;
-        %tmp.202 = aputv %tmp.201 0 %tmp.200;
-        %tmp.203 = lgetv %beakY.3;
-        symbol [ beakY %tmp.203 84 41 46 ];
-        %tmp.204 = 2;
-        %tmp.205 = sub %tmp.203 %tmp.204;
-        %tmp.206 = dup %tmp.202;
-        %tmp.207 = aputv %tmp.206 1 %tmp.205;
-        %tmp.208 = dup %tmp.194;
-        %tmp.209 = aputv %tmp.208 0 %tmp.207;
-        %tmp.210 = newa 2;
-        symbol [ x %tmp.212 85 25 26 ];
-        %tmp.212 = getv ? :x;
-        symbol [ radius %tmp.214 85 29 35 ];
+        %tmp.11 = 0xEEEEEE;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_80_32_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 85; @symbol_functiondef = [_wingCol,85,20,28]; ]
+    protected
+    function _wingCol() {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_85_31_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_8_86_42_if_stmt:
+        symbol [ skin %tmp.2 86 12 16 ];
+        %tmp.2 = getv ? :skin;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_8_86_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_8_86_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_23_86_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 86 25 ]
+        %tmp.5 = 0x11A888;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_23_86_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_8_86_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_86_8_86_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 87 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_8_87_42_if_stmt:
+        symbol [ skin %tmp.7 87 12 16 ];
+        %tmp.7 = getv ? :skin;
+        %tmp.8 = 2;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_8_87_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_8_87_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_23_87_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 87 25 ]
+        %tmp.10 = 0xCC9911;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_23_87_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_8_87_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_87_8_87_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 88 8 ]
+        %tmp.11 = 0x666666;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_85_31_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 90; @symbol_functiondef = [_trailCol,90,20,29]; ]
+    protected
+    function _trailCol() {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_90_32_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_8_91_42_if_stmt:
+        symbol [ skin %tmp.2 91 12 16 ];
+        %tmp.2 = getv ? :skin;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_8_91_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_8_91_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_23_91_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 91 25 ]
+        %tmp.5 = 0x66FFCC;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_23_91_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_8_91_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_91_8_91_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 92 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_8_92_42_if_stmt:
+        symbol [ skin %tmp.7 92 12 16 ];
+        %tmp.7 = getv ? :skin;
+        %tmp.8 = 2;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_8_92_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_8_92_42_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_23_92_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 92 25 ]
+        %tmp.10 = 0xFFDD66;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_23_92_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_8_92_42_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_92_8_92_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 93 8 ]
+        %tmp.11 = 0xBBBBBB;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_90_32_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 97; @symbol_functiondef = [drawAt,97,13,19]; @symbol_param<0> = [dc,97,20,22]; @symbol_param<1> = [ox,97,24,26]; @symbol_param<2> = [oy,97,28,30]; ]
+    function drawAt(dc, ox, oy) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %bx.1 = local;
+        symbol [ bx %bx.1 98 12 14 ];
+        symbol [ x %tmp.2 98 17 18 ];
+        %tmp.2 = getv ? :x;
+        %tmp.3 = lgetv %ox;
+        symbol [ ox %tmp.3 98 21 23 ];
+        %tmp.4 = add %tmp.2 %tmp.3;
+        lputv %bx.1 %tmp.4;
+        symbol [ bx %bx.1 98 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 98 25 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %by.2 = local;
+        symbol [ by %by.2 98 29 31 ];
+        symbol [ y %tmp.6 98 34 35 ];
+        %tmp.6 = getv ? :y;
+        %tmp.7 = lgetv %oy;
+        symbol [ oy %tmp.7 98 38 40 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        lputv %by.2 %tmp.8;
+        symbol [ by %by.2 98 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %tilt.3 = local;
+        symbol [ tilt %tilt.3 99 12 16 ];
+        symbol [ vy %tmp.10 99 19 21 ];
+        %tmp.10 = getv ? :vy;
+        %tmp.11 = 6;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        lputv %tilt.3 %tmp.12;
+        symbol [ tilt %tilt.3 99 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_8_100_38_if_stmt:
+        %tmp.13 = lgetv %tilt.3;
+        symbol [ tilt %tmp.13 100 12 16 ];
+        %tmp.14 = -15;
+        %tmp.15 = lt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_8_100_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_8_100_38_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_24_100_38_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 100 26 ]
+        %tmp.16 = -15;
+        lputv %tilt.3 %tmp.16;
+        symbol [ tilt %tilt.3 100 26 30 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_24_100_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_8_100_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_100_8_100_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_8_101_38_if_stmt:
+        %tmp.17 = lgetv %tilt.3;
+        symbol [ tilt %tmp.17 101 12 16 ];
+        %tmp.18 = 70;
+        %tmp.19 = gt %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_8_101_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_8_101_38_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_24_101_38_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 101 26 ]
+        %tmp.20 = 70;
+        lputv %tilt.3 %tmp.20;
+        symbol [ tilt %tilt.3 101 26 30 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_24_101_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_8_101_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_101_8_101_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 104 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_8_114_8_if_stmt:
+        symbol [ showTrail %tmp.22 104 12 21 ];
+        %tmp.22 = getv ? :showTrail;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_8_114_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_8_114_8_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_23_114_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 105 12 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_23_114_8_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_23_114_8_stop" ]
+        %tc.4 = local;
+        symbol [ tc %tc.4 105 16 18 ];
+        %tmp.23 = self;
+        symbol [ _trailCol %tmp.24 105 21 30 ];
+        %tmp.24 = getv function %tmp.23 :_trailCol;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        lputv %tc.4 %tmp.25;
+        symbol [ tc %tc.4 105 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 106 12 ]
+        for @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_test @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_incr @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_begin" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_end" ]
+        %t.5 = local;
+        symbol [ t %t.5 106 21 22 ];
+        %tmp.26 = 1;
+        lputv %t.5 %tmp.26;
+        symbol [ t %t.5 106 21 22 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_test:
+        %tmp.27 = lgetv %t.5;
+        symbol [ t %tmp.27 106 28 29 ];
+        symbol [ TRAIL %tmp.29 106 32 37 ];
+        %tmp.29 = getv ? :TRAIL;
+        %tmp.30 = lt %tmp.27 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_begin:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 107 16 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_stop" ]
+        %idx.6 = local;
+        symbol [ idx %idx.6 107 20 23 ];
+        symbol [ _tHead %tmp.32 107 27 33 ];
+        %tmp.32 = getv ? :_tHead;
+        %tmp.33 = lgetv %t.5;
+        symbol [ t %tmp.33 107 36 37 ];
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        symbol [ TRAIL %tmp.36 107 40 45 ];
+        %tmp.36 = getv ? :TRAIL;
+        %tmp.37 = 2;
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        %tmp.39 = add %tmp.34 %tmp.38;
+        symbol [ TRAIL %tmp.41 107 53 58 ];
+        %tmp.41 = getv ? :TRAIL;
+        %tmp.42 = mod %tmp.39 %tmp.41;
+        lputv %idx.6 %tmp.42;
+        symbol [ idx %idx.6 107 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 108 16 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_stop" ]
+        %tr.7 = local;
+        symbol [ tr %tr.7 108 20 22 ];
+        symbol [ radius %tmp.44 108 26 32 ];
+        %tmp.44 = getv ? :radius;
+        symbol [ TRAIL %tmp.46 108 36 41 ];
+        %tmp.46 = getv ? :TRAIL;
+        %tmp.47 = lgetv %t.5;
+        symbol [ t %tmp.47 108 44 45 ];
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = mul %tmp.44 %tmp.48;
+        symbol [ TRAIL %tmp.51 108 51 56 ];
+        %tmp.51 = getv ? :TRAIL;
+        %tmp.52 = 2;
+        %tmp.53 = mul %tmp.51 %tmp.52;
+        %tmp.54 = div %tmp.49 %tmp.53;
+        lputv %tr.7 %tmp.54;
+        symbol [ tr %tr.7 108 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 109 16 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_16_109_38_if_stmt:
+        %tmp.55 = lgetv %tr.7;
+        symbol [ tr %tmp.55 109 20 22 ];
+        %tmp.56 = 1;
+        %tmp.57 = lt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_16_109_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_16_109_38_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_28_109_38_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 109 30 ]
+        %tmp.58 = 1;
+        lputv %tr.7 %tmp.58;
+        symbol [ tr %tr.7 109 30 32 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_28_109_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_16_109_38_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_109_16_109_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 110 16 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_stop" ]
+        %f.8 = local;
+        symbol [ f %f.8 110 20 21 ];
+        %tmp.59 = 70;
+        %tmp.60 = lgetv %t.5;
+        symbol [ t %tmp.60 110 29 30 ];
+        %tmp.61 = 9;
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = sub %tmp.59 %tmp.62;
+        lputv %f.8 %tmp.63;
+        symbol [ f %f.8 110 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 111 16 ]
+        %tmp.64 = lgetv %dc;
+        symbol [ dc %tmp.64 111 16 18 ];
+        symbol [ setColor %tmp.65 111 19 27 ];
+        %tmp.65 = getv function %tmp.64 :setColor;
+        %tmp.66 = self;
+        symbol [ _dim %tmp.67 111 28 32 ];
+        %tmp.67 = getv function %tmp.66 :_dim;
+        %tmp.68 = lgetv %tc.4;
+        symbol [ tc %tmp.68 111 33 35 ];
+        %tmp.69 = lgetv %f.8;
+        symbol [ f %tmp.69 111 37 38 ];
+        %tmp.70 = invoke %tmp.66 %tmp.67(%tmp.68, %tmp.69);
+        symbol [ Graphics %tmp.71 111 41 49 ];
+        %tmp.71 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.72 111 50 67 ];
+        %tmp.72 = getv %tmp.71 :COLOR_TRANSPARENT;
+        invoke %tmp.64 %tmp.65(%tmp.70, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 112 16 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 112 16 18 ];
+        symbol [ fillCircle %tmp.74 112 19 29 ];
+        %tmp.74 = getv function %tmp.73 :fillCircle;
+        symbol [ _tx %tmp.76 112 31 34 ];
+        %tmp.76 = getv ? :_tx;
+        %tmp.77 = lgetv %idx.6;
+        symbol [ idx %tmp.77 112 35 38 ];
+        %tmp.78 = agetv %tmp.76 %tmp.77;
+        symbol [ toNumber %tmp.79 112 41 49 ];
+        %tmp.79 = getv function %tmp.78 :toNumber;
+        %tmp.80 = invoke %tmp.78 %tmp.79();
+        %tmp.81 = lgetv %ox;
+        symbol [ ox %tmp.81 112 54 56 ];
+        %tmp.82 = add %tmp.80 %tmp.81;
+        symbol [ _ty %tmp.84 112 59 62 ];
+        %tmp.84 = getv ? :_ty;
+        %tmp.85 = lgetv %idx.6;
+        symbol [ idx %tmp.85 112 63 66 ];
+        %tmp.86 = agetv %tmp.84 %tmp.85;
+        symbol [ toNumber %tmp.87 112 69 77 ];
+        %tmp.87 = getv function %tmp.86 :toNumber;
+        %tmp.88 = invoke %tmp.86 %tmp.87();
+        %tmp.89 = lgetv %oy;
+        symbol [ oy %tmp.89 112 82 84 ];
+        %tmp.90 = add %tmp.88 %tmp.89;
+        %tmp.91 = lgetv %tr.7;
+        symbol [ tr %tmp.91 112 86 88 ];
+        invoke %tmp.73 %tmp.74(%tmp.82, %tmp.90, %tmp.91);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_44_113_12_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 106 ]
+        %tmp.94 = lgetv %t.5;
+        symbol [ t %tmp.94 106 39 40 ];
+        %tmp.95 = add %tmp.94 1;
+        lputv %t.5 %tmp.95;
+        symbol [ t %t.5 106 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_test;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_106_12_113_12_for_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_23_114_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_8_114_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_104_8_114_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %bodyC.9 = local;
+        symbol [ bodyC %bodyC.9 116 12 17 ];
+        %tmp.96 = self;
+        symbol [ _bodyCol %tmp.97 116 21 29 ];
+        %tmp.97 = getv function %tmp.96 :_bodyCol;
+        %tmp.98 = invoke %tmp.96 %tmp.97();
+        lputv %bodyC.9 %tmp.98;
+        symbol [ bodyC %bodyC.9 116 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 117 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %bellyC.10 = local;
+        symbol [ bellyC %bellyC.10 117 12 18 ];
+        %tmp.99 = self;
+        symbol [ _bellyCol %tmp.100 117 21 30 ];
+        %tmp.100 = getv function %tmp.99 :_bellyCol;
+        %tmp.101 = invoke %tmp.99 %tmp.100();
+        lputv %bellyC.10 %tmp.101;
+        symbol [ bellyC %bellyC.10 117 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 118 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %wingC.11 = local;
+        symbol [ wingC %wingC.11 118 12 17 ];
+        %tmp.102 = self;
+        symbol [ _wingCol %tmp.103 118 21 29 ];
+        %tmp.103 = getv function %tmp.102 :_wingCol;
+        %tmp.104 = invoke %tmp.102 %tmp.103();
+        lputv %wingC.11 %tmp.104;
+        symbol [ wingC %wingC.11 118 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 121 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_8_124_8_if_stmt:
+        symbol [ skin %tmp.106 121 12 16 ];
+        %tmp.106 = getv ? :skin;
+        %tmp.107 = 1;
+        %tmp.108 = eq %tmp.106 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_8_124_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_8_124_8_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_23_124_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 122 12 ]
+        %tmp.109 = lgetv %dc;
+        symbol [ dc %tmp.109 122 12 14 ];
+        symbol [ setColor %tmp.110 122 15 23 ];
+        %tmp.110 = getv function %tmp.109 :setColor;
+        %tmp.111 = 0x1C7A66;
+        symbol [ Graphics %tmp.112 122 34 42 ];
+        %tmp.112 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.113 122 43 60 ];
+        %tmp.113 = getv %tmp.112 :COLOR_TRANSPARENT;
+        invoke %tmp.109 %tmp.110(%tmp.111, %tmp.113);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 123 12 ]
+        %tmp.114 = lgetv %dc;
+        symbol [ dc %tmp.114 123 12 14 ];
+        symbol [ fillCircle %tmp.115 123 15 25 ];
+        %tmp.115 = getv function %tmp.114 :fillCircle;
+        %tmp.116 = lgetv %bx.1;
+        symbol [ bx %tmp.116 123 26 28 ];
+        %tmp.117 = lgetv %by.2;
+        symbol [ by %tmp.117 123 30 32 ];
+        symbol [ radius %tmp.119 123 34 40 ];
+        %tmp.119 = getv ? :radius;
+        %tmp.120 = 2;
+        %tmp.121 = add %tmp.119 %tmp.120;
+        invoke %tmp.114 %tmp.115(%tmp.116, %tmp.117, %tmp.121);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_23_124_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_8_124_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_121_8_124_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 127 8 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 127 8 10 ];
+        symbol [ setColor %tmp.123 127 11 19 ];
+        %tmp.123 = getv function %tmp.122 :setColor;
+        %tmp.124 = lgetv %bodyC.9;
+        symbol [ bodyC %tmp.124 127 20 25 ];
+        symbol [ Graphics %tmp.125 127 27 35 ];
+        %tmp.125 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.126 127 36 53 ];
+        %tmp.126 = getv %tmp.125 :COLOR_TRANSPARENT;
+        invoke %tmp.122 %tmp.123(%tmp.124, %tmp.126);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 128 8 ]
+        %tmp.127 = lgetv %dc;
+        symbol [ dc %tmp.127 128 8 10 ];
+        symbol [ fillCircle %tmp.128 128 11 21 ];
+        %tmp.128 = getv function %tmp.127 :fillCircle;
+        %tmp.129 = lgetv %bx.1;
+        symbol [ bx %tmp.129 128 22 24 ];
+        %tmp.130 = lgetv %by.2;
+        symbol [ by %tmp.130 128 26 28 ];
+        symbol [ radius %tmp.132 128 30 36 ];
+        %tmp.132 = getv ? :radius;
+        invoke %tmp.127 %tmp.128(%tmp.129, %tmp.130, %tmp.132);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 130 8 ]
+        %tmp.133 = lgetv %dc;
+        symbol [ dc %tmp.133 130 8 10 ];
+        symbol [ setColor %tmp.134 130 11 19 ];
+        %tmp.134 = getv function %tmp.133 :setColor;
+        %tmp.135 = lgetv %bellyC.10;
+        symbol [ bellyC %tmp.135 130 20 26 ];
+        symbol [ Graphics %tmp.136 130 28 36 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.137 130 37 54 ];
+        %tmp.137 = getv %tmp.136 :COLOR_TRANSPARENT;
+        invoke %tmp.133 %tmp.134(%tmp.135, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 131 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 131 8 10 ];
+        symbol [ fillCircle %tmp.139 131 11 21 ];
+        %tmp.139 = getv function %tmp.138 :fillCircle;
+        %tmp.140 = lgetv %bx.1;
+        symbol [ bx %tmp.140 131 22 24 ];
+        %tmp.141 = 1;
+        %tmp.142 = sub %tmp.140 %tmp.141;
+        %tmp.143 = lgetv %by.2;
+        symbol [ by %tmp.143 131 30 32 ];
+        symbol [ radius %tmp.145 131 35 41 ];
+        %tmp.145 = getv ? :radius;
+        %tmp.146 = 3;
+        %tmp.147 = div %tmp.145 %tmp.146;
+        %tmp.148 = add %tmp.143 %tmp.147;
+        symbol [ radius %tmp.150 131 47 53 ];
+        %tmp.150 = getv ? :radius;
+        %tmp.151 = 2;
+        %tmp.152 = mul %tmp.150 %tmp.151;
+        %tmp.153 = 3;
+        %tmp.154 = div %tmp.152 %tmp.153;
+        invoke %tmp.138 %tmp.139(%tmp.142, %tmp.148, %tmp.154);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 133 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %wingDy.12 = local;
+        symbol [ wingDy %wingDy.12 133 12 18 ];
+        %tmp.155 = 0;
+        lputv %wingDy.12 %tmp.155;
+        symbol [ wingDy %wingDy.12 133 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 134 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_stmt:
+        symbol [ wingPhase %tmp.157 134 12 21 ];
+        %tmp.157 = getv ? :wingPhase;
+        %tmp.158 = 2;
+        %tmp.159 = lt %tmp.157 %tmp.158;
+        bf %tmp.159 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_false;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_34_134_49_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 134 36 ]
+        %tmp.160 = -2;
+        lputv %wingDy.12 %tmp.160;
+        symbol [ wingDy %wingDy.12 134 36 42 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_34_134_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_false:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 135 13 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_stmt:
+        symbol [ wingPhase %tmp.162 135 17 26 ];
+        %tmp.162 = getv ? :wingPhase;
+        %tmp.163 = 4;
+        %tmp.164 = lt %tmp.162 %tmp.163;
+        bf %tmp.164 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_else_false;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_34_135_49_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 135 36 ]
+        %tmp.165 = 0;
+        lputv %wingDy.12 %tmp.165;
+        symbol [ wingDy %wingDy.12 135 36 42 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_34_135_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_else_false:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_136_34_136_49_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 136 36 ]
+        %tmp.166 = 2;
+        lputv %wingDy.12 %tmp.166;
+        symbol [ wingDy %wingDy.12 136 36 42 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_136_34_136_49_stop:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_135_13_136_49_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_134_8_136_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 137 8 ]
+        %tmp.167 = lgetv %dc;
+        symbol [ dc %tmp.167 137 8 10 ];
+        symbol [ setColor %tmp.168 137 11 19 ];
+        %tmp.168 = getv function %tmp.167 :setColor;
+        %tmp.169 = lgetv %wingC.11;
+        symbol [ wingC %tmp.169 137 20 25 ];
+        symbol [ Graphics %tmp.170 137 27 35 ];
+        %tmp.170 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.171 137 36 53 ];
+        %tmp.171 = getv %tmp.170 :COLOR_TRANSPARENT;
+        invoke %tmp.167 %tmp.168(%tmp.169, %tmp.171);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 138 8 ]
+        %tmp.172 = lgetv %dc;
+        symbol [ dc %tmp.172 138 8 10 ];
+        symbol [ fillPolygon %tmp.173 138 11 22 ];
+        %tmp.173 = getv function %tmp.172 :fillPolygon;
+        %tmp.174 = newa 3;
+        %tmp.175 = newa 2;
+        %tmp.176 = lgetv %bx.1;
+        symbol [ bx %tmp.176 138 25 27 ];
+        %tmp.177 = 1;
+        %tmp.178 = sub %tmp.176 %tmp.177;
+        %tmp.179 = dup %tmp.175;
+        %tmp.180 = aputv %tmp.179 0 %tmp.178;
+        %tmp.181 = lgetv %by.2;
+        symbol [ by %tmp.181 138 44 46 ];
+        %tmp.182 = 1;
+        %tmp.183 = add %tmp.181 %tmp.182;
+        %tmp.184 = dup %tmp.180;
+        %tmp.185 = aputv %tmp.184 1 %tmp.183;
+        %tmp.186 = dup %tmp.174;
+        %tmp.187 = aputv %tmp.186 0 %tmp.185;
+        %tmp.188 = newa 2;
+        %tmp.189 = lgetv %bx.1;
+        symbol [ bx %tmp.189 139 25 27 ];
+        symbol [ radius %tmp.191 139 30 36 ];
+        %tmp.191 = getv ? :radius;
+        %tmp.192 = sub %tmp.189 %tmp.191;
+        %tmp.193 = 2;
+        %tmp.194 = sub %tmp.192 %tmp.193;
+        %tmp.195 = dup %tmp.188;
+        %tmp.196 = aputv %tmp.195 0 %tmp.194;
+        %tmp.197 = lgetv %by.2;
+        symbol [ by %tmp.197 139 44 46 ];
+        %tmp.198 = 1;
+        %tmp.199 = add %tmp.197 %tmp.198;
+        %tmp.200 = lgetv %wingDy.12;
+        symbol [ wingDy %tmp.200 139 53 59 ];
+        %tmp.201 = add %tmp.199 %tmp.200;
+        %tmp.202 = dup %tmp.196;
+        %tmp.203 = aputv %tmp.202 1 %tmp.201;
+        %tmp.204 = dup %tmp.187;
+        %tmp.205 = aputv %tmp.204 1 %tmp.203;
+        %tmp.206 = newa 2;
+        %tmp.207 = lgetv %bx.1;
+        symbol [ bx %tmp.207 140 25 27 ];
+        %tmp.208 = 1;
+        %tmp.209 = sub %tmp.207 %tmp.208;
+        %tmp.210 = dup %tmp.206;
+        %tmp.211 = aputv %tmp.210 0 %tmp.209;
+        %tmp.212 = lgetv %by.2;
+        symbol [ by %tmp.212 140 44 46 ];
+        symbol [ radius %tmp.214 140 49 55 ];
         %tmp.214 = getv ? :radius;
         %tmp.215 = add %tmp.212 %tmp.214;
-        %tmp.216 = 5;
-        %tmp.217 = add %tmp.215 %tmp.216;
-        %tmp.218 = dup %tmp.210;
-        %tmp.219 = aputv %tmp.218 0 %tmp.217;
-        %tmp.220 = lgetv %beakY.3;
-        symbol [ beakY %tmp.220 85 41 46 ];
-        %tmp.221 = 1;
-        %tmp.222 = add %tmp.220 %tmp.221;
-        %tmp.223 = dup %tmp.219;
-        %tmp.224 = aputv %tmp.223 1 %tmp.222;
-        %tmp.225 = dup %tmp.209;
-        %tmp.226 = aputv %tmp.225 1 %tmp.224;
-        %tmp.227 = newa 2;
-        symbol [ x %tmp.229 86 25 26 ];
-        %tmp.229 = getv ? :x;
-        symbol [ radius %tmp.231 86 29 35 ];
-        %tmp.231 = getv ? :radius;
-        %tmp.232 = add %tmp.229 %tmp.231;
-        %tmp.233 = dup %tmp.227;
-        %tmp.234 = aputv %tmp.233 0 %tmp.232;
-        %tmp.235 = lgetv %beakY.3;
-        symbol [ beakY %tmp.235 86 41 46 ];
+        %tmp.216 = dup %tmp.211;
+        %tmp.217 = aputv %tmp.216 1 %tmp.215;
+        %tmp.218 = dup %tmp.205;
+        %tmp.219 = aputv %tmp.218 2 %tmp.217;
+        invoke %tmp.172 %tmp.173(%tmp.219);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 142 8 ]
+        %tmp.220 = lgetv %dc;
+        symbol [ dc %tmp.220 142 8 10 ];
+        symbol [ setColor %tmp.221 142 11 19 ];
+        %tmp.221 = getv function %tmp.220 :setColor;
+        %tmp.222 = 0xFFFFFF;
+        symbol [ Graphics %tmp.223 142 30 38 ];
+        %tmp.223 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.224 142 39 56 ];
+        %tmp.224 = getv %tmp.223 :COLOR_TRANSPARENT;
+        invoke %tmp.220 %tmp.221(%tmp.222, %tmp.224);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 143 8 ]
+        %tmp.225 = lgetv %dc;
+        symbol [ dc %tmp.225 143 8 10 ];
+        symbol [ fillCircle %tmp.226 143 11 21 ];
+        %tmp.226 = getv function %tmp.225 :fillCircle;
+        %tmp.227 = lgetv %bx.1;
+        symbol [ bx %tmp.227 143 22 24 ];
+        symbol [ radius %tmp.229 143 27 33 ];
+        %tmp.229 = getv ? :radius;
+        %tmp.230 = 3;
+        %tmp.231 = div %tmp.229 %tmp.230;
+        %tmp.232 = add %tmp.227 %tmp.231;
+        %tmp.233 = lgetv %by.2;
+        symbol [ by %tmp.233 143 39 41 ];
+        symbol [ radius %tmp.235 143 44 50 ];
+        %tmp.235 = getv ? :radius;
         %tmp.236 = 3;
-        %tmp.237 = add %tmp.235 %tmp.236;
-        %tmp.238 = dup %tmp.234;
-        %tmp.239 = aputv %tmp.238 1 %tmp.237;
-        %tmp.240 = dup %tmp.226;
-        %tmp.241 = aputv %tmp.240 2 %tmp.239;
-        invoke %tmp.192 %tmp.193(%tmp.241);
-_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_56_22_87_4_stop:
+        %tmp.237 = div %tmp.235 %tmp.236;
+        %tmp.238 = sub %tmp.233 %tmp.237;
+        symbol [ radius %tmp.240 143 56 62 ];
+        %tmp.240 = getv ? :radius;
+        %tmp.241 = 4;
+        %tmp.242 = div %tmp.240 %tmp.241;
+        invoke %tmp.225 %tmp.226(%tmp.232, %tmp.238, %tmp.242);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 144 8 ]
+        %tmp.243 = lgetv %dc;
+        symbol [ dc %tmp.243 144 8 10 ];
+        symbol [ setColor %tmp.244 144 11 19 ];
+        %tmp.244 = getv function %tmp.243 :setColor;
+        %tmp.245 = 0x000000;
+        symbol [ Graphics %tmp.246 144 30 38 ];
+        %tmp.246 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.247 144 39 56 ];
+        %tmp.247 = getv %tmp.246 :COLOR_TRANSPARENT;
+        invoke %tmp.243 %tmp.244(%tmp.245, %tmp.247);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 145 8 ]
+        %tmp.248 = lgetv %dc;
+        symbol [ dc %tmp.248 145 8 10 ];
+        symbol [ fillCircle %tmp.249 145 11 21 ];
+        %tmp.249 = getv function %tmp.248 :fillCircle;
+        %tmp.250 = lgetv %bx.1;
+        symbol [ bx %tmp.250 145 22 24 ];
+        symbol [ radius %tmp.252 145 27 33 ];
+        %tmp.252 = getv ? :radius;
+        %tmp.253 = 3;
+        %tmp.254 = div %tmp.252 %tmp.253;
+        %tmp.255 = add %tmp.250 %tmp.254;
+        %tmp.256 = 1;
+        %tmp.257 = add %tmp.255 %tmp.256;
+        %tmp.258 = lgetv %by.2;
+        symbol [ by %tmp.258 145 43 45 ];
+        symbol [ radius %tmp.260 145 48 54 ];
+        %tmp.260 = getv ? :radius;
+        %tmp.261 = 3;
+        %tmp.262 = div %tmp.260 %tmp.261;
+        %tmp.263 = sub %tmp.258 %tmp.262;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_begin:
+        symbol [ radius %tmp.265 145 61 67 ];
+        %tmp.265 = getv ? :radius;
+        %tmp.266 = 4;
+        %tmp.267 = div %tmp.265 %tmp.266;
+        %tmp.268 = 2;
+        %tmp.269 = lt %tmp.267 %tmp.268;
+        bf %tmp.269 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_else_false;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_true:
+        %tmp.270 = 1;
+        push %tmp.270;
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_else_false:
+        symbol [ radius %tmp.272 145 83 89 ];
+        %tmp.272 = getv ? :radius;
+        %tmp.273 = 6;
+        %tmp.274 = div %tmp.272 %tmp.273;
+        push %tmp.274;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_end:
+        %tmp.275 = phi [%tmp.269 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_begin] [%tmp.270 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_true] [%tmp.274 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_else_false] [%tmp.275 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_145_60_145_92_end];
+        invoke %tmp.248 %tmp.249(%tmp.257, %tmp.263, %tmp.275);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 147 8 ]
+        %tmp.276 = lgetv %dc;
+        symbol [ dc %tmp.276 147 8 10 ];
+        symbol [ setColor %tmp.277 147 11 19 ];
+        %tmp.277 = getv function %tmp.276 :setColor;
+        %tmp.278 = 0xFF8822;
+        symbol [ Graphics %tmp.279 147 30 38 ];
+        %tmp.279 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.280 147 39 56 ];
+        %tmp.280 = getv %tmp.279 :COLOR_TRANSPARENT;
+        invoke %tmp.276 %tmp.277(%tmp.278, %tmp.280);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 148 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop" ]
+        %beakY.13 = local;
+        symbol [ beakY %beakY.13 148 12 17 ];
+        %tmp.281 = lgetv %by.2;
+        symbol [ by %tmp.281 148 20 22 ];
+        %tmp.282 = lgetv %tilt.3;
+        symbol [ tilt %tmp.282 148 26 30 ];
+        %tmp.283 = 18;
+        %tmp.284 = div %tmp.282 %tmp.283;
+        %tmp.285 = add %tmp.281 %tmp.284;
+        lputv %beakY.13 %tmp.285;
+        symbol [ beakY %beakY.13 148 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 149 8 ]
+        %tmp.286 = lgetv %dc;
+        symbol [ dc %tmp.286 149 8 10 ];
+        symbol [ fillPolygon %tmp.287 149 11 22 ];
+        %tmp.287 = getv function %tmp.286 :fillPolygon;
+        %tmp.288 = newa 3;
+        %tmp.289 = newa 2;
+        %tmp.290 = lgetv %bx.1;
+        symbol [ bx %tmp.290 149 25 27 ];
+        symbol [ radius %tmp.292 149 30 36 ];
+        %tmp.292 = getv ? :radius;
+        %tmp.293 = add %tmp.290 %tmp.292;
+        %tmp.294 = dup %tmp.289;
+        %tmp.295 = aputv %tmp.294 0 %tmp.293;
+        %tmp.296 = lgetv %beakY.13;
+        symbol [ beakY %tmp.296 149 42 47 ];
+        %tmp.297 = 2;
+        %tmp.298 = sub %tmp.296 %tmp.297;
+        %tmp.299 = dup %tmp.295;
+        %tmp.300 = aputv %tmp.299 1 %tmp.298;
+        %tmp.301 = dup %tmp.288;
+        %tmp.302 = aputv %tmp.301 0 %tmp.300;
+        %tmp.303 = newa 2;
+        %tmp.304 = lgetv %bx.1;
+        symbol [ bx %tmp.304 150 25 27 ];
+        symbol [ radius %tmp.306 150 30 36 ];
+        %tmp.306 = getv ? :radius;
+        %tmp.307 = add %tmp.304 %tmp.306;
+        %tmp.308 = 5;
+        %tmp.309 = add %tmp.307 %tmp.308;
+        %tmp.310 = dup %tmp.303;
+        %tmp.311 = aputv %tmp.310 0 %tmp.309;
+        %tmp.312 = lgetv %beakY.13;
+        symbol [ beakY %tmp.312 150 42 47 ];
+        %tmp.313 = 1;
+        %tmp.314 = add %tmp.312 %tmp.313;
+        %tmp.315 = dup %tmp.311;
+        %tmp.316 = aputv %tmp.315 1 %tmp.314;
+        %tmp.317 = dup %tmp.302;
+        %tmp.318 = aputv %tmp.317 1 %tmp.316;
+        %tmp.319 = newa 2;
+        %tmp.320 = lgetv %bx.1;
+        symbol [ bx %tmp.320 151 25 27 ];
+        symbol [ radius %tmp.322 151 30 36 ];
+        %tmp.322 = getv ? :radius;
+        %tmp.323 = add %tmp.320 %tmp.322;
+        %tmp.324 = dup %tmp.319;
+        %tmp.325 = aputv %tmp.324 0 %tmp.323;
+        %tmp.326 = lgetv %beakY.13;
+        symbol [ beakY %tmp.326 151 42 47 ];
+        %tmp.327 = 3;
+        %tmp.328 = add %tmp.326 %tmp.327;
+        %tmp.329 = dup %tmp.325;
+        %tmp.330 = aputv %tmp.329 1 %tmp.328;
+        %tmp.331 = dup %tmp.318;
+        %tmp.332 = aputv %tmp.331 2 %tmp.330;
+        invoke %tmp.286 %tmp.287(%tmp.332);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 153 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_8_156_8_if_stmt:
+        symbol [ skin %tmp.334 153 12 16 ];
+        %tmp.334 = getv ? :skin;
+        %tmp.335 = 2;
+        %tmp.336 = eq %tmp.334 %tmp.335;
+        bf %tmp.336 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_8_156_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_8_156_8_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_23_156_8_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 154 12 ]
+        %tmp.337 = lgetv %dc;
+        symbol [ dc %tmp.337 154 12 14 ];
+        symbol [ setColor %tmp.338 154 15 23 ];
+        %tmp.338 = getv function %tmp.337 :setColor;
+        %tmp.339 = 0xFFFFFF;
+        symbol [ Graphics %tmp.340 154 34 42 ];
+        %tmp.340 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.341 154 43 60 ];
+        %tmp.341 = getv %tmp.340 :COLOR_TRANSPARENT;
+        invoke %tmp.337 %tmp.338(%tmp.339, %tmp.341);
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 155 12 ]
+        %tmp.342 = lgetv %dc;
+        symbol [ dc %tmp.342 155 12 14 ];
+        symbol [ fillCircle %tmp.343 155 15 25 ];
+        %tmp.343 = getv function %tmp.342 :fillCircle;
+        %tmp.344 = lgetv %bx.1;
+        symbol [ bx %tmp.344 155 26 28 ];
+        symbol [ radius %tmp.346 155 31 37 ];
+        %tmp.346 = getv ? :radius;
+        %tmp.347 = 3;
+        %tmp.348 = div %tmp.346 %tmp.347;
+        %tmp.349 = sub %tmp.344 %tmp.348;
+        %tmp.350 = lgetv %by.2;
+        symbol [ by %tmp.350 155 43 45 ];
+        symbol [ radius %tmp.352 155 48 54 ];
+        %tmp.352 = getv ? :radius;
+        %tmp.353 = 2;
+        %tmp.354 = div %tmp.352 %tmp.353;
+        %tmp.355 = sub %tmp.350 %tmp.354;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_begin:
+        symbol [ radius %tmp.357 155 61 67 ];
+        %tmp.357 = getv ? :radius;
+        %tmp.358 = 5;
+        %tmp.359 = div %tmp.357 %tmp.358;
+        %tmp.360 = 1;
+        %tmp.361 = lt %tmp.359 %tmp.360;
+        bf %tmp.361 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_else_false;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_true:
+        %tmp.362 = 1;
+        push %tmp.362;
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_else_false:
+        symbol [ radius %tmp.364 155 83 89 ];
+        %tmp.364 = getv ? :radius;
+        %tmp.365 = 5;
+        %tmp.366 = div %tmp.364 %tmp.365;
+        push %tmp.366;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_end:
+        %tmp.367 = phi [%tmp.361 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_begin] [%tmp.362 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_true] [%tmp.366 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_else_false] [%tmp.367 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_155_60_155_92_end];
+        invoke %tmp.342 %tmp.343(%tmp.349, %tmp.355, %tmp.367);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_23_156_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_8_156_8_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_153_8_156_8_if_end:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_97_32_157_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 160; @symbol_functiondef = [draw,160,13,17]; @symbol_param<0> = [dc,160,18,20]; ]
+    function draw(dc) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_160_22_160_42_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 160 24 ]
+        %tmp.1 = self;
+        symbol [ drawAt %tmp.2 160 24 30 ];
+        %tmp.2 = getv function %tmp.1 :drawAt;
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 160 31 33 ];
+        %tmp.4 = 0;
+        %tmp.5 = 0;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5);
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_160_22_160_42_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 163; @symbol_functiondef = [_dim,163,20,24]; @symbol_param<0> = [col,163,25,28]; @symbol_param<1> = [pct,163,30,33]; ]
+    protected
+    function _dim(col, pct) {
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 164 8 ]
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_8_164_32_if_stmt:
+        %tmp.1 = lgetv %pct;
+        symbol [ pct %tmp.1 164 12 15 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_8_164_32_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_8_164_32_if_true:
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_21_164_32_start:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 164 23 ]
+        %tmp.4 = 0;
+        lputv %pct %tmp.4;
+        symbol [ pct %pct 164 23 26 ];
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_21_164_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_8_164_32_if_end;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_164_8_164_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 165 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 165 12 13 ];
+        %tmp.5 = lgetv %col;
+        symbol [ col %tmp.5 165 18 21 ];
+        %tmp.6 = 16;
+        %tmp.7 = shr %tmp.5 %tmp.6;
+        %tmp.8 = 0xFF;
+        %tmp.9 = bitand %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %pct;
+        symbol [ pct %tmp.10 165 39 42 ];
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        %tmp.12 = 100;
+        %tmp.13 = div %tmp.11 %tmp.12;
+        lputv %r.1 %tmp.13;
+        symbol [ r %r.1 165 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_stop" ]
+        %g.2 = local;
+        symbol [ g %g.2 166 12 13 ];
+        %tmp.14 = lgetv %col;
+        symbol [ col %tmp.14 166 18 21 ];
+        %tmp.15 = 8;
+        %tmp.16 = shr %tmp.14 %tmp.15;
+        %tmp.17 = 0xFF;
+        %tmp.18 = bitand %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %pct;
+        symbol [ pct %tmp.19 166 39 42 ];
+        %tmp.20 = mul %tmp.18 %tmp.19;
+        %tmp.21 = 100;
+        %tmp.22 = div %tmp.20 %tmp.21;
+        lputv %g.2 %tmp.22;
+        symbol [ g %g.2 166 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_start" "_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 167 12 13 ];
+        %tmp.23 = lgetv %col;
+        symbol [ col %tmp.23 167 17 20 ];
+        %tmp.24 = 0xFF;
+        %tmp.25 = bitand %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %pct;
+        symbol [ pct %tmp.26 167 31 34 ];
+        %tmp.27 = mul %tmp.25 %tmp.26;
+        %tmp.28 = 100;
+        %tmp.29 = div %tmp.27 %tmp.28;
+        lputv %b.3 %tmp.29;
+        symbol [ b %b.3 167 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc" 168 8 ]
+        %tmp.30 = lgetv %r.1;
+        symbol [ r %tmp.30 168 16 17 ];
+        %tmp.31 = 16;
+        %tmp.32 = shl %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %g.2;
+        symbol [ g %tmp.33 168 28 29 ];
+        %tmp.34 = 8;
+        %tmp.35 = shl %tmp.33 %tmp.34;
+        %tmp.36 = bitor %tmp.32 %tmp.35;
+        %tmp.37 = lgetv %b.3;
+        symbol [ b %tmp.37 168 38 39 ];
+        %tmp.38 = bitor %tmp.36 %tmp.37;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_flappypidgeon_source_Bird_mc_163_35_169_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 12; ]
+[ @file = "/Users/kkorolczuk/work/garmin/flappypidgeon/source/Bird.mc"; @line = 18; ]
 <init> {
 }

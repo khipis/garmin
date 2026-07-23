@@ -21,8 +21,16 @@
 
 using Toybox.Graphics;
 using Toybox.Math;
+using Toybox.System;
 
 class RenderSystem {
+
+    // Halve each channel for a cheap "darker skirt" shade.
+    hidden static function _dark(col) {
+        return (((col >> 17) & 0x7F) << 16)
+             | (((col >>  9) & 0x7F) << 8)
+             |  ((col >>  1) & 0x7F);
+    }
 
     // ── Pre-allocated polygon vertex storage ────────────────────
     // The four corners of a tile diamond.  `_polyVerts` is the
@@ -89,6 +97,38 @@ class RenderSystem {
         for (var k = 0; k < n; k++) {
             dc.drawPoint(_starsXY[k * 2], _starsXY[k * 2 + 1]);
         }
+
+        // Parallax clouds — three soft puffs drifting slowly with the
+        // run distance so the sky reads as moving without much cost.
+        var d = ctrl.distance;
+        dc.setColor(0x4E75A8, Graphics.COLOR_TRANSPARENT);
+        for (var c = 0; c < 3; c++) {
+            var span = w + 60;
+            var cxp  = ((c * 4703 + d * (c + 1)) % span) - 30;
+            var cyp  = h * (14 + c * 8) / 100;
+            var r    = (w * 7 / 100) + c * 3;
+            dc.fillCircle(cxp - r, cyp, r);
+            dc.fillCircle(cxp + r, cyp, r);
+            dc.fillCircle(cxp, cyp - r / 2, r + 2);
+        }
+    }
+
+    // Faint radial speed lines at high forward speed — sells velocity.
+    static function drawSpeedLines(dc, ctrl) {
+        var mul = ctrl.path.speedMul();
+        if (mul < 1.5) { return; }
+        var cxp = ctrl.cx; var cyp = ctrl.cy + SR_BALL_Y_OFFSET;
+        var t   = System.getTimer() / 60;
+        dc.setColor(0x8FB8E0, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 6; i++) {
+            var ang = ((i * 60) + (t * 13)) % 360;
+            var rad = ang * 0.01745;
+            var r0  = 30 + (t % 20);
+            var r1  = r0 + 14;
+            var dx  = Math.cos(rad); var dy = Math.sin(rad);
+            dc.drawLine(cxp + (dx * r0).toNumber(), cyp + (dy * r0).toNumber(),
+                        cxp + (dx * r1).toNumber(), cyp + (dy * r1).toNumber());
+        }
     }
 
     // ── Visible-tile painter ────────────────────────────────────
@@ -109,6 +149,7 @@ class RenderSystem {
         var rowMaxX = path.rowMaxX;
         var tileBuf = path.tile;
         var brkBuf  = path.breakT;
+        var gemBuf  = path.gem;
 
         for (var y = yHi; y >= yLo; y--) {
             // y is guaranteed >= 0 here so the modulo never needs
@@ -120,19 +161,20 @@ class RenderSystem {
             if (lo > hi) { continue; }              // empty row
             var rowT = tileBuf[yi];
             var rowB = brkBuf[yi];
+            var rowG = gemBuf[yi];
             for (var x = lo; x <= hi; x++) {
                 var xi = x + SR_X_HALF;
                 var t = rowT[xi];
                 if (t == SR_T_NONE) { continue; }
                 var br = (t == SR_T_BREAK) ? rowB[xi] : 0;
-                _drawTile(dc, ctrl, x, y, t, br);
+                _drawTile(dc, ctrl, x, y, t, br, rowG[xi]);
             }
         }
     }
 
-    // Single-polygon tile.  We compose the screen position inline to
-    // avoid an extra worldToScreen call returning a fresh array.
-    hidden static function _drawTile(dc, ctrl, wx, wy, t, breakRem) {
+    // Tile = a darker skirt (pseudo-height) + the diamond top + any
+    // boost/gem marker. Skirt is one hexagon poly so it stays cheap.
+    hidden static function _drawTile(dc, ctrl, wx, wy, t, breakRem, hasGem) {
         var cam = ctrl.cam;
         var hwF = SR_TILE_HW.toFloat();
         var hhF = SR_TILE_HH.toFloat();
@@ -159,8 +201,40 @@ class RenderSystem {
             col = 0x6A2A18 + (k << 16);
         }
         else                        { col = 0xC8D4DC; }
+
+        // Skirt — one hexagon under the front rim gives the floating
+        // slab a sense of thickness/height. ~4 px deep.
+        var sk = 4;
+        dc.setColor(_dark(col), Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[bx0 - hw, by0 - hh],
+                        [bx0,      by0],
+                        [bx0 + hw, by0 - hh],
+                        [bx0 + hw, by0 - hh + sk],
+                        [bx0,      by0 + sk],
+                        [bx0 - hw, by0 - hh + sk]]);
+
+        // Top face.
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon(_polyVerts);
+
+        // Boost chevron — a gold up-arrow on the tile.
+        if (t == SR_T_BOOST) {
+            var my = by0 - hh;
+            dc.setColor(0xFFF3B0, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[bx0, my - 6], [bx0 - 5, my], [bx0 + 5, my]]);
+        }
+
+        // Floating collectible gem — a small spinning cyan/gold diamond
+        // hovering above the tile top.
+        if (hasGem) {
+            var gy = by0 - hh - 8;
+            var t2 = (System.getTimer() / 120) % 2;
+            var gw = (t2 == 0) ? 4 : 2;
+            dc.setColor(0x33E0FF, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[bx0, gy - 5], [bx0 + gw, gy], [bx0, gy + 5], [bx0 - gw, gy]]);
+            dc.setColor(0xEAFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(bx0 - 1, gy - 2, 2, 2);
+        }
     }
 
     // ── Ball (shadow + body + fall animation). ──────────────────

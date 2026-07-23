@@ -28,10 +28,16 @@ class Player {
 
     // Animation
     var legPhase;   // 0..7 used to bob the legs
+    var squashT;    // ticks remaining of a landing squash
 
     // Cosmetic skin tier, unlocked by lifetime coins collected — see
     // GameController.skinTier(). 0 = default green frog.
     var skin;
+
+    // Selectable, shop-ready character skin from the shared Progress layer:
+    // 0 = CLASSIC (use the coin-tier look above), 1 = NEON, 2 = GOLD. When
+    // the player picks (and owns) NEON/GOLD it overrides the body palette.
+    var skinSel;
 
     // Continuous input flags (mutated by InputHandler/MainView via
     // GameController.setHold). Tap pulses live in vx directly.
@@ -40,7 +46,7 @@ class Player {
 
     function initialize() {
         x = 0; y = 0; vx = 0.0; vy = 0.0; w = 8; h = 10;
-        alive = true; legPhase = 0; skin = 0;
+        alive = true; legPhase = 0; skin = 0; skinSel = 0; squashT = 0;
         holdLeft = false; holdRight = false;
     }
 
@@ -48,8 +54,14 @@ class Player {
         x = startX; y = startY;
         vx = 0.0; vy = 0.0;
         w  = halfW; h = halfH;
-        alive = true; legPhase = 0;
+        alive = true; legPhase = 0; squashT = 0;
         holdLeft = false; holdRight = false;
+    }
+
+    // Decay animation-only timers (kept out of step() so the physics
+    // integration stays untouched).
+    function stepFx() {
+        if (squashT > 0) { squashT = squashT - 1; }
     }
 
     function bounce() {
@@ -99,18 +111,29 @@ class Player {
         // GameController.skinTier()). Purely cosmetic; hitbox/physics
         // are identical across tiers.
         var bodyC = 0x44CC44; var bellyC = 0xCCFFCC; var legC = 0x33AA33;
-        if (skin == 1) {       // Ice Frog
+        // Selectable shop-ready skin takes priority when picked & owned.
+        if (skinSel == 1) {         // NEON frog
+            bodyC = 0x22FF99; bellyC = 0xCCFFEE; legC = 0x00CC88;
+        } else if (skinSel == 2) {  // GOLD frog
+            bodyC = 0xFFD21A; bellyC = 0xFFF3C4; legC = 0xC79300;
+        } else if (skin == 1) {     // Ice Frog (coin tier)
             bodyC = 0x55CCEE; bellyC = 0xEAFBFF; legC = 0x2E9BC0;
-        } else if (skin == 2) { // Gold Frog
+        } else if (skin == 2) {     // Gold Frog (coin tier)
             bodyC = 0xE8B923; bellyC = 0xFFF3C4; legC = 0xB4880F;
-        } else if (skin >= 3) { // Diamond Frog
+        } else if (skin >= 3) {     // Diamond Frog (coin tier)
             bodyC = 0xB06CFF; bellyC = 0xE9D6FF; legC = 0x7A3FCC;
         }
 
+        // Squash & stretch — the body fattens on a landing and slims
+        // when rocketing upward. Purely cosmetic; hitbox is unchanged.
+        var bw = w;
+        if (squashT > 0)        { bw = (w * 5) / 4; }   // splat wide on landing
+        else if (vy < -3.0)     { bw = (w * 3) / 4; }   // stretch thin on ascent
+
         // Body — coloured oval (drawn as two circles + rectangle for round-rect feel)
         dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(sx, sy, w);
-        dc.fillRectangle(sx - w, sy - 2, w * 2, 4);
+        dc.fillCircle(sx, sy, bw);
+        dc.fillRectangle(sx - bw, sy - 2, bw * 2, 4);
         // Belly
         dc.setColor(bellyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(sx, sy + 2, (w * 2) / 3);

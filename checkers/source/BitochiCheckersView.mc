@@ -5,9 +5,11 @@ using Toybox.Math;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
 
 const LB_GAME_ID = "checkers";
 const LB_STREAK_KEY = "checkers_streak";
+const CK_FX_KEY = "checkers_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const CK_EMPTY = 0;
 const CK_WHITE = 1;
@@ -48,6 +50,8 @@ class BitochiCheckersView extends WatchUi.View {
 
     hidden var _menuRow;
     hidden var _resultHandled;
+    hidden var _isTouch;   // device has a touchscreen — tailor control hints
+    hidden var _fxOn;      // sound + haptics master switch (OPTIONS: checkers_fx)
 
     // ── Engagement leaderboard: pieces taken ─────────────────────────────────
     // Counts how many opponent pieces the player has captured this game.
@@ -77,6 +81,7 @@ class BitochiCheckersView extends WatchUi.View {
         View.initialize();
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
+        _isTouch = (ds.isTouchScreen == true);
         _tick = 0;
         _gs = GS_MENU;
         // Settings now live in the shared unified menu (OPTIONS); read them back.
@@ -97,6 +102,7 @@ class BitochiCheckersView extends WatchUi.View {
         _sq = 0; _ox = 0; _oy = 0;
         _menuRow = 0;
         _resultHandled = false;
+        _fxOn = _loadFx();
 
         _dirsKing  = [[-1,-1],[-1,1],[1,-1],[1,1]];
         _dirsWhite = [[1,-1],[1,1]];
@@ -191,6 +197,12 @@ class BitochiCheckersView extends WatchUi.View {
     // Called once per finished game (single-player vs AI only).
     hidden function _handleGameResult() {
         _resultHandled = true;
+
+        // End-of-game feedback for every mode.
+        if (_gs == GS_WIN)       { _tone(3); _vibe(100, 250); }
+        else if (_gs == GS_LOSE) { _tone(4); _vibe(100, 350); }
+        else                     { _tone(2); _vibe(40, 120); }
+
         if (_aiVsAi || _pvp) { return; }
         submitCaptures();   // record pieces taken on EVERY outcome, win or lose
         if (_gs == GS_WIN) {
@@ -309,6 +321,7 @@ class BitochiCheckersView extends WatchUi.View {
                 _selRow = _curRow; _selCol = _curCol;
                 _validDsts = moves;
                 _curRow = moves[0][0]; _curCol = moves[0][1];
+                _tone(0); _vibe(20, 20);
             }
         } else {
             var moved = false;
@@ -321,6 +334,7 @@ class BitochiCheckersView extends WatchUi.View {
             }
             if (!moved) {
                 _selRow = -1; _selCol = -1; _validDsts = new [0];
+                _tone(2);
             }
         }
     }
@@ -470,6 +484,7 @@ class BitochiCheckersView extends WatchUi.View {
         _menuRow = 0;
         _resultHandled = false;
         _capturesSubmitted = false;
+        _fxOn = _loadFx();
         _gs = GS_PLAY;
         if (_aiVsAi) {
             _playerIsWhite = true;
@@ -512,6 +527,34 @@ class BitochiCheckersView extends WatchUi.View {
         }
     }
 
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    // kind: 0 move/select · 1 capture · 2 illegal · 3 win/king · 4 loss.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(CK_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
+
     hidden function handleCell(row, col) {
         if (!isPlayerTurn()) { return; }
         var piece = _board[row * 8 + col];
@@ -521,7 +564,7 @@ class BitochiCheckersView extends WatchUi.View {
             if (!ownPiece) { return; }
             if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
             var moves = getMovesFor(row, col, piece, _mustRow >= 0);
-            if (moves.size() > 0) { _selRow = row; _selCol = col; _validDsts = moves; }
+            if (moves.size() > 0) { _selRow = row; _selCol = col; _validDsts = moves; _tone(0); _vibe(20, 20); }
         } else {
             var moved = false;
             for (var i = 0; i < _validDsts.size(); i++) {
@@ -536,7 +579,10 @@ class BitochiCheckersView extends WatchUi.View {
                 if (ownPiece) {
                     if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
                     var moves2 = getMovesFor(row, col, piece, _mustRow >= 0);
-                    if (moves2.size() > 0) { _selRow = row; _selCol = col; _validDsts = moves2; }
+                    if (moves2.size() > 0) { _selRow = row; _selCol = col; _validDsts = moves2; _tone(0); _vibe(20, 20); }
+                    else { _tone(2); }
+                } else {
+                    _tone(2);
                 }
             }
         }
@@ -548,12 +594,17 @@ class BitochiCheckersView extends WatchUi.View {
         var capR = mv[2]; var capC = mv[3];
 
         var piece = _board[fromR * 8 + fromC];
+        var wasKing = (piece == CK_WKING || piece == CK_BKING);
         _board[toR * 8 + toC] = piece;
         _board[fromR * 8 + fromC] = CK_EMPTY;
         if (capR >= 0) { _board[capR * 8 + capC] = CK_EMPTY; _capturedByPlayer++; }
 
+        if (capR >= 0) { _tone(1); _vibe(60, 90); }   // jump/capture
+        else           { _tone(0); _vibe(25, 30); }   // slide
+
         if (piece == CK_WHITE && toR == 7) { _board[toR * 8 + toC] = CK_WKING; piece = CK_WKING; }
         if (piece == CK_BLACK && toR == 0) { _board[toR * 8 + toC] = CK_BKING; piece = CK_BKING; }
+        if (!wasKing && (piece == CK_WKING || piece == CK_BKING)) { _tone(3); _vibe(45, 80); }   // crowned
 
         _selRow = -1; _selCol = -1; _validDsts = new [0];
         _mustRow = -1; _mustCol = -1;
@@ -1054,6 +1105,9 @@ class BitochiCheckersView extends WatchUi.View {
         var toR = _aiTR[i]; var toC = _aiTC[i];
         var capR = _aiCR[i]; var capC = _aiCC[i];
         var p = _aiPc[i];
+
+        if (capR >= 0) { _tone(1); _vibe(60, 90); }   // AI jump/capture
+        else           { _tone(0); _vibe(25, 30); }   // AI slide
 
         _board[toR * 8 + toC] = p;
         _board[fromR * 8 + fromC] = CK_EMPTY;
@@ -1586,9 +1640,17 @@ class BitochiCheckersView extends WatchUi.View {
             lbl = "Must jump!";
         } else if (isPlayerTurn()) {
             if (_selRow >= 0) {
-                lbl = _validDsts.size() > 1 ? "UP/DN switch  SEL move" : "SEL to move";
+                if (_isTouch) {
+                    lbl = "Tap green square";
+                } else {
+                    lbl = _validDsts.size() > 1 ? "UP/DN switch  SEL move" : "SEL to move";
+                }
             } else {
-                lbl = _playerIsWhite ? "Light moves" : "Dark moves";
+                if (_isTouch) {
+                    lbl = "Tap a piece";
+                } else {
+                    lbl = _playerIsWhite ? "Light moves" : "Dark moves";
+                }
             }
         }
         dc.setColor(0xBB9966, Graphics.COLOR_TRANSPARENT);

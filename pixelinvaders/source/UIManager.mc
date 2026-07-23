@@ -177,14 +177,14 @@ class UIManager {
     }
 
     // ── Player cannon ──────────────────────────────────────────
-    static function drawPlayer(dc, ox, oy, cell, p) {
+    static function drawPlayer(dc, ox, oy, cell, p, col) {
         // Flash invul: hide every other frame.
         if (p.isInvulnerable() && (p.blinkTicks % 4) >= 2) { return; }
         var x = ox + (p.colFloat * cell).toNumber();
         var y = oy + PI_PLAYER_ROW * cell;
         var cx = x + cell / 2;
 
-        dc.setColor(0x55FFAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         // Base (trapezoid).
         var bw = cell - 2;
         var bh = cell / 2;
@@ -239,6 +239,14 @@ class UIManager {
             ["Wave  " + ctrl.wave.format("%d"), 0xFFFFFF],
             ["Best  " + ctrl.bestScore.format("%d"), 0xFFFFFF]
         ];
+        // Shared progression summary: rank/level + coin balance + login streak,
+        // plus a one-shot gold banner when this run crossed an unlock milestone.
+        var lvl = Progress.level();
+        lines.add(["Lv " + lvl + " " + Progress.rankName() + " - " + Progress.coins() + "c", 0xBFD8C4]);
+        lines.add(["Streak " + Progress.currentStreak(), 0x88CCAA]);
+        if (ctrl.pgUnlockMsg != null) {
+            lines.add([ctrl.pgUnlockMsg, 0xFFD24A]);
+        }
         GameOverCard.draw(dc, sw, sh, "GAME OVER", 0xFF4466, lines, "Tap = menu", 0xFF4466);
     }
 }

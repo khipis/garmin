@@ -73,6 +73,7 @@ class CollisionSystem {
 
         var fell       = !anySolid;
         var boostedNow = false;
+        var gotGem     = false;
 
         // Side effects only on the CENTRE-probe tile so a glancing
         // hover near the edge of a boost doesn't fire it.
@@ -85,14 +86,20 @@ class CollisionSystem {
                 path.setTile(ctrTX, ctrTY, SR_T_NORMAL);
                 boostedNow = true;
             }
+            // Gems are grabbed off whichever tile the ball centre is on.
+            if (path.gemAt(ctrTX, ctrTY)) {
+                path.setGem(ctrTX, ctrTY, false);
+                gotGem = true;
+            }
         }
 
-        if (_ret == null) { _ret = new [5]; }
+        if (_ret == null) { _ret = new [6]; }
         _ret[0] = fell;
         _ret[1] = ctrTile;
         _ret[2] = boostedNow;
         _ret[3] = ctrTX;
         _ret[4] = ctrTY;
+        _ret[5] = gotGem;
         return _ret;
     }
 }

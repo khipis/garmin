@@ -538,9 +538,9 @@ _Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_52_44_58_4_sto
 }
 [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc"; @line = 61; @symbol_functiondef = [buildSlotBanditMenu,61,9,28]; @symbol_return<0> = [Lang,61,34,38]; @symbol_return<1> = [Array,61,39,44]; ]
 function buildSlotBanditMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_start:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_start:
 [ "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc" 62 4 ]
-    [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 62 8 11 ];
     symbol [ MenuConfig %tmp.4 62 18 28 ];
@@ -601,7 +601,7 @@ _Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_sta
     %tmp.59 = aputv %tmp.58 %tmp.53 %tmp.54;
     %tmp.61 = const :options;
     symbol [ options %tmp.61 73 9 16 const ];
-    %tmp.62 = newa 1;
+    %tmp.62 = newa 3;
     symbol [ GmOption %tmp.66 74 16 24 ];
     %tmp.66 = getv ? :GmOption;
     symbol [ SB_ROUND_KEY %tmp.68 74 25 37 ];
@@ -621,37 +621,69 @@ _Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_sta
     %tmp.63 = newc %tmp.66 (%tmp.68, %tmp.69, %tmp.79, %tmp.80);
     %tmp.81 = dup %tmp.62;
     %tmp.82 = aputv %tmp.81 0 %tmp.63;
-    %tmp.83 = dup %tmp.59;
-    %tmp.84 = aputv %tmp.83 %tmp.61 %tmp.82;
-    %tmp.1 = newc %tmp.4 (%tmp.84);
-    lputv %cfg.1 %tmp.1;
-    symbol [ cfg %cfg.1 62 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc" 77 4 ]
-    [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_stop" ]
-    %v.2 = local;
-    symbol [ v %v.2 77 8 9 ];
-    symbol [ GameMenuView %tmp.88 77 16 28 ];
-    %tmp.88 = getv ? :GameMenuView;
-    %tmp.89 = lgetv %cfg.1;
-    symbol [ cfg %tmp.89 77 29 32 ];
-    %tmp.85 = newc %tmp.88 (%tmp.89);
-    lputv %v.2 %tmp.85;
-    symbol [ v %v.2 77 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc" 78 4 ]
+    symbol [ GmOption %tmp.86 75 16 24 ];
+    %tmp.86 = getv ? :GmOption;
+    symbol [ SB_FX_KEY %tmp.88 75 25 34 ];
+    %tmp.88 = getv ? :SB_FX_KEY;
+    %tmp.89 = "Sound & Haptics";
     %tmp.90 = newa 2;
-    %tmp.91 = lgetv %v.2;
-    symbol [ v %tmp.91 78 12 13 ];
+    %tmp.91 = "ON";
     %tmp.92 = dup %tmp.90;
     %tmp.93 = aputv %tmp.92 0 %tmp.91;
-    symbol [ GameMenuDelegate %tmp.97 78 19 35 ];
-    %tmp.97 = getv ? :GameMenuDelegate;
-    %tmp.98 = lgetv %v.2;
-    symbol [ v %tmp.98 78 36 37 ];
-    %tmp.94 = newc %tmp.97 (%tmp.98);
-    %tmp.99 = dup %tmp.93;
-    %tmp.100 = aputv %tmp.99 1 %tmp.94;
-    ret %tmp.100;
-_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_79_0_stop:
+    %tmp.94 = "OFF";
+    %tmp.95 = dup %tmp.93;
+    %tmp.96 = aputv %tmp.95 1 %tmp.94;
+    %tmp.97 = 0;
+    %tmp.83 = newc %tmp.86 (%tmp.88, %tmp.89, %tmp.96, %tmp.97);
+    %tmp.98 = dup %tmp.82;
+    %tmp.99 = aputv %tmp.98 1 %tmp.83;
+    symbol [ GmOption %tmp.103 78 16 24 ];
+    %tmp.103 = getv ? :GmOption;
+    symbol [ SB_SKIN_KEY %tmp.105 78 25 36 ];
+    %tmp.105 = getv ? :SB_SKIN_KEY;
+    %tmp.106 = "Machine";
+    %tmp.107 = newa 2;
+    %tmp.108 = "CLASSIC";
+    %tmp.109 = dup %tmp.107;
+    %tmp.110 = aputv %tmp.109 0 %tmp.108;
+    %tmp.111 = "GOLD";
+    %tmp.112 = dup %tmp.110;
+    %tmp.113 = aputv %tmp.112 1 %tmp.111;
+    %tmp.114 = 0;
+    %tmp.100 = newc %tmp.103 (%tmp.105, %tmp.106, %tmp.113, %tmp.114);
+    %tmp.115 = dup %tmp.99;
+    %tmp.116 = aputv %tmp.115 2 %tmp.100;
+    %tmp.117 = dup %tmp.59;
+    %tmp.118 = aputv %tmp.117 %tmp.61 %tmp.116;
+    %tmp.1 = newc %tmp.4 (%tmp.118);
+    lputv %cfg.1 %tmp.1;
+    symbol [ cfg %cfg.1 62 8 11 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc" 81 4 ]
+    [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_stop" ]
+    %v.2 = local;
+    symbol [ v %v.2 81 8 9 ];
+    symbol [ GameMenuView %tmp.122 81 16 28 ];
+    %tmp.122 = getv ? :GameMenuView;
+    %tmp.123 = lgetv %cfg.1;
+    symbol [ cfg %tmp.123 81 29 32 ];
+    %tmp.119 = newc %tmp.122 (%tmp.123);
+    lputv %v.2 %tmp.119;
+    symbol [ v %v.2 81 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc" 82 4 ]
+    %tmp.124 = newa 2;
+    %tmp.125 = lgetv %v.2;
+    symbol [ v %tmp.125 82 12 13 ];
+    %tmp.126 = dup %tmp.124;
+    %tmp.127 = aputv %tmp.126 0 %tmp.125;
+    symbol [ GameMenuDelegate %tmp.131 82 19 35 ];
+    %tmp.131 = getv ? :GameMenuDelegate;
+    %tmp.132 = lgetv %v.2;
+    symbol [ v %tmp.132 82 36 37 ];
+    %tmp.128 = newc %tmp.131 (%tmp.132);
+    %tmp.133 = dup %tmp.127;
+    %tmp.134 = aputv %tmp.133 1 %tmp.128;
+    ret %tmp.134;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SlotBanditMenu_mc_61_45_83_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SlotBanditMenu.mc"; @line = 8; ]
 <init> {

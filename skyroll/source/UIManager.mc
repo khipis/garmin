@@ -39,12 +39,49 @@ class UIManager {
     static function draw(dc, ctrl) {
         if (ctrl.state == SR_MENU) { _drawMenu(dc, ctrl); return; }
 
+        // Screen shake — nudge the shared centre so world + ball move
+        // together, then restore. Particles carry the same offset.
+        var shx = 0; var shy = 0;
+        if (ctrl.shake > 0) {
+            shx = (Math.rand() % 7) - 3;
+            shy = (Math.rand() % 7) - 3;
+        }
+        var ocx = ctrl.cx; var ocy = ctrl.cy;
+        ctrl.cx = ocx + shx; ctrl.cy = ocy + shy;
+
         RenderSystem.drawSky(dc, ctrl);
         RenderSystem.drawPath(dc, ctrl);
+        RenderSystem.drawSpeedLines(dc, ctrl);
         RenderSystem.drawBall(dc, ctrl);
 
+        ctrl.cx = ocx; ctrl.cy = ocy;
+        ctrl.fx.draw(dc, shx, shy);
+
+        // Near-edge danger flash — a red border pulse during the grace
+        // tick before a fall.
+        if (ctrl.warnFlash > 0 && ctrl.state == SR_PLAY) {
+            dc.setColor(0xFF3322, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth(4);
+            dc.drawRoundedRectangle(2, 2, ctrl.sw - 4, ctrl.sh - 4, 14);
+            dc.setPenWidth(1);
+        }
+
         _drawHUD(dc, ctrl);
+        if (ctrl.milestoneFlash > 0) { _drawMilestone(dc, ctrl); }
         if (ctrl.state == SR_OVER) { _drawOver(dc, ctrl); }
+    }
+
+    // Milestone banner — a gold pill in the upper-mid screen.
+    hidden static function _drawMilestone(dc, ctrl) {
+        var ccx = ctrl.cx; var y = ctrl.sh * 30 / 100;
+        var w = ctrl.sw * 52 / 100; if (w < 120) { w = 120; }
+        var x = ccx - w / 2;
+        dc.setColor(0x2A2200, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(x, y, w, 26, 8);
+        dc.setColor(0xFFE066, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(x, y, w, 26, 8);
+        dc.drawText(ccx, y + 4, Graphics.FONT_XTINY,
+                    ctrl.milestoneMsg, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── HUD ─────────────────────────────────────────────────
@@ -78,6 +115,16 @@ class UIManager {
             dc.drawText(6, sh * 84 / 100, Graphics.FONT_XTINY,
                         "BOOST", Graphics.TEXT_JUSTIFY_LEFT);
         }
+
+        // Top-left: gem counter with a little diamond icon; pops when
+        // a gem was just grabbed.
+        var gy = sh * 8 / 100; if (gy < 6) { gy = 6; }
+        var gx = 12;
+        var gcol = (ctrl.gemFlash > 0) ? 0xEAFFFF : 0x33E0FF;
+        dc.setColor(gcol, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[gx, gy], [gx + 4, gy + 5], [gx, gy + 10], [gx - 4, gy + 5]]);
+        dc.drawText(gx + 9, gy - 1, Graphics.FONT_XTINY,
+                    ctrl.gemsRun.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     // ── OVER card ───────────────────────────────────────────
@@ -93,12 +140,21 @@ class UIManager {
         dc.drawText(ccx, by + 6, Graphics.FONT_SMALL,
                     "FELL", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, by + 38, Graphics.FONT_XTINY,
+        dc.drawText(ccx, by + 34, Graphics.FONT_XTINY,
                     "Dist  " + ctrl.distance.format("%d") + " m",
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(ccx, by + 56, Graphics.FONT_XTINY,
+        dc.drawText(ccx, by + 50, Graphics.FONT_XTINY,
                     "Best  " + ctrl.bestScore.format("%d") + " m",
                     Graphics.TEXT_JUSTIFY_CENTER);
+        // Gems line with icon.
+        var gy2 = by + 68;
+        dc.setColor(0x33E0FF, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[ccx - 34, gy2 + 7], [ccx - 30, gy2 + 12],
+                        [ccx - 34, gy2 + 17], [ccx - 38, gy2 + 12]]);
+        dc.setColor(0xEAFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(ccx - 22, gy2, Graphics.FONT_XTINY,
+                    ctrl.gemsRun.format("%d") + "  (best " + ctrl.bestGems.format("%d") + ")",
+                    Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(ccx, by + bh - 16, Graphics.FONT_XTINY,
                     "tap = retry", Graphics.TEXT_JUSTIFY_CENTER);

@@ -25,7 +25,7 @@ physiology dashboard (CO2 tolerance, O2 adaptation, PB prediction, overtraining 
 
 ---
 
-## 2. Connect IQ Store listing (optimize this FIRST — it converts traffic you already get)
+## 2. Connect IQ Store listingknac te (optimize this FIRST — it converts traffic you already get)
 
 **Title:** Breath Training System
 

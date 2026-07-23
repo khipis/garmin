@@ -15,7 +15,8 @@ enum {
     GS_HIT,
     GS_RESULT,
     GS_SHOP,
-    GS_GAMEOVER
+    GS_GAMEOVER,
+    GS_SELECT
 }
 
 enum {
@@ -110,9 +111,32 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _windGust;
 
     // Difficulty from the shared OPTIONS screen (cat_diff: 0=Easy 1=Normal
-    // 2=Hard). Drives wind strength and castle/target distance, and segments
-    // the leaderboard.
+    // 2=Hard). Drives wind strength and castle/target distance.
     hidden var _diff;
+
+    // Catapult type chosen at the start of every run (cat_type: 0=Classic
+    // 1=Heavy 2=Sniper). Each plays differently and gets its OWN global
+    // leaderboard board (variant "classic"/"heavy"/"sniper").
+    hidden var _catType;
+    hidden var _pickSel;
+    hidden var _catTypeNames;
+    hidden var _catTypeDesc;
+    hidden var _catTypeColors;
+
+    // Per-type physics/feel multipliers, resolved by applyCatType().
+    hidden var _typeGravity;
+    hidden var _typeWindMul;
+    hidden var _typeDragMul;
+    hidden var _typeSpeedBonus;
+    hidden var _typeSpeedCap;
+    hidden var _typeSplMul;
+    hidden var _typeBlockDmg;
+    hidden var _typeDirectMul;
+    hidden var _typeProjSize;
+
+    // Sound & Haptics master switch (OPTIONS: cat_fx). 0/unset = ON, 1 = OFF.
+    // Gates BOTH tones and vibration, matching the drwal convention.
+    hidden var _fxOn;
 
     hidden var _shakeLeft;
     hidden var _shakeOx;
@@ -274,7 +298,90 @@ class BitochiCatapultView extends WatchUi.View {
         var cd = Application.Storage.getValue("cat_diff");
         if (cd instanceof Number && cd >= 0 && cd <= 2) { _diff = cd; }
 
+        // Catapult type — last chosen persists; picker at run start lets the
+        // player change it (and re-writes cat_type so the menu board matches).
+        _catType = 0;
+        var ct = Application.Storage.getValue("cat_type");
+        if (ct instanceof Number && ct >= 0 && ct <= 4) { _catType = ct; }
+        _pickSel = _catType;
+        // Five distinct machines — each with its own physics AND its own global
+        // leaderboard board (see _lbVariant / CatapultMenu.lbVariant).
+        _catTypeNames  = ["CLASSIC", "HEAVY", "SNIPER", "GALE", "TITAN"];
+        _catTypeDesc   = ["All-round balance", "Big blast, heavy", "Fast bolt, low wind", "Floaty, wind-wild", "Huge, wall-breaker"];
+        _catTypeColors = [0xB07840, 0x99A6B4, 0xFFCC44, 0x33DDCC, 0xE0662C];
+        applyCatType();
+
+        // Sound & Haptics: ON unless explicitly set to OFF (value 1).
+        _fxOn = true;
+        var cs2 = Application.Storage.getValue("cat_fx");
+        if (cs2 instanceof Number && cs2 == 1) { _fxOn = false; }
+
         initRound();
+    }
+
+    // Resolve the physics/feel of the currently selected catapult. Kept in one
+    // place so the picker, launch, flight, impact and drawing all agree.
+    hidden function applyCatType() {
+        if (_catType == 1) {            // HEAVY — wall-crushing bombard
+            _typeGravity    = 0.34;
+            _typeWindMul    = 0.85;
+            _typeDragMul    = 1.15;
+            _typeSpeedBonus = 0.0;
+            _typeSpeedCap   = 21.0;
+            _typeSplMul     = 1.55;
+            _typeBlockDmg   = 1;
+            _typeDirectMul  = 1.15;
+            _typeProjSize   = 1.7;
+        } else if (_catType == 2) {     // SNIPER — precision bolt thrower
+            _typeGravity    = 0.205;
+            _typeWindMul    = 0.30;
+            _typeDragMul    = 0.55;
+            _typeSpeedBonus = 2.4;
+            _typeSpeedCap   = 25.0;
+            _typeSplMul     = 0.60;
+            _typeBlockDmg   = 0;
+            _typeDirectMul  = 1.6;
+            _typeProjSize   = 0.72;
+        } else if (_catType == 3) {     // GALE — floaty storm-rider (wind is huge)
+            _typeGravity    = 0.22;
+            _typeWindMul    = 1.6;      // very wind-sensitive: high skill / reward
+            _typeDragMul    = 0.70;
+            _typeSpeedBonus = 1.4;
+            _typeSpeedCap   = 24.0;
+            _typeSplMul     = 0.90;
+            _typeBlockDmg   = 0;
+            _typeDirectMul  = 1.25;
+            _typeProjSize   = 0.85;
+        } else if (_catType == 4) {     // TITAN — colossal siege boulder
+            _typeGravity    = 0.40;     // very heavy arc
+            _typeWindMul    = 0.55;     // shrugs off wind
+            _typeDragMul    = 1.30;
+            _typeSpeedBonus = 0.0;
+            _typeSpeedCap   = 19.0;     // slow, ponderous
+            _typeSplMul     = 1.95;     // biggest blast of all
+            _typeBlockDmg   = 1;        // smashes through walls
+            _typeDirectMul  = 1.0;
+            _typeProjSize   = 2.1;      // enormous projectile
+        } else {                        // CLASSIC — balanced trebuchet
+            _typeGravity    = 0.28;
+            _typeWindMul    = 1.0;
+            _typeDragMul    = 1.0;
+            _typeSpeedBonus = 0.0;
+            _typeSpeedCap   = 21.0;
+            _typeSplMul     = 1.0;
+            _typeBlockDmg   = 0;
+            _typeDirectMul  = 1.0;
+            _typeProjSize   = 1.0;
+        }
+    }
+
+    hidden function doTone(t) as Void {
+        if (!_fxOn) { return; }
+        if (Toybox has :Attention) {
+            if (Toybox.Attention has :playTone) {
+                try { Toybox.Attention.playTone(t); } catch (e) {}
+            }
+        }
     }
 
     hidden function initRound() {
@@ -488,8 +595,8 @@ class BitochiCatapultView extends WatchUi.View {
         // post-game card (or later rounds' scout screen) is left untouched.
         if (gameState == GS_READY && !_autoStarted) {
             _autoStarted = true;
-            gameState = GS_PREVIEW;
-            _previewTick = 0;
+            _pickSel = _catType;
+            gameState = GS_SELECT;
         }
     }
 
@@ -571,11 +678,13 @@ class BitochiCatapultView extends WatchUi.View {
                     _gold += _roundGold;
                     gameState = GS_RESULT;
                     _resultTick = 0;
+                    doTone(Toybox.Attention.TONE_SUCCESS);
                 } else if (_shots <= 0) {
                     _roundGold = 10 + _round * 5;
                     _gold += _roundGold;
                     gameState = GS_RESULT;
                     _resultTick = 0;
+                    doTone(Toybox.Attention.TONE_FAILURE);
                 } else {
                     resetShot();
                     gameState = GS_ANGLE;
@@ -681,11 +790,12 @@ class BitochiCatapultView extends WatchUi.View {
         var speed = Math.sqrt(_vx * _vx + _vy * _vy);
         var dragCoeff = 0.0004 + _round.toFloat() * 0.00003;
         if (dragCoeff > 0.001) { dragCoeff = 0.001; }
+        dragCoeff = dragCoeff * _typeDragMul;
         var dragX = -dragCoeff * _vx * speed;
         var dragY = -dragCoeff * _vy * speed;
 
-        _vx += _wind + _windGust + dragX;
-        _vy += 0.28 + dragY;
+        _vx += _wind * _typeWindMul + _windGust + dragX;
+        _vy += _typeGravity + dragY;
 
         // Homing Shot — gentle in-flight course correction toward the boss.
         // Not a full auto-aim: still needs a roughly-right angle/power, but
@@ -733,6 +843,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var dmg = (speed * 18.0).toNumber();
                 if (dmg < 20) { dmg = 20; }
                 dmg = dmg * 2;
+                dmg = (dmg.toFloat() * _typeDirectMul).toNumber();
                 _enemyHp -= dmg;
                 _hitEnemyDirect = true;
                 _critHit = true;
@@ -796,7 +907,7 @@ class BitochiCatapultView extends WatchUi.View {
         else if (_activePow == PW_ICE) { splMul = 1.3; }
         else if (_activePow == PW_CLUSTER) { splMul = 1.2; }
         else if (_activePow == PW_TRIPLE) { splMul = 0.75; }
-        var splR = _bw.toFloat() * 3.5 * splMul;
+        var splR = _bw.toFloat() * 3.5 * splMul * _typeSplMul;
         var bwf = _bw.toFloat();
         var hitSomething = _hitEnemyDirect;
         _chainLimit = 15;
@@ -812,6 +923,7 @@ class BitochiCatapultView extends WatchUi.View {
                 else if (_activePow == PW_FIRE) { dmgToBlock = 2; }
                 else if (_activePow == PW_CLUSTER) { dmgToBlock = 2; }
                 else if (_activePow == PW_ICE) { dmgToBlock = 5; } // shatters instantly
+                else { dmgToBlock += _typeBlockDmg; } // Heavy crushes walls harder
                 _bhp[i] -= dmgToBlock;
                 if (_bhp[i] < 0) { _bhp[i] = 0; }
                 hitSomething = true;
@@ -890,6 +1002,7 @@ class BitochiCatapultView extends WatchUi.View {
         var vibDur = _critHit ? 250 : 150;
         if (_activePow == PW_MEGA || _activePow == PW_CLUSTER) { vibInt = 75; vibDur = 300; }
         doVibe(vibInt, vibDur);
+        if (_critHit) { doTone(Toybox.Attention.TONE_LOUD_BEEP); }
 
         if (_activePow != PW_NONE) {
             for (var qi = 0; qi < _powQueueLen - 1; qi++) {
@@ -1022,6 +1135,7 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     hidden function doVibe(intensity, duration) {
+        if (!_fxOn) { return; }
         if (Toybox has :Attention) {
             if (Toybox.Attention has :vibrate) {
                 Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
@@ -1029,14 +1143,15 @@ class BitochiCatapultView extends WatchUi.View {
         }
     }
 
-    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
-    hidden function _diffVariant() {
-        return ["easy", "normal", "hard"][_diff];
+    // Leaderboard variant = the chosen catapult, so each machine (Classic /
+    // Heavy / Sniper / Gale / Titan) ranks on its own global board.
+    hidden function _lbVariant() {
+        return ["classic", "heavy", "sniper", "gale", "titan"][_catType];
     }
 
-    // Open the shared global leaderboard for catapult (per-difficulty board).
+    // Open the shared global leaderboard for catapult (per-catapult board).
     function openLeaderboard() {
-        var v = new LbScoresView("catapult", _diffVariant(), "CATAPULT");
+        var v = new LbScoresView("catapult", _lbVariant(), "CATAPULT");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -1047,10 +1162,10 @@ class BitochiCatapultView extends WatchUi.View {
     // brutal damage haul both earn their own bragging rights.
     hidden function toGameOver() {
         if (!_scoreSubmitted) {
-            Leaderboard.submitScore("catapult", _score, _diffVariant());
+            Leaderboard.submitScore("catapult", _score, _lbVariant());
             if (_matchDamage > 0) { Leaderboard.submitScore("catapult", _matchDamage, "damage"); }
             if (_matchShotsFired > 0) { Leaderboard.submitScore("catapult", _matchShotsFired, "shots"); }
-            Leaderboard.showPostGame("catapult", _diffVariant(), "CATAPULT");
+            Leaderboard.showPostGame("catapult", _lbVariant(), "CATAPULT");
             _scoreSubmitted = true;
         }
         gameState = GS_GAMEOVER;
@@ -1058,7 +1173,14 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     function doAction() {
-        if (gameState == GS_READY) {
+        if (gameState == GS_SELECT) {
+            _catType = _pickSel;
+            try { Application.Storage.setValue("cat_type", _catType); } catch (e) {}
+            applyCatType();
+            doTone(Toybox.Attention.TONE_START);
+            gameState = GS_PREVIEW;
+            _previewTick = 0;
+        } else if (gameState == GS_READY) {
             if (_readySel == 1) {
                 openLeaderboard();
             } else {
@@ -1099,11 +1221,17 @@ class BitochiCatapultView extends WatchUi.View {
             _matchDamage = 0;
             _matchShotsFired = 0;
             initRound();
+            // A restart is a fresh run — let the player pick a catapult again.
+            _pickSel = _catType;
+            gameState = GS_SELECT;
         }
     }
 
     function doUp() {
-        if (gameState == GS_SHOP) {
+        if (gameState == GS_SELECT) {
+            var n = _catTypeNames.size();
+            _pickSel = (_pickSel + n - 1) % n;
+        } else if (gameState == GS_SHOP) {
             _shopSel--;
             if (_shopSel < 0) { _shopSel = _shopNames.size(); }
         } else if (gameState == GS_READY) {
@@ -1114,7 +1242,9 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     function doDown() {
-        if (gameState == GS_SHOP) {
+        if (gameState == GS_SELECT) {
+            _pickSel = (_pickSel + 1) % _catTypeNames.size();
+        } else if (gameState == GS_SHOP) {
             _shopSel++;
             if (_shopSel > _shopNames.size()) { _shopSel = 0; }
         } else if (gameState == GS_READY) {
@@ -1186,6 +1316,8 @@ class BitochiCatapultView extends WatchUi.View {
         } else if (curPow == PW_ICE) {
             _projColor = 0xAAEEFF;
         }
+
+        doTone(Toybox.Attention.TONE_KEY);
     }
 
     function onUpdate(dc) {
@@ -1195,6 +1327,7 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(0x0A0A1A, 0x0A0A1A);
         dc.clear();
 
+        if (gameState == GS_SELECT) { drawSelect(dc, _w, _h); return; }
         if (gameState == GS_READY) { drawReady(dc, _w, _h); return; }
         if (gameState == GS_GAMEOVER) { drawGameOver(dc, _w, _h); return; }
         if (gameState == GS_RESULT) { drawResult(dc, _w, _h); return; }
@@ -2151,16 +2284,45 @@ class BitochiCatapultView extends WatchUi.View {
         var tipX = csx + (armLen.toFloat() * Math.cos(rad)).toNumber();
         var tipY = csy - suppH + (-(armLen.toFloat()) * Math.sin(rad)).toNumber();
 
+        var armC;
+        if      (_catType == 1) { armC = 0x778088; }   // HEAVY  — steel grey
+        else if (_catType == 2) { armC = 0x9A7A28; }   // SNIPER — brass bolt
+        else if (_catType == 3) { armC = 0x2E8F84; }   // GALE   — teal composite
+        else if (_catType == 4) { armC = 0x8A4A2A; }   // TITAN  — burnt iron
+        else                    { armC = 0x886644; }   // CLASSIC
+        var armHi = _catTypeColors[_catType];
+
+        // TITAN/HEAVY get a chunky counterweight behind the pivot so their
+        // silhouette reads as a wall-breaker even before firing.
+        if (_catType == 1 || _catType == 4) {
+            var cwSize = (_catType == 4) ? 8 : 6;
+            dc.setColor(0x3A3A3A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(csx - cwSize - 3, csy - suppH - 2, cwSize, cwSize + 2);
+            dc.setColor(0x5A5A5A, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(csx - cwSize - 3, csy - suppH - 2, cwSize, cwSize + 2);
+        }
+
         dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(4);
+        dc.setPenWidth((_catType == 4) ? 5 : 4);       // TITAN arm is thicker
         dc.drawLine(csx, csy - suppH, tipX, tipY);
         dc.setPenWidth(1);
-        dc.setColor(0x886644, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(2);
+        dc.setColor(armC, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth((_catType == 2) ? 1 : 2);       // SNIPER arm is thin
         dc.drawLine(csx, csy - suppH, tipX, tipY);
         dc.setPenWidth(1);
-        dc.setColor(0xAA8866, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(armHi, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(csx + 1, csy - suppH + 1, tipX + 1, tipY + 1);
+
+        // GALE trails little wind streaks off the arm tip.
+        if (_catType == 3) {
+            dc.setColor(0x88F0E0, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(tipX + 3, tipY - 5, tipX + 8, tipY - 6);
+            dc.drawLine(tipX + 3, tipY - 1, tipX + 8, tipY - 2);
+        }
+
+        // Small type banner on the support post so the chosen machine reads at a glance.
+        dc.setColor(armHi, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(csx + 2, csy - suppH - 5, 5, 4);
 
         dc.setColor(0x775533, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(csx, csy - suppH, 4);
@@ -2175,10 +2337,12 @@ class BitochiCatapultView extends WatchUi.View {
             dc.setColor(0x664433, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(tipX - 3, tipY - 1, 6, 3);
 
+            var br = (4.0 * _typeProjSize).toNumber();
+            if (br < 2) { br = 2; }
             dc.setColor(_projColor, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(tipX, tipY - 5, 4);
+            dc.fillCircle(tipX, tipY - 5, br);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(tipX - 1, tipY - 7, 2, 1);
+            dc.fillRectangle(tipX - 1, tipY - 5 - br, 2, 1);
         }
     }
 
@@ -2297,12 +2461,124 @@ class BitochiCatapultView extends WatchUi.View {
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
+    // Draw a tiny catapult glyph in the given tint — used on the chooser rows.
+    // Each machine type gets its own silhouette so the five options read apart
+    // at a glance.
+    hidden function drawCatIcon(dc, cx, cy, tint, type) {
+        // Shared sled + wheels.
+        dc.setColor(0x3A2A1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - 7, cy + 3, 14, 3);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - 5, cy + 6, 2);
+        dc.fillCircle(cx + 5, cy + 6, 2);
+
+        if (type == 2) {                 // SNIPER — long low barrel + scope
+            dc.setColor(tint, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth(2);
+            dc.drawLine(cx - 6, cy - 1, cx + 8, cy - 4);
+            dc.setPenWidth(1);
+            dc.fillCircle(cx + 8, cy - 4, 1);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - 2, cy - 5, cx, cy - 3);
+            return;
+        }
+        if (type == 4) {                 // TITAN — bulky body + big boulder
+            dc.setColor(0x4A3620, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 6, cy - 3, 8, 6);
+            dc.setColor(tint, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth(3);
+            dc.drawLine(cx - 2, cy, cx + 4, cy - 7);
+            dc.setPenWidth(1);
+            dc.fillCircle(cx + 6, cy - 8, 3);
+            return;
+        }
+
+        // Tall-arm machines (classic / heavy / gale).
+        dc.setColor(tint, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(2);
+        dc.drawLine(cx - 4, cy + 3, cx + 6, cy - 6);
+        dc.setPenWidth(1);
+        if (type == 1) {                 // HEAVY — counterweight + bigger ball
+            dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 8, cy - 3, 4, 5);
+            dc.setColor(tint, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx + 6, cy - 6, 3);
+        } else if (type == 3) {          // GALE — light ball + wind streaks
+            dc.fillCircle(cx + 6, cy - 6, 2);
+            dc.setColor(0x88F0E0, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx + 8, cy - 8, cx + 11, cy - 9);
+            dc.drawLine(cx + 8, cy - 5, cx + 11, cy - 6);
+        } else {                         // CLASSIC
+            dc.fillCircle(cx + 6, cy - 6, 2);
+        }
+    }
+
+    // Start-of-run catapult chooser — three distinct machines, each with its
+    // own physics AND its own global leaderboard board.
+    hidden function drawSelect(dc, w, h) {
+        dc.setColor(0x0A1428, 0x0A1428);
+        dc.clear();
+
+        var n = _catTypeNames.size();
+
+        // Compact title so all five machines fit without crowding.
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 4 / 100, Graphics.FONT_XTINY, "CHOOSE CATAPULT", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
+
+        // Rows carry ONLY the machine name (short — CLASSIC/HEAVY/…), vertically
+        // centred using the real font height so lines can never overlap. The
+        // highlighted machine's description gets its own line below the list.
+        // Layout is ~10% narrower than before so text clears the round bezel.
+        var topZone = h * 14 / 100;
+        var botZone = h * 82 / 100;
+        var avail   = botZone - topZone;
+        var gap     = h * 2 / 100; if (gap < 3) { gap = 3; }
+        var rowH    = (avail - gap * (n - 1)) / n;
+        var minRowH = fhX + 3;
+        if (rowH < minRowH) { rowH = minRowH; }
+        if (rowH > 30) { rowH = 30; }
+        var rowW = w * 72 / 100; if (rowW > w - 12) { rowW = w - 12; }
+        var rowX = (w - rowW) / 2;
+        var used  = rowH * n + gap * (n - 1);
+        var startY = topZone + (avail - used) / 2;
+        if (startY < topZone) { startY = topZone; }
+
+        for (var i = 0; i < n; i++) {
+            var ry = startY + i * (rowH + gap);
+            var sel = (_pickSel == i);
+            var tint = _catTypeColors[i];
+            dc.setColor(sel ? 0x14263E : 0x0E1A2C, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? tint : 0x2A3A4E, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+
+            drawCatIcon(dc, rowX + 15, ry + rowH / 2, tint, i);
+
+            dc.setColor(sel ? tint : 0xBBCCDD, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(rowX + 30, ry + rowH / 2, Graphics.FONT_XTINY, _catTypeNames[i],
+                        Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
+
+        // Description of the highlighted machine — own line, no overlap.
+        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, _catTypeDesc[_pickSel],
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 95 / 100, Graphics.FONT_XTINY, "UP/DN pick   SEL go",
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
     hidden function drawReady(dc, w, h) {
         dc.setColor(_skyC1, _skyC1);
         dc.clear();
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 9 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(_catTypeColors[_catType], Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 2 / 100, Graphics.FONT_XTINY, _catTypeNames[_catType], Graphics.TEXT_JUSTIFY_CENTER);
 
         var r = w * 10 / 100;
         if (r < 10) { r = 10; }
@@ -2390,16 +2666,25 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(0x0A0A18, 0x0A0A18);
         dc.clear();
 
+        var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
+
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 3 / 100, Graphics.FONT_SMALL, "SHOP", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 4 / 100, Graphics.FONT_SMALL, "SHOP", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_XTINY, "Gold: " + _gold, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 15 / 100, Graphics.FONT_XTINY, "Gold: " + _gold, Graphics.TEXT_JUSTIFY_CENTER);
 
         var numItems = _shopNames.size();
         var totalRows = numItems + 1; // +1 "NEXT ROUND" row, part of the scroll
-        var visibleRows = 6;
-        var startY = h * 20 / 100;
-        var rowH = h * 9 / 100;
+        // Fewer, taller rows so a full XTINY line always fits inside its row and
+        // adjacent items never overlap. Text is vertically centred by real font
+        // height and the box is pulled ~10% in from the bezel.
+        var visibleRows = 5;
+        var startY = h * 19 / 100;
+        var rowH = h * 10 / 100;
+        var minRowH = fhX + 4;
+        if (rowH < minRowH) { rowH = minRowH; }
+        var boxX = w * 10 / 100;
+        var boxW = w * 80 / 100;
 
         var maxScroll = totalRows - visibleRows;
         if (maxScroll < 0) { maxScroll = 0; }
@@ -2411,47 +2696,53 @@ class BitochiCatapultView extends WatchUi.View {
             var idx = scroll + vi;
             if (idx >= totalRows) { break; }
             var iy = startY + vi * rowH;
+            var midY = iy + rowH / 2;
             var sel = (idx == _shopSel);
 
             if (idx >= numItems) {
                 if (sel) {
                     dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                    dc.fillRoundedRectangle(boxX, iy + 1, boxW, rowH - 2, 4);
                     dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-                    dc.drawRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                    dc.drawRoundedRectangle(boxX, iy + 1, boxW, rowH - 2, 4);
                 }
                 dc.setColor(sel ? 0x44FF88 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(w / 2, iy + 1, Graphics.FONT_XTINY, "NEXT ROUND >>", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(w / 2, midY, Graphics.FONT_XTINY, "NEXT ROUND >>",
+                            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                 continue;
             }
 
             var afford = (_gold >= _shopCosts[idx]);
             if (sel) {
-                var selC = afford ? 0x1A2A3A : 0x2A1A1A;
-                dc.setColor(selC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                dc.setColor(afford ? 0x1A2A3A : 0x2A1A1A, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(boxX, iy + 1, boxW, rowH - 2, 4);
                 dc.setColor(afford ? 0x44AAFF : 0x664444, Graphics.COLOR_TRANSPARENT);
-                dc.drawRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                dc.drawRoundedRectangle(boxX, iy + 1, boxW, rowH - 2, 4);
             }
 
             var nameC = afford ? 0xDDEEFF : 0x555555;
             if (sel && afford) { nameC = 0xFFFFFF; }
             dc.setColor(nameC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w * 10 / 100, iy + 1, Graphics.FONT_XTINY, _shopNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(boxX + 8, midY, Graphics.FONT_XTINY, _shopNames[idx],
+                        Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
             var costC = afford ? 0xFFDD44 : 0x554422;
             dc.setColor(costC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w * 90 / 100, iy + 1, Graphics.FONT_XTINY, "" + _shopCosts[idx], Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(boxX + boxW - 8, midY, Graphics.FONT_XTINY, "" + _shopCosts[idx],
+                        Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
+        var listBot = startY + visibleRows * rowH;
         dc.setColor(0x6688AA, Graphics.COLOR_TRANSPARENT);
-        if (scroll > 0) { dc.drawText(w * 97 / 100, startY - 9, Graphics.FONT_XTINY, "^", Graphics.TEXT_JUSTIFY_CENTER); }
-        if (scroll < maxScroll) { dc.drawText(w * 97 / 100, startY + visibleRows * rowH + 1, Graphics.FONT_XTINY, "v", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (scroll > 0)         { dc.drawText(w * 92 / 100, startY + 2,       Graphics.FONT_XTINY, "^", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (scroll < maxScroll) { dc.drawText(w * 92 / 100, listBot - fhX,    Graphics.FONT_XTINY, "v", Graphics.TEXT_JUSTIFY_CENTER); }
 
-        var belowY = startY + visibleRows * rowH + 6;
+        // Highlighted item's description on its own line, spaced by font height.
+        var descY = listBot + 4 + fhX / 2;
         if (_shopSel < numItems) {
-            dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, belowY, Graphics.FONT_XTINY, _shopDesc[_shopSel], Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, descY, Graphics.FONT_XTINY, _shopDesc[_shopSel],
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
         if (_powQueueLen > 0) {
@@ -2469,11 +2760,13 @@ class BitochiCatapultView extends WatchUi.View {
                 else if (_powQueue[qi] == PW_ICE) { pn = "Fr"; }
                 qstr += pn;
             }
-            dc.drawText(w / 2, belowY + rowH, Graphics.FONT_XTINY, qstr, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, descY + fhX, Graphics.FONT_XTINY, qstr,
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "Tap:buy Scroll:next", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "SEL buy  UP/DN move",
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     hidden function drawGameOver(dc, w, h) {

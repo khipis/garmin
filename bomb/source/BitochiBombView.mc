@@ -15,6 +15,17 @@ enum {
 
 const BOMB_LB_GAME_ID = "bomb";
 
+// ── Weapon arsenal ──────────────────────────────────────────────────────────
+// The player cycles the loadout with UP/DOWN and drops with SELECT/tap. The
+// classic gravity BOMB is unlimited (bounded by the wave bomb budget); the
+// specials carry their own per-wave ammo and each detonates differently.
+const WP_BOMB    = 0;   // classic iron bomb — single blast
+const WP_COOKIE  = 1;   // giant cookie bomb — huge blast + choc-chip shrapnel
+const WP_CLUSTER = 2;   // splits into a spread of three ground blasts
+const WP_NAPALM  = 3;   // wide wall of fire along the ground
+const WP_MISSILE = 4;   // fast heavy warhead — deep crater, big punch
+const WP_COUNT   = 5;
+
 class BitochiBombView extends WatchUi.View {
 
     var accelX;
@@ -38,8 +49,15 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bombVx;
     hidden var _bombVy;
     hidden var _bombAlive;
+    hidden var _bombType;     // per-active-bomb weapon id (WP_*)
+    hidden var _bombSplit;    // cluster: 0 = not yet split, 1 = already split
     hidden var _bombTrailX;
     hidden var _bombTrailY;
+
+    // Weapon loadout state.
+    hidden var _weapon;       // currently selected WP_* id
+    hidden var _wAmmo;        // per-weapon ammo (WP_BOMB slot unused/large)
+    hidden var _wNames;
 
     hidden const MAX_ENEMIES = 10;
     hidden var _enemX;
@@ -155,13 +173,21 @@ class BitochiBombView extends WatchUi.View {
         _bombVx = new [MAX_BOMBS];
         _bombVy = new [MAX_BOMBS];
         _bombAlive = new [MAX_BOMBS];
+        _bombType = new [MAX_BOMBS];
+        _bombSplit = new [MAX_BOMBS];
         _bombTrailX = new [MAX_BOMBS * 6];
         _bombTrailY = new [MAX_BOMBS * 6];
         for (var i = 0; i < MAX_BOMBS; i++) {
             _bombAlive[i] = false;
             _bombX[i] = 0.0; _bombY[i] = 0.0;
             _bombVx[i] = 0.0; _bombVy[i] = 0.0;
+            _bombType[i] = WP_BOMB; _bombSplit[i] = 0;
         }
+
+        _weapon = WP_BOMB;
+        _wAmmo = new [WP_COUNT];
+        for (var i = 0; i < WP_COUNT; i++) { _wAmmo[i] = 0; }
+        _wNames = ["BOMB", "COOKIE", "CLUSTER", "NAPALM", "MISSILE"];
         for (var i = 0; i < MAX_BOMBS * 6; i++) {
             _bombTrailX[i] = 0.0; _bombTrailY[i] = 0.0;
         }
@@ -288,7 +314,7 @@ class BitochiBombView extends WatchUi.View {
                 _airstrikeTimer++;
                 if (_airstrikeTimer % 80 == 0) {
                     var ax = Math.rand().abs() % _w;
-                    doExplosion(ax, _groundY, 1);
+                    doExplosion(ax, _groundY, 1, 1.0);
                 }
             }
             updatePlane();
@@ -329,6 +355,7 @@ class BitochiBombView extends WatchUi.View {
     hidden function updateBombs() {
         for (var i = 0; i < MAX_BOMBS; i++) {
             if (!_bombAlive[i]) { continue; }
+            var wt = _bombType[i];
             var base = i * 6;
             for (var t = 5; t > 0; t--) {
                 _bombTrailX[base + t] = _bombTrailX[base + t - 1];
@@ -336,8 +363,13 @@ class BitochiBombView extends WatchUi.View {
             }
             _bombTrailX[base] = _bombX[i];
             _bombTrailY[base] = _bombY[i];
-            _bombVy[i] += 0.38;
-            _bombVx[i] += _wind * 0.035;
+
+            var grav = 0.38;
+            var windMul = 0.035;
+            if (wt == WP_MISSILE) { grav = 0.55; windMul = 0.010; }
+            else if (wt == WP_COOKIE) { grav = 0.30; }
+            _bombVy[i] += grav;
+            _bombVx[i] += _wind * windMul;
             _bombX[i] += _bombVx[i];
             _bombY[i] += _bombVy[i];
 
@@ -347,15 +379,52 @@ class BitochiBombView extends WatchUi.View {
                 var bTop = _groundY - _bldgH[b];
                 if (_bombY[i] >= bTop.toFloat() && _bombX[i] > (_bldgX[b] - _bldgW[b] / 2).toFloat() && _bombX[i] < (_bldgX[b] + _bldgW[b] / 2).toFloat()) {
                     _bombAlive[i] = false;
-                    hitBuilding(b, _bombX[i].toNumber(), bTop);
+                    detonateWeapon(wt, _bombX[i].toNumber(), bTop, b);
                     hit = true;
                     break;
                 }
             }
             if (!hit && _bombY[i] >= _groundY.toFloat()) {
                 _bombAlive[i] = false;
-                doExplosion(_bombX[i].toNumber(), _groundY, 0);
+                detonateWeapon(wt, _bombX[i].toNumber(), _groundY, -1);
             }
+        }
+    }
+
+    // Route a bomb impact to the right detonation for its weapon type. bldgIdx
+    // is the struck building (or -1 for a ground hit).
+    hidden function detonateWeapon(wt, x, y, bldgIdx) {
+        if (wt == WP_COOKIE) {
+            doExplosion(x, y, 0, 1.9);
+            spawnCookieBits(x, y);
+            _hitMsg = "COOKIE!"; _hitMsgTick = 26;
+        } else if (wt == WP_CLUSTER) {
+            doExplosion(x, y, 0, 0.75);
+            doExplosion(x - 28, _groundY, 0, 0.7);
+            doExplosion(x + 28, _groundY, 0, 0.7);
+            _hitMsg = "CLUSTER!"; _hitMsgTick = 24;
+        } else if (wt == WP_NAPALM) {
+            var offs = [-44, -22, 0, 22, 44];
+            for (var k = 0; k < 5; k++) {
+                doExplosion(x + offs[k], _groundY, 0, 0.6);
+            }
+            spawnFireParticles(x, _groundY - 4, 3);
+            spawnFireParticles(x - 30, _groundY - 4, 2);
+            spawnFireParticles(x + 30, _groundY - 4, 2);
+            _hitMsg = "FIRESTORM!"; _hitMsgTick = 26;
+        } else if (wt == WP_MISSILE) {
+            doExplosion(x, y, 0, 1.55);
+            _shakeTimer = 26;
+            for (var c = 0; c < MAX_CRATERS; c++) {
+                if (_craterLife[c] > 0) { continue; }
+                _craterX[c] = x; _craterR[c] = 18; _craterLife[c] = 560;
+                break;
+            }
+            _hitMsg = "DIRECT HIT!"; _hitMsgTick = 24;
+        } else {
+            // Classic bomb: keep the satisfying direct-hit bonus on buildings.
+            if (bldgIdx >= 0) { hitBuilding(bldgIdx, x, y); }
+            else { doExplosion(x, _groundY, 0, 1.0); }
         }
     }
 
@@ -554,6 +623,14 @@ class BitochiBombView extends WatchUi.View {
         _planeDir = 1;
         _lbHandled = false;
 
+        // Restock the special arsenal for the wave (scales gently with progress).
+        _weapon = WP_BOMB;
+        _wAmmo[WP_BOMB]    = 9999;
+        _wAmmo[WP_COOKIE]  = 3 + _wave / 3;   if (_wAmmo[WP_COOKIE]  > 8) { _wAmmo[WP_COOKIE]  = 8; }
+        _wAmmo[WP_CLUSTER] = 2 + _wave / 4;   if (_wAmmo[WP_CLUSTER] > 6) { _wAmmo[WP_CLUSTER] = 6; }
+        _wAmmo[WP_NAPALM]  = 2 + _wave / 4;   if (_wAmmo[WP_NAPALM]  > 6) { _wAmmo[WP_NAPALM]  = 6; }
+        _wAmmo[WP_MISSILE] = 2 + _wave / 5;   if (_wAmmo[WP_MISSILE] > 5) { _wAmmo[WP_MISSILE] = 5; }
+
         spawnBuildings();
         gameState = GS_PLAY;
     }
@@ -606,9 +683,34 @@ class BitochiBombView extends WatchUi.View {
     // gameState == GS_MENU; other states just drop a bomb like every other
     // button, preserving the original one-button-does-it-all gameplay.
     function navigate(dir) {
-        if (gameState != GS_MENU) { doAction(); return; }
-        _menuSel = (_menuSel + dir + 2) % 2;
-        doVibe(15, 30);
+        if (gameState == GS_MENU) {
+            _menuSel = (_menuSel + dir + 2) % 2;
+            doVibe(15, 30);
+            return;
+        }
+        if (gameState == GS_PLAY) {
+            cycleWeapon(dir);
+            return;
+        }
+        // Between waves / game over: any nav still advances like a tap.
+        doAction();
+    }
+
+    // Cycle the loadout to the next weapon that still has ammo (BOMB is always
+    // available). UP/DOWN both work; direction just controls scan order.
+    hidden function cycleWeapon(dir) {
+        var step = (dir < 0) ? (WP_COUNT - 1) : 1;
+        var w = _weapon;
+        for (var n = 0; n < WP_COUNT; n++) {
+            w = (w + step) % WP_COUNT;
+            if (w == WP_BOMB || _wAmmo[w] > 0) {
+                _weapon = w;
+                _hitMsg = _wNames[w];
+                _hitMsgTick = 20;
+                doVibe(18, 30);
+                return;
+            }
+        }
     }
 
     function doAction() {
@@ -635,17 +737,30 @@ class BitochiBombView extends WatchUi.View {
 
     hidden function dropBomb() {
         if (_bombsLeft <= 0) { return; }
+        var w = _weapon;
+        // Out of ammo for a special → fall back to the classic bomb this drop.
+        if (w != WP_BOMB && _wAmmo[w] <= 0) { w = WP_BOMB; }
+
         for (var i = 0; i < MAX_BOMBS; i++) {
             if (_bombAlive[i]) { continue; }
             _bombX[i] = _planeX;
             _bombY[i] = (_planeY + 6).toFloat();
             _bombVx[i] = _planeDir.toFloat() * _planeSpeed * 0.3 + _wind * 0.3;
-            _bombVy[i] = 1.4;
+            // Missile drops fast and true; cookie floats down heavy and slow.
+            if (w == WP_MISSILE) { _bombVy[i] = 4.6; _bombVx[i] = _bombVx[i] * 0.4; }
+            else if (w == WP_COOKIE) { _bombVy[i] = 1.0; }
+            else { _bombVy[i] = 1.4; }
             _bombAlive[i] = true;
+            _bombType[i] = w;
+            _bombSplit[i] = 0;
             var base = i * 6;
             for (var t = 0; t < 6; t++) { _bombTrailX[base + t] = _bombX[i]; _bombTrailY[base + t] = _bombY[i]; }
             _bombsLeft--;
-            doVibe(25, 30);
+            if (w != WP_BOMB) {
+                _wAmmo[w]--;
+                if (_wAmmo[w] <= 0) { _weapon = WP_BOMB; }   // auto-swap when empty
+            }
+            doVibe((w == WP_MISSILE) ? 45 : 25, 30);
             break;
         }
     }
@@ -742,8 +857,9 @@ class BitochiBombView extends WatchUi.View {
         }
     }
 
-    hidden function doExplosion(ex, ey, chainLevel) {
+    hidden function doExplosion(ex, ey, chainLevel, scale) {
         _shakeTimer = 12 + chainLevel * 8;
+        if (scale >= 1.5) { _shakeTimer += 8; }
         _chainCount = chainLevel;
         if (_chainCount > _chainMax) { _chainMax = _chainCount; }
         doVibe(80 + chainLevel * 40, 180 + chainLevel * 80);
@@ -752,7 +868,7 @@ class BitochiBombView extends WatchUi.View {
             if (_explLife[i] > 0) { continue; }
             _explX[i] = ex;
             _explY[i] = ey;
-            _explR[i] = 12.0 + chainLevel.toFloat() * 6.0;
+            _explR[i] = (12.0 + chainLevel.toFloat() * 6.0) * scale;
             _explLife[i] = 24 + chainLevel * 6;
             _explMax[i] = _explLife[i];
             break;
@@ -765,7 +881,7 @@ class BitochiBombView extends WatchUi.View {
                 if (_explLife[i] > 0) { continue; }
                 _explX[i] = ex + offX;
                 _explY[i] = ey + offY;
-                _explR[i] = 6.0 + chainLevel.toFloat() * 3.0;
+                _explR[i] = (6.0 + chainLevel.toFloat() * 3.0) * scale;
                 _explLife[i] = 16 + chainLevel * 4;
                 _explMax[i] = _explLife[i];
                 break;
@@ -775,12 +891,14 @@ class BitochiBombView extends WatchUi.View {
         for (var i = 0; i < MAX_CRATERS; i++) {
             if (_craterLife[i] > 0) { continue; }
             _craterX[i] = ex;
-            _craterR[i] = 10 + chainLevel * 5;
+            _craterR[i] = (((10 + chainLevel * 5)).toFloat() * scale).toNumber();
             _craterLife[i] = 500;
             break;
         }
 
-        spawnFireParticles(ex, ey, chainLevel + 1);
+        var fireN = chainLevel + 1;
+        if (scale >= 1.4) { fireN += 1; }
+        spawnFireParticles(ex, ey, fireN);
         spawnGroundDebris(ex);
         spawnDirtEruption(ex, ey);
         spawnDirtEruption(ex + ((Math.rand().abs() % 10) - 5), ey);
@@ -792,21 +910,25 @@ class BitochiBombView extends WatchUi.View {
             var dx = ex - _enemX[j].toNumber();
             var dy = ey - _enemY[j];
             var dist = Math.sqrt((dx * dx + dy * dy).toFloat());
-            var hitR = 26.0 + chainLevel.toFloat() * 7.0 + _enemSize[j].toFloat();
+            var hitR = (26.0 + chainLevel.toFloat() * 7.0) * scale + _enemSize[j].toFloat();
             if (dist < hitR) {
                 killEnemy(j, chainLevel > 0);
                 hitAny = true;
             }
         }
 
+        var bReach = (((18 + chainLevel * 6)).toFloat() * scale).toNumber();
+        var bDmg = 1 + chainLevel;
+        if (scale >= 1.4) { bDmg += 1; }
+        if (scale >= 1.8) { bDmg += 1; }
         for (var b = 0; b < MAX_BLDG; b++) {
             if (_bldgHp[b] <= 0) { continue; }
             var bdx = (ex - _bldgX[b]).abs();
-            if (bdx < 18 + chainLevel * 6 + _bldgW[b] / 2) {
+            if (bdx < bReach + _bldgW[b] / 2) {
                 var bTop = _groundY - _bldgH[b];
                 if (ey > bTop - 12) {
-                    _bldgHp[b] -= 1 + chainLevel;
-                    _totalDamage += 1 + chainLevel;
+                    _bldgHp[b] -= bDmg;
+                    _totalDamage += bDmg;
                     if (_bldgHp[b] <= 0) { destroyBuilding(b); }
                     else { spawnBuildingDebris(_bldgX[b], bTop, _bldgColor[b]); }
                 }
@@ -953,6 +1075,31 @@ class BitochiBombView extends WatchUi.View {
             _partLife[i] = 18 + Math.rand().abs() % 12;
             _partColor[i] = wc[Math.rand().abs() % 5];
             _partSize[i] = 1 + Math.rand().abs() % 2;
+            spawned++;
+        }
+    }
+
+    // Cookie bomb shrapnel: warm dough crumbs, dark chocolate chips and a few
+    // bright sprinkles bursting outward — pure sugary carnage.
+    hidden function spawnCookieBits(ex, ey) {
+        var crumb = [0xD9A566, 0xC8944F, 0xE0B378, 0xB8863C, 0xE8C088];
+        var chip  = [0x3A2410, 0x2A1808, 0x4A2E14];
+        var sprk  = [0xFF66AA, 0x66DDFF, 0x66FF88, 0xFFEE55, 0xFF8844];
+        var spawned = 0;
+        for (var i = 0; i < MAX_PARTS; i++) {
+            if (spawned >= 20) { break; }
+            if (_partLife[i] > 0) { continue; }
+            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 18) - 9).toFloat();
+            _partY[i] = ey.toFloat();
+            var a = (Math.rand().abs() % 360).toFloat() * 3.14159 / 180.0;
+            var spd = 2.0 + (Math.rand().abs() % 55).toFloat() / 10.0;
+            _partVx[i] = spd * Math.cos(a);
+            _partVy[i] = -spd * Math.sin(a).abs() - 1.5;
+            _partLife[i] = 18 + Math.rand().abs() % 20;
+            var pick = Math.rand().abs() % 10;
+            if (pick < 6)      { _partColor[i] = crumb[Math.rand().abs() % 5]; _partSize[i] = 2 + Math.rand().abs() % 3; }
+            else if (pick < 8) { _partColor[i] = chip[Math.rand().abs() % 3];  _partSize[i] = 2 + Math.rand().abs() % 2; }
+            else               { _partColor[i] = sprk[Math.rand().abs() % 5];  _partSize[i] = 1 + Math.rand().abs() % 2; }
             spawned++;
         }
     }
@@ -1434,28 +1581,87 @@ class BitochiBombView extends WatchUi.View {
             if (!_bombAlive[i]) { continue; }
             var bx = _bombX[i].toNumber() + ox;
             var by = _bombY[i].toNumber() + oy;
+            var wt = _bombType[i];
             var base = i * 6;
 
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            // Trail — tinted per weapon for a readable streak.
+            var trailC = 0x555555;
+            if (wt == WP_MISSILE) { trailC = 0xFFAA44; }
+            else if (wt == WP_NAPALM) { trailC = 0xFF7733; }
+            else if (wt == WP_COOKIE) { trailC = 0xC8944F; }
+            dc.setColor(trailC, Graphics.COLOR_TRANSPARENT);
             for (var t = 0; t < 6; t++) {
                 var tx = _bombTrailX[base + t].toNumber() + ox;
                 var ty = _bombTrailY[base + t].toNumber() + oy;
                 dc.fillCircle(tx, ty, 1);
             }
 
-            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(bx, by, 4);
-            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(bx, by, 3);
-            dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(bx - 1, by - 1, 1);
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(bx - 2, by - 5, 5, 2);
-            dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(bx - 1, by - 6, 3, 1);
+            if (wt == WP_COOKIE) {
+                dc.setColor(0xB8863C, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx, by, 7);
+                dc.setColor(0xD9A566, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx, by, 6);
+                dc.setColor(0xE8C088, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx - 2, by - 2, 2);
+                dc.setColor(0x3A2410, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx - 2, by + 2, 1);
+                dc.fillCircle(bx + 3, by - 1, 1);
+                dc.fillCircle(bx + 1, by + 3, 1);
+                dc.fillCircle(bx + 2, by + 1, 1);
+                dc.fillCircle(bx - 3, by - 2, 1);
+                // Lit fuse.
+                dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx + 4, by - 6, 1);
+            } else if (wt == WP_MISSILE) {
+                // Nose-down warhead with fins + flame.
+                dc.setColor(0xBBBBBB, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 2, by - 6, 4, 8);
+                dc.setColor(0xE0E0E0, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 1, by - 6, 1, 8);
+                dc.setColor(0xCC3322, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[bx - 2, by + 2], [bx + 2, by + 2], [bx, by + 6]]);
+                dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 4, by - 5, 2, 3);
+                dc.fillRectangle(bx + 2, by - 5, 2, 3);
+                var fl = (_tick % 2 == 0) ? 5 : 3;
+                dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[bx - 2, by - 6], [bx + 2, by - 6], [bx, by - 6 - fl]]);
+                dc.setColor(0xFF7722, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx, by - 7, 1);
+            } else if (wt == WP_CLUSTER) {
+                dc.setColor(0x556633, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 3, by - 5, 6, 9);
+                dc.setColor(0x6A7A40, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 3, by - 5, 2, 9);
+                dc.setColor(0xFFCC33, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 3, by - 2, 6, 1);
+                dc.fillRectangle(bx - 3, by + 1, 6, 1);
+                dc.setColor(0x556633, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 2, by - 7, 4, 2);
+            } else if (wt == WP_NAPALM) {
+                dc.setColor(0x884422, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(bx - 4, by - 4, 8, 9, 3);
+                dc.setColor(0xCC5522, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(bx - 3, by - 3, 6, 7, 2);
+                dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 2, by - 2, 2, 2);
+                dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 1, by - 6, 2, 2);
+            } else {
+                dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx, by, 4);
+                dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx, by, 3);
+                dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx - 1, by - 1, 1);
+                dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 2, by - 5, 5, 2);
+                dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx - 1, by - 6, 3, 1);
+            }
 
             var distG = _groundY - by + oy;
-            if (distG < 40 && distG > 0) {
+            if (distG < 40 && distG > 0 && wt != WP_MISSILE) {
                 dc.setColor(0xFF4400, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(bx, by + 1, 1);
                 if (distG < 20) {
@@ -1589,6 +1795,15 @@ class BitochiBombView extends WatchUi.View {
         dc.setColor(0xFF5555, Graphics.COLOR_TRANSPARENT);
         dc.drawText(5, 4, Graphics.FONT_XTINY, "" + _killCount, Graphics.TEXT_JUSTIFY_LEFT);
 
+        // Current weapon + ammo readout (UP/DOWN cycles the loadout).
+        var wtxt = _wNames[_weapon];
+        if (_weapon != WP_BOMB) { wtxt = wtxt + " x" + _wAmmo[_weapon]; }
+        var wcol = [0xFFFFFF, 0xE8C088, 0x9BBF55, 0xFF7733, 0xCCCCCC][_weapon];
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + 1, _h * 90 / 100 + 1, Graphics.FONT_XTINY, wtxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(wcol, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 90 / 100, Graphics.FONT_XTINY, wtxt, Graphics.TEXT_JUSTIFY_CENTER);
+
         if (_hitMsgTick > 0 && !_hitMsg.equals("")) {
             var msgC = 0xFFFF44;
             if (_hitMsg.equals("MISS")) { msgC = 0x888888; }
@@ -1610,6 +1825,12 @@ class BitochiBombView extends WatchUi.View {
             var warn = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000;
             dc.setColor(warn, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_cx, _h * 70 / 100, Graphics.FONT_XTINY, "AIRSTRIKE!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Show the loadout control hint only at the very start of a wave.
+        if (_spawnCount == 0 && _killCount == 0 && _hitMsgTick <= 0) {
+            dc.setColor(0x668899, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 96 / 100, Graphics.FONT_XTINY, "up/dn swap weapon", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

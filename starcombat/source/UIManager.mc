@@ -56,18 +56,24 @@ class UIManager {
 
         drawStars(dc, ctrl, ox, oy);
         drawEnemies(dc, ctrl, ox, oy);
+        drawPowerups(dc, ctrl, ox, oy);
         drawBolts(dc, ctrl, ox, oy);
         drawLaser(dc, ctrl, ox, oy);
+        drawMuzzle(dc, ctrl, ox, oy);
         drawExplosions(dc, ctrl, ox, oy);
+        drawParticles(dc, ctrl, ox, oy);
         drawReticle(dc, ctrl);
         drawHUD(dc, ctrl);
         if (ctrl.hitT > 0) { drawHitFlash(dc, ctrl); }
+        if (ctrl.toastT > 0 && ctrl.toastMsg != null) { drawToast(dc, ctrl); }
         if (ctrl.state == SC_OVER) { drawGameOver(dc, ctrl); }
     }
 
-    // ── Star field ───────────────────────────────────────────
+    // ── Star field (parallax warp streaks) ──────────────────
+    // Each star streaks radially outward from screen centre; nearer
+    // depth layers streak longer and brighter, giving a strong sense
+    // of flying forward at speed. Cheap — one short line per star.
     static function drawStars(dc, ctrl, ox, oy) {
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < SC_NSTARS; i++) {
             var dy = ctrl.sYaw[i]   - ctrl.gazeYaw;
             var dp = ctrl.sPitch[i] - ctrl.gazePitch;
@@ -75,13 +81,22 @@ class UIManager {
             var sy = (ctrl.cy + dp * SC_FOV).toNumber() + oy;
             if (sx < 0 || sx >= ctrl.sw || sy < 0 || sy >= ctrl.sh) { continue; }
             var d2 = dy * dy + dp * dp;
+            var depth = ctrl.sDepth[i];
             var col;
-            if (d2 < 0.20)      { col = 0xFFFFFF; }
-            else if (d2 < 0.80) { col = 0xCCCCCC; }
-            else                 { col = 0x888888; }
+            if      (depth >= 3) { col = 0xFFFFFF; }
+            else if (depth == 2) { col = 0xCCCCCC; }
+            else                  { col = 0x888888; }
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-            dc.drawPoint(sx, sy);
-            if (d2 < 0.10) { dc.drawPoint(sx + 1, sy); }
+            // Streak tail: from the star back toward centre, length by depth
+            // and by how far out it already is (faster near the edge).
+            var vx = sx - ctrl.cx;
+            var vy = sy - ctrl.cy;
+            var tail = depth;
+            if (d2 > 1.0) { tail = tail + 2; }
+            var tx = sx - vx * tail / 40;
+            var ty = sy - vy * tail / 40;
+            dc.drawLine(sx, sy, tx, ty);
+            if (depth >= 3) { dc.drawPoint(sx + 1, sy); }
         }
     }
 
@@ -111,6 +126,21 @@ class UIManager {
             if (br > 230) { br = 230; }
             // Hit flash: pure white briefly after a non-killing hit.
             var flash = (ctrl.eFlashT[i] > 0);
+
+            // Engine trail — a short fading exhaust streak off the stern
+            // (aft = away from the ship's facing, i.e. -(ca,sa)). Drawn
+            // before the hull so the ship renders on top of its own glow.
+            if (s >= 5) {
+                var tlen = (s * 1.6).toNumber();
+                var t1x = ex - (ca * tlen * 0.5).toNumber();
+                var t1y = ey - (sa * tlen * 0.5).toNumber();
+                var t2x = ex - (ca * tlen).toNumber();
+                var t2y = ey - (sa * tlen).toNumber();
+                dc.setColor(0x224488, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(ex, ey, t2x, t2y);
+                dc.setColor(0x66AAFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(ex, ey, t1x, t1y);
+            }
 
             if      (ctrl.eType[i] == SC_ET_TIE)     { _drawTie(dc, ex, ey, s, ca, sa, br, flash); }
             else if (ctrl.eType[i] == SC_ET_CRUISER) { _drawCruiser(dc, ex, ey, s, ca, sa, br, flash); }
@@ -321,18 +351,73 @@ class UIManager {
         }
     }
 
-    // ── Player laser (red) ──────────────────────────────────
+    // ── Player laser (skinned) ──────────────────────────────
     static function drawLaser(dc, ctrl, ox, oy) {
         if (ctrl.laserAge <= 0) { return; }
         var tx = ctrl.laserTx + ox;
         var ty = ctrl.laserTy + oy;
-        dc.setColor(0x660000, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x330000, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(ctrl.cx - 1, ctrl.cy, tx - 1, ty);
         dc.drawLine(ctrl.cx, ctrl.cy - 1, tx, ty - 1);
-        dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(ctrl.skinLaser(), Graphics.COLOR_TRANSPARENT);
         dc.drawLine(ctrl.cx, ctrl.cy, tx, ty);
-        dc.setColor(0xFFAAAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(ctrl.cx, ctrl.cy, (ctrl.cx + tx) / 2, (ctrl.cy + ty) / 2);
+    }
+
+    // ── Player muzzle flash ─────────────────────────────────
+    // A brief bright burst at the scope centre when the player fires,
+    // in the skin's laser colour. Cheap: two filled circles.
+    static function drawMuzzle(dc, ctrl, ox, oy) {
+        if (ctrl.muzzleT <= 0) { return; }
+        var cx = ctrl.cx + ox; var cy = ctrl.cy + oy;
+        dc.setColor(ctrl.skinLaser(), Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, 5);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, 2);
+    }
+
+    // ── Debris particles ────────────────────────────────────
+    static function drawParticles(dc, ctrl, ox, oy) {
+        for (var i = 0; i < SC_MAX_PARTS; i++) {
+            if (ctrl.pLive[i] == 0) { continue; }
+            var x = ctrl.pX[i].toNumber() + ox;
+            var y = ctrl.pY[i].toNumber() + oy;
+            // Fade to a dark ember over its life.
+            var col = ((ctrl.pAge[i] * 2) < SC_PART_T) ? ctrl.pCol[i] : 0x884422;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x, y, (ctrl.pAge[i] < 3) ? 2 : 1);
+        }
+    }
+
+    // ── Power-ups ───────────────────────────────────────────
+    // A rotating diamond capsule with a letter: S = shield, R = rapid.
+    // Pulses so it reads as a collectible reward, not an enemy.
+    static function drawPowerups(dc, ctrl, ox, oy) {
+        for (var i = 0; i < SC_MAX_POWERUPS; i++) {
+            if (ctrl.puLive[i] == 0) { continue; }
+            var x = ctrl.puSx[i] + ox;
+            var y = ctrl.puSy[i] + oy;
+            var s = ctrl.puSz[i];
+            var isShield = (ctrl.puType[i] == SC_PU_SHIELD);
+            var core = isShield ? 0x33CCFF : 0xFFAA22;
+            var glow = isShield ? 0x114466 : 0x553311;
+            var pulse = ((ctrl.tick & 3) < 2) ? 2 : 0;
+            // Outer glow diamond.
+            dc.setColor(glow, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[x, y - s - pulse], [x + s + pulse, y],
+                            [x, y + s + pulse], [x - s - pulse, y]]);
+            // Inner core diamond.
+            dc.setColor(core, Graphics.COLOR_TRANSPARENT);
+            var hs = s * 65 / 100; if (hs < 3) { hs = 3; }
+            dc.fillPolygon([[x, y - hs], [x + hs, y], [x, y + hs], [x - hs, y]]);
+            // Letter label if big enough.
+            if (s >= 9) {
+                dc.setColor(0x001018, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y - 8, Graphics.FONT_XTINY,
+                            isShield ? "S" : "R", Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        }
     }
 
     // ── Explosions ─────────────────────────────────────────
@@ -363,7 +448,7 @@ class UIManager {
             var dy = ctrl.eSy[i] - ctrl.cy;
             if (dx * dx + dy * dy < r2) { locked = true; break; }
         }
-        var ring = locked ? 0x33FF44 : 0x66CCEE;
+        var ring = locked ? 0x33FF44 : ctrl.skinAccent();
         var line = locked ? 0x99FFAA : 0xAADDFF;
         var outerR = (ctrl.sw < ctrl.sh ? ctrl.sw : ctrl.sh) / 12;
         if (outerR < 16) { outerR = 16; }
@@ -431,16 +516,23 @@ class UIManager {
             }
         }
 
-        // Ammo.
-        var ammoCol;
-        if      (ctrl.noAmmoT > 0)             { ammoCol = 0xFF3344; }
-        else if (ctrl.ammo <= 3)               { ammoCol = 0xFF6666; }
-        else if (ctrl.ammo <= ctrl.maxAmmo/3)  { ammoCol = 0xFFAA22; }
-        else                                    { ammoCol = 0xFFEE66; }
-        dc.setColor(ammoCol, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx + 14, tyBot, Graphics.FONT_XTINY,
-                    "A" + ctrl.ammo.format("%d"),
-                    Graphics.TEXT_JUSTIFY_LEFT);
+        // Ammo — or a rapid-fire banner while the power-up is active.
+        if (ctrl.rapidT > 0) {
+            var rc = ((ctrl.tick & 3) < 2) ? 0xFFCC22 : 0xFF8811;
+            dc.setColor(rc, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx + 14, tyBot, Graphics.FONT_XTINY, "RAPID",
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        } else {
+            var ammoCol;
+            if      (ctrl.noAmmoT > 0)             { ammoCol = 0xFF3344; }
+            else if (ctrl.ammo <= 3)               { ammoCol = 0xFF6666; }
+            else if (ctrl.ammo <= ctrl.maxAmmo/3)  { ammoCol = 0xFFAA22; }
+            else                                    { ammoCol = 0xFFEE66; }
+            dc.setColor(ammoCol, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx + 14, tyBot, Graphics.FONT_XTINY,
+                        "A" + ctrl.ammo.format("%d"),
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        }
 
         // Level-up flash overlay (centred just under reticle).
         if (ctrl.levelUpT > 0) {
@@ -448,6 +540,23 @@ class UIManager {
             dc.drawText(cx, ctrl.cy + 30, Graphics.FONT_XTINY,
                         "LEVEL UP!", Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    // ── Toast (one-shot daily bonus) ────────────────────────
+    // Lightweight, non-blocking banner near the bottom of the play
+    // field so it never covers the reticle or incoming enemies.
+    static function drawToast(dc, ctrl) {
+        var cx = ctrl.cx; var sw = ctrl.sw; var sh = ctrl.sh;
+        var y  = (sh * 64) / 100;
+        var bw = sw * 76 / 100; if (bw < 150) { bw = 150; }
+        var bx = cx - bw / 2;
+        var bh = 20;
+        dc.setColor(0x08121E, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bx, y, bw, bh, 5);
+        dc.setColor(0xFFCC33, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bx, y, bw, bh, 5);
+        dc.drawText(cx, y + 2, Graphics.FONT_XTINY, ctrl.toastMsg,
+                    Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     static function drawHitFlash(dc, ctrl) {
@@ -534,29 +643,53 @@ class UIManager {
     }
 
     // ── Game Over ─────────────────────────────────────────
+    // Compact panel: title, score/wave/best, then a shared-progression
+    // line ("Lv N Rank - Xc" + streak) and a one-shot skin-unlock banner.
+    // Laid out by percentage of the panel so nothing overlaps on round
+    // watches at any size.
     static function drawGameOver(dc, ctrl) {
         var sw = ctrl.sw; var sh = ctrl.sh; var cx = ctrl.cx;
-        var bw = sw * 72 / 100; if (bw < 160) { bw = 160; }
-        var bh = sh * 44 / 100; if (bh < 120) { bh = 120; }
+        var bw = sw * 80 / 100; if (bw < 170) { bw = 170; }
+        var bh = sh * 62 / 100; if (bh < 150) { bh = 150; }
         var bx = (sw - bw) / 2; var by = (sh - bh) / 2;
         dc.setColor(0x000308, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, bw, bh, 9);
         dc.setColor(0xFF3344, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(bx, by, bw, bh, 9);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
+
+        dc.drawText(cx, by + bh * 3 / 100, Graphics.FONT_SMALL,
                     "DESTROYED", Graphics.TEXT_JUSTIFY_CENTER);
+
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 38, Graphics.FONT_XTINY,
-                    "Score  " + ctrl.score.format("%d"),
+        dc.drawText(cx, by + bh * 26 / 100, Graphics.FONT_XTINY,
+                    "Score " + ctrl.score.format("%d") +
+                    "   W" + ctrl.level.format("%d"),
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 56, Graphics.FONT_XTINY,
-                    "Level  " + ctrl.level.format("%d"),
+        dc.setColor(0x99BBDD, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, by + bh * 40 / 100, Graphics.FONT_XTINY,
+                    "Best " + ctrl.bestScore.format("%d"),
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, by + 74, Graphics.FONT_XTINY,
-                    "Best   " + ctrl.bestScore.format("%d"),
+
+        // Shared progression summary.
+        dc.setColor(0xBFD8C4, Graphics.COLOR_TRANSPARENT);
+        var pline = "Lv " + ctrl.pgLevel().format("%d") + " " + ctrl.pgRank() +
+                    " - " + ctrl.pgCoins().format("%d") + "c";
+        dc.drawText(cx, by + bh * 54 / 100, Graphics.FONT_XTINY, pline,
                     Graphics.TEXT_JUSTIFY_CENTER);
+        if (ctrl.pgStreak > 1) {
+            dc.setColor(0x88CCAA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + bh * 66 / 100, Graphics.FONT_XTINY,
+                        "Streak " + ctrl.pgStreak.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        if (ctrl.pgUnlockMsg != null) {
+            dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + bh * 78 / 100, Graphics.FONT_XTINY,
+                        ctrl.pgUnlockMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
+        dc.drawText(cx, by + bh - 15, Graphics.FONT_XTINY,
                     "Tap = retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

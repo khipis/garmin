@@ -46,6 +46,12 @@ class ObstacleManager {
     // setting: WIDE = +, NORMAL = 0 (default feel), TIGHT = -.
     var gapBias;
 
+    // Near-miss telemetry — set during step() on the tick a pipe is scored
+    // if the bird squeezed through with tight clearance. The controller
+    // reads these to award a small bonus + spawn a spark. Reset each step.
+    var nearMiss;     // 1 when the just-scored pass was a tight squeeze
+    var nearMissY;    // bird y at that moment (for the spark origin)
+
     function initialize() {
         pipes = new [MAX_PIPES];
         for (var i = 0; i < MAX_PIPES; i++) { pipes[i] = new Pipe(); }
@@ -56,6 +62,8 @@ class ObstacleManager {
         spawnX    = 240;
         spacing   = 110;
         gapBias   = 0;
+        nearMiss  = 0;
+        nearMissY = 0;
     }
 
     function setGapBias(b) { gapBias = b; }
@@ -123,7 +131,10 @@ class ObstacleManager {
     // Advance all pipes left by dx. Recycle off-screen pipes to the
     // right of the rightmost active pipe. Returns number of new
     // points scored this tick (bird must have already crossed each).
-    function step(dx, birdX, score, scaleNum, scaleDen) {
+    function step(dx, birdX, birdY, birdR, score, scaleNum, scaleDen) {
+        nearMiss = 0;
+        // Near-miss clearance threshold (screen px), scaled from the 240 ref.
+        var thr = (10 * scaleNum) / scaleDen; if (thr < 6) { thr = 6; }
         // Find current rightmost x so we can recycle past it.
         var rightMost = -10000;
         for (var i = 0; i < MAX_PIPES; i++) {
@@ -137,6 +148,16 @@ class ObstacleManager {
             if (p.scored == 0 && p.x + p.w < birdX) {
                 p.scored = 1;
                 added    = added + 1;
+                // Measure how tight the squeeze was: distance from the bird's
+                // top/bottom edge to the nearest gap edge. A small clearance
+                // on either side is a "near miss" worth rewarding.
+                var clearTop = (birdY - birdR) - p.gapTopY;
+                var clearBot = p.gapBotY - (birdY + birdR);
+                var minClear = (clearTop < clearBot) ? clearTop : clearBot;
+                if (minClear >= 0 && minClear < thr) {
+                    nearMiss  = 1;
+                    nearMissY = birdY;
+                }
             }
             // Recycle once fully off-screen left
             if (p.x + p.w < -4) {

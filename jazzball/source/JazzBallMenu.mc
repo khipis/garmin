@@ -43,6 +43,14 @@ class JazzBallHooks extends GameHooks {
         } catch (e) {}
         return names[d];
     }
+
+    function footerText() as Lang.String or Null {
+        try {
+            var v = Application.Storage.getValue("jb_best");
+            if (v instanceof Lang.Number && v > 0) { return "BEST " + v.format("%d"); }
+        } catch (e) {}
+        return null;
+    }
 }
 
 function buildJazzBallMenu() as Lang.Array {
@@ -57,7 +65,8 @@ function buildJazzBallMenu() as Lang.Array {
         :lbTitle => "JAZZBALL",
         :hooks   => new JazzBallHooks(),
         :options => [
-            new GmOption("jb_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1)
+            new GmOption("jb_diff", "Difficulty", ["EASY", "NORMAL", "HARD"], 1),
+            new GmOption("jb_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

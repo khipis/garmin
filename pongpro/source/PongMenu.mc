@@ -65,7 +65,8 @@ function buildPongMenu() as Lang.Array {
         :hooks   => new PongHooks(),
         :options => [
             new GmOption("pp_diff", "Difficulty", ["EASY", "MEDIUM", "HARD"], 1),
-            new GmOption("pp_tilt", "Tilt steer", ["OFF", "ON"], 0)
+            new GmOption("pp_tilt", "Tilt steer", ["OFF", "ON"], 0),
+            new GmOption("pp_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

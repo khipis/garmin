@@ -84,7 +84,8 @@ function buildArcadeMenu() as Lang.Array {
         :lbTitle => "AXE ARCADE",
         :hooks   => new ArcadeHooks(),
         :options => [
-            new GmOption("arc_axes", "Axes", ["3", "5", "7"], 1)
+            new GmOption("arc_axes", "Axes", ["3", "5", "7"], 1),
+            new GmOption("arc_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

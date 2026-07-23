@@ -90,6 +90,25 @@ class BitochiRunView extends WatchUi.View {
     hidden var _obstacleOpenLane;
     hidden var _obstacleWidth;
 
+    // Collectible souls (risk/reward pickups in a lane)
+    hidden var _soulActive;
+    hidden var _soulDist;
+    hidden var _soulLane;
+    hidden var _soulsCollected;
+    hidden var _runSoulPts;
+
+    // Visible powerup pickups (replace the old invisible RNG powerups)
+    hidden var _puActive;
+    hidden var _puDist;
+    hidden var _puLane;
+    hidden var _puKind;          // 0 = shield, 1 = boost
+    hidden var _collectFlash;    // brief on-screen pop when something is grabbed
+    hidden var _collectKind;     // 0 = soul, 1 = shield, 2 = boost
+
+    // Sound & Haptics master switch (OPTIONS: run_fx). 0/unset = ON, 1 = OFF.
+    // Gates BOTH tones and vibration, matching the drwal convention.
+    hidden var _fxOn;
+
     hidden var _footprintsX;
     hidden var _footprintsY;
     hidden var _footprintLife;
@@ -136,6 +155,11 @@ class BitochiRunView extends WatchUi.View {
         var sp = BrStore.getValue("run_spd");
         if (sp instanceof Number && sp >= 0 && sp <= 2) { _spdSel = sp; }
         _spdFactor = [1.0, 1.3, 1.6][_spdSel];
+
+        // Sound & Haptics: ON unless explicitly set to OFF (value 1).
+        _fxOn = true;
+        var fx = BrStore.getValue("run_fx");
+        if (fx instanceof Number && fx == 1) { _fxOn = false; }
 
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth;
@@ -546,6 +570,19 @@ class BitochiRunView extends WatchUi.View {
         _obstacleWidth = 10.0;
         _levelRunScore = 0;
 
+        _soulActive = true;
+        _soulDist = _playerDist + 14.0 + (Math.rand().abs() % 16).toFloat();
+        _soulLane = Math.rand().abs() % 3;
+        _soulsCollected = 0;
+        _runSoulPts = 0;
+
+        _puActive = false;
+        _puDist = 0.0;
+        _puLane = 0;
+        _puKind = 0;
+        _collectFlash = 0;
+        _collectKind = 0;
+
         for (var ei = 0; ei < 5; ei++) {
             _eyeTrailAge[ei] = 0;
         }
@@ -596,14 +633,43 @@ class BitochiRunView extends WatchUi.View {
         }
     }
 
+    // Schedule a VISIBLE powerup pickup ahead in a random lane. The player must
+    // steer into that lane to grab it (shield or boost). Only one pending at a time.
     hidden function spawnPowerupNearObstacle() {
+        if (_puActive) { return; }
         var r = Math.rand().abs() % 100;
-        if (r >= 22) { return; }
-        if (r < 11) {
+        if (r >= 34) { return; }
+        _puActive = true;
+        _puDist = _playerDist + 18.0 + (Math.rand().abs() % 22).toFloat();
+        _puLane = Math.rand().abs() % 3;
+        // Bias toward shield if the player has none, otherwise mix in boosts.
+        _puKind = _shieldActive ? 1 : (Math.rand().abs() % 100 < 55 ? 0 : 1);
+    }
+
+    // Called when the player reaches a soul's distance in the matching lane.
+    hidden function collectSoul() {
+        _soulsCollected++;
+        _runSoulPts += 18;
+        _stamina = _stamina + 8.0;
+        if (_stamina > 100.0) { _stamina = 100.0; }
+        _collectFlash = 10;
+        _collectKind = 0;
+        doTone(Toybox.Attention.TONE_KEY);
+        doVibe(30, 40);
+    }
+
+    // Called when the player reaches a powerup's distance in the matching lane.
+    hidden function collectPowerup() {
+        if (_puKind == 0) {
             _shieldActive = true;
+            _collectKind = 1;
         } else {
-            _boostTicks = 80 + Math.rand().abs() % 50;
+            _boostTicks = 90 + Math.rand().abs() % 60;
+            _collectKind = 2;
         }
+        _collectFlash = 12;
+        doTone(Toybox.Attention.TONE_SUCCESS);
+        doVibe(60, 90);
     }
 
     hidden function applyMonsterBehavior() {
@@ -718,6 +784,22 @@ class BitochiRunView extends WatchUi.View {
 
         _playerDist += _playerSpeed;
 
+        if (_collectFlash > 0) { _collectFlash--; }
+
+        // Soul pickups: collect when reached in the matching lane, then respawn one.
+        if (_soulActive && _playerDist >= _soulDist) {
+            if (_dodgeLane == _soulLane) { collectSoul(); }
+            _soulActive = true;
+            _soulDist = _playerDist + 12.0 + (Math.rand().abs() % 18).toFloat();
+            _soulLane = Math.rand().abs() % 3;
+        }
+
+        // Visible powerup pickups: grant when reached in the matching lane.
+        if (_puActive && _playerDist >= _puDist) {
+            if (_dodgeLane == _puLane) { collectPowerup(); }
+            _puActive = false;
+        }
+
         var msm = monsterSpeedMultiplier();
         var monStep = _monsterBaseSpeed * msm * _spdFactor;
         _monsterDist = _monsterDist + monStep + _monsterWobble;
@@ -759,10 +841,12 @@ class BitochiRunView extends WatchUi.View {
                 if (_shieldActive) {
                     _shieldActive = false;
                     doVibe(60, 200);
+                    doTone(Toybox.Attention.TONE_LOUD_BEEP);
                 } else {
                     gameState = RS_CAUGHT;
                     _introTick = 0;
                     doVibe(100, 1000);
+                    doTone(Toybox.Attention.TONE_FAILURE);
                     finalizeScore(false);
                     submitToLeaderboard();
                     return;
@@ -803,10 +887,12 @@ class BitochiRunView extends WatchUi.View {
                 _shieldActive = false;
                 _monsterDist = _monsterDist - 8.0;
                 doVibe(70, 250);
+                doTone(Toybox.Attention.TONE_LOUD_BEEP);
             } else {
                 gameState = RS_CAUGHT;
                 _introTick = 0;
                 doVibe(100, 1000);
+                doTone(Toybox.Attention.TONE_FAILURE);
                 finalizeScore(false);
                 submitToLeaderboard();
                 return;
@@ -820,6 +906,7 @@ class BitochiRunView extends WatchUi.View {
             _totalDist = _totalDist + _exitDist;
             finalizeScore(true);
             doVibe(60, 300);
+            doTone(Toybox.Attention.TONE_SUCCESS);
         }
 
         var pyBase = _h * 55 / 100;
@@ -835,7 +922,7 @@ class BitochiRunView extends WatchUi.View {
     hidden function finalizeScore(escaped) {
         var timePts = _runTicks / 5;
         var distPts = _playerDist.toNumber() * 2;
-        _levelRunScore = timePts + distPts;
+        _levelRunScore = timePts + distPts + _runSoulPts;
         if (escaped) {
             _levelRunScore = _levelRunScore + 200;
         }
@@ -843,7 +930,17 @@ class BitochiRunView extends WatchUi.View {
         saveHighScore(_sessionScore);
     }
 
+    hidden function doTone(t) as Void {
+        if (!_fxOn) { return; }
+        if (Toybox has :Attention) {
+            if (Toybox.Attention has :playTone) {
+                try { Toybox.Attention.playTone(t); } catch (e) {}
+            }
+        }
+    }
+
     hidden function doVibe(intensity, duration) {
+        if (!_fxOn) { return; }
         if (Toybox has :Attention) {
             if (Toybox.Attention has :vibrate) {
                 Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
@@ -852,6 +949,7 @@ class BitochiRunView extends WatchUi.View {
     }
 
     hidden function doVibeDouble() as Void {
+        if (!_fxOn) { return; }
         if (Toybox has :Attention) {
             if (Toybox.Attention has :vibrate) {
                 Toybox.Attention.vibrate([
@@ -1492,6 +1590,47 @@ class BitochiRunView extends WatchUi.View {
             dc.fillRectangle(ox - 2, oy + _obstacleOpenLane * 12 + 3, 4, 2);
         }
 
+        // Soul collectible — a pulsing pale orb floating in its lane.
+        if (_soulActive) {
+            var sScreen = ((_soulDist - _playerDist) * 8.0).toNumber();
+            if (sScreen > -5 && sScreen < h) {
+                var sx = w / 2 + tilt + (_soulLane - 1) * 4;
+                var sy = h * 40 / 100 - sScreen / 2 + _soulLane * 12;
+                var pulse = (Math.sin(_tick.toFloat() / 3.0) * 2.0).toNumber();
+                var sr = 5 + pulse;
+                if (sr < 3) { sr = 3; }
+                dc.setColor(0x113344, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(sx, sy, sr + 3);
+                dc.setColor(0x33CCDD, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(sx, sy, sr);
+                dc.setColor(0xCCFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(sx - 1, sy - 1, sr / 2 + 1);
+            }
+        }
+
+        // Powerup pickup — shield (green ring) or boost (blue bolt).
+        if (_puActive) {
+            var pScreen = ((_puDist - _playerDist) * 8.0).toNumber();
+            if (pScreen > -5 && pScreen < h) {
+                var px = w / 2 + tilt + (_puLane - 1) * 4;
+                var py = h * 40 / 100 - pScreen / 2 + _puLane * 12;
+                var glow = (_tick % 6 < 3);
+                if (_puKind == 0) {
+                    dc.setColor(glow ? 0x33FF88 : 0x116644, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(px, py, 7);
+                    dc.setColor(0x081408, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(px, py, 4);
+                    dc.setColor(0xAAFFCC, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(px, py, 7);
+                } else {
+                    dc.setColor(glow ? 0x44AAFF : 0x224488, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(px, py, 7);
+                    dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT);
+                    dc.fillPolygon([[px - 3, py - 5], [px + 2, py - 1], [px - 1, py - 1], [px + 3, py + 5], [px - 2, py + 1], [px + 1, py + 1]]);
+                }
+            }
+        }
+
         var fp;
         for (fp = 0; fp < 10; fp++) {
             if (_footprintLife[fp] > 0) {
@@ -1542,6 +1681,22 @@ class BitochiRunView extends WatchUi.View {
         if (_boostTicks > 0) {
             dc.setColor(0x2288FF, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w * 75 / 100, h * 40 / 100, Graphics.FONT_XTINY, "BOOST", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Souls-collected counter (top-left).
+        if (_soulsCollected > 0) {
+            dc.setColor(0x33CCDD, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(w * 16 / 100, h * 20 / 100, 4);
+            dc.setColor(0xCCFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w * 20 / 100, h * 20 / 100 - 8, Graphics.FONT_XTINY, "x" + _soulsCollected.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
+        }
+
+        // Brief pop when something is grabbed.
+        if (_collectFlash > 0) {
+            var fTxt = (_collectKind == 0) ? "+SOUL" : (_collectKind == 1 ? "SHIELD!" : "BOOST!");
+            var fCol = (_collectKind == 0) ? 0x66EEFF : (_collectKind == 1 ? 0x33FF88 : 0x44AAFF);
+            dc.setColor(fCol, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 62 / 100 - (12 - _collectFlash), Graphics.FONT_XTINY, fTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         var barW = w * 50 / 100;
@@ -1887,6 +2042,11 @@ class BitochiRunView extends WatchUi.View {
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_XTINY, "LV " + _level + "/" + _maxLevels, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(w / 2, h * 69 / 100, Graphics.FONT_XTINY, "+" + _levelRunScore + " = " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
+
+        if (_soulsCollected > 0) {
+            dc.setColor(0x66EEFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 55 / 100, Graphics.FONT_XTINY, "SOULS x" + _soulsCollected.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         if (_level < _maxLevels) {
             dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);

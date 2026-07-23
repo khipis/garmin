@@ -888,9 +888,9 @@ _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_93_28_104_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 107; @symbol_functiondef = [buildFishMenu,107,9,22]; @symbol_return<0> = [Lang,107,28,32]; @symbol_return<1> = [Array,107,33,38]; ]
 function buildFishMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start:
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_start:
 [ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 108 4 ]
-    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 108 8 11 ];
     symbol [ MenuConfig %tmp.4 108 18 28 ];
@@ -945,7 +945,7 @@ _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
     symbol [ options %tmp.55 118 9 16 const ];
-    %tmp.56 = newa 2;
+    %tmp.56 = newa 3;
     symbol [ GmOption %tmp.60 119 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "fish_diff";
@@ -979,37 +979,55 @@ _Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start:
     %tmp.76 = newc %tmp.79 (%tmp.80, %tmp.81, %tmp.88, %tmp.89);
     %tmp.90 = dup %tmp.75;
     %tmp.91 = aputv %tmp.90 1 %tmp.76;
-    %tmp.92 = dup %tmp.53;
-    %tmp.93 = aputv %tmp.92 %tmp.55 %tmp.91;
-    %tmp.1 = newc %tmp.4 (%tmp.93);
+    symbol [ GmOption %tmp.95 123 16 24 ];
+    %tmp.95 = getv ? :GmOption;
+    %tmp.96 = "fish_rod";
+    %tmp.97 = "Rod";
+    %tmp.98 = newa 3;
+    %tmp.99 = "BASIC";
+    %tmp.100 = dup %tmp.98;
+    %tmp.101 = aputv %tmp.100 0 %tmp.99;
+    %tmp.102 = "PRO";
+    %tmp.103 = dup %tmp.101;
+    %tmp.104 = aputv %tmp.103 1 %tmp.102;
+    %tmp.105 = "MASTER";
+    %tmp.106 = dup %tmp.104;
+    %tmp.107 = aputv %tmp.106 2 %tmp.105;
+    %tmp.108 = 0;
+    %tmp.92 = newc %tmp.95 (%tmp.96, %tmp.97, %tmp.107, %tmp.108);
+    %tmp.109 = dup %tmp.91;
+    %tmp.110 = aputv %tmp.109 2 %tmp.92;
+    %tmp.111 = dup %tmp.53;
+    %tmp.112 = aputv %tmp.111 %tmp.55 %tmp.110;
+    %tmp.1 = newc %tmp.4 (%tmp.112);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 108 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 123 4 ]
-    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 126 4 ]
+    [ "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_start" "_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 123 8 9 ];
-    symbol [ GameMenuView %tmp.97 123 16 28 ];
-    %tmp.97 = getv ? :GameMenuView;
-    %tmp.98 = lgetv %cfg.1;
-    symbol [ cfg %tmp.98 123 29 32 ];
-    %tmp.94 = newc %tmp.97 (%tmp.98);
-    lputv %v.2 %tmp.94;
-    symbol [ v %v.2 123 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 124 4 ]
-    %tmp.99 = newa 2;
-    %tmp.100 = lgetv %v.2;
-    symbol [ v %tmp.100 124 12 13 ];
-    %tmp.101 = dup %tmp.99;
-    %tmp.102 = aputv %tmp.101 0 %tmp.100;
-    symbol [ GameMenuDelegate %tmp.106 124 19 35 ];
-    %tmp.106 = getv ? :GameMenuDelegate;
-    %tmp.107 = lgetv %v.2;
-    symbol [ v %tmp.107 124 36 37 ];
-    %tmp.103 = newc %tmp.106 (%tmp.107);
-    %tmp.108 = dup %tmp.102;
-    %tmp.109 = aputv %tmp.108 1 %tmp.103;
-    ret %tmp.109;
-_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_125_0_stop:
+    symbol [ v %v.2 126 8 9 ];
+    symbol [ GameMenuView %tmp.116 126 16 28 ];
+    %tmp.116 = getv ? :GameMenuView;
+    %tmp.117 = lgetv %cfg.1;
+    symbol [ cfg %tmp.117 126 29 32 ];
+    %tmp.113 = newc %tmp.116 (%tmp.117);
+    lputv %v.2 %tmp.113;
+    symbol [ v %v.2 126 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc" 127 4 ]
+    %tmp.118 = newa 2;
+    %tmp.119 = lgetv %v.2;
+    symbol [ v %tmp.119 127 12 13 ];
+    %tmp.120 = dup %tmp.118;
+    %tmp.121 = aputv %tmp.120 0 %tmp.119;
+    symbol [ GameMenuDelegate %tmp.125 127 19 35 ];
+    %tmp.125 = getv ? :GameMenuDelegate;
+    %tmp.126 = lgetv %v.2;
+    symbol [ v %tmp.126 127 36 37 ];
+    %tmp.122 = newc %tmp.125 (%tmp.126);
+    %tmp.127 = dup %tmp.121;
+    %tmp.128 = aputv %tmp.127 1 %tmp.122;
+    ret %tmp.128;
+_Users_kkorolczuk_work_garmin_fish_source_FishMenu_mc_107_39_128_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/fish/source/FishMenu.mc"; @line = 4; ]
 <init> {

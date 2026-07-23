@@ -29,6 +29,9 @@
 using Toybox.Application;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Attention;
+
+const MP_FX_KEY = "mp_fx";   // 0 = sound+haptics ON, 1 = OFF
 
 const GS_MENU = 0;
 const GS_PLAY = 1;
@@ -80,6 +83,13 @@ class GameController {
     var frightTicks;
     var fearChain;        // 1,2,3,4 → 200/400/800/1600
 
+    // One-shot "cosmetic unlocked" banner for the result card. Set by the
+    // progression layer on the run that first crosses the unlock milestone.
+    var pgUnlockMsg;
+
+    hidden var _fxOn;       // sound + haptics master switch (OPTIONS: mp_fx)
+    hidden var _pelletCd;   // cooldown so continuous pellet-eating doesn't machine-gun the buzzer
+
     function initialize() {
         state = GS_MENU;
         menuRow = 0;
@@ -97,8 +107,36 @@ class GameController {
         bestScore = 0;
         frightTicks = 0;
         fearChain   = 0;
+        pgUnlockMsg = null;
+        _fxOn       = _loadFx();
+        _pelletCd   = 0;
         _loadBest();
         _loadSettings();
+    }
+
+    // ── Best-effort sound + haptics (guarded; silent hardware is fine) ──
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(MP_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadBest() {
@@ -196,6 +234,9 @@ class GameController {
         level = menuStartLevel;
         lives = menuLives;
         score = 0;
+        pgUnlockMsg = null;
+        _fxOn     = _loadFx();
+        _pelletCd = 0;
         _buildLevel();
         state = GS_PLAY;
     }
@@ -233,6 +274,8 @@ class GameController {
     function tick() {
         if (state != GS_PLAY) { return; }
 
+        if (_pelletCd > 0) { _pelletCd = _pelletCd - 1; }
+
         // 1. Apply queued direction if legal.
         var nd = player.nextDir;
         var dn = Player.delta(nd);
@@ -254,6 +297,8 @@ class GameController {
         if (t == TILE_PELLET) {
             score = score + 10;
             pelletsLeft = pelletsLeft - 1;
+            // Light chomp tick, rate-limited so a pellet run doesn't machine-gun.
+            if (_pelletCd <= 0) { _tone(0); _pelletCd = 3; }
         } else if (t == TILE_POWER) {
             score = score + 50;
             pelletsLeft = pelletsLeft - 1;
@@ -261,6 +306,9 @@ class GameController {
             frightTicks = 30;
             fearChain   = 0;
             for (var i = 0; i < ghosts.size(); i++) { ghosts[i].frighten(30); }
+            // Big juicy "power up" cue.
+            _tone(1);
+            _vibe(45, 90);
         }
 
         // 3b. Collision check BEFORE ghosts move (pass-through case:
@@ -302,12 +350,18 @@ class GameController {
             else if (fearChain >= 4) { bonus = 1600; }
             score = score + bonus;
             g.eaten();
+            // Ghost gobbled — rewarding chime.
+            _tone(1);
+            _vibe(50, 90);
         } else {
             // Pac-Man dies.
             lives = lives - 1;
             if (lives <= 0) {
                 _onGameOver();
             } else {
+                // Lost a life but survived — a warning buzz.
+                _tone(2);
+                _vibe(70, 140);
                 _respawnAfterDeath();
             }
         }
@@ -334,22 +388,63 @@ class GameController {
             _onWin();
             return;
         }
+        // Level cleared — rewarding chime.
+        _tone(1);
+        _vibe(60, 120);
         level = level + 1;
         _buildLevel();
     }
 
     hidden function _onWin() {
         state = GS_WIN;
+        // Victory fanfare.
+        _tone(1);
+        _vibe(100, 250);
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        _awardProgress();
         // Submit the run to the shared global leaderboard.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
         Leaderboard.showPostGame(LB_GAME_ID, "", "MANPAC");
     }
     hidden function _onGameOver() {
         state = GS_OVER;
+        // Game-over sting.
+        _tone(2);
+        _vibe(100, 200);
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        _awardProgress();
         // Submit the run to the shared global leaderboard.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
         Leaderboard.showPostGame(LB_GAME_ID, "", "MANPAC");
+    }
+
+    // ── Meta-progression (shared, shop-ready via Progress module) ────────────
+    // Grants coins + XP proportional to the run's score and unlocks the NEON
+    // Pac skin at rank 3. Coins are the future shop's currency; the skin's
+    // ownership is exactly what a shop purchase would grant.
+    hidden function _awardProgress() {
+        try {
+            var g = score / 60;      // ~1 coin/xp per 60 points
+            if (g > 40) { g = 40; }  // cap so a run is a nudge, not a grind
+            if (g > 0) {
+                Progress.addCoins(g);
+                Progress.addXp(g);
+            }
+            if (Progress.unlockIfReached("manpac_skin2", Progress.level(), 3)) {
+                pgUnlockMsg = "UNLOCKED: NEON";
+            }
+        } catch (e) {}
+    }
+
+    // Selected-and-owned Pac colour. Falls back to the classic yellow until the
+    // NEON skin is owned, so a locked pick never renders — safe pre/post-shop.
+    function pacColor() {
+        var sel = 0;
+        try {
+            var v = Application.Storage.getValue("mp_skin");
+            if (v instanceof Number) { sel = v; }
+        } catch (e) {}
+        if (sel == 1 && Progress.owns("manpac_skin2")) { return 0x33FFCC; }
+        return 0xFFE100;
     }
 }

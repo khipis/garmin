@@ -5,6 +5,10 @@ using Toybox.Math;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Lang;
+using Toybox.Attention;
+
+// Sound + haptics master switch (OPTIONS: cw_fx). 0/unset = ON, 1 = OFF.
+const CW_FX_KEY = "cw_fx";
 
 // ── Integer constants (safe at module level) ───────────────────────────────────
 const GS_RUN  = 0;
@@ -71,6 +75,9 @@ class CellWarsView extends WatchUi.View {
     // ── menu ──────────────────────────────────────────────────────────────────
     hidden var _mSel;
 
+    // Device has a touchscreen — used to show the right control hint.
+    hidden var _isTouch;
+
     // ── team data (for the CURRENT complete generation) ───────────────────────
     hidden var _tAlgo;   // Array[4] which algorithm each team uses
     hidden var _tCnt;    // Array[4] alive cell count — synced after each generation
@@ -89,9 +96,13 @@ class CellWarsView extends WatchUi.View {
     // rows-per-tick per speed level  [speed-1]
     hidden var _bRows;
 
+    // ── Sound + haptics (OPTIONS: cw_fx) ───────────────────────────────────
+    hidden var _fxOn;
+
     function initialize() {
         View.initialize();
 
+        _fxOn     = true;     // effective value loaded in _applySettings()
         _gs       = GS_RUN;   // unified menu handles setup; drop straight into the sim
         _mode     = MD_BATTLE;
         _speed    = 3;
@@ -173,6 +184,7 @@ class CellWarsView extends WatchUi.View {
     function onLayout(dc) {
         _w = dc.getWidth();
         _h = dc.getHeight();
+        try { _isTouch = (System.getDeviceSettings().isTouchScreen == true); } catch (e) { _isTouch = false; }
 
         var gridPx = _h * 86 / 100;
         _csz = gridPx / GH;
@@ -192,6 +204,33 @@ class CellWarsView extends WatchUi.View {
         _speed   = _readIdx("cw_speed", 2, 0, 4) + 1;   // idx 0..4 -> speed 1..5
         _density = _readIdx("cw_fill",  1, 0, 2);       // LOW/MED/HIGH
         _theme   = _readIdx("cw_theme", 0, 0, TH_COUNT - 1);
+        _fxOn    = _loadFx();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(CW_FX_KEY);
+            if (v instanceof Lang.Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 control tap · 1 victory · 2 (reserved).
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _readIdx(key, def, lo, hi) {
@@ -389,6 +428,7 @@ class CellWarsView extends WatchUi.View {
         if (_isMulti() && alive > 30) {
             for (var wt = 0; wt < nT; wt++) {
                 if (_tCnt[wt] * 100 / alive > 96) {
+                    if (_winFlash == 0) { _tone(1); _vibe(100, 220); }   // domination!
                     _winFlash = 20;
                     _stale    = 28;
                 }
@@ -418,6 +458,7 @@ class CellWarsView extends WatchUi.View {
         }
         _gen = 0; _stale = 0; _prevAlive = -1; _winFlash = 0; _procRow = 0;
         for (var t = 0; t < 4; t++) { _tCnt[t] = 0; _tCntBuf[t] = 0; }
+        _fxOn = _loadFx();
     }
 
     hidden function _isMulti() {
@@ -444,12 +485,19 @@ class CellWarsView extends WatchUi.View {
         }
 
         if (_gs == GS_PAU) {
+            var boxW = _w * 62 / 100; if (boxW < 120) { boxW = 120; }
+            var boxH = 46;
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(_w / 2 - 28, _h / 2 - 12, 56, 24, 8);
+            dc.fillRoundedRectangle(_w / 2 - boxW / 2, _h / 2 - boxH / 2, boxW, boxH, 8);
+            dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(_w / 2 - boxW / 2, _h / 2 - boxH / 2, boxW, boxH, 8);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h / 2 - 1, Graphics.FONT_XTINY,
-                "PAUSED",
-                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            dc.drawText(_w / 2, _h / 2 - 10, Graphics.FONT_XTINY,
+                "PAUSED", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
+            var hint = _isTouch ? "tap=play  swipe=speed" : "SEL=play  UP/DN=speed";
+            dc.drawText(_w / 2, _h / 2 + 9, Graphics.FONT_XTINY,
+                hint, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
     }
 
@@ -597,8 +645,8 @@ class CellWarsView extends WatchUi.View {
 
     function doSelect() {
         // SELECT toggles pause/resume of the simulation.
-        if (_gs == GS_RUN)      { _gs = GS_PAU; }
-        else if (_gs == GS_PAU) { _gs = GS_RUN; }
+        if (_gs == GS_RUN)      { _gs = GS_PAU; _tone(0); _vibe(20, 25); }
+        else if (_gs == GS_PAU) { _gs = GS_RUN; _tone(0); _vibe(20, 25); }
     }
 
     hidden function _menuAct() {
@@ -620,14 +668,15 @@ class CellWarsView extends WatchUi.View {
             if (_gen == 0) { _randomize(); }
             _gs = GS_RUN;
         }
+        _tone(0);
     }
 
     function doUp() {
-        if (_speed < 5) { _speed++; }
+        if (_speed < 5) { _speed++; _tone(0); }
     }
 
     function doDown() {
-        if (_speed > 1) { _speed--; }
+        if (_speed > 1) { _speed--; _tone(0); }
     }
 
     function doBack() {
@@ -637,5 +686,6 @@ class CellWarsView extends WatchUi.View {
 
     function doTap(x, y) {
         _gs = (_gs == GS_RUN) ? GS_PAU : GS_RUN;
+        _tone(0); _vibe(20, 25);
     }
 }

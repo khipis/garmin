@@ -68,7 +68,8 @@ function buildTicTacMenu() as Lang.Array {
             new GmOption("ttp_diff", "AI level", ["EASY", "MED", "HARD"], 1),
             new GmOption("ttp_grid", "Board",
                 ["3x3", "4x4", "5x5", "6x6", "7x7", "CUBE 2", "CUBE 3", "CUBE 4"], 2),
-            new GmOption("ttp_side", "You play", ["X (1st)", "O (2nd)"], 0)
+            new GmOption("ttp_side", "You play", ["X (1st)", "O (2nd)"], 0),
+            new GmOption("ttp_fx", "Sound & Haptics", ["ON", "OFF"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

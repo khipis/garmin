@@ -727,9 +727,9 @@ _Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_49_40_57_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc"; @line = 60; @symbol_functiondef = [buildPokerMenu,60,9,23]; @symbol_return<0> = [Lang,60,29,33]; @symbol_return<1> = [Array,60,34,39]; ]
 function buildPokerMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_start:
+_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_start:
 [ "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc" 61 4 ]
-    [ "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_start" "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_start" "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 61 8 11 ];
     symbol [ MenuConfig %tmp.4 61 18 28 ];
@@ -784,7 +784,7 @@ _Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.47 %tmp.48;
     %tmp.55 = const :options;
     symbol [ options %tmp.55 71 9 16 const ];
-    %tmp.56 = newa 1;
+    %tmp.56 = newa 2;
     symbol [ GmOption %tmp.60 72 16 24 ];
     %tmp.60 = getv ? :GmOption;
     %tmp.61 = "pk_hands";
@@ -803,37 +803,52 @@ _Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_start:
     %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.72, %tmp.73);
     %tmp.74 = dup %tmp.56;
     %tmp.75 = aputv %tmp.74 0 %tmp.57;
-    %tmp.76 = dup %tmp.53;
-    %tmp.77 = aputv %tmp.76 %tmp.55 %tmp.75;
-    %tmp.1 = newc %tmp.4 (%tmp.77);
+    symbol [ GmOption %tmp.79 75 16 24 ];
+    %tmp.79 = getv ? :GmOption;
+    %tmp.80 = "pk_skin";
+    %tmp.81 = "Card Back";
+    %tmp.82 = newa 2;
+    %tmp.83 = "CLASSIC";
+    %tmp.84 = dup %tmp.82;
+    %tmp.85 = aputv %tmp.84 0 %tmp.83;
+    %tmp.86 = "NEON";
+    %tmp.87 = dup %tmp.85;
+    %tmp.88 = aputv %tmp.87 1 %tmp.86;
+    %tmp.89 = 0;
+    %tmp.76 = newc %tmp.79 (%tmp.80, %tmp.81, %tmp.88, %tmp.89);
+    %tmp.90 = dup %tmp.75;
+    %tmp.91 = aputv %tmp.90 1 %tmp.76;
+    %tmp.92 = dup %tmp.53;
+    %tmp.93 = aputv %tmp.92 %tmp.55 %tmp.91;
+    %tmp.1 = newc %tmp.4 (%tmp.93);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 61 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc" 75 4 ]
-    [ "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_start" "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc" 78 4 ]
+    [ "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_start" "_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 75 8 9 ];
-    symbol [ GameMenuView %tmp.81 75 16 28 ];
-    %tmp.81 = getv ? :GameMenuView;
-    %tmp.82 = lgetv %cfg.1;
-    symbol [ cfg %tmp.82 75 29 32 ];
-    %tmp.78 = newc %tmp.81 (%tmp.82);
-    lputv %v.2 %tmp.78;
-    symbol [ v %v.2 75 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc" 76 4 ]
-    %tmp.83 = newa 2;
-    %tmp.84 = lgetv %v.2;
-    symbol [ v %tmp.84 76 12 13 ];
-    %tmp.85 = dup %tmp.83;
-    %tmp.86 = aputv %tmp.85 0 %tmp.84;
-    symbol [ GameMenuDelegate %tmp.90 76 19 35 ];
-    %tmp.90 = getv ? :GameMenuDelegate;
-    %tmp.91 = lgetv %v.2;
-    symbol [ v %tmp.91 76 36 37 ];
-    %tmp.87 = newc %tmp.90 (%tmp.91);
-    %tmp.92 = dup %tmp.86;
-    %tmp.93 = aputv %tmp.92 1 %tmp.87;
-    ret %tmp.93;
-_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_77_0_stop:
+    symbol [ v %v.2 78 8 9 ];
+    symbol [ GameMenuView %tmp.97 78 16 28 ];
+    %tmp.97 = getv ? :GameMenuView;
+    %tmp.98 = lgetv %cfg.1;
+    symbol [ cfg %tmp.98 78 29 32 ];
+    %tmp.94 = newc %tmp.97 (%tmp.98);
+    lputv %v.2 %tmp.94;
+    symbol [ v %v.2 78 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc" 79 4 ]
+    %tmp.99 = newa 2;
+    %tmp.100 = lgetv %v.2;
+    symbol [ v %tmp.100 79 12 13 ];
+    %tmp.101 = dup %tmp.99;
+    %tmp.102 = aputv %tmp.101 0 %tmp.100;
+    symbol [ GameMenuDelegate %tmp.106 79 19 35 ];
+    %tmp.106 = getv ? :GameMenuDelegate;
+    %tmp.107 = lgetv %v.2;
+    symbol [ v %tmp.107 79 36 37 ];
+    %tmp.103 = newc %tmp.106 (%tmp.107);
+    %tmp.108 = dup %tmp.102;
+    %tmp.109 = aputv %tmp.108 1 %tmp.103;
+    ret %tmp.109;
+_Users_kkorolczuk_work_garmin_poker_source_PokerMenu_mc_60_40_80_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/poker/source/PokerMenu.mc"; @line = 4; ]
 <init> {

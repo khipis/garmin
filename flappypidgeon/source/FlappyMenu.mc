@@ -61,7 +61,12 @@ function buildFlappyMenu() as Lang.Array {
         :lbTitle => "FLAPPY",
         :hooks   => new FlappyHooks(),
         :options => [
-            new GmOption("fp_gap", "Gap", ["WIDE", "NORMAL", "TIGHT"], 1)
+            new GmOption("fp_gap", "Gap", ["WIDE", "NORMAL", "TIGHT"], 1),
+            new GmOption("fp_fx", "Sound & Haptics", ["ON", "OFF"], 0),
+            // Cosmetic bird skin — unlocked by rank, shop-ready. A locked pick
+            // simply renders as the classic pidgeon until it's owned (the game
+            // clamps the selection to Progress.owns()).
+            new GmOption("fp_skin", "Bird", ["CLASSIC", "NEON", "GOLD"], 0)
         ]
     });
     var v = new GameMenuView(cfg);

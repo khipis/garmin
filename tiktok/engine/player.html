@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf8">
+<style>
+  html,body{margin:0;padding:0;background:#05060a;overflow:hidden}
+  #c{display:block}
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="arcade.js"></script>
+<script>
+// ── The player: renders a full vertical promo timeline into #c, advanced by a
+// fixed timestep (window.__frame(dt)) so recording is deterministic + smooth.
+(function () {
+  "use strict";
+  var W = 1080, H = 1920;
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  var G = window.ARCADE || {};
+  var SPEC = window.SPEC || { scenes: [{ type: "card", dur: 2, card: { title: "NO SPEC" } }] };
+
+  // offscreen for watch gameplay
+  var GS = 900;
+  var gc = document.createElement("canvas"); gc.width = GS; gc.height = GS;
+  var gx = gc.getContext("2d");
+
+  // build absolute timeline
+  var scenes = SPEC.scenes;
+  var tl = []; var acc = 0;
+  for (var i = 0; i < scenes.length; i++) { var s = scenes[i]; tl.push({ s: s, idx: i, start: acc, end: acc + s.dur }); acc += s.dur; }
+  var TOTAL = acc;
+  window.__total = TOTAL;
+
+  // preload real-screenshot images used by "proof" / shot-based "play" scenes
+  var proofImages = {};
+  var pendingLoads = [];
+  scenes.forEach(function (s, idx) {
+    var list = s.images || (s.card && s.card.images) || null;
+    if (list && list.length) {
+      proofImages[idx] = [];
+      list.forEach(function (src) {
+        var img = new Image();
+        pendingLoads.push(new Promise(function (resolve) { img.onload = resolve; img.onerror = resolve; }));
+        img.src = src;
+        proofImages[idx].push(img);
+      });
+    }
+  });
+
+  var clock = 0;
+  var gameStates = {};      // per game id, persistent state
+  var gameClock = {};       // per game id, accumulated active time (for continuity)
+
+  function rr(x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function circ(x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.closePath(); }
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function ease(u) { return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; }
+  function easeOutBack(u) { var c = 1.70158, c3 = c + 1; return 1 + c3 * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); }
+
+  function strokedText(txt, x, y, size, color, weight) {
+    ctx.font = (weight || 900) + " " + size + "px Arial, 'Arial Black', sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.lineJoin = "round"; ctx.lineWidth = Math.max(6, size * 0.09);
+    ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.strokeText(txt, x, y);
+    ctx.fillStyle = color; ctx.fillText(txt, x, y);
+  }
+  function pill(txt, cx, y, size, bg, fg, padx, pady) {
+    ctx.font = "900 " + size + "px Arial, sans-serif"; ctx.textBaseline = "middle"; ctx.textAlign = "center";
+    var w = ctx.measureText(txt).width + padx * 2, h = size + pady * 2;
+    ctx.fillStyle = bg; rr(cx - w / 2, y - h / 2, w, h, h / 2); ctx.fill();
+    ctx.fillStyle = fg; ctx.fillText(txt, cx, y);
+  }
+
+  function bgAnim(accent, dark) {
+    var g = ctx.createRadialGradient(W / 2, H * 0.34, 80, W / 2, H * 0.5, H * 0.75);
+    g.addColorStop(0, mix(accent, "#0a0d16", 0.78)); g.addColorStop(1, "#05060a");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // grid
+    ctx.strokeStyle = "rgba(255,255,255,0.04)"; ctx.lineWidth = 1;
+    var off = (clock * 26) % 70;
+    for (var x = -off; x < W; x += 70) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (var y = -off; y < H; y += 70) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    // floating accent motes (twinkling for a livelier backdrop)
+    for (var i = 0; i < 34; i++) {
+      var px = (i * 137.5) % W, py = (H - ((clock * (24 + i % 5 * 10) + i * 90) % (H + 100)));
+      var tw = 0.55 + 0.45 * Math.sin(clock * 3 + i * 1.3);
+      ctx.globalAlpha = 0.10 + 0.14 * tw; ctx.fillStyle = accent; circ(px, py, 3 + (i % 3)); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  // twinkly sparkle particles rising around a rect — adds life to static screenshots
+  function sparkles(cx, cy, w, h, accent, seedOffset) {
+    var n = 16;
+    for (var i = 0; i < n; i++) {
+      var seed = i * 53.7 + (seedOffset || 0) * 1000;
+      var speed = 34 + (i % 5) * 12;
+      var px = cx - w / 2 + ((seed * 12.9) % w);
+      var travel = (clock * speed + seed * 7) % (h + 160);
+      var py = cy + h / 2 + 60 - travel;
+      var tw = 0.5 + 0.5 * Math.sin(clock * 4 + seed);
+      var size = 3 + (i % 4) * 2.2;
+      var alphaEnv = Math.sin(Math.PI * clamp(travel / (h + 160), 0, 1));
+      ctx.globalAlpha = 0.55 * alphaEnv * (0.4 + 0.6 * tw);
+      ctx.fillStyle = i % 3 === 0 ? "#fff" : accent;
+      ctx.save(); ctx.translate(px, py); ctx.rotate(clock * 2 + seed);
+      ctx.beginPath();
+      for (var k = 0; k < 4; k++) {
+        var ang = (Math.PI / 2) * k;
+        var rr2 = k % 2 === 0 ? size : size * 0.4;
+        var pxk = Math.cos(ang) * rr2, pyk = Math.sin(ang) * rr2;
+        if (k === 0) ctx.moveTo(pxk, pyk); else ctx.lineTo(pxk, pyk);
+      }
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function mix(a, b, u) {
+    function h2(c) { c = c.replace("#", ""); return [parseInt(c.substr(0, 2), 16), parseInt(c.substr(2, 2), 16), parseInt(c.substr(4, 2), 16)]; }
+    var A = h2(a), B = h2(b); return "rgb(" + Math.round(A[0] * (1 - u) + B[0] * u) + "," + Math.round(A[1] * (1 - u) + B[1] * u) + "," + Math.round(A[2] * (1 - u) + B[2] * u) + ")";
+  }
+
+  // draw real watch screenshot cover-fit into a circle (for idle games etc.)
+  function drawShotInCircle(img, cx, cy, R, zoom) {
+    if (!img || !img.complete || !img.naturalWidth) return;
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var side = R * 2 * (zoom || 1.08);
+    var scale = Math.max(side / iw, side / ih);
+    var dw = iw * scale, dh = ih * scale;
+    ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh);
+  }
+
+  // draw the watch (round device) with live gameplay OR real screenshots clipped to the screen circle
+  function drawWatch(gameId, accent, cx, cy, R, lt, shotImgs) {
+    // update per-game continuity clock
+    if (gameClock[gameId] == null) gameClock[gameId] = 0;
+    gameClock[gameId] += window.__dt;
+    if (!gameStates[gameId]) gameStates[gameId] = {};
+    // bob the whole watch slightly
+    var bob = Math.sin(clock * 2.3) * 10;
+    cy = cy + bob;
+    // render game to offscreen (arcade) — skipped when we have real shots
+    var game = G[gameId];
+    var useShots = shotImgs && shotImgs.length;
+    if (!useShots) {
+      gx.save(); gx.clearRect(0, 0, GS, GS);
+      if (game) {
+        gx.fillStyle = game.bg || "#000"; gx.fillRect(0, 0, GS, GS);
+        try { game.draw(gx, GS, gameClock[gameId], gameStates[gameId]); } catch (e) { }
+      } else { gx.fillStyle = "#111"; gx.fillRect(0, 0, GS, GS); }
+      gx.restore();
+    }
+    // bezel glow
+    ctx.save();
+    ctx.shadowColor = accent; ctx.shadowBlur = 60;
+    ctx.fillStyle = "#0b0d12"; circ(cx, cy, R + 26); ctx.fill();
+    ctx.restore();
+    // metal bezel ring
+    var bg = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R);
+    bg.addColorStop(0, "#3a3f4a"); bg.addColorStop(0.5, "#71767f"); bg.addColorStop(1, "#22252c");
+    ctx.fillStyle = bg; circ(cx, cy, R + 22); ctx.fill();
+    ctx.fillStyle = "#0a0b0f"; circ(cx, cy, R + 6); ctx.fill();
+    // side buttons
+    ctx.fillStyle = "#4a4f58";
+    rr(cx + R + 2, cy - R * 0.32, 16, R * 0.16, 6); ctx.fill();
+    rr(cx + R + 2, cy + R * 0.18, 16, R * 0.16, 6); ctx.fill();
+    rr(cx - R - 18, cy - R * 0.08, 16, R * 0.18, 6); ctx.fill();
+    // screen clip + gameplay / real shot
+    ctx.save(); circ(cx, cy, R); ctx.clip();
+    if (useShots) {
+      var per = 1.15;
+      var i = clamp(Math.floor(lt / per), 0, shotImgs.length - 1);
+      var localT = lt - i * per;
+      var fade = Math.min(clamp(localT / 0.18, 0, 1), clamp((per - localT) / 0.18, 0, 1), 1);
+      ctx.globalAlpha = 0.35 + 0.65 * fade;
+      var kb = clamp(localT / per, 0, 1);
+      drawShotInCircle(shotImgs[i], cx + Math.sin(kb * Math.PI) * 6, cy, R, 1.06 + 0.06 * kb);
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.drawImage(gc, cx - R, cy - R, R * 2, R * 2);
+    }
+    // subtle screen vignette + gloss
+    var vg = ctx.createRadialGradient(cx, cy, R * 0.4, cx, cy, R);
+    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,0.35)"); ctx.fillStyle = vg; circ(cx, cy, R); ctx.fill();
+    ctx.globalAlpha = 0.10; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.ellipse(cx - R * 0.3, cy - R * 0.5, R * 0.6, R * 0.28, -0.5, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  function drawLeaderboard(accent, lt) {
+    var names = ["ALEX_R", "MIA.G", "K_NOVA", "YOU", "T3MPO", "R.LEE", "ZED"];
+    var scores = [12840, 11220, 10990, 10870, 9930, 9410, 8880];
+    strokedText("GLOBAL", W / 2, 320, 110, "#fff");
+    strokedText("LEADERBOARD", W / 2, 440, 100, accent);
+    var y0 = 620, rh = 128;
+    for (var i = 0; i < names.length; i++) {
+      var in01 = clamp((lt - i * 0.12) / 0.4, 0, 1); if (in01 <= 0) continue;
+      var x = lerp(W + 200, 90, easeOutBack(in01));
+      var you = names[i] === "YOU";
+      var y = y0 + i * rh;
+      ctx.globalAlpha = clamp(in01, 0, 1);
+      ctx.fillStyle = you ? accent : "#141a28"; rr(x, y, W - 180, rh - 16, 22); ctx.fill();
+      if (you) { ctx.strokeStyle = "#fff"; ctx.lineWidth = 4; rr(x, y, W - 180, rh - 16, 22); ctx.stroke(); }
+      ctx.fillStyle = you ? "#04120a" : "#fff"; ctx.font = "900 52px Arial"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+      ctx.fillText("#" + (i + 1), x + 34, y + (rh - 16) / 2);
+      ctx.fillText(names[i], x + 150, y + (rh - 16) / 2);
+      ctx.textAlign = "right"; ctx.fillText(scores[i].toLocaleString(), x + W - 220, y + (rh - 16) / 2);
+      ctx.globalAlpha = 1;
+    }
+  }
+  function lerp(a, b, u) { return a + (b - a) * u; }
+
+  function drawCaptions(txt, lt, dur) {
+    if (!txt) return;
+    var accent = txt.accent || "#66FFAA";
+    // brand chip (top)
+    if (txt.brand !== false) {
+      ctx.globalAlpha = 0.92; pill("BITOCHI GAMES", W / 2, 110, 34, "rgba(8,10,16,0.6)", "#fff", 30, 16); ctx.globalAlpha = 1;
+    }
+    // tag chip near watch bottom
+    if (txt.tag) { var ta = clamp(lt / 0.3, 0, 1); ctx.globalAlpha = ta; pill(txt.tag, W / 2, 1150, 40, accent, "#04120a", 32, 16); ctx.globalAlpha = 1; }
+    // big hook (pops in)
+    var hy = 1290;
+    if (txt.hook) {
+      var u = clamp(lt / 0.35, 0, 1), sc = lerp(0.7, 1, easeOutBack(u));
+      ctx.save(); ctx.translate(W / 2, hy); ctx.scale(sc, sc); ctx.globalAlpha = clamp(lt / 0.2, 0, 1);
+      strokedText(txt.hook, 0, 0, 138, "#fff");
+      if (txt.hook2) strokedText(txt.hook2, 0, 150, 138, accent);
+      ctx.restore(); ctx.globalAlpha = 1;
+    }
+    // sub pill (slides up)
+    if (txt.sub) {
+      var su = clamp((lt - 0.2) / 0.4, 0, 1); var sy = lerp(1620, 1560, ease(su));
+      ctx.globalAlpha = su;
+      ctx.font = "700 46px Arial"; ctx.textAlign = "center";
+      var w = ctx.measureText(txt.sub).width + 60;
+      ctx.fillStyle = "rgba(6,8,14,0.72)"; rr(W / 2 - w / 2, sy - 44, w, 88, 26); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textBaseline = "middle"; ctx.fillText(txt.sub, W / 2, sy);
+      ctx.globalAlpha = 1;
+    }
+    // watermark CTA (bottom)
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = "900 56px Arial"; ctx.fillStyle = "#fff";
+    ctx.fillText("bitochi", W / 2 - 60, 1780); ctx.fillStyle = accent; ctx.fillText(".com", W / 2 + 90, 1780);
+    ctx.font = "700 34px Arial"; ctx.fillStyle = "#cfd8e6"; ctx.fillText("Free on Garmin Connect IQ", W / 2, 1830);
+  }
+
+  function drawCard(card, lt, dur) {
+    var accent = card.accent || "#66FFAA";
+    // kicker
+    if (card.kicker) { var ka = clamp(lt / 0.3, 0, 1); ctx.globalAlpha = ka; pill(card.kicker, W / 2, 330, 42, accent, "#04120a", 34, 18); ctx.globalAlpha = 1; }
+    // title
+    var u = clamp(lt / 0.4, 0, 1), sc = lerp(0.8, 1, easeOutBack(u));
+    ctx.save(); ctx.translate(W / 2, 560); ctx.scale(sc, sc); ctx.globalAlpha = clamp(lt / 0.25, 0, 1);
+    strokedText(card.title || "", 0, 0, 118, "#fff");
+    if (card.title2) strokedText(card.title2, 0, 130, 118, accent);
+    ctx.restore(); ctx.globalAlpha = 1;
+    // big
+    if (card.big) { strokedText(card.big, W / 2, 900, 150, accent); }
+    // mini watch preview on intro cards
+    var curIdx = currentScene().idx;
+    var cardShots = (proofImages[curIdx] && proofImages[curIdx].length) ? proofImages[curIdx] : null;
+    if (cardShots && cardShots[0] && cardShots[0].complete) {
+      // Real device photo — float it (already includes the watch bezel).
+      var img = cardShots[0];
+      var popU = clamp(lt / 0.4, 0, 1);
+      var pop = lerp(0.6, 1, easeOutBack(popU));
+      var tw = 620 * pop, th = tw * img.naturalHeight / img.naturalWidth;
+      var bob = Math.sin(clock * 2.2) * 10;
+      var wiggle = Math.sin(clock * 1.6) * 0.035;
+      var cx0 = W / 2, cy0 = 980 + bob;
+      var pulse = 0.5 + 0.5 * Math.sin(clock * 3);
+      ctx.save(); ctx.globalAlpha = 0.28 + 0.16 * pulse;
+      var halo = ctx.createRadialGradient(cx0, cy0, tw * 0.12, cx0, cy0, tw * 0.6);
+      halo.addColorStop(0, accent); halo.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(cx0, cy0, tw * 0.6, 0, 7); ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.shadowColor = accent; ctx.shadowBlur = 50;
+      ctx.translate(cx0, cy0); ctx.rotate(wiggle);
+      ctx.drawImage(img, -tw / 2, -th / 2, tw, th);
+      ctx.restore();
+      sparkles(cx0, cy0, tw, th, accent, curIdx);
+    } else if (card.game) {
+      drawWatch(card.game, accent, W / 2, 1120, 300, lt, null);
+    }
+    // chips
+    if (card.chips) {
+      var cy = 1560; var total = card.chips.length; var startX = W / 2;
+      ctx.font = "800 40px Arial";
+      var widths = card.chips.map(function (c) { return ctx.measureText(c).width + 60; });
+      var tw = widths.reduce(function (a, b) { return a + b + 24; }, -24);
+      var x = W / 2 - tw / 2;
+      for (var i = 0; i < card.chips.length; i++) {
+        var cw = widths[i]; var ca = clamp((lt - 0.3 - i * 0.12) / 0.3, 0, 1); ctx.globalAlpha = ca;
+        ctx.fillStyle = "#141a28"; rr(x, cy - 44, cw, 88, 44); ctx.fill();
+        ctx.strokeStyle = accent; ctx.lineWidth = 3; rr(x, cy - 44, cw, 88, 44); ctx.stroke();
+        ctx.fillStyle = "#eaf0ff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(card.chips[i], x + cw / 2, cy);
+        ctx.globalAlpha = 1; x += cw + 24;
+      }
+    }
+    // note
+    if (card.note) { ctx.globalAlpha = clamp((lt - 0.4) / 0.4, 0, 1); ctx.font = "700 42px Arial"; ctx.fillStyle = "#dfe7f5"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(card.note, W / 2, 1720); ctx.globalAlpha = 1; }
+  }
+
+  function currentScene() { for (var i = 0; i < tl.length; i++) { if (clock >= tl[i].start && clock < tl[i].end) return tl[i]; } return tl[tl.length - 1]; }
+
+  // real device-screenshot showcase — authenticity proof, or shot-based beats with hooks
+  function drawProof(imgs, lt, dur, accentIn, text) {
+    text = text || {};
+    var accent = text.accent || accentIn || '#66FFAA';
+    var hasHook = !!(text.hook || text.hook2);
+    if (!hasHook) {
+      ctx.globalAlpha = 0.94; pill('REAL GAMEPLAY \u00b7 ACTUAL WATCH', W / 2, 210, 34, accent, '#04120a', 30, 16); ctx.globalAlpha = 1;
+    } else {
+      ctx.globalAlpha = 0.92; pill('BITOCHI GAMES', W / 2, 110, 34, 'rgba(8,10,16,0.6)', '#fff', 30, 16); ctx.globalAlpha = 1;
+      if (text.tag) { var ta = clamp(lt / 0.3, 0, 1); ctx.globalAlpha = ta; pill(text.tag, W / 2, 210, 40, accent, '#04120a', 32, 16); ctx.globalAlpha = 1; }
+      var hy = 300;
+      if (text.hook) {
+        var u = clamp(lt / 0.35, 0, 1), sc = lerp(0.7, 1, easeOutBack(u));
+        ctx.save(); ctx.translate(W / 2, hy); ctx.scale(sc, sc); ctx.globalAlpha = clamp(lt / 0.2, 0, 1);
+        strokedText(text.hook, 0, 0, 110, '#fff');
+        if (text.hook2) strokedText(text.hook2, 0, 120, 110, accent);
+        ctx.restore(); ctx.globalAlpha = 1;
+      }
+    }
+    if (!imgs || !imgs.length) return;
+    var per = dur / imgs.length;
+    var i = clamp(Math.floor(lt / per), 0, imgs.length - 1);
+    var localT = lt - i * per;
+    var img = imgs[i];
+    if (img && img.complete && img.naturalWidth) {
+      var fadeIn = clamp(localT / 0.22, 0, 1), fadeOut = clamp((per - localT) / 0.22, 0, 1);
+      var a = Math.min(fadeIn, fadeOut, 1);
+      // bounce in (pop), then a slow continuous ken-burns drift + tiny wiggle for liveliness
+      var bounceU = clamp(localT / 0.32, 0, 1);
+      var bounceSc = lerp(0.55, 1, easeOutBack(bounceU));
+      var kb = clamp(localT / per, 0, 1);
+      var driftZoom = lerp(1.0, 1.1, kb);
+      var driftX = Math.sin(kb * Math.PI * 0.9) * 26;
+      var driftY = -kb * 22;
+      var wiggle = Math.sin(clock * 2.4 + i * 1.7) * 0.018;
+      var iw = img.naturalWidth, ih = img.naturalHeight;
+      var tw = W * 0.82, th = tw * ih / iw;
+      var maxH = hasHook ? H * 0.48 : H * 0.56;
+      if (th > maxH) { th = maxH; tw = th * iw / ih; }
+      var cx = W / 2, cy = hasHook ? H * 0.52 : H * 0.44;
+      // pulsing accent halo behind the shot for extra energy
+      var pulse = 0.5 + 0.5 * Math.sin(clock * 3.1);
+      ctx.save(); ctx.globalAlpha = a * 0.5;
+      var halo = ctx.createRadialGradient(cx, cy, tw * 0.15, cx, cy, tw * 0.62);
+      halo.addColorStop(0, accent); halo.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalAlpha = a * (0.22 + 0.18 * pulse); ctx.fillStyle = halo;
+      ctx.beginPath(); ctx.arc(cx, cy, tw * 0.62, 0, 7); ctx.fill();
+      ctx.restore();
+      ctx.save(); ctx.globalAlpha = a;
+      ctx.shadowColor = 'rgba(0,0,0,0.55)'; ctx.shadowBlur = 70;
+      ctx.translate(cx + driftX, cy + driftY); ctx.rotate(wiggle); ctx.scale(bounceSc * driftZoom, bounceSc * driftZoom);
+      ctx.drawImage(img, -tw / 2, -th / 2, tw, th);
+      ctx.restore(); ctx.globalAlpha = 1;
+      sparkles(cx, cy, tw, th, accent, i);
+    }
+    if (imgs.length > 1) {
+      var dw = 16, gap = 26, tx = W / 2 - ((imgs.length - 1) * gap) / 2;
+      var dy = hasHook ? H * 0.78 : H * 0.75;
+      for (var k = 0; k < imgs.length; k++) { ctx.globalAlpha = k === i ? 1 : 0.35; ctx.fillStyle = accent; circ(tx + k * gap, dy, dw / 2); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+    if (text.sub) {
+      var su = clamp(lt / 0.3, 0, 1);
+      ctx.globalAlpha = su; ctx.font = '700 44px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      var w = ctx.measureText(text.sub).width + 60;
+      ctx.fillStyle = 'rgba(6,8,14,0.72)'; rr(W / 2 - w / 2, 1560 - 44, w, 88, 26); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText(text.sub, W / 2, 1560);
+      ctx.globalAlpha = 1;
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '900 56px Arial'; ctx.fillStyle = '#fff';
+    ctx.fillText('bitochi', W / 2 - 60, 1780); ctx.fillStyle = accent; ctx.fillText('.com', W / 2 + 90, 1780);
+    ctx.font = '700 34px Arial'; ctx.fillStyle = '#cfd8e6'; ctx.fillText('60+ free games \u00b7 Garmin Connect IQ', W / 2, 1830);
+  }
+
+  function renderFrame() {
+    var cur = currentScene(); var s = cur.s; var lt = clock - cur.start;
+    var accent = (s.text && s.text.accent) || (s.card && s.card.accent) || s.accent || "#66FFAA";
+    ctx.clearRect(0, 0, W, H);
+    bgAnim(accent, "#05060a");
+    if (s.type === "card") { drawCard(s.card || {}, lt, s.dur); }
+    else if (s.type === "site") { drawLeaderboard(accent, lt); drawCaptions(Object.assign({ brand: false }, s.text || {}), lt, s.dur); }
+    else if (s.type === "proof") { drawProof(proofImages[cur.idx] || [], lt, s.dur, accent, s.text); }
+    else { // play (arcade engine, or real screenshots when s.images is set)
+      var R = s.watchR || 430; var cy = s.watchCy || 690;
+      var shots = (s.images && proofImages[cur.idx]) ? proofImages[cur.idx] : null;
+      drawWatch(s.game, accent, W / 2, cy, R, lt, shots);
+      drawCaptions(s.text || {}, lt, s.dur);
+    }
+    // scene-start flash cut
+    if (lt < 0.14) { ctx.globalAlpha = (1 - lt / 0.14) * 0.5; ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+    // progress bar
+    ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fillRect(0, H - 8, W, 8);
+    ctx.fillStyle = accent; ctx.fillRect(0, H - 8, W * (clock / TOTAL), 8);
+  }
+
+  window.__dt = 1 / 30;
+  window.__frame = function (dt) {
+    window.__dt = dt; clock += dt; if (clock > TOTAL) clock = TOTAL;
+    renderFrame();
+    return cv.toDataURL("image/png");
+  };
+  window.__step = function (dt) {
+    window.__dt = dt; clock += dt; if (clock > TOTAL) clock = TOTAL;
+    renderFrame();
+  };
+  window.__reset = function () { clock = 0; gameStates = {}; gameClock = {}; };
+  // initial paint (deferred until any real-screenshot images used by "proof" scenes finish loading)
+  window.__ready = false;
+  Promise.all(pendingLoads).then(function () { renderFrame(); window.__ready = true; });
+  if (pendingLoads.length === 0) { renderFrame(); window.__ready = true; }
+})();
+</script>
+</body>
+</html>

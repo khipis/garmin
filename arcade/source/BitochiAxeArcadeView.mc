@@ -5,6 +5,7 @@ using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Attention;
 
 enum {
     GS_MENU,
@@ -111,6 +112,9 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _menuRow;
     hidden var _submitted;
 
+    // sound + haptics master switch (OPTIONS: arc_fx). 0/unset = ON, 1 = OFF.
+    hidden var _fxOn;
+
     // Axes-per-level base, from the shared OPTIONS screen (arc_axes: 0/1/2 ->
     // 3/5/7). Drives how many axes/throws you get per level before advancing;
     // also segments the leaderboard (ax3/ax5/ax7).
@@ -215,6 +219,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         var av = Application.Storage.getValue("arc_axes");
         if (av instanceof Number && av >= 0 && av <= 2) { _axesIdx = av; }
         _axesBase = [3, 5, 7][_axesIdx];
+
+        _fxOn = _loadFx();
     }
 
     // Leaderboard variant = axe-count setting, so 3/5/7 rank separately.
@@ -374,6 +380,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _comboTimer = 35;
             _shakeTimer = 6;
             _flashTimer = 4;
+            _tone(3);
             doVibe(80, 120);
             _crowdHype = 25;
             var rad = (_appleAngle + _logAngle) * 3.14159 / 180.0;
@@ -383,6 +390,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             spawnSparks(sx, sy, 0xFF4444);
         } else {
             pts = 10 * _comboMult;
+            _tone(0);
             doVibe(40, 60);
             _shakeTimer = 3;
         }
@@ -432,14 +440,17 @@ class BitochiAxeArcadeView extends WatchUi.View {
         spawnSparks(_failAxeX.toNumber(), _failAxeY.toNumber(), sparkCol);
         if (_lives <= 0) {
             _comboMsg = "CLANG!";
+            _tone(4);
             doVibe(100, 300);
             _shakeTimer = 16;
         } else if (_lives == 1) {
             _comboMsg = "LAST LIFE!";
+            _tone(2);
             doVibe(100, 200);
             _shakeTimer = 14;
         } else {
             _comboMsg = _lives + " LIVES LEFT";
+            _tone(2);
             doVibe(80, 150);
             _shakeTimer = 10;
         }
@@ -515,10 +526,12 @@ class BitochiAxeArcadeView extends WatchUi.View {
         if (_isBoss) {
             _comboMsg = "BOSS!";
             _flashTimer = 8;
+            _tone(3);
             doVibe(100, 200);
             _crowdHype = 30;
         } else {
             _comboMsg = "LEVEL " + _level;
+            _tone(1);
             doVibe(60, 100);
         }
         _comboTimer = 40;
@@ -582,11 +595,35 @@ class BitochiAxeArcadeView extends WatchUi.View {
         }
     }
 
+    // ── Best-effort sound + haptics (silent/absent hardware is fine) ──────
+    // kind: 0 light tick · 1 loud/success beep · 2 alert · 3 fanfare · 4 failure.
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue("arc_fx");
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else if (kind == 2) { t = Attention.TONE_ALERT_LO; }
+        else if (kind == 3) { t = Attention.TONE_SUCCESS; }
+        else                { t = Attention.TONE_FAILURE; }
+        try { Attention.playTone(t); } catch (e) { }
+    }
     hidden function doVibe(intensity, duration) {
-        if (Toybox has :Attention) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try {
             var vp = new Toybox.Attention.VibeProfile(intensity, duration);
             Toybox.Attention.vibrate([vp]);
-        }
+        } catch (e) { }
     }
 
     function doAction() {
@@ -598,6 +635,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         if (gameState == GS_READY) {
             _axeVy = -8.0;
             gameState = GS_THROW;
+            _tone(0);
             return;
         }
         if (gameState == GS_OVER) {
@@ -660,6 +698,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
     }
 
     hidden function startGame() {
+        _fxOn = _loadFx();
         _submitted = false;
         _score = 0; _level = 1;
         _lives = 3;

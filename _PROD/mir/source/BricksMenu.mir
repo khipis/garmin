@@ -454,9 +454,9 @@ _Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_45_49_51_4_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc"; @line = 54; @symbol_functiondef = [buildBricksMenu,54,9,24]; @symbol_return<0> = [Lang,54,30,34]; @symbol_return<1> = [Array,54,35,40]; ]
 function buildBricksMenu() as Lang.Array {
-_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_start:
+_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_start:
 [ "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc" 55 4 ]
-    [ "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_start" "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_stop" ]
+    [ "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_start" "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_stop" ]
     %cfg.1 = local;
     symbol [ cfg %cfg.1 55 8 11 ];
     symbol [ MenuConfig %tmp.4 55 18 28 ];
@@ -506,7 +506,7 @@ _Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_start:
     %tmp.48 = aputv %tmp.47 %tmp.42 %tmp.43;
     %tmp.50 = const :options;
     symbol [ options %tmp.50 64 9 16 const ];
-    %tmp.51 = newa 1;
+    %tmp.51 = newa 2;
     symbol [ GmOption %tmp.55 65 16 24 ];
     %tmp.55 = getv ? :GmOption;
     %tmp.56 = "br_diff";
@@ -525,37 +525,55 @@ _Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_start:
     %tmp.52 = newc %tmp.55 (%tmp.56, %tmp.57, %tmp.67, %tmp.68);
     %tmp.69 = dup %tmp.51;
     %tmp.70 = aputv %tmp.69 0 %tmp.52;
-    %tmp.71 = dup %tmp.48;
-    %tmp.72 = aputv %tmp.71 %tmp.50 %tmp.70;
-    %tmp.1 = newc %tmp.4 (%tmp.72);
+    symbol [ GmOption %tmp.74 68 16 24 ];
+    %tmp.74 = getv ? :GmOption;
+    %tmp.75 = "br_skin";
+    %tmp.76 = "Skin";
+    %tmp.77 = newa 3;
+    %tmp.78 = "CLASSIC";
+    %tmp.79 = dup %tmp.77;
+    %tmp.80 = aputv %tmp.79 0 %tmp.78;
+    %tmp.81 = "NEON";
+    %tmp.82 = dup %tmp.80;
+    %tmp.83 = aputv %tmp.82 1 %tmp.81;
+    %tmp.84 = "GOLD";
+    %tmp.85 = dup %tmp.83;
+    %tmp.86 = aputv %tmp.85 2 %tmp.84;
+    %tmp.87 = 0;
+    %tmp.71 = newc %tmp.74 (%tmp.75, %tmp.76, %tmp.86, %tmp.87);
+    %tmp.88 = dup %tmp.70;
+    %tmp.89 = aputv %tmp.88 1 %tmp.71;
+    %tmp.90 = dup %tmp.48;
+    %tmp.91 = aputv %tmp.90 %tmp.50 %tmp.89;
+    %tmp.1 = newc %tmp.4 (%tmp.91);
     lputv %cfg.1 %tmp.1;
     symbol [ cfg %cfg.1 55 8 11 ];
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc" 68 4 ]
-    [ "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_start" "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_stop" ]
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc" 71 4 ]
+    [ "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_start" "_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_stop" ]
     %v.2 = local;
-    symbol [ v %v.2 68 8 9 ];
-    symbol [ GameMenuView %tmp.76 68 16 28 ];
-    %tmp.76 = getv ? :GameMenuView;
-    %tmp.77 = lgetv %cfg.1;
-    symbol [ cfg %tmp.77 68 29 32 ];
-    %tmp.73 = newc %tmp.76 (%tmp.77);
-    lputv %v.2 %tmp.73;
-    symbol [ v %v.2 68 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc" 69 4 ]
-    %tmp.78 = newa 2;
-    %tmp.79 = lgetv %v.2;
-    symbol [ v %tmp.79 69 12 13 ];
-    %tmp.80 = dup %tmp.78;
-    %tmp.81 = aputv %tmp.80 0 %tmp.79;
-    symbol [ GameMenuDelegate %tmp.85 69 19 35 ];
-    %tmp.85 = getv ? :GameMenuDelegate;
-    %tmp.86 = lgetv %v.2;
-    symbol [ v %tmp.86 69 36 37 ];
-    %tmp.82 = newc %tmp.85 (%tmp.86);
-    %tmp.87 = dup %tmp.81;
-    %tmp.88 = aputv %tmp.87 1 %tmp.82;
-    ret %tmp.88;
-_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_70_0_stop:
+    symbol [ v %v.2 71 8 9 ];
+    symbol [ GameMenuView %tmp.95 71 16 28 ];
+    %tmp.95 = getv ? :GameMenuView;
+    %tmp.96 = lgetv %cfg.1;
+    symbol [ cfg %tmp.96 71 29 32 ];
+    %tmp.92 = newc %tmp.95 (%tmp.96);
+    lputv %v.2 %tmp.92;
+    symbol [ v %v.2 71 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc" 72 4 ]
+    %tmp.97 = newa 2;
+    %tmp.98 = lgetv %v.2;
+    symbol [ v %tmp.98 72 12 13 ];
+    %tmp.99 = dup %tmp.97;
+    %tmp.100 = aputv %tmp.99 0 %tmp.98;
+    symbol [ GameMenuDelegate %tmp.104 72 19 35 ];
+    %tmp.104 = getv ? :GameMenuDelegate;
+    %tmp.105 = lgetv %v.2;
+    symbol [ v %tmp.105 72 36 37 ];
+    %tmp.101 = newc %tmp.104 (%tmp.105);
+    %tmp.106 = dup %tmp.100;
+    %tmp.107 = aputv %tmp.106 1 %tmp.101;
+    ret %tmp.107;
+_Users_kkorolczuk_work_garmin_bricks_source_BricksMenu_mc_54_41_73_0_stop:
 }
 [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BricksMenu.mc"; @line = 4; ]
 <init> {

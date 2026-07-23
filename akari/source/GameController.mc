@@ -26,9 +26,12 @@
 using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
+using Toybox.Attention;
 
 // Global leaderboard game identifier (must match the backend key).
 const LB_GAME_ID = "akari";
+
+const AK_FX_KEY = "ak_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const AS_MENU = 0;
 const AS_PLAY = 1;
@@ -71,6 +74,8 @@ class GameController {
 
     var dirty;
 
+    hidden var _fxOn;     // sound + haptics master switch (OPTIONS: ak_fx)
+
     function initialize() {
         state          = AS_MENU;
         menuRow        = 0;
@@ -90,8 +95,35 @@ class GameController {
         dailyBestSec   = -1;
         streak         = 0;
         dirty          = true;
+        _fxOn          = _loadFx();
         _loadAll();
         _refreshDailyStatus();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(AK_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 tap/move/toggle · 1 win/solve · 2 mistake.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     // ── Persistence ────────────────────────────────────────────
@@ -203,6 +235,7 @@ class GameController {
     function beginGame() { _startGame(); }
 
     hidden function _startGame() {
+        _fxOn = _loadFx();
         _refreshDailyStatus();
         var rec;
         if (mode == AK_MODE_DAILY) {
@@ -265,6 +298,7 @@ class GameController {
         curR = ((curR + dr) + n) % n;
         curC = ((curC + dc) + n) % n;
         dirty = true;
+        _tone(0);
     }
     function setCursor(r, c) {
         if (state != AS_PLAY || !grid.inBounds(r, c)) { return; }
@@ -292,12 +326,15 @@ class GameController {
         moves = moves + 1;
         // X doesn't change illumination but we still re-render.
         dirty = true;
+        _tone(0);
     }
     hidden function _cycleAt(r, c) {
         grid.cycle(r, c);
         moves = moves + 1;
         lit   = IlluminationEngine.compute(grid);
         dirty = true;
+        _tone(0);
+        _vibe(30, 30);
         if (ValidationEngine.isSolved(grid, lit)) { _finishWin(); }
     }
 
@@ -329,5 +366,7 @@ class GameController {
 
         state = AS_WIN;
         dirty = true;
+        _tone(1);
+        _vibe(100, 250);
     }
 }

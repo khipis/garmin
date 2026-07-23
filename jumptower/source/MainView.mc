@@ -60,21 +60,76 @@ class MainView extends WatchUi.View {
         _drawBackground(dc);
 
         var shx = 0;
-        if (_ctrl.deathShake > 0) { shx = (Math.rand() % 7) - 3; }
+        var sh = _ctrl.deathShake;
+        if (_ctrl.shake > sh) { sh = _ctrl.shake; }
+        if (sh > 0) {
+            var amp = (sh > 5) ? 4 : 3;
+            shx = (Math.rand() % (amp * 2 + 1)) - amp;
+        }
 
         _drawPlatforms(dc, shx);
         if (_ctrl.jetpackT > 0) { _drawJetpackFlame(dc, shx); }
+        // Particles behind the frog so it always stays readable.
+        _ctrl.fx.draw(dc, shx);
         // Player at its current screen-y.
         _ctrl.player.draw(dc, (_ctrl.player.x + shx).toNumber(),
                               _ctrl.player.y.toNumber());
+        if (_ctrl.shieldActive) { _drawShieldBubble(dc, shx); }
         _drawHUD(dc);
 
         if (_ctrl.lastSpringFlash > 0) { _drawSpringFx(dc); }
         if (_ctrl.jetpackFlash    > 0) { _drawJetpackFx(dc); }
+        if (_ctrl.shieldFlash     > 0) { _drawBanner(dc, "SHIELD!", 0x66FFCC); }
+        if (_ctrl.shieldSaveFlash > 0) { _drawBanner(dc, "SAVED!",  0x66FFCC); }
         if (_ctrl.coinFlash       > 0) { _drawCoinFx(dc); }
+        if (_ctrl.comboFlash > 0 && _ctrl.comboCount >= 3) { _drawCombo(dc); }
         if (_ctrl.zoneFlashT      > 0) { _drawZoneBanner(dc); }
         if (_ctrl.state == GS_READY)   { _drawReady(dc); }
+        if (_ctrl.dailyT > 0 && _ctrl.dailyMsg != null) { _drawDailyToast(dc); }
         if (_ctrl.state == GS_OVER)    { _drawOver(dc); }
+    }
+
+    // One-shot daily-bonus toast (queued by the App on the day's first
+    // launch). A lightweight banner over the top of the run — no new view.
+    hidden function _drawDailyToast(dc) {
+        var cx = _ctrl.screenW / 2;
+        var cy = _ctrl.screenH * 30 / 100;
+        var bw = _ctrl.screenW * 92 / 100;
+        var bh = 20;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.drawText(cx, cy - 7, Graphics.FONT_XTINY,
+                    _ctrl.dailyMsg, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Cyan bubble drawn around the frog while a shield is armed.
+    hidden function _drawShieldBubble(dc, shx) {
+        var sx = (_ctrl.player.x + shx).toNumber();
+        var sy = _ctrl.player.y.toNumber();
+        var r  = _ctrl.player.w + 6;
+        dc.setColor(0x66FFCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(sx, sy, r);
+        dc.drawCircle(sx, sy, r - 1);
+        // A little top-left glint so it reads as glass.
+        dc.setColor(0xEAFFF7, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(sx - r / 2, sy - r / 2, 1);
+    }
+
+    hidden function _drawBanner(dc, msg, col) {
+        var cx = _ctrl.screenW / 2;
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _ctrl.screenH - 40, Graphics.FONT_SMALL,
+                    msg, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function _drawCombo(dc) {
+        var cx = _ctrl.screenW / 2;
+        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, 24, Graphics.FONT_XTINY,
+                    "COMBO x" + _ctrl.comboCount.format("%d"),
+                    Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // Little flickering flame under the frog while the jetpack burns.
@@ -243,6 +298,8 @@ class MainView extends WatchUi.View {
                 col = 0x2A82C8; top = 0x4FB0EF; snow2 = 0xC8F0FF;
             } else if (p.type == PT_JETPACK) {
                 col = 0x707880; top = 0xC8D0D8; snow2 = 0xFFD27A;
+            } else if (p.type == PT_SHIELD) {
+                col = 0x1E8C74; top = 0x3FD9B4; snow2 = 0xC8FFEF;
             }
 
             // ── Dark outline — drawn first as a 1-px rect 1 px larger
@@ -323,6 +380,15 @@ class MainView extends WatchUi.View {
                                 [rx,     ry + 3]]);
                 dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(rx, ry, 2);
+            } else if (p.type == PT_SHIELD) {
+                // A floating bubble emblem hovering over the platform.
+                var bx = x + p.w / 2;
+                var by = capY - 5;
+                dc.setColor(0x66FFCC, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(bx, by, 5);
+                dc.drawCircle(bx, by, 4);
+                dc.setColor(0xEAFFF7, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(bx - 2, by - 2, 1);
             }
 
             if (p.coinAlive) { _drawCoin(dc, p.coinX + shx, p.coinY); }
@@ -543,7 +609,15 @@ class MainView extends WatchUi.View {
             lines.add(["Best " + (_ctrl.hi / 6).format("%d") + "m", 0xFFCC22]);
         }
         lines.add([_ctrl.coinsRun.format("%d") + " coins this run", 0xFFFFFF]);
-        lines.add([_ctrl.lifeCoins.format("%d") + " lifetime", 0x99AABB]);
+        // Shared meta-progression summary line: level + rank + coin balance.
+        lines.add(["Lv " + Progress.level().format("%d") + " " + _ctrl.rankName()
+                   + " - " + Progress.coins().format("%d") + "c", 0xBFD8C4]);
+        if (Progress.currentStreak() > 1) {
+            lines.add(["Streak " + Progress.currentStreak().format("%d"), 0x66CCFF]);
+        }
+        if (_ctrl.pgUnlockMsg != null) {
+            lines.add([_ctrl.pgUnlockMsg, 0xFFD24A]);
+        }
         if (_ctrl.hasNewCoinsRecord()) {
             lines.add(["*** BEST HAUL EVER! ***", 0xFFCC22]);
         }

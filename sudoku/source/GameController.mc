@@ -18,9 +18,12 @@
 
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Attention;
 
 // Global leaderboard game identifier (must match the backend key).
 const LB_GAME_ID = "sudoku";
+
+const SK_FX_KEY = "sk_fx";   // 0/unset = sound+haptics ON, 1 = OFF
 
 const GS_MENU     = 0;
 const GS_PLAY     = 1;
@@ -69,6 +72,8 @@ class GameController {
     // an immediate redraw (set by setCell, clearCell, etc).
     var dirty;
 
+    hidden var _fxOn;   // sound + haptics master switch (OPTIONS: sk_fx)
+
     function initialize() {
         state    = GS_MENU;
         mode     = MODE_CLASSIC;
@@ -83,7 +88,34 @@ class GameController {
         bestMs      = -1;
         lastTimeMs  = 0;
         dirty       = true;
+        _fxOn       = _loadFx();
         _loadMenuSettings();
+    }
+
+    // ── Best-effort feedback (silent/absent hardware is fine) ──────────────
+    hidden function _loadFx() {
+        try {
+            var v = Application.Storage.getValue(SK_FX_KEY);
+            if (v instanceof Number && v == 1) { return false; }
+        } catch (e) { }
+        return true;
+    }
+    // kind: 0 move/fill · 1 solve/win · 2 mistake/invalid.
+    hidden function _tone(kind) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :playTone)) { return; }
+        var t;
+        if      (kind == 0) { t = Attention.TONE_KEY; }
+        else if (kind == 1) { t = Attention.TONE_LOUD_BEEP; }
+        else                { t = Attention.TONE_ALERT_LO; }
+        try { Attention.playTone(t); } catch (e) {}
+    }
+    hidden function _vibe(intensity, duration) {
+        if (!_fxOn) { return; }
+        if (!(Toybox has :Attention)) { return; }
+        if (!(Attention has :vibrate)) { return; }
+        try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
     }
 
     hidden function _loadMenuSettings() {
@@ -151,6 +183,7 @@ class GameController {
 
         elapsedMs   = 0;
         _lastResume = System.getTimer();
+        _fxOn = _loadFx();
         state = GS_PLAY;
         dirty = true;
     }
@@ -204,6 +237,7 @@ class GameController {
         curR = (curR + dr + n) % n;
         curC = (curC + dc + n) % n;
         dirty = true;
+        _tone(0);
     }
 
     function setCellTo(value) {
@@ -211,6 +245,13 @@ class GameController {
         if (!grid.setValue(curR, curC, value)) { return; }
         if (valMode == VAL_RELAXED) { grid.recomputeErrors(); }
         dirty = true;
+        if (value != 0 && valMode == VAL_RELAXED && grid.isError(curR, curC)) {
+            _tone(2);
+            _vibe(45, 70);
+        } else {
+            _tone(0);
+            _vibe(25, 25);
+        }
         _checkAutoComplete();
     }
 
@@ -247,6 +288,8 @@ class GameController {
         } else {
             state = GS_FAILED;
             dirty = true;
+            _tone(2);
+            _vibe(80, 150);
         }
     }
 
@@ -264,6 +307,8 @@ class GameController {
 
         state = GS_COMPLETE;
         dirty = true;
+        _tone(1);
+        _vibe(100, 250);
     }
 
     // Variant string for the leaderboard = board mode + difficulty,
