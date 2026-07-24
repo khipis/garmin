@@ -1763,16 +1763,23 @@ const CR_RA_COL  = ['#AAB4C0','#4CA8FF','#B46CFF','#FFC24A','#FF4C7A'];
 const CR_RA_GLOW = ['none','drop-shadow(0 0 3px rgba(76,168,255,.6))',
   'drop-shadow(0 0 5px rgba(180,108,255,.8))','drop-shadow(0 0 7px rgba(255,194,74,.95))',
   'drop-shadow(0 0 9px rgba(255,76,122,.98))'];
+// Evolution stages 0-7 (Egg → Cosmic). The last three are the post-Apex tiers
+// that take months to reach, so they get their own halo colour.
+const CR_EV_MAX   = 7;
+const CR_EV_NAME  = ['Egg','Hatchling','Juvenile','Adult','Apex','Mythic','Eternal','Cosmic'];
+const CR_EV_AURA  = ['','','','','','#8be9fd','#ffd24a','#ff6ad5'];
 
 function creatureIconSvg(meta, px = 46) {
   const sp   = _ci(meta && meta.sp, 0, 4);
-  const evo  = _ci(meta && meta.ev, 0, 4);
+  const evo  = _ci(meta && meta.ev, 0, CR_EV_MAX);
   const ra   = _ci(meta && meta.rt, 0, 4);
   const pa   = _ci(meta && meta.pa, 0, 4);
   const mood = _ci(meta && meta.mo, 0, 100);
   const body = CR_SP_COL[sp], dark = CR_SP_DARK[sp], aura = CR_RA_COL[ra];
-  // Grows as it evolves (Hatchling → Apex).
-  const s = 0.74 + evo * 0.055;
+  // Grows as it evolves, but stops growing at Apex — the post-Apex stages
+  // (Mythic/Eternal/Cosmic) escalate with a halo instead, exactly like the
+  // watch does, so the biggest creatures still fit their frame.
+  const s = 0.74 + Math.min(evo, 4) * 0.055;
 
   // Species crest on the head (drawn around the top of the body ~ y 14).
   let crest = '';
@@ -1803,8 +1810,26 @@ function creatureIconSvg(meta, px = 46) {
     ? `<circle cx="24" cy="26" r="21" fill="none" stroke="${aura}" stroke-width="1" opacity=".5" stroke-dasharray="3 4"/>`
     : '';
 
+  // Post-Apex stages: Mythic gets a halo, Eternal adds sunburst rays, Cosmic
+  // adds a second orbit. These are the only cue that a creature went past Apex.
+  let ascendAura = '';
+  if (evo >= 5) {
+    const hc = CR_EV_AURA[Math.min(evo, CR_EV_MAX)];
+    ascendAura += `<circle cx="24" cy="26" r="22" fill="none" stroke="${hc}" stroke-width="1.4" opacity=".75"/>`;
+    if (evo >= 6) {
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ascendAura += `<line x1="${(24 + Math.cos(a) * 18).toFixed(1)}" y1="${(26 + Math.sin(a) * 18).toFixed(1)}" x2="${(24 + Math.cos(a) * 23).toFixed(1)}" y2="${(26 + Math.sin(a) * 23).toFixed(1)}" stroke="${hc}" stroke-width="1.2" opacity=".8"/>`;
+      }
+    }
+    if (evo >= 7) {
+      ascendAura += `<ellipse cx="24" cy="26" rx="23" ry="9" fill="none" stroke="${hc}" stroke-width="1.1" opacity=".7" transform="rotate(-24 24 26)"/>`;
+    }
+  }
+
   return `<svg width="${px}" height="${px}" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="filter:${CR_RA_GLOW[ra]}">
     ${ring}
+    ${ascendAura}
     <ellipse cx="24" cy="44" rx="12" ry="3" fill="#000" opacity=".25"/>
     <g transform="translate(24 27) scale(${s.toFixed(3)}) translate(-24 -27)">
       ${crest}
@@ -1826,17 +1851,20 @@ function creatureCaption(meta) {
   if (meta.name) bits.push(meta.name);
   const sp = ['Flameborn','Aquarian','Voltling','Forestkin','Shadowborn'][_ci(meta.sp,0,4)];
   const ra = ['Common','Rare','Epic','Legendary','Mythic'][_ci(meta.rt,0,4)];
-  const st = ['Egg','Hatchling','Juvenile','Adult','Apex'][_ci(meta.ev,0,4)];
+  const st = CR_EV_NAME[_ci(meta.ev, 0, CR_EV_MAX)];
   if (meta.rarity || ra) bits.push(meta.rarity || ra);
   if (meta.species || sp) bits.push(meta.species || sp);
   if (st) bits.push(st);
+  const asc = Math.max(0, Number(meta.asc) || 0);
+  if (asc > 0) bits.push('Ascended ×' + asc);
   return bits.filter(Boolean).map(escHtml).join(' · ');
 }
 
 // ── Mines — a zone-tinted crest with a pickaxe, depth badge & legend gems ────
-const MN_ZONE_COL = ['#6E5A44','#4A6A78','#6A4A78','#3A5A8A','#2A2038'];
+const MN_ZONE_COL = ['#6E5A44','#4A6A78','#6A4A78','#3A5A8A','#2A2038',
+  '#5A2618','#24304E','#1A2430','#2E1424','#120A18'];
 function mineEmblemSvg(meta, px = 46) {
-  const z    = _ci(meta && meta.z, 0, 4);
+  const z    = _ci(meta && meta.z, 0, MN_ZONE_COL.length - 1);
   const lvl  = Math.max(0, Number(meta && meta.level) || 0);
   const leg  = Math.max(0, Number(meta && meta.legend) || 0);
   const col  = MN_ZONE_COL[z];
@@ -1845,7 +1873,9 @@ function mineEmblemSvg(meta, px = 46) {
   for (let i = 0; i < gems; i++) {
     stars += `<circle cx="${15 + i * 9}" cy="39" r="2.2" fill="#8be9fd" stroke="#0b1220" stroke-width=".5"/>`;
   }
-  const glow = z >= 3 ? 'drop-shadow(0 0 5px rgba(96,165,250,.6))' : 'none';
+  const glow = z >= 8 ? 'drop-shadow(0 0 7px rgba(255,106,213,.85))'
+             : z >= 5 ? 'drop-shadow(0 0 6px rgba(255,138,74,.7))'
+             : z >= 3 ? 'drop-shadow(0 0 5px rgba(96,165,250,.6))' : 'none';
   return `<svg width="${px}" height="${px}" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="filter:${glow}">
     <path d="M24 3 L42 11 V27 Q42 39 24 45 Q6 39 6 27 V11 Z" fill="${col}" stroke="#0b1220" stroke-width="1.6"/>
     <path d="M24 3 L42 11 V27 Q42 39 24 45 Z" fill="#000" opacity=".16"/>

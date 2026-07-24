@@ -41,32 +41,55 @@ class FarmModel {
     }
     hidden function _set(k, v) { try { Application.Storage.setValue(k, v); } catch (e) {} }
 
+    // Every loaded value is type-checked and clamped: a corrupt or legacy key
+    // must never become a bad array index, an unbounded loop count, or a
+    // non-number that throws the moment we do arithmetic on it.
+    hidden function _num(k, def, lo, hi) {
+        var v = _get(k, def);
+        if (!(v instanceof Lang.Number)) { return def; }
+        if (v < lo) { return lo; }
+        if (v > hi) { return hi; }
+        return v;
+    }
+    hidden function _bool(k) {
+        var v = _get(k, false);
+        if (v instanceof Lang.Boolean) { return v; }
+        if (v instanceof Lang.Number) { return v != 0; }
+        return false;
+    }
+
     hidden function _load() {
-        started    = _get("fa_started", false);
-        bornSec    = _get("fa_born", 0);
-        lastSec    = _get("fa_last", 0);
-        population = _get("fa_pop", 0);
-        visitors   = _get("fa_vis", 0);
-        streak     = _get("fa_streak", 0);
-        lastDay    = _get("fa_lday", 0);
-        dailyDay   = _get("fa_dday", 0);
-        dUpgrades  = _get("fa_dup", 0);
-        dExpl      = _get("fa_dexp", 0);
-        dailyClaimed   = _get("fa_dclaim", false);
-        dailyCollected = _get("fa_dcol", false);
-        discMask   = _get("fa_disc", 0);
-        collMask   = _get("fa_coll", 0);
-        pendingEvent = _get("fa_pev", Fa.EV_NONE);
+        started    = _bool("fa_started");
+        bornSec    = _num("fa_born", 0, 0, 2000000000);
+        lastSec    = _num("fa_last", 0, 0, 2000000000);
+        population = _num("fa_pop", 0, 0, 9999999);
+        visitors   = _num("fa_vis", 0, 0, 9999999);
+        streak     = _num("fa_streak", 0, 0, 999999);
+        lastDay    = _num("fa_lday", 0, 0, 9999999);
+        dailyDay   = _num("fa_dday", 0, 0, 9999999);
+        dUpgrades  = _num("fa_dup", 0, 0, 999999);
+        dExpl      = _num("fa_dexp", 0, 0, 999999);
+        dailyClaimed   = _bool("fa_dclaim");
+        dailyCollected = _bool("fa_dcol");
+        discMask   = _num("fa_disc", 0, 0, 0x7FFFFFFF);
+        collMask   = _num("fa_coll", 0, 0, 0x7FFFFFFF);
+        pendingEvent = _num("fa_pev", Fa.EV_NONE, Fa.EV_NONE, Fa.EV_TRAVELER);
 
         res = new [Fa.R_N];
-        for (var i = 0; i < Fa.R_N; i++) { res[i] = _get("fa_r" + i, 0); }
+        for (var i = 0; i < Fa.R_N; i++) { res[i] = _num("fa_r" + i, 0, 0, 2000000000); }
+        // New building/area slots simply aren't in old saves, so they load as 0.
         bLevel = new [Fa.B_N];
-        for (var b = 0; b < Fa.B_N; b++) { bLevel[b] = _get("fa_b" + b, 0); }
+        for (var b = 0; b < Fa.B_N; b++) { bLevel[b] = _num("fa_b" + b, 0, 0, Fa.LVL_MAX); }
         arProg = new [Fa.AR_N];
-        for (var a = 0; a < Fa.AR_N; a++) { arProg[a] = _get("fa_ar" + a, 0); }
+        for (var a = 0; a < Fa.AR_N; a++) { arProg[a] = _num("fa_ar" + a, 0, 0, 100); }
 
+        log = [];
         var lg = _get("fa_log", null);
-        log = (lg instanceof Lang.Array) ? lg : [];
+        if (lg instanceof Lang.Array) {
+            for (var j = 0; j < lg.size() && j < 8; j++) {
+                if (lg[j] instanceof Lang.String) { log.add(lg[j]); }
+            }
+        }
 
         gRes = [0, 0, 0, 0]; gSecs = 0; gPop = 0; gVis = 0; newDay = false; gEvent = Fa.EV_NONE;
     }
@@ -145,6 +168,13 @@ class FarmModel {
         return a;
     }
     function visitorsCap() { return attraction() * 6 + 5; }
+    // Feed eaten by each new animal — a bigger herd is hungrier, so feed crops
+    // stay worth building all the way through the late game.
+    function feedPerAnimal() {
+        var f = Fa.FEED_PER_ANIMAL + population / 20;
+        if (f < 1) { f = 1; }
+        return f;
+    }
 
     function daysAlive() {
         if (bornSec == 0) { return 0; }
@@ -176,16 +206,14 @@ class FarmModel {
         for (var i = 0; i < Fa.B_N; i++) { s += bLevel[i]; }
         return s;
     }
-    function cropLevels() {
+    // Category sums walk the whole table so appended structures count too.
+    function catLevels(cat) {
         var s = 0;
-        for (var i = Fa.B_WHEAT; i <= Fa.B_BERRY; i++) { s += bLevel[i]; }
+        for (var i = 0; i < Fa.B_N; i++) { if (Fa.bCat(i) == cat) { s += bLevel[i]; } }
         return s;
     }
-    function specialLevels() {
-        var s = 0;
-        for (var i = Fa.B_GOLDBARN; i <= Fa.B_SILO; i++) { s += bLevel[i]; }
-        return s;
-    }
+    function cropLevels() { return catLevels(1); }
+    function specialLevels() { return catLevels(3); }
     function charmScore() {
         return collectionScore() * 4 + specialLevels() * 5 + cropLevels() * 2 + areasDiscovered() * 6;
     }
@@ -197,12 +225,35 @@ class FarmModel {
     }
     function milestoneLabel() {
         var l = farmLevel();
+        if (l >= 600) { return "Eternal Harvest"; }
+        if (l >= 400) { return "Mythic Homestead"; }
+        if (l >= 250) { return "Moonlit Estate"; }
+        if (l >= 175) { return "Storybook Manor"; }
         if (l >= 100) { return "Legendary Ranch"; }
         if (l >= 50)  { return "Prize Ranch"; }
         if (l >= 25)  { return "Busy Farmstead"; }
         if (l >= 10)  { return "Growing Farm"; }
         return "New Paddock";
     }
+
+    // Which crowd the farm draws — livestock pulls families, crops pull
+    // farmers, the market pulls foodies and the landmarks pull tourists.
+    function guestTypeIndex() {
+        var s = [0, 0, 0, 0];
+        for (var i = 0; i < Fa.B_N; i++) {
+            var w = bLevel[i] * Fa.bAttract(i);
+            if (w <= 0) { continue; }
+            var c = Fa.bCat(i);
+            if (c == 0)      { s[1] += w; }
+            else if (c == 1) { s[3] += w; }
+            else if (c == 2) { s[2] += w; }
+            else             { s[0] += w; }
+        }
+        var best = 0;
+        for (var k = 1; k < 4; k++) { if (s[k] > s[best]) { best = k; } }
+        return best;
+    }
+    function guestTypeName() { return Fa.visitorType(guestTypeIndex()); }
 
     // ── Production ─────────────────────────────────────────────────────────────
     function hourlyRate(r) {
@@ -215,11 +266,31 @@ class FarmModel {
         var popPct     = 100 + population * 2;
         var greenPct   = 100 + bLevel[Fa.B_GREENHSE] * 10;
         var siloPct    = 100 + bLevel[Fa.B_SILO] * 15;
+        var moonPct    = 100 + bLevel[Fa.B_HARVMOON] * 25;
         var v = base;
-        v = v * popPct / 100;
-        v = v * greenPct / 100;
-        v = v * siloPct / 100;
+        v = _mul(v, popPct);
+        v = _mul(v, greenPct);
+        v = _mul(v, siloPct);
+        v = _mul(v, moonPct);
         return v;
+    }
+    // Percentage multiply in 64-bit, clamped back into a Number. In plain 32-bit
+    // maths a deep-late-game farm can wrap negative and drain resources.
+    hidden function _mul(v, pct) {
+        if (v <= 0 || pct <= 0) { return 0; }
+        var r = v.toLong() * pct.toLong() / 100l;
+        if (r > 1000000000l) { return 1000000000; }
+        return r.toNumber();
+    }
+    // Add to a resource pool without ever wrapping negative. Returns the amount
+    // actually banked.
+    hidden function _addRes(r, amt) {
+        if (r < 0 || r >= Fa.R_N || amt == null || amt <= 0) { return 0; }
+        var before = res[r];
+        var v = before + amt;
+        if (v < 0 || v > Fa.RES_MAX) { v = Fa.RES_MAX; }
+        res[r] = v;
+        return v - before;
     }
 
     // ── Offline collection + daily rollover ──────────────────────────────────
@@ -254,34 +325,48 @@ class FarmModel {
             }
         }
 
-        // Resource income (night bonus from sleep).
+        // Resource income (night bonus from sleep). 64-bit intermediate: hours of
+        // idle time on a huge farm overflows a 32-bit product.
         var nightPct = 100;
         if (newDay) { var sl = Sensors.getSleepData(); if (sl > 0) { nightPct = 110; } }
         for (var r = 0; r < Fa.R_N; r++) {
-            var gain = hourlyRate(r) * elapsed / 3600;
-            gain = gain * nightPct / 100;
-            if (gain > 0) { res[r] += gain; gRes[r] = gain; }
+            var g = hourlyRate(r).toLong() * elapsed.toLong() / 3600l;
+            g = g * nightPct.toLong() / 100l;
+            if (g > Fa.RES_MAX.toLong()) { g = Fa.RES_MAX.toLong(); }
+            if (g > 0) { gRes[r] = _addRes(r, g.toNumber()); }
         }
         var any = false;
         for (var k = 0; k < Fa.R_N; k++) { if (gRes[k] > 0) { any = true; } }
         if (any) { dailyCollected = true; }
 
-        // Animal growth (needs feed).
-        if (population < popCap() && res[Fa.R_FEED] > 0) {
+        // Animal growth — each new animal eats feed, so the feed economy keeps
+        // mattering. No feed simply pauses growth (never a hard lock: the daily
+        // reward and the feed crops always bring it back).
+        var pcap = popCap();
+        if (population < pcap && res[Fa.R_FEED] > 0) {
             var add = elapsed / Fa.POP_INTERVAL;
             if (add > 0) {
-                var cap = popCap();
-                var np = population + add; if (np > cap) { np = cap; }
-                gPop = np - population; population = np;
+                var room = pcap - population;
+                if (add > room) { add = room; }
+                var per = feedPerAnimal();
+                var afford = res[Fa.R_FEED] / per;
+                if (add > afford) { add = afford; }
+                if (add > 0) {
+                    res[Fa.R_FEED] -= add * per;
+                    if (res[Fa.R_FEED] < 0) { res[Fa.R_FEED] = 0; }
+                    population += add;
+                    gPop = add;
+                }
             }
         }
 
-        // Steps auto-advance the current expedition (once per new day).
+        // Steps auto-advance the current expedition (once per new day). Later
+        // areas need many more steps, so this takes several days each.
         if (newDay) {
             var steps = Sensors.getStepsToday();
             if (steps > 0) {
                 var tgt = _nextArea();
-                if (tgt >= 0) { _advanceArea(tgt, steps * 100 / Fa.STEPS_PER_AREA); }
+                if (tgt >= 0) { _advanceArea(tgt, Fa.pctForSteps(tgt, steps)); }
             }
         }
 
@@ -307,7 +392,7 @@ class FarmModel {
             _logAdd("Stray animal +" + v + " guests");
             if (_rand(100) < 40) { _grantRandomCollectible(); }
         } else { // FESTIVAL
-            var c = 150 + _rand(300); res[Fa.R_COIN] += c; visitors += 10; gEvent = e;
+            var c = 150 + _rand(300); _addRes(Fa.R_COIN, c); visitors += 10; gEvent = e;
             _logAdd("Festival +" + c + " coins");
         }
     }
@@ -321,7 +406,7 @@ class FarmModel {
         var msg = "";
         if (e == Fa.EV_TREASURE) {
             if (choice == 0) {
-                var c = 120 + _rand(280); res[Fa.R_COIN] += c;
+                var c = 120 + _rand(280); _addRes(Fa.R_COIN, c);
                 msg = "Crate opened! +" + c + " coins"; _logAdd("Lucky crate +" + c + " coins");
                 if (_rand(100) < 45) { var gi = _grantRandomCollectible(); if (gi >= 0) { msg = "Found " + Fa.cName(gi) + "!"; } }
             } else { msg = "Left the crate."; }
@@ -331,7 +416,7 @@ class FarmModel {
                     res[Fa.R_COIN] -= 100;
                     var gi2 = _grantRandomCollectible();
                     msg = (gi2 >= 0) ? ("Traded for " + Fa.cName(gi2)) : "Traded for 20 wood";
-                    if (gi2 < 0) { res[Fa.R_WOOD] += 20; }
+                    if (gi2 < 0) { _addRes(Fa.R_WOOD, 20); }
                     _logAdd("Merchant trade");
                 } else { msg = "Not enough coins to trade"; }
             } else { msg = "Merchant moved on."; }
@@ -354,6 +439,7 @@ class FarmModel {
         if (!isUnlocked(i)) {
             return "Locked - explore " + Fa.arName(Fa.bUnlockArea(i));
         }
+        if (bLevel[i] >= Fa.LVL_MAX) { return Fa.bName(i) + " is maxed"; }
         var cost = upgradeCost(i);
         if (!canAfford(cost)) { return "Need more resources"; }
         res[Fa.R_COIN] -= cost[0]; res[Fa.R_WOOD] -= cost[1]; res[Fa.R_GRAIN] -= cost[2];
@@ -372,16 +458,19 @@ class FarmModel {
         return -1;
     }
     hidden function _advanceArea(i, incPct) {
-        if (i < 0 || isDiscovered(i)) { return false; }
+        if (i < 0 || i >= Fa.AR_N || isDiscovered(i)) { return false; }
+        if (incPct == null || incPct <= 0) { return false; }
         arProg[i] += incPct;
         if (arProg[i] >= 100) {
             arProg[i] = 100;
             discMask = discMask | (1 << i);
             dExpl += 1;
-            res[Fa.R_COIN] += 80;
+            _addRes(Fa.R_COIN, 80);
             var b = Fa.arUnlockBuilding(i);
+            var g = Fa.arGrantColl(i);
             if (b >= 0) { _logAdd("Explored " + Fa.arName(i) + " -> " + Fa.bName(b)); }
-            else { _grantCollectible(7); _logAdd("Explored " + Fa.arName(i) + " -> Prize Ribbon"); }
+            else if (g >= 0) { _grantCollectible(g); _logAdd("Explored " + Fa.arName(i) + " -> " + Fa.cName(g)); }
+            else { _logAdd("Explored " + Fa.arName(i)); }
             return true;
         }
         return false;
@@ -389,9 +478,13 @@ class FarmModel {
     function explore(i) {
         if (i < 0 || i >= Fa.AR_N) { return "Invalid area"; }
         if (isDiscovered(i)) { return Fa.arName(i) + " already explored"; }
-        if (res[Fa.R_COIN] < Fa.EXPLORE_COST_COIN) { return "Need " + Fa.EXPLORE_COST_COIN + " coins"; }
-        res[Fa.R_COIN] -= Fa.EXPLORE_COST_COIN;
-        var step = Fa.EXPLORE_STEP + Sensors.getActivityMinutes() / 5;
+        var cost = Fa.exploreCost(i);
+        if (res[Fa.R_COIN] < cost) { return "Need " + cost + " coins"; }
+        res[Fa.R_COIN] -= cost;
+        // A trip covers a fixed amount of ground, so the bigger late areas need
+        // many more of them.
+        var step = Fa.pctForSteps(i, Fa.EXPLORE_TRIP_STEPS + Sensors.getActivityMinutes() * 50);
+        if (step < 1) { step = 1; }
         var done = _advanceArea(i, step);
         save();
         if (done) {
@@ -420,11 +513,16 @@ class FarmModel {
     // Grant milestone charms as the farm level climbs.
     hidden function _checkMilestoneCollectibles() {
         var l = farmLevel();
-        if (l >= 10)  { _grantCollectible(0); }   // Flower Bed
-        if (l >= 20)  { _grantCollectible(4); }   // Pond Ducks
-        if (l >= 35)  { _grantCollectible(3); }   // Golden Egg
-        if (l >= 60)  { _grantCollectible(5); }   // Rainbow Cow
-        if (l >= 100) { _grantCollectible(8); }   // Harvest Feast
+        if (l >= 10)  { _grantCollectible(0); }    // Flower Bed
+        if (l >= 20)  { _grantCollectible(4); }    // Pond Ducks
+        if (l >= 35)  { _grantCollectible(3); }    // Golden Egg
+        if (l >= 60)  { _grantCollectible(5); }    // Rainbow Cow
+        if (l >= 100) { _grantCollectible(8); }    // Harvest Feast
+        if (l >= 150) { _grantCollectible(9); }    // Bee Hive
+        if (l >= 220) { _grantCollectible(10); }   // Stone Bridge
+        if (l >= 300) { _grantCollectible(12); }   // Sun Crown
+        if (l >= 400) { _grantCollectible(13); }   // Moon Cart
+        if (l >= 550) { _grantCollectible(14); }   // Golden Plow
     }
 
     // ── Daily challenge ─────────────────────────────────────────────────────────
@@ -445,11 +543,12 @@ class FarmModel {
         return dUpgrades > 0 ? 1 : 0;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
-    function dailyRewardText() { return "+250 Coins  +80 Wood"; }
+    // Always includes feed so an empty-larder farm can restart herd growth.
+    function dailyRewardText() { return "+250 Coins +80 Wood +20 Feed"; }
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        res[Fa.R_COIN] += 250; res[Fa.R_WOOD] += 80;
+        _addRes(Fa.R_COIN, 250); _addRes(Fa.R_WOOD, 80); _addRes(Fa.R_FEED, 20);
         if (_rand(100) < 20) { _grantRandomCollectible(); }
         save();
         return true;
@@ -471,10 +570,10 @@ class FarmModel {
     }
 
     function grantDemoResources() {
-        res[Fa.R_COIN]  += 600;
-        res[Fa.R_WOOD]  += 300;
-        res[Fa.R_GRAIN] += 180;
-        res[Fa.R_FEED]  += 140;
+        _addRes(Fa.R_COIN,  600);
+        _addRes(Fa.R_WOOD,  300);
+        _addRes(Fa.R_GRAIN, 180);
+        _addRes(Fa.R_FEED,  140);
         var pc = popCap();
         if (population < pc) { population += 1; if (population > pc) { population = pc; } }
         var vc = visitorsCap();
@@ -490,12 +589,13 @@ class FarmModel {
 
     // Upgrade the cheapest affordable unlocked structure. Returns true if built.
     function demoUpgrade() {
-        var best = -1; var bestCost = 0;
+        var best = -1; var bestCost = 0l;
         for (var i = 0; i < Fa.B_N; i++) {
             if (!isUnlocked(i)) { continue; }
             var c = upgradeCost(i);
             if (!canAfford(c)) { continue; }
-            var tot = c[0] + c[1] + c[2];
+            // 64-bit: three capped costs summed in 32 bits can wrap negative.
+            var tot = c[0].toLong() + c[1].toLong() + c[2].toLong();
             if (best < 0 || tot < bestCost) { best = i; bestCost = tot; }
         }
         if (best >= 0) { upgrade(best); return true; }

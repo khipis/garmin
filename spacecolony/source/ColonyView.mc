@@ -153,7 +153,7 @@ class ColonyView extends WatchUi.View {
             if (!_m.isUnlocked(i)) { continue; }
             var c = _m.upgradeCost(i);
             if (!_m.canAfford(c)) { continue; }
-            var score = c[0] + c[1] + c[2];
+            var score = c[0] + c[1] + c[2] + c[3];
             if (_m.bLevel[i] == 0) { score -= 1000000; }   // prioritise NEW builds
             if (bestId < 0 || score < bestScore) { bestId = i; bestScore = score; }
         }
@@ -214,6 +214,7 @@ class ColonyView extends WatchUi.View {
         if (_page == SV_BLD)  { return Sc.B_N; }
         if (_page == SV_EXP)  { return Sc.RG_N; }
         if (_page == SV_TECH) { return Sc.T_N; }
+        if (_page == SV_MIS)  { return 2; }   // CLAIM + SUPPLY DROP
         return 0;
     }
     // UP/DOWN: move the cursor on list pages and OVERFLOW into the neighbouring
@@ -238,7 +239,10 @@ class ColonyView extends WatchUi.View {
             if (_page == SV_BLD)  { _do(_m.upgrade(_cur)); return; }
             if (_page == SV_EXP)  { _do(_m.explore(_cur)); return; }
             if (_page == SV_TECH) { _do(_m.research(_cur)); return; }
-            if (_page == SV_MIS)  { _doClaim(); return; }
+            if (_page == SV_MIS)  {
+                if (_cur == 1) { _do(_m.supplyDrop()); } else { _doClaim(); }
+                return;
+            }
             if (_page == SV_OVER) { setPage(SV_BLD); return; }
         } catch (e) {}
     }
@@ -254,6 +258,7 @@ class ColonyView extends WatchUi.View {
         if (res == null) { res = ""; }
         _popup = res; _popupT = 30;
         var bad = (res.length() >= 4 && res.substring(0, 4).equals("Need"))
+               || (res.length() >= 4 && res.substring(0, 4).equals("Crew"))
                || (res.length() >= 6 && res.substring(0, 6).equals("Locked"));
         if (bad) { _tone(2); _vibe(30, 40); } else { _tone(4); _vibe(35, 45); }
         WatchUi.requestUpdate();
@@ -294,7 +299,8 @@ class ColonyView extends WatchUi.View {
         for (var r = 0; r < _rows.size(); r++) {
             if (_inR(x, y, _rows[r])) { _cur = _rowIds[r]; activate(); return true; }
         }
-        if (_inR(x, y, _rBtnA)) { activate(); return true; }
+        if (_inR(x, y, _rBtnB)) { _cur = 1; activate(); return true; }
+        if (_inR(x, y, _rBtnA)) { _cur = 0; activate(); return true; }
         return true;
     }
     hidden function _inR(x, y, r) {
@@ -515,16 +521,20 @@ class ColonyView extends WatchUi.View {
                dim ? Sc.MUTED : Sc.TEXT, Sc.bName(id));
 
         var sub;
+        var afford = false;
         if (!unlocked) {
             sub = "Explore " + Sc.rgName(Sc.bUnlockRegion(id));
         } else {
+            // Cost first (it's the gate), production preview last — if the row
+            // is too narrow, _wrap1 trims the preview rather than the price.
             var c = _m.upgradeCost(id);
-            var prod = "";
+            afford = _m.canAfford(c);
+            sub = _fmt(c[0]) + "M " + _fmt(c[1]) + "E"
+                + (c[2] > 0 ? " " + _fmt(c[2]) + "S" : "")
+                + (c[3] > 0 ? " " + _fmt(c[3]) + "C" : "");
             var pr = Sc.bProdRes(id);
-            if (pr >= 0) { prod = "+" + _fmt(Sc.prodAt(id, lvl + 1)) + Sc.resAbbr(pr) + "  "; }
-            sub = prod + _fmt(c[0]) + "M " + _fmt(c[1]) + "E" + (c[2] > 0 ? " " + _fmt(c[2]) + "S" : "");
+            if (pr >= 0) { sub = sub + "  +" + _fmt(Sc.prodAt(id, lvl + 1)) + Sc.resAbbr(pr); }
         }
-        var afford = unlocked && _m.canAfford(_m.upgradeCost(id));
         _wrap1(dc, tx, y + rh * 60 / 100, nameW, Graphics.FONT_XTINY,
                !unlocked ? 0xB46CFF : (afford ? 0x6FE08A : Sc.MUTED), sub);
     }
@@ -547,7 +557,15 @@ class ColonyView extends WatchUi.View {
 
     // ── EXPLORE ─────────────────────────────────────────────────────────────
     hidden function _drawExplore(dc) {
-        _drawListFrame(dc, Sc.RG_N, method(:_drawRegionRow), _h * 22 / 100);
+        // Expeditions are rationed per day, so the remaining sorties have to be
+        // visible — otherwise "Crew resting" reads as a bug.
+        try {
+            var left = _m.expeditionsLeft();
+            var sc = _h / 260; if (sc < 2) { sc = 2; }
+            Px.gshC(dc, "SORTIES " + left + "/" + _m.expeditionCap(), _w / 2, _h * 21 / 100,
+                    sc, left > 0 ? 0xFFE9A0 : 0xFF8A8A);
+        } catch (e) {}
+        _drawListFrame(dc, Sc.RG_N, method(:_drawRegionRow), _h * 26 / 100);
     }
     function _drawRegionRow(dc, id, x, y, w, rh, sel) {
         var col = Sc.rgColor(id);
@@ -565,8 +583,15 @@ class ColonyView extends WatchUi.View {
             _txt(dc, tx, y + rh * 60 / 100, Graphics.FONT_XTINY, 0x6FE08A,
                  "Mapped - " + Sc.bName(Sc.rgUnlockBuilding(id)), Graphics.TEXT_JUSTIFY_LEFT);
         } else {
-            var bw = w - (tx - x) - 6;
+            // Later regions are much bigger, so surface the step budget next to
+            // the bar — otherwise a stalling percentage looks like a bug.
+            var need = _fmt(Sc.stepsForRegion(id));
+            var needW = dc.getTextWidthInPixels(need, Graphics.FONT_XTINY) + 4;
+            var bw = w - (tx - x) - 6 - needW;
+            if (bw < 8) { bw = 8; }
             _bar(dc, tx, y + rh * 58 / 100, bw, 6, _m.rgProg[id], col);
+            _txt(dc, x + w - 4, y + rh * 60 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+                 need, Graphics.TEXT_JUSTIFY_RIGHT);
             _txt(dc, x + w - 4, y + rh * 16 / 100, Graphics.FONT_XTINY, Sc.MUTED,
                  _m.rgProg[id] + "%", Graphics.TEXT_JUSTIFY_RIGHT);
         }
@@ -600,8 +625,11 @@ class ColonyView extends WatchUi.View {
     hidden function _drawListFrame(dc, count, rowFn, top) {
         var bottom = _h * 94 / 100;
         var rh = _h * 17 / 100;
+        if (rh < 1) { rh = 1; }                 // never divide by zero
         var maxRows = (bottom - top) / rh;
         if (maxRows < 1) { maxRows = 1; }
+        if (_cur < 0) { _cur = 0; }
+        if (_cur >= count) { _cur = (count > 0) ? count - 1 : 0; }
         if (_cur < _scroll) { _scroll = _cur; }
         if (_cur >= _scroll + maxRows) { _scroll = _cur - maxRows + 1; }
         if (_scroll < 0) { _scroll = 0; }
@@ -634,23 +662,30 @@ class ColonyView extends WatchUi.View {
     // ── MISSION ─────────────────────────────────────────────────────────────
     hidden function _drawMissions(dc) {
         var cx = _w / 2;
-        _wrap(dc, cx, _h * 24 / 100, _w * 80 / 100, Graphics.FONT_TINY, Sc.TEXT, _m.dailyText());
+        _wrap(dc, cx, _h * 22 / 100, _w * 80 / 100, Graphics.FONT_TINY, Sc.TEXT, _m.dailyText());
 
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
-        var bw = _w * 62 / 100; var bx = cx - bw / 2; var by = _h * 44 / 100;
+        var bw = _w * 62 / 100; var bx = cx - bw / 2; var by = _h * 40 / 100;
         _bar(dc, bx, by, bw, 10, (tgt > 0 ? prog * 100 / tgt : 100), Sc.ACCENT);
-        _txt(dc, cx, by + _h * 6 / 100, Graphics.FONT_XTINY, Sc.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, by + _h * 13 / 100, Graphics.FONT_XTINY, Sc.GOLD, _m.dailyRewardText(), Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, by + _h * 20 / 100, Graphics.FONT_XTINY, Sc.TEXT,
+        _txt(dc, cx, by + _h * 5 / 100, Graphics.FONT_XTINY, Sc.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, by + _h * 12 / 100, Graphics.FONT_XTINY, Sc.GOLD, _m.dailyRewardText(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, by + _h * 19 / 100, Graphics.FONT_XTINY, Sc.TEXT,
              "Streak " + _m.streak + "d" + _mileTag(), Graphics.TEXT_JUSTIFY_CENTER);
 
-        var bwr = _w * 46 / 100; var bxr = cx - bwr / 2; var byr = _h * 82 / 100; var bhr = _h * 12 / 100;
-        _rBtnA = [bxr, byr, bwr, bhr];
-        var can = _m.dailyComplete() && !_m.dailyClaimed;
-        _button(dc, _rBtnA, _m.dailyClaimed ? "CLAIMED" : "CLAIM", can);
+        // Two stacked actions: claim the daily, or spend Credits on a supply
+        // drop (the Credits sink — buys the Water that population growth eats).
+        var bwr = _w * 52 / 100; var bxr = cx - bwr / 2; var bhr = _h * 11 / 100;
+        _rBtnA = [bxr, _h * 67 / 100, bwr, bhr];
+        _rBtnB = [bxr, _h * 80 / 100, bwr, bhr];
+        _button(dc, _rBtnA, _m.dailyClaimed ? "CLAIMED" : "CLAIM", _cur == 0);
+        var tc = _m.tradeCost();
+        _button(dc, _rBtnB, "TRADE " + _fmt(tc) + "CR", _cur == 1);
     }
     hidden function _mileTag() {
         var d = _m.daysAlive();
+        if (d >= 700) { return "  D700!"; }
+        if (d >= 365) { return "  D365!"; }
+        if (d >= 200) { return "  D200!"; }
         if (d >= 100) { return "  D100!"; }
         if (d >= 30) { return "  D30!"; }
         if (d >= 7) { return "  D7!"; }
@@ -803,6 +838,7 @@ class ColonyView extends WatchUi.View {
     }
     // Single-line clamp for the log rows (truncate with ellipsis).
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
+        if (s == null) { return; }
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         var str = s;
         while (str.length() > 4 && dc.getTextWidthInPixels(str, font) > maxw) {

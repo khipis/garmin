@@ -18,8 +18,9 @@ class CreatureModel {
     var seed;         // unique 31-bit DNA seed (set once at egg creation)
     var hatched;      // Boolean
     var species;      // 0..4
-    var traits;       // [5] each 1..10
+    var traits;       // [5] each 1..Cr.TRAIT_MAX
     var path;         // PATH_* evolution path (set at first evolution)
+    var asc;          // ascensions completed (permanent legacy, survives rebirth)
 
     // ── Life-cycle ───────────────────────────────────────────────────────────
     var bornSec;      // epoch sec of egg creation
@@ -66,45 +67,78 @@ class CreatureModel {
     hidden function _set(k, v) {
         try { Application.Storage.setValue(k, v); } catch (e) {}
     }
+    // Numeric load: a corrupt or legacy non-Number value must never reach
+    // _clamp (comparing a String to a Number throws) or an array index.
+    hidden function _getNum(k, def) {
+        var v = _get(k, def);
+        if (!(v instanceof Lang.Number)) { return def; }
+        return v;
+    }
+    hidden function _getBool(k, def) {
+        var v = _get(k, def);
+        if (v instanceof Lang.Boolean) { return v; }
+        if (v instanceof Lang.Number)  { return v != 0; }
+        return def;
+    }
 
     hidden function _load() {
-        seed      = _get("cr_seed", 0);
-        hatched   = _get("cr_hatch", false);
-        species   = _get("cr_spec", 0);
-        path      = _get("cr_path", Cr.PATH_NONE);
-        bornSec   = _get("cr_born", 0);
-        lastSec   = _get("cr_last", 0);
-        boostSec  = _get("cr_boost", 0);
-        level     = _get("cr_lvl", 1);
-        xp        = _get("cr_xp", 0);
-        food      = _get("cr_food", 5);
-        energy    = _get("cr_en", Cr.ENERGY_MAX);
-        mood      = _get("cr_mood", 70);
-        evo       = _get("cr_evo", Cr.EV_EGG);
-        mutations = _get("cr_mut", 0);
-        streak    = _get("cr_streak", 0);
-        lastDay   = _get("cr_lday", 0);
-        seenMask  = _get("cr_seen", 0);
-        actions   = _get("cr_act", 0);
-        trains    = _get("cr_train", 0);
-        dailyDay  = _get("cr_dday", 0);
-        dFeed     = _get("cr_dfeed", 0);
-        dTrain    = _get("cr_dtrain", 0);
-        dExpl     = _get("cr_dexpl", 0);
-        dailyClaimed = _get("cr_dclaim", false);
+        seed      = _getNum("cr_seed", 0);
+        hatched   = _getBool("cr_hatch", false);
+        species   = _getNum("cr_spec", 0);
+        path      = _getNum("cr_path", Cr.PATH_NONE);
+        bornSec   = _getNum("cr_born", 0);
+        lastSec   = _getNum("cr_last", 0);
+        boostSec  = _getNum("cr_boost", 0);
+        level     = _getNum("cr_lvl", 1);
+        xp        = _getNum("cr_xp", 0);
+        food      = _getNum("cr_food", 5);
+        energy    = _getNum("cr_en", Cr.ENERGY_MAX);
+        mood      = _getNum("cr_mood", 70);
+        evo       = _getNum("cr_evo", Cr.EV_EGG);
+        mutations = _getNum("cr_mut", 0);
+        streak    = _getNum("cr_streak", 0);
+        lastDay   = _getNum("cr_lday", 0);
+        seenMask  = _getNum("cr_seen", 0);
+        actions   = _getNum("cr_act", 0);
+        trains    = _getNum("cr_train", 0);
+        dailyDay  = _getNum("cr_dday", 0);
+        dFeed     = _getNum("cr_dfeed", 0);
+        dTrain    = _getNum("cr_dtrain", 0);
+        dExpl     = _getNum("cr_dexpl", 0);
+        dailyClaimed = _getBool("cr_dclaim", false);
+        asc       = _getNum("cr_asc", 0);
 
         traits = new [Cr.TR_N];
         for (var i = 0; i < Cr.TR_N; i++) {
-            var tv = _get("cr_t" + i, 3);
-            traits[i] = Cr._clamp((tv instanceof Lang.Number) ? tv : 3, 1, 10);
+            var tv = _getNum("cr_t" + i, 3);
+            traits[i] = Cr._clamp(tv, 1, Cr.TRAIT_MAX);
         }
-        // Defensive clamps so downstream math (xpNeeded, bars) can never break.
-        if (!(level instanceof Lang.Number) || level < 1) { level = 1; }
-        if (!(xp instanceof Lang.Number) || xp < 0) { xp = 0; }
-        if (!(food instanceof Lang.Number) || food < 0) { food = 0; }
+        // Defensive clamps so downstream math (xpNeeded, bars) and every table
+        // lookup can never break, even on a corrupt or hand-edited save.
+        if (level < 1) { level = 1; }
+        if (level > 999) { level = 999; }
+        if (xp < 0) { xp = 0; }
+        if (food < 0) { food = 0; }
+        if (bornSec < 0) { bornSec = 0; }
+        if (lastSec < 0) { lastSec = 0; }
+        if (boostSec < 0) { boostSec = 0; }
+        if (mutations < 0) { mutations = 0; }
+        if (streak < 0) { streak = 0; }
+        if (lastDay < 0) { lastDay = 0; }
+        if (dailyDay < 0) { dailyDay = 0; }
+        if (dFeed < 0) { dFeed = 0; }
+        if (dTrain < 0) { dTrain = 0; }
+        if (dExpl < 0) { dExpl = 0; }
+        if (actions < 0) { actions = 0; }
+        if (trains < 0) { trains = 0; }
+        if (asc < 0) { asc = 0; }
+        if (asc > 9999) { asc = 9999; }
+        if (seenMask < 0) { seenMask = 0; }
+        species  = Cr._clamp(species, 0, Cr.SPECIES_N - 1);
+        path     = Cr._clamp(path, Cr.PATH_NONE, Cr.PATH_ENERGY);
         energy = Cr._clamp(energy, 0, Cr.ENERGY_MAX);
         mood   = Cr._clamp(mood, 0, Cr.MOOD_MAX);
-        evo    = Cr._clamp(evo, Cr.EV_EGG, Cr.EV_APEX);
+        evo    = Cr._clamp(evo, Cr.EV_EGG, Cr.EV_COSMIC);
         gXp = 0; gFood = 0; gMut = 0; gSecs = 0; newDay = false;
     }
 
@@ -133,6 +167,7 @@ class CreatureModel {
         _set("cr_dtrain", dTrain);
         _set("cr_dexpl", dExpl);
         _set("cr_dclaim", dailyClaimed);
+        _set("cr_asc", asc);
         for (var i = 0; i < Cr.TR_N; i++) { _set("cr_t" + i, traits[i]); }
     }
 
@@ -144,7 +179,8 @@ class CreatureModel {
                     "cr_last", "cr_boost", "cr_lvl", "cr_xp", "cr_food",
                     "cr_en", "cr_mood", "cr_evo", "cr_mut", "cr_streak",
                     "cr_lday", "cr_seen", "cr_act", "cr_train", "cr_dday",
-                    "cr_dfeed", "cr_dtrain", "cr_dexpl", "cr_dclaim", "cr_lbday"];
+                    "cr_dfeed", "cr_dtrain", "cr_dexpl", "cr_dclaim", "cr_lbday",
+                    "cr_asc"];
         for (var i = 0; i < keys.size(); i++) {
             try { Application.Storage.deleteValue(keys[i]); } catch (e) {}
         }
@@ -224,14 +260,17 @@ class CreatureModel {
     hidden function _hatch() {
         species = _hash(1) % Cr.SPECIES_N;
         traits = new [Cr.TR_N];
+        // Legacy: every ascension raises the FLOOR of the starting roll, so a
+        // veteran's newborn is measurably better than a first-timer's.
+        var lo = 2 + ascTraitBonus();
         for (var i = 0; i < Cr.TR_N; i++) {
-            traits[i] = 2 + (_hash(10 + i) % 8);   // 2..9
+            traits[i] = Cr._clamp(lo + (_hash(10 + i) % 8), 1, Cr.TRAIT_MAX);
         }
         // Activity-driven bias at birth.
         var dom = Sensors.dominantPath();
         if (dom != Cr.PATH_NONE) {
-            var ti = Cr.pathTrait(dom);
-            traits[ti] = Cr._clamp(traits[ti] + 2, 1, 10);
+            var ti = Cr._clamp(Cr.pathTrait(dom), 0, Cr.TR_N - 1);
+            traits[ti] = Cr._clamp(traits[ti] + 2, 1, Cr.TRAIT_MAX);
         }
         path = Cr.PATH_NONE;
         hatched = true;
@@ -286,14 +325,16 @@ class CreatureModel {
         gSecs = elapsed;
 
         // XP + food scale with time and level; energy slowly refills.
-        gXp   = elapsed * (5 + level) / 3600;
+        gXp   = elapsed * Cr.idleXpPerHour(level) / 3600;
         gFood = elapsed * 3 / 3600;
         if (newDay) { gXp += Sensors.getStepsToday() / 60; }   // once/day step bonus
 
-        // DNA mutation rolls (bounded, luck-weighted).
+        // DNA mutation rolls (bounded, luck-weighted). Capped below certainty so
+        // a trait-20 creature can't farm a guaranteed mutation every window.
         var slots = elapsed / (5 * 3600);
         if (slots > 3) { slots = 3; }
         var chance = 28 + traits[Cr.TR_LCK] * 5;   // %
+        if (chance > 85) { chance = 85; }
         for (var i = 0; i < slots; i++) {
             if (_rand(100) < chance) { gMut += 1; }
         }
@@ -303,6 +344,7 @@ class CreatureModel {
         energy = Cr._clamp(energy + elapsed * 9 / 3600, 0, Cr.ENERGY_MAX);
         if (gMut > 0) { _applyMutations(gMut); }
         _addXp(gXp);
+        gXp = ascXpGain(gXp);   // report the legacy-boosted amount actually granted
 
         // Mood drifts toward contentment, dented by empty energy.
         var target = (energy > 25) ? 72 : 40;
@@ -315,17 +357,33 @@ class CreatureModel {
     }
 
     hidden function _applyMutations(n) {
-        mutations += n;
-        for (var i = 0; i < n; i++) {
-            var t = _rand(Cr.TR_N);
-            traits[t] = Cr._clamp(traits[t] + 1, 1, 10);
+        var k = n;
+        if (!(k instanceof Lang.Number) || k <= 0) { return; }
+        if (k > 50) { k = 50; }          // bound the loop no matter the caller
+        mutations += k;
+        for (var i = 0; i < k; i++) {
+            var t = Cr._clamp(_rand(Cr.TR_N), 0, Cr.TR_N - 1);
+            traits[t] = Cr._clamp(traits[t] + 1, 1, Cr.TRAIT_MAX);
         }
+    }
+
+    // ── Ascension legacy multipliers ─────────────────────────────────────────
+    // Bonuses stop scaling past ASC_BONUS_CAP so nothing can overflow or trivialise
+    // the curve after dozens of rebirths.
+    function ascBonus() { return Cr._clamp(asc, 0, Cr.ASC_BONUS_CAP); }
+    function ascTraitBonus() { return Cr._clamp(asc, 0, Cr.ASC_TRAIT_CAP); }
+    // Legacy: +15% XP per ascension. Also used to REPORT gains so the numbers on
+    // screen match what was actually granted.
+    function ascXpGain(n) {
+        var b = ascBonus();
+        if (b <= 0) { return n; }
+        return n * (100 + Cr.ASC_XP_PCT * b) / 100;
     }
 
     // ── XP / level ────────────────────────────────────────────────────────────
     hidden function _addXp(n) {
         if (n <= 0) { return; }
-        xp += n;
+        xp += ascXpGain(n);
         // Guard the level loop against a zero/negative requirement (never freeze).
         var guard = 0;
         while (xp >= Cr.xpForLevel(level)) {
@@ -364,11 +422,12 @@ class CreatureModel {
         trains += 1; dTrain += 1;
         // Grow the focused trait (or a live-activity-driven one on AUTO).
         var ti = focus;
-        if (ti < 0) {
+        if (!(ti instanceof Lang.Number) || ti < 0) {
             var dom = Sensors.dominantPath();
             ti = (dom != Cr.PATH_NONE) ? Cr.pathTrait(dom) : _rand(Cr.TR_N);
         }
-        traits[ti] = Cr._clamp(traits[ti] + 1, 1, 10);
+        ti = Cr._clamp(ti, 0, Cr.TR_N - 1);
+        traits[ti] = Cr._clamp(traits[ti] + 1, 1, Cr.TRAIT_MAX);
         _bump(true);
         checkEvolution();
         save();
@@ -383,8 +442,10 @@ class CreatureModel {
         _addXp(20);
         dExpl += 1;
         var extra = "";
-        // Lucky DNA fragment find.
-        if (_rand(100) < 15 + traits[Cr.TR_LCK] * 4) {
+        // Lucky DNA fragment find (capped below certainty at trait 20).
+        var find = 15 + traits[Cr.TR_LCK] * 4;
+        if (find > 85) { find = 85; }
+        if (_rand(100) < find) {
             _applyMutations(1);
             extra = "  +1 DNA!";
         }
@@ -399,14 +460,17 @@ class CreatureModel {
     }
 
     // ── Evolution ─────────────────────────────────────────────────────────────
-    // Advances stage based on days alive + level; locks a path at first evolve.
+    // Advances stage based on days alive + level, straight off the Cr.evoDays /
+    // Cr.evoLevel gate tables; locks a path at first evolve. Walking DOWN from the
+    // last stage means a returning player who blew past several gates while away
+    // lands on the highest one they've actually earned.
     function checkEvolution() {
         if (!hatched) { return false; }
         var d = daysAlive();
         var target = Cr.EV_HATCH;
-        if (d >= 30 && level >= 25) { target = Cr.EV_APEX; }
-        else if (d >= 7 && level >= 12) { target = Cr.EV_ADULT; }
-        else if (d >= 1 && level >= 5) { target = Cr.EV_JUV; }
+        for (var s = Cr.EV_MAX; s > Cr.EV_HATCH; s--) {
+            if (d >= Cr.evoDays(s) && level >= Cr.evoLevel(s)) { target = s; break; }
+        }
 
         if (target > evo) {
             evo = target;
@@ -427,19 +491,52 @@ class CreatureModel {
         path = (dom != Cr.PATH_NONE) ? dom : (Cr.PATH_RUNNER + (_hash(3) % 4));
     }
 
-    // The next stage the creature is working toward, or -1 at apex.
-    function nextStage() { return (evo >= Cr.EV_APEX) ? -1 : evo + 1; }
+    // The next stage the creature is working toward, or -1 at the final stage.
+    function nextStage() { return (evo >= Cr.EV_MAX) ? -1 : evo + 1; }
+    // Progress toward the NEXT stage, read from the same gate tables so the bar
+    // is correct at every stage (and never divides by a zero gate).
     function evoProgressPct() {
-        if (evo >= Cr.EV_APEX) { return 100; }
-        var d = daysAlive();
-        var needD; var needL;
-        if (evo == Cr.EV_HATCH) { needD = 1;  needL = 5;  }
-        else if (evo == Cr.EV_JUV) { needD = 7;  needL = 12; }
-        else { needD = 30; needL = 25; }
-        var pd = (needD == 0) ? 100 : d * 100 / needD;
-        var pl = level * 100 / needL;
+        var ns = nextStage();
+        if (ns < 0) { return 100; }
+        var needD = Cr.evoDays(ns);
+        var needL = Cr.evoLevel(ns);
+        var pd = (needD <= 0) ? 100 : daysAlive() * 100 / needD;
+        var pl = (needL <= 0) ? 100 : level * 100 / needL;
         var p = (pd < pl) ? pd : pl;
         return Cr._clamp(p, 0, 100);
+    }
+
+    // ── Ascension: rebirth into a new egg, keeping a permanent legacy ─────────
+    // Unlocked at Apex. Rolls a brand new seed (so a new species / name / DNA)
+    // and resets stats + level, but PRESERVES the ascension count (+1), the
+    // species-seen mask, the lifetime trainer totals, the streak, and every
+    // settings key. Nothing here deletes storage, so a failure mid-way leaves a
+    // playable creature rather than a wiped save.
+    function canAscend() { return hatched && evo >= Cr.EV_APEX; }
+
+    function ascend() {
+        if (!canAscend()) { return false; }
+        var next = asc + 1;
+        if (next > 9999) { next = 9999; }
+
+        seed = 0;              // ensureEgg() rolls a fresh DNA seed
+        hatched = false;
+        evo = Cr.EV_EGG;
+        boostSec = 0;
+        level = 1; xp = 0;
+        mutations = 0;
+        path = Cr.PATH_NONE;
+        food = 5;
+        energy = Cr.ENERGY_MAX;
+        mood = 80;
+        traits = new [Cr.TR_N];
+        for (var i = 0; i < Cr.TR_N; i++) { traits[i] = 3; }
+        asc = next;
+        bornSec = 0;
+        lastSec = nowSec();
+        ensureEgg();           // sets seed/born/last/day and saves
+        save();
+        return true;
     }
 
     // ── Derived / display ─────────────────────────────────────────────────────
@@ -461,7 +558,8 @@ class CreatureModel {
     function rarityScore() {
         var sum = 0;
         for (var i = 0; i < Cr.TR_N; i++) { sum += traits[i]; }
-        return sum * 10 + traits[Cr.TR_LCK] * 15 + mutations * 18 + evo * 45;
+        return sum * 10 + traits[Cr.TR_LCK] * 15 + mutations * 18
+             + evo * 60 + asc * Cr.ASC_RARITY;
     }
     function rarityTier() {
         var s = rarityScore();
@@ -519,12 +617,22 @@ class CreatureModel {
         return streak >= 1 ? 1 : 0;   // "come back" completes just by returning
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
-    function dailyRewardText() { return "+80 XP  +6 food  +1 DNA"; }
+    // The reward scales gently with level so a daily still feels worth claiming
+    // at level 90 — it stays a small fraction of a day's idle income, so it can
+    // never short-circuit the long haul.
+    function dailyXpReward() {
+        var n = 80 + level * 6;
+        if (n > 900) { n = 900; }
+        return n;
+    }
+    function dailyRewardText() {
+        return "+" + ascXpGain(dailyXpReward()) + " XP +6 food +1 DNA";
+    }
     // Grant the daily reward once. Returns true if granted now.
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        _addXp(80);
+        _addXp(dailyXpReward());
         food += 6;
         _applyMutations(1);
         checkEvolution();
@@ -538,9 +646,13 @@ class CreatureModel {
         var rows = [];
         rows.add(["Day 1", "Hatched from egg #" + (seed % 100000)]);
         if (mutations > 0) { rows.add(["Mutations", mutations + " DNA shift(s)"]); }
-        if (evo >= Cr.EV_JUV) { rows.add(["Day 1+", "Evolved to " + Cr.stageName(Cr.EV_JUV)]); }
-        if (evo >= Cr.EV_ADULT) { rows.add(["Day 7+", "Grew into an " + Cr.stageName(Cr.EV_ADULT)]); }
-        if (evo >= Cr.EV_APEX) { rows.add(["Day 30+", "Reached " + Cr.stageName(Cr.EV_APEX) + " form"]); }
+        // One row per stage reached, labelled from the gate table.
+        for (var s = Cr.EV_JUV; s <= Cr.EV_MAX; s++) {
+            if (evo >= s) {
+                rows.add(["Day " + Cr.evoDays(s) + "+", "Reached " + Cr.stageName(s)]);
+            }
+        }
+        if (asc > 0) { rows.add(["Legacy", asc + " ascension(s)"]); }
         if (streak >= 7) { rows.add(["Streak", streak + "-day bond"]); }
         return rows;
     }
@@ -569,7 +681,10 @@ class CreatureModel {
                 "level"   => level,
                 "path"    => Cr.pathName(path),
                 "sp" => species, "ev" => evo, "rt" => rarityTier(),
-                "pa" => path, "mo" => mood, "sd" => seed
+                "pa" => path, "mo" => mood, "sd" => seed,
+                // Appended (never remove/rename the keys above): ascension count
+                // so the site can badge veterans.
+                "asc" => asc
             };
             Leaderboard.submitScoreBatch(Cr.GAME_ID, [
                 { :score => rarityScore(),   :variant => Cr.LB_RARITY,  :meta => meta },
@@ -604,7 +719,7 @@ class CreatureModel {
 
             // Pump traits + DNA for a high rarity tier.
             for (var i = 0; i < Cr.TR_N; i++) {
-                traits[i] = Cr._clamp(traits[i] + 1, 1, 10);
+                traits[i] = Cr._clamp(traits[i] + 1, 1, Cr.TRAIT_MAX);
             }
             _applyMutations(1);
             actions += 3; trains += 1;

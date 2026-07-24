@@ -66,12 +66,20 @@ module ColonyArt {
     }
 
     function _drawSkyline(dc, m, cx, ground, r, phase) {
-        var order = [Sc.B_REACTOR, Sc.B_MINE, Sc.B_HABITAT, Sc.B_FARM, Sc.B_LAB,
-                     Sc.B_SAT, Sc.B_LAUNCH, Sc.B_ALIEN, Sc.B_ELEVATOR, Sc.B_DEFENSE];
+        // Draw order = left-to-right layout of the mini skyline. MUST list every
+        // building id exactly once; ids are only ever appended.
+        var order = [Sc.B_REACTOR, Sc.B_GEO, Sc.B_MINE, Sc.B_REFINERY, Sc.B_HABITAT,
+                     Sc.B_FARM, Sc.B_ICE, Sc.B_LAB, Sc.B_SAT, Sc.B_TRADE,
+                     Sc.B_LAUNCH, Sc.B_ALIEN, Sc.B_QUANTUM, Sc.B_ELEVATOR, Sc.B_DEFENSE];
         var built = [];
         for (var i = 0; i < order.size(); i++) {
-            if (m.bLevel[order[i]] > 0) { built.add(order[i]); }
+            var oid = order[i];
+            if (oid < 0 || oid >= Sc.B_N) { continue; }
+            if (m.bLevel[oid] > 0) { built.add(oid); }
         }
+        // The preview band is tiny — past a dozen slots the silhouettes turn to
+        // mush, so cap what we draw rather than shrink to sub-pixel widths.
+        if (built.size() > 12) { built = built.slice(0, 12); }
         if (built.size() == 0) {
             _pod(dc, cx, ground, r, phase);
             return;
@@ -129,7 +137,20 @@ module ColonyArt {
             _pips(dc, id, lvl, bx, ground - r * 2 - 8);
             return;
         }
-        if (id == Sc.B_REACTOR) {
+        if (id == Sc.B_QUANTUM) {
+            // Levitating core ring — the endgame landmark.
+            dc.setColor(Sc.bColorDark(id), Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x, ground - h / 4, w, h / 4);
+            var qy = y + h / 3 - ((phase / 7) % 3);
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx, qy, w / 3);
+            dc.drawCircle(bx, qy, w / 2);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx, qy, w / 8 + 1);
+            _pips(dc, id, lvl, bx, y - 5);
+            return;
+        }
+        if (id == Sc.B_REACTOR || id == Sc.B_GEO) {
             dc.setColor(Sc.bColorDark(id), Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(x, y, w, h);
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
@@ -156,7 +177,7 @@ module ColonyArt {
             _pips(dc, id, lvl, bx, y - h / 4 - 6);
             return;
         }
-        if (id == Sc.B_SAT) {
+        if (id == Sc.B_SAT || id == Sc.B_TRADE) {
             // Mast + dish (arc).
             dc.setColor(0x445A70, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx - 1, y, 3, h);
@@ -181,7 +202,8 @@ module ColonyArt {
             return;
         }
 
-        // Default: lit dome + body (habitat / mine / farm / lab / alien).
+        // Default: lit dome + body (habitat / mine / farm / lab / alien /
+        // refinery / ice works) — retinted per building colour.
         dc.setColor(Sc.bColorDark(id), Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x, y + h / 3, w, h * 2 / 3);
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
@@ -282,6 +304,9 @@ module ColonyArt {
     }
 
     function _pxScene(dc, m, x0, y0, w, h, phase) {
+        // Several helpers take `% w` / `% h`; a degenerate box would divide by
+        // zero, so bail out before anything touches the modulo.
+        if (w < 16 || h < 16) { return; }
         var clipped = false;
         try { dc.setClip(x0, y0, w, h); clipped = true; } catch (e) {}
 
@@ -364,11 +389,15 @@ module ColonyArt {
         try { _pxSurface(dc, m, x0, w, horizon, px, phase); } catch (e) {}
 
         // Region survey markers on the far hills (one per discovered region).
+        // Spacing is COMPUTED from RG_N and the flags alternate between two
+        // rows, so any number of regions stays on-screen and legible.
         try {
+            var span = 78;
+            var divs = (Sc.RG_N > 1) ? (Sc.RG_N - 1) : 1;
             for (var rg = 0; rg < Sc.RG_N; rg++) {
                 if (!m.isDiscovered(rg)) { continue; }
-                var mkx = x0 + w * (14 + rg * 17) / 100;
-                var mky = horizon - 2;
+                var mkx = x0 + w * (11 + rg * span / divs) / 100;
+                var mky = horizon - 2 - ((rg % 2) * (px + 1));
                 dc.setColor(0x2A2028, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(mkx, mky - px, 1, px + 2);
                 dc.setColor(Sc.rgColor(rg), Graphics.COLOR_TRANSPARENT);
@@ -566,11 +595,24 @@ module ColonyArt {
         }
     }
 
+    // Safe building-level read: any id past the end of a legacy save's array
+    // reads as 0 instead of throwing out of the render path.
+    function _lv(bl, id) {
+        if (bl == null || id < 0 || id >= bl.size()) { return 0; }
+        var v = bl[id];
+        return (v == null || v < 0) ? 0 : v;
+    }
+
     // Draw the colony structures + inhabitants (all bLevel-driven).
     function _pxColony(dc, m, x0, y0, w, h, px, pxB, gF, gB, cx, pal, phase, tier) {
         var bl;
         try { bl = m.bLevel; } catch (e) { bl = null; }
         if (bl == null) { return; }
+
+        // A third, mid-depth terrace holds the late-game industry so the base
+        // grows *backwards* into the scene instead of overlapping the front row.
+        var gM = (gB + gF) / 2;
+        var pxM = px * 90 / 100; if (pxM < 2) { pxM = 2; }
 
         var built = 0;
         try { built = m.buildingsBuilt(); } catch (e) {}
@@ -625,6 +667,85 @@ module ColonyArt {
             }
             _pips(dc, Sc.B_MINE, bl[Sc.B_MINE], x0 + w * 72 / 100, oy3 - 4);
             _techBadge(dc, x0 + w * 72 / 100, oy3 - 10, _techLvl(m, Sc.T_EXTR));
+        }
+        // Quantum core: a hovering, pulsing singularity ring — the endgame
+        // landmark, so the very last unlock is unmistakable on the skyline.
+        if (_lv(bl, Sc.B_QUANTUM) > 0) {
+            var qx = x0 + w * 88 / 100;
+            var qr = pxB + pxB / 2; if (qr < 3) { qr = 3; }
+            var qy = gB - pxB * 4 - ((phase / 9) % 3);
+            dc.setColor(0x2A1440, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(qx - pxB * 2, gB - pxB, pxB * 4, pxB);
+            dc.setColor(Sc.bColor(Sc.B_QUANTUM), Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(qx, qy, qr + 2);
+            dc.fillCircle(qx, qy, qr);
+            var qlit = ((phase / 5) % 6) < 3;
+            dc.setColor(qlit ? 0xFFFFFF : 0xE0D0FF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(qx, qy, qr / 2 + 1);
+            dc.setColor(0x8C6ACF, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(qx, qy + qr, qx, gB - pxB);
+            _pips(dc, Sc.B_QUANTUM, _lv(bl, Sc.B_QUANTUM), qx, qy - qr - 6);
+            _techBadge(dc, qx, qy - qr - 12, _techLvl(m, Sc.T_EFF));
+        }
+
+        // ── MID ROW — late-game industry terrace ─────────────────────────────
+        var midAny = _lv(bl, Sc.B_GEO) + _lv(bl, Sc.B_TRADE)
+                   + _lv(bl, Sc.B_REFINERY) + _lv(bl, Sc.B_ICE);
+        if (midAny > 0) {
+            dc.setColor(0x2C1D24, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x0 + w * 8 / 100, gM - 1, w * 84 / 100, 2);
+        }
+        // Geothermal plant: squat vent housing with a magma glow + steam plume.
+        if (_lv(bl, Sc.B_GEO) > 0) {
+            var geo = ["GGGGG", "GoooG", "GGGGG", "kkkkk"];
+            var gy2 = _place(dc, geo, pal, 16, gM, pxM, x0, w, false);
+            var gcx = x0 + w * 16 / 100;
+            var hot = ((phase / 4) % 8) < 4;
+            dc.setColor(hot ? 0xFFD24A : 0xC24A1A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(gcx - pxM, gy2 + pxM, pxM * 2, pxM);
+            var puff = (phase / 6) % 3;
+            dc.setColor(0x6E7A88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(gcx - pxM / 2, gy2 - pxM * (1 + puff), pxM, pxM);
+            _pips(dc, Sc.B_GEO, _lv(bl, Sc.B_GEO), gcx, gy2 - pxM * 4 - 2);
+            _techBadge(dc, gcx, gy2 - pxM * 4 - 8, _techLvl(m, Sc.T_POWER));
+        }
+        // Trade hub: market pad under a blinking landing beacon.
+        if (_lv(bl, Sc.B_TRADE) > 0) {
+            var trd = [".nnn.", "nnnnn", "GyGyG", "kkkkk"];
+            var ty2 = _place(dc, trd, pal, 39, gM, pxM, x0, w, false);
+            var tcx = x0 + w * 39 / 100;
+            var beac = ((phase / 5) % 4) < 2;
+            dc.setColor(beac ? 0xEAFFD8 : 0x2E6E30, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(tcx - pxM / 2, ty2 - pxM, pxM, pxM);
+            _pips(dc, Sc.B_TRADE, _lv(bl, Sc.B_TRADE), tcx, ty2 - pxM - 5);
+            _techBadge(dc, tcx, ty2 - pxM - 11, _techLvl(m, Sc.T_TRADE));
+        }
+        // Refinery: smelter stack with a growing ingot stack at its foot.
+        if (_lv(bl, Sc.B_REFINERY) > 0) {
+            var rfn = ["..s..", ".sMs.", "sMMMs", "GGGGG", "kkkkk"];
+            var fy2 = _place(dc, rfn, pal, 61, gM, pxM, x0, w, false);
+            var fcx = x0 + w * 61 / 100;
+            var ing = _lv(bl, Sc.B_REFINERY); if (ing > 4) { ing = 4; }
+            dc.setColor(0xE0E6EC, Graphics.COLOR_TRANSPARENT);
+            for (var ii = 0; ii < ing; ii++) {
+                dc.fillRectangle(fcx + pxM * 2 + ii * pxM / 2, gM - pxM, pxM / 2 + 1, pxM / 2 + 1);
+            }
+            var smoke = (phase / 7) % 3;
+            dc.setColor(0x5A4636, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(fcx - pxM / 2, fy2 - pxM * (1 + smoke), pxM, pxM);
+            _pips(dc, Sc.B_REFINERY, _lv(bl, Sc.B_REFINERY), fcx, fy2 - pxM * 4 - 2);
+            _techBadge(dc, fcx, fy2 - pxM * 4 - 8, _techLvl(m, Sc.T_EXTR));
+        }
+        // Ice works: melt tank with a shimmering waterline.
+        if (_lv(bl, Sc.B_ICE) > 0) {
+            var ice = [".lll.", "lWWWl", "GlllG", "kkkkk"];
+            var iy2 = _place(dc, ice, pal, 84, gM, pxM, x0, w, false);
+            var icx = x0 + w * 84 / 100;
+            var shim = ((phase / 6) % 4);
+            dc.setColor(shim < 2 ? 0xCFF4FF : 0x33AEE0, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(icx - pxM + shim, iy2 + pxM, pxM, pxM / 2 + 1);
+            _pips(dc, Sc.B_ICE, _lv(bl, Sc.B_ICE), icx, iy2 - 5);
+            _techBadge(dc, icx, iy2 - 11, _techLvl(m, Sc.T_HYDRO));
         }
 
         // ── FRONT ROW ────────────────────────────────────────────────────────

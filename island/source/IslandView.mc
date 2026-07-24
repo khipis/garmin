@@ -579,10 +579,14 @@ class IslandView extends WatchUi.View {
         if (disc) {
             var b = Is.arUnlockBuilding(id);
             _txt(dc, tx, y + rh - fhX - 2, Graphics.FONT_XTINY, 0x6FE08A,
-                 b >= 0 ? "Found - " + Is.bName(b) : "Found - Monument", Graphics.TEXT_JUSTIFY_LEFT);
+                 b >= 0 ? "Found - " + Is.bName(b) : "Found - " + Is.cName(Is.arGrantColl(id)),
+                 Graphics.TEXT_JUSTIFY_LEFT);
         } else {
+            // Progress plus how much walking the area asks for — the later
+            // areas need several days of steps, so show the target up front.
             _txt(dc, x + w - 4, y + 2, Graphics.FONT_XTINY, Is.MUTED,
-                 _m.arProg[id] + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+                 _m.arProg[id] + "% of " + (Is.stepsForArea(id) / 1000) + "k",
+                 Graphics.TEXT_JUSTIFY_RIGHT);
             var bw = w - (tx - x) - 6;
             var barY = y + fhX + 4;
             if (barY + 5 <= y + rh - 2) { _bar(dc, tx, barY, bw, 4, _m.arProg[id], col); }
@@ -594,9 +598,11 @@ class IslandView extends WatchUi.View {
         var cx = _w / 2;
         _txt(dc, cx, _h * 20 / 100, Graphics.FONT_XTINY, 0xFFD24A,
              _m.collectiblesOwned() + " / " + Is.C_N + " found", Graphics.TEXT_JUSTIFY_CENTER);
-        var cols = 3;
-        var gx = _w * 18 / 100; var gy = _h * 26 / 100;
-        var cw = _w * 64 / 100; var cell = cw / cols;
+        // 5 x 3 grid: keeps all 15 pieces on one screen without scrolling.
+        var cols = 5;
+        var gx = _w * 15 / 100; var gy = _h * 27 / 100;
+        var cw = _w * 70 / 100; var cell = cw / cols;
+        if (cell < 6) { cell = 6; }
         for (var i = 0; i < Is.C_N; i++) {
             var r = i / cols; var c = i % cols;
             var px = gx + c * cell + cell / 2;
@@ -617,8 +623,8 @@ class IslandView extends WatchUi.View {
             _rowIds.add(i);
         }
         var name = Is.cName(_cur) + (_m.hasColl(_cur) ? "" : " (locked)");
-        _txt(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, _m.hasColl(_cur) ? Is.TEXT : Is.MUTED, name, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, _m.hasColl(_cur) ? Is.TEXT : Is.MUTED, name, Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 86 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(), Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── HISTORY ─────────────────────────────────────────────────────────────
@@ -769,8 +775,11 @@ class IslandView extends WatchUi.View {
         var top = _h * 21 / 100;
         var bottom = _h * 92 / 100;
         var rh = _h * 15 / 100;
+        if (rh < 1) { rh = 1; }               // never divide by zero on a tiny dc
         var maxRows = (bottom - top) / rh;
         if (maxRows < 1) { maxRows = 1; }
+        if (_cur < 0) { _cur = 0; }
+        if (_cur >= count) { _cur = (count > 0) ? count - 1 : 0; }
         if (_cur < _scroll) { _scroll = _cur; }
         if (_cur >= _scroll + maxRows) { _scroll = _cur - maxRows + 1; }
         if (_scroll < 0) { _scroll = 0; }

@@ -30,7 +30,7 @@ class ColonyHooks extends GameHooks {
     // Signature art: a live mini render of your colony skyline.
     function drawArt(dc, cx, cy, w, h) as Void {
         if (_preview == null) { return; }
-        _tick += 1;
+        _tick = (_tick + 1) % 1000000;   // bounded so it can never wrap negative
         var r = h * 26 / 100;
         if (r < 16) { r = 16; }
         try { ColonyArt.drawScene(dc, _preview, cx, cy, r, _tick); } catch (e) {}

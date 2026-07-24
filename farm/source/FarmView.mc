@@ -65,8 +65,10 @@ class FarmView extends WatchUi.View {
         _loadDemo();
         _loadIntro();
 
-        _m.ensureStart();
-        _m.collectOffline();
+        // Guarded: a save-loading hiccup must not take the whole view down with
+        // it (the constructor has no outer catch).
+        try { _m.ensureStart(); } catch (e) {}
+        try { _m.collectOffline(); } catch (e) {}
         _pendingWelcome = _hasGains() || _m.newDay || _m.gEvent != Fa.EV_NONE;
         if (_m.pendingEvent != Fa.EV_NONE) { _event = true; _evChoice = 0; }
         else if (_pendingWelcome) { _welcome = true; }
@@ -229,7 +231,7 @@ class FarmView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
     hidden function _doClaim() {
-        if (_m.claimDaily()) { _popup = "Challenge reward claimed!"; _popupT = 34; _tone(4); _vibe(60, 120); }
+        if (_m.claimDaily()) { _popup = "Claimed " + _m.dailyRewardText(); _popupT = 34; _tone(4); _vibe(60, 120); }
         else if (_m.dailyClaimed) { _popup = "Already claimed today"; _popupT = 24; }
         else { _popup = "Challenge not complete"; _popupT = 24; _tone(2); }
         WatchUi.requestUpdate();
@@ -381,15 +383,6 @@ class FarmView extends WatchUi.View {
         if (s == null || s < 0) { s = 0; }
         return s;
     }
-    hidden function _comma(n) {
-        if (n < 0) { n = 0; }
-        var s = "" + n; var out = ""; var c = 0;
-        for (var i = s.length() - 1; i >= 0; i--) {
-            out = s.substring(i, i + 1) + out; c++;
-            if (c % 3 == 0 && i > 0) { out = "," + out; }
-        }
-        return out;
-    }
     // ── BUILD ─────────────────────────────────────────────────────────────────
     hidden function _drawBuild(dc) {
         _drawListFrame(dc, Fa.B_N, method(:_drawBuildRow));
@@ -441,10 +434,17 @@ class FarmView extends WatchUi.View {
         dc.setColor(0xF0C060, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_w * 11 / 100, yy + rowH * 22 / 100, 5);
         _txt(dc, lx, yy, Graphics.FONT_XTINY, 0xF0C060, "Herd", Graphics.TEXT_JUSTIFY_LEFT);
+        // Feed each new animal eats — grows with the herd.
+        _txt(dc, cx + _w * 12 / 100, yy, Graphics.FONT_XTINY,
+             _m.res[Fa.R_FEED] >= _m.feedPerAnimal() ? Fa.MUTED : 0xFF8A6A,
+             "-" + _fmt(_m.feedPerAnimal()) + " feed", Graphics.TEXT_JUSTIFY_RIGHT);
         _txt(dc, rx, yy, Graphics.FONT_XTINY, Fa.TEXT, _m.population + "/" + _m.popCap(), Graphics.TEXT_JUSTIFY_RIGHT);
         dc.setColor(0xFF9AC0, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_w * 11 / 100, yy + rowH + rowH * 22 / 100, 5);
         _txt(dc, lx, yy + rowH, Graphics.FONT_XTINY, 0xFF9AC0, "Guests", Graphics.TEXT_JUSTIFY_LEFT);
+        // Which crowd the farm currently draws.
+        _txt(dc, cx + _w * 12 / 100, yy + rowH, Graphics.FONT_XTINY, Fa.MUTED,
+             _m.guestTypeName(), Graphics.TEXT_JUSTIFY_RIGHT);
         _txt(dc, rx, yy + rowH, Graphics.FONT_XTINY, Fa.TEXT, _m.visitors + "/" + _m.visitorsCap(), Graphics.TEXT_JUSTIFY_RIGHT);
 
         // Daily challenge card (relocated off HOME so HOME is pure diorama).
@@ -495,14 +495,23 @@ class FarmView extends WatchUi.View {
         // BELOW it (using the real glyph height) so text never sits on the bar.
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
         var tx = x + rh + 4;
-        _txt(dc, tx, y + 2, Graphics.FONT_XTINY, Fa.TEXT, Fa.arName(id), Graphics.TEXT_JUSTIFY_LEFT);
+        // Undiscovered rows carry a right-hand "progress / steps needed" badge,
+        // so the name is truncated to whatever space is left over.
+        var badge = "";
+        if (!disc) { badge = _m.arProg[id] + "% " + _fmt(Fa.stepsForArea(id)) + "st"; }
+        var badgeW = (badge.length() > 0) ? dc.getTextWidthInPixels(badge, Graphics.FONT_XTINY) + 6 : 0;
+        var nameW = w - (tx - x) - badgeW - 4;
+        if (nameW < 12) { nameW = 12; }
+        _wrap1(dc, tx, y + 2, nameW, Graphics.FONT_XTINY, Fa.TEXT, Fa.arName(id));
         if (disc) {
             var b = Fa.arUnlockBuilding(id);
-            _txt(dc, tx, y + rh - fhX - 2, Graphics.FONT_XTINY, 0x9AE070,
-                 b >= 0 ? "Found - " + Fa.bName(b) : "Found - Prize Ribbon", Graphics.TEXT_JUSTIFY_LEFT);
+            var g = Fa.arGrantColl(id);
+            var found = "Found";
+            if (b >= 0) { found = "Found - " + Fa.bName(b); }
+            else if (g >= 0) { found = "Found - " + Fa.cName(g); }
+            _wrap1(dc, tx, y + rh - fhX - 2, w - (tx - x) - 4, Graphics.FONT_XTINY, 0x9AE070, found);
         } else {
-            _txt(dc, x + w - 4, y + 2, Graphics.FONT_XTINY, Fa.MUTED,
-                 _m.arProg[id] + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+            _txt(dc, x + w - 4, y + 2, Graphics.FONT_XTINY, Fa.MUTED, badge, Graphics.TEXT_JUSTIFY_RIGHT);
             var bw = w - (tx - x) - 6;
             var barY = y + fhX + 4;
             if (barY + 5 <= y + rh - 2) { _bar(dc, tx, barY, bw, 4, _m.arProg[id], col); }
@@ -514,9 +523,11 @@ class FarmView extends WatchUi.View {
         var cx = _w / 2;
         _txt(dc, cx, _h * 20 / 100, Graphics.FONT_XTINY, 0xFFD24A,
              _m.collectiblesOwned() + " / " + Fa.C_N + " found", Graphics.TEXT_JUSTIFY_CENTER);
-        var cols = 3;
-        var gx = _w * 18 / 100; var gy = _h * 26 / 100;
-        var cw = _w * 64 / 100; var cell = cw / cols;
+        // 5 columns keeps the full 15-charm set inside the dial.
+        var cols = 5;
+        var gx = _w * 10 / 100; var gy = _h * 26 / 100;
+        var cw = _w * 80 / 100; var cell = cw / cols;
+        if (cell < 6) { cell = 6; }
         for (var i = 0; i < Fa.C_N; i++) {
             var r = i / cols; var c = i % cols;
             var px = gx + c * cell + cell / 2;
@@ -689,6 +700,7 @@ class FarmView extends WatchUi.View {
         var top = _h * 21 / 100;
         var bottom = _h * 92 / 100;
         var rh = _h * 15 / 100;
+        if (rh < 1) { rh = 1; }
         var maxRows = (bottom - top) / rh;
         if (maxRows < 1) { maxRows = 1; }
         if (_cur < _scroll) { _scroll = _cur; }

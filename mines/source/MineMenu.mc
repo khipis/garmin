@@ -29,7 +29,7 @@ class MineHooks extends GameHooks {
 
     function drawArt(dc, cx, cy, w, h) as Void {
         if (_preview == null) { return; }
-        _tick += 1;
+        _tick = (_tick + 1) % 1000000;
         var r = h * 30 / 100;
         if (r < 18) { r = 18; }
         try { MineArt.drawScene(dc, _preview, cx, cy, r, _tick); } catch (e) {}

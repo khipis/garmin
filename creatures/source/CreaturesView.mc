@@ -231,8 +231,37 @@ class CreaturesView extends WatchUi.View {
             return;
         }
         if (_page == CV_DAY) { doClaim(); return; }
-        if (_page == CV_EVO) { setPage(CV_ACT); return; }
+        if (_page == CV_EVO) {
+            // SELECT on EVOLVE is the button-only route to ASCEND (it always
+            // goes through the confirmation menu, so it can't wipe by accident).
+            var canAsc = false;
+            try { canAsc = _m.canAscend(); } catch (e) {}
+            if (canAsc) { askAscend(); } else { setPage(CV_ACT); }
+            return;
+        }
         if (_page == CV_COL) { setPage(CV_HOME); return; }
+    }
+
+    // ── Ascension ─────────────────────────────────────────────────────────────
+    // Always confirm: this trades the current creature for a new egg.
+    function askAscend() {
+        try {
+            if (!_m.canAscend()) { return; }
+            crOpenAscend(self);
+        } catch (e) {}
+    }
+    // Called by CrAscendConfirmDelegate once the player confirms.
+    function doAscend() as Void {
+        try {
+            if (!_m.canAscend()) { return; }
+            _m.ascend();
+            _page = CV_HOME;
+            _welcome = false; _hatchFlash = false;
+            _actCursor = 0; _colScroll = 0;
+            _popup = "ASCENDED! A new egg awaits"; _popupT = 44;
+            _tone(4); _vibe(80, 160);
+            WatchUi.requestUpdate();
+        } catch (e) {}
     }
 
     function toggleDemo() {
@@ -330,6 +359,9 @@ class CreaturesView extends WatchUi.View {
         }
         if (_page == CV_DAY) {
             if (_inRect(x, y, _rBtnA)) { doClaim(); return true; }
+        }
+        if (_page == CV_EVO) {
+            if (_inRect(x, y, _rBtnA)) { askAscend(); return true; }
         }
         if (_page == CV_HOME) { setPage(CV_ACT); return true; }
         return true;
@@ -565,13 +597,19 @@ class CreaturesView extends WatchUi.View {
         Px.gtxt(dc, rs, bx + barW - pad - Px.gtxtW(rs, sc), gy, sc, 0x37D0C0);
     }
 
-    // Rotating right-hand vital for the HOME ribbon.
+    // Rotating right-hand vital for the HOME ribbon. Veterans get a fourth slot
+    // showing their ascension count — the centre "LV n stage" text has no room
+    // left on a round chord.
     hidden function _rotStat() {
-        var idx = (_t / 90) % 3;
+        var n = (_m.asc > 0) ? 4 : 3;
+        var idx = (_t / 90) % n;
         if (idx == 0) { return "En " + _m.energy; }
         if (idx == 1) { return "Md " + _m.mood; }
-        var need = _m.xpNeeded(); if (need < 1) { need = 1; }
-        return "XP " + (_m.xp * 100 / need) + "%";
+        if (idx == 2) {
+            var need = _m.xpNeeded(); if (need < 1) { need = 1; }
+            return "XP " + (_m.xp * 100 / need) + "%";
+        }
+        return "ASC " + _m.asc;
     }
 
     // First-run explainer overlay: stats are the currency.
@@ -643,30 +681,45 @@ class CreaturesView extends WatchUi.View {
     // ── EVOLUTION ───────────────────────────────────────────────────────────────
     hidden function _drawEvolution(dc) {
         var cx = _w / 2;
+        // At Apex or beyond the page grows an ASCEND button; the trait rows tighten
+        // by 1% each so the button always clears the bottom hint line.
+        var canAsc = false;
+        try { canAsc = _m.canAscend(); } catch (e) {}
 
-        var yy = _h * 22 / 100;
+        var yy = _h * 21 / 100;
         var sc = _h / 220; if (sc < 2) { sc = 2; }
         var gh = 5 * sc;
-        Px.gtxtC(dc, Cr.stageName(_m.evo), cx, yy, sc, Cr.TEXT);
+        var hdr = Cr.stageName(_m.evo);
+        if (_m.asc > 0) { hdr += " A" + _m.asc; }
+        Px.gtxtC(dc, hdr, cx, yy, sc, Cr.TEXT);
         var ns = _m.nextStage();
-        var lbl = (ns < 0) ? "APEX FORM" : "NEXT " + Cr.stageName(ns);
-        Px.gtxtC(dc, lbl, cx, yy + _h * 8 / 100, sc, 0xB46CFF);
+        var lbl = (ns < 0) ? "FINAL FORM" : "NEXT " + Cr.stageName(ns);
+        Px.gtxtC(dc, lbl, cx, yy + _h * 7 / 100, sc, 0xB46CFF);
 
         var bw = _w * 62 / 100; var bx = cx - bw / 2;
-        var by = yy + _h * 15 / 100;
+        var by = yy + _h * 14 / 100;
         _bar(dc, bx, by, bw, 9, _m.evoProgressPct(), 0xB46CFF);
-        Px.gtxtC(dc, "DNA MUT " + _m.mutations, cx, by + _h * 6 / 100, sc, Cr.MUTED);
+        Px.gtxtC(dc, "DNA MUT " + _m.mutations, cx, by + _h * 5 / 100, sc, Cr.MUTED);
 
         // Trait bars (extra spacing). The label sits in a reserved left column so
-        // it can never touch the bar that starts after it.
-        var ty = by + _h * 13 / 100;
-        var rowH = _h * 8 / 100;
+        // it can never touch the bar that starts after it. Bars are scaled to
+        // TRAIT_MAX so a maxed trait fills the box exactly instead of overflowing.
+        var ty = by + _h * 12 / 100;
+        var rowH = canAsc ? _h * 7 / 100 : _h * 8 / 100;
         var labW = _w * 18 / 100;
         for (var i = 0; i < Cr.TR_N; i++) {
             var ry = ty + i * rowH;
             Px.gtxt(dc, Cr.traitAbbr(i), bx, ry, sc, Cr.TEXT);
+            var tv = Cr._clamp(_m.traits[i], 0, Cr.TRAIT_MAX);
             _bar(dc, bx + labW, ry + gh / 2 - 3, bw - labW, 6,
-                 _m.traits[i] * 10, Cr.speciesColor(_m.species));
+                 tv * 100 / Cr.TRAIT_MAX, Cr.speciesColor(_m.species));
+        }
+
+        if (canAsc) {
+            var bwr = _w * 46 / 100; var bxr = cx - bwr / 2;
+            var byr = _h * 82 / 100; var bhr = _h * 11 / 100;
+            _rBtnA = [bxr, byr, bwr, bhr];
+            _button(dc, _rBtnA, "ASCEND", true);
         }
     }
 

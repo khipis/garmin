@@ -35,38 +35,66 @@ class IslandModel {
     function initialize() { _load(); }
 
     // ── Storage ───────────────────────────────────────────────────────────────
+    // Saturation limits. Everything the player can accumulate is bounded so no
+    // arithmetic path (idle income, multipliers, costs) can wrap a 32-bit int.
+    const RES_MAX  = 1000000000;
+    const RATE_MAX = 100000000;
+    const LVL_MAX  = 2000;
+    const VIS_MAX  = 10000000;
+    const POP_MAX  = 200000;
+
     hidden function _get(k, def) {
         try { var v = Application.Storage.getValue(k); if (v != null) { return v; } } catch (e) {}
         return def;
     }
     hidden function _set(k, v) { try { Application.Storage.setValue(k, v); } catch (e) {} }
 
+    // Read a saved value as a clamped Number. A corrupt or legacy entry (wrong
+    // type, negative, absurdly large) can never reach the game logic.
+    hidden function _getNum(k, def, lo, hi) {
+        var v = _get(k, def);
+        if (v instanceof Lang.Float || v instanceof Lang.Double || v instanceof Lang.Long) {
+            try { v = v.toNumber(); } catch (e) { return def; }
+        }
+        if (!(v instanceof Lang.Number)) { return def; }
+        if (v < lo) { return lo; }
+        if (v > hi) { return hi; }
+        return v;
+    }
+
     hidden function _load() {
-        started    = _get("is_started", false);
-        bornSec    = _get("is_born", 0);
-        lastSec    = _get("is_last", 0);
-        population = _get("is_pop", 0);
-        visitors   = _get("is_vis", 0);
-        streak     = _get("is_streak", 0);
-        lastDay    = _get("is_lday", 0);
-        dailyDay   = _get("is_dday", 0);
-        dUpgrades  = _get("is_dup", 0);
-        dExpl      = _get("is_dexp", 0);
-        dailyClaimed   = _get("is_dclaim", false);
-        dailyCollected = _get("is_dcol", false);
-        discMask   = _get("is_disc", 0);
-        collMask   = _get("is_coll", 0);
-        pendingEvent = _get("is_pev", Is.EV_NONE);
+        started    = (_get("is_started", false) == true);
+        bornSec    = _getNum("is_born", 0, 0, 2000000000);
+        lastSec    = _getNum("is_last", 0, 0, 2000000000);
+        population = _getNum("is_pop", 0, 0, POP_MAX);
+        visitors   = _getNum("is_vis", 0, 0, VIS_MAX);
+        streak     = _getNum("is_streak", 0, 0, 100000);
+        lastDay    = _getNum("is_lday", 0, 0, 1000000);
+        dailyDay   = _getNum("is_dday", 0, 0, 1000000);
+        dUpgrades  = _getNum("is_dup", 0, 0, 100000);
+        dExpl      = _getNum("is_dexp", 0, 0, 100000);
+        dailyClaimed   = (_get("is_dclaim", false) == true);
+        dailyCollected = (_get("is_dcol", false) == true);
+        discMask   = _getNum("is_disc", 0, 0, 0x7FFFFFFF);
+        collMask   = _getNum("is_coll", 0, 0, 0x7FFFFFFF);
+        pendingEvent = _getNum("is_pev", Is.EV_NONE, Is.EV_NONE, 4);
 
         res = new [Is.R_N];
-        for (var i = 0; i < Is.R_N; i++) { res[i] = _get("is_r" + i, 0); }
+        for (var i = 0; i < Is.R_N; i++) { res[i] = _getNum("is_r" + i, 0, 0, RES_MAX); }
+        // Sized by B_N / AR_N: ids appended since the save was written simply
+        // default to 0, so older saves load straight into the longer tables.
         bLevel = new [Is.B_N];
-        for (var b = 0; b < Is.B_N; b++) { bLevel[b] = _get("is_b" + b, 0); }
+        for (var b = 0; b < Is.B_N; b++) { bLevel[b] = _getNum("is_b" + b, 0, 0, LVL_MAX); }
         arProg = new [Is.AR_N];
-        for (var a = 0; a < Is.AR_N; a++) { arProg[a] = _get("is_ar" + a, 0); }
+        for (var a = 0; a < Is.AR_N; a++) { arProg[a] = _getNum("is_ar" + a, 0, 0, 100); }
 
+        log = [];
         var lg = _get("is_log", null);
-        log = (lg instanceof Lang.Array) ? lg : [];
+        if (lg instanceof Lang.Array) {
+            for (var j = 0; j < lg.size() && j < 8; j++) {
+                if (lg[j] instanceof Lang.String) { log.add(lg[j]); }
+            }
+        }
 
         gRes = [0, 0, 0, 0]; gSecs = 0; gPop = 0; gVis = 0; newDay = false; gEvent = Is.EV_NONE;
     }
@@ -112,6 +140,27 @@ class IslandModel {
     function nowSec() { return Time.now().value(); }
     function today()  { return nowSec() / 86400; }
     hidden function _rand(n) { if (n <= 1) { return 0; } return (Math.rand() & 0x7FFFFFFF) % n; }
+
+    // ── Saturating arithmetic ────────────────────────────────────────────────
+    hidden function _addRes(r, n) {
+        if (n <= 0) { return; }
+        var v = res[r] + n;
+        if (v > RES_MAX || v < 0) { v = RES_MAX; }
+        res[r] = v;
+    }
+    hidden function _addVis(n) {
+        if (n <= 0) { return; }
+        visitors += n;
+        if (visitors > VIS_MAX || visitors < 0) { visitors = VIS_MAX; }
+    }
+    // Percentage multiply in 64-bit, saturated back into a safe Number. The
+    // stacked pop/crystal/sky bonuses used to overflow at high island levels.
+    hidden function _mulPct(v, pct) {
+        if (v <= 0 || pct <= 0) { return 0; }
+        var out = v.toLong() * pct / 100;
+        if (out > RATE_MAX) { return RATE_MAX; }
+        return out.toNumber();
+    }
 
     hidden function _logAdd(s) {
         var nl = [s];
@@ -197,6 +246,10 @@ class IslandModel {
     }
     function milestoneLabel() {
         var l = islandLevel();
+        if (l >= 600) { return "Cosmic Paradise"; }
+        if (l >= 400) { return "Eternal Dominion"; }
+        if (l >= 250) { return "Ascended Realm"; }
+        if (l >= 175) { return "Divine Isles"; }
         if (l >= 100) { return "Mythical Kingdom"; }
         if (l >= 50)  { return "Legendary Island"; }
         if (l >= 25)  { return "Tourist Paradise"; }
@@ -212,13 +265,10 @@ class IslandModel {
         }
         if (r == Is.R_COIN) { base += visitors * 2; }   // visitor passive income
         if (base <= 0) { return 0; }
-        var popPct     = 100 + population * 2;
-        var crystalPct = 100 + bLevel[Is.B_CRYSTAL] * 10;
-        var skyPct     = 100 + bLevel[Is.B_SKY] * 15;
         var v = base;
-        v = v * popPct / 100;
-        v = v * crystalPct / 100;
-        v = v * skyPct / 100;
+        v = _mulPct(v, 100 + population * 2);
+        v = _mulPct(v, 100 + bLevel[Is.B_CRYSTAL] * 10);
+        v = _mulPct(v, 100 + bLevel[Is.B_SKY] * 15);
         return v;
     }
 
@@ -254,13 +304,17 @@ class IslandModel {
             }
         }
 
-        // Resource income (night bonus from sleep).
+        // Resource income (night bonus from sleep). Computed in 64-bit: rate can
+        // reach eight figures late game and rate*elapsed overflows a Number.
         var nightPct = 100;
         if (newDay) { var sl = Sensors.getSleepData(); if (sl > 0) { nightPct = 110; } }
         for (var r = 0; r < Is.R_N; r++) {
-            var gain = hourlyRate(r) * elapsed / 3600;
-            gain = gain * nightPct / 100;
-            if (gain > 0) { res[r] += gain; gRes[r] = gain; }
+            var rate = hourlyRate(r);
+            if (rate <= 0) { continue; }
+            var g = rate.toLong() * elapsed / 3600 * nightPct / 100;
+            if (g > RES_MAX) { g = RES_MAX; }
+            var gain = g.toNumber();
+            if (gain > 0) { _addRes(r, gain); gRes[r] = gain; }
         }
         var any = false;
         for (var k = 0; k < Is.R_N; k++) { if (gRes[k] > 0) { any = true; } }
@@ -281,7 +335,7 @@ class IslandModel {
             var steps = Sensors.getStepsToday();
             if (steps > 0) {
                 var tgt = _nextArea();
-                if (tgt >= 0) { _advanceArea(tgt, steps * 100 / Is.STEPS_PER_AREA); }
+                if (tgt >= 0) { _advanceArea(tgt, steps * 100 / Is.stepsForArea(tgt)); }
             }
         }
 
@@ -303,11 +357,11 @@ class IslandModel {
             res[Is.R_WOOD] -= loss; if (res[Is.R_WOOD] < 0) { res[Is.R_WOOD] = 0; }
             gEvent = e; _logAdd("Storm -" + loss + " wood");
         } else if (e == Is.EV_ANIMAL) {
-            var v = 8 + _rand(20); visitors += v; gEvent = e;
+            var v = 8 + _rand(20); _addVis(v); gEvent = e;
             _logAdd("Rare animal +" + v + " visitors");
             if (_rand(100) < 40) { _grantRandomCollectible(); }
         } else { // FESTIVAL
-            var c = 150 + _rand(300); res[Is.R_COIN] += c; visitors += 10; gEvent = e;
+            var c = 150 + _rand(300); _addRes(Is.R_COIN, c); _addVis(10); gEvent = e;
             _logAdd("Festival +" + c + " coins");
         }
     }
@@ -321,7 +375,7 @@ class IslandModel {
         var msg = "";
         if (e == Is.EV_TREASURE) {
             if (choice == 0) {
-                var c = 120 + _rand(280); res[Is.R_COIN] += c;
+                var c = 120 + _rand(280); _addRes(Is.R_COIN, c);
                 msg = "Chest opened! +" + c + " coins"; _logAdd("Treasure +" + c + " coins");
                 if (_rand(100) < 45) { var gi = _grantRandomCollectible(); if (gi >= 0) { msg = "Found " + Is.cName(gi) + "!"; } }
             } else { msg = "Left the chest."; }
@@ -331,7 +385,7 @@ class IslandModel {
                     res[Is.R_COIN] -= 100;
                     var gi2 = _grantRandomCollectible();
                     msg = (gi2 >= 0) ? ("Traded for " + Is.cName(gi2)) : "Traded for 20 wood";
-                    if (gi2 < 0) { res[Is.R_WOOD] += 20; }
+                    if (gi2 < 0) { _addRes(Is.R_WOOD, 20); }
                     _logAdd("Traveler trade");
                 } else { msg = "Not enough coins to trade"; }
             } else { msg = "Traveler moved on."; }
@@ -354,6 +408,7 @@ class IslandModel {
         if (!isUnlocked(i)) {
             return "Locked - explore " + Is.arName(Is.bUnlockArea(i));
         }
+        if (bLevel[i] >= LVL_MAX) { return Is.bName(i) + " is maxed"; }
         var cost = upgradeCost(i);
         if (!canAfford(cost)) { return "Need more resources"; }
         res[Is.R_COIN] -= cost[0]; res[Is.R_WOOD] -= cost[1]; res[Is.R_STONE] -= cost[2];
@@ -372,16 +427,21 @@ class IslandModel {
         return -1;
     }
     hidden function _advanceArea(i, incPct) {
-        if (i < 0 || isDiscovered(i)) { return false; }
+        if (i < 0 || i >= Is.AR_N || isDiscovered(i)) { return false; }
+        if (incPct <= 0) { return false; }
         arProg[i] += incPct;
         if (arProg[i] >= 100) {
             arProg[i] = 100;
             discMask = discMask | (1 << i);
             dExpl += 1;
-            res[Is.R_COIN] += 80;
+            _addRes(Is.R_COIN, 80);
             var b = Is.arUnlockBuilding(i);
             if (b >= 0) { _logAdd("Discovered " + Is.arName(i) + " -> " + Is.bName(b)); }
-            else { _grantCollectible(7); _logAdd("Discovered " + Is.arName(i) + " -> Ancient Monument"); }
+            else {
+                var gc = Is.arGrantColl(i);
+                _grantCollectible(gc);
+                _logAdd("Discovered " + Is.arName(i) + " -> " + Is.cName(gc));
+            }
             return true;
         }
         return false;
@@ -389,9 +449,10 @@ class IslandModel {
     function explore(i) {
         if (i < 0 || i >= Is.AR_N) { return "Invalid area"; }
         if (isDiscovered(i)) { return Is.arName(i) + " already explored"; }
-        if (res[Is.R_COIN] < Is.EXPLORE_COST_COIN) { return "Need " + Is.EXPLORE_COST_COIN + " coins"; }
-        res[Is.R_COIN] -= Is.EXPLORE_COST_COIN;
-        var step = Is.EXPLORE_STEP + Sensors.getActivityMinutes() / 5;
+        var fee = Is.exploreCost(i);
+        if (res[Is.R_COIN] < fee) { return "Need " + fee + " coins"; }
+        res[Is.R_COIN] -= fee;
+        var step = Is.exploreStep(i, Sensors.getActivityMinutes() / 5);
         var done = _advanceArea(i, step);
         save();
         if (done) {
@@ -417,7 +478,8 @@ class IslandModel {
         _grantCollectible(pick);
         return pick;
     }
-    // Grant milestone decorations as the island level climbs.
+    // Grant milestone decorations as the island level climbs. The late tiers
+    // stretch the ladder far past the old level-100 finish line.
     hidden function _checkMilestoneCollectibles() {
         var l = islandLevel();
         if (l >= 10)  { _grantCollectible(0); }   // Palm Grove
@@ -425,6 +487,11 @@ class IslandModel {
         if (l >= 35)  { _grantCollectible(3); }   // Golden Tree
         if (l >= 60)  { _grantCollectible(5); }   // Crystal Waterfall
         if (l >= 100) { _grantCollectible(8); }   // Rainbow Fountain
+        if (l >= 150) { _grantCollectible(10); }  // Storm Bell
+        if (l >= 220) { _grantCollectible(11); }  // Sunken Relic
+        if (l >= 300) { _grantCollectible(12); }  // Sky Shard
+        if (l >= 400) { _grantCollectible(13); }  // Titan Pearl
+        if (l >= 550) { _grantCollectible(14); }  // Eternal Bloom
     }
 
     // ── Daily challenge ─────────────────────────────────────────────────────────
@@ -449,7 +516,7 @@ class IslandModel {
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        res[Is.R_COIN] += 250; res[Is.R_WOOD] += 80;
+        _addRes(Is.R_COIN, 250); _addRes(Is.R_WOOD, 80);
         if (_rand(100) < 20) { _grantRandomCollectible(); }
         save();
         return true;
@@ -471,10 +538,10 @@ class IslandModel {
     }
 
     function grantDemoResources() {
-        res[Is.R_COIN]  += 600;
-        res[Is.R_WOOD]  += 300;
-        res[Is.R_STONE] += 180;
-        res[Is.R_FOOD]  += 140;
+        _addRes(Is.R_COIN,  600);
+        _addRes(Is.R_WOOD,  300);
+        _addRes(Is.R_STONE, 180);
+        _addRes(Is.R_FOOD,  140);
         var pc = popCap();
         if (population < pc) { population += 1; if (population > pc) { population = pc; } }
         var vc = visitorsCap();

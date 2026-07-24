@@ -17,15 +17,18 @@
 //                Beach/Arena/Festival/Resort each add a distinct entertainment
 //                feature; the SPECIAL landmarks appear once their area is
 //                discovered — Ancient Temple, sparkling Crystal Tower, Dragon
-//                Statue and a floating Sky Palace.
+//                Statue and a floating Sky Palace; the late-game Sky Tower,
+//                Timber Mill, Grand Marina and the mythic Sun Obelisk, Sunken
+//                Shrine and pulsing Rift Gate keep the skyline growing.
 //   • Life     — villagers of varied sprite designs wander varied paths at
 //                varied speed (count ~ population, capped for perf), birds
 //                drift, fish jump, the crystal sparkles, waves shimmer — all
 //                driven off a single cheap phase counter, no per-frame heap
 //                churn beyond small literal sprite rows (same as before).
-//   • Decor    — every one of the 9 collectibles now has ITS OWN distinct
-//                pixel decoration (grove, shells, totem, golden tree, coral,
-//                waterfall, idol, monument, fountain).
+//   • Decor    — the first nine collectibles each have their OWN distinct pixel
+//                decoration (grove, shells, totem, golden tree, coral,
+//                waterfall, idol, monument, fountain); anything appended after
+//                them falls back to a gem pedestal tinted with its own colour.
 //
 // Everything is drawn from cheap primitive fills, contained in a box, scales
 // to any watch, and is fully guarded — the master render is wrapped in
@@ -63,7 +66,7 @@ module IslandArt {
 
         var horizon = y + h * 46 / 100;
         var groundY = y + h * 62 / 100;         // grass surface: land sprites sit here
-        var islandHalf = w * 42 / 100;
+        var islandHalf = w * 42 / 100; if (islandHalf < 4) { islandHalf = 4; }
 
         _sky(dc, x, y, w, horizon - y, tod, phase);
         _light(dc, x, y, w, h, tod, phase);
@@ -235,7 +238,7 @@ module IslandArt {
         var sand  = tod == 3 ? 0xB89A62 : 0xE9D6A0;
         var sand2 = tod == 3 ? 0x9A7E4E : 0xD8B87A;
         var top = groundY - (groundY - horizon) * 55 / 100;   // grass crest above waterline
-        var span = bottom - top;
+        var span = bottom - top; if (span < 1) { span = 1; }
         var bh = span / prof.size(); if (bh < 2) { bh = 2; }
         for (var i = 0; i < prof.size(); i++) {
             var hw = islandHalf * prof[i] / 100;
@@ -256,15 +259,18 @@ module IslandArt {
         // way twice across the island's width, never flickers frame-to-frame.
         var speck = tod == 3 ? 0x8A6E3E : 0xC8AC72;
         dc.setColor(speck, Graphics.COLOR_TRANSPARENT);
+        var spanW = islandHalf * 2; if (spanW < 1) { spanW = 1; }
+        var spanH = span * 55 / 100; if (spanH < 1) { spanH = 1; }
         for (var s = 0; s < 16; s++) {
-            var hx = _hash(s * 7 + 3) % (islandHalf * 2);
-            var hy = top + span * 42 / 100 + _hash(s * 13 + 9) % (span * 55 / 100);
+            var hx = _hash(s * 7 + 3) % spanW;
+            var hy = top + span * 42 / 100 + _hash(s * 13 + 9) % spanH;
             dc.fillRectangle(cx - islandHalf + hx, hy, 2, 2);
         }
         // Grass tufts for a little texture up top.
         dc.setColor(tod == 3 ? 0x134A24 : 0x1E7A34, Graphics.COLOR_TRANSPARENT);
+        var tuftW = islandHalf * 130 / 100; if (tuftW < 1) { tuftW = 1; }
         for (var g = 0; g < 8; g++) {
-            var gx = _hash(g * 19 + 5) % (islandHalf * 130 / 100);
+            var gx = _hash(g * 19 + 5) % tuftW;
             var gy = top + _hash(g * 29 + 1) % (bh * 2);
             dc.fillRectangle(cx - islandHalf * 65 / 100 + gx, gy, 1, 3);
         }
@@ -285,10 +291,16 @@ module IslandArt {
 
     // ── The estate: buildings/trees/decor scaled by progress ─────────────────
     function _estate(dc, m, cx, groundY, islandHalf, p, phase, mini) {
+        // Zero-filled first: a partial read must never leave nulls behind for
+        // the sprite passes to compare against.
         var lv = new [Is.B_N];
+        for (var z = 0; z < Is.B_N; z++) { lv[z] = 0; }
         var coll = 0; var built = 0; var topHouse = -1; var housingSum = 0;
         try {
-            for (var i = 0; i < Is.B_N; i++) { lv[i] = m.bLevel[i]; }
+            for (var i = 0; i < Is.B_N; i++) {
+                var v = m.bLevel[i];
+                if (v != null && v > 0) { lv[i] = v; }
+            }
             for (var hi2 = Is.B_TENT; hi2 <= Is.B_CASTLE; hi2++) {
                 housingSum += lv[hi2]; if (lv[hi2] > 0) { topHouse = hi2; }
             }
@@ -300,8 +312,11 @@ module IslandArt {
         if (built == 0) { try { _camp(dc, cx, groundY, p); } catch (e) {} return; }
 
         try { _skyPalace(dc, lv[Is.B_SKY], cx, groundY, islandHalf, p, phase); } catch (e) {}
+        try { _riftGate(dc, lv[Is.B_RIFT], cx, groundY, islandHalf, p, phase); } catch (e) {}
         try { _landmarks(dc, lv, cx, groundY, islandHalf, p, phase); } catch (e) {}
+        try { _mythic(dc, lv, cx, groundY, islandHalf, p, phase); } catch (e) {}
         try { _housingCluster(dc, topHouse, housingSum, cx, groundY, islandHalf, p); } catch (e) {}
+        try { _skyTower(dc, lv[Is.B_TOWER], cx, groundY, islandHalf, p); } catch (e) {}
         try { _natureFeatures(dc, lv, cx, groundY, islandHalf, p, phase); } catch (e) {}
         try { _funFeatures(dc, lv, cx, groundY, islandHalf, p, phase); } catch (e) {}
         try { _decor(dc, coll, cx, groundY, islandHalf, p, phase); } catch (e) {}
@@ -314,6 +329,38 @@ module IslandArt {
         var palPal = { "p" => 0xB8A0FF, "b" => 0xEAF4FA };
         var flo = (Math.sin(phase.toFloat() * 0.06) * p).toNumber();
         _place(dc, palRows, palPal, cx - islandHalf * 32 / 100, groundY - p * 8 + flo, _scaleP(p, lvSky), false);
+    }
+
+    // Rift Gate — a torn portal hanging opposite the Sky Palace, pulsing.
+    function _riftGate(dc, lvRift, cx, groundY, islandHalf, p, phase) {
+        if (lvRift <= 0) { return; }
+        var rows = [".vvv.", "vv.vv", "v...v", "vv.vv", ".vvv."];
+        var pal = { "v" => ((phase / 5) % 2 == 0) ? 0xD070FF : 0x9A4ADF };
+        var flo = (Math.sin(phase.toFloat() * 0.05 + 2) * p).toNumber();
+        _place(dc, rows, pal, cx + islandHalf * 34 / 100, groundY - p * 9 + flo, _scaleP(p, lvRift), false);
+    }
+
+    // MYTHIC ground structures — the reward for the late discovery areas.
+    function _mythic(dc, lv, cx, groundY, islandHalf, p, phase) {
+        var ob = lv[Is.B_OBELISK]; var sh = lv[Is.B_SHRINE];
+        if (ob > 0) {
+            var oRows = ["..y..", ".ooo.", ".ooo.", ".ooo.", ".ooo.", "ooooo"];
+            var oPal = { "y" => 0xFFE9A0, "o" => 0xFFB03A };
+            _place(dc, oRows, oPal, cx + islandHalf * 46 / 100, groundY, _scaleP(p, ob), false);
+        }
+        if (sh > 0) {
+            var sRows = [".s.s.", "sssss", ".ggg.", ".ggg.", "sssss"];
+            var sPal = { "s" => 0x3AE0A0, "g" => 0x14504A };
+            _place(dc, sRows, sPal, cx - islandHalf * 40 / 100, groundY + p * 2, _scaleP(p, sh), false);
+        }
+    }
+
+    // Sky Tower — a slim high-rise that visibly out-tops the housing skyline.
+    function _skyTower(dc, lvTower, cx, groundY, islandHalf, p) {
+        if (lvTower <= 0) { return; }
+        var rows = ["..a..", ".ttt.", "twtwt", "ttttt", "twtwt", "ttttt", "twtwt", "ttttt"];
+        var pal = { "t" => 0xA0C8FF, "w" => 0x2A5A80, "a" => 0xFFE9A0 };
+        _place(dc, rows, pal, cx - islandHalf * 70 / 100, groundY, _scaleP(p, lvTower), false);
     }
 
     // SPECIAL landmarks around the centre-back.
@@ -421,6 +468,12 @@ module IslandArt {
                 dc.fillRectangle(cx + islandHalf * 12 / 100 + s * p, groundY + p * (2 + (s % 2)), p - 1, p - 1);
             }
         }
+        if (lv[Is.B_MILL] > 0) {                 // Timber Mill — sawhouse + wheel
+            var mRows = ["..r..", ".rrr.", "wwwww", "w.k.w", "wwwww"];
+            var mPal = { "r" => 0x6A3A22, "w" => 0x8A6A3A, "k" => 0xC8B090 };
+            _place(dc, mRows, mPal, cx - islandHalf * 56 / 100, groundY + p * 3,
+                   _scaleP(p, lv[Is.B_MILL]), false);
+        }
     }
 
     // ENTERTAINMENT: each building type gets its own silhouette.
@@ -448,10 +501,16 @@ module IslandArt {
             var rPal = { "w" => 0xF0DCC0, "b" => 0x5AC0E0 };
             _place(dc, rRows, rPal, cx + islandHalf * 22 / 100, groundY + p * 4, _scaleP(p, resort), false);
         }
+        if (lv[Is.B_MARINA] > 0) {               // Grand Marina — jetty + moored yachts
+            var yRows = ["s...s", "mm.mm", "ddddd", "..d.."];
+            var yPal = { "s" => 0xEAF6F2, "m" => 0x4AE0C8, "d" => 0x8A6A4A };
+            _place(dc, yRows, yPal, cx + islandHalf * 62 / 100, groundY + p * 6,
+                   _scaleP(p, lv[Is.B_MARINA]), false);
+        }
     }
 
-    // Collection decorations — every one of the 9 collectibles now has its own
-    // distinct pixel sprite/effect instead of a generic flower.
+    // Collection decorations — the original nine each have their own distinct
+    // pixel sprite/effect; ids appended after them share a generic pedestal.
     function _decor(dc, coll, cx, groundY, islandHalf, p, phase) {
         if ((coll & (1 << 0)) != 0) {   // Palm Grove
             var pgRows = ["f.f", ".f.", "t.t"];
@@ -508,6 +567,17 @@ module IslandArt {
                 dc.setColor(0xEAFBFF, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(fx - 1, groundY + p * 2 - p * 5, 2, 2);
             }
+        }
+        // Every collectible appended past the nine hand-drawn ones gets a
+        // generic gem pedestal tinted with its own palette colour, fanned along
+        // the shore — new ids always place something instead of nothing.
+        for (var ci = 9; ci < Is.C_N; ci++) {
+            if ((coll & (1 << ci)) == 0) { continue; }
+            var k = ci - 9;
+            var gemRows = [".g.", "ggg", ".g.", ".b."];
+            var gemPal = { "g" => Is.cColor(ci), "b" => 0x8A8478 };
+            _place(dc, gemRows, gemPal, cx + islandHalf * (-84 + k * 28) / 100,
+                   groundY + p * 5, p, (k % 2) == 1);
         }
     }
 

@@ -33,8 +33,8 @@ const MV_COLL = 3;
 const MV_DAILY = 4;
 const MV_HIST = 5;
 const MV_PAGES = 6;
-const MV_UPG_ROWS = 9;   // 7 buildings + pickaxe + cart
-const MV_COLL_COLS = 4;
+const MV_UPG_ROWS = 11;   // Mn.B_N (9) buildings + pickaxe + cart
+const MV_COLL_COLS = 5;
 
 class MineView extends WatchUi.View {
     hidden var _m;
@@ -501,7 +501,14 @@ class MineView extends WatchUi.View {
         var bwr = _w * 54 / 100; var bxr = cx - bwr / 2; var byr = _h * 73 / 100; var bhr = _h * 14 / 100;
         _rBtnA = [bxr, byr, bwr, bhr];
         _button(dc, _rBtnA, "DIG  +" + (2 + _m.pickTier + _m.bLevel[Mn.B_SHAFT]) + "m", _digPulse > 0);
-        _txt(dc, cx, _h * 92 / 100, Graphics.FONT_XTINY, Mn.MUTED, "SELECT / TAP to dig", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Depth pressure readout — the one line that explains why the idle dig
+        // rate keeps falling below 1200m, and which building answers it.
+        var pp = 100;
+        try { pp = _m.pressurePct(); } catch (e) { pp = 100; }
+        var hint = "SELECT / TAP to dig"; var hintCol = Mn.MUTED;
+        if (pp < 100) { hint = "Pressure " + pp + "% - build Rig"; hintCol = 0xFF8A5A; }
+        _txt(dc, cx, _h * 92 / 100, Graphics.FONT_XTINY, hintCol, hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
     hidden function _nextMark() {
         for (var i = 0; i < Mn.D_N; i++) { if (Mn.dDepth(i) > _m.depth) { return Mn.dDepth(i); } }
@@ -605,9 +612,18 @@ class MineView extends WatchUi.View {
         var cx = _w / 2;
         _txt(dc, cx, _h * 20 / 100, Graphics.FONT_XTINY, 0xFFD24A,
              _m.collectiblesOwned() + " / " + Mn.C_N + " found", Graphics.TEXT_JUSTIFY_CENTER);
+        // The grid sizes itself from BOTH axes so appending collectibles adds
+        // rows without ever pushing cells off the bottom of the display.
         var cols = MV_COLL_COLS;
-        var cw = _w * 76 / 100; var cell = cw / cols;
-        var gx = cx - cw / 2; var gy = _h * 26 / 100;
+        var rows = (Mn.C_N + cols - 1) / cols;
+        if (rows < 1) { rows = 1; }
+        var bandY = _h * 25 / 100;
+        var bandH = _h * 56 / 100;
+        var cell = _w * 80 / 100 / cols;
+        if (bandH / rows < cell) { cell = bandH / rows; }
+        if (cell < 6) { cell = 6; }
+        var gx = cx - cell * cols / 2;
+        var gy = bandY + (bandH - cell * rows) / 2;
         for (var i = 0; i < Mn.C_N; i++) {
             var rr = i / cols; var c = i % cols;
             var px = gx + c * cell + cell / 2;
@@ -740,8 +756,11 @@ class MineView extends WatchUi.View {
         var top = _h * 19 / 100;
         var bottom = _h * 93 / 100;
         var rh = _h * 15 / 100;
+        if (rh < 1) { rh = 1; }
         var maxRows = (bottom - top) / rh;
         if (maxRows < 1) { maxRows = 1; }
+        if (_cur < 0) { _cur = 0; }
+        if (_cur >= count) { _cur = (count > 0) ? count - 1 : 0; }
         if (_cur < _scroll) { _scroll = _cur; }
         if (_cur >= _scroll + maxRows) { _scroll = _cur - maxRows + 1; }
         if (_scroll < 0) { _scroll = 0; }

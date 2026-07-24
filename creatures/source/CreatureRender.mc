@@ -67,8 +67,13 @@ module CreatureArt {
         var rare = Cr.rarityColor(m.rarityTier());
         var tier = m.rarityTier();
 
-        // Size grows with evolution stage.
-        var sz = r * (56 + m.evo * 11) / 100;
+        // Size grows with evolution stage, but the ears/horns/fins reach up to
+        // 1.5*sz beyond the body, so sz must never exceed the frame radius r.
+        // Apex (evo 4) already hits that ceiling; the post-Apex stages express
+        // themselves through extra aura rings below instead of more pixels.
+        var g = 56 + m.evo * 11;
+        if (g > 100) { g = 100; }
+        var sz = r * g / 100;
         var bob = (Math.sin(phase * 0.11) * (r / 20)).toNumber();
         var by  = cy + bob;
 
@@ -78,6 +83,15 @@ module CreatureArt {
             dc.drawCircle(cx, by, sz + 6);
             if (tier >= Cr.RA_LEGEND) { dc.drawCircle(cx, by, sz + 10); }
             if (tier >= Cr.RA_MYTHIC) { dc.drawCircle(cx, by, sz + 14); }
+        }
+        // Post-Apex stages: a gold halo per stage beyond Apex, so Mythic ->
+        // Cosmic still reads as a visible upgrade without growing the body.
+        if (m.evo > Cr.EV_APEX) {
+            dc.setColor(Cr.GOLD, Graphics.COLOR_TRANSPARENT);
+            var halos = Cr._clamp(m.evo - Cr.EV_APEX, 0, 3);
+            for (var hi = 0; hi < halos; hi++) {
+                dc.drawCircle(cx, by, sz + 4 + hi * 4);
+            }
         }
 
         // Ground shadow.
@@ -314,8 +328,12 @@ module CreatureArt {
             if (tier >= Cr.RA_MYTHIC) { dc.drawCircle(cx, by - px * 3, rr + px * 2); }
             if (apex) {
                 dc.setColor(Cr.GOLD, Graphics.COLOR_TRANSPARENT);
-                for (var ri = 0; ri < 6; ri++) {
-                    var ang = phase * 0.02 + ri * 1.047;
+                // Two extra sunburst rays per stage past Apex, so Mythic ->
+                // Cosmic keeps escalating on the home diorama.
+                var rays = 6;
+                try { rays = 6 + Cr._clamp(m.evo - Cr.EV_APEX, 0, 3) * 2; } catch (e) { rays = 6; }
+                for (var ri = 0; ri < rays; ri++) {
+                    var ang = phase * 0.02 + ri * 6.283 / rays;
                     var r0 = rr + px * 2; var r1 = rr + px * 3;
                     var rx0 = cx + (Math.cos(ang) * r0).toNumber();
                     var ry0 = by - px * 3 + (Math.sin(ang) * r0).toNumber();
@@ -641,11 +659,15 @@ module CreatureArt {
                 var evoF = 0;
                 try { evoF = m.evo; } catch (e) {}
                 var frameCol = 0x24303C;
-                if (evoF >= Cr.EV_ADULT) { frameCol = 0x3D4E60; }
-                if (evoF >= Cr.EV_APEX)  { frameCol = Cr.GOLD; }
+                if (evoF >= Cr.EV_ADULT)   { frameCol = 0x3D4E60; }
+                if (evoF >= Cr.EV_APEX)    { frameCol = Cr.GOLD; }
+                if (evoF >= Cr.EV_MYTH)    { frameCol = 0xFF4C7A; }
+                if (evoF >= Cr.EV_ETERNAL) { frameCol = 0x8FE3FF; }
+                if (evoF >= Cr.EV_COSMIC)  { frameCol = 0xB46CFF; }
                 dc.setColor(frameCol, Graphics.COLOR_TRANSPARENT);
                 dc.drawRoundedRectangle(x0, y0, w, h, 10);
                 if (evoF >= Cr.EV_APEX) { dc.drawRoundedRectangle(x0 + 2, y0 + 2, w - 4, h - 4, 9); }
+                if (evoF >= Cr.EV_ETERNAL) { dc.drawRoundedRectangle(x0 + 4, y0 + 4, w - 8, h - 8, 8); }
             }
         } catch (e) {}
     }

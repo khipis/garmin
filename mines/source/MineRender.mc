@@ -15,6 +15,11 @@ using Toybox.Lang;
 
 module MineArt {
 
+    // First zone that counts as "deep world" for the showpiece effects (the
+    // old final zone, The Abyss). Keeps the aura/shimmer payoffs landing where
+    // they always did now that five more zones sit below them.
+    const MN_RICH_ZONE = 4;
+
     // ── Central mine cross-section ────────────────────────────────────────────
     function drawScene(dc, m, cx, cy, r, phase) {
         var top = cy - r;
@@ -46,6 +51,7 @@ module MineArt {
         var span = (bandH > 3) ? (bandH - 2) : 1;
         for (var z = 0; z < Mn.Z_N; z++) {
             var by = surfaceY + z * bandH;
+            if (by >= bottom) { break; }   // ten thin bands can outgrow the box
             dc.setColor(Mn.zColor(z), Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(lx, by, w, bandH + 1);
             dc.setColor(_darken(Mn.zColor(z)), Graphics.COLOR_TRANSPARENT);
@@ -59,7 +65,8 @@ module MineArt {
             }
             // Twinkling ore / gems (brighter once the zone is reached).
             if (z >= 1) {
-                for (var s = 0; s < z + 2; s++) {
+                var sparks = z + 2; if (sparks > 5) { sparks = 5; }
+                for (var s = 0; s < sparks; s++) {
                     var sx = lx + ((s * 6197 + z * 971) % w);
                     var sy = by + ((s * 3301 + z * 613) % span) + 1;
                     if (sx > cx - clearW && sx < cx + clearW) { continue; }
@@ -126,12 +133,29 @@ module MineArt {
         dc.fillCircle(cx + cw / 3, cartY + chh, 2);
     }
 
+    // The visible shaft is not a fixed 1800m any more — it stretches to follow
+    // the player, so the cart, strata and machines still read correctly at
+    // 50000m. Floored at D_CAP_MIN so a fresh mine looks exactly as it always
+    // did, and ceilinged so every `cap * pixels` product stays inside a Number.
+    const D_CAP_MIN = 1800;
+    const D_CAP_MAX = 240000;
+    function depthCap(depth) {
+        var c = depth;
+        if (c < 0) { c = 0; }
+        if (c > D_CAP_MAX) { c = D_CAP_MAX; }
+        c = c * 12 / 10;
+        if (c < D_CAP_MIN) { c = D_CAP_MIN; }
+        if (c > D_CAP_MAX) { c = D_CAP_MAX; }
+        return c;
+    }
+
     // 0..100 fraction of the visible shaft for a given depth.
     function depthFrac(depth) {
         var d = depth;
         if (d < 0) { d = 0; }
-        if (d > 1800) { d = 1800; }
-        return d * 100 / 1800;
+        var cap = depthCap(d);
+        if (d > cap) { d = cap; }
+        return d * 100 / cap;
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -144,8 +168,6 @@ module MineArt {
     // "pixels" so it reads as crisp retro art, and the whole scene visibly
     // deepens & fills as depth and buildings grow. Round-safe (clips to circle).
     // ═══════════════════════════════════════════════════════════════════════
-    const D_CAP = 1800;
-
     function drawMine(dc, m, sx, sy, sw, sh, phase, cx, cy, R) {
         var u = sw / 30;
         if (u < 7) { u = 7; }
@@ -157,8 +179,8 @@ module MineArt {
         var travel = earthBot - surfaceY;
         if (travel < u) { travel = u; }
 
-        var dShown = m.depth; if (dShown > D_CAP) { dShown = D_CAP; }
-        var reachedY = surfaceY + travel * dShown / D_CAP;
+        var cap = depthCap(m.depth);
+        var reachedY = surfaceY + travel * depthFrac(m.depth) / 100;
 
         var shaftHalf = u;                     // shaft is ~2 pixels wide
         var clearW = shaftHalf + u;            // keep clear of central column
@@ -193,7 +215,7 @@ module MineArt {
         if (gl2[1] > gl2[0]) { dc.fillRectangle(gl2[0], surfaceY, gl2[1] - gl2[0], u / 2 + 1); }
 
         // ── EARTH LAYERS (chunky stripes, per-zone colour, deepen + enrich) ────
-        // Each of the 5 zones keeps its own base hue (Mn.zColor) so the strata
+        // Each of the Mn.Z_N zones keeps its own base hue (Mn.zColor) so strata
         // read as visually distinct bands at a glance; a bright seam marks
         // every zone boundary once it's actually been dug, marbled veining
         // breaks up flat colour, and a travelling shimmer sweeps the two
@@ -203,13 +225,13 @@ module MineArt {
         var deepest = Mn.Z_N - 1;
         for (var yy2 = surfaceY; yy2 < earthBot; yy2 += u) {
             var mid = yy2 + u / 2;
-            var dep = D_CAP * (mid - surfaceY) / travel;
+            var dep = cap * (mid - surfaceY) / travel;
             var z = Mn.zoneOf(dep);
             var base = Mn.zColor(z);
-            var col2 = _shade(base, 105 - dep * 45 / D_CAP);   // deeper → darker
+            var col2 = _shade(base, 105 - dep * 45 / cap);   // deeper → darker
             var isReached = (yy2 < reachedY);
             if (!isReached) { col2 = _shade(col2, 48); }        // undug → muted
-            else if (z == deepest) {                            // Abyss: slow violet pulse
+            else if (z >= deepest - 2) {                        // deepest three: violet pulse
                 col2 = _mix(col2, 0xB46CFF, ((phase / 6) % 6 == 0) ? 26 : 9);
             }
             var lr2 = _clip(cx, cy, R, yy2, u, sx, sw);
@@ -242,10 +264,10 @@ module MineArt {
                 }
             }
 
-            // Travelling shimmer sweep in the two richest dug zones — a quick
-            // glinting flourish tied to the phase counter, distinct from the
-            // per-nugget twinkle below.
-            if (isReached && z >= deepest - 1) {
+            // Travelling shimmer sweep in the rich lower half of the world — a
+            // quick glinting flourish tied to the phase counter, distinct from
+            // the per-nugget twinkle below.
+            if (isReached && z >= MN_RICH_ZONE) {
                 var sweepSpan = lr2[1] - lr2[0]; if (sweepSpan < 2) { sweepSpan = 2; }
                 var sweepX = lr2[0] + ((phase * 2 + rowIdx * 13) % sweepSpan);
                 if (!(sweepX > cx - clearW && sweepX < cx + clearW)) {
@@ -294,11 +316,16 @@ module MineArt {
         // the deepest zone has actually been reached ────────────────────────
         try { _abyssAura(dc, m, cx, surfaceY, reachedY, shaftHalf, u, phase); } catch (e) {}
 
-        // ── EMBEDDED MACHINES on the shaft walls (appear/grow with bLevel) ─────
-        _machine(dc, m, Mn.B_GEMWS,   100, surfaceY, travel, cx, shaftHalf, u, reachedY, phase);
-        _machine(dc, m, Mn.B_LAB,     260, surfaceY, travel, cx, shaftHalf, u, reachedY, phase);
-        _machine(dc, m, Mn.B_FORGE,    60, surfaceY, travel, cx, shaftHalf, u, reachedY, phase);
-        _machine(dc, m, Mn.B_SCANNER, 520, surfaceY, travel, cx, shaftHalf, u, reachedY, phase);
+        // ── EMBEDDED MACHINES on the shaft walls (appear/grow with bLevel) ────
+        // Spaced by SLOT down the dug section rather than by absolute depth:
+        // once the shaft covers 50km, an absolute 60m/520m placement would pile
+        // every machine into the topmost pixel row.
+        _machine(dc, m, Mn.B_FORGE,   0, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
+        _machine(dc, m, Mn.B_GEMWS,   1, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
+        _machine(dc, m, Mn.B_LAB,     2, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
+        _machine(dc, m, Mn.B_SCANNER, 3, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
+        _machine(dc, m, Mn.B_RIG,     4, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
+        _machine(dc, m, Mn.B_BORE,    5, 6, surfaceY, cx, shaftHalf, u, reachedY, phase);
 
         // ── COLLECTED ITEMS glinting in the walls — the whole dig history ──────
         _collScatter(dc, m, cx, surfaceY, reachedY, shaftHalf, u, phase);
@@ -381,7 +408,7 @@ module MineArt {
         var off = (p <= span) ? p : (2 * span - p);
         var carx = lr[0] + off;
         var tier = m.cartTier;
-        var body = (tier >= 2) ? 0x4CE0C0 : ((tier >= 1) ? 0x8CC0FF : 0xC98A4A);
+        var body = _cartColor(tier);
         var wheelSpin = ((phase / 2) % 2 == 0) ? 0x1A120A : 0x3A2A18;   // spin flicker
         var pal = { "C" => body, "O" => 0xFFC24A, "G" => 0x5CF0EA, "K" => wheelSpin };
         var spr = (tier >= 1)
@@ -390,13 +417,17 @@ module MineArt {
         Px.spr(dc, spr, pal, carx, railLine - u * 3, u, false);
     }
 
-    // A machine sprite embedded in a shaft wall at its unlock depth.
-    function _machine(dc, m, id, atDepth, surfaceY, travel, cx, shaftHalf, u, reachedY, phase) {
-        var lvl = m.bLevel[id];
+    // A machine sprite embedded in a shaft wall, at slot `slot` of `nSlots`
+    // evenly spaced down the section of shaft that has actually been dug.
+    function _machine(dc, m, id, slot, nSlots, surfaceY, cx, shaftHalf, u, reachedY, phase) {
+        var lvl = m.bLevel[Mn._c(id, 0, Mn.B_N - 1)];
         if (lvl <= 0) { return; }
-        var y = surfaceY + travel * atDepth / D_CAP;
+        if (nSlots < 1) { nSlots = 1; }
+        var span = reachedY - surfaceY;
+        if (span < u * 4) { return; }
+        var y = surfaceY + span * (slot + 1) / (nSlots + 1);
         if (y < surfaceY + u) { y = surfaceY + u; }
-        var left = (id == Mn.B_LAB || id == Mn.B_SCANNER);   // alternate walls
+        var left = (slot % 2 == 1);   // alternate walls
         var mpx = u * 80 / 100; if (mpx < 5) { mpx = 5; }
         var spr; var pal;
         if (id == Mn.B_FORGE) {
@@ -408,6 +439,15 @@ module MineArt {
         } else if (id == Mn.B_GEMWS) {
             pal = { "M" => 0x4CE6E0, "W" => 0xE8FBFA };
             spr = ["..M..", ".MWM.", "MMMMM", ".MMM."];
+        } else if (id == Mn.B_RIG) {         // hydraulic piston bracing the wall
+            var ext = ((phase / 6) % 2 == 0);
+            pal = { "S" => 0x8A6A5A, "P" => 0xE05A3A, "H" => 0xFFC0A0 };
+            spr = ext ? ["SSSSS", "S.P.S", "SPPPS", "SSHSS"]
+                      : ["SSSSS", "SPPPS", "S.P.S", "SSHSS"];
+        } else if (id == Mn.B_BORE) {        // quantum bore: spinning drill head
+            var hot = ((phase / 4) % 2 == 0) ? 0xFFFFFF : 0x7AF0FF;
+            pal = { "Q" => 0x2A6A7A, "C" => 0x7AF0FF, "W" => hot };
+            spr = ["QQQQ.", "QCCCW", "QQQQ.", ".W..."];
         } else {   // SCANNER: dish + sweeping beam
             var bc = ((phase / 5) % 2 == 0) ? 0xE0C0FF : 0xB46CFF;
             pal = { "D" => 0x7A5AA0, "B" => bc };
@@ -499,9 +539,15 @@ module MineArt {
         } else if (id == 10) {  // Ancient Core
             pal = { "P" => 0xB46CFF, "W" => (w != null) ? w : 0xEFE0FF };
             spr = [".PP.", "PWWP", ".PP."];
-        } else {                 // Unknown Crystal
+        } else if (id == 11) {  // Unknown Crystal
             pal = { "M" => 0xFF5AC0, "W" => (w != null) ? w : 0xFFE0F4 };
             spr = ["..M.", ".MWM", "..M."];
+        } else {
+            // Generic fallback for every appended collectible: a shard tinted
+            // by its rarity, so growing C_N never draws an empty hole.
+            var rc = Mn.rarityColor(Mn.cRarity(id));
+            pal = { "C" => rc, "W" => (w != null) ? w : 0xFFFFFF };
+            spr = [".CC.", "CWWC", ".CC."];
         }
         Px.spr(dc, spr, pal, ox, oy, px, false);
     }
@@ -527,8 +573,17 @@ module MineArt {
     // A little crew on the surface; one swings a pickaxe (dust puffs). The
     // pick's colour reflects the equipped tier so equipment upgrades read
     // visually, not just in a menu.
+    // One colour per pickaxe tier — must stay Mn.PICK_N long so every tier
+    // renders as its own thing instead of silently reusing the last entry.
     function _pickColor(tier) {
-        var a = [0x9A7648, 0xB8B8B8, 0x8CE0FF, 0x8C6CFF, 0x5CF0EA];
+        var a = [0x9A7648, 0xB8B8B8, 0x8CE0FF, 0x8C6CFF, 0x5CF0EA,
+                 0xFF7A3A, 0xFFFFFF, 0xB46CFF, 0xFFD24A];
+        return a[Mn._c(tier, 0, a.size() - 1)];
+    }
+    // One colour per cart tier (Mn.CART_N long); the sprite itself is reused
+    // from the highest hand-drawn body and just re-tinted.
+    function _cartColor(tier) {
+        var a = [0xC98A4A, 0x8CC0FF, 0x4CE0C0, 0xB46CFF, 0xFFD24A, 0xFF5AC0];
         return a[Mn._c(tier, 0, a.size() - 1)];
     }
     function _miners(dc, m, cx, surfaceY, shaftHalf, u, phase) {
@@ -586,7 +641,7 @@ module MineArt {
         var vpx = u * 45 / 100; if (vpx < 2) { vpx = 2; }
         for (var v = 0; v < veins; v++) {
             var baseY = surfaceY + ((v * 6151 + 97) % span);
-            var dep = D_CAP * (baseY - surfaceY) / travel;
+            var dep = depthCap(m.depth) * (baseY - surfaceY) / travel;
             var z = Mn.zoneOf(dep);
             var col = Mn.resColor(_pickOreRes(z, v * 17 + z * 5));
             var side = (v % 2 == 0) ? -1 : 1;
@@ -614,12 +669,13 @@ module MineArt {
         if (reachedZone < 2 || travel <= 0) { return; }
         var geo = [".CWC.", "CWWWC", "CWCWC", ".CDC.", "..D.."];
         var count = reachedZone - 1; if (count > 3) { count = 3; }
-        var extra = (reachedZone >= Mn.Z_N - 1) ? 1 : 0;   // Abyss earns a bonus geode
+        var extra = (reachedZone >= Mn.Z_N - 1) ? 1 : 0;   // the last zone earns a bonus geode
         var gpx = u * 45 / 100; if (gpx < 2) { gpx = 2; }
+        var cap = depthCap(m.depth);
         for (var k = 0; k < count + extra; k++) {
             var z = (k < count) ? (2 + k) : (Mn.Z_N - 1);
-            var depOff = (k < count) ? 30 : 220;   // bonus one sits deeper in the Abyss band
-            var y = surfaceY + travel * (Mn.zoneMin(z) + depOff) / D_CAP;
+            var depOff = (k < count) ? 30 : 220;   // bonus one sits deeper in its band
+            var y = surfaceY + travel * (Mn.zoneMin(z) + depOff) / cap;
             if (y > reachedY - u) { continue; }
             var side = (k % 2 == 0) ? 1 : -1;
             var gx = cx + side * (clearW + u * 2);
@@ -686,7 +742,7 @@ module MineArt {
     // has actually been reached, so the richest content is unmistakably the
     // most spectacular on screen.
     function _abyssAura(dc, m, cx, surfaceY, reachedY, shaftHalf, u, phase) {
-        if (Mn.zoneOf(m.depth) < Mn.Z_N - 1) { return; }
+        if (Mn.zoneOf(m.depth) < MN_RICH_ZONE) { return; }
         var pulse = (phase / 4) % 8;
         var amp = (pulse < 4) ? pulse : (8 - pulse);   // 0..3..0 triangle wave
         var glowR = shaftHalf + u * 2 + amp;
@@ -786,6 +842,14 @@ module MineArt {
             dc.fillPolygon([[cx - q / 3, cy], [cx + q / 3, cy], [cx + q, cy + q], [cx - q, cy + q]]);
         } else if (i == Mn.B_GEMWS) {          // diamond
             dc.fillPolygon([[cx, cy - q], [cx + q * 75 / 100, cy], [cx, cy + q], [cx - q * 75 / 100, cy]]);
+        } else if (i == Mn.B_RIG) {            // piston: bracing bars
+            dc.fillRectangle(cx - q, cy - q, q * 2, q / 3 + 1);
+            dc.fillRectangle(cx - q, cy + q * 70 / 100, q * 2, q / 3 + 1);
+            dc.fillRectangle(cx - q / 4, cy - q / 2, q / 2, q * 5 / 4);
+        } else if (i == Mn.B_BORE) {           // drill: converging bit
+            dc.fillPolygon([[cx - q, cy - q], [cx + q, cy - q], [cx, cy + q]]);
+            dc.setColor(dim ? 0x2A2216 : col, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - q / 2, cy - q / 3, q, q / 4 + 1);
         } else {                               // scanner: radar arcs
             dc.drawArc(cx, cy + q / 2, q, Graphics.ARC_COUNTER_CLOCKWISE, 20, 160);
             dc.drawArc(cx, cy + q / 2, q / 2, Graphics.ARC_COUNTER_CLOCKWISE, 20, 160);
@@ -793,21 +857,26 @@ module MineArt {
         }
     }
 
-    // Pickaxe glyph on a disc.
+    // Pickaxe glyph on a disc; the head is tinted per tier so all nine tiers
+    // are visually distinct in the upgrade list.
     function pickIcon(dc, cx, cy, s, tier) {
         dc.setColor(0xFF9A4A, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, s);
         var q = s * 60 / 100;
         dc.setColor(0x6A4A2A, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(cx - q, cy + q, cx + q, cy - q);          // handle
-        dc.setColor(0xE8ECF2, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_pickColor(tier), Graphics.COLOR_TRANSPARENT);
         dc.drawArc(cx + q / 3, cy - q / 2, q, Graphics.ARC_CLOCKWISE, 300, 60);   // head
         if (tier >= 2) { dc.setColor(0x5CF0EA, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx + q / 3, cy - q / 2, 1); }
+        if (tier >= 5) {   // exotic tiers get a second spark
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - q / 2, cy + q / 2, 1);
+        }
     }
 
-    // Cart glyph on a disc.
+    // Cart glyph on a disc, tinted per tier.
     function cartIcon(dc, cx, cy, s, tier) {
-        dc.setColor(0x8CC0FF, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_cartColor(tier), Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, s);
         var q = s * 62 / 100;
         dc.setColor(0x143048, Graphics.COLOR_TRANSPARENT);

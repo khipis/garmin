@@ -14,12 +14,14 @@
 //               Farm Stand, spinning Windmill, Bakery and Petting Zoo for the
 //               Market; and the SPECIAL landmarks appear once explored — a
 //               gleaming Golden Barn, glass Greenhouse, Prize Bull statue and a
-//               towering Rainbow Silo.
-//   • Life    — cute animals (chickens, ducks, pigs, cows) wander the field,
-//               their species matching what you've built, count ~ herd size.
-//   • Decor   — every one of the 9 collectibles has ITS OWN distinct charm
-//               (flower bed, scarecrow, hay bales, golden egg, pond ducks,
-//               rainbow cow, wishing well, prize ribbon, harvest feast).
+//               towering Rainbow Silo. LATE GAME adds sunflowers, a Creamery,
+//               an Alpaca pen, the Cider Mill, a silver Moonlit Barn and the
+//               Harvest Moon itself hanging over the ridge.
+//   • Life    — cute animals (chickens, ducks, pigs, cows, alpacas) wander the
+//               field, their species matching what you've built, count ~ herd.
+//   • Decor   — the first 9 collectibles each have their OWN pixel charm; every
+//               later charm gets a compact generic trinket in its own colour,
+//               so new collectibles always show up in the world.
 //
 // Everything is drawn from cheap primitive fills, contained in a box, scales to
 // any watch, and is fully guarded — the master render is wrapped in try/catch
@@ -249,6 +251,8 @@ module FarmArt {
     function _estate(dc, m, cx, groundY, fieldHalf, p, phase, mini) {
         var lv = new [Fa.B_N];
         var coll = 0; var built = 0;
+        // Zeroed first: a half-filled level array must never leave nulls behind.
+        for (var z = 0; z < Fa.B_N; z++) { lv[z] = 0; }
         try {
             for (var i = 0; i < Fa.B_N; i++) { lv[i] = m.bLevel[i]; }
             coll = m.collMask;
@@ -258,12 +262,83 @@ module FarmArt {
         // Empty farm → cosy starter paddock so the scene is never bare.
         if (built == 0) { try { _starter(dc, cx, groundY, p); } catch (e) {} return; }
 
+        try { _lateBack(dc, lv, cx, groundY, fieldHalf, p, phase); } catch (e) {}
         try { _silo(dc, lv[Fa.B_SILO], cx, groundY, fieldHalf, p, phase); } catch (e) {}
         try { _specials(dc, lv, cx, groundY, fieldHalf, p, phase); } catch (e) {}
         try { _crops(dc, lv, cx, groundY, fieldHalf, p, phase); } catch (e) {}
         try { _livestockPens(dc, lv, cx, groundY, fieldHalf, p); } catch (e) {}
         try { _market(dc, lv, cx, groundY, fieldHalf, p, phase); } catch (e) {}
+        try { _lateFront(dc, lv, cx, groundY, fieldHalf, p, phase); } catch (e) {}
         try { _decor(dc, coll, cx, groundY, fieldHalf, p, phase); } catch (e) {}
+        try { _decorExtra(dc, coll, cx, groundY, fieldHalf, p); } catch (e) {}
+    }
+
+    // ── LATE-GAME structures ─────────────────────────────────────────────────
+    // Back row: the Harvest Moon hanging over the ridge, the silver Moonlit Barn
+    // and the Cider Mill.
+    function _lateBack(dc, lv, cx, groundY, fieldHalf, p, phase) {
+        var moon = lv[Fa.B_HARVMOON];
+        if (moon > 0) {
+            var mr = p * 2 + moon; if (mr > p * 6) { mr = p * 6; }
+            var mx = cx - fieldHalf * 60 / 100;
+            var my = groundY - p * 13;
+            dc.setColor(0xF0C860, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(mx, my, mr + 2);
+            dc.setColor(0xFFF3C4, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(mx, my, mr);
+            dc.setColor(0xF0D890, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(mx + mr / 3, my - mr / 3, mr / 4);
+        }
+        var barn = lv[Fa.B_MOONBARN];
+        if (barn > 0) {
+            var rows = [".sssss.", "sssssss", "bwbbbwb", "bbbdbbb", "bbbdbbb"];
+            var pal = { "s" => 0x6A7AB0, "b" => 0x9AB0FF, "w" => 0xEAF0FF, "d" => 0x3A4A7A };
+            _place(dc, rows, pal, cx - fieldHalf * 70 / 100, groundY + p, _scaleP(p, barn), false);
+        }
+        var cider = lv[Fa.B_CIDER];
+        if (cider > 0) {
+            var rows2 = ["..r..", "rrrrr", "cwcwc", "ccdcc"];
+            var pal2 = { "r" => 0x8A3A2A, "c" => 0xC86A3A, "w" => 0xFFD8A0, "d" => 0x5A2A1A };
+            var bx = cx + fieldHalf * 62 / 100;
+            _place(dc, rows2, pal2, bx, groundY + p * 2, _scaleP(p, cider), false);
+            dc.setColor(0x8A5A3A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(bx + p * 2, groundY + p, p * 2, p * 2);
+        }
+    }
+
+    // Front row: Sunflowers, the Creamery and the Alpaca pen.
+    function _lateFront(dc, lv, cx, groundY, fieldHalf, p, phase) {
+        var sun = lv[Fa.B_SUNFLR];
+        if (sun > 0) {
+            var n = 3 + sun / 2; if (n > 5) { n = 5; }
+            var sway = (Math.sin(phase.toFloat() * 0.06) * 1).toNumber();
+            for (var i = 0; i < n; i++) {
+                var sx = cx - fieldHalf * 58 / 100 + i * p * 3 + sway;
+                var sy = groundY + p * 5;
+                dc.setColor(0x3E8E36, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(sx, sy - p * 4, 2, p * 4);
+                dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(sx + 1, sy - p * 4, p);
+                dc.setColor(0x8A5A1A, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(sx + 1, sy - p * 4, p / 3);
+            }
+        }
+        var cream = lv[Fa.B_CREAMRY];
+        if (cream > 0) {
+            var rows = ["..b..", "bbbbb", "wwdww", "wwdww"];
+            var pal = { "b" => 0x6FA8D0, "w" => 0xEAF2F0, "d" => 0x8A9AA0 };
+            _place(dc, rows, pal, cx - fieldHalf * 26 / 100, groundY + p * 6, _scaleP(p, cream), false);
+        }
+        var alp = lv[Fa.B_ALPACA];
+        if (alp > 0) {
+            var ax = cx + fieldHalf * 28 / 100;
+            var ay = groundY + p * 7;
+            dc.setColor(0xC8A06A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(ax - p * 3, ay - 1, p * 6, 2);
+            var rows2 = [".ff", "fff", "ff.", "l.l"];
+            var pal2 = { "f" => 0xE8D8B0, "l" => 0xC0A880 };
+            _place(dc, rows2, pal2, ax, ay, p, false);
+        }
     }
 
     // Rainbow Silo — tall back structure, drawn first behind everything.
@@ -474,6 +549,21 @@ module FarmArt {
         }
     }
 
+    // Charms 9+ share one generic trinket on a little plinth, tinted with the
+    // charm's own colour and placed by formula — no per-id table to outgrow.
+    function _decorExtra(dc, coll, cx, groundY, fieldHalf, p) {
+        var rows = [".c.", "ccc", "sss"];
+        for (var i = 9; i < Fa.C_N; i++) {
+            if ((coll & (1 << i)) == 0) { continue; }
+            var k = i - 9;
+            var side = ((k % 2) == 0) ? -1 : 1;
+            var off = 26 + (k / 2) * 14; if (off > 74) { off = 74; }
+            var pal = { "c" => Fa.cColor(i), "s" => 0x6A5A3A };
+            _place(dc, rows, pal, cx + side * fieldHalf * off / 100,
+                   groundY + p * (2 + (k % 3) * 2), p, false);
+        }
+    }
+
     // ── Animals wandering the field ───────────────────────────────────────────
     // Species match what the player has built; count ~ herd size (capped).
     function _animals(dc, m, cx, groundY, fieldHalf, p, phase) {
@@ -490,22 +580,25 @@ module FarmArt {
                 if (lv[Fa.B_DUCK] > 0) { species.add(1); }
                 if (lv[Fa.B_PIG]  > 0) { species.add(2); }
                 if (lv[Fa.B_COW]  > 0) { species.add(3); }
+                if (lv[Fa.B_ALPACA] > 0) { species.add(4); }
             }
         } catch (e) {}
         if (species.size() == 0) { species = [0]; }
 
-        // Sprite table: 0 chicken, 1 duck, 2 pig, 3 cow.
+        // Sprite table: 0 chicken, 1 duck, 2 pig, 3 cow, 4 alpaca.
         var sprites = [
             [".c.", "www", "ww.", "l.l"],   // chicken
             [".y.", "yyo", "yyy", "f.f"],   // duck
             ["...", "ppp", "ppp", "l.l"],   // pig
-            ["b.b", "www", "wbw", "l.l"]    // cow
+            ["b.b", "www", "wbw", "l.l"],   // cow
+            [".ff", "fff", "ff.", "l.l"]    // alpaca
         ];
         var pals = [
             { "c" => 0xFF5A5A, "w" => 0xF4F4F4, "l" => 0xE0A020 },
             { "y" => 0xF4D24A, "o" => 0xFF9A4A, "f" => 0xE0A020 },
             { "p" => 0xFF9AB0, "l" => 0xD07A90 },
-            { "w" => 0xF4F4F4, "b" => 0x2A2A2A, "l" => 0x8A6A4A }
+            { "w" => 0xF4F4F4, "b" => 0x2A2A2A, "l" => 0x8A6A4A },
+            { "f" => 0xE8D8B0, "l" => 0xC0A880 }
         ];
         var vp = p * 6 / 10; if (vp < 2) { vp = 2; }
         var range = fieldHalf * 80 / 100;
