@@ -508,6 +508,9 @@ class IslandModel {
         if (_get("is_lbday", 0) == td) { return; }
         if (!started) { return; }
         _set("is_lbday", td);
+        // Serial batch: one request at a time (see submitScoreBatch — Garmin
+        // allows only one in-flight makeWebRequest; concurrent posts dropped
+        // boards and crashed the app on some firmware).
         try {
             var meta = {
                 "level"   => islandLevel(),
@@ -516,10 +519,12 @@ class IslandModel {
                 "beauty"  => beautyScore(),
                 "coll"    => collectiblesOwned()
             };
-            Leaderboard.submitScoreWithMeta(Is.GAME_ID, islandLevel(), Is.LB_LEVEL, meta);
+            Leaderboard.submitScoreBatch(Is.GAME_ID, [
+                { :score => islandLevel(),     :variant => Is.LB_LEVEL,   :meta => meta },
+                { :score => beautyScore(),     :variant => Is.LB_BEAUTY,  :meta => meta },
+                { :score => population,        :variant => Is.LB_POP,     :meta => meta },
+                { :score => collectionScore(), :variant => Is.LB_COLLECT, :meta => meta }
+            ]);
         } catch (e) {}
-        try { Leaderboard.submitScoreAux(Is.GAME_ID, beautyScore(), Is.LB_BEAUTY); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Is.GAME_ID, population, Is.LB_POP); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Is.GAME_ID, collectionScore(), Is.LB_COLLECT); } catch (e) {}
     }
 }

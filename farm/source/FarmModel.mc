@@ -508,6 +508,9 @@ class FarmModel {
         if (_get("fa_lbday", 0) == td) { return; }
         if (!started) { return; }
         _set("fa_lbday", td);
+        // Serial batch: one request at a time (see submitScoreBatch — Garmin
+        // allows only one in-flight makeWebRequest; concurrent posts dropped
+        // boards and crashed the app on some firmware).
         try {
             var meta = {
                 "level"   => farmLevel(),
@@ -516,10 +519,12 @@ class FarmModel {
                 "charm"   => charmScore(),
                 "coll"    => collectiblesOwned()
             };
-            Leaderboard.submitScoreWithMeta(Fa.GAME_ID, farmLevel(), Fa.LB_LEVEL, meta);
+            Leaderboard.submitScoreBatch(Fa.GAME_ID, [
+                { :score => farmLevel(),       :variant => Fa.LB_LEVEL,   :meta => meta },
+                { :score => charmScore(),      :variant => Fa.LB_CHARM,   :meta => meta },
+                { :score => population,        :variant => Fa.LB_HERD,    :meta => meta },
+                { :score => collectionScore(), :variant => Fa.LB_COLLECT, :meta => meta }
+            ]);
         } catch (e) {}
-        try { Leaderboard.submitScoreAux(Fa.GAME_ID, charmScore(), Fa.LB_CHARM); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Fa.GAME_ID, population, Fa.LB_HERD); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Fa.GAME_ID, collectionScore(), Fa.LB_COLLECT); } catch (e) {}
     }
 }

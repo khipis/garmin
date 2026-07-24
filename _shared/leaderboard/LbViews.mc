@@ -79,13 +79,15 @@ class LbSubmitter {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
+            Leaderboard.markBusy();
             Communications.makeWebRequest(Leaderboard.API_BASE + "/score",
                                           body, opts, method(:_onDone));
-        } catch (e) {}
+        } catch (e) { Leaderboard.clearBusy(); }
     }
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
         if (responseCode == 200 || responseCode == 201) { return; }
         if (responseCode >= 400 && responseCode < 500) { return; }  // 4xx — don't retry
         if (_attempt >= 3) { return; }                              // exhausted
@@ -93,6 +95,100 @@ class LbSubmitter {
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_doSend), delay, false); } catch (e) {}
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Score batch — SERIAL multi-board submit for the idle games (Mines, Creatures,
+// Island Life, Space Colony, Farm). Those games publish 4-5 leaderboard scores
+// in one go when the play view opens. Firing them as separate LbSubmitter POSTs
+// (as submitScore/submitScoreAux do) issues several makeWebRequest calls at
+// once — but Garmin allows only ONE in-flight request, so the extra calls fail
+// (their boards never update) and, worse, on several firmware versions a second
+// makeWebRequest issued while one is pending TERMINATES the app a moment later.
+// Idle players typically open the game about once a day, so this fired on
+// essentially every session → the reported "keeps kicking me off" crash.
+//
+// LbScoreBatch walks the entries strictly one at a time — each POST starts only
+// after the previous one's callback settles — and waits out a short initial
+// delay so the once-per-launch pipeline (launch ping → messages → daily) has
+// finished first. Never more than one request in flight. Callbacks are public
+// (a method(:hidden) timer/comms callback resolves outside try/catch and
+// crashes — see LbPinger below).
+// ═══════════════════════════════════════════════════════════════════════════
+class LbScoreBatch {
+    hidden var _game;
+    hidden var _user;
+    hidden var _entries;      // [ { :score, :variant, :meta }, ... ]
+    hidden var _i;
+    hidden var _attempt;
+    hidden var _timer;
+
+    function initialize() { _i = 0; _attempt = 0; _timer = null; }
+
+    function start(game, user, entries) {
+        _game = game; _user = user; _entries = entries;
+        _i = 0; _attempt = 0;
+        // Let the launch pipeline drain first, then send the first score.
+        _schedule(3000);
+    }
+
+    hidden function _schedule(delay) {
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        try { _timer.start(method(:_sendCurrent), delay, false); } catch (e) {}
+    }
+
+    // PUBLIC — used as a Timer callback.
+    function _sendCurrent() as Void {
+        if (_entries == null || _i >= _entries.size()) { return; }
+        // Skip sending while another request is still pending on the shared
+        // channel; try again shortly so we never collide.
+        if (Leaderboard.isBusy()) { _schedule(700); return; }
+        var e = _entries[_i];
+        var body = { "game" => _game, "user" => _user, "score" => e[:score] };
+        var variant = e[:variant];
+        if (variant != null && variant.length() > 0) { body["variant"] = variant; }
+        if (e[:meta] != null) { body["meta"] = e[:meta]; }
+        var opts = {
+            :method       => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers      => {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
+                "X-LB-Key"     => Leaderboard.SUBMIT_KEY
+            },
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+        try {
+            Leaderboard.markBusy();
+            Communications.makeWebRequest(Leaderboard.API_BASE + "/score",
+                                          body, opts, method(:_onDone));
+        } catch (ex) {
+            Leaderboard.clearBusy();
+            _retryOrAdvance();
+        }
+    }
+
+    // PUBLIC — makeWebRequest callback.
+    function _onDone(responseCode as Lang.Number,
+                     data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
+        if (responseCode == 200 || responseCode == 201) { _advance(); return; }
+        if (responseCode >= 400 && responseCode < 500) { _advance(); return; } // client error: don't retry
+        _retryOrAdvance();
+    }
+
+    hidden function _retryOrAdvance() {
+        if (_attempt < 2) {
+            _attempt += 1;
+            _schedule([2000, 5000][_attempt - 1]);
+            return;
+        }
+        _advance();
+    }
+
+    hidden function _advance() {
+        _attempt = 0;
+        _i += 1;
+        if (_entries != null && _i < _entries.size()) { _schedule(700); }
     }
 }
 
@@ -125,15 +221,18 @@ class LbPinger {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
+            Leaderboard.markBusy();
             Communications.makeWebRequest(Leaderboard.API_BASE + "/launch",
                                           body, opts, method(:_onDone));
         } catch (e) {
+            Leaderboard.clearBusy();
             _continuePipeline();
         }
     }
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
         if (responseCode == 200 || responseCode == 201) { _continuePipeline(); return; }
         if (responseCode >= 400 && responseCode < 500) { _continuePipeline(); return; }
         if (_attempt >= 3) { _continuePipeline(); return; }

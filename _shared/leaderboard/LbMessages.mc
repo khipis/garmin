@@ -53,15 +53,18 @@ class LbMessageFetcher {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
+            Leaderboard.markBusy();
             Communications.makeWebRequest(Leaderboard.API_BASE + "/messages",
                                           params, opts, method(:_onDone));
         } catch (e) {
+            Leaderboard.clearBusy();
             _continuePipeline();
         }
     }
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
         if (responseCode == 200 && data instanceof Lang.Dictionary) {
             try {
                 Application.Storage.setValue(Leaderboard.MSG_CACHE_KEY, data);

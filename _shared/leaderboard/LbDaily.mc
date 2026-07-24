@@ -267,14 +267,16 @@ class LbDailyFetcher {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
+            Leaderboard.markBusy();
             Communications.makeWebRequest(Leaderboard.API_BASE + "/daily",
                                           params, opts, method(:_onDone));
-        } catch (e) {}
+        } catch (e) { Leaderboard.clearBusy(); }
     }
 
     function _onDone(code as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String
                           or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
         if (code == 200 && data instanceof Lang.Dictionary) {
             try {
                 var ctype  = data["type"];
@@ -331,12 +333,14 @@ class LbDailyCompleter {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
+            Leaderboard.markBusy();
             Communications.makeWebRequest(Leaderboard.API_BASE + "/daily/complete",
                                           body, opts, method(:_onDone));
-        } catch (e) {}
+        } catch (e) { Leaderboard.clearBusy(); }
     }
 
     function _onDone(code, data) {
+        Leaderboard.clearBusy();
         if (code == 200 || code == 201) { return; }
         if (code >= 400 && code < 500)  { return; }
         if (_attempt >= 2) { return; }

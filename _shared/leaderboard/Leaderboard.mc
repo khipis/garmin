@@ -109,6 +109,48 @@ module Leaderboard {
     // have no instance to bind to. We hold the sender in a module var so it
     // survives until the async response arrives.
     var _sender = null;
+    var _batch  = null;
+
+    // ── Single-flight advisory ────────────────────────────────────────────────
+    // Garmin allows only ONE in-flight makeWebRequest; a second issued while one
+    // is pending fails (best case) or terminates the app (worse, on several
+    // firmwares). The fire-and-forget senders below mark this flag around their
+    // request so a *serial* caller (LbScoreBatch) can wait its turn instead of
+    // colliding. Auto-expires so a dropped callback can never wedge it forever.
+    var _busy   = false;
+    var _busyAt = 0;
+    function markBusy()  as Void { _busy = true;  _busyAt = System.getTimer(); }
+    function clearBusy() as Void { _busy = false; }
+    function isBusy()    as Lang.Boolean {
+        if (!_busy) { return false; }
+        var age = System.getTimer() - _busyAt;
+        if (age < 0 || age > 15000) { _busy = false; return false; }
+        return true;
+    }
+
+    // Serial multi-board submit — see LbScoreBatch (LbViews.mc). `entries` is an
+    // array of { :score, :variant, :meta } dictionaries; they are POSTed one at
+    // a time, never concurrently. Use this instead of several back-to-back
+    // submitScore/submitScoreAux calls whenever a game publishes many boards at
+    // once (the idle builders), so it never trips the one-request limit.
+    function submitScoreBatch(game as Lang.String, entries as Lang.Array) as Void {
+        if (!isSupported())                    { return; }
+        if (!isPhoneConnected())               { return; }
+        if (entries == null || entries.size() == 0) { return; }
+        var user = loadUser();
+        if (user == null) { user = "anon"; }
+        try {
+            _batch = new LbScoreBatch();
+            _batch.start(game, user, entries);
+        } catch (e) {}
+        // Preserve the daily-challenge hook that submitScoreWithMeta used to fire
+        // for the primary (first) score. Its own POST is timer-delayed, so it
+        // does not add a concurrent request here.
+        try {
+            var e0 = entries[0];
+            DailyChallenge.onScoreSubmit(game, e0[:score], e0[:variant]);
+        } catch (e) {}
+    }
 
     function submitScore(game as Lang.String, score as Lang.Number,
                          variant as Lang.String or Null) as Void {

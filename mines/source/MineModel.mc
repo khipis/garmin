@@ -516,19 +516,28 @@ class MineModel {
         if (_get("mn_lbday", 0) == td) { return; }
         if (!started) { return; }
         _set("mn_lbday", td);
+        // Publish all five boards through a SERIAL batch: one request at a time
+        // (Garmin allows only one in-flight makeWebRequest — firing them at once
+        // dropped four of five and crashed the app on some firmware).
         try {
+            // "z" is the numeric zone (tints the web emblem to match the
+            // on-watch biome colour); depth/level/legend drive the crest badges.
+            // Meta rides every board so the emblem shows regardless of tab.
             var meta = {
                 "depth"  => depth,
                 "level"  => mineLevel(),
                 "zone"   => Mn.zName(zone()),
                 "legend" => legendaryFinds(),
-                "rich"   => richest()
+                "rich"   => richest(),
+                "z"      => zone()
             };
-            Leaderboard.submitScoreWithMeta(Mn.GAME_ID, depth, Mn.LB_DEPTH, meta);
+            Leaderboard.submitScoreBatch(Mn.GAME_ID, [
+                { :score => depth,            :variant => Mn.LB_DEPTH,  :meta => meta },
+                { :score => richest(),        :variant => Mn.LB_RICH,   :meta => meta },
+                { :score => legendaryFinds(), :variant => Mn.LB_LEGEND, :meta => meta },
+                { :score => mineLevel(),      :variant => Mn.LB_LEVEL,  :meta => meta },
+                { :score => daysAlive() + 1,  :variant => Mn.LB_AGE,    :meta => meta }
+            ]);
         } catch (e) {}
-        try { Leaderboard.submitScoreAux(Mn.GAME_ID, richest(), Mn.LB_RICH); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Mn.GAME_ID, legendaryFinds(), Mn.LB_LEGEND); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Mn.GAME_ID, mineLevel(), Mn.LB_LEVEL); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Mn.GAME_ID, daysAlive() + 1, Mn.LB_AGE); } catch (e) {}
     }
 }

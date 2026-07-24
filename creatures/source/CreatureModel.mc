@@ -554,19 +554,30 @@ class CreatureModel {
         if (lb == td) { return; }
         if (!hatched) { return; }
         _set("cr_lbday", td);
+        // Serial batch: one request at a time (see submitScoreBatch — Garmin
+        // allows only one in-flight makeWebRequest; concurrent posts dropped
+        // boards and crashed the app on some firmware).
         try {
+            // Human-readable fields (species/rarity/name/level/path) drive the
+            // web caption; the compact numeric fields (sp/ev/rt/pa/mo/sd) let
+            // bitochi.com redraw the EXACT creature avatar the player sees on the
+            // wrist. Attached to every board so the avatar shows on all of them.
             var meta = {
                 "species" => Cr.speciesName(species),
                 "rarity"  => Cr.rarityName(rarityTier()),
                 "name"    => givenName(),
                 "level"   => level,
-                "path"    => Cr.pathName(path)
+                "path"    => Cr.pathName(path),
+                "sp" => species, "ev" => evo, "rt" => rarityTier(),
+                "pa" => path, "mo" => mood, "sd" => seed
             };
-            Leaderboard.submitScoreWithMeta(Cr.GAME_ID, rarityScore(), Cr.LB_RARITY, meta);
+            Leaderboard.submitScoreBatch(Cr.GAME_ID, [
+                { :score => rarityScore(),   :variant => Cr.LB_RARITY,  :meta => meta },
+                { :score => daysAlive() + 1, :variant => Cr.LB_AGE,     :meta => meta },
+                { :score => evo * 1000 + level, :variant => Cr.LB_EVO,  :meta => meta },
+                { :score => actions,         :variant => Cr.LB_TRAINER, :meta => meta }
+            ]);
         } catch (e) {}
-        try { Leaderboard.submitScoreAux(Cr.GAME_ID, daysAlive() + 1, Cr.LB_AGE); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Cr.GAME_ID, evo * 1000 + level, Cr.LB_EVO); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Cr.GAME_ID, actions, Cr.LB_TRAINER); } catch (e) {}
     }
 
     // ── DEMO fast-track ───────────────────────────────────────────────────────

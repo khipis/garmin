@@ -441,6 +441,9 @@ class ColonyModel {
         if (_get("sc_lbday", 0) == td) { return; }
         if (!started) { return; }
         _set("sc_lbday", td);
+        // Serial batch: one request at a time (see submitScoreBatch — Garmin
+        // allows only one in-flight makeWebRequest; concurrent posts dropped
+        // boards and crashed the app on some firmware).
         try {
             var meta = {
                 "planet" => "X-01",
@@ -449,12 +452,14 @@ class ColonyModel {
                 "buildings" => totalBuildingLevels(),
                 "regions"   => regionsDiscovered()
             };
-            Leaderboard.submitScoreWithMeta(Sc.GAME_ID, civLevel(), Sc.LB_CIV, meta);
+            Leaderboard.submitScoreBatch(Sc.GAME_ID, [
+                { :score => civLevel(),   :variant => Sc.LB_CIV,     :meta => meta },
+                { :score => population,   :variant => Sc.LB_COLONY,  :meta => meta },
+                { :score => totalTech() + bLevel[Sc.B_LAB], :variant => Sc.LB_TECH, :meta => meta },
+                { :score => daysAlive() + 1, :variant => Sc.LB_AGE,  :meta => meta },
+                { :score => regionsDiscovered() * 100 + _expPct(), :variant => Sc.LB_EXPLORE, :meta => meta }
+            ]);
         } catch (e) {}
-        try { Leaderboard.submitScoreAux(Sc.GAME_ID, population, Sc.LB_COLONY); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Sc.GAME_ID, totalTech() + bLevel[Sc.B_LAB], Sc.LB_TECH); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Sc.GAME_ID, daysAlive() + 1, Sc.LB_AGE); } catch (e) {}
-        try { Leaderboard.submitScoreAux(Sc.GAME_ID, regionsDiscovered() * 100 + _expPct(), Sc.LB_EXPLORE); } catch (e) {}
     }
     hidden function _expPct() {
         var s = 0;
