@@ -129,7 +129,7 @@ const AGG_TTL_BOARD   = 45;     // leaderboard top-N + player count
 const AGG_TTL_STANDING= 60;     // per-period best/count for the in-game card
 const AGG_TTL_FEED    = 30;     // global activity feed
 const AGG_TTL_DASH    = 300;    // windowed dashboard aggregates (cheap, kept fresh)
-const AGG_TTL_LIST    = 600;    // slow-moving lists (games, variants, bots)
+const AGG_TTL_LIST    = 600;    // slow-moving lists (games, variants)
 const AGG_TTL_DAY     = 86_400; // per-day immutable values (daily challenge)
 
 // Lifetime totals — COUNT(DISTINCT user/ip_hash) over every row of `scores` or
@@ -140,9 +140,9 @@ const AGG_TTL_DAY     = 86_400; // per-day immutable values (daily challenge)
 // when the owner actually wants the current figure.
 const AGG_TTL_LIFETIME = 14_400; // 4h
 
-// Drops every memoised aggregate. Called after the destructive admin operations
-// (season reset, bot purge) so the dashboard reflects them immediately instead of
-// waiting out a TTL.
+// Drops every memoised aggregate. Called after destructive admin operations
+// (season reset) so the dashboard reflects them immediately instead of waiting
+// out a TTL.
 async function purgeAggCache(env: Env): Promise<void> {
   try {
     await env.DB.prepare("DELETE FROM agg_cache").run();
@@ -235,11 +235,8 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
 
   // Anon uniquification: give every "anon" player a stable short tag derived
   // from their IP hash so they appear as separate leaderboard entries.
-  // Same network → same tag (e.g. "anon-a3f2"); bots keep their own names.
-  const isBot   = b.is_bot === true ? 1 : 0;
-  const uniqueUser = (user === "anon" && !isBot)
-    ? `anon-${ipHash.slice(0, 4)}`
-    : user;
+  // Same network → same tag (e.g. "anon-a3f2").
+  const uniqueUser = user === "anon" ? `anon-${ipHash.slice(0, 4)}` : user;
   if (GAME_KEYS[game] !== undefined) {
     if (b.key !== GAME_KEYS[game]) return err("invalid game key", 403);
   }
@@ -250,19 +247,15 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
     : null;
 
   const cf      = (req as unknown as { cf?: { country?: string } }).cf;
-  // Bots carry an explicit country code in the body; real Garmin clients use CF edge.
-  const cfCountry = (cf && typeof cf.country === "string" && cf.country.length === 2)
+  const country = (cf && typeof cf.country === "string" && cf.country.length === 2)
     ? cf.country : null;
-  const botCountry = (isBot && typeof b.country === "string" && b.country.length === 2)
-    ? b.country.toUpperCase() : null;
-  const country = botCountry ?? cfCountry;
 
   try {
     await env.DB
       .prepare(
-        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country, is_bot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
       )
-      .bind(game, uniqueUser, Math.round(score), ts, variant, metaStr, ipHash, country, isBot)
+      .bind(game, uniqueUser, Math.round(score), ts, variant, metaStr, ipHash, country)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
@@ -322,19 +315,17 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
 
   const variant  = sanitizeVariant(variantRaw);
   const user     = userRaw ? sanitizeUser(userRaw) : "";
-  const realOnly = url.searchParams.get("real") === "1";
 
   const asc    = ASC_GAMES.has(game);
   const order  = asc ? "ASC" : "DESC";
   const better = asc ? "<" : ">";              // "is a better score than"
   const bestFn = asc ? "MIN(score)" : "MAX(score)";
 
-  // Shared WHERE: game + variant (+ optional period + optional bot filter).
+  // Shared WHERE: game + variant (+ optional period).
   const cutoff = periodCutoff(period);
-  const botClause = realOnly ? " AND is_bot = 0" : "";
   const where  = cutoff != null
-    ? `game = ? AND variant = ? AND timestamp >= ?${botClause}`
-    : `game = ? AND variant = ?${botClause}`;
+    ? `game = ? AND variant = ? AND timestamp >= ?`
+    : `game = ? AND variant = ?`;
   const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
 
   // `meta` (m) rides along via SQLite's documented bare-column behaviour: when
@@ -353,7 +344,7 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
     // The visible board is the same for everyone, so it is memoised: grouping
     // every score in the partition by user is the single most expensive read in
     // the API and it does not need to be redone per request.
-    const boardKey = `lb:${game}|${variant}|${period}:${cutoff ?? 0}|${realOnly ? 1 : 0}`;
+    const boardKey = `lb:${game}|${variant}|${period}:${cutoff ?? 0}`;
     const board = await cached(env, boardKey, AGG_TTL_BOARD, async () => {
       const topRes = await env.DB
         .prepare(
@@ -390,7 +381,7 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
         // again when one player refreshes — so it is memoised per offset.
         const nearRows = await cached(
           env,
-          `lbn:${game}|${variant}|${period}:${cutoff ?? 0}|${realOnly ? 1 : 0}|${off}`,
+          `lbn:${game}|${variant}|${period}:${cutoff ?? 0}|${off}`,
           AGG_TTL_BOARD,
           async () => {
             const nearRes = await env.DB
@@ -555,22 +546,20 @@ async function handleGetRecent(url: URL, env: Env): Promise<Response> {
   );
 }
 
-// GET /activity?limit=20&real=1
-// Global feed of the most recent real score submissions across all games.
+// GET /activity?limit=20
+// Global feed of the most recent score submissions across all games.
 async function handleGetActivity(url: URL, env: Env): Promise<Response> {
-  const realOnly = url.searchParams.get("real") === "1";
   const limitRaw = parseInt(url.searchParams.get("limit") ?? "20", 10);
   const limit    = Math.min(Math.max(limitRaw || 20, 1), 50);
-  const w        = realOnly ? "WHERE is_bot = 0" : "";
 
   type Row = { game: string; variant: string; u: string; s: number; c: string | null; t: number };
   let rows: Row[] = [];
   try {
-    rows = await cached(env, `act:${realOnly ? 1 : 0}:${limit}`, AGG_TTL_FEED, async () => {
+    rows = await cached(env, `act:${limit}`, AGG_TTL_FEED, async () => {
       const res = await env.DB
         .prepare(
           `SELECT game, variant, user AS u, score AS s, country AS c, timestamp AS t
-           FROM scores ${w} ORDER BY timestamp DESC LIMIT ?`
+           FROM scores ORDER BY timestamp DESC LIMIT ?`
         )
         .bind(limit)
         .all<Row>();
@@ -613,7 +602,7 @@ async function handleGetHot(url: URL, env: Env): Promise<Response> {
                   SUM(CASE WHEN timestamp >= ? AND timestamp < ? THEN 1 ELSE 0 END) AS prev,
                   COUNT(DISTINCT CASE WHEN timestamp >= ? THEN user END)        AS players
            FROM scores
-           WHERE is_bot = 0 AND timestamp >= ?
+           WHERE timestamp >= ?
            GROUP BY game
            HAVING cur > 0
            ORDER BY cur DESC
@@ -772,7 +761,6 @@ async function handleGetCiq(url: URL, env: Env): Promise<Response> {
 
 // Aggregate player stats, computed live from the scores table. Used by the
 // "Stats" tab on bitochi.com for development/planning.
-// ?real=1 → exclude bot-seeded rows so the owner sees authentic traffic only.
 type StatsPerGame    = { game: string; scores: number; players: number; devices: number };
 type StatsPerCountry = { country: string | null; players: number; scores: number };
 interface StatsPayload {
@@ -792,7 +780,7 @@ interface StatsPayload {
 // Every query below aggregates over the whole table (COUNT(DISTINCT …), GROUP BY
 // country, retention cohorts), which is why the caller memoises the result rather
 // than recomputing it on each dashboard refresh.
-async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> {
+async function computeStats(env: Env): Promise<StatsPayload> {
   type PerGame    = StatsPerGame;
   type PerCountry = StatsPerCountry;
   let perGame:    PerGame[]    = [];
@@ -804,11 +792,6 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
     lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
   };
 
-  const w  = realOnly ? "WHERE is_bot = 0" : "";
-  const wa = realOnly ? "AND is_bot = 0"   : "";
-  // Backwards-compat alias for the old name used below
-  const botFilter = w;
-
   {
     const byGame = await env.DB
       .prepare(
@@ -817,7 +800,6 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
                 COUNT(DISTINCT user)      AS players,
                 COUNT(DISTINCT ip_hash)   AS devices
          FROM scores
-         ${botFilter}
          GROUP BY game
          ORDER BY players DESC, scores DESC`
       )
@@ -830,7 +812,6 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
                 COUNT(DISTINCT user) AS players,
                 COUNT(*)             AS scores
          FROM scores
-         ${botFilter}
          GROUP BY country
          ORDER BY players DESC, scores DESC`
       )
@@ -843,8 +824,7 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
                 COUNT(*)                 AS scores,
                 COUNT(DISTINCT user)     AS players,
                 COUNT(DISTINCT ip_hash)  AS devices
-         FROM scores
-         ${botFilter}`
+         FROM scores`
       )
       .first<{ games: number; scores: number; players: number; devices: number }>();
     if (agg) Object.assign(totals, agg);
@@ -862,7 +842,7 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
            COUNT(CASE WHEN d >= 7 THEN 1 END) AS r7
          FROM (
            SELECT ip_hash, COUNT(DISTINCT DATE(timestamp, 'unixepoch')) AS d
-           FROM scores ${w} GROUP BY ip_hash
+           FROM scores GROUP BY ip_hash
          )`
       )
       .first<{ r2:number; r3:number; r4:number; r5:number; r6:number; r7:number }>();
@@ -883,7 +863,7 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
     const newP = await env.DB
       .prepare(
         `SELECT COUNT(*) AS cnt FROM (
-           SELECT ip_hash FROM scores ${w}
+           SELECT ip_hash FROM scores
            GROUP BY ip_hash
            HAVING MIN(timestamp) > ?
          )`
@@ -901,7 +881,7 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
            SELECT DATE(timestamp, 'unixepoch') AS day,
                   COUNT(DISTINCT ip_hash)      AS n
            FROM scores
-           WHERE timestamp > ? ${wa}
+           WHERE timestamp > ?
            GROUP BY day
          )`
       )
@@ -913,7 +893,7 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
     const avgRow = await env.DB
       .prepare(
         `SELECT ROUND(CAST(COUNT(*) AS REAL) / MAX(1, COUNT(DISTINCT ip_hash)), 1) AS avg
-         FROM scores ${w}`
+         FROM scores`
       )
       .first<{ avg: number }>();
     if (avgRow?.avg) totals.avgScoresPerPlayer = avgRow.avg;
@@ -953,12 +933,10 @@ function wantsFresh(req: Request, url: URL, env: Env): boolean {
 }
 
 async function handleGetStats(req: Request, url: URL, env: Env): Promise<Response> {
-  const realOnly = url.searchParams.get("real") === "1";
-
   let payload: StatsPayload;
   try {
-    payload = await cached(env, `stats:${realOnly ? 1 : 0}`, AGG_TTL_LIFETIME,
-      () => computeStats(env, realOnly), wantsFresh(req, url, env));
+    payload = await cached(env, "stats:1", AGG_TTL_LIFETIME,
+      () => computeStats(env), wantsFresh(req, url, env));
   } catch (e) {
     console.error("DB stats error:", e);
     return err("db error", 500);
@@ -990,7 +968,7 @@ async function handleGetHoF(env: Env): Promise<Response> {
 // POST /hof — authenticated.
 // Mode A (add single): { game, variant?, user, score, country?, note? }
 // Mode B (promote):    { promote: true, note? }
-//   → finds the best real score per game+variant from `scores` and inserts them.
+//   → finds the best score per game+variant from `scores` and inserts them.
 async function handlePostHoF(req: Request, env: Env): Promise<Response> {
   const reqKey = req.headers.get("X-LB-Key") ?? "";
   if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
@@ -1008,7 +986,6 @@ async function handlePostHoF(req: Request, env: Env): Promise<Response> {
           `SELECT game, variant,
                   user, MAX(score) AS score, country
            FROM scores
-           WHERE is_bot = 0
            GROUP BY game, variant
            ORDER BY game ASC, variant ASC`
         )
@@ -1079,9 +1056,9 @@ async function handleDeleteHoF(req: Request, env: Env): Promise<Response> {
 }
 
 // ── Season snapshot ────────────────────────────────────────────────────────
-// POST /snapshot { label? } — captures the current real-only stats as a
-// permanent record. Called automatically by reset-stats.sh before a wipe so
-// retention / engagement metrics survive season resets.
+// POST /snapshot { label? } — captures the current stats as a permanent record.
+// Called automatically by reset-stats.sh before a wipe so retention / engagement
+// metrics survive season resets.
 async function handleSnapshot(req: Request, env: Env): Promise<Response> {
   const reqKey = req.headers.get("X-LB-Key") ?? "";
   if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
@@ -1092,13 +1069,12 @@ async function handleSnapshot(req: Request, env: Env): Promise<Response> {
     if (typeof body.label === "string") label = body.label.trim().slice(0, 100) || null;
   } catch { /* label is optional */ }
 
-  const w = "WHERE is_bot = 0";
   try {
     const [aggRow, funnelRow, topGames, topCountries] = await Promise.all([
       env.DB.prepare(
         `SELECT COUNT(DISTINCT game) AS games, COUNT(*) AS scores,
                 COUNT(DISTINCT user) AS players, COUNT(DISTINCT ip_hash) AS devices
-         FROM scores ${w}`
+         FROM scores`
       ).first<{ games:number; scores:number; players:number; devices:number }>(),
 
       env.DB.prepare(
@@ -1109,17 +1085,17 @@ async function handleSnapshot(req: Request, env: Env): Promise<Response> {
                 COUNT(CASE WHEN d >= 6 THEN 1 END) AS r6,
                 COUNT(CASE WHEN d >= 7 THEN 1 END) AS r7
          FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d
-               FROM scores ${w} GROUP BY ip_hash)`
+               FROM scores GROUP BY ip_hash)`
       ).first<{ r2:number; r3:number; r4:number; r5:number; r6:number; r7:number }>(),
 
       env.DB.prepare(
         `SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores
-         FROM scores ${w} GROUP BY game ORDER BY players DESC LIMIT 20`
+         FROM scores GROUP BY game ORDER BY players DESC LIMIT 20`
       ).all<{ game:string; players:number; scores:number }>(),
 
       env.DB.prepare(
         `SELECT country, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores
-         FROM scores ${w} GROUP BY country ORDER BY players DESC LIMIT 15`
+         FROM scores GROUP BY country ORDER BY players DESC LIMIT 15`
       ).all<{ country:string; players:number; scores:number }>(),
     ]);
 
@@ -1160,60 +1136,8 @@ async function handleSnapshot(req: Request, env: Env): Promise<Response> {
 //   snapshot — if true, saves a named snapshot before wiping.
 //   note     — label for the snapshot (optional).
 // Requires X-LB-Key authentication.
-// ── Bot traffic management ────────────────────────────────────────────────────
-// GET  /bots?game=xxx   — count of bot rows (all games or one game)
-// DELETE /bots?game=xxx — delete bot rows (auth required)
-
-async function handleGetBots(url: URL, env: Env): Promise<Response> {
-  const game = url.searchParams.get("game") || null;
-  try {
-    if (game) {
-      const count = await cached(env, `bots:${game}`, AGG_TTL_LIST, async () => {
-        const row = await env.DB.prepare(
-          "SELECT COUNT(*) AS n FROM scores WHERE is_bot=1 AND game=?"
-        ).bind(game).first<{ n: number }>();
-        return row?.n ?? 0;
-      });
-      return json({ game, count });
-    }
-    const games = await cached(env, "bots:all", AGG_TTL_LIST, async () => {
-      const rows = await env.DB.prepare(
-        "SELECT game, COUNT(*) AS n FROM scores WHERE is_bot=1 GROUP BY game ORDER BY game ASC"
-      ).all<{ game: string; n: number }>();
-      return rows.results ?? [];
-    });
-    const total = games.reduce((s, r) => s + r.n, 0);
-    return json({ total, games });
-  } catch (e) {
-    console.error("get bots error:", e);
-    return err("db error", 500);
-  }
-}
-
-async function handleDeleteBots(req: Request, env: Env): Promise<Response> {
+async function handleReset(req: Request, env: Env): Promise<Response> {
   const reqKey = req.headers.get("X-LB-Key") ?? "";
-  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
-  let game: string | null = null;
-  try {
-    const b = await req.json() as Record<string, unknown>;
-    game = typeof b.game === "string" && b.game.trim() ? b.game.trim() : null;
-  } catch { /* body optional */ }
-  try {
-    if (game) {
-      const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1 AND game=?").bind(game).run();
-      await purgeAggCache(env);
-      return json({ ok: true, game, deleted: r.meta?.changes ?? 0 });
-    }
-    const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1").run();
-    await purgeAggCache(env);
-    return json({ ok: true, game: "all", deleted: r.meta?.changes ?? 0 });
-  } catch (e) {
-    console.error("delete bots error:", e);
-    return err("db error", 500);
-  }
-}
-
-async function handleReset(req: Request, env: Env): Promise<Response> {  const reqKey = req.headers.get("X-LB-Key") ?? "";
   if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
 
   let body: Record<string, unknown> = {};
@@ -1226,24 +1150,23 @@ async function handleReset(req: Request, env: Env): Promise<Response> {  const r
   // ── Optional pre-reset snapshot ─────────────────────────────────────────
   let snapId: number | null = null;
   if (doSnap) {
-    const w   = "WHERE is_bot = 0";
-    const wg  = game ? `WHERE is_bot = 0 AND game = ?` : w;
+    const wg  = game ? `WHERE game = ?` : "";
     const label = note ?? (game ? `${game}-reset-${new Date().toISOString().slice(0,10)}` : `season-reset-${new Date().toISOString().slice(0,10)}`);
     try {
       const [aggRow, funnelRow, topGames, topCountries] = await Promise.all([
         (game
           ? env.DB.prepare(`SELECT COUNT(DISTINCT game) AS games, COUNT(*) AS scores, COUNT(DISTINCT user) AS players, COUNT(DISTINCT ip_hash) AS devices FROM scores ${wg}`).bind(game)
-          : env.DB.prepare(`SELECT COUNT(DISTINCT game) AS games, COUNT(*) AS scores, COUNT(DISTINCT user) AS players, COUNT(DISTINCT ip_hash) AS devices FROM scores ${w}`)
+          : env.DB.prepare(`SELECT COUNT(DISTINCT game) AS games, COUNT(*) AS scores, COUNT(DISTINCT user) AS players, COUNT(DISTINCT ip_hash) AS devices FROM scores`)
         ).first<{ games:number; scores:number; players:number; devices:number }>(),
         (game
-          ? env.DB.prepare(`SELECT COUNT(CASE WHEN d>=2 THEN 1 END) AS r2, COUNT(CASE WHEN d>=3 THEN 1 END) AS r3, COUNT(CASE WHEN d>=4 THEN 1 END) AS r4, COUNT(CASE WHEN d>=5 THEN 1 END) AS r5, COUNT(CASE WHEN d>=6 THEN 1 END) AS r6, COUNT(CASE WHEN d>=7 THEN 1 END) AS r7 FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d FROM scores WHERE is_bot=0 AND game=? GROUP BY ip_hash)`).bind(game)
-          : env.DB.prepare(`SELECT COUNT(CASE WHEN d>=2 THEN 1 END) AS r2, COUNT(CASE WHEN d>=3 THEN 1 END) AS r3, COUNT(CASE WHEN d>=4 THEN 1 END) AS r4, COUNT(CASE WHEN d>=5 THEN 1 END) AS r5, COUNT(CASE WHEN d>=6 THEN 1 END) AS r6, COUNT(CASE WHEN d>=7 THEN 1 END) AS r7 FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d FROM scores ${w} GROUP BY ip_hash)`)
+          ? env.DB.prepare(`SELECT COUNT(CASE WHEN d>=2 THEN 1 END) AS r2, COUNT(CASE WHEN d>=3 THEN 1 END) AS r3, COUNT(CASE WHEN d>=4 THEN 1 END) AS r4, COUNT(CASE WHEN d>=5 THEN 1 END) AS r5, COUNT(CASE WHEN d>=6 THEN 1 END) AS r6, COUNT(CASE WHEN d>=7 THEN 1 END) AS r7 FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d FROM scores WHERE game=? GROUP BY ip_hash)`).bind(game)
+          : env.DB.prepare(`SELECT COUNT(CASE WHEN d>=2 THEN 1 END) AS r2, COUNT(CASE WHEN d>=3 THEN 1 END) AS r3, COUNT(CASE WHEN d>=4 THEN 1 END) AS r4, COUNT(CASE WHEN d>=5 THEN 1 END) AS r5, COUNT(CASE WHEN d>=6 THEN 1 END) AS r6, COUNT(CASE WHEN d>=7 THEN 1 END) AS r7 FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d FROM scores GROUP BY ip_hash)`)
         ).first<{ r2:number; r3:number; r4:number; r5:number; r6:number; r7:number }>(),
         (game
-          ? env.DB.prepare(`SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores WHERE is_bot=0 AND game=? GROUP BY game ORDER BY players DESC LIMIT 20`).bind(game)
-          : env.DB.prepare(`SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores ${w} GROUP BY game ORDER BY players DESC LIMIT 20`)
+          ? env.DB.prepare(`SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores WHERE game=? GROUP BY game ORDER BY players DESC LIMIT 20`).bind(game)
+          : env.DB.prepare(`SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores GROUP BY game ORDER BY players DESC LIMIT 20`)
         ).all<{ game:string; players:number; scores:number }>(),
-        env.DB.prepare(`SELECT country, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores ${w} GROUP BY country ORDER BY players DESC LIMIT 15`).all<{ country:string; players:number; scores:number }>(),
+        env.DB.prepare(`SELECT country, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores FROM scores GROUP BY country ORDER BY players DESC LIMIT 15`).all<{ country:string; players:number; scores:number }>(),
       ]);
       const data = JSON.stringify({
         totals: { games: aggRow?.games??0, scores: aggRow?.scores??0, players: aggRow?.players??0, devices: aggRow?.devices??0, returning: funnelRow?.r2??0, ret3: funnelRow?.r3??0, ret4: funnelRow?.r4??0, ret5: funnelRow?.r5??0, ret6: funnelRow?.r6??0, loyal: funnelRow?.r7??0 },
@@ -1493,15 +1416,12 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
   const game = sanitizeGame(gameRaw);
   if (!game)   return err("invalid game name");
 
-  const realOnly  = url.searchParams.get("real") === "1";
-  const botClause = realOnly ? " AND is_bot = 0" : "";
-
   let variants: string[] = [];
   try {
-    variants = await cached(env, `var:${game}:${realOnly ? 1 : 0}`, AGG_TTL_LIST, async () => {
+    variants = await cached(env, `var:${game}`, AGG_TTL_LIST, async () => {
       const result = await env.DB
         .prepare(
-          `SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != ''${botClause} ORDER BY variant ASC`
+          `SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != '' ORDER BY variant ASC`
         )
         .bind(game)
         .all<{ variant: string }>();
@@ -2033,7 +1953,7 @@ async function computeDailyChallenge(
   // Archetype rotates across the 4 types via seed bits 0-1.
   // But fall back to "rounds" when there's not enough data.
   const countRow = await env.DB
-    .prepare("SELECT COUNT(*) AS n FROM scores WHERE game=? AND is_bot=0")
+    .prepare("SELECT COUNT(*) AS n FROM scores WHERE game=?")
     .bind(game).first<{ n: number }>();
   const total = countRow?.n ?? 0;
 
@@ -2089,7 +2009,7 @@ async function computeDailyChallenge(
       if (baseOffset < 0)     baseOffset = 0;
 
       const row = await env.DB
-        .prepare(`SELECT score FROM scores WHERE game=? AND is_bot=0 ORDER BY score ${order} LIMIT 1 OFFSET ?`)
+        .prepare(`SELECT score FROM scores WHERE game=? ORDER BY score ${order} LIMIT 1 OFFSET ?`)
         .bind(game, baseOffset)
         .first<{ score: number }>();
 
@@ -2330,8 +2250,6 @@ async function route(req: Request, env: Env, url: URL, method: string): Promise<
     if (method === "POST"   && path === "/launch")      return handleLaunch(req, env);
     if (method === "POST"   && path === "/snapshot")    return handleSnapshot(req, env);
     if (method === "POST"   && path === "/reset")       return handleReset(req, env);
-    if (method === "GET"    && path === "/bots")        return handleGetBots(url, env);
-    if (method === "DELETE" && path === "/bots")        return handleDeleteBots(req, env);
     if (method === "POST"   && path === "/hof")         return handlePostHoF(req, env);
     if (method === "DELETE" && path === "/hof")         return handleDeleteHoF(req, env);
     if (method === "GET"    && path === "/messages")    return handleGetMessages(url, env);

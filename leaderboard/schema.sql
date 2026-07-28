@@ -13,8 +13,7 @@
 --   ALTER TABLE scores ADD COLUMN ip_hash TEXT;
 --   -- country flag (ISO-3166 alpha-2 from Cloudflare edge)
 --   ALTER TABLE scores ADD COLUMN country TEXT;
---   -- bot-seeded rows flag (1 = bot, 0 = real player)
---   ALTER TABLE scores ADD COLUMN is_bot INTEGER NOT NULL DEFAULT 0;
+--   -- legacy: is_bot column may still exist on older DBs (always 0; unused)
 
 CREATE TABLE IF NOT EXISTS scores (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,8 +24,7 @@ CREATE TABLE IF NOT EXISTS scores (
   variant   TEXT    NOT NULL DEFAULT '',  -- optional sub-category (hill, difficulty, …)
   meta      TEXT,                         -- JSON blob, nullable
   ip_hash   TEXT,                         -- salted SHA-256 of client IP (anonymised), for unique-player stats
-  country   TEXT,                         -- ISO-3166 alpha-2 from the Cloudflare edge (flags), nullable
-  is_bot    INTEGER NOT NULL DEFAULT 0    -- 1 = bot-seeded, 0 = real player
+  country   TEXT                          -- ISO-3166 alpha-2 from the Cloudflare edge (flags), nullable
 );
 
 -- Covers WHERE game=? AND variant=? ORDER BY score DESC
@@ -61,28 +59,18 @@ CREATE INDEX IF NOT EXISTS idx_scores_gvu
 CREATE INDEX IF NOT EXISTS idx_scores_gvsu
   ON scores (game, variant, score, user);
 
--- Global feeds and trending: WHERE is_bot = 0 [AND timestamp >= ?] ORDER BY
--- timestamp DESC. Leading equality on is_bot means the activity feed reads only
--- as many rows as it returns, and bot queries read none at all.
-CREATE INDEX IF NOT EXISTS idx_scores_bot_ts
-  ON scores (is_bot, timestamp DESC);
+-- Global activity feed: ORDER BY timestamp DESC LIMIT N.
+CREATE INDEX IF NOT EXISTS idx_scores_ts
+  ON scores (timestamp DESC);
 
--- Daily-challenge percentile: WHERE game = ? AND is_bot = 0 ORDER BY score.
--- Lets the OFFSET walk the index instead of sorting the partition.
-CREATE INDEX IF NOT EXISTS idx_scores_game_bot_score
-  ON scores (game, is_bot, score);
-
--- Bot-traffic panel (WHERE is_bot = ? GROUP BY game). Ordering by game *inside*
--- the is_bot seek satisfies the filter and the grouping at once, so the query
--- stops scanning the whole table to find rows that may not exist: 21508 rows read
--- before, 0 now that no bot rows remain.
-CREATE INDEX IF NOT EXISTS idx_scores_bot_game
-  ON scores (is_bot, game);
+-- Daily-challenge percentile: WHERE game = ? ORDER BY score + OFFSET walk.
+CREATE INDEX IF NOT EXISTS idx_scores_game_score
+  ON scores (game, score);
 
 -- Retention / new-player cohorts group by device. Covering, so the funnel never
 -- reads the wide table rows.
 CREATE INDEX IF NOT EXISTS idx_scores_iphash
-  ON scores (ip_hash, is_bot, timestamp);
+  ON scores (ip_hash, timestamp);
 
 -- ── Visitor tracking ──────────────────────────────────────────────────────────
 -- Migration (run once on existing DB):
