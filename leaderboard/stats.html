@@ -522,6 +522,7 @@
   <div class="spacer"></div>
   <span id="updated-tag" style="font-size:.68rem;color:var(--muted);margin-right:8px"></span>
   <button class="hbtn" onclick="loadStats()">↺ Refresh stats</button>
+  <button class="hbtn" onclick="loadStats(true)" title="Rescan every score row for the lifetime totals (costs a lot of D1 reads)">⟳ Recompute totals</button>
 </header>
 
 <div class="layout">
@@ -903,9 +904,22 @@ function showOverview() {
   currentGame = null;
 }
 
-async function loadStats() {
+// The lifetime totals here (unique players, retention cohorts, per-game and
+// per-country breakdowns) are distinct counts over every score ever recorded, so
+// the API serves them a few hours old rather than rescanning the table on each
+// refresh — that scan is what used to blow the D1 free-plan read budget. Pass
+// force to spend a recompute when the current figure actually matters.
+async function loadStats(force) {
   try {
-    const r = await fetch(`${API}/stats?real=1`, { cache: 'no-store' });
+    const headers = {};
+    let qs = `${API}/stats?real=1`;
+    if (force) {
+      const k = lbKey('Enter LB_KEY to recompute the lifetime totals:');
+      if (!k) return;
+      headers['X-LB-Key'] = k;
+      qs += '&fresh=1';
+    }
+    const r = await fetch(qs, { cache: 'no-store', headers });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     statsData = await r.json();
     renderStats();
@@ -917,8 +931,14 @@ async function loadStats() {
 function renderStats() {
   const d = statsData;
 
-  const ts = d.updated ? new Date(d.updated * 1000) : null;
-  const tsStr = ts ? 'Updated ' + ts.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : '';
+  // Report when the figures were computed, not when we fetched them.
+  const ts = (d.computed || d.updated) ? new Date((d.computed || d.updated) * 1000) : null;
+  let tsStr = '';
+  if (ts) {
+    tsStr = 'Computed ' + ts.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    const ageMin = Math.round((Date.now() - ts.getTime()) / 60000);
+    if (ageMin >= 60) tsStr += ` · ${Math.floor(ageMin / 60)}h old`;
+  }
   document.getElementById('updated-tag').textContent    = tsStr;
   document.getElementById('updated-inline').textContent = tsStr;
 

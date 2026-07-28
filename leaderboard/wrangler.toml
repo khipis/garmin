@@ -8,6 +8,13 @@ routes = [
   { pattern = "api.bitochi.com", custom_domain = true }
 ]
 
+# ── Scheduled upkeep ──────────────────────────────────────────────────────────
+# Sundays 04:10 UTC: rebuild D1 table statistics (so the query planner keeps
+# choosing index seeks over full scans as the tables grow) and drop expired
+# aggregate-cache rows. See the `scheduled` handler in src/index.ts.
+[triggers]
+crons = ["10 4 * * SUN"]
+
 # ── D1 Database ───────────────────────────────────────────────────────────────
 [[d1_databases]]
 binding      = "DB"                          # env.DB in Worker code

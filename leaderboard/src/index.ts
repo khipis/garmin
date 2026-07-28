@@ -128,9 +128,17 @@ function checkRateLimit(ip: string): boolean {
 const AGG_TTL_BOARD   = 45;     // leaderboard top-N + player count
 const AGG_TTL_STANDING= 60;     // per-period best/count for the in-game card
 const AGG_TTL_FEED    = 30;     // global activity feed
-const AGG_TTL_DASH    = 300;    // owner dashboard aggregates (full-table scans)
+const AGG_TTL_DASH    = 300;    // windowed dashboard aggregates (cheap, kept fresh)
 const AGG_TTL_LIST    = 600;    // slow-moving lists (games, variants, bots)
 const AGG_TTL_DAY     = 86_400; // per-day immutable values (daily challenge)
+
+// Lifetime totals — COUNT(DISTINCT user/ip_hash) over every row of `scores` or
+// `launches`. Around 350k rows read to answer, and there is no index that can
+// avoid it: a distinct count has to visit the whole table. Since these numbers
+// barely move from hour to hour, frequency is the only lever, so the dashboard
+// gets them at a few hours old. `?fresh=1` with the admin key forces a recompute
+// when the owner actually wants the current figure.
+const AGG_TTL_LIFETIME = 14_400; // 4h
 
 // Drops every memoised aggregate. Called after the destructive admin operations
 // (season reset, bot purge) so the dashboard reflects them immediately instead of
@@ -143,10 +151,13 @@ async function purgeAggCache(env: Env): Promise<void> {
 
 // Reads through the cache, computing `produce()` on a miss. Every failure path
 // falls back to a live query, so a missing/locked cache table degrades into the
-// old behaviour instead of an error.
-async function cached<T>(env: Env, key: string, ttlS: number, produce: () => Promise<T>): Promise<T> {
+// old behaviour instead of an error. `force` skips the read but still refreshes
+// the entry, so an admin recompute also updates what everyone else sees.
+async function cached<T>(
+  env: Env, key: string, ttlS: number, produce: () => Promise<T>, force = false,
+): Promise<T> {
   const now = Math.floor(Date.now() / 1000);
-  try {
+  if (!force) try {
     const row = await env.DB
       .prepare("SELECT v FROM agg_cache WHERE k = ? AND exp > ?")
       .bind(key, now)
@@ -268,18 +279,27 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
 // best beats mine — has to read every score in the partition. Counting distinct
 // users who hold *any* better score gives the identical answer (a player's best
 // beats mine exactly when at least one of their scores does) but can seek straight
-// to the better-than-mine slice of idx_scores_game_variant_score, so it reads a
-// handful of rows for a strong player instead of the whole board. My own rows can
-// never qualify, since no score of mine beats my own best.
+// to the better-than-mine slice of the score index, so it reads a handful of rows
+// for a strong player instead of the whole board. My own rows can never qualify,
+// since no score of mine beats my own best.
+//
+// `allTime` picks the access path, and the difference is large enough to be worth
+// stating: with no date filter the planner prefers a covering index that groups by
+// user and reads the entire partition (2527 rows on the busiest board), so the
+// score-range index is requested explicitly (2 rows for a top player). With a date
+// filter the timestamp index wins instead, because the window is the selective
+// part — forcing the score index there would be 9x worse.
 async function countBetterUsers(
   env: Env,
   where: string,
   wbind: (string | number)[],
   better: string,
   myScore: number,
+  allTime: boolean,
 ): Promise<number> {
+  const from = allTime ? "scores INDEXED BY idx_scores_gvsu" : "scores";
   const row = await env.DB
-    .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where} AND score ${better} ?`)
+    .prepare(`SELECT COUNT(DISTINCT user) AS c FROM ${from} WHERE ${where} AND score ${better} ?`)
     .bind(...wbind, myScore)
     .first<{ c: number }>();
   return row?.c ?? 0;
@@ -362,7 +382,7 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
 
       if (meBest && meBest.s != null) {
         const myScore = meBest.s;
-        const myRank = (await countBetterUsers(env, where, wbind, better, myScore)) + 1;
+        const myRank = (await countBetterUsers(env, where, wbind, better, myScore, cutoff == null)) + 1;
         me = { r: myRank, s: myScore };
 
         const off = Math.max(0, myRank - 6);
@@ -459,7 +479,7 @@ async function handleGetStanding(url: URL, env: Env): Promise<Response> {
         .first<{ s: number | null }>();
       if (meRes && meRes.s != null) {
         myBest = meRes.s;
-        myRank = (await countBetterUsers(env, where, wbind, better, myBest)) + 1;
+        myRank = (await countBetterUsers(env, where, wbind, better, myBest, cutoff == null)) + 1;
       }
     }
     return { top1: board.top1, count: board.count, myBest, myRank };
@@ -764,6 +784,9 @@ interface StatsPayload {
   };
   perGame: StatsPerGame[];
   perCountry: StatsPerCountry[];
+  // When these figures were actually computed, so the dashboard can show their
+  // age rather than implying they are live.
+  computed: number;
 }
 
 // Every query below aggregates over the whole table (COUNT(DISTINCT …), GROUP BY
@@ -918,16 +941,24 @@ async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> 
     }
   }
 
-  return { totals, perGame, perCountry };
+  return { totals, perGame, perCountry, computed: Math.floor(Date.now() / 1000) };
 }
 
-async function handleGetStats(url: URL, env: Env): Promise<Response> {
+// True when the caller asked for a recompute *and* proved it is the owner —
+// otherwise anyone could bypass the cache and replay the expensive scans at will.
+function wantsFresh(req: Request, url: URL, env: Env): boolean {
+  return url.searchParams.get("fresh") === "1"
+    && !!env.LB_KEY
+    && req.headers.get("X-LB-Key") === env.LB_KEY;
+}
+
+async function handleGetStats(req: Request, url: URL, env: Env): Promise<Response> {
   const realOnly = url.searchParams.get("real") === "1";
 
   let payload: StatsPayload;
   try {
-    payload = await cached(env, `stats:${realOnly ? 1 : 0}`, AGG_TTL_DASH,
-      () => computeStats(env, realOnly));
+    payload = await cached(env, `stats:${realOnly ? 1 : 0}`, AGG_TTL_LIFETIME,
+      () => computeStats(env, realOnly), wantsFresh(req, url, env));
   } catch (e) {
     console.error("DB stats error:", e);
     return err("db error", 500);
@@ -1312,19 +1343,24 @@ async function handleLaunch(req: Request, env: Env): Promise<Response> {
 type LaunchByGame    = { game: string; launches: number; players: number };
 type LaunchByCountry = { country: string | null; launches: number; players: number };
 type LaunchWindowAgg = { launches: number; games: number; players: number };
-interface LaunchStatsPayload {
+interface LaunchLifetime {
   totals: LaunchWindowAgg;
   byGame: LaunchByGame[];
   byCountry: LaunchByCountry[];
+  computed: number;
+}
+interface LaunchRecent {
   last24h: LaunchWindowAgg;
   last7d: LaunchWindowAgg;
   byGame24h: LaunchByGame[];
   byGame7d: LaunchByGame[];
 }
 
-// Six aggregates over the launches table, three of them unwindowed. Identical for
-// every caller, so the caller memoises rather than rescanning per refresh.
-async function computeLaunchStats(env: Env): Promise<LaunchStatsPayload> {
+// Split by volatility, because the two halves cost wildly different amounts. The
+// windowed half only touches the rows inside its window (a couple of thousand),
+// so it stays near-live; the lifetime half scans all 31k launches three times over
+// and is cached for hours.
+async function computeLaunchLifetime(env: Env): Promise<LaunchLifetime> {
   type ByGame    = LaunchByGame;
   type ByCountry = LaunchByCountry;
   type WindowAgg = LaunchWindowAgg;
@@ -1370,7 +1406,20 @@ async function computeLaunchStats(env: Env): Promise<LaunchStatsPayload> {
       )
       .first<WindowAgg>();
     if (agg) totals = agg;
+  }
 
+  return { totals, byGame, byCountry, computed: Math.floor(Date.now() / 1000) };
+}
+
+async function computeLaunchRecent(env: Env): Promise<LaunchRecent> {
+  type ByGame    = LaunchByGame;
+  type WindowAgg = LaunchWindowAgg;
+  let last24h: WindowAgg = { launches: 0, games: 0, players: 0 };
+  let last7d: WindowAgg = { launches: 0, games: 0, players: 0 };
+  let byGame24h: ByGame[] = [];
+  let byGame7d: ByGame[] = [];
+
+  {
     // launches.timestamp is unix ms (Date.now()), same as visits / api_errors.
     const nowMs = Date.now();
     const t24 = nowMs - 24 * 3600 * 1000;
@@ -1417,19 +1466,24 @@ async function computeLaunchStats(env: Env): Promise<LaunchStatsPayload> {
     byGame7d = g7.results ?? [];
   }
 
-  return { totals, byGame, byCountry, last24h, last7d, byGame24h, byGame7d };
+  return { last24h, last7d, byGame24h, byGame7d };
 }
 
-async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
-  let payload: LaunchStatsPayload;
+async function handleGetLaunchStats(req: Request, url: URL, env: Env): Promise<Response> {
+  let lifetime: LaunchLifetime;
+  let recent: LaunchRecent;
   try {
-    payload = await cached(env, "lstats", AGG_TTL_DASH, () => computeLaunchStats(env));
+    [lifetime, recent] = await Promise.all([
+      cached(env, "lstats:life", AGG_TTL_LIFETIME,
+        () => computeLaunchLifetime(env), wantsFresh(req, url, env)),
+      cached(env, "lstats:recent", AGG_TTL_DASH, () => computeLaunchRecent(env)),
+    ]);
   } catch (e) {
     console.error("launch stats error:", e);
     return err("db error", 500);
   }
 
-  return json({ updated: Math.floor(Date.now() / 1000), ...payload });
+  return json({ updated: Math.floor(Date.now() / 1000), ...lifetime, ...recent });
 }
 
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
@@ -2252,6 +2306,21 @@ export default {
     );
     return Promise.race([handlerP, timeoutP]);
   },
+
+  // Weekly upkeep. ANALYZE is the important half: without table statistics the
+  // planner has no idea how selective `timestamp > ?` is and falls back to
+  // scanning whole tables for the windowed dashboard aggregates — 31k rows read
+  // instead of 1.3k on the launches breakdown. Statistics go stale as the tables
+  // grow, so they get rebuilt rather than left as a one-off.
+  async scheduled(_event: ScheduledController, env: Env): Promise<void> {
+    try {
+      await env.DB.prepare("DELETE FROM agg_cache WHERE exp < ?")
+        .bind(Math.floor(Date.now() / 1000)).run();
+    } catch (e) { console.warn("agg_cache prune failed:", e); }
+    try {
+      await env.DB.prepare("ANALYZE").run();
+    } catch (e) { console.warn("ANALYZE failed:", e); }
+  },
 } satisfies ExportedHandler<Env>;
 
 async function route(req: Request, env: Env, url: URL, method: string): Promise<Response> {
@@ -2282,8 +2351,8 @@ async function route(req: Request, env: Env, url: URL, method: string): Promise<
     if (method === "GET"    && path === "/hot")         return handleGetHot(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);
     if (method === "GET"    && path === "/ciq")         return handleGetCiq(url, env);
-    if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);
-    if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(url, env);
+    if (method === "GET"    && path === "/stats")       return handleGetStats(req, url, env);
+    if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(req, url, env);
     if (method === "GET"    && path === "/snapshots")   return handleGetSnapshots(env);
     if (method === "GET"    && path === "/hof")         return handleGetHoF(env);
     if (method === "GET"    && path === "/variants")    return handleGetVariants(url, env);
