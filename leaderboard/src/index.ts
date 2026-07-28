@@ -114,6 +114,64 @@ function checkRateLimit(ip: string): boolean {
   return rec.count <= RATE_LIMIT_MAX;
 }
 
+// ── Aggregate cache ───────────────────────────────────────────────────────────
+// D1 bills per row *read*, and several endpoints answer with aggregates that have
+// to touch every row of `scores`/`launches` — COUNT(DISTINCT user), GROUP BY
+// country, retention cohorts. Those answers are identical for every caller, so
+// recomputing them on each dashboard refresh burned millions of row reads a day.
+// Memoising the finished JSON turns a repeat call into one primary-key lookup.
+//
+// Deliberately D1-backed rather than the Cache API: this cache is shared by every
+// colo (the traffic is watches spread across the world, so a per-colo cache would
+// mostly miss) and it survives Worker isolate recycling.
+
+const AGG_TTL_BOARD   = 45;     // leaderboard top-N + player count
+const AGG_TTL_STANDING= 60;     // per-period best/count for the in-game card
+const AGG_TTL_FEED    = 30;     // global activity feed
+const AGG_TTL_DASH    = 300;    // owner dashboard aggregates (full-table scans)
+const AGG_TTL_LIST    = 600;    // slow-moving lists (games, variants, bots)
+const AGG_TTL_DAY     = 86_400; // per-day immutable values (daily challenge)
+
+// Drops every memoised aggregate. Called after the destructive admin operations
+// (season reset, bot purge) so the dashboard reflects them immediately instead of
+// waiting out a TTL.
+async function purgeAggCache(env: Env): Promise<void> {
+  try {
+    await env.DB.prepare("DELETE FROM agg_cache").run();
+  } catch (_) { /* best-effort */ }
+}
+
+// Reads through the cache, computing `produce()` on a miss. Every failure path
+// falls back to a live query, so a missing/locked cache table degrades into the
+// old behaviour instead of an error.
+async function cached<T>(env: Env, key: string, ttlS: number, produce: () => Promise<T>): Promise<T> {
+  const now = Math.floor(Date.now() / 1000);
+  try {
+    const row = await env.DB
+      .prepare("SELECT v FROM agg_cache WHERE k = ? AND exp > ?")
+      .bind(key, now)
+      .first<{ v: string }>();
+    if (row?.v) return JSON.parse(row.v) as T;
+  } catch (_) { /* treat any cache failure as a miss */ }
+
+  const value = await produce();
+
+  try {
+    await env.DB
+      .prepare("INSERT OR REPLACE INTO agg_cache (k, v, exp) VALUES (?, ?, ?)")
+      .bind(key, JSON.stringify(value), now + ttlS)
+      .run();
+    // Keys that embed a date (the daily challenge) are never read again once the
+    // day rolls over, so sweep expired rows occasionally to stop the table from
+    // growing without bound.
+    if (Math.random() < 0.02) {
+      await env.DB.prepare("DELETE FROM agg_cache WHERE exp < ?").bind(now - 3600).run();
+    }
+  } catch (_) { /* cache writes are best-effort */ }
+
+  return value;
+}
+
 // ── Route handlers ────────────────────────────────────────────────────────────
 
 // Logs a non-403 error to the api_errors table for monitoring in stats.html.
@@ -204,6 +262,29 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   return json({ ok: true });
 }
 
+// How many players rank ahead of `myScore` on a board.
+//
+// The obvious phrasing — group the partition by user, then count the groups whose
+// best beats mine — has to read every score in the partition. Counting distinct
+// users who hold *any* better score gives the identical answer (a player's best
+// beats mine exactly when at least one of their scores does) but can seek straight
+// to the better-than-mine slice of idx_scores_game_variant_score, so it reads a
+// handful of rows for a strong player instead of the whole board. My own rows can
+// never qualify, since no score of mine beats my own best.
+async function countBetterUsers(
+  env: Env,
+  where: string,
+  wbind: (string | number)[],
+  better: string,
+  myScore: number,
+): Promise<number> {
+  const row = await env.DB
+    .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where} AND score ${better} ?`)
+    .bind(...wbind, myScore)
+    .first<{ c: number }>();
+  return row?.c ?? 0;
+}
+
 // Enriched leaderboard. Returns the best-score-per-user top list plus, when a
 // `user` is supplied, that player's global rank, a ±5 "near you" window, and a
 // "target" (median of the top scores) for the "beat this" mechanic.
@@ -249,21 +330,29 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   let near: { r: number; u: string; s: number; c: string | null; m: string | null }[] = [];
 
   try {
-    const topRes = await env.DB
-      .prepare(
-        `SELECT user, ${bestFn} AS s, country AS c, meta AS m
-         FROM scores WHERE ${where}
-         GROUP BY user ORDER BY s ${order} LIMIT 10`
-      )
-      .bind(...wbind)
-      .all<Row>();
-    top = (topRes.results ?? []).map((r, i) => ({ r: i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
+    // The visible board is the same for everyone, so it is memoised: grouping
+    // every score in the partition by user is the single most expensive read in
+    // the API and it does not need to be redone per request.
+    const boardKey = `lb:${game}|${variant}|${period}:${cutoff ?? 0}|${realOnly ? 1 : 0}`;
+    const board = await cached(env, boardKey, AGG_TTL_BOARD, async () => {
+      const topRes = await env.DB
+        .prepare(
+          `SELECT user, ${bestFn} AS s, country AS c, meta AS m
+           FROM scores WHERE ${where}
+           GROUP BY user ORDER BY s ${order} LIMIT 10`
+        )
+        .bind(...wbind)
+        .all<Row>();
 
-    const cntRes = await env.DB
-      .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
-      .bind(...wbind)
-      .first<{ c: number }>();
-    count = cntRes?.c ?? 0;
+      const cntRes = await env.DB
+        .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
+        .bind(...wbind)
+        .first<{ c: number }>();
+
+      return { rows: topRes.results ?? [], count: cntRes?.c ?? 0 };
+    });
+    top = board.rows.map((r, i) => ({ r: i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
+    count = board.count;
 
     if (user) {
       const meBest = await env.DB
@@ -273,27 +362,29 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
 
       if (meBest && meBest.s != null) {
         const myScore = meBest.s;
-        const betterCnt = await env.DB
-          .prepare(
-            `SELECT COUNT(*) AS c FROM (
-               SELECT user, ${bestFn} AS b FROM scores WHERE ${where} GROUP BY user
-             ) WHERE b ${better} ?`
-          )
-          .bind(...wbind, myScore)
-          .first<{ c: number }>();
-        const myRank = (betterCnt?.c ?? 0) + 1;
+        const myRank = (await countBetterUsers(env, where, wbind, better, myScore)) + 1;
         me = { r: myRank, s: myScore };
 
         const off = Math.max(0, myRank - 6);
-        const nearRes = await env.DB
-          .prepare(
-            `SELECT user, ${bestFn} AS s, country AS c, meta AS m
-             FROM scores WHERE ${where}
-             GROUP BY user ORDER BY s ${order} LIMIT 11 OFFSET ?`
-          )
-          .bind(...wbind, off)
-          .all<Row>();
-        near = (nearRes.results ?? []).map((r, i) => ({ r: off + i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
+        // Same slice for every player sitting at this rank, and the same slice
+        // again when one player refreshes — so it is memoised per offset.
+        const nearRows = await cached(
+          env,
+          `lbn:${game}|${variant}|${period}:${cutoff ?? 0}|${realOnly ? 1 : 0}|${off}`,
+          AGG_TTL_BOARD,
+          async () => {
+            const nearRes = await env.DB
+              .prepare(
+                `SELECT user, ${bestFn} AS s, country AS c, meta AS m
+                 FROM scores WHERE ${where}
+                 GROUP BY user ORDER BY s ${order} LIMIT 11 OFFSET ?`
+              )
+              .bind(...wbind, off)
+              .all<Row>();
+            return nearRes.results ?? [];
+          },
+        );
+        near = nearRows.map((r, i) => ({ r: off + i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
       }
     }
   } catch (e) {
@@ -344,17 +435,20 @@ async function handleGetStanding(url: URL, env: Env): Promise<Response> {
       : `game = ? AND variant = ?`;
     const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
 
-    const top1Res = await env.DB
-      .prepare(`SELECT ${bestFn} AS s FROM scores WHERE ${where}`)
-      .bind(...wbind)
-      .first<{ s: number | null }>();
-    const top1 = top1Res?.s ?? null;
-
-    const cntRes = await env.DB
-      .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
-      .bind(...wbind)
-      .first<{ c: number }>();
-    const count = cntRes?.c ?? 0;
+    // Leader and field size are player-independent, so they are memoised — and
+    // fetched in a single pass instead of two scans of the same partition.
+    const board = await cached(
+      env,
+      `st:${game}|${variant}|${period}:${cutoff ?? 0}`,
+      AGG_TTL_STANDING,
+      async () => {
+        const row = await env.DB
+          .prepare(`SELECT ${bestFn} AS s, COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
+          .bind(...wbind)
+          .first<{ s: number | null; c: number }>();
+        return { top1: row?.s ?? null, count: row?.c ?? 0 };
+      },
+    );
 
     let myBest: number | null = null;
     let myRank: number | null = null;
@@ -365,18 +459,10 @@ async function handleGetStanding(url: URL, env: Env): Promise<Response> {
         .first<{ s: number | null }>();
       if (meRes && meRes.s != null) {
         myBest = meRes.s;
-        const rankRes = await env.DB
-          .prepare(
-            `SELECT COUNT(*) AS c FROM (
-               SELECT user, ${bestFn} AS b FROM scores WHERE ${where} GROUP BY user
-             ) WHERE b ${better} ?`
-          )
-          .bind(...wbind, myBest)
-          .first<{ c: number }>();
-        myRank = (rankRes?.c ?? 0) + 1;
+        myRank = (await countBetterUsers(env, where, wbind, better, myBest)) + 1;
       }
     }
-    return { top1, count, myBest, myRank };
+    return { top1: board.top1, count: board.count, myBest, myRank };
   }
 
   try {
@@ -460,14 +546,16 @@ async function handleGetActivity(url: URL, env: Env): Promise<Response> {
   type Row = { game: string; variant: string; u: string; s: number; c: string | null; t: number };
   let rows: Row[] = [];
   try {
-    const res = await env.DB
-      .prepare(
-        `SELECT game, variant, user AS u, score AS s, country AS c, timestamp AS t
-         FROM scores ${w} ORDER BY timestamp DESC LIMIT ?`
-      )
-      .bind(limit)
-      .all<Row>();
-    rows = res.results ?? [];
+    rows = await cached(env, `act:${realOnly ? 1 : 0}:${limit}`, AGG_TTL_FEED, async () => {
+      const res = await env.DB
+        .prepare(
+          `SELECT game, variant, user AS u, score AS s, country AS c, timestamp AS t
+           FROM scores ${w} ORDER BY timestamp DESC LIMIT ?`
+        )
+        .bind(limit)
+        .all<Row>();
+      return res.results ?? [];
+    });
   } catch (e) {
     console.error("activity query error:", e);
     return err("db error", 500);
@@ -495,22 +583,26 @@ async function handleGetHot(url: URL, env: Env): Promise<Response> {
   type HotRow = { game: string; cur: number; prev: number; players: number };
   let rows: HotRow[] = [];
   try {
-    const res = await env.DB
-      .prepare(
-        `SELECT game,
-                SUM(CASE WHEN timestamp >= ? THEN 1 ELSE 0 END)              AS cur,
-                SUM(CASE WHEN timestamp >= ? AND timestamp < ? THEN 1 ELSE 0 END) AS prev,
-                COUNT(DISTINCT CASE WHEN timestamp >= ? THEN user END)        AS players
-         FROM scores
-         WHERE is_bot = 0 AND timestamp >= ?
-         GROUP BY game
-         HAVING cur > 0
-         ORDER BY cur DESC
-         LIMIT ?`
-      )
-      .bind(cutoff1, cutoff2, cutoff1, cutoff1, cutoff2, limit)
-      .all<HotRow>();
-    rows = res.results ?? [];
+    // Trending is a whole-window aggregate that every visitor sees identically,
+    // and it feeds the "Top Choices" card on every page load.
+    rows = await cached(env, `hot:${window_h}:${limit}`, AGG_TTL_DASH, async () => {
+      const res = await env.DB
+        .prepare(
+          `SELECT game,
+                  SUM(CASE WHEN timestamp >= ? THEN 1 ELSE 0 END)              AS cur,
+                  SUM(CASE WHEN timestamp >= ? AND timestamp < ? THEN 1 ELSE 0 END) AS prev,
+                  COUNT(DISTINCT CASE WHEN timestamp >= ? THEN user END)        AS players
+           FROM scores
+           WHERE is_bot = 0 AND timestamp >= ?
+           GROUP BY game
+           HAVING cur > 0
+           ORDER BY cur DESC
+           LIMIT ?`
+        )
+        .bind(cutoff1, cutoff2, cutoff1, cutoff1, cutoff2, limit)
+        .all<HotRow>();
+      return res.results ?? [];
+    });
   } catch (e) {
     console.error("hot query error:", e);
     return err("db error", 500);
@@ -534,10 +626,12 @@ async function handleGetHot(url: URL, env: Env): Promise<Response> {
 async function handleGetGames(env: Env): Promise<Response> {
   let games: string[] = [];
   try {
-    const result = await env.DB
-      .prepare("SELECT DISTINCT game FROM scores ORDER BY game ASC")
-      .all<{ game: string }>();
-    games = (result.results ?? []).map(r => r.game);
+    games = await cached(env, "games", AGG_TTL_LIST, async () => {
+      const result = await env.DB
+        .prepare("SELECT DISTINCT game FROM scores ORDER BY game ASC")
+        .all<{ game: string }>();
+      return (result.results ?? []).map(r => r.game);
+    });
   } catch (e) {
     console.error("DB query error:", e);
     return err("db error", 500);
@@ -659,25 +753,40 @@ async function handleGetCiq(url: URL, env: Env): Promise<Response> {
 // Aggregate player stats, computed live from the scores table. Used by the
 // "Stats" tab on bitochi.com for development/planning.
 // ?real=1 → exclude bot-seeded rows so the owner sees authentic traffic only.
-async function handleGetStats(url: URL, env: Env): Promise<Response> {
-  type PerGame    = { game: string; scores: number; players: number; devices: number };
-  type PerCountry = { country: string | null; players: number; scores: number };
+type StatsPerGame    = { game: string; scores: number; players: number; devices: number };
+type StatsPerCountry = { country: string | null; players: number; scores: number };
+interface StatsPayload {
+  totals: {
+    games: number; scores: number; players: number; devices: number;
+    returning: number; ret3: number; ret4: number; ret5: number; ret6: number; loyal: number;
+    newPlayers7d: number; dau30d: number; avgScoresPerPlayer: number;
+    lifetimeGames: number; lifetimePlayers: number; lifetimeLaunches: number;
+  };
+  perGame: StatsPerGame[];
+  perCountry: StatsPerCountry[];
+}
+
+// Every query below aggregates over the whole table (COUNT(DISTINCT …), GROUP BY
+// country, retention cohorts), which is why the caller memoises the result rather
+// than recomputing it on each dashboard refresh.
+async function computeStats(env: Env, realOnly: boolean): Promise<StatsPayload> {
+  type PerGame    = StatsPerGame;
+  type PerCountry = StatsPerCountry;
   let perGame:    PerGame[]    = [];
   let perCountry: PerCountry[] = [];
-  let totals = {
+  const totals = {
     games: 0, scores: 0, players: 0, devices: 0,
     returning: 0, ret3: 0, ret4: 0, ret5: 0, ret6: 0, loyal: 0,
     newPlayers7d: 0, dau30d: 0, avgScoresPerPlayer: 0,
     lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
   };
 
-  const realOnly = url.searchParams.get("real") === "1";
   const w  = realOnly ? "WHERE is_bot = 0" : "";
   const wa = realOnly ? "AND is_bot = 0"   : "";
   // Backwards-compat alias for the old name used below
   const botFilter = w;
 
-  try {
+  {
     const byGame = await env.DB
       .prepare(
         `SELECT game,
@@ -807,14 +916,25 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
       // Don't fail /stats if launches table is unavailable in a local/older DB.
       console.warn("lifetime launches stats unavailable:", e);
     }
+  }
 
+  return { totals, perGame, perCountry };
+}
+
+async function handleGetStats(url: URL, env: Env): Promise<Response> {
+  const realOnly = url.searchParams.get("real") === "1";
+
+  let payload: StatsPayload;
+  try {
+    payload = await cached(env, `stats:${realOnly ? 1 : 0}`, AGG_TTL_DASH,
+      () => computeStats(env, realOnly));
   } catch (e) {
     console.error("DB stats error:", e);
     return err("db error", 500);
   }
 
   return json(
-    { updated: Math.floor(Date.now() / 1000), totals, perGame, perCountry },
+    { updated: Math.floor(Date.now() / 1000), ...payload },
     200,
     { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
   );
@@ -1017,16 +1137,22 @@ async function handleGetBots(url: URL, env: Env): Promise<Response> {
   const game = url.searchParams.get("game") || null;
   try {
     if (game) {
-      const row = await env.DB.prepare(
-        "SELECT COUNT(*) AS n FROM scores WHERE is_bot=1 AND game=?"
-      ).bind(game).first<{ n: number }>();
-      return json({ game, count: row?.n ?? 0 });
+      const count = await cached(env, `bots:${game}`, AGG_TTL_LIST, async () => {
+        const row = await env.DB.prepare(
+          "SELECT COUNT(*) AS n FROM scores WHERE is_bot=1 AND game=?"
+        ).bind(game).first<{ n: number }>();
+        return row?.n ?? 0;
+      });
+      return json({ game, count });
     }
-    const rows = await env.DB.prepare(
-      "SELECT game, COUNT(*) AS n FROM scores WHERE is_bot=1 GROUP BY game ORDER BY game ASC"
-    ).all<{ game: string; n: number }>();
-    const total = (rows.results ?? []).reduce((s, r) => s + r.n, 0);
-    return json({ total, games: rows.results ?? [] });
+    const games = await cached(env, "bots:all", AGG_TTL_LIST, async () => {
+      const rows = await env.DB.prepare(
+        "SELECT game, COUNT(*) AS n FROM scores WHERE is_bot=1 GROUP BY game ORDER BY game ASC"
+      ).all<{ game: string; n: number }>();
+      return rows.results ?? [];
+    });
+    const total = games.reduce((s, r) => s + r.n, 0);
+    return json({ total, games });
   } catch (e) {
     console.error("get bots error:", e);
     return err("db error", 500);
@@ -1044,9 +1170,11 @@ async function handleDeleteBots(req: Request, env: Env): Promise<Response> {
   try {
     if (game) {
       const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1 AND game=?").bind(game).run();
+      await purgeAggCache(env);
       return json({ ok: true, game, deleted: r.meta?.changes ?? 0 });
     }
     const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1").run();
+    await purgeAggCache(env);
     return json({ ok: true, game: "all", deleted: r.meta?.changes ?? 0 });
   } catch (e) {
     console.error("delete bots error:", e);
@@ -1113,6 +1241,7 @@ async function handleReset(req: Request, env: Env): Promise<Response> {  const r
       await env.DB.prepare("INSERT INTO resets (game, at) VALUES (?, ?)")
         .bind(game ?? null, Date.now()).run();
     } catch (e) { console.warn("reset log failed:", e); }
+    await purgeAggCache(env);
     return json({ ok: true, scope: game ?? "all", snapshotId: snapId });
   } catch (e) {
     console.error("reset error:", e);
@@ -1180,10 +1309,25 @@ async function handleLaunch(req: Request, env: Env): Promise<Response> {
 // played even when the leaderboard never receives a submission.
 // Also returns recent windows (24h / 7d) so the dashboard can spot momentum and
 // open→score conversion without a second endpoint.
-async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
-  type ByGame    = { game: string; launches: number; players: number };
-  type ByCountry = { country: string | null; launches: number; players: number };
-  type WindowAgg = { launches: number; games: number; players: number };
+type LaunchByGame    = { game: string; launches: number; players: number };
+type LaunchByCountry = { country: string | null; launches: number; players: number };
+type LaunchWindowAgg = { launches: number; games: number; players: number };
+interface LaunchStatsPayload {
+  totals: LaunchWindowAgg;
+  byGame: LaunchByGame[];
+  byCountry: LaunchByCountry[];
+  last24h: LaunchWindowAgg;
+  last7d: LaunchWindowAgg;
+  byGame24h: LaunchByGame[];
+  byGame7d: LaunchByGame[];
+}
+
+// Six aggregates over the launches table, three of them unwindowed. Identical for
+// every caller, so the caller memoises rather than rescanning per refresh.
+async function computeLaunchStats(env: Env): Promise<LaunchStatsPayload> {
+  type ByGame    = LaunchByGame;
+  type ByCountry = LaunchByCountry;
+  type WindowAgg = LaunchWindowAgg;
   let byGame: ByGame[] = [];
   let byCountry: ByCountry[] = [];
   let totals: WindowAgg = { launches: 0, games: 0, players: 0 };
@@ -1192,7 +1336,7 @@ async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
   let byGame24h: ByGame[] = [];
   let byGame7d: ByGame[] = [];
 
-  try {
+  {
     const g = await env.DB
       .prepare(
         `SELECT game,
@@ -1271,16 +1415,21 @@ async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
       .bind(t7)
       .all<ByGame>();
     byGame7d = g7.results ?? [];
+  }
+
+  return { totals, byGame, byCountry, last24h, last7d, byGame24h, byGame7d };
+}
+
+async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
+  let payload: LaunchStatsPayload;
+  try {
+    payload = await cached(env, "lstats", AGG_TTL_DASH, () => computeLaunchStats(env));
   } catch (e) {
     console.error("launch stats error:", e);
     return err("db error", 500);
   }
 
-  return json({
-    updated: Math.floor(Date.now() / 1000),
-    totals, byGame, byCountry,
-    last24h, last7d, byGame24h, byGame7d,
-  });
+  return json({ updated: Math.floor(Date.now() / 1000), ...payload });
 }
 
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
@@ -1295,13 +1444,15 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
 
   let variants: string[] = [];
   try {
-    const result = await env.DB
-      .prepare(
-        `SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != ''${botClause} ORDER BY variant ASC`
-      )
-      .bind(game)
-      .all<{ variant: string }>();
-    variants = (result.results ?? []).map(r => r.variant);
+    variants = await cached(env, `var:${game}:${realOnly ? 1 : 0}`, AGG_TTL_LIST, async () => {
+      const result = await env.DB
+        .prepare(
+          `SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != ''${botClause} ORDER BY variant ASC`
+        )
+        .bind(game)
+        .all<{ variant: string }>();
+      return (result.results ?? []).map(r => r.variant);
+    });
   } catch (e) {
     console.error("DB query error:", e);
     return err("db error", 500);
@@ -1616,18 +1767,22 @@ async function handleGetErrors(url: URL, env: Env): Promise<Response> {
             "SELECT id, timestamp, game, error_code, error_msg FROM api_errors ORDER BY timestamp DESC LIMIT ?"
           ).bind(limit).all<{ id: number; timestamp: number; game: string; error_code: number; error_msg: string }>(),
 
-      // Per-game summary for last 24 h
-      env.DB.prepare(
-        `SELECT game, error_code, COUNT(*) AS cnt
-         FROM api_errors WHERE timestamp > ?
-         GROUP BY game, error_code
-         ORDER BY cnt DESC LIMIT 100`
-      ).bind(since24h).all<{ game: string; error_code: number; cnt: number }>(),
+      // Per-game summary for last 24 h — a windowed aggregate that is the same
+      // for every dashboard refresh, so it is memoised.
+      cached(env, "errsum", AGG_TTL_DASH, async () => {
+        const res = await env.DB.prepare(
+          `SELECT game, error_code, COUNT(*) AS cnt
+           FROM api_errors WHERE timestamp > ?
+           GROUP BY game, error_code
+           ORDER BY cnt DESC LIMIT 100`
+        ).bind(since24h).all<{ game: string; error_code: number; cnt: number }>();
+        return res.results ?? [];
+      }),
     ]);
 
     return json({
-      recent:  recentRes.results  ?? [],
-      summary: summaryRes.results ?? [],
+      recent:  recentRes.results ?? [],
+      summary: summaryRes,
     });
   } catch (e) {
     return err("db error", 500);
@@ -1805,19 +1960,22 @@ const LABELS_ROUNDS_3: ((m: DailyMeta) => string)[] = [
  *   3 → "rounds"   (play N times today)
  * Cached at CDN for 1 hour — same challenge for all players same day.
  */
-async function handleGetDaily(url: URL, env: Env): Promise<Response> {
-  const gameRaw = (url.searchParams.get("game") ?? "").trim();
-  const userRaw = (url.searchParams.get("user") ?? "").trim();
+interface DailyChallenge {
+  type: string;
+  target: number;
+  label: string;
+  asc: boolean;
+  archetypePct: number;
+}
 
-  if (!gameRaw) return err("missing: game");
-  const game = sanitizeGame(gameRaw);
-  if (!game)   return err("invalid game name");
-  const user   = userRaw ? sanitizeUser(userRaw) : null;
-  const date   = todayUTC();
-  const seed   = dailySeed(date, game);
-  const isAsc  = ASC_GAMES_SET.has(game);
-  const meta   = dailyMeta(game);
-
+// The challenge itself depends only on the date and the game, so it is computed
+// once per game per UTC day. Besides saving the two most expensive reads on this
+// path (a per-game COUNT plus a percentile walk), memoising also fixes a real bug:
+// the percentile was recomputed against a score count that grows during the day,
+// so the advertised target could shift under players mid-challenge.
+async function computeDailyChallenge(
+  env: Env, game: string, seed: number, isAsc: boolean, meta: DailyMeta,
+): Promise<DailyChallenge> {
   // Archetype rotates across the 4 types via seed bits 0-1.
   // But fall back to "rounds" when there's not enough data.
   const countRow = await env.DB
@@ -1865,9 +2023,14 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
         baseOffset = Math.floor(total * (0.25 + (seed % 10) / 100));
       } else {
         // top_pct: beat 50–75% of players → need to be in top 25–50% = offset 25–50%
-        archetypePct = [50, 60, 65, 70, 75][(seed >> 4) % 5];
+        // `seed` fills all 32 bits, so the shift must be unsigned: a signed `>>`
+        // yields a negative index for any seed past 2^31, which picked `undefined`
+        // out of the table and sent a NaN offset to D1 — taking the whole endpoint
+        // down for every game whose seed landed on this archetype.
+        archetypePct = [50, 60, 65, 70, 75][(seed >>> 4) % 5];
         baseOffset   = Math.floor(total * (1 - archetypePct / 100));
       }
+      if (!Number.isFinite(baseOffset)) baseOffset = 0;
       if (baseOffset >= total) baseOffset = total - 1;
       if (baseOffset < 0)     baseOffset = 0;
 
@@ -1896,6 +2059,27 @@ async function handleGetDaily(url: URL, env: Env): Promise<Response> {
       }
     }
   }
+
+  return { type, target, label, asc, archetypePct };
+}
+
+async function handleGetDaily(url: URL, env: Env): Promise<Response> {
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const userRaw = (url.searchParams.get("user") ?? "").trim();
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+  const user   = userRaw ? sanitizeUser(userRaw) : null;
+  const date   = todayUTC();
+  const seed   = dailySeed(date, game);
+  const isAsc  = ASC_GAMES_SET.has(game);
+  const meta   = dailyMeta(game);
+
+  const { type, target, label, asc, archetypePct } = await cached(
+    env, `daily:${date}:${game}`, AGG_TTL_DAY,
+    () => computeDailyChallenge(env, game, seed, isAsc, meta),
+  );
 
   // Check if this user already completed today.
   let completed = false;

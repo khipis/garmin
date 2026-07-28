@@ -37,6 +37,46 @@ CREATE INDEX IF NOT EXISTS idx_scores_game_variant_score
 CREATE INDEX IF NOT EXISTS idx_scores_game_variant_ts
   ON scores (game, variant, timestamp DESC);
 
+-- "Recently played" spans every variant of a game, so `variant` sitting between
+-- game and timestamp in the index above forces a scan-and-sort of the whole game
+-- partition. This one makes it read just the rows it returns.
+CREATE INDEX IF NOT EXISTS idx_scores_game_ts
+  ON scores (game, timestamp DESC);
+
+-- ── Read-cost indexes ─────────────────────────────────────────────────────────
+-- D1 bills per row *read*, so the goal of everything below is to turn full-table
+-- scans into index seeks. Migration (run once on an existing DB): these are all
+-- idempotent, just execute this file again with --remote.
+
+-- One player's best score in a board: seek instead of scanning the whole
+-- game+variant partition. Includes `score` so it never touches the table.
+CREATE INDEX IF NOT EXISTS idx_scores_gvu
+  ON scores (game, variant, user, score);
+
+-- Rank ("how many players beat me"). Carrying `user` alongside `score` is what
+-- makes this work: the planner can seek straight to the better-than-mine slice
+-- and still resolve COUNT(DISTINCT user) from the index. Without `user` it falls
+-- back to scanning the entire partition. Measured on the busiest board: 2 rows
+-- read for a top player and 113 mid-table, against 2523 either way before.
+CREATE INDEX IF NOT EXISTS idx_scores_gvsu
+  ON scores (game, variant, score, user);
+
+-- Global feeds and trending: WHERE is_bot = 0 [AND timestamp >= ?] ORDER BY
+-- timestamp DESC. Leading equality on is_bot means the activity feed reads only
+-- as many rows as it returns, and bot queries read none at all.
+CREATE INDEX IF NOT EXISTS idx_scores_bot_ts
+  ON scores (is_bot, timestamp DESC);
+
+-- Daily-challenge percentile: WHERE game = ? AND is_bot = 0 ORDER BY score.
+-- Lets the OFFSET walk the index instead of sorting the partition.
+CREATE INDEX IF NOT EXISTS idx_scores_game_bot_score
+  ON scores (game, is_bot, score);
+
+-- Retention / new-player cohorts group by device. Covering, so the funnel never
+-- reads the wide table rows.
+CREATE INDEX IF NOT EXISTS idx_scores_iphash
+  ON scores (ip_hash, is_bot, timestamp);
+
 -- ── Visitor tracking ──────────────────────────────────────────────────────────
 -- Migration (run once on existing DB):
 --   CREATE TABLE IF NOT EXISTS visits (ip_hash TEXT NOT NULL, timestamp INTEGER NOT NULL);
@@ -78,6 +118,11 @@ CREATE TABLE IF NOT EXISTS api_errors (
 CREATE INDEX IF NOT EXISTS idx_errors_ts   ON api_errors (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_errors_game ON api_errors (game, timestamp DESC);
 
+-- Dashboard breakdown (WHERE timestamp > ? GROUP BY game, error_code): covering,
+-- and the leading timestamp keeps the scan inside the window.
+CREATE INDEX IF NOT EXISTS idx_errors_ts_game_code
+  ON api_errors (timestamp, game, error_code);
+
 -- ── Game launches ─────────────────────────────────────────────────────────────
 -- A row per app open (fire-and-forget POST /launch from the shared lib's
 -- App.onStart). Lets us see which games are actually being played, even when a
@@ -97,6 +142,15 @@ CREATE TABLE IF NOT EXISTS launches (
 
 CREATE INDEX IF NOT EXISTS idx_launches_game ON launches (game, timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_launches_ts   ON launches (timestamp DESC);
+
+-- Country breakdown on the dashboard (GROUP BY country). Covering, so it reads
+-- the narrow index rather than every launch row.
+CREATE INDEX IF NOT EXISTS idx_launches_country ON launches (country, ip_hash);
+
+-- Windowed per-game breakdown (WHERE timestamp > ? GROUP BY game): the leading
+-- timestamp restricts the scan to the window, and game/ip_hash ride along so the
+-- aggregate stays index-only.
+CREATE INDEX IF NOT EXISTS idx_launches_ts_game ON launches (timestamp, game, ip_hash);
 
 -- ── Season snapshots ──────────────────────────────────────────────────────────
 -- One row per season/reset. Saved automatically by reset-stats.sh before wiping
@@ -230,4 +284,18 @@ CREATE TABLE IF NOT EXISTS ciq_cache (
   app_id     TEXT PRIMARY KEY,     -- Connect IQ app UUID
   data       TEXT NOT NULL,        -- slim JSON payload returned to the site
   fetched_at INTEGER NOT NULL      -- unix seconds of last successful upstream fetch
+);
+
+-- ── Aggregate cache ───────────────────────────────────────────────────────────
+-- Memoises query results that are identical for every caller but expensive to
+-- compute: the dashboard aggregates (COUNT(DISTINCT …), GROUP BY country,
+-- retention cohorts) have to touch every row of `scores`/`launches`, and D1 bills
+-- per row read. A cache hit is a single primary-key lookup, which is what keeps
+-- the whole API inside the free plan's daily read budget. Every entry carries its
+-- own expiry, and expired rows are pruned opportunistically on write.
+-- Migration (run once on existing DB): the CREATE TABLE below is idempotent.
+CREATE TABLE IF NOT EXISTS agg_cache (
+  k   TEXT PRIMARY KEY,     -- cache key, e.g. "stats:1" or "daily:2026-07-28:mines"
+  v   TEXT NOT NULL,        -- JSON payload
+  exp INTEGER NOT NULL      -- unix seconds after which the entry is stale
 );
