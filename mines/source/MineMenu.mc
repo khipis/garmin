@@ -97,7 +97,7 @@ function buildMineMenu() as Lang.Array {
         :bg      => Mn.BG,
         :circle  => Mn.CIRCLE,
         :accent  => Mn.ACCENT,
-        :lbTitle => "BITOCHI MINES",
+        :lbTitle => "MINES",
         :hooks   => new MineHooks(),
         :options => [
             new GmOption("mn_fx", "Sound & Haptics", ["ON", "OFF"], 0)

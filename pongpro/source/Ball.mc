@@ -23,13 +23,22 @@ class Ball {
     var maxSpeed;   // cap on |vx| so paddles can keep up
     var wallBounced; // true for the tick the ball bounced off top/bottom wall (FX cue)
 
+    // Previous two positions — drawn as a shrinking trail so a fast ball
+    // reads as a streak instead of a single-frame speck.
+    hidden var _t1x;
+    hidden var _t1y;
+    hidden var _t2x;
+    hidden var _t2y;
+
     function initialize() {
         x = 0; y = 0; vx = 0.0; vy = 0.0; size = 6; maxSpeed = 6.0;
         wallBounced = false;
+        _t1x = 0; _t1y = 0; _t2x = 0; _t2y = 0;
     }
 
     function reset(cx, cy, baseSpd, toLeft) {
         x  = cx; y  = cy;
+        _t1x = cx; _t1y = cy; _t2x = cx; _t2y = cy;
         // Random starting angle within ±35° of horizontal.
         var ang = (Math.rand() % 70) - 35;          // degrees
         // Cheap sin/cos via Toybox.Math.
@@ -57,6 +66,7 @@ class Ball {
         if (vy > -0.6 && vy < 0.6) { vy = (src.vx >= 0) ? 1.4 : -1.4; }
         size = src.size;
         maxSpeed = src.maxSpeed;
+        _t1x = x; _t1y = y; _t2x = x; _t2y = y;
     }
 
     // 0..1 — how close the ball is to its speed cap. Drives the colour
@@ -75,6 +85,8 @@ class Ball {
     //   -1 ball passed the LEFT wall (right player scored)
     //   +1 ball passed the RIGHT wall (left player scored)
     function step(playX0, playY0, playX1, playY1) {
+        _t2x = _t1x; _t2y = _t1y;
+        _t1x = x;    _t1y = y;
         x = x + vx;
         y = y + vy;
         wallBounced = false;
@@ -143,13 +155,22 @@ class Ball {
         var cR = (0x00 + (0xFF - 0x00) * r).toNumber();
         var cG = (0xEE + (0x22 - 0xEE) * r).toNumber();
         var cB = (0xFF + (0xAA - 0xFF) * r).toNumber();
-        var body  = (cR << 16) | (cG << 8) | cB;
-        var glow  = ((cR / 4).toNumber() << 16) | ((cG / 4).toNumber() << 8) | ((cB / 3).toNumber());
-        // Glow halo
-        dc.setColor(glow, Graphics.COLOR_TRANSPARENT);
+        var halo = (cR << 16) | (cG << 8) | cB;
+
+        // Trail behind the ball. Pure white so it survives 1-bit palettes
+        // (Instinct), where every mid-tone collapses to one of two inks.
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        var t1 = size - 2; if (t1 < 2) { t1 = 2; }
+        dc.fillRectangle(_t1x - t1 / 2, _t1y - t1 / 2, t1, t1);
+        var t2 = size - 4; if (t2 < 1) { t2 = 1; }
+        dc.fillRectangle(_t2x - t2 / 2, _t2y - t2 / 2, t2, t2);
+
+        // Speed halo, then a white core. Both inks are bright, so on
+        // monochrome screens the ball stays a solid lit block instead of a
+        // mid-tone that can quantise into the background.
+        dc.setColor(halo, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x - h - 1, y - h - 1, size + 2, size + 2);
-        // Body
-        dc.setColor(body, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x - h, y - h, size, size);
     }
 }

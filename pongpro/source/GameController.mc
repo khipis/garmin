@@ -75,6 +75,7 @@ class GameController {
     var paddleW;
     var paddleH;
     var ballSz;
+    hidden var _spdScale;   // court-width pace multiplier (see setScreen)
 
     // Pacing
     var serveCounter;  // ticks until ball launches
@@ -103,7 +104,8 @@ class GameController {
         hiPlayerWins = _loadStat();
         screenW = 240; screenH = 240;
         playX0 = 0; playY0 = 0; playX1 = 0; playY1 = 0;
-        paddleW = 4; paddleH = 30; ballSz = 6;
+        paddleW = 4; paddleH = 30; ballSz = 7;
+        _spdScale = 1.0;
         serveCounter = 0; serveDelay = 24;
         difficulty = DIFF_MEDIUM;
         baseBallSpeed = 3.6;
@@ -221,9 +223,19 @@ class GameController {
         paddleW = (w * 2) / 100; if (paddleW < 3)  { paddleW = 3;  }
                                   if (paddleW > 7)  { paddleW = 7;  }
         paddleH = (h * 14) / 100; if (paddleH < 22) { paddleH = 22; }
-        ballSz  = (w * 3) / 100;  if (ballSz < 5)   { ballSz = 5;   }
-                                  if (ballSz > 9)   { ballSz = 9;   }
+        ballSz  = (w * 4) / 100;  if (ballSz < 7)   { ballSz = 7;   }
+                                  if (ballSz > 10)  { ballSz = 10;  }
         ball.size = ballSz;
+
+        // Ball speed is in px/tick, so a narrow court (Instinct's 176 px
+        // semi-octagon leaves only ~120 px of play) would otherwise be
+        // crossed in half the time of a 240 px round watch — fast enough
+        // that the ball reads as a flicker. Scale pace to court width so
+        // every screen gets the same seconds-per-length.
+        _spdScale = (playX1 - playX0) / 164.0;
+        if (_spdScale < 0.70) { _spdScale = 0.70; }
+        if (_spdScale > 1.25) { _spdScale = 1.25; }
+        setDifficulty(difficulty);   // re-derive speeds at the new scale
 
         pPlayer.setBounds(playX0 + 2, paddleW, paddleH, playY0, playY1);
         pCpu.setBounds(playX1 - 2 - paddleW, paddleW, paddleH, playY0, playY1);
@@ -237,8 +249,8 @@ class GameController {
         difficulty = d;
         ai.setDifficulty(d);
         // Ball gets faster with difficulty too.
-        baseBallSpeed = 3.2 + d * 0.4;
-        ball.maxSpeed = 5.5 + d * 0.6;
+        baseBallSpeed = (3.2 + d * 0.4) * _spdScale;
+        ball.maxSpeed = (5.5 + d * 0.6) * _spdScale;
     }
 
     function cycleDifficulty() {
