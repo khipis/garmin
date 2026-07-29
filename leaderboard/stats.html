@@ -155,6 +155,31 @@
     display: flex; align-items: center; padding-left: 8px;
     min-width: 32px;
   }
+  .cohort-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin: 0 0 18px;
+  }
+  @media (max-width: 700px) { .cohort-grid { grid-template-columns: 1fr; } }
+  .cohort-card {
+    background: #0c1b27; border: 1px solid #1b3447; border-radius: 12px;
+    padding: 14px 16px; position: relative; overflow: hidden;
+  }
+  .cohort-card.d7 { border-color: #18526a; background: #0b2230; }
+  .cohort-day {
+    font-size: .62rem; font-weight: 800; letter-spacing: .12em;
+    text-transform: uppercase; color: #708ca0; margin-bottom: 6px;
+  }
+  .cohort-card.d7 .cohort-day { color: var(--accent); }
+  .cohort-pct { font-size: 1.85rem; font-weight: 850; color: #f3f9fd; line-height: 1; }
+  .cohort-meta { margin-top: 8px; color: #7893a6; font-size: .68rem; line-height: 1.45; }
+  .cohort-bar {
+    margin-top: 10px; height: 4px; border-radius: 99px; background: rgba(255,255,255,.06);
+    overflow: hidden;
+  }
+  .cohort-bar > i {
+    display: block; height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, #34d399, #22d3ee);
+  }
   .funnel-bar-val {
     font-size: .68rem; font-weight: 700; color: #04121a;
     white-space: nowrap;
@@ -617,7 +642,9 @@
 
       <!-- ── Retention ──────────────────────────────────────────────────────── -->
       <div class="sh"><span class="sh-title">📈 Are players coming back?</span><span class="sh-line"></span></div>
-      <div class="section-desc">Of everyone who has ever played — how many returned the next day, after 3 days, after a week? The higher the numbers, the more addictive your games are.</div>
+      <div class="section-desc"><b>Classic cohort</b> (D1 / D3 / D7): of devices whose first score was ≥N days ago, what % also scored on calendar day <b>first+N</b> (UTC). Below that: lifetime stickiness — devices with 2+ / 7+ distinct play-days ever.</div>
+      <div id="cohort-retention" class="cohort-grid"></div>
+      <div class="section-desc" style="margin-top:4px">Lifetime stickiness (distinct calendar days with a score, by device)</div>
       <div id="retention-funnel"></div>
 
       <!-- ── Growth ────────────────────────────────────────────────────────── -->
@@ -938,8 +965,27 @@ function renderStats() {
     <div class="card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Real Scores</div></div>
     <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Active</div></div>`;
 
-  // Retention funnel: 2→3→4→5→6→7 days
-  const base = t.players || 1;
+  // Classic D1/D3/D7 cohort retention (first-play day → score on day+N).
+  const cohortCards = [
+    { day: 'D1', n: 1, retained: t.cohortD1 || 0, eligible: t.cohortD1Eligible || 0, hint: 'scored again next calendar day' },
+    { day: 'D3', n: 3, retained: t.cohortD3 || 0, eligible: t.cohortD3Eligible || 0, hint: 'scored on day first+3' },
+    { day: 'D7', n: 7, retained: t.cohortD7 || 0, eligible: t.cohortD7Eligible || 0, hint: 'scored on day first+7', hi: true },
+  ];
+  document.getElementById('cohort-retention').innerHTML = cohortCards.map(c => {
+    const pct = c.eligible > 0 ? Math.round(c.retained / c.eligible * 1000) / 10 : null;
+    const pctLabel = pct === null ? '—' : (Number.isInteger(pct) ? pct : pct.toFixed(1)) + '%';
+    const barW = pct === null ? 0 : Math.min(100, Math.max(pct, pct > 0 ? 2 : 0));
+    return `<div class="cohort-card${c.hi ? ' d7' : ''}">
+      <div class="cohort-day">${c.day} retention</div>
+      <div class="cohort-pct">${pctLabel}</div>
+      <div class="cohort-meta">${(c.retained||0).toLocaleString()} / ${(c.eligible||0).toLocaleString()} eligible devices<br>${esc(c.hint)}</div>
+      <div class="cohort-bar"><i style="width:${barW}%"></i></div>
+    </div>`;
+  }).join('');
+
+  // Lifetime stickiness funnel: devices with 2→7+ distinct calendar play-days.
+  // Denominator MUST be devices — cohorts are counted by ip_hash, not user.
+  const base = t.devices || t.players || 1;
   const steps = [
     { label: '2+ days', val: t.returning  || 0 },
     { label: '3+ days', val: t.ret3       || 0 },
@@ -1192,9 +1238,12 @@ function updateInsightBar() {
   const el = document.getElementById('insight-bar');
   if (!el || !statsData) return;
   const t = statsData.totals || {};
-  // "returning" = played on 2+ distinct calendar days (NOT next-day retention).
-  const retPct   = t.players > 0 ? Math.round((t.returning || 0) / t.players * 100) : 0;
-  const loyalPct = t.players > 0 ? Math.round((t.loyal     || 0) / t.players * 100) : 0;
+  // Stickiness vs classic cohort D7.
+  const retBase  = t.devices || t.players || 0;
+  const retPct   = retBase > 0 ? Math.round((t.returning || 0) / retBase * 100) : 0;
+  const loyalPct = retBase > 0 ? Math.round((t.loyal     || 0) / retBase * 100) : 0;
+  const d7e = t.cohortD7Eligible || 0;
+  const d7Pct = d7e > 0 ? Math.round((t.cohortD7 || 0) / d7e * 1000) / 10 : null;
   const newP     = t.newPlayers7d || 0;
   const dau      = t.dau30d       || 0;
   const opens7d  = lastLaunch7d.launches || 0;
@@ -1202,12 +1251,15 @@ function updateInsightBar() {
   const depth    = Number(t.avgScoresPerPlayer || 0);
 
   let rating = ''; // business health signal
-  if (loyalPct >= 15) rating = '🟢 Great';
-  else if (retPct >= 30) rating = '🟡 Good';
+  if ((d7Pct !== null && d7Pct >= 10) || loyalPct >= 15) rating = '🟢 Great';
+  else if (retPct >= 20 || (d7Pct !== null && d7Pct >= 5)) rating = '🟡 Good';
   else rating = '🔵 Growing';
 
   el.innerHTML =
     `${rating} — <b>${(t.players||0).toLocaleString()}</b> players across <b>${t.games||0}</b> games &nbsp;·&nbsp; ` +
+    (d7Pct !== null
+      ? `<b>${Number.isInteger(d7Pct) ? d7Pct : d7Pct.toFixed(1)}%</b> D7 cohort &nbsp;·&nbsp; `
+      : '') +
     `<b>${retPct}%</b> multi-day (2+) &nbsp;·&nbsp; ` +
     `<b>${loyalPct}%</b> loyal (7+ days) &nbsp;·&nbsp; ` +
     (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} new this week</span> &nbsp;·&nbsp; ` : '') +
@@ -1221,8 +1273,9 @@ function updateInsightBar() {
 function renderCommandCenter() {
   if (!statsData) return;
   const t = statsData.totals || {};
-  const retPct = t.players ? Math.round((t.returning || 0) / t.players * 100) : 0;
-  const loyalPct = t.players ? Math.round((t.loyal || 0) / t.players * 100) : 0;
+  const retBase = t.devices || t.players || 0;
+  const retPct = retBase ? Math.round((t.returning || 0) / retBase * 100) : 0;
+  const loyalPct = retBase ? Math.round((t.loyal || 0) / retBase * 100) : 0;
   const livePlays = lastHotEntries.reduce((sum, x) => sum + (x.cur || 0), 0);
   const rising = lastHotEntries.filter(x => x.cur >= 2 && (x.vel === null || x.vel >= 1.15));
   const cooling = lastHotEntries.filter(x => x.prev > 0 && x.vel !== null && x.vel < .7);
@@ -1277,11 +1330,16 @@ function renderCommandCenter() {
   const lifeOpens = t.lifetimePlayers || lastLaunchTotals.players || 0;
   const convPct = lifeOpens > 0 ? Math.round((scorePlayers / lifeOpens) * 100) : 0;
 
+  const d7eKpi = t.cohortD7Eligible || 0;
+  const d7PctKpi = d7eKpi > 0 ? Math.round((t.cohortD7 || 0) / d7eKpi * 1000) / 10 : null;
+  const d7Label = d7PctKpi === null ? '—'
+    : ((Number.isInteger(d7PctKpi) ? d7PctKpi : d7PctKpi.toFixed(1)) + '%');
+
   document.getElementById('kpi-strip').innerHTML = `
     <div class="kpi-cell"><div class="kpi-value">${livePlays.toLocaleString()}</div><div class="kpi-label">Plays now</div><div class="kpi-note">selected hot window</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${d7Label}</div><div class="kpi-label">D7 cohort</div><div class="kpi-note">${(t.cohortD7||0).toLocaleString()} / ${d7eKpi.toLocaleString()} eligible</div></div>
     <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Multi-day</div><div class="kpi-note">${(t.returning||0).toLocaleString()} played 2+ days</div></div>
     <div class="kpi-cell"><div class="kpi-value">${avgDepth.toFixed(1)}×</div><div class="kpi-label">Play depth</div><div class="kpi-note">scores per player</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${challengeDone.toLocaleString()}</div><div class="kpi-label">Challenges done</div><div class="kpi-note">today · ${DAILY_TRACKED_GAMES.length} tracked</div></div>
     <div class="kpi-cell"><div class="kpi-value">${opens24.toLocaleString()}</div><div class="kpi-label">Opens / 24h</div><div class="kpi-note">${opens7d.toLocaleString()} / 7d · ${openPlayers7d.toLocaleString()} devices</div></div>
     <div class="kpi-cell"><div class="kpi-value">${convPct || '—'}%</div><div class="kpi-label">Open→score</div><div class="kpi-note">${scorePlayers.toLocaleString()} scorers / ${(lifeOpens||0).toLocaleString()} openers</div></div>`;
 
@@ -1621,8 +1679,9 @@ function renderSelectedSnapshot() {
   const t   = s.data?.totals || {};
   const top = (s.data?.topGames || []).slice(0, 8);
   const lbl = s.label || `Snapshot #${s.id}`;
-  const pct2 = t.players > 0 ? Math.round((t.returning||0)/t.players*100) : 0;
-  const pct7 = t.players > 0 ? Math.round((t.loyal||0)/t.players*100)     : 0;
+  const retBase = t.devices || t.players || 0;
+  const pct2 = retBase > 0 ? Math.round((t.returning||0)/retBase*100) : 0;
+  const pct7 = retBase > 0 ? Math.round((t.loyal||0)/retBase*100)     : 0;
 
   el.innerHTML = `<div class="snap-card">
     <div class="snap-header">

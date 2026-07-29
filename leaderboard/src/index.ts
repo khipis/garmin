@@ -769,6 +769,12 @@ interface StatsPayload {
     returning: number; ret3: number; ret4: number; ret5: number; ret6: number; loyal: number;
     newPlayers7d: number; dau30d: number; avgScoresPerPlayer: number;
     lifetimeGames: number; lifetimePlayers: number; lifetimeLaunches: number;
+    // Classic cohort retention (device = ip_hash): share of eligible first-plays
+    // that also scored on calendar day first+N. Eligible = first day old enough
+    // that day+N has already elapsed (UTC).
+    cohortD1Eligible: number; cohortD1: number;
+    cohortD3Eligible: number; cohortD3: number;
+    cohortD7Eligible: number; cohortD7: number;
   };
   perGame: StatsPerGame[];
   perCountry: StatsPerCountry[];
@@ -789,7 +795,10 @@ async function computeStats(env: Env): Promise<StatsPayload> {
     games: 0, scores: 0, players: 0, devices: 0,
     returning: 0, ret3: 0, ret4: 0, ret5: 0, ret6: 0, loyal: 0,
     newPlayers7d: 0, dau30d: 0, avgScoresPerPlayer: 0,
-    lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
+    lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0,
+    cohortD1Eligible: 0, cohortD1: 0,
+    cohortD3Eligible: 0, cohortD3: 0,
+    cohortD7Eligible: 0, cohortD7: 0,
   };
 
   {
@@ -853,6 +862,48 @@ async function computeStats(env: Env): Promise<StatsPayload> {
       totals.ret5      = funnel.r5;
       totals.ret6      = funnel.r6;
       totals.loyal     = funnel.r7;
+    }
+
+    // Classic D1 / D3 / D7 cohort retention by device (ip_hash).
+    // Day N retained = scored on calendar day (first_play_day + N), UTC.
+    // Eligible for DN = first_play_day ≤ today − N (cohort has matured).
+    const cohort = await env.DB
+      .prepare(
+        `WITH firsts AS (
+           SELECT ip_hash, DATE(MIN(timestamp), 'unixepoch') AS first_day
+           FROM scores
+           GROUP BY ip_hash
+         ),
+         flagged AS (
+           SELECT f.ip_hash,
+                  f.first_day,
+                  MAX(CASE WHEN DATE(s.timestamp, 'unixepoch') = date(f.first_day, '+1 day')
+                           THEN 1 ELSE 0 END) AS r1,
+                  MAX(CASE WHEN DATE(s.timestamp, 'unixepoch') = date(f.first_day, '+3 day')
+                           THEN 1 ELSE 0 END) AS r3,
+                  MAX(CASE WHEN DATE(s.timestamp, 'unixepoch') = date(f.first_day, '+7 day')
+                           THEN 1 ELSE 0 END) AS r7
+           FROM firsts f
+           JOIN scores s ON s.ip_hash = f.ip_hash
+           GROUP BY f.ip_hash
+         )
+         SELECT
+           SUM(CASE WHEN first_day <= date('now', '-1 day') THEN 1 ELSE 0 END) AS d1e,
+           SUM(CASE WHEN first_day <= date('now', '-1 day') AND r1 = 1 THEN 1 ELSE 0 END) AS d1r,
+           SUM(CASE WHEN first_day <= date('now', '-3 day') THEN 1 ELSE 0 END) AS d3e,
+           SUM(CASE WHEN first_day <= date('now', '-3 day') AND r3 = 1 THEN 1 ELSE 0 END) AS d3r,
+           SUM(CASE WHEN first_day <= date('now', '-7 day') THEN 1 ELSE 0 END) AS d7e,
+           SUM(CASE WHEN first_day <= date('now', '-7 day') AND r7 = 1 THEN 1 ELSE 0 END) AS d7r
+         FROM flagged`
+      )
+      .first<{ d1e: number; d1r: number; d3e: number; d3r: number; d7e: number; d7r: number }>();
+    if (cohort) {
+      totals.cohortD1Eligible = cohort.d1e || 0;
+      totals.cohortD1         = cohort.d1r || 0;
+      totals.cohortD3Eligible = cohort.d3e || 0;
+      totals.cohortD3         = cohort.d3r || 0;
+      totals.cohortD7Eligible = cohort.d7e || 0;
+      totals.cohortD7         = cohort.d7r || 0;
     }
 
     // New players in the last 7 days (ip_hash whose first score arrived ≤7d ago).
@@ -935,7 +986,8 @@ function wantsFresh(req: Request, url: URL, env: Env): boolean {
 async function handleGetStats(req: Request, url: URL, env: Env): Promise<Response> {
   let payload: StatsPayload;
   try {
-    payload = await cached(env, "stats:1", AGG_TTL_LIFETIME,
+    // stats:2 — includes classic D1/D3/D7 cohort fields (invalidate old payload shape).
+    payload = await cached(env, "stats:2", AGG_TTL_LIFETIME,
       () => computeStats(env), wantsFresh(req, url, env));
   } catch (e) {
     console.error("DB stats error:", e);
