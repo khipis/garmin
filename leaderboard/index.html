@@ -171,12 +171,14 @@
   }
   #ciq-link svg { flex-shrink: 0; }
 
-  /* ── Game selector ────────────────────────────────────────────────── */
+  /* ── Game selector (sticky, always reachable) ─────────────────────── */
   #game-selector-wrap {
-    position: relative; z-index: 1;
-    background: var(--surface);
+    position: sticky; top: 60px; z-index: 90;
+    background: rgba(14, 21, 32, .94);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
-    padding: 12px 0;
+    padding: 10px 0 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
   }
 
   #game-selector-label {
@@ -184,17 +186,55 @@
     text-transform: uppercase; padding: 0 20px 8px;
   }
 
-  #game-scroll {
-    display: flex; gap: 8px;
-    overflow-x: auto; padding: 0 20px 4px;
-    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-    scroll-snap-type: x mandatory;
+  #game-scroll-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 10px;
+    min-width: 0;
   }
-  #game-scroll::-webkit-scrollbar { height: 4px; }
-  #game-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .game-scroll-btn {
+    flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--accent);
+    font-size: 1.25rem; line-height: 1; font-weight: 700;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, opacity .15s, color .15s;
+  }
+  .game-scroll-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(0,212,255,.12);
+  }
+  .game-scroll-btn:disabled {
+    opacity: .28; cursor: default; color: var(--muted);
+  }
+
+  #game-scroll {
+    flex: 1; min-width: 0;
+    display: flex; gap: 8px;
+    overflow-x: auto; overflow-y: hidden;
+    padding: 4px 4px 8px;
+    scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    /* Soft edge fades so it's obvious there's more to scroll */
+    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  }
+  #game-scroll.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+  #game-scroll::-webkit-scrollbar { height: 6px; }
+  #game-scroll::-webkit-scrollbar-track { background: transparent; }
+  #game-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,212,255,.45); border-radius: 6px;
+  }
+  #game-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
   .game-chip {
-    flex-shrink: 0; scroll-snap-align: start;
+    flex-shrink: 0;
     padding: 7px 16px; border-radius: 999px;
     border: 1px solid var(--border);
     background: transparent;
@@ -202,6 +242,7 @@
     letter-spacing: .04em; text-transform: uppercase;
     cursor: pointer; white-space: nowrap;
     transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
+    touch-action: manipulation;
   }
   .game-chip:hover {
     border-color: var(--accent);
@@ -213,6 +254,11 @@
     border-color: var(--accent);
     color: #fff;
     box-shadow: 0 0 18px rgba(0,212,255,.3);
+  }
+
+  @media (max-width: 560px) {
+    .game-scroll-btn { width: 30px; height: 30px; font-size: 1.1rem; }
+    #game-scroll-row { padding: 0 6px; gap: 4px; }
   }
 
   /* ── Main content ─────────────────────────────────────────────────── */
@@ -1128,6 +1174,16 @@
 <!-- ── Rankings view ───────────────────────────────────────────────────────── -->
 <div id="view-rankings">
 
+<!-- ── Game selector (sticky under header — always reachable) ──────────────── -->
+<div id="game-selector-wrap">
+  <div id="game-selector-label">Select game</div>
+  <div id="game-scroll-row">
+    <button type="button" class="game-scroll-btn" id="game-scroll-prev" aria-label="Scroll games left">‹</button>
+    <div id="game-scroll" role="listbox" aria-label="Games"></div>
+    <button type="button" class="game-scroll-btn" id="game-scroll-next" aria-label="Scroll games right">›</button>
+  </div>
+</div>
+
 <!-- ── Hero banner ─────────────────────────────────────────────────────────── -->
 <div id="hero">
   <img id="hero-img" src="" alt="" loading="eager">
@@ -1158,12 +1214,6 @@
     </div>
     <button id="fd-play-btn" class="fd-play-btn">Play now →</button>
   </div>
-</div>
-
-<!-- ── Game selector ───────────────────────────────────────────────────────── -->
-<div id="game-selector-wrap">
-  <div id="game-selector-label">Select game</div>
-  <div id="game-scroll"></div>
 </div>
 
 <!-- ── Variant selector ─────────────────────────────────────────────────────── -->
@@ -2060,21 +2110,92 @@ function buildGameChips(list = GAMES) {
   gameScroll.innerHTML = '';
   list.forEach(g => {
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.className   = `game-chip${currentGame === g.id ? ' active' : ''}`;
     btn.dataset.id  = g.id;
     btn.textContent = g.label;
-    btn.onclick     = () => selectGame(g);
+    btn.setAttribute('role', 'option');
+    btn.setAttribute('aria-selected', currentGame === g.id ? 'true' : 'false');
+    btn.onclick     = () => {
+      if (gameScroll._didDrag) { gameScroll._didDrag = false; return; }
+      selectGame(g);
+    };
     gameScroll.appendChild(btn);
   });
+  updateGameScrollButtons();
+}
+
+function centerGameChip(chip) {
+  if (!chip || !gameScroll) return;
+  const left = chip.offsetLeft - (gameScroll.clientWidth - chip.offsetWidth) / 2;
+  gameScroll.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+}
+
+function updateGameScrollButtons() {
+  const prev = document.getElementById('game-scroll-prev');
+  const next = document.getElementById('game-scroll-next');
+  if (!prev || !next || !gameScroll) return;
+  const max = Math.max(0, gameScroll.scrollWidth - gameScroll.clientWidth);
+  const x = gameScroll.scrollLeft;
+  prev.disabled = x <= 2;
+  next.disabled = x >= max - 2;
 }
 
 function initGameDiscovery() {
-  // Mouse-wheel → horizontal scroll on the game strip
+  const prev = document.getElementById('game-scroll-prev');
+  const next = document.getElementById('game-scroll-next');
+  const step = () => Math.max(180, Math.floor(gameScroll.clientWidth * 0.7));
+
+  prev?.addEventListener('click', () => {
+    gameScroll.scrollBy({ left: -step(), behavior: 'smooth' });
+  });
+  next?.addEventListener('click', () => {
+    gameScroll.scrollBy({ left: step(), behavior: 'smooth' });
+  });
+
+  // Wheel / trackpad → always move the strip when the pointer is over it
   gameScroll.addEventListener('wheel', e => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // already horizontal (trackpad)
+    const max = gameScroll.scrollWidth - gameScroll.clientWidth;
+    if (max <= 0) return;
+    const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (!dx) return;
+    const atStart = gameScroll.scrollLeft <= 0 && dx < 0;
+    const atEnd   = gameScroll.scrollLeft >= max - 1 && dx > 0;
+    if (atStart || atEnd) return; // let page scroll when strip is done
     e.preventDefault();
-    gameScroll.scrollBy({ left: e.deltaY * 2, behavior: 'auto' });
+    gameScroll.scrollLeft += dx;
+    updateGameScrollButtons();
   }, { passive: false });
+
+  // Click-drag to scroll (desktop) — touch keeps native momentum scrolling
+  let drag = null;
+  gameScroll.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') return;
+    if (e.button !== 0) return;
+    drag = { id: e.pointerId, x: e.clientX, left: gameScroll.scrollLeft, moved: false };
+    gameScroll.classList.add('is-dragging');
+    try { gameScroll.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  gameScroll.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) < 4) return;
+    drag.moved = true;
+    gameScroll._didDrag = true;
+    gameScroll.scrollLeft = drag.left - dx;
+    updateGameScrollButtons();
+  });
+  const endDrag = e => {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    gameScroll.classList.remove('is-dragging');
+    drag = null;
+  };
+  gameScroll.addEventListener('pointerup', endDrag);
+  gameScroll.addEventListener('pointercancel', endDrag);
+  gameScroll.addEventListener('lostpointercapture', endDrag);
+
+  gameScroll.addEventListener('scroll', updateGameScrollButtons, { passive: true });
+  window.addEventListener('resize', updateGameScrollButtons);
 
   buildGameChips();
 }
@@ -2097,8 +2218,11 @@ function selectGame(g, pushState = true) {
     history.pushState({ game: g.id, variant: '' }, '', u);
   }
 
-  document.querySelectorAll('.game-chip').forEach(c =>
-    c.classList.toggle('active', c.dataset.id === g.id));
+  document.querySelectorAll('.game-chip').forEach(c => {
+    const on = c.dataset.id === g.id;
+    c.classList.toggle('active', on);
+    c.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
 
   heroImg.classList.remove('loaded');
   heroImg.onload  = () => heroImg.classList.add('loaded');
@@ -2116,7 +2240,7 @@ function selectGame(g, pushState = true) {
   loadStorePreview(g);
 
   const chip = document.querySelector(`.game-chip[data-id="${g.id}"]`);
-  if (chip) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  if (chip) centerGameChip(chip);
 
   // Clear variant bar while we fetch
   variantWrap.style.display = 'none';
