@@ -42,10 +42,15 @@ class PetsHooks extends GameHooks {
     // Single global quality board (no per-variant split on the front row).
     function lbVariant() as Lang.String { return ""; }
 
-    // Footer: the current creature's name, if one is being raised.
+    // Footer: the fresh-content banner for the first two weeks after the update,
+    // then back to the current creature's name.
     function footerText() as Lang.String or Null {
         var pet = gPet;
-        if (pet != null && pet.isCreated && pet.petName != null) {
+        if (pet == null) { return null; }
+        try {
+            if (pet.newDropActive()) { return "NEW PETS+GAME"; }
+        } catch (e) {}
+        if (pet.isCreated && pet.petName != null) {
             return pet.petName;
         }
         return null;

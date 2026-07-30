@@ -420,6 +420,21 @@ class MainView extends WatchUi.View {
             if (severity >= 3) { return "USER: DISCONNECTED"; }
             return "IDLE: TIMEOUT WARN";
         }
+        if (t == TYPE_DISKOO) {
+            if (severity >= 3) { return "LIGHTS OUT... FOREVER?"; }
+            if (severity >= 2) { return "Empty dancefloor :("; }
+            return "*spins alone*";
+        }
+        if (t == TYPE_BANANZO) {
+            if (severity >= 3) { return "I'M FULLY BROWN!!"; }
+            if (severity >= 2) { return "SPOTS EVERYWHERE!"; }
+            return "*ripening fast*";
+        }
+        if (t == TYPE_KEBSON) {
+            if (severity >= 3) { return "ZIMNY JAK LOD!"; }
+            if (severity >= 2) { return "No gdzie ten sos?!"; }
+            return "Stygne, szefu...";
+        }
         if (severity >= 3) { return "I NEED YOU!"; }
         if (severity >= 2) { return "Please come back!"; }
         return "Missing you...";

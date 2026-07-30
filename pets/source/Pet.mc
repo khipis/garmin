@@ -5,6 +5,9 @@ using Toybox.Graphics;
 using Toybox.ActivityMonitor;
 using Toybox.System;
 
+// New species are always appended here: the saved pet stores this raw index,
+// so re-ordering the enum would turn every existing creature into a different
+// animal. Carousel order is decoupled via typeAtIndex().
 enum {
     TYPE_BLOBBY, TYPE_FLAMEY, TYPE_AQUA, TYPE_ROCKY,
     TYPE_GHOSTY, TYPE_SPARKY, TYPE_FROSTY, TYPE_SHROOMY,
@@ -12,8 +15,13 @@ enum {
     TYPE_POLACCO, TYPE_NOSACZ, TYPE_DONUT, TYPE_CACTUSO, TYPE_PIXELBOT, TYPE_OCTAVIO, TYPE_BATSY, TYPE_NUGGET,
     TYPE_FOCZKA, TYPE_RAINBOW, TYPE_DOGGO, TYPE_UNDEAD,
     TYPE_PHOENIX, TYPE_ANGELO, TYPE_VOIDMOTH,
+    TYPE_DISKOO, TYPE_BANANZO, TYPE_KEBSON,
     TYPE_COUNT
 }
+
+// Newest drop — shown first in the picker and badged "NEW" for two weeks.
+const NEW_TYPE_COUNT = 3;
+const NEW_DROP_SECS = 1209600;
 
 // Karma & minigame unlock goals — kept as named constants so the lock-screen
 // progress text and the unlock checks always agree.
@@ -719,6 +727,30 @@ class Pet {
                 var ua = ["*shambles forward*", "*rattles bones*", "*stares vacantly*", "*moans softly*"];
                 eventText = ua[Math.rand().abs() % ua.size()]; happiness -= 2; return true;
             }
+        } else if (petType == TYPE_DISKOO) {
+            if (mood == :party) {
+                var pa = ["*RAVE MODE ON!!*", "*strobe attack!*", "*confetti cannon!*", "*floor is lava, dance!*"];
+                eventText = pa[Math.rand().abs() % pa.size()]; happiness += 18; energy -= 10; return true;
+            }
+            if (mood == :sugar_high) { eventText = "*140 BPM forever*"; happiness += 14; energy -= 14; return true; }
+            if (mood == :rage) { eventText = "*drops the WORST bass*"; happiness += 6; energy -= 8; return true; }
+            if (mood == :existential) { eventText = "*lights dim slowly...*"; happiness -= 6; return true; }
+            if (mood == :love) { eventText = "*slow dance for two*"; happiness += 10; return true; }
+        } else if (petType == TYPE_BANANZO) {
+            if (mood == :feral) { eventText = "*peels itself, howls*"; energy -= 10; happiness += 8; return true; }
+            if (mood == :sugar_high) { eventText = "*POTASSIUM OVERLOAD*"; happiness += 15; energy -= 12; return true; }
+            if (mood == :rage) { eventText = "*slips, blames you*"; health -= 3; happiness += 5; return true; }
+            if (mood == :paranoid) { eventText = "*hides from smoothie*"; energy -= 5; happiness -= 4; return true; }
+            if (mood == :existential) { eventText = "*browns a little*"; health -= 2; return true; }
+        } else if (petType == TYPE_KEBSON) {
+            if (mood == :party) {
+                var ka = ["*disco polo na cały regulator*", "*stawia kebsa wszystkim*", "*tanczy z folia*"];
+                eventText = ka[Math.rand().abs() % ka.size()]; happiness += 14; energy -= 6; return true;
+            }
+            if (mood == :feral) { eventText = "*atakuje sosem ostrym*"; hunger -= 12; energy -= 6; return true; }
+            if (mood == :rage) { eventText = "GDZIE MOJ SOS?!"; happiness += 6; energy -= 5; return true; }
+            if (mood == :love) { eventText = "*dzieli sie frytkami*"; happiness += 12; return true; }
+            if (mood == :existential) { eventText = "*stygnie powoli...*"; happiness -= 4; return true; }
         }
         return false;
     }
@@ -794,6 +826,24 @@ class Pet {
             if (level >= 3) { return "Time means nothing."; }
             if (level >= 2) { return "You returned. Good."; }
             return "...";
+        }
+        if (petType == TYPE_DISKOO) {
+            if (level >= 4) { return "THE PARTY NEVER STOPPED"; }
+            if (level >= 3) { return "I danced alone. For hours."; }
+            if (level >= 2) { return "DJ, drop it, they're back!"; }
+            return "*strobe of joy*";
+        }
+        if (petType == TYPE_BANANZO) {
+            if (level >= 4) { return "I ALMOST WENT BROWN!"; }
+            if (level >= 3) { return "Two more days = smoothie"; }
+            if (level >= 2) { return "Still ripe. Barely."; }
+            return "*wiggles peel*";
+        }
+        if (petType == TYPE_KEBSON) {
+            if (level >= 4) { return "Wystyglem calkowicie k*rwa"; }
+            if (level >= 3) { return "Sos juz zaschnal..."; }
+            if (level >= 2) { return "No wreszcie, glodny?"; }
+            return "Siema, duzy mieszany?";
         }
         if (level >= 4) { return "YOU'RE BACK!!!"; }
         if (level >= 3) { return "Missed you SO much!"; }
@@ -897,6 +947,9 @@ class Pet {
         if (petType == TYPE_RAINBOW) { return "*rainbow vomit!*"; }
         if (petType == TYPE_DOGGO) { return "*barfs & wags tail*"; }
         if (petType == TYPE_UNDEAD) { return "*rises from barf*"; }
+        if (petType == TYPE_DISKOO) { return "*glitter puke, still dancing*"; }
+        if (petType == TYPE_BANANZO) { return "*banana smoothie. sideways.*"; }
+        if (petType == TYPE_KEBSON) { return "SOS WRACA! *bulgot*"; }
         return "*BLEARGH!*";
     }
 
@@ -925,6 +978,9 @@ class Pet {
         if (petType == TYPE_RAINBOW) { return "*glitter burp~*"; }
         if (petType == TYPE_DOGGO) { return "*happy belch*"; }
         if (petType == TYPE_UNDEAD) { return "...undead dont eat"; }
+        if (petType == TYPE_DISKOO) { return "*food coma disco*"; }
+        if (petType == TYPE_BANANZO) { return "*peel getting tight*"; }
+        if (petType == TYPE_KEBSON) { return "Duzy byl. Za duzy."; }
         return "*urp* ...too full";
     }
 
@@ -1230,6 +1286,9 @@ class Pet {
         else if (petType == TYPE_RAINBOW) { rate = -8; }
         else if (petType == TYPE_DOGGO) { rate = -5; }
         else if (petType == TYPE_UNDEAD) { rate = -15; }
+        else if (petType == TYPE_DISKOO) { rate = -8; }
+        else if (petType == TYPE_BANANZO) { rate = 30; }
+        else if (petType == TYPE_KEBSON) { rate = 12; }
         if (hasTrait(TRAIT_CHEERFUL)) { rate -= 3; }
         if (hasTrait(TRAIT_GRUMPY)) { rate += 5; }
         if (hasTrait(TRAIT_PLAYFUL)) { rate -= 2; }
@@ -2164,7 +2223,40 @@ class Pet {
         if (t == TYPE_PHOENIX) { return "Phoenix"; }
         if (t == TYPE_ANGELO) { return "Angelo"; }
         if (t == TYPE_VOIDMOTH) { return "Voidmoth"; }
+        if (t == TYPE_DISKOO) { return "Diskoo"; }
+        if (t == TYPE_BANANZO) { return "Bananzo"; }
+        if (t == TYPE_KEBSON) { return "Kebson"; }
         return "???";
+    }
+
+    // ===== "NEW" drop (3 species + Bubble Pop) =====
+
+    function isNewType(t) {
+        return t >= TYPE_DISKOO && t < TYPE_COUNT;
+    }
+
+    // The badge is stamped on the first launch after the update and fades two
+    // weeks later, so returning players are not nagged about it forever.
+    function newDropActive() {
+        var seen = Application.Storage.getValue("newDropSeen");
+        var now = Time.now().value();
+        if (seen == null) {
+            Application.Storage.setValue("newDropSeen", now);
+            return true;
+        }
+        var age = now - seen;
+        if (age < 0) {
+            Application.Storage.setValue("newDropSeen", now);
+            return true;
+        }
+        return age < NEW_DROP_SECS;
+    }
+
+    // Carousel position -> species. The freshest arrivals lead, everything else
+    // keeps its historical order.
+    function typeAtIndex(i) {
+        if (i < NEW_TYPE_COUNT) { return TYPE_DISKOO + i; }
+        return i - NEW_TYPE_COUNT;
     }
 
     function getTypeDesc(t) {
@@ -2195,6 +2287,9 @@ class Pet {
         if (t == TYPE_PHOENIX) { return "Reborn from ashes"; }
         if (t == TYPE_ANGELO) { return "Radiant & merciful"; }
         if (t == TYPE_VOIDMOTH) { return "Thrives in darkness"; }
+        if (t == TYPE_DISKOO) { return "24/7 neon party"; }
+        if (t == TYPE_BANANZO) { return "Unhinged & peeled"; }
+        if (t == TYPE_KEBSON) { return "Ostry sos, duza porcja"; }
         return "???";
     }
 
@@ -2301,6 +2396,9 @@ class Pet {
         else if (petType == TYPE_PHOENIX) { r = r; }
         else if (petType == TYPE_ANGELO) { r = r * 6 / 5; }
         else if (petType == TYPE_VOIDMOTH) { r = r * 6 / 5; }
+        else if (petType == TYPE_DISKOO) { r = r * 4 / 5; }
+        else if (petType == TYPE_BANANZO) { r = r * 4 / 5; }
+        else if (petType == TYPE_KEBSON) { r = r * 3 / 2; }
         if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
@@ -2340,6 +2438,9 @@ class Pet {
         else if (petType == TYPE_PHOENIX) { r = r * 6 / 5; }
         else if (petType == TYPE_ANGELO) { r = r * 3 / 2; }
         else if (petType == TYPE_VOIDMOTH) { r = r; }
+        else if (petType == TYPE_DISKOO) { r = r * 2 / 3; }
+        else if (petType == TYPE_BANANZO) { r = r * 3 / 4; }
+        else if (petType == TYPE_KEBSON) { r = r * 6 / 5; }
         if (petType == TYPE_UNDEAD) { return r; }
         if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 3 / 4; }
@@ -2381,6 +2482,9 @@ class Pet {
         else if (petType == TYPE_PHOENIX) { r = r * 4 / 5; }
         else if (petType == TYPE_ANGELO) { r = r * 6 / 5; }
         else if (petType == TYPE_VOIDMOTH) { r = r; }
+        else if (petType == TYPE_DISKOO) { r = r * 2 / 3; }
+        else if (petType == TYPE_BANANZO) { r = r * 3 / 4; }
+        else if (petType == TYPE_KEBSON) { r = r * 7 / 5; }
         if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
@@ -3136,6 +3240,21 @@ class Pet {
             suggestedAction = 1;
             return t[Math.rand().abs() % t.size()];
         }
+        if (petType == TYPE_DISKOO) {
+            var t = ["DANCE-OFF? NOW?", "*starts music without asking*", "Game! With lights!", "The floor is waiting!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_BANANZO) {
+            var t = ["PLAY BEFORE I RIPEN!", "*bounces off walls*", "Game! Fast! FASTER!", "Bored bananas go brown!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_KEBSON) {
+            var t = ["Zagramy, szefu?", "Nudy jak w kolejce po kebsa", "Gra? Stawiam sos.", "No dawaj, jedna gierka"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
         var t = ["Play with me?", "Game time?", "Let's play!", "Wanna play?", "Play pleeease!", "I'm bored..."];
         suggestedAction = 1;
         return t[Math.rand().abs() % t.size()];
@@ -3238,6 +3357,24 @@ class Pet {
             if (nl >= 4) { var t = ["WHERE R U B*TCH?!", "*destroys the room*", "Come. Back. NOW.", "I will END things."]; return t[Math.rand().abs() % t.size()]; }
             if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["WHERE THE F*CK?!", "*smashes stuff*", "Come back. Or ELSE.", "My rage is BUILDING."]; return t[Math.rand().abs() % t.size()]; }
             if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["...where r u.", "*simmers in hate*", "This is YOUR fault.", "My anger grows."]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
+        if (petType == TYPE_DISKOO) {
+            if (nl >= 4) { var t = ["Lights out. All of them.", "*last confetti falls*", "Empty dancefloor...", "The music stopped."]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["Nobody's dancing...", "*strobe flickers sadly*", "Party of one again."]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["DJ needs a crowd!", "*spins slowly*", "One dance? Anyone?"]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
+        if (petType == TYPE_BANANZO) {
+            if (nl >= 4) { var t = ["I AM ENTIRELY BROWN", "*fruit flies arrive*", "Smoothie time... for me.", "Overripe & abandoned"]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["Spots! I HAVE SPOTS!", "*softening rapidly*", "Peel is going dark..."]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["Bananas expire, you know!", "*nervous curve*", "Clock's ticking, chief."]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
+        if (petType == TYPE_KEBSON) {
+            if (nl >= 4) { var t = ["Zimny kebs. Najgorsze.", "Sos zaschnal na kamien", "Nikt mnie nie zjadl...", "Folia to moj jedyny druh"]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["Stygne tu k*rwa", "Halo, szefu?", "Mieso sie nudzi"]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["Jest tam kto?", "Sos czeka...", "No chodz, zimno mi"]; return t[Math.rand().abs() % t.size()]; }
             return null;
         }
         if (nl >= 4) {
@@ -3460,6 +3597,9 @@ class Pet {
         else if (petType == TYPE_FOCZKA) { t = ["Arf!", "*flop*", "Fish?", "*claps*", "Splash~", "*belly flop*", "Throw me a ball!", "*wiggles*", "Arf arf arf!", "*balances fish on nose*", "I am a professional flopper.", "ARF = love language.", "*spins on ice*", "Belly rubs: ALWAYS YES.", "The beach is home.", "*claps for no reason*"]; }
         else if (petType == TYPE_DOGGO) { t = ["WOOF!", "*tail wag*", "Ball?!", "*zoomies*", "Bork!", "WALKIES?!", "*spins*", "Squirrel!", "I LOVE YOU!", "*sniffs everything*", "WHO IS GOOD BOY?! ME!", "BEST DAY EVER. AGAIN.", "*digs inappropriate hole*", "Your face smells so good!", "I waited FOREVER (3 minutes).", "THE MAILMAN IS MY NEMESIS.", "*destroys sock out of pure love*", "You came back!!! You ALWAYS come back!!"]; }
         else if (petType == TYPE_UNDEAD) { t = ["...", "*exists*", "Still here.", "*rattles*", "Uuugh...", "Cold.", "Forever.", "*stares*", "Brains?", "Death is fine.", "Eternity is... fine.", "*decomposes slightly*", "I've seen empires fall.", "The living confuse me.", "Sleep is for the living.", "*drops a rib accidentally*"]; }
+        else if (petType == TYPE_DISKOO) { t = ["BASS DROP!", "*spins violently*", "Lights! LIGHTS!", "Is this floor sticky?", "Never sober. Never tired.", "*blinds a small room*", "Sleep is for Tuesdays.", "I AM the light show.", "One more song. Always one more.", "*confetti out of nowhere*", "My BPM is 140. Always.", "Somebody call the neighbours!", "*disco ball intensifies*", "Boogie or begone!", "I refract, therefore I party.", "Do you hear that? EXACTLY."]; }
+        else if (petType == TYPE_BANANZO) { t = ["BANANA!!!", "*peels self, screams*", "Potassium is POWER!", "I'm 90% water & rage.", "*slips on own peel*", "Do NOT bruise me.", "I went ripe 3 days ago.", "Yellow is a personality.", "*curves menacingly*", "Someone put me in a smoothie. I bit back.", "Fruit? I'm a lifestyle.", "AAAA! ...sorry. Sugar.", "*vibrates at banana frequency*", "Monkeys fear me now.", "Peel me and we fight."]; }
+        else if (petType == TYPE_KEBSON) { t = ["Z baranka czy z kurczaka?", "OSTRY! Zawsze ostry!", "*kapie sos*", "3 nad ranem to moja pora", "Bez kapusty, prosze.", "Duzy. Zawsze duzy.", "Mieszany? Ty decydujesz.", "*zapach na caly zegarek*", "Frytki w srodku? Legalne.", "Kebs to nie jedzenie. To styl.", "Sos czosnkowy = milosc", "Byl 15zl. Bylo lepiej.", "*owija sie w folie*", "Nie pytaj co jest w miesie.", "Na cieplo czy na zimno? CIEPLO."]; }
         else { t = ["Sparkle!", "*glows*", "Rainbow~", "Shine!", "Colors!", "DOUBLE RAINBOW!", "I am LIGHT!", "Glitter bomb~", "Love & sparkles!", "Roy G Biv is my spirit animal.", "Every color is valid!", "*leaves glitter trail*", "I am visible from space.", "Chromatic excellence!", "*vibing in spectrum*"]; }
         return t[Math.rand().abs() % t.size()];
     }
@@ -3551,6 +3691,27 @@ class Pet {
             if (steps >= 10000) { return "Even rocks move eventually."; }
             if (steps >= 5000) { return "Solid footwork."; }
             if (steps < 500) { return "I respect the stillness."; }
+            return null;
+        }
+        if (petType == TYPE_DISKOO) {
+            if (steps >= 20000) { return "That's a 5-hour set, legend!"; }
+            if (steps >= 10000) { return "You danced 10k! RESPECT!"; }
+            if (steps >= 5000) { return "Warm-up set complete~"; }
+            if (steps < 500) { return "The floor is EMPTY today."; }
+            return null;
+        }
+        if (petType == TYPE_BANANZO) {
+            if (steps >= 20000) { return "POTASSIUM! You need me!"; }
+            if (steps >= 10000) { return "Eat a banana. Not me though."; }
+            if (steps >= 5000) { return "Nice legs. I have none."; }
+            if (steps < 500) { return "We're both just ripening here."; }
+            return null;
+        }
+        if (petType == TYPE_KEBSON) {
+            if (steps >= 20000) { return "Zasluzyles na duzego!"; }
+            if (steps >= 10000) { return "10k? Kebs zasluzony k*rwa"; }
+            if (steps >= 5000) { return "Jeszcze 5k i stawiam sos"; }
+            if (steps < 500) { return "Kanapa i kebs. Rozumiem."; }
             return null;
         }
         var t;
@@ -3847,6 +4008,9 @@ class Pet {
         else if (type == TYPE_PHOENIX) { b = bodyPhoenix(); }
         else if (type == TYPE_ANGELO) { b = bodyAngelo(); }
         else if (type == TYPE_VOIDMOTH) { b = bodyVoidmoth(); }
+        else if (type == TYPE_DISKOO) { b = bodyDiskoo(); }
+        else if (type == TYPE_BANANZO) { b = bodyBananzo(); }
+        else if (type == TYPE_KEBSON) { b = bodyKebson(); }
         else { b = bodyRainbow(); }
         if (type == petType) { _bodyCache = b; _bodyCacheType = type; }
         return b;
@@ -3881,6 +4045,9 @@ class Pet {
         else if (type == TYPE_PHOENIX) { base = [0x7A1200, 0xFF6600, 0xFFDD55, 0xFF1744]; }
         else if (type == TYPE_ANGELO) { base = [0xB8860B, 0xFFFFFF, 0xFFF8DC, 0xFFD700]; }
         else if (type == TYPE_VOIDMOTH) { base = [0x1A0B2E, 0x4A2C6D, 0xB39DDB, 0x76FF03]; }
+        else if (type == TYPE_DISKOO) { base = [0x2B1B4D, 0xFF2FD0, 0x00E5FF, 0xFFE24A]; }
+        else if (type == TYPE_BANANZO) { base = [0x7A5200, 0xFFE23A, 0xFFF7A0, 0xFF3D9E]; }
+        else if (type == TYPE_KEBSON) { base = [0xA9702A, 0xF0C070, 0x2ECC40, 0xFF3B30]; }
         else { base = [0x1B5E20, 0x388E3C, 0x66BB6A, 0xA5D6A7]; }
         if (paletteIdx > 0 && type == petType) { base = applyPalette(base, paletteIdx); }
         return base;
@@ -4155,4 +4322,34 @@ class Pet {
         3,2,2,4,4,2,2,4,4,2,2,3, 1,2,2,2,2,2,2,2,2,2,2,1,
         0,1,2,2,2,2,2,2,2,2,1,0, 0,0,1,2,2,2,2,2,2,1,0,0,
         0,0,0,1,1,1,1,1,1,0,0,0, 0,0,0,0,1,1,1,1,0,0,0,0]; }
+
+    // Mirror-ball gremlin — magenta/cyan facets, gold sparks above, confetti
+    // and two stubby dancing legs below.
+    hidden function bodyDiskoo() { return [
+        0,0,0,0,4,0,0,4,0,0,0,0, 0,0,0,1,1,1,1,1,1,0,0,0,
+        0,0,1,3,2,3,2,3,2,1,0,0, 0,1,3,2,3,2,3,2,3,2,1,0,
+        1,3,2,3,2,3,2,3,2,3,2,1, 1,2,3,2,3,2,3,2,3,2,3,1,
+        1,3,2,3,2,3,2,3,2,3,2,1, 0,1,3,2,3,2,3,2,3,2,1,0,
+        0,0,1,3,2,3,2,3,2,1,0,0, 0,0,0,1,1,1,1,1,1,0,0,0,
+        0,0,4,0,0,4,4,0,0,4,0,0, 0,0,0,0,1,0,0,1,0,0,0,0]; }
+
+    // Overripe banana that never calmed down — brown stem on top, bright peel,
+    // pink energy sparks flying off the sides.
+    hidden function bodyBananzo() { return [
+        0,0,0,0,0,1,1,0,0,0,0,0, 0,0,0,0,1,2,2,1,0,0,0,0,
+        0,0,0,1,1,2,2,1,1,0,0,0, 0,0,1,2,2,2,2,2,2,1,0,0,
+        0,1,2,3,2,2,2,2,3,2,1,0, 1,2,3,2,2,2,2,2,2,3,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,1, 1,2,2,2,2,2,2,2,2,2,2,1,
+        0,1,2,2,2,2,2,2,2,2,1,0, 0,0,1,2,2,2,2,2,2,1,0,0,
+        0,4,0,1,1,1,1,1,1,0,4,0, 0,0,0,0,1,0,0,1,0,0,0,0]; }
+
+    // Kebab in a pita — salad sticking out of the top, chunks of meat, and
+    // two proud drops of hot sauce underneath.
+    hidden function bodyKebson() { return [
+        0,0,0,3,0,0,0,0,3,0,0,0, 0,0,3,4,3,0,0,3,4,3,0,0,
+        0,1,1,1,1,1,1,1,1,1,1,0, 1,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,4,2,2,3,3,2,2,4,2,1, 1,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,3,2,2,2,2,3,2,2,1, 1,2,2,2,2,4,4,2,2,2,2,1,
+        0,1,2,2,2,2,2,2,2,2,1,0, 0,0,1,2,2,2,2,2,2,1,0,0,
+        0,0,0,1,1,1,1,1,1,0,0,0, 0,0,0,0,4,0,0,4,0,0,0,0]; }
 }

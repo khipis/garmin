@@ -11,7 +11,9 @@ Virtual pet game for Garmin smartwatches.
 
 ## Features
 
-- Multiple pet types with unique appearances
+- 30 pet types with unique appearances, palettes and personalities
+- Newest arrivals — **Diskoo**, **Bananzo**, **Kebson** — lead the picker and carry a
+  NEW badge for 14 days after the update
 - Unlockable pets: Undead (unlock by losing a pet) and Dzikko (unlock by overfeeding)
 - Pet lifecycle: aging, hunger, happiness, health
 - Persistent pet state saved between sessions
@@ -20,6 +22,10 @@ Virtual pet game for Garmin smartwatches.
   - **React** — reaction time challenge
   - **Rush** — speed tapping game
   - **Dodge** — obstacle avoidance
+  - **Comet Catch** — catch falling comets (unlocks Voidmoth)
+  - **Peekaboo** — boop the burrow your pet pops out of
+  - **Balance** — keep your pet on the tightrope
+  - **Bubble Pop** — burst rising bubbles inside the glowing band
 
 ## Controls
 

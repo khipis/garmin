@@ -272,7 +272,7 @@ Każdy stworek ma 2 losowe cechy (nie mogą być sprzeczne):
 
 ---
 
-## Stworki (24 typy)
+## Stworki (30 typów)
 
 | Typ | Opis | Unikalna cecha |
 |-----|------|---------------|
@@ -300,16 +300,29 @@ Każdy stworek ma 2 losowe cechy (nie mogą być sprzeczne):
 | **Rainbow** | Tęczowy słodziaczek | Czysta radość, hugStress -8, sparkle |
 | **Doggo** | Szalony wesołek — pies | Zawsze szczęśliwy (wolny spadek happiness ×6/5), lojalny, bork! |
 | **Undead** | Nieśmiertelny nieumarły | Nie można zabić, nie potrzebuje nic, zdrowie min=5, isSick=false |
+| **Phoenix** | Ognisty ptak | Jednorazowe odrodzenie z popiołów |
+| **Angelo** | Świetlisty anioł | Odblokowywany dobrą karmą, łagodniejsze tempo statów |
+| **Voidmoth** | Ćma pustki | Odblokowywana w Comet Catch, kwitnie nocą |
+| **Diskoo** | Kula dyskotekowa | Impreza 24/7, party/sugar_high non stop, gaśnie w samotności |
+| **Bananzo** | Odklejony banan | Nadpobudliwy, "dojrzewa" przy zaniedbaniu, ślizga się na własnej skórce |
+| **Kebson** | Kebab w picie | Polski humor, sos ostry, stygnie gdy zapomniany |
+
+Trzy najnowsze (Diskoo, Bananzo, Kebson) są pokazywane **na początku** karuzeli wyboru
+i przez 14 dni od pierwszego uruchomienia mają plakietkę **NEW** (`newDropSeen` w Storage).
 
 ---
 
-## Mini-gry (5)
+## Mini-gry (9)
 
 1. **CatchGame** — Łap spadające przedmioty przyciskami
 2. **RushGame** — Wciśnij przycisk jak najszybciej po sygnale
 3. **ReactGame** — Reaguj na zmieniające się kolory
 4. **DodgeGame** — Unikaj spadających przeszkód (poruszanie lewo/prawo)
 5. **MemoryGame** — Zapamiętaj sekwencję kierunków (Simon Says)
+6. **StarCatch (Comet Catch)** — Łap komety (odblokowuje Voidmotha)
+7. **Peekaboo** — Trafiaj w norę, z której wyskakuje stworek
+8. **Balance** — Utrzymaj równowagę na linie
+9. **Bubble Pop** — Bąbelki lecą w górę, pękaj je w świecącym pasie (SELECT)
 
 ### Wyniki
 | Wynik gry | playResult | Efekt |

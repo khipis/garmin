@@ -5,6 +5,7 @@ class SetupView extends WatchUi.View {
 
     hidden var _pet;
     var phase;
+    var typeIdx;
     var selectedType;
     var selectedName;
 
@@ -12,8 +13,16 @@ class SetupView extends WatchUi.View {
         View.initialize();
         _pet = pet;
         phase = 1;
-        selectedType = 0;
+        typeIdx = 0;
+        selectedType = pet.typeAtIndex(0);
         selectedName = 0;
+    }
+
+    // The carousel walks positions, not raw species ids, so the newest arrivals
+    // can lead without renumbering saved pets.
+    function moveType(delta) {
+        typeIdx = (typeIdx + delta + TYPE_COUNT) % TYPE_COUNT;
+        selectedType = _pet.typeAtIndex(typeIdx);
     }
 
     function setPhase(p) {
@@ -67,6 +76,10 @@ class SetupView extends WatchUi.View {
 
             dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_XTINY, _pet.getTypeDesc(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+
+            if (_pet.isNewType(selectedType) && _pet.newDropActive()) {
+                drawNewBadge(dc, w / 2, h * 17 / 100);
+            }
         }
 
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
@@ -79,10 +92,22 @@ class SetupView extends WatchUi.View {
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
         var dots = "";
         for (var i = 0; i < TYPE_COUNT; i++) {
-            if (i == selectedType) { dots = dots + "O "; }
+            if (i == typeIdx) { dots = dots + "O "; }
             else { dots = dots + "o "; }
         }
         dc.drawText(w / 2, h * 80 / 100, Graphics.FONT_XTINY, dots, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawNewBadge(dc, cx, cy) {
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var bw = dc.getTextWidthInPixels("NEW", Graphics.FONT_XTINY) + 14;
+        var bh = fh + 4;
+        dc.setColor(0xFF2FD0, 0xFF2FD0);
+        dc.fillRectangle(cx - bw / 2, cy - bh / 2, bw, bh);
+        dc.setColor(0xFFE24A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(cx - bw / 2, cy - bh / 2, bw, bh);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - bh / 2 + 2, Graphics.FONT_XTINY, "NEW", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawNameSelect(dc, w, h) {
@@ -124,7 +149,7 @@ class SetupDelegate extends WatchUi.BehaviorDelegate {
 
     function onPreviousPage() {
         if (_view.phase == 1) {
-            _view.selectedType = (_view.selectedType - 1 + TYPE_COUNT) % TYPE_COUNT;
+            _view.moveType(-1);
         } else {
             var names = _pet.getNames(_view.selectedType);
             _view.selectedName = (_view.selectedName - 1 + names.size()) % names.size();
@@ -135,7 +160,7 @@ class SetupDelegate extends WatchUi.BehaviorDelegate {
 
     function onNextPage() {
         if (_view.phase == 1) {
-            _view.selectedType = (_view.selectedType + 1) % TYPE_COUNT;
+            _view.moveType(1);
         } else {
             var names = _pet.getNames(_view.selectedType);
             _view.selectedName = (_view.selectedName + 1) % names.size();

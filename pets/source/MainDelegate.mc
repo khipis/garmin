@@ -1,5 +1,6 @@
 using Toybox.WatchUi;
 using Toybox.Math;
+using Toybox.Application;
 
 class MainDelegate extends WatchUi.BehaviorDelegate {
 
@@ -57,7 +58,16 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             _pet.feed();
         }
         else if (idx == 1) {
-            var gt = Math.rand().abs() % 8;
+            // First play after the update always opens the new game, so nobody
+            // has to roll the dice nine times to find it.
+            var gt;
+            var seenBubble = Application.Storage.getValue("bubbleSeen");
+            if (seenBubble == null && _pet.newDropActive()) {
+                Application.Storage.setValue("bubbleSeen", true);
+                gt = 8;
+            } else {
+                gt = Math.rand().abs() % 9;
+            }
             if (gt == 0) {
                 var gv = new MiniGameView(_pet);
                 WatchUi.pushView(gv, new MiniGameDelegate(gv), WatchUi.SLIDE_UP);
@@ -79,9 +89,12 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             } else if (gt == 6) {
                 var gv = new PeekabooGameView(_pet);
                 WatchUi.pushView(gv, new PeekabooGameDelegate(gv), WatchUi.SLIDE_UP);
-            } else {
+            } else if (gt == 7) {
                 var gv = new BalanceGameView(_pet);
                 WatchUi.pushView(gv, new BalanceGameDelegate(gv), WatchUi.SLIDE_UP);
+            } else {
+                var gv = new BubbleGameView(_pet);
+                WatchUi.pushView(gv, new BubbleGameDelegate(gv), WatchUi.SLIDE_UP);
             }
             return true;
         }
