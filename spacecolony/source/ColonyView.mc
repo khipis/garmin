@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // ColonyView.mc — The SPACE COLONY gameplay view.
 //
-// A seven-screen carousel over one ColonyModel:
-//   OVERVIEW · BUILD · EXPLORE · MISSION · TECH · RELICS · LOG
+// An eight-screen carousel over one ColonyModel:
+//   OVERVIEW · BUILD · EXPLORE · MISSION · WAR · TECH · RELICS · LOG
 //
 // Navigation is deliberately redundant so it works on EVERY watch + emulator:
 //   • TAP a dot in the top tab strip to jump straight to any page.
@@ -30,10 +30,11 @@ const SV_OVER = 0;
 const SV_BLD  = 1;
 const SV_EXP  = 2;
 const SV_MIS  = 3;
-const SV_TECH = 4;
-const SV_ART  = 5;
-const SV_HIST = 6;
-const SV_PAGES = 7;
+const SV_WAR  = 4;
+const SV_TECH = 5;
+const SV_ART  = 6;
+const SV_HIST = 7;
+const SV_PAGES = 8;
 const SV_ART_COLS = 5;
 
 // Detail-card kinds. Every purchasable structure, research programme and
@@ -43,6 +44,16 @@ const CK_BLD    = 0;   // id = building index
 const CK_TECH   = 1;   // id = technology index
 const CK_REGION = 2;   // id = region index
 const CK_ART    = 3;   // id = artifact index
+const CK_WARLOG = 4;   // no id — the war log reuses the card as a plain overlay
+
+// WAR page action rows.
+const WR_MARINE = 0;
+const WR_TURRET = 1;
+const WR_STANCE = 2;
+const WR_FAIR   = 3;
+const WR_RISK   = 4;
+const WR_LOG    = 5;
+const WR_ROWS   = 6;
 
 class ColonyView extends WatchUi.View {
     hidden var _m;
@@ -59,6 +70,7 @@ class ColonyView extends WatchUi.View {
     hidden var _evChoice;
     hidden var _pendingWelcome;
     hidden var _explain;         // first-run stats-as-currency explainer
+    hidden var _raidResult;      // showing the WON/LOST raid overlay
 
     hidden var _demo;            // demo fast-track running
     hidden var _demoT;           // demo sub-tick counter
@@ -70,6 +82,7 @@ class ColonyView extends WatchUi.View {
     hidden var _tabs;            // tap rects for the top tab strip
     hidden var _rBtnA; hidden var _rBtnB;
     hidden var _rPrev; hidden var _rNext; hidden var _rDemo;
+    hidden var _roster;          // once-a-day rival fetch (never blocks play)
 
     function initialize() {
         View.initialize();
@@ -78,17 +91,18 @@ class ColonyView extends WatchUi.View {
         _cur = 0; _scroll = 0;
         _popup = null; _popupT = 0;
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false;
-        _explain = false;
+        _explain = false; _raidResult = false;
         _demo = false; _demoT = 0;
         _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _tabs = [];
         _rBtnA = null; _rBtnB = null; _rPrev = null; _rNext = null; _rDemo = null;
+        _roster = null;
         _loadFx();
         _loadDemo();
 
         try { _m.ensureStart(); } catch (e) {}
         try { _m.collectOffline(); } catch (e) {}
-        _pendingWelcome = _hasGains() || _m.newDay || _m.gEvent != Sc.EV_NONE;
+        _pendingWelcome = _hasGains() || _m.newDay || _m.gEvent != Sc.EV_NONE || _m.gDefN > 0;
         // Only surface the choice overlay for genuine choice events.
         if (_m.pendingEvent != Sc.EV_NONE && Sc.evHasChoice(_m.pendingEvent)) {
             _event = true; _evChoice = 0;
@@ -122,13 +136,21 @@ class ColonyView extends WatchUi.View {
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_tick), 66, true); } catch (e) {}
+        // Refresh the rival roster after a long tick countdown so it lands well
+        // after the launch pipeline; RivalRoster no-ops when it already ran today.
+        try {
+            if (_roster == null) { _roster = new RivalRoster(_m); }
+            _roster.schedule();
+        } catch (e) {}
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
+        try { if (_roster != null) { _roster.stop(); } } catch (e) {}
         try { _m.save(); } catch (e) {}
     }
     function _tick() as Void {
         _t = (_t + 1) % 1000000;
+        try { if (_roster != null) { _roster.poll(); } } catch (e) {}
         if (_popupT > 0) { _popupT -= 1; if (_popupT == 0) { _popup = null; } }
         if (_demo && !_event && !_welcome) {
             _demoT += 1;
@@ -228,9 +250,11 @@ class ColonyView extends WatchUi.View {
         if (_cardKind == CK_BLD)    { return Sc.B_N; }
         if (_cardKind == CK_TECH)   { return Sc.T_N; }
         if (_cardKind == CK_REGION) { return Sc.RG_N; }
+        if (_cardKind == CK_WARLOG) { return 1; }   // nothing to browse
         return Sc.A_N;
     }
     hidden function _cardStep(d) {
+        if (_cardKind == CK_WARLOG) { return; }   // stepping it would drag _cur off WAR LOG
         var n = _cardCount();
         if (n < 1) { return; }
         _cardId = ((_cardId + d) % n + n) % n;
@@ -242,10 +266,14 @@ class ColonyView extends WatchUi.View {
     // ── Navigation ────────────────────────────────────────────────────────────
     hidden function _dismiss() {
         if (_event) { return false; }   // events must be answered
+        if (_raidResult) { _raidResult = false; WatchUi.requestUpdate(); return true; }
         if (_welcome) { _welcome = false; WatchUi.requestUpdate(); return true; }
         if (_explain) { _explain = false; _markExplainSeen(); WatchUi.requestUpdate(); return true; }
         return false;
     }
+    // Public wrapper so BACK can close a raid/welcome/explainer overlay
+    // before it falls through to save+exit.
+    function dismissOverlay() { return _dismiss(); }
     hidden function _markExplainSeen() {
         try { Application.Storage.setValue("sc_expl_seen", 1); } catch (e) {}
     }
@@ -264,6 +292,7 @@ class ColonyView extends WatchUi.View {
         if (_page == SV_TECH) { return Sc.T_N; }
         if (_page == SV_ART)  { return Sc.A_N; }
         if (_page == SV_MIS)  { return 2; }   // CLAIM + SUPPLY DROP
+        if (_page == SV_WAR)  { return WR_ROWS; }
         return 0;
     }
     // UP/DOWN: move the cursor on list pages and OVERFLOW into the neighbouring
@@ -304,6 +333,15 @@ class ColonyView extends WatchUi.View {
                 if (_cur == 1) { _do(_m.supplyDrop()); } else { _doClaim(); }
                 return;
             }
+            if (_page == SV_WAR) {
+                if (_cur == WR_MARINE) { _do(_m.trainMarine()); }
+                else if (_cur == WR_TURRET) { _do(_m.buildTurret()); }
+                else if (_cur == WR_STANCE) { _do(_m.cycleStance()); }
+                else if (_cur == WR_FAIR) { _doRaid(Sc.RAID_BAND_FAIR); }
+                else if (_cur == WR_RISK) { _doRaid(Sc.RAID_BAND_RISK); }
+                else { _openCard(CK_WARLOG, 0); }
+                return;
+            }
             if (_page == SV_OVER) { setPage(SV_BLD); return; }
         } catch (e) {}
     }
@@ -322,8 +360,24 @@ class ColonyView extends WatchUi.View {
         _popup = res; _popupT = 30;
         var bad = (res.length() >= 4 && res.substring(0, 4).equals("Need"))
                || (res.length() >= 4 && res.substring(0, 4).equals("Crew"))
+               || (res.length() >= 5 && res.substring(0, 5).equals("Fleet"))
                || (res.length() >= 6 && res.substring(0, 6).equals("Locked"));
         if (bad) { _tone(2); _vibe(30, 40); } else { _tone(4); _vibe(35, 45); }
+        WatchUi.requestUpdate();
+    }
+    // Launch a raid: a real engagement opens the WON/LOST overlay, while a
+    // "can't raid right now" message (no energy / no sorties left) is just a
+    // popup like every other blocked action.
+    hidden function _doRaid(band) {
+        try {
+            var res = _m.raid(band);
+            var blocked = (res != null)
+                       && ((res.length() >= 4 && res.substring(0, 4).equals("Need"))
+                        || (res.length() >= 5 && res.substring(0, 5).equals("Fleet")));
+            if (blocked) { _do(res); return; }
+            _raidResult = true;
+            _tone(_m.rWin ? 4 : 2); _vibe(_m.rWin ? 60 : 40, _m.rWin ? 100 : 70);
+        } catch (e) {}
         WatchUi.requestUpdate();
     }
     hidden function _doClaim() {
@@ -356,6 +410,7 @@ class ColonyView extends WatchUi.View {
             if (_inR(x, y, _rBtnB)) { _resolveEvent(1); return true; }
             return true;
         }
+        if (_raidResult) { _dismiss(); return true; }
         if (_welcome) { _dismiss(); return true; }
         if (_explain) { _dismiss(); return true; }
         if (cardOpen()) {
@@ -399,6 +454,7 @@ class ColonyView extends WatchUi.View {
         else if (_page == SV_BLD) { _drawBuildings(dc); }
         else if (_page == SV_EXP) { _drawExplore(dc); }
         else if (_page == SV_MIS) { _drawMissions(dc); }
+        else if (_page == SV_WAR) { _drawWar(dc); }
         else if (_page == SV_TECH) { _drawTech(dc); }
         else if (_page == SV_ART) { _drawArtifacts(dc); }
         else { _drawHistory(dc); }
@@ -406,18 +462,19 @@ class ColonyView extends WatchUi.View {
         _drawTabStrip(dc);
         if (cardOpen()) { _drawCard(dc); }
         if (_popup != null) { _drawPopup(dc); }
-        if (_welcome) { _drawWelcome(dc); }
+        if (_raidResult) { _drawRaidResult(dc); }
+        else if (_welcome) { _drawWelcome(dc); }
         else if (_explain) { _drawExplain(dc); }
         if (_event) { _drawEvent(dc); }
     }
 
     // ── Top tab strip: page name + tappable dots + side chevrons + DEMO ───────
     hidden function _pageName(p) {
-        var a = ["OVERVIEW", "BUILD", "EXPLORE", "MISSION", "TECH", "RELICS", "LOG"];
+        var a = ["OVERVIEW", "BUILD", "EXPLORE", "MISSION", "WAR", "TECH", "RELICS", "LOG"];
         return a[Sc._c(p, 0, SV_PAGES - 1)];
     }
     hidden function _pageColor(p) {
-        var a = [Sc.ACCENT, 0xFFC24A, 0xE0663A, Sc.GOLD, 0x4CE0C0, 0xB46CFF, 0x9FB0C0];
+        var a = [Sc.ACCENT, 0xFFC24A, 0xE0663A, Sc.GOLD, 0xFF5A7A, 0x4CE0C0, 0xB46CFF, 0x9FB0C0];
         return a[Sc._c(p, 0, SV_PAGES - 1)];
     }
     hidden function _drawTabStrip(dc) {
@@ -595,14 +652,18 @@ class ColonyView extends WatchUi.View {
         var unlocked = _m.isUnlocked(id);
         var dim = !unlocked;
 
-        // Icon chip.
-        dc.setColor(dim ? 0x2A3442 : Sc.bColorDark(id), Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(x, y + rh * 12 / 100, rh * 76 / 100, rh * 76 / 100, 4);
-        dc.setColor(dim ? 0x3A4656 : col, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(x + 2, y + rh * 12 / 100 + 2, rh * 76 / 100 - 4, rh * 76 / 100 - 4, 3);
-        dc.setColor(dim ? Sc.MUTED : 0x06110E, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x + rh * 38 / 100, y + rh / 2, Graphics.FONT_XTINY, Sc.bGlyph(id),
-                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        // The row shows the same portrait the detail card opens with; a locked
+        // module keeps its dark socket so the list still reads as a build tree.
+        if (dim) {
+            dc.setColor(0x2A3442, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(x, y + rh * 12 / 100, rh * 76 / 100, rh * 76 / 100, 4);
+            dc.setColor(Sc.MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + rh * 38 / 100, y + rh / 2, Graphics.FONT_XTINY, Sc.bGlyph(id),
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        } else {
+            var bap = rh * 62 / 100 / 6; if (bap < 1) { bap = 1; }
+            try { ColonyArt.bldArt(dc, id, x + rh * 38 / 100, y + rh / 2, bap); } catch (e) {}
+        }
 
         // Reserve a right-hand column for the level number + pip bar so the
         // name/cost labels can never touch it.
@@ -663,11 +724,15 @@ class ColonyView extends WatchUi.View {
     function _drawRegionRow(dc, id, x, y, w, rh, sel) {
         var col = Sc.rgColor(id);
         var disc = _m.isDiscovered(id);
-        dc.setColor(disc ? col : 0x2A3442, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x + rh * 38 / 100, y + rh / 2, rh / 3);
+        // Mapped regions show their terrain portrait, unmapped ones a blank socket.
         if (disc) {
-            dc.setColor(0x06110E, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(x + rh * 38 / 100, y + rh / 2, Graphics.FONT_XTINY, "+",
+            var rap = rh * 62 / 100 / 6; if (rap < 1) { rap = 1; }
+            try { ColonyArt.regionArt(dc, id, x + rh * 38 / 100, y + rh / 2, rap); } catch (e) {}
+        } else {
+            dc.setColor(0x2A3442, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + rh * 38 / 100, y + rh / 2, rh / 3);
+            dc.setColor(Sc.MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + rh * 38 / 100, y + rh / 2, Graphics.FONT_XTINY, "?",
                         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
         var tx = x + rh + 4;
@@ -696,11 +761,8 @@ class ColonyView extends WatchUi.View {
     }
     function _drawTechRow(dc, id, x, y, w, rh, sel) {
         var lvl = _m.tech[id];
-        dc.setColor(0x4CE0C0, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(x, y + rh * 12 / 100, rh * 76 / 100, rh * 76 / 100, 4);
-        dc.setColor(0x06110E, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x + rh * 38 / 100, y + rh / 2, Graphics.FONT_XTINY, "T",
-                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        var tap = rh * 62 / 100 / 6; if (tap < 1) { tap = 1; }
+        try { ColonyArt.techArt(dc, id, x + rh * 38 / 100, y + rh / 2, tap); } catch (e) {}
 
         // Level number + pip bar live in the reserved right-hand column.
         var barLeft = (lvl > 0) ? _drawLevelCol(dc, x, y, w, rh, lvl, 0x4CE0C0) : (x + w);
@@ -779,6 +841,8 @@ class ColonyView extends WatchUi.View {
         var cx = _w / 2;
         dc.setColor(0x04070C, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(0x0A1420, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
+
+        if (_cardKind == CK_WARLOG) { _drawWarLog(dc); return; }
 
         var ap = _h * 20 / 100 / 6; if (ap < 2) { ap = 2; }
         var pcy = _h * 22 / 100;
@@ -866,10 +930,26 @@ class ColonyView extends WatchUi.View {
 
         var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
         Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x7C8BA0);
-        _wrap(dc, cx, _h * 35 / 100, _w * 84 / 100, Graphics.FONT_TINY, Sc.TEXT, name);
-        _wrap(dc, cx, _h * 44 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
-        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xB6C6D6, lore, 3);
-        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x6FE08A, effect, 2);
+        // Stacked off each block's measured end rather than fixed percentages:
+        // a name or status line that wraps to two rows used to be overdrawn by
+        // whatever came next.
+        var yMeta = _wrapN(dc, cx, _h * 33 / 100, _w * 84 / 100,
+                           Graphics.FONT_TINY, Sc.TEXT, name, 2);
+        var lw = _w * 80 / 100;
+        var lTop = _wrapN(dc, cx, yMeta, _w * 86 / 100,
+                          Graphics.FONT_XTINY, metaCol, meta, 2);
+        // The effect line is the mechanical payload, so it books its space
+        // first and the flavour text takes whatever is left above the button.
+        var lh = dc.getFontHeight(Graphics.FONT_XTINY) * 85 / 100;
+        var fit = (_h * 80 / 100 - 6 - lTop) / lh;
+        if (fit < 2) { fit = 2; }
+        var eLines = _lineCount(dc, effect, lw, Graphics.FONT_XTINY);
+        if (eLines > 2) { eLines = 2; }
+        var lLines = fit - eLines;
+        if (lLines < 1) { lLines = 1; }
+        if (lLines > 3) { lLines = 3; }
+        var ly = _wrapN(dc, cx, lTop, lw, Graphics.FONT_XTINY, 0xB6C6D6, lore, lLines);
+        _wrapN(dc, cx, ly, lw, Graphics.FONT_XTINY, 0x6FE08A, effect, eLines);
 
         // 54% wide and stopping at 92% keeps both bottom corners inside the
         // inscribed circle of a round display.
@@ -877,6 +957,85 @@ class ColonyView extends WatchUi.View {
         _rBtnA = [bx, _h * 80 / 100, bw, _h * 12 / 100];
         _cardBtn(dc, _rBtnA, btn, btnCost, btnHot);
     }
+    // ── WAR LOG overlay ───────────────────────────────────────────────────────
+    // The war record in one screen: raids this colony launched, then the raids
+    // it took while the player was away, newest first. Row counts are derived
+    // from the real glyph height and split between the two sections, so the
+    // card fills a 280px round face without ever running under the bezel.
+    hidden function _drawWarLog(dc) {
+        var cx = _w / 2;
+        var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
+        Px.gshC(dc, "WAR LOG", cx, _h * 6 / 100, hsc, 0x7C8BA0);
+        _txtFit(dc, cx, _h * 13 / 100, Graphics.FONT_XTINY, Sc.GOLD,
+                Sc.warRankName(_m.warPts) + "  " + _m.warPts + "pts  "
+                + _m.warWins + "W-" + _m.warLosses + "L", _w * 76 / 100);
+
+        var top = _h * 21 / 100;
+        var bottom = _h * 74 / 100;   // clear of the CLOSE button at 80%
+        var lineH = dc.getFontHeight(Graphics.FONT_XTINY) * 85 / 100;
+        if (lineH < 1) { lineH = 1; }
+        var slots = (bottom - top) / lineH;
+        var maxw = _w * 68 / 100;
+
+        var raids = _m.warRecent();
+        var defs  = _m.defenceRecent();
+        // An empty section still costs its one "nothing yet" line.
+        var rWant = (raids.size() > 0) ? raids.size() : 1;
+        var dWant = (defs.size() > 0)  ? defs.size()  : 1;
+        var budget = slots - 2;                    // two section headers
+        if (budget < 2) { budget = 2; }
+        var rShow = budget / 2;
+        var dShow = budget - rShow;
+        // Either side lends its unused rows to the other, so a colony that has
+        // only ever attacked still fills the card with raids.
+        if (rWant < rShow) { dShow += rShow - rWant; rShow = rWant; }
+        if (dWant < dShow) { rShow += dShow - dWant; dShow = dWant; }
+        if (rShow > rWant) { rShow = rWant; }
+        if (dShow > dWant) { dShow = dWant; }
+        if (rShow < 1) { rShow = 1; }
+        if (dShow < 1) { dShow = 1; }
+
+        var y = top;
+        _txt(dc, cx, y, Graphics.FONT_XTINY, 0xFFC24A, "RAIDS", Graphics.TEXT_JUSTIFY_CENTER);
+        y += lineH;
+        if (raids.size() == 0) {
+            _txt(dc, cx, y, Graphics.FONT_XTINY, Sc.MUTED, "no raids yet", Graphics.TEXT_JUSTIFY_CENTER);
+            y += lineH;
+        } else {
+            for (var i = 0; i < rShow && i < raids.size(); i++) {
+                _wrapN(dc, cx, y, maxw, Graphics.FONT_XTINY, _raidColor(raids[i]),
+                       _raidLine(raids[i]), 1);
+                y += lineH;
+            }
+        }
+        y += lineH / 3;
+        _txt(dc, cx, y, Graphics.FONT_XTINY, 0xFF8A8A, "DEFENCE", Graphics.TEXT_JUSTIFY_CENTER);
+        y += lineH;
+        if (defs.size() == 0) {
+            _txt(dc, cx, y, Graphics.FONT_XTINY, Sc.MUTED, "never attacked", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            for (var d = 0; d < dShow && d < defs.size(); d++) {
+                _wrapN(dc, cx, y, maxw, Graphics.FONT_XTINY,
+                       _m.defenceHeldAt(d) ? 0x6FE08A : 0xE0A0A0, _m.defenceText(d), 1);
+                y += lineH;
+            }
+        }
+
+        var bw = _w * 54 / 100; var bx = cx - bw / 2;
+        _rBtnA = [bx, _h * 80 / 100, bw, _h * 12 / 100];
+        _cardBtn(dc, _rBtnA, "CLOSE", "", false);
+    }
+    // Outbound entries persist in their compact stored form ("W raid X" /
+    // "L vs X"); they are expanded for display so the two lists read alike.
+    hidden function _raidLine(s) {
+        if (s.length() > 7 && s.substring(0, 7).equals("W raid ")) { return "WON vs " + s.substring(7, s.length()); }
+        if (s.length() > 5 && s.substring(0, 5).equals("L vs ")) { return "LOST vs " + s.substring(5, s.length()); }
+        return s;
+    }
+    hidden function _raidColor(s) {
+        return (s.length() > 0 && s.substring(0, 1).equals("W")) ? 0x6FE08A : 0xE0A0A0;
+    }
+
     // Card action button: the verb reads at FONT_XTINY while the price rides
     // underneath in the 3x5 pixel font, the only way a four-resource cost fits
     // inside one button on a 240px watch.
@@ -968,20 +1127,22 @@ class ColonyView extends WatchUi.View {
         var bw = _w * 62 / 100; var bx = cx - bw / 2; var by = _h * 31 / 100;
         _bar(dc, bx, by, bw, 9, (tgt > 0 ? prog * 100 / tgt : 100), Sc.ACCENT);
         _txt(dc, cx, _h * 35 / 100, Graphics.FONT_XTINY, Sc.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
-        _wrap(dc, cx, _h * 41 / 100, _w * 84 / 100, Graphics.FONT_XTINY, Sc.GOLD, _rewardStr());
+        // Font-metric stack: the reward, the streak line and the offline gauge
+        // step by the real glyph height so none of them slides under the buttons.
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var yy = _h * 40 / 100;
+        _wrap(dc, cx, yy, _w * 84 / 100, Graphics.FONT_XTINY, Sc.GOLD, _rewardStr());
 
-        // Streak + its live multiplier, then the next milestone worth chasing.
-        _txt(dc, cx, _h * 48 / 100, Graphics.FONT_XTINY, Sc.TEXT,
-             "Streak " + _m.streak + "d  x" + _multStr() + _mileTag(), Graphics.TEXT_JUSTIFY_CENTER);
+        yy += fh;
         var nxt = _m.nextStreakMilestone();
-        _txt(dc, cx, _h * 54 / 100, Graphics.FONT_XTINY, Sc.MUTED,
-             (nxt > 0) ? ("Next bonus at " + nxt + "d" + ((nxt == Sc.STREAK_M2 || nxt == Sc.STREAK_M4) ? " + relic" : ""))
-                       : "All streak bonuses earned",
-             Graphics.TEXT_JUSTIFY_CENTER);
+        var streak = "Streak " + _m.streak + "d  x" + _multStr() + _mileTag();
+        if (nxt > 0) { streak += "  next " + nxt + "d"; }
+        _txtFit(dc, cx, yy, Graphics.FONT_XTINY, Sc.TEXT, streak, _w * 88 / 100);
 
         // Offline buffer: production only banks OFFLINE_CAP hours, so how full
         // that store is has to be visible before it starts wasting output.
-        try { _drawStoreBar(dc, _h * 60 / 100); } catch (e) {}
+        yy += fh;
+        try { _drawStoreBar(dc, yy); } catch (e) {}
 
         // Two stacked actions: claim the daily, or spend Credits on a supply
         // drop (the Credits sink — buys the Water that population growth eats).
@@ -1011,7 +1172,8 @@ class ColonyView extends WatchUi.View {
         var bw = _w * 46 / 100; var bx = cx - bw / 2;
         _txt(dc, cx, y, Graphics.FONT_XTINY, (pct >= 90) ? 0xFF8A8A : Sc.MUTED,
              "Store " + pct + "% of " + _m.offlineCapHours() + "h", Graphics.TEXT_JUSTIFY_CENTER);
-        _bar(dc, bx, y + _h * 6 / 100, bw, 4, pct, (pct >= 90) ? 0xFF5A7A : 0x4CE0C0);
+        _bar(dc, bx, y + dc.getFontHeight(Graphics.FONT_XTINY), bw, 4, pct,
+             (pct >= 90) ? 0xFF5A7A : 0x4CE0C0);
     }
     hidden function _mileTag() {
         var d = _m.daysAlive();
@@ -1022,6 +1184,74 @@ class ColonyView extends WatchUi.View {
         if (d >= 30) { return "  D30!"; }
         if (d >= 7) { return "  D7!"; }
         return "";
+    }
+
+    // ── WAR — military economy + raids on rival colonies ─────────────────────
+    hidden function _drawWar(dc) {
+        var cx = _w / 2;
+        var cap = _m.marineCap(); var tcap = _m.turretCap();
+        var sc = _h / 260; if (sc < 2) { sc = 2; }
+        Px.gshC(dc, "MARINES " + _m.marines + "/" + cap + "  TURRETS " + _m.turrets + "/" + tcap,
+                cx, _h * 18 / 100, sc, 0xEAF2FF);
+
+        var atk = _m.attackPower(); var def = _m.defensePower();
+        _txt(dc, cx, _h * 25 / 100, Graphics.FONT_XTINY, 0xFF8A8A,
+             "ATK " + atk + "   DEF " + def, Graphics.TEXT_JUSTIFY_CENTER);
+
+        var rank = Sc.warRankName(_m.warPts);
+        _txt(dc, cx, _h * 31 / 100, Graphics.FONT_XTINY, Sc.GOLD,
+             rank + "  " + _m.warPts + "pts  " + _m.warWins + "W-" + _m.warLosses + "L",
+             Graphics.TEXT_JUSTIFY_CENTER);
+        var streakTxt;
+        if (_m.warStreak > 0) { streakTxt = "Win streak " + _m.warStreak; }
+        else if (_m.warStreak < 0) { streakTxt = "Losing streak " + (-_m.warStreak); }
+        else { streakTxt = "No raids yet"; }
+        _txt(dc, cx, _h * 36 / 100, Graphics.FONT_XTINY, Sc.MUTED, streakTxt, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Six actions no longer fit as fixed slices of the remaining height —
+        // two lines of XTINY need a full row — so the WAR page uses the same
+        // scrolling list frame as BUILD/TECH and pages the extra rows in.
+        _drawListFrame(dc, WR_ROWS, method(:_warRow), _h * 41 / 100);
+    }
+    // One WAR-page action row, drawn inside the rect the list frame reserved
+    // (which also registers the tap rect, so the generic loop in onTapXY
+    // selects + activates it exactly like any other list row).
+    function _warRow(dc, id, x, y, w, rh, sel) {
+        var label = ""; var sub = ""; var hot = false;
+        if (id == WR_MARINE) {
+            var cap = _m.marineCap();
+            var full = (_m.marines >= cap);
+            label = full ? "MARINES FULL" : "TRAIN MARINE";
+            var mc = _m.marineCost();
+            sub = full ? "upgrade Habitat/Defense" : (_fmt(mc[0]) + "M " + _fmt(mc[1]) + "E");
+            hot = !full && _m.canAffordMarine();
+        } else if (id == WR_TURRET) {
+            var tcap = _m.turretCap();
+            var tfull = (_m.turrets >= tcap);
+            label = tfull ? "TURRETS FULL" : "BUILD TURRET";
+            var tc = _m.turretCost();
+            sub = tfull ? "upgrade Defense Grid" : (_fmt(tc[0]) + "M " + _fmt(tc[1]) + "S");
+            hot = !tfull && _m.canAffordTurret();
+        } else if (id == WR_STANCE) {
+            label = "STANCE: " + Sc.stanceName(_m.raidStance).toUpper();
+            sub = "tap to cycle"; hot = true;
+        } else if (id == WR_FAIR || id == WR_RISK) {
+            var left = _m.raidsLeft();
+            label = (id == WR_FAIR) ? "FAIR RAID" : "RISK RAID";
+            if (left <= 0) { sub = "Fleet resting"; }
+            else if (id == WR_FAIR) { sub = Sc.RAID_COST_NRG + "E - " + left + " left"; }
+            else { sub = Sc.RAID_COST_NRG + "E - bigger reward"; }
+            hot = (left > 0);
+        } else {
+            label = "WAR LOG";
+            var nr = _m.warRecent().size(); var nd = _m.defenceRecent().size();
+            sub = (nr + nd > 0) ? (nr + " raids  " + nd + " defences") : "no battles yet";
+            hot = (nr + nd > 0);
+        }
+        _wrapN(dc, x + w / 2, y + rh * 16 / 100, w - 6, Graphics.FONT_XTINY,
+               hot ? Sc.TEXT : Sc.MUTED, label, 1);
+        _wrapN(dc, x + w / 2, y + rh * 56 / 100, w - 6, Graphics.FONT_XTINY,
+               hot ? 0x6FE08A : Sc.MUTED, sub, 1);
     }
 
     // ── LOG ─────────────────────────────────────────────────────────────────
@@ -1047,7 +1277,17 @@ class ColonyView extends WatchUi.View {
         dc.setColor(0x040609, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(Sc.CIRCLE, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         _txt(dc, cx, _h * 13 / 100, Graphics.FONT_SMALL, Sc.ACCENT, "WELCOME BACK", Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 23 / 100, Graphics.FONT_XTINY, Sc.MUTED, "COMMANDER", Graphics.TEXT_JUSTIFY_CENTER);
+        // Rival raids resolved on this return take the subtitle slot: the stack
+        // below is already full at five stockpiles plus a relic line on a 240px
+        // face, and this is news the player must not miss.
+        var raided = "";
+        try { raided = _m.defenceSummary(); } catch (e) { raided = ""; }
+        if (raided.length() > 0) {
+            _txtFit(dc, cx, _h * 23 / 100, Graphics.FONT_XTINY,
+                    _m.defenceAllHeld() ? 0x6FE08A : 0xFF8A8A, raided, _w * 74 / 100);
+        } else {
+            _txt(dc, cx, _h * 23 / 100, Graphics.FONT_XTINY, Sc.MUTED, "COMMANDER", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         var y = _h * 31 / 100; var step = _h * 7 / 100; var n = 0;
         for (var i = 0; i < Sc.R_N; i++) {
@@ -1072,6 +1312,35 @@ class ColonyView extends WatchUi.View {
              "Store was " + cpct + "% of " + _m.offlineCapHours() + "h",
              Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 93 / 100, Graphics.FONT_XTINY, Sc.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Raid outcome — WON/LOST, the foe's name, the war-points swing and a
+    // short tip, dismissed by tap/select/swipe/BACK exactly like WELCOME BACK.
+    hidden function _drawRaidResult(dc) {
+        var cx = _w / 2;
+        var win = _m.rWin;
+        dc.setColor(win ? 0x04140A : 0x14060A, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(win ? 0x0A2414 : 0x241014, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        _txt(dc, cx, _h * 15 / 100, Graphics.FONT_SMALL, win ? 0x6FE08A : 0xFF6A6A,
+             win ? "VICTORY" : "REPELLED", Graphics.TEXT_JUSTIFY_CENTER);
+        _wrap(dc, cx, _h * 27 / 100, _w * 82 / 100, Graphics.FONT_TINY, Sc.TEXT,
+              (win ? "Raided " : "Attacked by ") + _m.rFoeName);
+
+        var ptsStr = (_m.rPtsDelta >= 0 ? "+" : "") + _m.rPtsDelta + " war pts";
+        _txt(dc, cx, _h * 40 / 100, Graphics.FONT_XTINY, Sc.GOLD, ptsStr, Graphics.TEXT_JUSTIFY_CENTER);
+        if (win && (_m.rCredit > 0 || _m.rSci > 0)) {
+            _txt(dc, cx, _h * 47 / 100, Graphics.FONT_XTINY, 0x6FE08A,
+                 "+" + _m.rCredit + " credits  +" + _m.rSci + " science", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        _txt(dc, cx, _h * 57 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+             Sc.warRankName(_m.warPts) + "  " + _m.warWins + "W-" + _m.warLosses + "L",
+             Graphics.TEXT_JUSTIFY_CENTER);
+        _wrap(dc, cx, _h * 68 / 100, _w * 78 / 100, Graphics.FONT_XTINY,
+              win ? 0x9FE0B0 : 0xE0A0A0, _m.rTip);
+        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Sc.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // First-run pixel-styled explainer: your body stats are the fuel.
@@ -1194,6 +1463,22 @@ class ColonyView extends WatchUi.View {
     // Multi-line centred wrap. The two-line version silently ran the remainder
     // off both edges of a round screen, which is where the longer card copy
     // lives, so anything that still will not fit is ellipsized instead.
+    // How many lines a string needs at this font and width, uncapped.
+    hidden function _lineCount(dc, s, maxw, font) {
+        if (s == null || s.length() == 0) { return 0; }
+        var words = _split(s);
+        var i = 0; var n = 0;
+        while (i < words.size()) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            n++;
+        }
+        return n;
+    }
     hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         var fh = dc.getFontHeight(font) * 85 / 100;
@@ -1218,6 +1503,7 @@ class ColonyView extends WatchUi.View {
             dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
             line++;
         }
+        return y + line * fh;      // where the block ended, for stacking
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         if (s == null) { return; }

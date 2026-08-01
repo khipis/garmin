@@ -26,6 +26,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Application;
 using Toybox.Attention;
+using Toybox.Math;
 using Toybox.Lang;
 
 const IV_HOME = 0;
@@ -531,14 +532,18 @@ class IslandView extends WatchUi.View {
         _drawListFrame(dc, Is.B_N, method(:_drawBuildRow));
     }
     function _drawBuildRow(dc, id, x, y, w, rh, sel) {
-        var col = Is.bColor(id);
         var lvl = _m.bLevel[id];
         var unlocked = _m.isUnlocked(id);
-        var dim = !unlocked;
-        // Category icon token.
-        _catIcon(dc, Is.bCat(id), dim ? 0x2A3A44 : col, x + rh / 2, y + rh / 2, rh / 3);
+        // Same portrait the detail card uses — category token only while locked.
+        if (unlocked) {
+            var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+            try { IslandArt.bldArt(dc, id, x + rh / 2, y + rh / 2, ap); } catch (e) {}
+        } else {
+            _catIcon(dc, Is.bCat(id), 0x2A3A44, x + rh / 2, y + rh / 2, rh / 3);
+        }
 
         var tx = x + rh + 4;
+        var dim = !unlocked;
         var nm = Is.bName(id) + (lvl > 0 ? "  L" + lvl : "");
         _txt(dc, tx, y + rh * 18 / 100, Graphics.FONT_XTINY, dim ? Is.MUTED : Is.TEXT, nm, Graphics.TEXT_JUSTIFY_LEFT);
 
@@ -653,23 +658,27 @@ class IslandView extends WatchUi.View {
     function _drawAreaRow(dc, id, x, y, w, rh, sel) {
         var col = Is.arColor(id);
         var disc = _m.isDiscovered(id);
-        dc.setColor(disc ? col : 0x2A3A44, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x + rh / 2, y + rh / 2, rh / 3);
+        // Same scene art the detail card uses; locked areas stay a "?" socket.
         if (disc) {
-            dc.setColor(0x08202C, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(x + rh / 2, y + rh / 2, Graphics.FONT_XTINY, "*",
+            var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+            try { IslandArt.areaArt(dc, id, x + rh / 2, y + rh / 2, ap); } catch (e) {}
+        } else {
+            dc.setColor(0x2A3A44, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + rh / 2, y + rh / 2, rh / 3);
+            dc.setColor(0x5A6A76, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + rh / 2, y + rh / 2, Graphics.FONT_XTINY, "?",
                         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
         // Font-metric layout: name on the top line, the progress bar strictly
         // BELOW it (using the real glyph height) so text never sits on the bar.
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
         var tx = x + rh + 4;
-        _txt(dc, tx, y + 2, Graphics.FONT_XTINY, Is.TEXT, Is.arName(id), Graphics.TEXT_JUSTIFY_LEFT);
+        var textW = w - (tx - x) - 4; if (textW < 8) { textW = 8; }
+        _wrap1(dc, tx, y + 1, textW, Graphics.FONT_XTINY, Is.TEXT, Is.arName(id));
         if (disc) {
             var b = Is.arUnlockBuilding(id);
-            _txt(dc, tx, y + rh - fhX - 2, Graphics.FONT_XTINY, 0x6FE08A,
-                 b >= 0 ? "Found - " + Is.bName(b) : "Found - " + Is.cName(Is.arGrantColl(id)),
-                 Graphics.TEXT_JUSTIFY_LEFT);
+            _wrap1(dc, tx, y + rh - fhX - 1, textW, Graphics.FONT_XTINY, 0x6FE08A,
+                   b >= 0 ? "Found - " + Is.bName(b) : "Found - " + Is.cName(Is.arGrantColl(id)));
         } else {
             // Progress plus how much walking the area asks for — the later
             // areas need several days of steps, so show the target up front.
@@ -722,12 +731,12 @@ class IslandView extends WatchUi.View {
             _rowIds.add(i);
         }
         var got = _m.hasColl(_cur);
-        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, got ? Is.cColor(_cur) : Is.MUTED,
+        _txt(dc, cx, _h * 72 / 100, Graphics.FONT_XTINY, got ? Is.cColor(_cur) : Is.MUTED,
              got ? Is.cName(_cur) : "Undiscovered", Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 855 / 1000, Graphics.FONT_XTINY, Is.MUTED,
-             got ? (Is.cRareName(_cur) + " - SELECT for story") : Is.cOrigin(_cur),
-             Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 92 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(), Graphics.TEXT_JUSTIFY_CENTER);
+        var sub = got ? (Is.cRareName(_cur) + " - SEL = story") : Is.cOrigin(_cur);
+        _txtFit(dc, cx, _h * 80 / 100, Graphics.FONT_XTINY, Is.MUTED, sub, _chordW(_h * 84 / 100) * 94 / 100);
+        _txtFit(dc, cx, _h * 88 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(),
+                _chordW(_h * 92 / 100) * 94 / 100);
     }
 
     // ── HISTORY ─────────────────────────────────────────────────────────────
@@ -896,17 +905,37 @@ class IslandView extends WatchUi.View {
 
         var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
         Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x7FA0AC);
-        _wrap(dc, cx, _h * 34 / 100, _w * 84 / 100, Graphics.FONT_TINY, Is.TEXT, name);
-        _wrap(dc, cx, _h * 43 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
-        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xBFD8E8, lore, 3);
-        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x6FE08A, effect, 2);
+        // Stacked off each block's measured end rather than fixed percentages:
+        // a name or status line that wraps to two rows used to be overdrawn by
+        // whatever came next.
+        var yMeta = _wrapN(dc, cx, _h * 32 / 100, _w * 84 / 100,
+                           Graphics.FONT_TINY, Is.TEXT, name, 2);
+        var lw = _w * 80 / 100;
+        var lTop = _wrapN(dc, cx, yMeta, _w * 86 / 100,
+                          Graphics.FONT_XTINY, metaCol, meta, 2);
+        // The effect line is the mechanical payload, so it books its space
+        // first and the flavour text takes whatever is left above the button.
+        var lh = dc.getFontHeight(Graphics.FONT_XTINY) * 85 / 100;
+        var fit = (_h * 79 / 100 - 6 - lTop) / lh;
+        if (fit < 2) { fit = 2; }
+        var eLines = _lineCount(dc, effect, lw, Graphics.FONT_XTINY);
+        if (eLines > 2) { eLines = 2; }
+        var lLines = fit - eLines;
+        if (lLines < 1) { lLines = 1; }
+        if (lLines > 3) { lLines = 3; }
+        var ly = _wrapN(dc, cx, lTop, lw, Graphics.FONT_XTINY, 0xBFD8E8, lore, lLines);
+        _wrapN(dc, cx, ly, lw, Graphics.FONT_XTINY, 0x6FE08A, effect, eLines);
 
         // Edge bands step through the set; the button performs the action. The
         // button sits clear of the bottom bezel so a round watch keeps it whole.
         _rPrev = [0, _h * 28 / 100, _w * 14 / 100, _h * 44 / 100];
         _rNext = [_w * 86 / 100, _h * 28 / 100, _w * 14 / 100, _h * 44 / 100];
-        var bw = _w * 62 / 100; var bx = cx - bw / 2;
-        var by = _h * 77 / 100; var bh = _h * 11 / 100;
+        var by = _h * 79 / 100; var bh = _h * 11 / 100;
+        // A three-resource upgrade price is far wider than a fixed 62% pill, so
+        // the button grows to whatever the chord allows at its own baseline.
+        var bw = _chordW(by + bh) * 92 / 100;
+        var wide = _w * 62 / 100; if (bw < wide) { bw = wide; }
+        var bx = cx - bw / 2;
         _rBtnA = [bx, by, bw, bh];
         _button(dc, _rBtnA, btn, btnHot);
     }
@@ -1062,6 +1091,10 @@ class IslandView extends WatchUi.View {
         dc.setColor(hot ? Is.ACCENT : 0x2A3A44, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(r[0], r[1], r[2], r[3], 6);
         dc.setColor(hot ? 0xCFF6F0 : 0x9FB2BC, Graphics.COLOR_TRANSPARENT);
+        var maxw = r[2] - 8;
+        while (label.length() > 3 && dc.getTextWidthInPixels(label, Graphics.FONT_XTINY) > maxw) {
+            label = label.substring(0, label.length() - 1);
+        }
         dc.drawText(r[0] + r[2] / 2, r[1] + r[3] / 2, Graphics.FONT_XTINY, label,
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
@@ -1097,6 +1130,16 @@ class IslandView extends WatchUi.View {
 
     // Centred title that steps down a font size (and finally truncates) rather
     // than running off the chord of a round screen.
+    // Usable width of the display at a given y — on a round watch the bottom of
+    // a card is a lot narrower than the middle.
+    hidden function _chordW(y) {
+        if (_w != _h) { return _w; }
+        var r = _w / 2;
+        var dy = y - r;
+        var q = r * r - dy * dy;
+        return (q > 0) ? Math.sqrt(q).toNumber() * 2 : _w;
+    }
+
     hidden function _txtFit(dc, cx, y, f, c, s, maxw) {
         var fonts = [f, Graphics.FONT_TINY, Graphics.FONT_XTINY];
         var use = f;
@@ -1134,6 +1177,22 @@ class IslandView extends WatchUi.View {
     // Multi-line centred wrap. The two-line version silently ran the remainder
     // off both edges of a round screen, which is where the longer card copy
     // lives, so anything that still will not fit is ellipsized instead.
+    // How many lines a string needs at this font and width, uncapped.
+    hidden function _lineCount(dc, s, maxw, font) {
+        if (s == null || s.length() == 0) { return 0; }
+        var words = _split(s);
+        var i = 0; var n = 0;
+        while (i < words.size()) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            n++;
+        }
+        return n;
+    }
     hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         var fh = dc.getFontHeight(font) * 85 / 100;
@@ -1158,6 +1217,7 @@ class IslandView extends WatchUi.View {
             dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
             line++;
         }
+        return y + line * fh;      // where the block ended, for stacking
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

@@ -48,8 +48,10 @@ class ColonyDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        // A detail card is a layer inside the game, not a way out of it.
+        // A detail card or an overlay (raid result / welcome back / first-run
+        // explainer) is a layer inside the game, not a way out of it.
         try { if (_v.closeCard()) { return true; } } catch (e) {}
+        try { if (_v.dismissOverlay()) { return true; } } catch (e) {}
         try { _v.model().save(); } catch (e) {}
         return false;
     }

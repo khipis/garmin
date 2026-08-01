@@ -926,6 +926,19 @@ module MineArt {
         Px.spr(dc, rows, pal, cx - cols * px / 2, cy - rows.size() * px / 2, px, false);
     }
 
+    // 7x6 portraits for the two gear tracks. The body is fixed and the working
+    // end takes the tier colour, so a glance at the row says how far you are.
+    function pickArt(dc, cx, cy, px, tier) {
+        var pal = { "P" => _pickColor(tier), "w" => 0x8A5A2A };
+        _sprC(dc, ["PP...PP", ".PPwPP.", "...w...", "...w...", "...w...", "...w..."],
+              pal, cx, cy, px);
+    }
+    function cartArt(dc, cx, cy, px, tier) {
+        var pal = { "B" => _cartColor(tier), "o" => 0xFFD24A, "K" => 0x2A2018 };
+        _sprC(dc, ["..ooo..", ".ooooo.", "BBBBBBB", "BBBBBBB", ".BBBBB.", ".K...K."],
+              pal, cx, cy, px);
+    }
+
     // 6x6 portrait per collectible id (0..Mn.C_N-1).
     function collArt(dc, id, cx, cy, px) {
         var rows; var pal;

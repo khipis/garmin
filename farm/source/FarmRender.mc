@@ -250,6 +250,11 @@ module FarmArt {
         dc.setColor(g1, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x, b1, w, bottom - b1);
 
+        // A hedgerow on each seam. Without it the band edges read as two hard
+        // rules ruled across the farm instead of field boundaries.
+        _hedge(dc, x, w, b0, tod);
+        _hedge(dc, x, w, b1, tod);
+
         // A slim, gently winding dirt path down the middle.
         // The country lane runs ACROSS the scene between the middle and front
         // lanes. A vertical track down the centre cut the farm in half and hid
@@ -290,6 +295,22 @@ module FarmArt {
             dc.fillRectangle(fx, fy, 1, 3);
             dc.setColor(fl[_hash(f * 31 + 2) % fl.size()], Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(fx - 1, fy - 1, 2, 2);
+        }
+    }
+
+    // Low hedge running the width of the scene along a field boundary.
+    function _hedge(dc, x, w, yy, tod) {
+        var dark = tod == 3 ? 0x000000 : 0x005500;
+        var lit  = tod == 3 ? 0x005500 : 0x55AA00;
+        var step = w / 26; if (step < 3) { step = 3; }
+        var bh = step * 6 / 10; if (bh < 2) { bh = 2; }
+        for (var i = 0; i * step < w; i++) {
+            var hx = x + i * step;
+            var lift = (i % 2 == 0) ? 0 : 1;
+            dc.setColor(dark, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(hx, yy - bh - lift, step - 1, bh + lift);
+            dc.setColor(lit, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(hx, yy - bh - lift, step / 2, 1);
         }
     }
 

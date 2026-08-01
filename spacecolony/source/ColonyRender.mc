@@ -541,12 +541,14 @@ module ColonyArt {
         if (civ >= 3) { return 1; }
         return 0;
     }
+    // On palette, like the terrain: the old near-black/plum pair rounded to two
+    // arbitrary steps, so the sky banded by accident rather than by design.
     function _skyTopCol(tier) {
-        var a = [0x05070D, 0x06080F, 0x080A16, 0x0B0A1E];
+        var a = [0x000000, 0x000000, 0x000055, 0x000055];
         return a[Sc._c(tier, 0, 3)];
     }
     function _skyBotCol(tier) {
-        var a = [0x2A123A, 0x321646, 0x3A1A56, 0x4A1E6E];
+        var a = [0x550055, 0x550055, 0x550055, 0xAA0055];
         return a[Sc._c(tier, 0, 3)];
     }
     // Chosen straight from the 64-colour MIP palette (channels 00/55/AA/FF):
@@ -1197,10 +1199,21 @@ module ColonyArt {
     // The ribbon stops below the tab strip band so the top of the watch stays
     // reserved for chrome instead of being bisected by a cable.
     function _pxElevator(dc, pal, ex, gB, y0, h, px, lvl, phase) {
-        var topY = y0 + h * 22 / 100;
+        // Below the milestone caption, so the ribbon never runs through the text.
+        var topY = y0 + h * 27 / 100;
         if (topY >= gB - px) { topY = gB - px * 2; }
         dc.setColor(0x445A70, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ex - 1, topY, 3, gB - topY);
+        // A lit edge and cross-braces every few pixels: a bare grey line read as
+        // a scratch on the screen rather than a structure.
+        dc.setColor(0x6A7A94, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(ex - 1, topY, 1, gB - topY);
+        dc.setColor(0x33445A, Graphics.COLOR_TRANSPARENT);
+        var rung = topY + px;
+        while (rung < gB - px) {
+            dc.fillRectangle(ex - 2, rung, 5, 1);
+            rung += px * 2;
+        }
         dc.setColor(0x8CD0FF, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ex - 2, gB - px * 2, 5, px * 2);          // base
         var span = gB - topY - px;

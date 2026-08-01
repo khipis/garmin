@@ -23,6 +23,7 @@ module Sc {
     const LB_AGE     = "Age";     // oldest colony (days)
     const LB_EXPLORE = "Explore"; // most discovered planet (regions)
     const LB_RELIC   = "Relic";   // richest alien artifact collection
+    const LB_WAR     = "War";     // war rating points (raid record)
 
     // ── Resources ────────────────────────────────────────────────────────────
     const R_N   = 5;
@@ -124,7 +125,7 @@ module Sc {
             "A dish that talks to the shipping lanes and sells them our ore.",
             "Salvaged xeno tech nobody fully understands, wired into our grid.",
             "A ribbon to orbit. Cargo leaves the gravity well for pennies.",
-            "Rail guns pointed at the sky, because the sky here throws rocks.",
+            "Rail guns pointed at the sky - and at raiders drawn to a rich colony.",
             "A shaft sunk into magma. The ground itself powers the base.",
             "An orbital market. What the colony lacks arrives by tonight.",
             "Raw rock in one end, clean structural alloy out the other.",
@@ -471,9 +472,9 @@ module Sc {
     const RATE_CAP = 10000000;        // hourly-rate ceiling (overflow guard)
 
     // ── Daily loop ───────────────────────────────────────────────────────────
-    // Seven mission varieties so a week of visits never repeats. Ids 0..3 keep
-    // their original meaning, so a live save's rotation only ever grows.
-    const DAILY_N       = 7;
+    // Eight mission varieties so a week-plus of visits never repeats. Ids 0..3
+    // keep their original meaning, so a live save's rotation only ever grows.
+    const DAILY_N       = 8;
     const STREAK_STEP   = 10;   // % extra daily reward per consecutive day
     const STREAK_CAP    = 100;  // % ceiling on that bonus (2x reward)
     const STREAK_M1     = 3;    // milestone streak lengths
@@ -483,6 +484,116 @@ module Sc {
     // Civilisation levels that hand over an artifact (one each, once).
     const CIV_RELIC_1   = 12;
     const CIV_RELIC_2   = 25;
+
+    // ── War (military economy + raids) ──────────────────────────────────────
+    // Marines are trained from Minerals+Energy; capacity rides on Habitat
+    // (housing for the militia) and Defense Grid (command capacity).
+    const MARINE_CAP_BASE = 4;
+    const MARINE_CAP_HAB  = 2;    // +2 marine cap per Habitat level
+    const MARINE_CAP_DEF  = 1;    // +1 marine cap per Defense Grid level
+    const MARINE_CAP_MAX  = 60;
+    const MARINE_COST_MIN = 50;   // base minerals for the next marine
+    const MARINE_COST_NRG = 35;   // base energy for the next marine
+    const MARINE_COST_PCT = 106;  // +6% per marine already enlisted
+
+    // Turrets are a separate purchase from the Defense Grid building itself —
+    // the Grid raises the *ceiling*, turrets are what you actually buy.
+    const TURRET_CAP_BASE  = 3;
+    const TURRET_CAP_DEF   = 2;   // +2 turret cap per Defense Grid level
+    const TURRET_CAP_MAX   = 40;
+    const DEFENSE_COST_MIN = 90;  // base minerals for the next turret
+    const DEFENSE_COST_SCI = 45;  // base science for the next turret
+    const DEFENSE_COST_PCT = 108; // +8% per turret already installed
+
+    // Raiding: a small energy toll to launch a sortie (never buildings/pop),
+    // rationed per day like expeditions so it can't be farmed in one sitting.
+    const RAID_COST_NRG    = 25;
+    const RAID_CAP_PER_DAY = 5;
+    const RAID_BAND_FAIR   = 0;   // favourable odds, modest payout
+    const RAID_BAND_RISK   = 1;   // harder odds, richer payout
+    // Odds window per band, as a percentage of this colony's attack power.
+    function raidBandLo(band) { return (band == RAID_BAND_RISK) ? 85 : 55; }
+    function raidBandHi(band) { return (band == RAID_BAND_RISK) ? 145 : 95; }
+
+    // Rival roster — REAL colonies read off the shared War board, cached so
+    // raiding behaves identically offline. Eight names keep the persisted blob
+    // small; the fetch is a once-a-day luxury, never a dependency.
+    const RIV_MAX      = 8;
+    // Counted in view frames (the 66 ms animation tick) rather than held on a
+    // Timer of their own: the leaderboard pipeline already sits at the device
+    // timer budget and one more allocation crashed the app on launch.
+    const RIV_DELAY_TICKS = 150;  // ~10 s — wait out launch ping -> msgs -> daily
+    const RIV_WAIT_TICKS  = 14;   // ~0.9 s — re-check while the request slot is busy
+    const RIV_WAIT_MAX = 12;      // ... then give up rather than poll forever
+    const RIV_NAME_MAX = 12;
+    // A rival's board score is a cumulative rating, not a defense stat, so it
+    // is compressed 2/5 into the range colony power lives in — a 500-pt
+    // Overlord should read as a hard fight, not an impossible one.
+    const RIV_PWR_BASE = 18;
+    const RIV_PWR_NUM  = 2;
+    const RIV_PWR_DEN  = 5;
+    function rivalPower(pts) {
+        var p = pts;
+        if (p < 0) { p = 0; }
+        if (p > 1000000) { p = 1000000; }
+        return RIV_PWR_BASE + p * RIV_PWR_NUM / RIV_PWR_DEN;
+    }
+
+    // Incoming attacks. There is no server-side PvP, so rival raids that
+    // happened while the player was away are rolled on return — the only
+    // moment they can be experienced anyway. Deliberately low-stakes:
+    // buildings, population and the garrison beyond a single casualty are
+    // never at risk, and a loss can never take a stockpile below zero.
+    const DEF_ROLL_HOURS = 8;     // one attempt per 8h of absence
+    const DEF_MAX_ROLLS  = 3;     // ... capped, however long the absence was
+    const DEF_CHANCE_PCT = 45;
+    const DEF_HELD_PTS   = 4;
+    const DEF_LOST_PTS   = 5;
+    const DEF_SKIM_PCT   = 3;     // % of the mineral stockpile a loss costs
+    const DEF_SKIM_CAP   = 500;   // hard ceiling — a raid must never gut a save,
+                                  // so late on this is pocket change by design
+    const DEF_MARINE_MIN = 2;     // garrison size a casualty is only taken above
+    const DEF_MARINE_PCT = 35;
+    const DEF_BAND_LO    = 60;    // attacker strength window, as a % of this
+    const DEF_BAND_HI    = 140;   // ... colony's own defense power
+    const DLOG_MAX       = 8;     // persisted defence-log entries
+
+    // Raid stance — a flat trade-off between this colony's own attack and
+    // defense power, picked before a raid and left in place until changed.
+    const STANCE_ASSAULT  = 0;
+    const STANCE_BALANCED = 1;
+    const STANCE_FORTIFY  = 2;
+    function stanceName(i) {
+        var a = ["Assault", "Balanced", "Fortify"];
+        return a[_c(i, 0, 2)];
+    }
+    function stanceAtkBonus(i) {
+        var a = [24, 10, 0];
+        return a[_c(i, 0, 2)];
+    }
+    function stanceDefBonus(i) {
+        var a = [0, 10, 24];
+        return a[_c(i, 0, 2)];
+    }
+
+    // Rival colonies for the war layer — flavour names only, generated
+    // locally so raiding always works offline. Never renumber; append only.
+    const WAR_FOE_N = 10;
+    function warFoeName(i) {
+        var a = ["Outpost Krell", "Vega-9", "Iron Reach", "New Meridian",
+                 "Ashfall Station", "Dust Hollow", "Zenith Colony",
+                 "Blackrock Base", "Halcyon Drift", "Ember Vault"];
+        return a[_c(i, 0, WAR_FOE_N - 1)];
+    }
+    // Cosmetic rank ladder climbed with cumulative war points.
+    function warRankName(pts) {
+        if (pts >= 500) { return "Overlord"; }
+        if (pts >= 260) { return "Warlord"; }
+        if (pts >= 140) { return "Vanguard"; }
+        if (pts >= 60)  { return "Sentinel"; }
+        if (pts >= 20)  { return "Guard"; }
+        return "Militia";
+    }
 
     // ── Palette ──────────────────────────────────────────────────────────────
     const BG      = 0x05070D;

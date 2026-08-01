@@ -1,68 +1,69 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// GameMenu.mc — The shared, unified main menu for every Bitochi game.
+// GameMenu.mc — The shared, unified main menu for every Bitochi games.
 //
-// A single pushable root view (returned from a game's App.getInitialView) that
-// renders an identical, premium three-row menu across all games:
+// Rows (dynamic):
+//   [RESUME]     ← only when GameHooks.hasResume() (SaveResume blob exists)
+//    START       ← always a fresh run
+//    OPTIONS
+//    LEADERBOARD
 //
-//     ┌─────────────────────────┐
-//     │        TITLE 1          │   ← per-game title + colours
-//     │        TITLE 2          │
-//     │       by Bitochi        │
-//     │      · signature art ·  │   ← per-game GameHooks.drawArt (optional)
-//     │   ▸ START               │   ← accent
-//     │     OPTIONS             │
-//     │   🏆 LEADERBOARD        │   ← shared LbBadge (gold)
-//     │        footer           │   ← optional GameHooks.footerText
-//     └─────────────────────────┘
-//
-// START     → GameHooks.startGame()      (push the gameplay view)
-// OPTIONS   → GmOptionsMenu              (per-game settings + Unlock full ver.)
-// LEADERBD  → LbScoresView               (shared global leaderboard)
-//
-// Consistency guarantees: same geometry, same fonts, same selection styling and
-// the same gold leaderboard badge on every game. Games only supply colours,
-// title, optional art and their settings list.
+// START     → GameHooks.startGame()
+// RESUME    → GameHooks.resumeGame()
+// OPTIONS   → GmOptionsMenu
+// LEADERBD  → LbScoresView (or hooks.openBoard())
 // ═══════════════════════════════════════════════════════════════════════════
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Lang;
+using Toybox.Math;
 using Toybox.Timer;
-
-// Row indices on the fixed 3-row main menu.
-const GM_START = 0;
-const GM_OPTS  = 1;
-const GM_BOARD = 2;
-const GM_ROWS  = 3;
 
 class GameMenuView extends WatchUi.View {
     hidden var _cfg;
     hidden var _sel;
     hidden var _w;
     hidden var _h;
-    hidden var _t;         // animation tick for subtle art motion
+    hidden var _t;
     hidden var _timer;
     hidden var _announced;
+    hidden var _ids;    // Array of row ids: :resume / :start / :opts / :board
+    hidden var _nRows;
 
     function initialize(cfg as MenuConfig) {
         View.initialize();
         _cfg = cfg;
-        _sel = GM_START;
+        _sel = 0;
         _w = 0; _h = 0;
         _t = 0; _timer = null;
         _announced = false;
+        _rebuildRows();
     }
 
     function config() as MenuConfig { return _cfg; }
 
+    hidden function _rebuildRows() as Void {
+        _ids = [];
+        var hasR = false;
+        try {
+            if (_cfg.hooks != null) { hasR = _cfg.hooks.hasResume(); }
+        } catch (e) { hasR = false; }
+        if (hasR) { _ids.add(:resume); }
+        _ids.add(:start);
+        _ids.add(:opts);
+        _ids.add(:board);
+        _nRows = _ids.size();
+        if (_sel >= _nRows) { _sel = 0; }
+    }
+
     function onShow() {
-        // One launch announcement per session (server-driven cross-promo /
-        // one-shot payment call-to-action). Fully guarded + throttled inside.
+        _rebuildRows();   // pick up a save created since last show
         if (!_announced) {
             _announced = true;
             try { Leaderboard.announce(_cfg.gameId, null); } catch (e) {}
         }
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_tick), 66, true); } catch (e) {}
+        WatchUi.requestUpdate();
     }
 
     function onHide() {
@@ -70,24 +71,30 @@ class GameMenuView extends WatchUi.View {
     }
 
     function _tick() as Void { _t = (_t + 1) % 1000000; WatchUi.requestUpdate(); }
-
-    // Expose the animation phase to art callbacks.
     function phase() as Lang.Number { return _t; }
 
-    // ── Selection / activation ─────────────────────────────────────────────
     function sel() as Lang.Number { return _sel; }
     function setSel(i as Lang.Number) as Void {
-        _sel = ((i % GM_ROWS) + GM_ROWS) % GM_ROWS;
+        if (_nRows <= 0) { return; }
+        _sel = ((i % _nRows) + _nRows) % _nRows;
         WatchUi.requestUpdate();
     }
     function move(d as Lang.Number) as Void { setSel(_sel + d); }
 
     function activate() as Void {
-        if (_sel == GM_START) {
+        if (_nRows <= 0 || _sel < 0 || _sel >= _nRows) { return; }
+        var id = _ids[_sel];
+        if (id == :resume) {
+            if (_cfg.hooks != null) {
+                try { _cfg.hooks.resumeGame(); } catch (e) {}
+            }
+            return;
+        }
+        if (id == :start) {
             if (_cfg.hooks != null) { _cfg.hooks.startGame(); }
             return;
         }
-        if (_sel == GM_OPTS) { _openOptions(); return; }
+        if (id == :opts) { _openOptions(); return; }
         _openBoard();
     }
 
@@ -102,8 +109,6 @@ class GameMenuView extends WatchUi.View {
 
     hidden function _openBoard() as Void {
         if (!Leaderboard.isSupported()) { return; }
-        // A game may fully own the leaderboard entry point (e.g. push a
-        // category picker for several boards). If it handled it, we're done.
         if (_cfg.hooks != null) {
             try { if (_cfg.hooks.openBoard()) { return; } } catch (e) {}
         }
@@ -115,7 +120,6 @@ class GameMenuView extends WatchUi.View {
         } catch (e) {}
     }
 
-    // ── Rendering ───────────────────────────────────────────────────────────
     function onUpdate(dc) {
         try { _draw(dc); }
         catch (e) { try { dc.setColor(_cfg.bg, _cfg.bg); dc.clear(); } catch (e2) {} }
@@ -137,18 +141,13 @@ class GameMenuView extends WatchUi.View {
         var fhT = dc.getFontHeight(Graphics.FONT_SMALL);
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
 
-        // ── Title block geometry (positions computed first, drawn LAST) ──
-        // Some games (the idle builders) paint a full diorama in the art band
-        // that reaches up behind the title. To keep the title readable we draw
-        // the art FIRST, then stamp the title on top of it with a soft shadow.
         var yT1 = (_h * 11) / 100 + fhT / 2;
         var yT2 = yT1 + fhT * 78 / 100;
         var yBrand = (_cfg.title2 != null ? yT2 : yT1) + fhT * 78 / 100;
         var y = yBrand;
         if (_cfg.brand != null && _cfg.brand.length() > 0) { y += fhX; }
 
-        // ── Signature art band (drawn behind the title) ──
-        var rg    = rowGeom();
+        var rg = rowGeom();
         var rowsTop = rg[3];
         var artTop  = y + 2;
         var artBot  = rowsTop - 4;
@@ -157,7 +156,6 @@ class GameMenuView extends WatchUi.View {
             try { _cfg.hooks.drawArt(dc, cx, artCy, _w, _h); } catch (e) {}
         }
 
-        // ── Title (on top of the art, with a legibility shadow) ──
         _titleLine(dc, cx, yT1, Graphics.FONT_SMALL, _cfg.col1, _cfg.title1, VC);
         if (_cfg.title2 != null) {
             _titleLine(dc, cx, yT2, Graphics.FONT_SMALL, _cfg.col2, _cfg.title2, VC);
@@ -166,44 +164,79 @@ class GameMenuView extends WatchUi.View {
             _titleLine(dc, cx, yBrand, Graphics.FONT_XTINY, LB_MUTED, _cfg.brand, VC);
         }
 
-        // ── Rows ──
         var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-        for (var i = 0; i < GM_ROWS; i++) {
+        for (var i = 0; i < _nRows; i++) {
             var ry  = rowY0 + i * (rowH + gap);
             var isSel = (i == _sel);
-            if (i == GM_BOARD) {
+            var id = _ids[i];
+            if (id == :board) {
                 LbBadge.drawRow(dc, rowX, ry, rowW, rowH, isSel);
                 continue;
             }
-            _drawRow(dc, rowX, ry, rowW, rowH, i, isSel, cx);
+            _drawRow(dc, rowX, ry, rowW, rowH, id, isSel, cx);
         }
 
-        // ── Footer ──
         if (_cfg.hooks != null) {
             var ft = _cfg.hooks.footerText();
             if (ft != null && ft.length() > 0) {
+                // The footer sits one line off the bottom, where a round display
+                // is barely half as wide as it is at the centre. Games kept
+                // shipping status lines that ran under the bezel, so trim here
+                // rather than relying on every caller to guess a safe length.
+                var fy = _h - fhX;
+                var fw = _chord(fy) * 94 / 100;
+                while (ft.length() > 4 && dc.getTextWidthInPixels(ft, Graphics.FONT_XTINY) > fw) {
+                    ft = ft.substring(0, ft.length() - 2);
+                }
+                // Footers are separator-joined, so a trim usually lands mid-join
+                // and leaves a dangling bullet or dash hanging off the end.
+                while (ft.length() > 1) {
+                    var tail = ft.substring(ft.length() - 1, ft.length());
+                    if (!tail.equals(" ") && !tail.equals("\u00b7") && !tail.equals("-")) { break; }
+                    ft = ft.substring(0, ft.length() - 1);
+                }
                 dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx, _h - fhX, Graphics.FONT_XTINY, ft, VC);
+                dc.drawText(cx, fy, Graphics.FONT_XTINY, ft, VC);
             }
         }
     }
 
-    // Title line with a soft dark drop-shadow so it stays legible even when a
-    // bright signature diorama is painted behind it.
-    hidden function _titleLine(dc, cx, y, font, col, s, just) {
-        if (s == null) { return; }
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx + 1, y + 1, font, s, just);
-        dc.drawText(cx - 1, y + 1, font, s, just);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, y, font, s, just);
+    // Width the display actually offers at this y. Square screens get the lot.
+    hidden function _chord(y) {
+        if (_w != _h) { return _w; }
+        var r = _w / 2;
+        var dy = y - r;
+        var q = r * r - dy * dy;
+        return (q > 0) ? Math.sqrt(q).toNumber() * 2 : _w;
     }
 
-    hidden function _drawRow(dc, x, y, w, h, idx, sel, cx) {
-        var isStart = (idx == GM_START);
-        var fill    = sel ? (isStart ? 0x123016 : 0x14263A) : 0x111820;
-        var border  = sel ? (isStart ? _cfg.accent : 0x55AAFF) : 0x2A3A4A;
-        var text    = sel ? (isStart ? 0xCFF7DA : 0xCCEEFF) : 0x8497A8;
+    hidden function _titleLine(dc, cx, y, font, col, s, just) {
+        if (s == null) { return; }
+        // Titles are centred near the top of a round display, where the chord is
+        // already well short of the full width. A two-word game name at
+        // FONT_SMALL runs under the bezel, so step the font down until it fits.
+        var f = font;
+        var maxw = _chord(y) * 90 / 100;
+        var fonts = [font, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        for (var i = 0; i < fonts.size(); i++) {
+            f = fonts[i];
+            if (dc.getTextWidthInPixels(s, f) <= maxw) { break; }
+        }
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, y + 1, f, s, just);
+        dc.drawText(cx - 1, y + 1, f, s, just);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, y, f, s, just);
+    }
+
+    hidden function _drawRow(dc, x, y, w, h, id, sel, cx) {
+        var isHi = (id == :start || id == :resume);
+        var fill    = sel ? (isHi ? 0x123016 : 0x14263A) : 0x111820;
+        var border  = sel ? (isHi ? _cfg.accent : 0x55AAFF) : 0x2A3A4A;
+        var text    = sel ? (isHi ? 0xCFF7DA : 0xCCEEFF) : 0x8497A8;
+        if (id == :resume && sel) {
+            fill = 0x1A2030; border = 0xFBBF24; text = 0xFFE9A8;
+        }
 
         dc.setColor(fill, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, w, h, 5);
@@ -214,41 +247,41 @@ class GameMenuView extends WatchUi.View {
             var ay = y + h / 2;
             dc.fillPolygon([[x + 6, ay - 4], [x + 6, ay + 4], [x + 12, ay]]);
         }
-        var label = (idx == GM_START) ? "START" : "OPTIONS";
+        var label = "OPTIONS";
+        if (id == :resume) { label = "RESUME"; }
+        else if (id == :start) { label = "START"; }
         dc.setColor(text, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, y + h / 2, Graphics.FONT_XTINY, label,
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
-    // Space-aware geometry for the fixed three rows. Rows live in the lower
-    // ~45% of the screen; height shrinks to fit small round watches and grows
-    // (capped) on large ones so the layout looks intentional everywhere.
-    //   [ rowH, rowW, rowX, rowY0, gap ]
     function rowGeom() as Lang.Array {
         var W = _w; var H = _h;
         if (W == 0) { W = 240; }
         if (H == 0) { H = 240; }
-        var topZone      = (H * 55) / 100;
-        var bottomMargin = (H * 12) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
-        var gap          = (H * 2)  / 100; if (gap < 4) { gap = 4; }
+        var n = _nRows; if (n < 1) { n = 3; }
+        // With RESUME (4 rows) pull the block up a bit so everything fits.
+        var topPct = (n >= 4) ? 48 : 55;
+        var topZone      = (H * topPct) / 100;
+        var bottomMargin = (H * 10) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
+        var gap          = (H * 15) / 1000; if (gap < 3) { gap = 3; }
         var avail        = (H - bottomMargin) - topZone;
-        var rowH         = (avail - gap * (GM_ROWS - 1)) / GM_ROWS;
-        if (rowH > 30) { rowH = 30; }
-        if (rowH < 18) { rowH = 18; }
+        var rowH         = (avail - gap * (n - 1)) / n;
+        if (rowH > 28) { rowH = 28; }
+        if (rowH < 16) { rowH = 16; }
         var rowW = (W * 62) / 100; if (rowW < 112) { rowW = 112; }
         if (rowW > W - 8) { rowW = W - 8; }
         var rowX = (W - rowW) / 2;
-        var used = GM_ROWS * rowH + (GM_ROWS - 1) * gap;
+        var used = n * rowH + (n - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
         if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
-    // Hit-test a tap; returns the row index or -1.
     function rowAt(x, y) as Lang.Number {
         var rg = rowGeom();
         var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-        for (var i = 0; i < GM_ROWS; i++) {
+        for (var i = 0; i < _nRows; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) { return i; }
         }
@@ -256,9 +289,6 @@ class GameMenuView extends WatchUi.View {
     }
 }
 
-// ── Delegate: identical navigation on every game ─────────────────────────────
-// UP/DOWN (buttons, page keys, swipes) move the selection; SELECT/ENTER/tap
-// activate; BACK exits the app (this is the root view).
 class GameMenuDelegate extends WatchUi.BehaviorDelegate {
     hidden var _v;
 

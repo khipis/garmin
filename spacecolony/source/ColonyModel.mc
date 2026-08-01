@@ -3,9 +3,11 @@
 //
 // One class owns everything: save/load, idle (offline) production, the building
 // tree (build/upgrade), planet exploration + discoveries, the tech tree, random
-// events, daily missions, streaks, colony history and the five leaderboard
-// scores. The view/delegate only read fields and call action methods. Every
-// Storage access is guarded so nothing here can throw into the UI.
+// events, daily missions, streaks, colony history, the war layer (marines,
+// turrets, raids on real rival colonies, incoming attacks) and the seven
+// leaderboard scores.
+// The view/delegate only read fields and call action methods. Every Storage
+// access is guarded so nothing here can throw into the UI.
 // ═══════════════════════════════════════════════════════════════════════════
 using Toybox.Application;
 using Toybox.Lang;
@@ -26,13 +28,27 @@ class ColonyModel {
 
     var streak; var lastDay; var streakPaid;
     var dailyDay; var dUpgrades; var dExpl; var dRes; var dailyClaimed; var dailyCollected;
+    var dRaid;             // raids launched today
     var stepBase;         // steps already converted into expedition progress today
     var log;              // Array<String> history (newest first, cap 8)
     var pendingEvent;     // EV_* awaiting a choice, or EV_NONE
 
+    // ── War (military economy + raids) ────────────────────────────────────
+    var marines; var turrets;
+    var warPts; var warWins; var warLosses; var warStreak;
+    var warLog;            // Array<String> war-only history (newest first, cap 8)
+    var raidStance;        // Sc.STANCE_*
+    var defLog;            // Array<[day, held, name, ptsLost, minLost]>, newest first
+    var rivals;            // Array<[name, power]> cached off the War board
+    var rivalDay;          // calendar day the roster was last refreshed
+
     // Idle summary (for WELCOME BACK)
     var gRes; var gSecs; var gPop; var newDay; var gEvent; var gArt;
+    var gDefN; var gDefHeld;   // incoming attacks resolved on this return
     var lastClaimBonus;   // streak-milestone line from the last daily claim
+
+    // Last raid outcome (transient — for the raid-result overlay only).
+    var rWin; var rFoeName; var rPtsDelta; var rTip; var rCredit; var rSci;
 
     function initialize() { _load(); }
 
@@ -62,6 +78,33 @@ class ColonyModel {
         if (v instanceof Lang.Number) { return v != 0; }
         return def;
     }
+    // The defence log and the rival roster persist as arrays of fixed-width
+    // rows (numbers + strings). A corrupt or legacy row must never reach the
+    // renderer, so anything off-shape is dropped here instead of being
+    // defended against at every read site.
+    hidden function _rowsOf(v, n, cap) {
+        var out = [];
+        if (!(v instanceof Lang.Array)) { return out; }
+        for (var i = 0; i < v.size() && out.size() < cap; i++) {
+            var r = v[i];
+            if (!(r instanceof Lang.Array) || r.size() != n) { continue; }
+            var ok = true;
+            for (var k = 0; k < n; k++) {
+                if (!(r[k] instanceof Lang.Number) && !(r[k] instanceof Lang.String)) { ok = false; }
+            }
+            if (ok) { out.add(r); }
+        }
+        return out;
+    }
+    hidden function _rNum(r, i) {
+        if (!(r instanceof Lang.Array) || i >= r.size()) { return 0; }
+        return (r[i] instanceof Lang.Number) ? r[i] : 0;
+    }
+    hidden function _rStr(r, i) {
+        if (!(r instanceof Lang.Array) || i >= r.size()) { return "Unknown"; }
+        if (r[i] instanceof Lang.String && r[i].length() > 0) { return r[i]; }
+        return "Unknown";
+    }
 
     hidden function _load() {
         started  = _bool("sc_started", false);
@@ -76,12 +119,21 @@ class ColonyModel {
         dRes     = _num("sc_dres", 0, 0, 100000);     // appended key -> 0 on old saves
         dailyClaimed  = _bool("sc_dclaim", false);
         dailyCollected= _bool("sc_dcol", false);
+        dRaid    = _num("sc_draid", 0, 0, 100000);    // absent in old saves -> 0
         stepBase = _num("sc_stepb", 0, 0, 1000000);   // absent in old saves -> 0
         discMask = _num("sc_disc", 0, 0, (1 << Sc.RG_N) - 1);
         artMask  = _num("sc_art", 0, 0, (1 << Sc.A_N) - 1);
         relicMask= _num("sc_amile", 0, 0, 0x7FFFFFFF);
         streakPaid = _num("sc_spaid", 0, 0, 100000);
         pendingEvent = _num("sc_pev", Sc.EV_NONE, Sc.EV_NONE, Sc.EV_RARE);
+
+        marines   = _num("sc_mar", 0, 0, Sc.MARINE_CAP_MAX);
+        turrets   = _num("sc_tur", 0, 0, Sc.TURRET_CAP_MAX);
+        warPts    = _num("sc_wpts", 0, 0, 0x7FFFFFFF);
+        warWins   = _num("sc_wwin", 0, 0, 1000000);
+        warLosses = _num("sc_wlos", 0, 0, 1000000);
+        warStreak = _num("sc_wstr", 0, -1000000, 1000000);
+        raidStance= _num("sc_stance", Sc.STANCE_BALANCED, 0, 2);
 
         // New indices simply aren't in old saves — they default to 0 here.
         res = new [Sc.R_N];
@@ -104,11 +156,25 @@ class ColonyModel {
                 if (lg[l] instanceof Lang.String) { log.add(lg[l]); }
             }
         }
+        var wl = _get("sc_wlog", null);
+        warLog = [];
+        if (wl instanceof Lang.Array) {
+            for (var wi = 0; wi < wl.size() && wi < 8; wi++) {
+                if (wl[wi] instanceof Lang.String) { warLog.add(wl[wi]); }
+            }
+        }
+        // Defence log + rival roster are appended keys: absent on every save
+        // written before the war layer, so both simply load empty.
+        defLog = _rowsOf(_get("sc_dlog", null), 6, Sc.DLOG_MAX);
+        rivals = _rowsOf(_get("sc_riv", null), 2, Sc.RIV_MAX);
+        rivalDay = _num("sc_rivday", 0, 0, 0x7FFFFFFF);
 
         gRes = new [Sc.R_N];
         for (var g = 0; g < Sc.R_N; g++) { gRes[g] = 0; }
         gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
+        gDefN = 0; gDefHeld = 0;
         lastClaimBonus = "";
+        rWin = false; rFoeName = ""; rPtsDelta = 0; rTip = ""; rCredit = 0; rSci = 0;
     }
 
     // Clamped stockpile add — keeps every resource inside 32-bit range so a
@@ -140,17 +206,27 @@ class ColonyModel {
         _set("sc_dres", dRes);
         _set("sc_dclaim", dailyClaimed);
         _set("sc_dcol", dailyCollected);
+        _set("sc_draid", dRaid);
         _set("sc_stepb", stepBase);
         _set("sc_disc", discMask);
         _set("sc_art", artMask);
         _set("sc_amile", relicMask);
         _set("sc_spaid", streakPaid);
         _set("sc_pev", pendingEvent);
+        _set("sc_mar", marines);
+        _set("sc_tur", turrets);
+        _set("sc_wpts", warPts);
+        _set("sc_wwin", warWins);
+        _set("sc_wlos", warLosses);
+        _set("sc_wstr", warStreak);
+        _set("sc_stance", raidStance);
         for (var i = 0; i < Sc.R_N; i++) { _set("sc_r" + i, res[i]); }
         for (var b = 0; b < Sc.B_N; b++) { _set("sc_b" + b, bLevel[b]); }
         for (var t = 0; t < Sc.T_N; t++) { _set("sc_t" + t, tech[t]); }
         for (var r = 0; r < Sc.RG_N; r++) { _set("sc_rg" + r, rgProg[r]); }
         _set("sc_log", log);
+        _set("sc_wlog", warLog);
+        _set("sc_dlog", defLog);
     }
 
     // ── Full reset (OPTIONS → Reset colony) ──────────────────────────────────
@@ -160,7 +236,9 @@ class ColonyModel {
         var keys = ["sc_started", "sc_born", "sc_last", "sc_pop", "sc_streak",
                     "sc_lday", "sc_dday", "sc_dup", "sc_dexp", "sc_dclaim",
                     "sc_dcol", "sc_disc", "sc_pev", "sc_log", "sc_lbday", "sc_stepb",
-                    "sc_dres", "sc_art", "sc_amile", "sc_spaid"];
+                    "sc_dres", "sc_art", "sc_amile", "sc_spaid",
+                    "sc_draid", "sc_mar", "sc_tur", "sc_wpts", "sc_wwin", "sc_wlos",
+                    "sc_wstr", "sc_stance", "sc_wlog", "sc_dlog", "sc_riv", "sc_rivday"];
         for (var i = 0; i < keys.size(); i++) { try { Application.Storage.deleteValue(keys[i]); } catch (e) {} }
         for (var r = 0; r < Sc.R_N; r++)  { try { Application.Storage.deleteValue("sc_r" + r); } catch (e) {} }
         for (var b = 0; b < Sc.B_N; b++)  { try { Application.Storage.deleteValue("sc_b" + b); } catch (e) {} }
@@ -356,6 +434,7 @@ class ColonyModel {
         var now = nowSec();
         for (var z = 0; z < Sc.R_N; z++) { gRes[z] = 0; }
         gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
+        gDefN = 0; gDefHeld = 0;
 
         var td = today();
         if (td != lastDay) {
@@ -366,7 +445,7 @@ class ColonyModel {
         }
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
-            dailyDay = td; dUpgrades = 0; dExpl = 0; dRes = 0;
+            dailyDay = td; dUpgrades = 0; dExpl = 0; dRes = 0; dRaid = 0;
             dailyClaimed = false; dailyCollected = false;
         }
 
@@ -389,6 +468,10 @@ class ColonyModel {
         // rather than breaking it: production is untouched, water keeps flowing
         // in, and a credit-funded supply drop can always restart it.
         _growPopulation(elapsed);
+
+        // Rivals raid AFTER production banks, so the skim comes off a stockpile
+        // the player has actually been credited with rather than a stale one.
+        _resolveIncoming(elapsed);
 
         _creditSteps();
 
@@ -643,8 +726,9 @@ class ColonyModel {
     }
 
     // ── Daily mission ──────────────────────────────────────────────────────────
-    // Seven varieties so a week of daily visits never asks the same thing
-    // twice. Ids 0..3 keep the meaning they shipped with.
+    // Eight varieties so a week-plus of daily visits never repeats too soon.
+    // Ids 0..3 keep the meaning they shipped with; id 7 is the war layer's
+    // addition — the rotation only ever grows, never renumbers.
     function dailyId() {
         var d = dailyDay % Sc.DAILY_N;
         return (d < 0) ? 0 : d;
@@ -657,7 +741,8 @@ class ColonyModel {
         if (id == 3) { return "Run an expedition"; }
         if (id == 4) { return "Upgrade 3 structures"; }
         if (id == 5) { return "Research a technology"; }
-        return "Run 3 expeditions";
+        if (id == 6) { return "Run 3 expeditions"; }
+        return "Launch a raid";
     }
     function dailyTarget() {
         var id = dailyId();
@@ -674,7 +759,8 @@ class ColonyModel {
         if (id == 3) { return dExpl > 0 ? 1 : 0; }
         if (id == 4) { return (dUpgrades > 3) ? 3 : dUpgrades; }
         if (id == 5) { return dRes > 0 ? 1 : 0; }
-        return (dExpl > 3) ? 3 : dExpl;
+        if (id == 6) { return (dExpl > 3) ? 3 : dExpl; }
+        return dRaid > 0 ? 1 : 0;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
 
@@ -775,6 +861,302 @@ class ColonyModel {
         return s * 100 / Sc.OFFLINE_CAP;
     }
 
+    // ── War (military economy + raids) ────────────────────────────────────────
+    // A win/loss layer on top of the colony, never a crushing resource loss:
+    // marines and turrets are bought once and kept forever, and a raid only
+    // ever risks the small energy toll it costs to launch.
+    function marineCap() {
+        var c = Sc.MARINE_CAP_BASE + bLevel[Sc.B_HABITAT] * Sc.MARINE_CAP_HAB
+              + bLevel[Sc.B_DEFENSE] * Sc.MARINE_CAP_DEF;
+        return (c > Sc.MARINE_CAP_MAX) ? Sc.MARINE_CAP_MAX : c;
+    }
+    function turretCap() {
+        var c = Sc.TURRET_CAP_BASE + bLevel[Sc.B_DEFENSE] * Sc.TURRET_CAP_DEF;
+        return (c > Sc.TURRET_CAP_MAX) ? Sc.TURRET_CAP_MAX : c;
+    }
+    // [minerals, energy] for the NEXT marine — escalates gently per marine
+    // already enlisted, same overflow-safe curve the buildings use.
+    function marineCost() {
+        return [Sc.escalate(Sc.MARINE_COST_MIN, marines, Sc.MARINE_COST_PCT, Sc.MARINE_COST_PCT),
+                Sc.escalate(Sc.MARINE_COST_NRG, marines, Sc.MARINE_COST_PCT, Sc.MARINE_COST_PCT)];
+    }
+    // [minerals, science] for the NEXT turret.
+    function turretCost() {
+        return [Sc.escalate(Sc.DEFENSE_COST_MIN, turrets, Sc.DEFENSE_COST_PCT, Sc.DEFENSE_COST_PCT),
+                Sc.escalate(Sc.DEFENSE_COST_SCI, turrets, Sc.DEFENSE_COST_PCT, Sc.DEFENSE_COST_PCT)];
+    }
+    function canAffordMarine() {
+        var c = marineCost();
+        return res[Sc.R_MIN] >= c[0] && res[Sc.R_NRG] >= c[1];
+    }
+    function canAffordTurret() {
+        var c = turretCost();
+        return res[Sc.R_MIN] >= c[0] && res[Sc.R_SCI] >= c[1];
+    }
+    function trainMarine() {
+        if (marines >= marineCap()) { return "Need Habitat or Defense Grid upgrade"; }
+        var c = marineCost();
+        if (!canAffordMarine()) { return "Need more resources"; }
+        _subRes(Sc.R_MIN, c[0]); _subRes(Sc.R_NRG, c[1]);
+        marines += 1;
+        if (marines == 1) { _logAdd("First marine enlisted"); }
+        save();
+        return "Marine recruited (" + marines + "/" + marineCap() + ")";
+    }
+    function buildTurret() {
+        if (turrets >= turretCap()) { return "Need Defense Grid upgrade"; }
+        var c = turretCost();
+        if (!canAffordTurret()) { return "Need more resources"; }
+        _subRes(Sc.R_MIN, c[0]); _subRes(Sc.R_SCI, c[1]);
+        turrets += 1;
+        if (turrets == 1) { _logAdd("First turret installed"); }
+        save();
+        return "Turret online (" + turrets + "/" + turretCap() + ")";
+    }
+
+    // Cycled from the WAR page — one flat trade-off between this colony's own
+    // attack and defense power, left in place until changed again.
+    function cycleStance() {
+        raidStance = (raidStance + 1) % 3;
+        save();
+        return "Stance: " + Sc.stanceName(raidStance);
+    }
+
+    function attackPower() {
+        var p = marines * 12 + bLevel[Sc.B_LAUNCH] * 8 + bLevel[Sc.B_DEFENSE] * 4 + civLevel() * 5;
+        return p + Sc.stanceAtkBonus(raidStance);
+    }
+    function defensePower() {
+        var p = turrets * 14 + bLevel[Sc.B_DEFENSE] * 10 + population / 2 + bLevel[Sc.B_SAT] * 3;
+        return p + Sc.stanceDefBonus(raidStance);
+    }
+
+    function raidsLeft() {
+        var n = Sc.RAID_CAP_PER_DAY - dRaid;
+        return (n < 0) ? 0 : n;
+    }
+    // ── Rival roster ──────────────────────────────────────────────────────
+    // Real colonies read off the War board once a day and cached. Everything
+    // below works on the cache alone, so a player who never connects a phone
+    // gets the same game with procedural opponents.
+    function rivalsStale() { return rivalDay != today(); }
+    // Called from the async fetch. Storing the day even for an empty result
+    // keeps a game with no rivals yet from re-fetching on every launch.
+    function setRivals(list) {
+        var out = [];
+        if (list instanceof Lang.Array) {
+            for (var i = 0; i < list.size() && out.size() < Sc.RIV_MAX; i++) {
+                var r = list[i];
+                if (r instanceof Lang.Array && r.size() == 2) { out.add(r); }
+            }
+        }
+        rivals = out;
+        rivalDay = today();
+        _set("sc_riv", rivals);
+        _set("sc_rivday", rivalDay);
+    }
+    // A rival whose power sits inside the band, or -1. Real rivals cluster
+    // around the player's own rating (the roster is built from the "near"
+    // rows first), so this hits most of the time on a connected watch.
+    hidden function _pickRival(lo, hi) {
+        var hits = [];
+        for (var i = 0; i < rivals.size(); i++) {
+            var p = _rNum(rivals[i], 1);
+            if (p >= lo && p <= hi) { hits.add(i); }
+        }
+        if (hits.size() == 0) { return -1; }
+        return hits[_rand(hits.size())];
+    }
+    // A rival colony sized off THIS colony's own attack power, so raids stay
+    // winnable but are never a guaranteed win. band FAIR favours the player;
+    // RISK is a harder fight for a richer payout.
+    //
+    // A cached rival inside the band is used as-is, name AND power. When the
+    // roster holds nobody at the player's weight class a real colony's name is
+    // still used but the fight is sized procedurally — being matched against
+    // the #1 Overlord because nobody else is cached is a bug, not a feature.
+    function makeFoe(band) {
+        var atk = attackPower();
+        if (atk < 10) { atk = 10; }
+        var lo = atk * Sc.raidBandLo(band) / 100;
+        var hi = atk * Sc.raidBandHi(band) / 100;
+        var pick = _pickRival(lo, hi);
+        if (pick >= 0) {
+            var pdef = _rNum(rivals[pick], 1);
+            if (pdef < 5) { pdef = 5; }
+            return { :name => _rStr(rivals[pick], 0), :def => pdef };
+        }
+        var pct = Sc.raidBandLo(band) + _rand(Sc.raidBandHi(band) - Sc.raidBandLo(band) + 1);
+        var def = atk * pct / 100;
+        if (def < 5) { def = 5; }
+        return { :name => _foeName(), :def => def };
+    }
+    // Prefer a real colony's name over the flavour list whenever one is cached.
+    hidden function _foeName() {
+        if (rivals.size() > 0) { return _rStr(rivals[_rand(rivals.size())], 0); }
+        return Sc.warFoeName(_rand(Sc.WAR_FOE_N));
+    }
+    // Launch a raid: win/loss only, decided by attackPower vs. the foe's
+    // defense with a little fog-of-war on both rolls. NEVER touches buildings,
+    // population or the resource stockpile beyond the flat energy toll.
+    function raid(band) {
+        if (raidsLeft() <= 0) { return "Fleet resting - back tomorrow"; }
+        if (res[Sc.R_NRG] < Sc.RAID_COST_NRG) { return "Need " + Sc.RAID_COST_NRG + " energy"; }
+        _subRes(Sc.R_NRG, Sc.RAID_COST_NRG);
+        dRaid += 1;
+
+        var foe = makeFoe(band);
+        var atk = attackPower();
+        var atkRoll = atk + _rand(atk / 3 + 1);
+        var foeDef = foe[:def];
+        var defRoll = foeDef + _rand(foeDef / 3 + 1);
+        var win = atkRoll >= defRoll;
+
+        var beforePts = warPts;
+        var riskBonus = (band == Sc.RAID_BAND_RISK) ? 6 : 0;
+        rWin = win; rFoeName = foe[:name]; rCredit = 0; rSci = 0;
+        if (win) {
+            warWins += 1;
+            warStreak = (warStreak >= 0) ? warStreak + 1 : 1;
+            var streakBonus = warStreak; if (streakBonus > 5) { streakBonus = 5; }
+            var ptsGain = 10 + civLevel() / 2 + riskBonus + streakBonus;
+            warPts += ptsGain;
+            rPtsDelta = ptsGain;
+            var cre = 30 + civLevel() * 4 + (band == Sc.RAID_BAND_RISK ? 20 : 0);
+            var sci = 10 + civLevel() * 2 + (band == Sc.RAID_BAND_RISK ? 10 : 0);
+            rCredit = _addRes(Sc.R_CRE, cre);
+            rSci = _addRes(Sc.R_SCI, sci);
+            rTip = "Marines held the line and brought back supplies.";
+            _warLogAdd("W raid " + foe[:name]);
+            if (warStreak == 3 || warStreak == 5 || warStreak == 10) {
+                _logAdd("War streak " + warStreak + " - " + Sc.warRankName(warPts));
+            }
+        } else {
+            warLosses += 1;
+            warStreak = (warStreak <= 0) ? warStreak - 1 : -1;
+            var ptsLoss = 6 + (band == Sc.RAID_BAND_RISK ? 4 : 0);
+            if (ptsLoss > warPts) { ptsLoss = warPts; }
+            warPts -= ptsLoss;
+            rPtsDelta = -ptsLoss;
+            rTip = "Reinforce the fleet and try again.";
+            _warLogAdd("L vs " + foe[:name]);
+        }
+        var rankBefore = Sc.warRankName(beforePts);
+        var rankAfter = Sc.warRankName(warPts);
+        if (!rankBefore.equals(rankAfter)) {
+            _logAdd((win ? "Promoted to " : "Demoted to ") + rankAfter);
+        }
+        save();
+        return win ? ("Victory over " + foe[:name] + "!") : ("Repelled by " + foe[:name]);
+    }
+    hidden function _warLogAdd(s) {
+        var nl = [s];
+        nl.addAll(warLog);
+        if (nl.size() > 8) { nl = nl.slice(0, 8); }
+        warLog = nl;
+    }
+    function warRecent() { return warLog; }
+
+    // ── Incoming attacks ──────────────────────────────────────────────────
+    // Nobody is running a PvP server, so a rival raid is rolled when the
+    // player comes back — the only moment they could ever witness it. This is
+    // what defensePower() is for: turrets and the Defense Grid finally buy
+    // something concrete. Deliberately kept out of warLog and the colony
+    // history: both cap at 8 entries and a week away would flush them.
+    hidden function _resolveIncoming(elapsed) {
+        // A colony that has never fought and owns no garrison is not a target.
+        if (warWins + warLosses == 0 && marines == 0 && turrets == 0) { return; }
+        var per = Sc.DEF_ROLL_HOURS * 3600;
+        var rolls = elapsed / per;
+        if (rolls > Sc.DEF_MAX_ROLLS) { rolls = Sc.DEF_MAX_ROLLS; }
+        var td = today();
+        for (var i = 0; i < rolls; i++) {
+            if (_rand(100) >= Sc.DEF_CHANCE_PCT) { continue; }
+            _resolveDefence(td);
+        }
+    }
+    hidden function _resolveDefence(td) {
+        var def = defensePower();
+        if (def < 5) { def = 5; }
+        var foe = _makeAttacker(def);
+        var apow = foe[:pow];
+        var defRoll = def + _rand(def / 3 + 1);
+        var atkRoll = apow + _rand(apow / 3 + 1);
+        gDefN += 1;
+        if (defRoll >= atkRoll) {
+            warPts += Sc.DEF_HELD_PTS;
+            gDefHeld += 1;
+            _defLogAdd([td, 1, foe[:name], 0, 0, 0]);
+            return;
+        }
+        var ptsLoss = Sc.DEF_LOST_PTS;
+        if (ptsLoss > warPts) { ptsLoss = warPts; }
+        warPts -= ptsLoss;
+        // A percentage of the stockpile under a hard ceiling: enough to notice
+        // on a young colony, never enough to undo real progress.
+        var skim = _pct(res[Sc.R_MIN], Sc.DEF_SKIM_PCT);
+        if (skim > Sc.DEF_SKIM_CAP) { skim = Sc.DEF_SKIM_CAP; }
+        _subRes(Sc.R_MIN, skim);
+        // A casualty is logged as well as taken: a marine that silently vanished
+        // from the roster reads as a bug, not as a raid.
+        var lostMar = 0;
+        if (marines > Sc.DEF_MARINE_MIN && _rand(100) < Sc.DEF_MARINE_PCT) {
+            marines -= 1; lostMar = 1;
+        }
+        _defLogAdd([td, 0, foe[:name], ptsLoss, skim, lostMar]);
+    }
+    // The attacker is drawn from the cached roster at this colony's own weight
+    // class; with no roster the raid is sized off defensePower() instead.
+    hidden function _makeAttacker(def) {
+        var pick = _pickRival(def * Sc.DEF_BAND_LO / 100, def * Sc.DEF_BAND_HI / 100);
+        if (pick >= 0) {
+            var p = _rNum(rivals[pick], 1);
+            if (p < 5) { p = 5; }
+            return { :name => _rStr(rivals[pick], 0), :pow => p };
+        }
+        var pct = Sc.DEF_BAND_LO + _rand(Sc.DEF_BAND_HI - Sc.DEF_BAND_LO + 1);
+        var pw = def * pct / 100;
+        if (pw < 5) { pw = 5; }
+        return { :name => _foeName(), :pow => pw };
+    }
+    hidden function _defLogAdd(row) {
+        var nl = [row];
+        nl.addAll(defLog);
+        if (nl.size() > Sc.DLOG_MAX) { nl = nl.slice(0, Sc.DLOG_MAX); }
+        defLog = nl;
+    }
+    function defenceRecent() { return defLog; }
+    function defenceHeldAt(i) {
+        if (i < 0 || i >= defLog.size()) { return false; }
+        return _rNum(defLog[i], 1) != 0;
+    }
+    // "3d ago  HELD vs Vega-9". Only the day NUMBER is persisted, so the line
+    // still reads correctly on a save that has been running for a year.
+    function defenceText(i) {
+        if (i < 0 || i >= defLog.size()) { return ""; }
+        var r = defLog[i];
+        var ago = today() - _rNum(r, 0);
+        var when = "today";
+        if (ago > 999) { when = "long ago"; }
+        else if (ago > 0) { when = ago + "d ago"; }
+        var who = _rStr(r, 2);
+        if (_rNum(r, 1) != 0) { return when + "  HELD vs " + who; }
+        var tail = (_rNum(r, 5) > 0) ? " -1 marine" : "";
+        var lost = _rNum(r, 4);
+        if (lost > 0) { return when + "  LOST " + lost + "M vs " + who + tail; }
+        return when + "  LOST vs " + who + tail;
+    }
+    // One short line for the WELCOME BACK overlay, or "" when the colony was
+    // left alone. Keep it short: it shares a slot with the header subtitle.
+    function defenceSummary() {
+        if (gDefN <= 0) { return ""; }
+        var s = "Raided " + gDefN + "x - ";
+        if (gDefHeld >= gDefN) { return s + "held"; }
+        if (gDefHeld <= 0) { return s + ((gDefN > 1) ? "all lost" : "lost"); }
+        return s + gDefHeld + " held";
+    }
+    function defenceAllHeld() { return gDefN > 0 && gDefHeld >= gDefN; }
+
     // ── History / milestones ────────────────────────────────────────────────
     function milestoneLabel() {
         var d = daysAlive();
@@ -804,7 +1186,9 @@ class ColonyModel {
                 "pop"    => population,
                 "buildings" => totalBuildingLevels(),
                 "regions"   => regionsDiscovered(),
-                "relics"    => artifactsOwned()
+                "relics"    => artifactsOwned(),
+                "warWins"   => warWins,
+                "warLosses" => warLosses
             };
             Leaderboard.submitScoreBatch(Sc.GAME_ID, [
                 { :score => civLevel(),   :variant => Sc.LB_CIV,     :meta => meta },
@@ -812,7 +1196,8 @@ class ColonyModel {
                 { :score => totalTech() + bLevel[Sc.B_LAB], :variant => Sc.LB_TECH, :meta => meta },
                 { :score => daysAlive() + 1, :variant => Sc.LB_AGE,  :meta => meta },
                 { :score => regionsDiscovered() * 100 + _expPct(), :variant => Sc.LB_EXPLORE, :meta => meta },
-                { :score => artifactScore(), :variant => Sc.LB_RELIC, :meta => meta }
+                { :score => artifactScore(), :variant => Sc.LB_RELIC, :meta => meta },
+                { :score => warPts, :variant => Sc.LB_WAR, :meta => meta }
             ]);
         } catch (e) {}
     }

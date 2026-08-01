@@ -623,10 +623,22 @@ class MineView extends WatchUi.View {
         var sub = ""; var subCol = Mn.MUTED;
         var lvl = 0; var showPips = false;
 
+        // Rows carry the same portrait the detail card opens with, so the list
+        // reads as a rig catalogue rather than a column of coloured tokens.
+        var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+
         if (id < Mn.B_N) {
             var unlocked = _m.isUnlocked(id);
             lvl = _m.bLevel[id];
-            MineArt.buildingIconEx(dc, icx, icy, isz, id, Mn.bColor(id), !unlocked);
+            if (unlocked) {
+                MineArt.bldArt(dc, id, icx, icy, ap);
+            } else {
+                dc.setColor(0x2A2216, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(icx, icy, isz);
+                dc.setColor(0x5A4A36, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(icx, icy, Graphics.FONT_XTINY, "?",
+                            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            }
             nm = Mn.bName(id);
             nmCol = unlocked ? Mn.TEXT : Mn.MUTED;
             if (!unlocked) {
@@ -637,7 +649,7 @@ class MineView extends WatchUi.View {
                 showPips = (lvl > 0);
             }
         } else if (id == Mn.B_N) {
-            MineArt.pickIcon(dc, icx, icy, isz, _m.pickTier);
+            MineArt.pickArt(dc, icx, icy, ap, _m.pickTier);
             nm = Mn.pickName(_m.pickTier);
             lvl = _m.pickTier + 1; showPips = true;
             if (_m.pickTier >= Mn.PICK_N - 1) {
@@ -647,7 +659,7 @@ class MineView extends WatchUi.View {
                 subCol = _m.canAfford(_m.pickCost()) ? 0x8FE080 : Mn.MUTED;
             }
         } else {
-            MineArt.cartIcon(dc, icx, icy, isz, _m.cartTier);
+            MineArt.cartArt(dc, icx, icy, ap, _m.cartTier);
             nm = Mn.cartName(_m.cartTier);
             lvl = _m.cartTier + 1; showPips = true;
             if (_m.cartTier >= Mn.CART_N - 1) {
@@ -771,15 +783,18 @@ class MineView extends WatchUi.View {
         var bw = _w * 60 / 100; var bx = cx - bw / 2; var by = _h * 43 / 100;
         _bar(dc, bx, by, bw, 10, (tgt > 0 ? prog * 100 / tgt : 100), Mn.ACCENT);
         _txt(dc, cx, by + _h * 5 / 100, Graphics.FONT_XTINY, Mn.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
-        _wrapN(dc, cx, by + _h * 11 / 100, _w * 80 / 100, Graphics.FONT_XTINY, Mn.GOLD,
-               _m.dailyRewardText(), 2);
+        // A two-line payout used to run straight through the streak line, so the
+        // rest of the card stacks from wherever the reward actually ended.
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var ry = _wrapN(dc, cx, by + _h * 11 / 100, _w * 80 / 100, Graphics.FONT_XTINY, Mn.GOLD,
+                        _m.dailyRewardText(), 2);
         // The streak multiplier is the reason to come back tomorrow, so it is
         // stated as a number next to the reward it scales.
         var sp = _m.streakPct();
-        _txt(dc, cx, by + _h * 20 / 100, Graphics.FONT_XTINY, Mn.TEXT,
+        _txt(dc, cx, ry, Graphics.FONT_XTINY, Mn.TEXT,
              "Streak " + _m.streak + "d  x" + (sp / 100) + "." + ((sp / 10) % 10), Graphics.TEXT_JUSTIFY_CENTER);
         var nm = _m.nextMilestone();
-        _txt(dc, cx, by + _h * 27 / 100, Graphics.FONT_XTINY, 0x8FE080,
+        _txt(dc, cx, ry + fh, Graphics.FONT_XTINY, 0x8FE080,
              (nm > 0) ? ("Bonus haul at day " + nm) : "All streak bonuses paid",
              Graphics.TEXT_JUSTIFY_CENTER);
 
@@ -902,7 +917,7 @@ class MineView extends WatchUi.View {
                 lore = Mn.bLore(id);
                 effect = Mn.bEffectText(id);
             } else if (_cardId == Mn.B_N) {
-                MineArt.pickIcon(dc, cx, _h * 22 / 100, _h * 10 / 100, _m.pickTier);
+                MineArt.pickArt(dc, cx, _h * 22 / 100, ap, _m.pickTier);
                 name = Mn.pickName(_m.pickTier);
                 meta = "Tier " + (_m.pickTier + 1) + "/" + Mn.PICK_N + " · " + Mn.pickPowerPct(_m.pickTier) + "% power";
                 metaCol = Mn.GOLD;
@@ -918,7 +933,7 @@ class MineView extends WatchUi.View {
                     btn = "FORGE  " + _costStr(pc);
                 }
             } else {
-                MineArt.cartIcon(dc, cx, _h * 22 / 100, _h * 10 / 100, _m.cartTier);
+                MineArt.cartArt(dc, cx, _h * 22 / 100, ap, _m.cartTier);
                 name = Mn.cartName(_m.cartTier);
                 meta = "Tier " + (_m.cartTier + 1) + "/" + Mn.CART_N + " · " + Mn.cartMultPct(_m.cartTier) + "% haul";
                 metaCol = Mn.GOLD;
@@ -979,10 +994,26 @@ class MineView extends WatchUi.View {
 
         var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
         Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x9A8A76);
-        _wrapN(dc, cx, _h * 34 / 100, _w * 84 / 100, Graphics.FONT_TINY, Mn.TEXT, name, 1);
-        _wrapN(dc, cx, _h * 43 / 100, _w * 82 / 100, Graphics.FONT_XTINY, metaCol, meta, 1);
-        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xC9BCA8, lore, 3);
-        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x8FE080, effect, 2);
+        // Stacked off each block's measured end rather than fixed percentages:
+        // a name or status line that wraps to two rows used to be overdrawn by
+        // whatever came next.
+        var yMeta = _wrapN(dc, cx, _h * 33 / 100, _w * 84 / 100,
+                           Graphics.FONT_TINY, Mn.TEXT, name, 2);
+        var lw = _w * 80 / 100;
+        var lTop = _wrapN(dc, cx, yMeta, _w * 82 / 100,
+                          Graphics.FONT_XTINY, metaCol, meta, 2);
+        // The effect line is the mechanical payload, so it books its space
+        // first and the flavour text takes whatever is left above the button.
+        var lh = dc.getFontHeight(Graphics.FONT_XTINY) * 85 / 100;
+        var fit = (_h * 81 / 100 - 6 - lTop) / lh;
+        if (fit < 2) { fit = 2; }
+        var eLines = _lineCount(dc, effect, lw, Graphics.FONT_XTINY);
+        if (eLines > 2) { eLines = 2; }
+        var lLines = fit - eLines;
+        if (lLines < 1) { lLines = 1; }
+        if (lLines > 3) { lLines = 3; }
+        var ly = _wrapN(dc, cx, lTop, lw, Graphics.FONT_XTINY, 0xC9BCA8, lore, lLines);
+        _wrapN(dc, cx, ly, lw, Graphics.FONT_XTINY, 0x8FE080, effect, eLines);
 
         var bw = _w * 62 / 100; var bx = cx - bw / 2;
         var by = _h * 81 / 100; var bh = _h * 12 / 100;
@@ -1117,6 +1148,22 @@ class MineView extends WatchUi.View {
     // Multi-line centred wrap. The two-line version silently ran the remainder
     // off both edges of a round screen, which is where the longer card copy
     // lives, so anything that still will not fit is ellipsized instead.
+    // How many lines a string needs at this font and width, uncapped.
+    hidden function _lineCount(dc, s, maxw, font) {
+        if (s == null || s.length() == 0) { return 0; }
+        var words = _split(s);
+        var i = 0; var n = 0;
+        while (i < words.size()) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            n++;
+        }
+        return n;
+    }
     hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         var fh = dc.getFontHeight(font) * 85 / 100;
@@ -1142,6 +1189,7 @@ class MineView extends WatchUi.View {
             dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
             line++;
         }
+        return y + line * fh;      // where the block ended, for stacking
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

@@ -824,10 +824,26 @@ class FarmView extends WatchUi.View {
 
         var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
         Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x8AA088);
-        _wrap(dc, cx, _h * 35 / 100, _w * 84 / 100, Graphics.FONT_TINY, Fa.TEXT, name);
-        _wrap(dc, cx, _h * 44 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
-        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xC2D2B8, lore, 3);
-        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x9AE070, effect, 2);
+        // Stacked off each block's measured end rather than fixed percentages:
+        // a name or status line that wraps to two rows used to be overdrawn by
+        // whatever came next.
+        var yMeta = _wrapN(dc, cx, _h * 33 / 100, _w * 84 / 100,
+                           Graphics.FONT_TINY, Fa.TEXT, name, 2);
+        var lw = _w * 80 / 100;
+        var lTop = _wrapN(dc, cx, yMeta, _w * 86 / 100,
+                          Graphics.FONT_XTINY, metaCol, meta, 2);
+        // The effect line is the mechanical payload, so it books its space
+        // first and the flavour text takes whatever is left above the button.
+        var lh = dc.getFontHeight(Graphics.FONT_XTINY) * 85 / 100;
+        var fit = (_h * 81 / 100 - 6 - lTop) / lh;
+        if (fit < 2) { fit = 2; }
+        var eLines = _lineCount(dc, effect, lw, Graphics.FONT_XTINY);
+        if (eLines > 2) { eLines = 2; }
+        var lLines = fit - eLines;
+        if (lLines < 1) { lLines = 1; }
+        if (lLines > 3) { lLines = 3; }
+        var ly = _wrapN(dc, cx, lTop, lw, Graphics.FONT_XTINY, 0xC2D2B8, lore, lLines);
+        _wrapN(dc, cx, ly, lw, Graphics.FONT_XTINY, 0x9AE070, effect, eLines);
 
         // Edge zones step to the previous/next item of the same kind.
         _rPrev = [0, _h * 30 / 100, _w * 14 / 100, _h * 44 / 100];
@@ -1008,6 +1024,22 @@ class FarmView extends WatchUi.View {
     // Multi-line centred wrap. The two-line version silently ran the remainder
     // off both edges of a round screen, which is where the longer card copy
     // lives, so anything that still will not fit is ellipsized instead.
+    // How many lines a string needs at this font and width, uncapped.
+    hidden function _lineCount(dc, s, maxw, font) {
+        if (s == null || s.length() == 0) { return 0; }
+        var words = _split(s);
+        var i = 0; var n = 0;
+        while (i < words.size()) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            n++;
+        }
+        return n;
+    }
     hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         var fh = dc.getFontHeight(font) * 85 / 100;
@@ -1032,6 +1064,7 @@ class FarmView extends WatchUi.View {
             dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
             line++;
         }
+        return y + line * fh;      // where the block ended, for stacking
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

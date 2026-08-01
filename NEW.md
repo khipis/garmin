@@ -7,36 +7,45 @@ the shared Bitochi menu, save system and global leaderboard.
 
 ---
 
-## 1. Bitochi Creatures  (folder: `creatures`)
+## 1. Creatures: Evolution Arena  (folder: `creatures`)
 
-**Store title (37 chars):**
-`Bitochi Creatures: Idle Pet Evolution`
+**Store title (26 chars):**
+`Creatures: Evolution Arena`
 
 **Description:**
 
-Hatch a mysterious egg and raise a creature that is truly your own. Bitochi
-Creatures is an idle evolution game where your pet keeps growing, feeding and
-mutating even while you are away — then rewards you the moment you return.
+Hatch a mysterious egg, raise the creature inside it, then send it into the
+arena. Creatures: Evolution Arena is a creature RPG for your wrist — train,
+evolve, equip and fight your way up the global rankings, while your companion
+keeps growing even when the watch is on the charger.
 
 Every creature is procedurally generated from its own DNA: species, traits,
 colors and rarity are unique to you, so no two players ever raise the same
 companion. Feed it, train it and watch it evolve down different paths depending
-on how you play and how you move in real life.
+on how you play and how you move in real life — then find out how it measures
+up against everybody else's.
+
+The loop: train, evolve, equip, battle, rank up.
 
 What you can do:
 - Hatch an egg and reveal a one-of-a-kind creature with its own DNA and traits.
-- Feed, train and explore to earn XP, food and rare DNA mutations.
+- Train with your real steps and daily activity to earn XP and evolution points.
 - Evolve along multiple branches — Runner, Warrior, Dream and Energy forms and
   beyond — shaped by your daily activity (steps, heart rate, sleep).
+- Equip weapons, armour and artifacts, and pick an aggressive, balanced or
+  defensive battle strategy before every fight.
+- Challenge rival creatures and watch the fight play out round by round, with
+  draining health bars and critical hits. Your creature never dies — a loss
+  costs a few ranking points and tells you what to upgrade.
+- Climb the arena ladder from Bronze to Legend, and see who challenged you
+  while you were away.
 - Collect offline progress every time you come back, up to 24 hours.
 - Complete daily challenges and keep a login streak alive for milestone rewards.
-- Track your journey in the creature journal and discover the global creature
-  index to see how rare your companion really is.
-- Climb global leaderboards: rarest creature, longest-living, highest evolution
-  and most active trainer.
+- Climb global leaderboards: arena champion, rarest creature, longest-living,
+  highest evolution and most active trainer.
 
 Sessions take seconds, but the pull to come back tomorrow lasts for weeks. Your
-creature never stops growing.
+creature never stops growing — and neither does the competition.
 
 ---
 
@@ -50,11 +59,13 @@ creature never stops growing.
 You are the commander of humanity's first colony on an unknown planet. Space
 Colony is an idle civilization builder where your base produces resources,
 expands and researches new technology around the clock — even while your watch
-is on your wrist and you are living your day.
+is on your wrist and you are living your day. Then the neighbours show up.
 
 Return to collect what your colony mined and generated, then invest it: raise
 habitats, reactors, mines, farms and laboratories, unlock advanced structures
 like launch pads and planetary defense, and push your civilization to the stars.
+Build a garrison while you are at it — out here, the richest colony is also the
+most tempting target.
 
 What you can do:
 - Manage five resources — energy, minerals, water, science and credits — that
@@ -67,11 +78,22 @@ What you can do:
 - Complete daily missions and use your real activity to fuel expeditions and
   bonuses.
 - Keep a daily streak and hit milestones from first colony to galactic empire.
-- Compete on global leaderboards: largest colony, most advanced technology and
-  oldest surviving colony.
+- Compete on global leaderboards: largest colony, most advanced technology,
+  oldest surviving colony and top war commander.
+
+Space war:
+- Train space marines and raise defense turrets to turn your base into a
+  fortress.
+- Launch raids on real rival colonies pulled straight from the global
+  leaderboard.
+- Choose a stance before you commit, then take a fair fight or gamble on a
+  risky one, and climb the war ranks.
+- Come back to find out who raided you while you were away and whether your
+  defenses held. Losses stay small — you never lose buildings or colonists.
+- Every raid you launch and every attack you take is recorded in a war log.
 
 A polished, addictive "one more upgrade" loop that grows your galaxy while you
-sleep.
+sleep — and now something worth defending.
 
 ---
 
