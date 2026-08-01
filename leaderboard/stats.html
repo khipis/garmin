@@ -621,7 +621,7 @@
       </div>
 
       <div class="sh"><span class="sh-title">👥 Players</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
-      <div class="section-desc">How many unique people have played your games (each person counted once, regardless of how many times they played). <b>Returning</b> = came back on a different day. <b>Loyal</b> = played on at least 7 different days.</div>
+      <div class="section-desc"><b>Unique players</b> = distinct display names. <b>Unique devices</b> / <b>Returning</b> / <b>Loyal</b> = distinct <code>ip_hash</code> (devices). Returning = scored on 2+ calendar days; Loyal = 7+ days. Do not divide Returning by Unique Players — use Unique Devices.</div>
       <div class="cards" id="cards"><div class="card"><div class="spinner"></div></div></div>
 
       <!-- ── Hot right now ──────────────────────────────────────────────────── -->
@@ -649,7 +649,7 @@
 
       <!-- ── Growth ────────────────────────────────────────────────────────── -->
       <div class="sh"><span class="sh-title">🌱 Growth & engagement</span><span class="sh-line"></span></div>
-      <div class="section-desc"><b>New (7d)</b> = first-time players this week. <b>DAU avg (30d)</b> = average daily active players over the last month. <b>Scores / player</b> = average number of plays per person — the higher, the better.</div>
+      <div class="section-desc"><b>New (7d)</b> = devices whose first score landed ≤7 days ago. <b>DAU avg (30d)</b> = average distinct scoring devices per day. <b>Scores / device</b> = average submissions per device — the higher, the better.</div>
       <div class="cards" id="engagement-cards"></div>
 
       <!-- ── Daily Challenge stats ──────────────────────────────────────────── -->
@@ -960,11 +960,13 @@ function renderStats() {
   document.getElementById('updated-inline').textContent = tsStr;
 
   const t = d.totals || {};
+  // Returning / loyal / cohorts are counted by ip_hash (device). Unique Players
+  // is by display name. Keep the units explicit so the two aren't compared.
   document.getElementById('cards').innerHTML = `
-    <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Unique Players</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">named + anon-XXXX</div></div>
-    <div class="card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Unique IPs</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">cross-check</div></div>
-    <div class="card"><div class="num">${(t.returning||0).toLocaleString()}</div><div class="lbl">Returning</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">played 2+ days</div></div>
-    <div class="card"><div class="num">${(t.loyal||0).toLocaleString()}</div><div class="lbl">Loyal</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">played 7+ days</div></div>
+    <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Unique Players</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">by display name</div></div>
+    <div class="card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Unique Devices</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">by ip_hash</div></div>
+    <div class="card"><div class="num">${(t.returning||0).toLocaleString()}</div><div class="lbl">Returning</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">devices · 2+ days</div></div>
+    <div class="card"><div class="num">${(t.loyal||0).toLocaleString()}</div><div class="lbl">Loyal</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">devices · 7+ days</div></div>
     <div class="card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Real Scores</div></div>
     <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Active</div></div>`;
 
@@ -1010,11 +1012,11 @@ function renderStats() {
     </div>`;
   }).join('');
 
-  // Engagement cards
+  // Engagement cards — newPlayers7d / dau / avg depth are all by ip_hash.
   document.getElementById('engagement-cards').innerHTML = `
-    <div class="card"><div class="num">${(t.newPlayers7d||0).toLocaleString()}</div><div class="lbl">New (7d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">first play ≤7 days ago</div></div>
-    <div class="card"><div class="num">${(t.dau30d||0).toLocaleString()}</div><div class="lbl">DAU avg (30d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">distinct IPs / day</div></div>
-    <div class="card"><div class="num">${(t.avgScoresPerPlayer||0).toLocaleString()}</div><div class="lbl">Scores / player</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">avg engagement depth</div></div>`;
+    <div class="card"><div class="num">${(t.newPlayers7d||0).toLocaleString()}</div><div class="lbl">New (7d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">devices · first score ≤7d</div></div>
+    <div class="card"><div class="num">${(t.dau30d||0).toLocaleString()}</div><div class="lbl">DAU avg (30d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">distinct devices / day</div></div>
+    <div class="card"><div class="num">${(t.avgScoresPerPlayer||0).toLocaleString()}</div><div class="lbl">Scores / device</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">avg engagement depth</div></div>`;
 
   // Per-game table + sidebar
   const rows = d.perGame || [];
@@ -1267,7 +1269,7 @@ function updateInsightBar() {
     `<b>${loyalPct}%</b> loyal (7+ days) &nbsp;·&nbsp; ` +
     (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} new this week</span> &nbsp;·&nbsp; ` : '') +
     (dau   ? `<b>${dau.toLocaleString()}</b> DAU avg (30d) &nbsp;·&nbsp; ` : '') +
-    (depth ? `<b>${depth.toFixed(1)}×</b> scores/player &nbsp;·&nbsp; ` : '') +
+    (depth ? `<b>${depth.toFixed(1)}×</b> scores/device &nbsp;·&nbsp; ` : '') +
     (opens24 || opens7d
       ? `<b>${opens24.toLocaleString()}</b> opens/24h · <b>${opens7d.toLocaleString()}</b> opens/7d`
       : '');
@@ -1328,10 +1330,11 @@ function renderCommandCenter() {
   const opens24 = lastLaunch24h.launches || 0;
   const opens7d = lastLaunch7d.launches || 0;
   const openPlayers7d = lastLaunch7d.players || 0;
-  const scorePlayers = t.players || 0;
-  // Rough portfolio conversion: unique scorers vs unique openers (lifetime).
-  const lifeOpens = t.lifetimePlayers || lastLaunchTotals.players || 0;
-  const convPct = lifeOpens > 0 ? Math.round((scorePlayers / lifeOpens) * 100) : 0;
+  // Both sides of open→score must be devices (ip_hash). Using display-name
+  // scorers vs device openers understated conversion (~22% vs ~37% live).
+  const scoreDevices = t.devices || 0;
+  const lifeOpeners = t.lifetimePlayers || lastLaunchTotals.players || 0;
+  const convPct = lifeOpeners > 0 ? Math.round((scoreDevices / lifeOpeners) * 100) : 0;
 
   const d7eKpi = t.cohortD7Eligible || 0;
   const d7PctKpi = d7eKpi > 0 ? Math.round((t.cohortD7 || 0) / d7eKpi * 1000) / 10 : null;
@@ -1341,10 +1344,10 @@ function renderCommandCenter() {
   document.getElementById('kpi-strip').innerHTML = `
     <div class="kpi-cell"><div class="kpi-value">${livePlays.toLocaleString()}</div><div class="kpi-label">Plays now</div><div class="kpi-note">selected hot window</div></div>
     <div class="kpi-cell"><div class="kpi-value">${d7Label}</div><div class="kpi-label">D7 cohort</div><div class="kpi-note">${(t.cohortD7||0).toLocaleString()} / ${d7eKpi.toLocaleString()} eligible</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Multi-day</div><div class="kpi-note">${(t.returning||0).toLocaleString()} played 2+ days</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${avgDepth.toFixed(1)}×</div><div class="kpi-label">Play depth</div><div class="kpi-note">scores per player</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${retPct}%</div><div class="kpi-label">Multi-day</div><div class="kpi-note">${(t.returning||0).toLocaleString()} devices · 2+ days</div></div>
+    <div class="kpi-cell"><div class="kpi-value">${avgDepth.toFixed(1)}×</div><div class="kpi-label">Play depth</div><div class="kpi-note">scores per device</div></div>
     <div class="kpi-cell"><div class="kpi-value">${opens24.toLocaleString()}</div><div class="kpi-label">Opens / 24h</div><div class="kpi-note">${opens7d.toLocaleString()} / 7d · ${openPlayers7d.toLocaleString()} devices</div></div>
-    <div class="kpi-cell"><div class="kpi-value">${convPct || '—'}%</div><div class="kpi-label">Open→score</div><div class="kpi-note">${scorePlayers.toLocaleString()} scorers / ${(lifeOpens||0).toLocaleString()} openers</div></div>`;
+    <div class="kpi-cell"><div class="kpi-value">${convPct || '—'}%</div><div class="kpi-label">Open→score</div><div class="kpi-note">${scoreDevices.toLocaleString()} scoring devices / ${(lifeOpeners||0).toLocaleString()} openers</div></div>`;
 
   renderConversionInsights();
   renderPerGameTable();
@@ -1422,12 +1425,12 @@ function renderConversionInsights() {
   const scoreByGame = new Map((lastPerGameRows || []).map(g => [g.game, g]));
   const launchRows  = lastLaunchGameRows.length ? lastLaunchGameRows : [];
   const rows = launchRows.map(L => {
-    const S = scoreByGame.get(L.game) || { scores: 0, players: 0 };
+    const S = scoreByGame.get(L.game) || { scores: 0, players: 0, devices: 0 };
     const opens = L.launches || 0;
     const scores = S.scores || 0;
-    const openers = L.players || 0;
-    const scorers = S.players || 0;
-    // Scores per open (engagement) + scorers/openers (device conversion).
+    const openers = L.players || 0;                 // launches: DISTINCT ip_hash
+    const scorers = S.devices || S.players || 0;    // scores: prefer devices
+    // Scores per open (engagement) + scoring-devices / opening-devices.
     const scorePerOpen = opens > 0 ? scores / opens : 0;
     const deviceConv   = openers > 0 ? scorers / openers : 0;
     return { game: L.game, opens, scores, openers, scorers, scorePerOpen, deviceConv };
