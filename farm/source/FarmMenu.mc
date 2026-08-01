@@ -39,8 +39,7 @@ class FarmHooks extends GameHooks {
         try {
             if (_preview == null) { return null; }
             if (!_preview.started) { return "Start your dream farm"; }
-            return "Lv " + _preview.farmLevel() + " · Herd " + _preview.population
-                 + " · " + _preview.ageDayLabel();
+            return "Lv " + _preview.farmLevel() + " · Herd " + _preview.population;
         } catch (e) { return null; }
     }
 

@@ -189,29 +189,29 @@ module MineArt {
         var skyN = surfaceH / u; if (skyN < 1) { skyN = 1; }
         for (var i = 0; i < skyN; i++) {
             var yy = sy + i * u;
-            var col = _mix(0x101C34, 0x53324A, i * 100 / skyN);
+            var col = _mix(0x000000, 0x000055, i * 100 / skyN);
             var lr = _clip(cx, cy, R, yy, u, sx, sw);
             if (lr[1] > lr[0]) { dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(lr[0], yy, lr[1] - lr[0], u + 1); }
         }
         // moon
-        dc.setColor(0xF4E7C0, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx + sw * 30 / 100, sy + u, u, u);
         dc.fillRectangle(cx + sw * 30 / 100 + u, sy + u, u, u);
         // stars (fixed twinkle)
         var stx = [cx - sw * 34 / 100, cx - sw * 12 / 100, cx + sw * 8 / 100, cx + sw * 20 / 100];
         for (var s = 0; s < stx.size(); s++) {
             if (((phase / 8) + s) % 4 != 0) {
-                dc.setColor(0xBFE0FF, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(0xAAAAFF, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(stx[s], sy + u + (s % 2) * u, u * 40 / 100 + 1, u * 40 / 100 + 1);
             }
         }
 
         // ── GROUND line ───────────────────────────────────────────────────────
         var gl = _clip(cx, cy, R, surfaceY - u, u, sx, sw);
-        dc.setColor(0x4A6A3A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x005500, Graphics.COLOR_TRANSPARENT);
         if (gl[1] > gl[0]) { dc.fillRectangle(gl[0], surfaceY - u, gl[1] - gl[0], u); }
         var gl2 = _clip(cx, cy, R, surfaceY, u / 2 + 1, sx, sw);
-        dc.setColor(0x35281A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x550000, Graphics.COLOR_TRANSPARENT);
         if (gl2[1] > gl2[0]) { dc.fillRectangle(gl2[0], surfaceY, gl2[1] - gl2[0], u / 2 + 1); }
 
         // ── EARTH LAYERS (chunky stripes, per-zone colour, deepen + enrich) ────
@@ -225,10 +225,14 @@ module MineArt {
         var deepest = Mn.Z_N - 1;
         for (var yy2 = surfaceY; yy2 < earthBot; yy2 += u) {
             var mid = yy2 + u / 2;
-            var dep = cap * (mid - surfaceY) / travel;
-            var z = Mn.zoneOf(dep);
+            // Equal bands, one per zone. Mapping strata to absolute depth meant
+            // that past a few thousand metres the entire cross-section collapsed
+            // into the single deepest zone colour.
+            var z = (mid - surfaceY) * Mn.Z_N / travel;
+            if (z < 0) { z = 0; }
+            if (z > Mn.Z_N - 1) { z = Mn.Z_N - 1; }
             var base = Mn.zColor(z);
-            var col2 = _shade(base, 105 - dep * 45 / cap);   // deeper → darker
+            var col2 = _shade(base, 104 - z * 20 / (Mn.Z_N - 1));   // deeper → darker
             var isReached = (yy2 < reachedY);
             if (!isReached) { col2 = _shade(col2, 48); }        // undug → muted
             else if (z >= deepest - 2) {                        // deepest three: violet pulse
@@ -264,10 +268,8 @@ module MineArt {
                 }
             }
 
-            // Travelling shimmer sweep in the rich lower half of the world — a
-            // quick glinting flourish tied to the phase counter, distinct from
-            // the per-nugget twinkle below.
-            if (isReached && z >= MN_RICH_ZONE) {
+            // Travelling shimmer sweep in the rich lower half of the world.
+            if (isReached && z >= MN_RICH_ZONE && (rowIdx % 4 == 0)) {
                 var sweepSpan = lr2[1] - lr2[0]; if (sweepSpan < 2) { sweepSpan = 2; }
                 var sweepX = lr2[0] + ((phase * 2 + rowIdx * 13) % sweepSpan);
                 if (!(sweepX > cx - clearW && sweepX < cx + clearW)) {
@@ -279,7 +281,7 @@ module MineArt {
             // Embedded ore/gem nuggets — distinct pixel sprite per resource type,
             // coloured straight from MnConst so the wall reads as real currency,
             // once that stripe has actually been dug.
-            if (isReached) {
+            if (isReached && (rowIdx % 2 == 0)) {
                 var gx = lr2[0] + ((rowIdx * 61 + z * 29) % ((lr2[1] - lr2[0]) | 1));
                 if (!(gx > cx - clearW && gx < cx + clearW)) {
                     var rId = _pickOreRes(z, rowIdx * 7 + z * 13);
@@ -363,6 +365,7 @@ module MineArt {
         var rows = 6;
         var maxH = surfaceY - topY - 2; if (maxH < rows * 3) { maxH = rows * 3; }
         var hh = maxH * (58 + lvl * 7) / 100;   // taller with progress
+        if (hh > maxH) { hh = maxH; }           // never poke past the sky strip
         var hpx = hh / rows; if (hpx < 3) { hpx = 3; }
         var pal = { "T" => 0x9A7648, "W" => 0xC8A24A, "C" => 0xFFE27A };
         var spr = [
@@ -385,7 +388,7 @@ module MineArt {
         // warning beacon once the headframe is tall
         if (lvl >= 4 && (phase / 6) % 2 == 0) {
             dc.setColor(0xFF5A3A, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - hpx / 2, oy - hpx, hpx, hpx);
+            dc.fillRectangle(cx - hpx / 2, oy, hpx, hpx);   // inside the frame, not above it
         }
     }
 
@@ -558,15 +561,22 @@ module MineArt {
         var dugRows = (reachedY - surfaceY) / u;
         if (dugRows < 1) { return; }
         var ipx = u * 55 / 100; if (ipx < 3) { ipx = 3; }
-        for (var i = 0; i < Mn.C_N; i++) {
-            if (!m.hasColl(i)) { continue; }
-            var rowIdx = (i * 47 + 11) % dugRows;
-            var y = surfaceY + rowIdx * u + u / 2;
-            var side = (i % 2 == 0) ? -1 : 1;
-            var slot = (i / 2) % 3;
-            var x = cx + side * (shaftHalf + u * (3 + slot));
-            var tw = ((phase / 6 + i * 3) % 6) == 0;
-            _collIcon(dc, i, x - ipx, y - ipx, ipx, tw);
+        // Only the best few finds are mounted along the shaft. Showing all
+        // twenty turned the cross-section into confetti and buried the strata,
+        // and the COLLECT page is where the full set belongs anyway.
+        var shown = 0;
+        for (var r = 4; r >= 0 && shown < 4; r--) {
+            for (var i = 0; i < Mn.C_N && shown < 4; i++) {
+                if (!m.hasColl(i) || Mn.cRarity(i) != r) { continue; }
+                var rowIdx = 2 + (shown * dugRows) / 5;
+                if (rowIdx >= dugRows) { rowIdx = dugRows - 1; }
+                var y = surfaceY + rowIdx * u + u / 2;
+                var side = (shown % 2 == 0) ? -1 : 1;
+                var x = cx + side * (shaftHalf + u * 3);
+                var tw = ((phase / 6 + i * 3) % 6) == 0;
+                _collIcon(dc, i, x - ipx, y - ipx, ipx, tw);
+                shown++;
+            }
         }
     }
 
@@ -637,12 +647,13 @@ module MineArt {
         var span = reachedY - surfaceY;
         if (span < u * 3 || travel <= 0) { return; }
         var reachedZone = Mn.zoneOf(m.depth);
-        var veins = 3 + reachedZone * 2; if (veins > 12) { veins = 12; }
+        var veins = 2 + reachedZone; if (veins > 6) { veins = 6; }
         var vpx = u * 45 / 100; if (vpx < 2) { vpx = 2; }
         for (var v = 0; v < veins; v++) {
             var baseY = surfaceY + ((v * 6151 + 97) % span);
-            var dep = depthCap(m.depth) * (baseY - surfaceY) / travel;
-            var z = Mn.zoneOf(dep);
+            var z = (baseY - surfaceY) * Mn.Z_N / travel;
+            if (z < 0) { z = 0; }
+            if (z > Mn.Z_N - 1) { z = Mn.Z_N - 1; }
             var col = Mn.resColor(_pickOreRes(z, v * 17 + z * 5));
             var side = (v % 2 == 0) ? -1 : 1;
             var vx = cx + side * (clearW + ((v * 53) % (sw / 3 + 1)));
@@ -903,5 +914,163 @@ module MineArt {
         var r = (c >> 16) & 0xFF; var g = (c >> 8) & 0xFF; var b = c & 0xFF;
         r = r * 45 / 100; g = g * 45 / 100; b = b * 45 / 100;
         return (r << 16) | (g << 8) | b;
+    }
+
+    // ── Info-card artwork ────────────────────────────────────────────────────
+    // Chunky pixel portraits behind every detail card: a collectible, a
+    // structure or a depth discovery drawn large enough to actually read as an
+    // object. The same tables feed the collection grid at a smaller scale, so a
+    // gem looks identical wherever you meet it.
+    function _sprC(dc, rows, pal, cx, cy, px) {
+        var cols = rows[0].length();
+        Px.spr(dc, rows, pal, cx - cols * px / 2, cy - rows.size() * px / 2, px, false);
+    }
+
+    // 6x6 portrait per collectible id (0..Mn.C_N-1).
+    function collArt(dc, id, cx, cy, px) {
+        var rows; var pal;
+        if (id == 0) {
+            pal = { "K" => 0x241E18, "G" => 0x5A5048 };
+            rows = ["..KK..", ".KKKK.", "KKKGKK", "KKKKKK", ".KGKK.", "..KK.."];
+        } else if (id == 1) {
+            pal = { "S" => 0x8A7A5A, "B" => 0xE8DCC0 };
+            rows = [".SSSS.", "S.BB.S", "SBBBBS", "S.BB.S", "SB..BS", ".SSSS."];
+        } else if (id == 2) {
+            pal = { "G" => 0xC8912A, "H" => 0xFFD86A };
+            rows = ["..GG..", ".GHHG.", "GHHHHG", "GHHHHG", ".GHHG.", "..GG.."];
+        } else if (id == 3) {
+            pal = { "C" => 0x2FB8B2, "W" => 0x9FF6F2 };
+            rows = ["..WW..", ".CWWC.", "CCWWCC", "CCWWCC", ".CCCC.", "..CC.."];
+        } else if (id == 4) {
+            pal = { "R" => 0x6A4A38, "K" => 0x3A2A20, "O" => 0xFF7A3A };
+            rows = ["O.....", ".O....", "..RRR.", ".RKRRR", ".RRRKR", "..RRR."];
+        } else if (id == 5) {
+            pal = { "K" => 0x8A8070, "T" => 0x7A5A2A };
+            rows = ["KKK...", "KKKK..", ".KTT..", "..TT..", "...TT.", "...TT."];
+        } else if (id == 6) {
+            pal = { "D" => 0xBFE4FF, "W" => 0xFFFFFF };
+            rows = [".DDDD.", "DWDDWD", "DDWWDD", ".DDDD.", "..DD..", "...D.."];
+        } else if (id == 7) {
+            pal = { "M" => 0x8CC0FF, "K" => 0x2A3A4A, "W" => 0xFFFFFF };
+            rows = [".K.K..", "KMMMK.", ".MWM..", "KMMMK.", ".K.KK.", "...MM."];
+        } else if (id == 8) {
+            pal = { "P" => 0x8C6CFF, "Y" => 0xFFD24A };
+            rows = ["..YY..", ".PPPP.", "PPYYPP", "PPYYPP", ".PPPP.", "..PP.."];
+        } else if (id == 9) {
+            pal = { "G" => 0xFFD24A, "K" => 0x2A2010 };
+            rows = [".GGGG.", "GGGGGG", "GKGGKG", "GGGGGG", ".GKKG.", ".G.G.G"];
+        } else if (id == 10) {
+            pal = { "P" => 0xB46CFF, "W" => 0xEFE0FF };
+            rows = ["P.PP.P", ".PWWP.", "PWWWWP", "PWWWWP", ".PWWP.", "P.PP.P"];
+        } else if (id == 11) {
+            pal = { "M" => 0xFF5AC0, "W" => 0xFFE0F4 };
+            rows = ["...M..", "..MWM.", ".MWWM.", "MWWMM.", ".MMM..", "..M..."];
+        } else if (id == 12) {
+            pal = { "O" => 0xFF7A2A, "R" => 0xC22A10, "Y" => 0xFFE24A };
+            rows = ["..OO..", ".ORRO.", "ORYYRO", "ORYYRO", ".ORRO.", "..OO.."];
+        } else if (id == 13) {
+            pal = { "K" => 0x2A2030, "W" => 0xB08CD0 };
+            rows = ["..KK..", ".KWWK.", ".KKKK.", "KKKKKK", ".KKKK.", ".K..K."];
+        } else if (id == 14) {
+            pal = { "V" => 0x8C6CFF, "K" => 0x0A0810 };
+            rows = ["...V..", "..VKV.", ".VKKV.", ".VKKV.", "..VKV.", "...V.."];
+        } else if (id == 15) {
+            pal = { "E" => 0xD8C070, "W" => 0xF4E6B0, "C" => 0x4CE6A0 };
+            rows = ["..EE..", ".EWWE.", "EWWWWE", "EWWCWE", ".EWWE.", "..EE.."];
+        } else if (id == 16) {
+            pal = { "B" => 0xE8E0C8, "S" => 0xA89A78 };
+            rows = ["BB..BB", "BSB.BS", ".BBBB.", ".BSSB.", "BB.BBS", "BS..BB"];
+        } else if (id == 17) {
+            pal = { "Y" => 0xFFD24A, "W" => 0xFFFDF0 };
+            rows = ["..YY..", "..WW..", "YWWWWY", "YWWWWY", "..WW..", "..YY.."];
+        } else if (id == 18) {
+            pal = { "P" => 0x6CE0FF, "W" => 0xFFFFFF };
+            rows = ["PPPPPP", ".PWWP.", "..PP..", "..PP..", ".PWWP.", "PPPPPP"];
+        } else if (id == 19) {
+            pal = { "N" => 0x6CE07A, "G" => 0x2E8A40, "S" => 0x8A5A2A, "W" => 0xFFE9A0 };
+            rows = ["..N...", ".NGN..", "..S...", ".SSSS.", "SSWWSS", ".SSSS."];
+        } else {
+            var rc = Mn.rarityColor(Mn.cRarity(id));
+            pal = { "C" => rc, "W" => 0xFFFFFF };
+            rows = ["..CC..", ".CWWC.", "CWWWWC", "CWWWWC", ".CWWC.", "..CC.."];
+        }
+        _sprC(dc, rows, pal, cx, cy, px);
+    }
+
+    // 7x6 portrait per building id (0..Mn.B_N-1).
+    function bldArt(dc, id, cx, cy, px) {
+        var rows; var pal;
+        if (id == Mn.B_SHAFT) {
+            pal = { "W" => 0x9A7648, "B" => 0x2A2018 };
+            rows = ["..WWW..", ".W...W.", "W..W..W", "WWWWWWW", "..BBB..", "..BBB.."];
+        } else if (id == Mn.B_FORGE) {
+            pal = { "K" => 0x4A3A2A, "O" => 0xFF7A3A, "Y" => 0xFFE24A };
+            rows = ["..K....", "..K....", ".KKKKK.", ".KOOOK.", ".KOYOK.", "KKKKKKK"];
+        } else if (id == Mn.B_ELEVATOR) {
+            pal = { "W" => 0x6A5A48, "C" => 0x8CC0FF };
+            rows = ["WWWWWWW", "W..C..W", "W.CCC.W", "W..C..W", "W.....W", "WWWWWWW"];
+        } else if (id == Mn.B_CAMP) {
+            pal = { "T" => 0x7AD07A, "O" => 0xFF9A3A, "G" => 0x4A3A28 };
+            rows = ["...T...", "..TTT..", ".TTTTT.", "TTTTTTT", ".G.O.G.", "GGGGGGG"];
+        } else if (id == Mn.B_LAB) {
+            pal = { "L" => 0xCFE0F0, "C" => 0x4CE0C0, "b" => 0x9FF0E0 };
+            rows = ["..b.b..", "...L...", "..LLL..", ".LCCCL.", ".LCCCL.", "..LLL.."];
+        } else if (id == Mn.B_GEMWS) {
+            pal = { "W" => 0xE8FBFA, "M" => 0x4CE6E0, "K" => 0x3A2E1E };
+            rows = [".WWWWW.", ".W...W.", "..MMM..", ".MWWWM.", "..MMM..", "KKKKKKK"];
+        } else if (id == Mn.B_SCANNER) {
+            pal = { "D" => 0xB46CFF, "w" => 0xE0C8FF, "S" => 0x5A4A6A };
+            rows = ["..w..w.", "...DD..", "..DDDD.", "...DD..", "...S...", ".SSSSS."];
+        } else if (id == Mn.B_RIG) {
+            pal = { "R" => 0xE05A3A, "P" => 0xB0B8C0, "K" => 0x3A2A20 };
+            rows = ["RRRRRRR", "R.R.R.R", "R.R.R.R", "RRRRRRR", ".P.P.P.", "KKKKKKK"];
+        } else {
+            pal = { "Q" => 0x7AF0FF, "W" => 0xFFFFFF };
+            rows = ["..QQQ..", ".QWWWQ.", ".QWWWQ.", "..QQQ..", "...Q...", "...Q..."];
+        }
+        _sprC(dc, rows, pal, cx, cy, px);
+    }
+
+    // 7x6 scene per depth discovery id (0..Mn.D_N-1).
+    function discArt(dc, id, cx, cy, px) {
+        var rows; var pal;
+        if (id == 0) {
+            pal = { "K" => 0x2A2430, "C" => 0x4CE6E0 };
+            rows = ["KKKKKKK", "K.C.C.K", "K.C.CCK", "KCC.C.K", "K.....K", "KKKKKKK"];
+        } else if (id == 1) {
+            pal = { "S" => 0x8A7A5A, "P" => 0xB0A084 };
+            rows = ["SSSSSSS", "S.....S", "P.P.P..", "P.P.P..", "P.P.P..", "SSSSSSS"];
+        } else if (id == 2) {
+            pal = { "K" => 0x3A3028, "W" => 0x9A8A70, "G" => 0xFFC24A };
+            rows = ["KKKKKKK", "K.....K", "K..W..K", "K.WGW.K", "K..W..K", "KKKKKKK"];
+        } else if (id == 3) {
+            pal = { "S" => 0x8CC0FF, "s" => 0x3A6A9A };
+            rows = ["...s...", "..sSs..", ".sS.Ss.", "sS...Ss", ".s...s.", "..s.s.."];
+        } else if (id == 4) {
+            pal = { "K" => 0x2A2038, "V" => 0x0A0810 };
+            rows = [".KKKKK.", "K.....K", "K..V..K", "K.VVV.K", "K.VVV.K", "KKKKKKK"];
+        } else if (id == 5) {
+            pal = { "K" => 0x3A1A10, "R" => 0xC22A10, "O" => 0xFF7A2A, "o" => 0xFFC24A };
+            rows = ["K..o..K", "K.o.o.K", "KKoKoKK", "KROKORK", "KRRRRRK", "KKKKKKK"];
+        } else if (id == 6) {
+            pal = { "K" => 0x1A1420, "W" => 0x6A5A80 };
+            rows = ["KKKKKKK", "KWKKKWK", "KWK.KWK", "KWK.KWK", "KWKKKWK", "KKKKKKK"];
+        } else if (id == 7) {
+            pal = { "V" => 0x8C6CFF, "W" => 0xFFFFFF };
+            rows = ["..VVV..", ".V...V.", "V..W..V", "V.WWW.V", ".V...V.", "..VVV.."];
+        } else if (id == 8) {
+            pal = { "B" => 0x2A6A8A, "K" => 0x3A3428 };
+            rows = [".......", "..BBB..", ".BBBBB.", "BBB.BBB", "KKKKKKK", "K.K.K.K"];
+        } else if (id == 9) {
+            pal = { "B" => 0xE8E0C8 };
+            rows = ["B.....B", "BB...BB", "B.B.B.B", "B.B.B.B", "BB...BB", "B.....B"];
+        } else if (id == 10) {
+            pal = { "K" => 0x3A3028, "M" => 0xFFC24A, "W" => 0xFFFFFF };
+            rows = ["K.KKK.K", "KKMMMKK", ".MMWMM.", "KKMMMKK", "K.KKK.K", "KKKKKKK"];
+        } else {
+            pal = { "G" => 0xFFD24A, "o" => 0xFFFFFF };
+            rows = ["GGGGGGG", "G.....G", "G..o..G", "G.....G", "G.....G", "GGGGGGG"];
+        }
+        _sprC(dc, rows, pal, cx, cy, px);
     }
 }

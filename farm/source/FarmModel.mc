@@ -26,6 +26,9 @@ class FarmModel {
 
     var streak; var lastDay;
     var dailyDay; var dUpgrades; var dExpl; var dailyClaimed; var dailyCollected;
+    var dTrips;           // scouting trips run today
+    var dCatMask;         // categories upgraded today (bit per Fa.bCat)
+    var mileDone;         // streak milestones already paid on this streak
     var log;              // Array<String> history, newest first, cap 8
     var pendingEvent;
 
@@ -71,6 +74,9 @@ class FarmModel {
         dExpl      = _num("fa_dexp", 0, 0, 999999);
         dailyClaimed   = _bool("fa_dclaim");
         dailyCollected = _bool("fa_dcol");
+        dTrips     = _num("fa_dtrip", 0, 0, 999999);
+        dCatMask   = _num("fa_dcat", 0, 0, 15);
+        mileDone   = _num("fa_dmile", 0, 0, Fa.MILE_N);
         discMask   = _num("fa_disc", 0, 0, 0x7FFFFFFF);
         collMask   = _num("fa_coll", 0, 0, 0x7FFFFFFF);
         pendingEvent = _num("fa_pev", Fa.EV_NONE, Fa.EV_NONE, Fa.EV_TRAVELER);
@@ -107,6 +113,9 @@ class FarmModel {
         _set("fa_dexp", dExpl);
         _set("fa_dclaim", dailyClaimed);
         _set("fa_dcol", dailyCollected);
+        _set("fa_dtrip", dTrips);
+        _set("fa_dcat", dCatMask);
+        _set("fa_dmile", mileDone);
         _set("fa_disc", discMask);
         _set("fa_coll", collMask);
         _set("fa_pev", pendingEvent);
@@ -123,7 +132,7 @@ class FarmModel {
         var keys = ["fa_started", "fa_born", "fa_last", "fa_pop", "fa_vis",
                     "fa_streak", "fa_lday", "fa_dday", "fa_dup", "fa_dexp",
                     "fa_dclaim", "fa_dcol", "fa_disc", "fa_coll", "fa_pev",
-                    "fa_log", "fa_lbday"];
+                    "fa_log", "fa_lbday", "fa_dtrip", "fa_dcat", "fa_dmile"];
         for (var i = 0; i < keys.size(); i++) { try { Application.Storage.deleteValue(keys[i]); } catch (e) {} }
         for (var r = 0; r < Fa.R_N; r++) { try { Application.Storage.deleteValue("fa_r" + r); } catch (e) {} }
         for (var b = 0; b < Fa.B_N; b++) { try { Application.Storage.deleteValue("fa_b" + b); } catch (e) {} }
@@ -174,6 +183,22 @@ class FarmModel {
         var f = Fa.FEED_PER_ANIMAL + population / 20;
         if (f < 1) { f = 1; }
         return f;
+    }
+
+    // ── Barn (offline) capacity ───────────────────────────────────────────────
+    // Idle production only banks for OFFLINE_CAP seconds. These read off the
+    // last collection so the player can see when they left income on the table.
+    function barnHours() { return Fa.OFFLINE_CAP / 3600; }
+    function barnPct() {
+        if (Fa.OFFLINE_CAP <= 0) { return 100; }
+        var s = gSecs; if (s < 0) { s = 0; }
+        var p = s * 100 / Fa.OFFLINE_CAP;
+        return (p > 100) ? 100 : p;
+    }
+    function barnFull() { return gSecs >= Fa.OFFLINE_CAP; }
+    function barnText() {
+        if (barnFull()) { return "Barn was FULL!"; }
+        return "Barn " + barnPct() + "% of " + barnHours() + "h";
     }
 
     function daysAlive() {
@@ -302,12 +327,14 @@ class FarmModel {
         if (td != lastDay) {
             newDay = true;
             if (lastDay != 0 && td == lastDay + 1) { streak += 1; }
-            else { streak = 1; }
+            // A broken streak also forfeits the milestone payouts it had banked.
+            else { streak = 1; mileDone = 0; }
             lastDay = td;
         }
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
             dailyDay = td; dUpgrades = 0; dExpl = 0; dailyClaimed = false; dailyCollected = false;
+            dTrips = 0; dCatMask = 0;
         }
 
         var elapsed = now - lastSec;
@@ -364,10 +391,7 @@ class FarmModel {
         // areas need many more steps, so this takes several days each.
         if (newDay) {
             var steps = Sensors.getStepsToday();
-            if (steps > 0) {
-                var tgt = _nextArea();
-                if (tgt >= 0) { _advanceArea(tgt, Fa.pctForSteps(tgt, steps)); }
-            }
+            if (steps > 0) { _advanceChain(steps); }
         }
 
         _checkMilestoneCollectibles();
@@ -446,6 +470,7 @@ class FarmModel {
         var wasNew = (bLevel[i] == 0);
         bLevel[i] += 1;
         dUpgrades += 1;
+        dCatMask = dCatMask | (1 << Fa._c(Fa.bCat(i), 0, 3));
         if (wasNew) { _logAdd("Built " + Fa.bName(i)); }
         _checkMilestoneCollectibles();
         save();
@@ -475,12 +500,29 @@ class FarmModel {
         }
         return false;
     }
+    // Spend a step budget across successive areas so a big walking day never
+    // stops dead the moment one expedition finishes.
+    hidden function _advanceChain(steps) {
+        if (steps == null || steps <= 0) { return; }
+        for (var guard = 0; guard < Fa.AR_N; guard++) {
+            var tgt = _nextArea();
+            if (tgt < 0) { return; }
+            var left = 100 - arProg[tgt];
+            if (left < 1) { left = 1; }
+            var need = Fa.stepsForArea(tgt) * left / 100;
+            if (need < 1) { need = 1; }
+            if (steps < need) { _advanceArea(tgt, Fa.pctForSteps(tgt, steps)); return; }
+            steps -= need;
+            _advanceArea(tgt, 100);
+        }
+    }
     function explore(i) {
         if (i < 0 || i >= Fa.AR_N) { return "Invalid area"; }
         if (isDiscovered(i)) { return Fa.arName(i) + " already explored"; }
         var cost = Fa.exploreCost(i);
         if (res[Fa.R_COIN] < cost) { return "Need " + cost + " coins"; }
         res[Fa.R_COIN] -= cost;
+        dTrips += 1;
         // A trip covers a fixed amount of ground, so the bigger late areas need
         // many more of them.
         var step = Fa.pctForSteps(i, Fa.EXPLORE_TRIP_STEPS + Sensors.getActivityMinutes() * 50);
@@ -526,32 +568,126 @@ class FarmModel {
     }
 
     // ── Daily challenge ─────────────────────────────────────────────────────────
-    function dailyId() { return dailyDay % 4; }
+    // Eight varieties on a day-number rotation, so a calendar week never repeats
+    // the same task twice.
+    function dailyId() { return Fa._c(dailyDay % Fa.DAILY_N, 0, Fa.DAILY_N - 1); }
     function dailyText() {
         var id = dailyId();
         if (id == 0) { return "Visit your farm"; }
         if (id == 1) { return "Collect farm income"; }
         if (id == 2) { return "Walk 3000 steps"; }
-        return "Upgrade a structure";
+        if (id == 3) { return "Upgrade a structure"; }
+        if (id == 4) { return "Upgrade twice today"; }
+        if (id == 5) { return "Run 2 scouting trips"; }
+        if (id == 6) { return "Host " + guestTarget() + " guests"; }
+        return "Build in the CROPS row";
     }
-    function dailyTarget() { return (dailyId() == 2) ? 3000 : 1; }
+    // The guest goal tracks the farm so it stays a stretch without ever being
+    // impossible: it can never exceed the attraction the farm actually has.
+    function guestTarget() {
+        var t = 10 + farmLevel() * 2;
+        var cap = visitorsCap();
+        if (t > cap) { t = cap; }
+        if (t < 5) { t = 5; }
+        return t;
+    }
+    function dailyTarget() {
+        var id = dailyId();
+        if (id == 2) { return 3000; }
+        if (id == 4) { return 2; }
+        if (id == 5) { return 2; }
+        if (id == 6) { return guestTarget(); }
+        return 1;
+    }
     function dailyProgress() {
         var id = dailyId();
         if (id == 0) { return 1; }                 // opening completes "visit"
         if (id == 1) { return dailyCollected ? 1 : 0; }
         if (id == 2) { var s = Sensors.getStepsToday(); return (s > 3000) ? 3000 : s; }
-        return dUpgrades > 0 ? 1 : 0;
+        if (id == 3) { return dUpgrades > 0 ? 1 : 0; }
+        if (id == 4) { return (dUpgrades > 2) ? 2 : dUpgrades; }
+        if (id == 5) { return (dTrips > 2) ? 2 : dTrips; }
+        if (id == 6) { var t = guestTarget(); return (visitors > t) ? t : visitors; }
+        return ((dCatMask & (1 << 1)) != 0) ? 1 : 0;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
+
+    // ── Daily reward ──────────────────────────────────────────────────────────
+    // Streak multiplier: +10% per consecutive day, capped at +100%.
+    function streakPct() {
+        var p = 100 + (streak - 1) * Fa.STREAK_STEP_PCT;
+        if (p < 100) { p = 100; }
+        if (p > Fa.STREAK_MAX_PCT) { p = Fa.STREAK_MAX_PCT; }
+        return p;
+    }
+    // Base bundle before the streak bonus: a floor plus farm level plus half an
+    // hour of the farm's own output, so it stays worth claiming late.
+    hidden function _dailyBase(r) {
+        var floorAmt; var perLvl;
+        if (r == Fa.R_COIN)      { floorAmt = Fa.DAILY_BASE_COIN; perLvl = 40; }
+        else if (r == Fa.R_WOOD) { floorAmt = Fa.DAILY_BASE_WOOD; perLvl = 12; }
+        else                     { floorAmt = Fa.DAILY_BASE_FEED; perLvl = 5;  }
+        var v = floorAmt.toLong() + farmLevel().toLong() * perLvl + hourlyRate(r).toLong() / 2l;
+        if (v > Fa.RES_MAX.toLong()) { v = Fa.RES_MAX.toLong(); }
+        return v.toNumber();
+    }
+    // Final payout -> [coins, wood, feed], streak multiplier already applied.
+    function dailyReward() {
+        var out = [0, 0, 0];
+        var rs = [Fa.R_COIN, Fa.R_WOOD, Fa.R_FEED];
+        var pct = streakPct().toLong();
+        for (var i = 0; i < 3; i++) {
+            var v = _dailyBase(rs[i]).toLong() * pct / 100l;
+            if (v > Fa.RES_MAX.toLong()) { v = Fa.RES_MAX.toLong(); }
+            out[i] = v.toNumber();
+        }
+        return out;
+    }
     // Always includes feed so an empty-larder farm can restart herd growth.
-    function dailyRewardText() { return "+250 Coins +80 Wood +20 Feed"; }
+    function dailyRewardText() {
+        var r = dailyReward();
+        return "+" + r[0] + "c +" + r[1] + "w +" + r[2] + "f";
+    }
+    // Next unpaid streak milestone, or -1 once they are all banked.
+    function nextMilestone() {
+        return (mileDone >= Fa.MILE_N) ? -1 : Fa._c(mileDone, 0, Fa.MILE_N - 1);
+    }
+    function milestoneText() {
+        var i = nextMilestone();
+        if (i < 0) { return "All streak rewards earned"; }
+        var d = Fa.mileDay(i) - streak;
+        if (d < 0) { d = 0; }
+        return (d == 0) ? ("Day " + Fa.mileDay(i) + " bonus ready")
+                        : (d + "d to the day " + Fa.mileDay(i) + " bonus");
+    }
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        _addRes(Fa.R_COIN, 250); _addRes(Fa.R_WOOD, 80); _addRes(Fa.R_FEED, 20);
+        var r = dailyReward();
+        _addRes(Fa.R_COIN, r[0]); _addRes(Fa.R_WOOD, r[1]); _addRes(Fa.R_FEED, r[2]);
         if (_rand(100) < 20) { _grantRandomCollectible(); }
+        _payMilestones(r);
         save();
         return true;
+    }
+    // Streak milestones at 3 / 7 / 14 / 30 days: one-off bundles on top of the
+    // daily, with a guaranteed charm at 7 and 30.
+    hidden function _payMilestones(base) {
+        for (var i = mileDone; i < Fa.MILE_N; i++) {
+            if (streak < Fa.mileDay(i)) { return; }
+            var mult = Fa.mileMult(i);
+            _addRes(Fa.R_COIN, _capMul(base[0], mult));
+            _addRes(Fa.R_WOOD, _capMul(base[1], mult));
+            _addRes(Fa.R_FEED, _capMul(base[2], mult));
+            if (Fa.mileCharm(i)) { _grantRandomCollectible(); }
+            mileDone = i + 1;
+            _logAdd("Streak " + Fa.mileDay(i) + " days - bonus x" + mult);
+        }
+    }
+    hidden function _capMul(v, mult) {
+        var r = v.toLong() * mult.toLong();
+        if (r > Fa.RES_MAX.toLong()) { r = Fa.RES_MAX.toLong(); }
+        return r.toNumber();
     }
 
     function history() { return log; }

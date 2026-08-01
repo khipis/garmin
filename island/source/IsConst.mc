@@ -168,43 +168,118 @@ module Is {
         return a[_c(i, 0, B_N - 1)];
     }
 
-    // Production at level: 10 -> 25 -> 40 (base*(3L-1)/2). The level clamp keeps
+    // Production at level: base*(3L-1)/2, plus a +15% tier bonus every 5 levels.
+    // The linear-only curve fell so far behind the cost curve that a building
+    // stopped being worth deepening; the tier steps keep a long investment in
+    // one structure competitive with starting a fresh one. The level clamp keeps
     // a corrupt/legacy save value from overflowing the 32-bit result.
     function prodAt(i, lvl) {
         if (lvl <= 0) { return 0; }
         if (lvl > 4000) { lvl = 4000; }
-        return bBaseProd(i) * (3 * lvl - 1) / 2;
+        var base = bBaseProd(i) * (3 * lvl - 1) / 2;
+        var tier = lvl / 5;
+        if (tier > 40) { tier = 40; }        // caps the multiplier at x7
+        if (tier <= 0) { return base; }
+        return base * (100 + tier * 15) / 100;
     }
 
-    // Growth escalates: x1.6 while levelling up to 12, x1.75 past that, so late
-    // levels stay a genuine long-term goal. Single source of truth for costs.
+    // Growth escalates in three bands: x1.45 through the early levels a daily
+    // player actually buys, x1.6 up to level 20, x1.75 past that so late levels
+    // stay a genuine long-term goal. The gentle first band is what removes the
+    // multi-day dead zone where nothing on the list was affordable at all.
+    // Single source of truth for costs.
     const COST_MAX     = 600000000;   // stop growing here — never overflow 32-bit
     const COST_LVL_CAP = 150;
     // Late-tier (id >= 16) entry premium so the new structures are an end-game
-    // project rather than something a week-old island can buy outright.
+    // project, kept low enough that a committed island can actually reach them.
     function costAt(i, lvl) {
         if (lvl < 1) { lvl = 1; }
         if (lvl > COST_LVL_CAP) { lvl = COST_LVL_CAP; }
         var coin = 30 + i * 18;
         var wood = 12 + i * 6;
         var stone = (i >= 4) ? (8 + i * 4) : 0;
+        // The quarry is the island's only source of stone, so it can never ask
+        // for stone itself — otherwise a fresh island is locked out of every
+        // structure above the housing tier for good.
+        if (i == B_TRAIL) { stone = 0; }
         if (i >= 16) {
             var t = i - 15;
-            coin  += t * t * 700;
-            wood  += t * t * 220;
-            stone += t * t * 90;
+            coin  += t * t * 450;
+            wood  += t * t * 140;
+            stone += t * t * 60;
         }
         for (var k = 1; k < lvl; k++) {
             if (coin >= COST_MAX) { break; }
-            if (k < 12) { coin = _m16(coin);  wood = _m16(wood);  stone = _m16(stone); }
-            else        { coin = _m175(coin); wood = _m175(wood); stone = _m175(stone); }
+            if (k < 8)       { coin = _m145(coin); wood = _m145(wood); stone = _m145(stone); }
+            else if (k < 20) { coin = _m16(coin);  wood = _m16(wood);  stone = _m16(stone); }
+            else             { coin = _m175(coin); wood = _m175(wood); stone = _m175(stone); }
         }
         return [coin, wood, stone];
     }
     // Overflow-safe growth steps: exact while the value is small, divide-first
     // once it is big enough that value*multiplier would wrap a 32-bit int.
+    function _m145(v) { return (v < 14000000)  ? (v * 145 / 100) : (v / 20 * 29); }
     function _m16(v)  { return (v < 100000000) ? (v * 16 / 10)   : (v / 5 * 8); }
     function _m175(v) { return (v < 12000000)  ? (v * 175 / 100) : (v / 4 * 7); }
+
+    // ── Building detail cards ────────────────────────────────────────────────
+    // Two short sentences that place the structure on the island and hint at
+    // why it matters. Sized to wrap into at most two FONT_XTINY lines.
+    function bLore(i) {
+        var a = [
+            "Canvas, rope and hope. Every island paradise started under one.",
+            "Four walls and a warm window. People stay once there is a door.",
+            "Wide verandas and sea views. Guests arrive and forget to leave.",
+            "Stone that outlives its builders. The island finally has a skyline.",
+            "Planted young, felled slowly. The grove pays for the whole village.",
+            "Neat beds of sweet roots. Full bellies grow into more neighbours.",
+            "Trade boats put in at the still water. Coin follows the current.",
+            "Switchbacks cut into the ridge. The mountain gives up its stone.",
+            "Soft sand raked every morning. Visitors pay simply to lie on it.",
+            "Sand and cheering. The island discovers it enjoys a crowd.",
+            "Lanterns strung between the palms. Nobody sleeps on festival week.",
+            "Marble, shade and cold drinks. Wealthy guests bring wealthy friends.",
+            "Older than the jungle around it. The steps were carved for someone.",
+            "It hums at dawn and the whole island works a little faster.",
+            "Carved from one red boulder. Sailors change course to see it.",
+            "It should not float, and it does. The clouds arrange themselves.",
+            "A spire of glass homes. The lift takes a full minute to climb.",
+            "The saw never stops. Timber leaves faster than the forest grows.",
+            "Deep-water berths for long white boats. Harbour fees do the rest.",
+            "It drinks the sunrise and the quarry works twice as hard.",
+            "Raised from the drowned city, still wet, still counting its treasure.",
+            "A tear in the sky, held open. Wealth arrives from somewhere else."
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    // Exact mechanical effect per level, in plain words.
+    function bEffectText(i) {
+        var a = [
+            "+2 population cap per level",
+            "+4 population cap per level",
+            "+8 population cap per level",
+            "+16 population cap per level",
+            "Wood per hour, +50% per level",
+            "Food per hour, +50% per level",
+            "Coins per hour, +50% per level",
+            "Stone per hour, +50% per level",
+            "Coins per hour, +1 attraction per level",
+            "Coins per hour, +2 attraction per level",
+            "Coins per hour, +3 attraction per level",
+            "Coins per hour, +4 attraction per level",
+            "Big Coins per hour, +2 attraction",
+            "+10% to ALL production per level",
+            "Big Coins per hour, +3 attraction",
+            "+15% to ALL production per level",
+            "+32 population cap per level",
+            "Heavy Wood per hour, +50% per level",
+            "Heavy Coins per hour, +5 attraction",
+            "Heavy Stone per hour, +4 attraction",
+            "Vast Coins per hour, +8 attraction",
+            "Endless Coins per hour, +12 attraction"
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
 
     // ── Discovery areas (ids are SAVE KEYS — only ever append) ────────────────
     const AR_N       = 9;
@@ -250,19 +325,44 @@ module Is {
         return STEPS_PER_AREA + _c(i, 0, AR_N - 1) * 3500;
     }
     // Coins per manual expedition. The five original areas keep the flat 40 so
-    // in-progress saves are unaffected; the new areas cost far more per push.
+    // in-progress saves are unaffected; the new areas cost more per push, but
+    // gently enough that the far areas are not priced out of a daily session.
     function exploreCost(i) {
         var k = _c(i, 0, AR_N - 1);
         if (k < 5) { return EXPLORE_COST_COIN; }
         var t = k - 4;
-        return EXPLORE_COST_COIN + t * t * 500;
+        return EXPLORE_COST_COIN + t * t * 300;
     }
-    // % progress a single manual expedition buys, scaled to the same curve.
+    // % progress a single manual expedition buys, scaled to the same curve. The
+    // floor keeps the deepest areas from needing fifty separate pushes.
     function exploreStep(i, bonusPct) {
         if (bonusPct < 0) { bonusPct = 0; }
         var v = (EXPLORE_STEP + bonusPct) * STEPS_PER_AREA / stepsForArea(i);
-        if (v < 2) { v = 2; }
+        if (v < 4) { v = 4; }
         return v;
+    }
+
+    // ── Discovery detail cards ───────────────────────────────────────────────
+    // Field notes: what the expedition actually walked into out there.
+    function arLore(i) {
+        var a = [
+            "Green dark, loud with birds. Something stone-faced watches the path.",
+            "A crack behind the waterfall, then a room that answers your voice.",
+            "The ground is warm through your boots. The summit smokes politely.",
+            "Cold water falling into a pool nobody has swum in for centuries.",
+            "Streets under the leaf litter. This island was somebody's kingdom.",
+            "A shelf of living colour, two fathoms down and worth the swim.",
+            "Above the clouds the air tastes of lightning. Nothing grows here.",
+            "Roofs under the waves. The tide keeps the front doors shut.",
+            "A seam of open sky that hums. Compasses point at it, not north."
+        ];
+        return a[_c(i, 0, AR_N - 1)];
+    }
+    // What finishing the expedition actually gives the player.
+    function arEffectText(i) {
+        var b = arUnlockBuilding(i);
+        if (b >= 0) { return "Reveals " + arDiscovery(i) + " and unlocks " + bName(b); }
+        return "Reveals " + arDiscovery(i) + " and grants " + cName(arGrantColl(i));
     }
 
     // ── Collection (ids are SAVE BITS — only ever append) ─────────────────────
@@ -289,6 +389,46 @@ module Is {
         return a[_c(i, 0, C_N - 1)];
     }
     function cWeight(i) { return cRare(i) ? 5 : 2; }
+    function cRareName(i) { return cRare(i) ? "Rare" : "Common"; }
+
+    // ── Collection detail cards ──────────────────────────────────────────────
+    // Museum label for each decoration: what it is, told in one breath.
+    function cLore(i) {
+        var a = [
+            "Nine palms in a ring. Shade at noon, coconuts by evening.",
+            "Every shell on this beach, sorted by the patient and the small.",
+            "A guardian face cut in soft wood. The village sleeps better.",
+            "Its leaves really are gold. It refuses to say how.",
+            "A garden of living stone that repaints itself every season.",
+            "It falls in slow blue crystal instead of water, and it never runs dry.",
+            "Carved before anyone counted years. Still facing the sunrise.",
+            "Raised by the old kingdom to mark something they never wrote down.",
+            "Seven colours in the spray, all day, in any weather.",
+            "Pearls in a circle of white gold. Fit for whoever owns this island.",
+            "Rung once on the peak. Storms are said to change their minds.",
+            "Salvaged from a drowned hall. It is warm and nobody knows why.",
+            "A splinter of the sky seam. Light bends around it politely.",
+            "A pearl the size of a fist, from an oyster nobody has seen.",
+            "A flower that will not close. The island grew it as a thank you."
+        ];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Where the piece turns up — sets the player a concrete next goal.
+    function cOrigin(i) {
+        var a = [
+            "Island level 10", "Beach visitors", "Village festivals",
+            "Island level 35", "Island level 20", "Island level 60",
+            "Coral Shelf expedition", "Chests and traders", "Island level 100",
+            "Coral Shelf expedition", "Island level 150", "Island level 220",
+            "Island level 300", "Island level 400", "Island level 550"
+        ];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Why the player should care: the collection feeds two leaderboards.
+    function cValueText(i) {
+        return "+" + cWeight(i) + " collection score, +" + (cWeight(i) * 4) + " beauty"
+             + (cRare(i) ? " (rare)" : "");
+    }
 
     // ── Visitors ────────────────────────────────────────────────────────────
     function visitorType(i) {
@@ -319,6 +459,28 @@ module Is {
         return a[_c(i, 0, 4)];
     }
     function evHasChoice(i) { return i == EV_TREASURE || i == EV_TRAVELER; }
+
+    // ── Daily loop ───────────────────────────────────────────────────────────
+    // Seven challenge varieties so a full week never repeats the same task.
+    // The rotation is derived from the day number, never stored, so widening it
+    // cannot disturb an existing save.
+    const DAILY_N        = 7;
+    const DAILY_COIN     = 250;   // floor payout, before level + streak scaling
+    const DAILY_WOOD     = 80;
+    const DAILY_STREAK_PCT = 10;  // reward bonus per consecutive day
+    const DAILY_STREAK_MAX = 100; // ... capped at +100%
+    // Streak milestones. Reaching one pays a lump sum worth day*30% of a daily
+    // reward; 7 and 30 also guarantee a collectible so the long streaks move the
+    // collection, not just the purse.
+    const MS_N = 4;
+    function msDay(i) {
+        var a = [3, 7, 14, 30];
+        return a[_c(i, 0, MS_N - 1)];
+    }
+    function msGrantsColl(i) {
+        var d = msDay(i);
+        return d == 7 || d == 30;
+    }
 
     // ── Tuning ───────────────────────────────────────────────────────────────
     const OFFLINE_CAP       = 24 * 3600;

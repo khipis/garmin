@@ -26,6 +26,8 @@ class IslandModel {
 
     var streak; var lastDay;
     var dailyDay; var dUpgrades; var dExpl; var dailyClaimed; var dailyCollected;
+    var dExpTry;          // manual expeditions launched today
+    var msDone;           // highest streak milestone already paid out
     var log;              // Array<String> history, newest first, cap 8
     var pendingEvent;
 
@@ -75,6 +77,9 @@ class IslandModel {
         dExpl      = _getNum("is_dexp", 0, 0, 100000);
         dailyClaimed   = (_get("is_dclaim", false) == true);
         dailyCollected = (_get("is_dcol", false) == true);
+        // Appended keys: a save written before them simply reads 0.
+        dExpTry    = _getNum("is_dexpt", 0, 0, 100000);
+        msDone     = _getNum("is_sms", 0, 0, 100000);
         discMask   = _getNum("is_disc", 0, 0, 0x7FFFFFFF);
         collMask   = _getNum("is_coll", 0, 0, 0x7FFFFFFF);
         pendingEvent = _getNum("is_pev", Is.EV_NONE, Is.EV_NONE, 4);
@@ -112,6 +117,8 @@ class IslandModel {
         _set("is_dexp", dExpl);
         _set("is_dclaim", dailyClaimed);
         _set("is_dcol", dailyCollected);
+        _set("is_dexpt", dExpTry);
+        _set("is_sms", msDone);
         _set("is_disc", discMask);
         _set("is_coll", collMask);
         _set("is_pev", pendingEvent);
@@ -128,7 +135,7 @@ class IslandModel {
         var keys = ["is_started", "is_born", "is_last", "is_pop", "is_vis",
                     "is_streak", "is_lday", "is_dday", "is_dup", "is_dexp",
                     "is_dclaim", "is_dcol", "is_disc", "is_coll", "is_pev",
-                    "is_log", "is_lbday"];
+                    "is_log", "is_lbday", "is_dexpt", "is_sms"];
         for (var i = 0; i < keys.size(); i++) { try { Application.Storage.deleteValue(keys[i]); } catch (e) {} }
         for (var r = 0; r < Is.R_N; r++) { try { Application.Storage.deleteValue("is_r" + r); } catch (e) {} }
         for (var b = 0; b < Is.B_N; b++) { try { Application.Storage.deleteValue("is_b" + b); } catch (e) {} }
@@ -281,12 +288,13 @@ class IslandModel {
         if (td != lastDay) {
             newDay = true;
             if (lastDay != 0 && td == lastDay + 1) { streak += 1; }
-            else { streak = 1; }
+            else { streak = 1; msDone = 0; }   // broken streak re-arms the milestones
             lastDay = td;
         }
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
-            dailyDay = td; dUpgrades = 0; dExpl = 0; dailyClaimed = false; dailyCollected = false;
+            dailyDay = td; dUpgrades = 0; dExpl = 0; dExpTry = 0;
+            dailyClaimed = false; dailyCollected = false;
         }
 
         var elapsed = now - lastSec;
@@ -452,6 +460,7 @@ class IslandModel {
         var fee = Is.exploreCost(i);
         if (res[Is.R_COIN] < fee) { return "Need " + fee + " coins"; }
         res[Is.R_COIN] -= fee;
+        dExpTry += 1;
         var step = Is.exploreStep(i, Sensors.getActivityMinutes() / 5);
         var done = _advanceArea(i, step);
         save();
@@ -495,31 +504,122 @@ class IslandModel {
     }
 
     // ── Daily challenge ─────────────────────────────────────────────────────────
-    function dailyId() { return dailyDay % 4; }
+    // Seven varieties, derived from the day number so a week never repeats and
+    // no new value has to be stored.
+    function dailyId() { return dailyDay % Is.DAILY_N; }
     function dailyText() {
         var id = dailyId();
         if (id == 0) { return "Visit your island"; }
         if (id == 1) { return "Collect island income"; }
         if (id == 2) { return "Walk 3000 steps"; }
-        return "Upgrade a building";
+        if (id == 3) { return "Upgrade a building"; }
+        if (id == 4) { return "Upgrade 3 buildings"; }
+        if (id == 5) { return "Walk 6000 steps"; }
+        return "Send out an expedition";
     }
-    function dailyTarget() { return (dailyId() == 2) ? 3000 : 1; }
+    function dailyTarget() {
+        var id = dailyId();
+        if (id == 2) { return 3000; }
+        if (id == 4) { return 3; }
+        if (id == 5) { return 6000; }
+        return 1;
+    }
     function dailyProgress() {
         var id = dailyId();
         if (id == 0) { return 1; }                 // opening completes "visit"
-        if (id == 1) { return dailyCollected ? 1 : 0; }
+        // A challenge must never be unwinnable, or one bad day silently ends a
+        // long streak: a brand new island has no income to collect yet, and a
+        // fully explored one has nowhere left to send an expedition.
+        if (id == 1) { return (dailyCollected || hourlyRate(Is.R_COIN) <= 0) ? 1 : 0; }
         if (id == 2) { var s = Sensors.getStepsToday(); return (s > 3000) ? 3000 : s; }
-        return dUpgrades > 0 ? 1 : 0;
+        if (id == 3) { return dUpgrades > 0 ? 1 : 0; }
+        if (id == 4) { return (dUpgrades > 3) ? 3 : dUpgrades; }
+        if (id == 5) { var s6 = Sensors.getStepsToday(); return (s6 > 6000) ? 6000 : s6; }
+        if (areasDiscovered() >= Is.AR_N) { return 1; }
+        return dExpTry > 0 ? 1 : 0;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
-    function dailyRewardText() { return "+250 Coins  +80 Wood"; }
+
+    // ── Daily reward ───────────────────────────────────────────────────────────
+    // The old flat +250/+80 stopped mattering within a week. The payout now
+    // tracks island progress (level floor, or half an hour of real income —
+    // whichever is larger) and compounds with the streak.
+    function streakPct() {
+        var s = streak - 1;
+        if (s < 0) { s = 0; }
+        var p = s * Is.DAILY_STREAK_PCT;
+        if (p > Is.DAILY_STREAK_MAX) { p = Is.DAILY_STREAK_MAX; }
+        return p;
+    }
+    hidden function _dailyBase(r, flat, perLevel) {
+        var base = flat + islandLevel() * perLevel;
+        var half = hourlyRate(r) / 2;
+        if (half > base) { base = half; }
+        return base;
+    }
+    function dailyCoinReward() {
+        return _mulPct(_dailyBase(Is.R_COIN, Is.DAILY_COIN, 60), 100 + streakPct());
+    }
+    function dailyWoodReward() {
+        return _mulPct(_dailyBase(Is.R_WOOD, Is.DAILY_WOOD, 20), 100 + streakPct());
+    }
+    function dailyRewardText() {
+        return "+" + _short(dailyCoinReward()) + " Coins  +" + _short(dailyWoodReward()) + " Wood";
+    }
+    // Next unpaid streak milestone, or -1 once every tier is behind the player.
+    function nextMilestoneDay() {
+        for (var i = 0; i < Is.MS_N; i++) {
+            if (Is.msDay(i) > msDone) { return Is.msDay(i); }
+        }
+        return -1;
+    }
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        _addRes(Is.R_COIN, 250); _addRes(Is.R_WOOD, 80);
+        _addRes(Is.R_COIN, dailyCoinReward());
+        _addRes(Is.R_WOOD, dailyWoodReward());
         if (_rand(100) < 20) { _grantRandomCollectible(); }
+        try { _payStreakMilestones(); } catch (e) {}
         save();
         return true;
+    }
+    // Lump-sum payouts as the streak crosses 3 / 7 / 14 / 30 days. msDone keeps
+    // each tier to a single payout per unbroken run.
+    hidden function _payStreakMilestones() {
+        for (var i = 0; i < Is.MS_N; i++) {
+            var d = Is.msDay(i);
+            if (streak < d || msDone >= d) { continue; }
+            msDone = d;
+            var coin = _mulPct(_dailyBase(Is.R_COIN, Is.DAILY_COIN, 60), d * 30);
+            var stone = d * 12 + islandLevel() * 4;
+            _addRes(Is.R_COIN, coin);
+            _addRes(Is.R_STONE, stone);
+            var extra = "";
+            if (Is.msGrantsColl(i)) {
+                var gi = _grantRandomCollectible();
+                if (gi >= 0) { extra = " + " + Is.cName(gi); }
+            }
+            _logAdd(d + "-day streak +" + _short(coin) + " coins" + extra);
+        }
+    }
+
+    // ── Idle storage ───────────────────────────────────────────────────────────
+    // How full the 24h idle store was when the player walked back in. 100% means
+    // production was being thrown away, which is the nudge to return sooner.
+    function offlineCapHours() { return Is.OFFLINE_CAP / 3600; }
+    function offlineFillPct() {
+        var p = gSecs * 100 / Is.OFFLINE_CAP;
+        return Is._c(p, 0, 100);
+    }
+    function offlineGapHours() { return gSecs / 3600; }
+
+    // Compact number text for reward strings (the view has its own _fmt).
+    hidden function _short(n) {
+        if (n < 0) { n = 0; }
+        if (n >= 1000000) { return (n / 1000000) + "." + ((n / 100000) % 10) + "M"; }
+        if (n >= 10000)   { return (n / 1000) + "k"; }
+        if (n >= 1000)    { return (n / 1000) + "." + ((n / 100) % 10) + "k"; }
+        return "" + n;
     }
 
     function history() { return log; }

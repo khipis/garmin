@@ -22,6 +22,7 @@ module Sc {
     const LB_TECH    = "Tech";    // most advanced technology
     const LB_AGE     = "Age";     // oldest colony (days)
     const LB_EXPLORE = "Explore"; // most discovered planet (regions)
+    const LB_RELIC   = "Relic";   // richest alien artifact collection
 
     // ── Resources ────────────────────────────────────────────────────────────
     const R_N   = 5;
@@ -110,6 +111,49 @@ module Sc {
         ];
         return a[_c(i, 0, B_N - 1)];
     }
+    // Story flavour for the building detail card — two short sentences that put
+    // the structure on planet X-01 and hint at why the colony needs it.
+    function bLore(i) {
+        var a = [
+            "Pressurised glass over red dust. Every colonist sleeps here.",
+            "A caged star. No lamp in the domes flickers while it burns.",
+            "A headframe over the first ore seam the survey drones ever tagged.",
+            "Racked greens under grow-lamps. It drinks ice, returns water.",
+            "Where the planet gets taken apart and written down.",
+            "Scorched apron, fuelled rocket. From here the maps get bigger.",
+            "A dish that talks to the shipping lanes and sells them our ore.",
+            "Salvaged xeno tech nobody fully understands, wired into our grid.",
+            "A ribbon to orbit. Cargo leaves the gravity well for pennies.",
+            "Rail guns pointed at the sky, because the sky here throws rocks.",
+            "A shaft sunk into magma. The ground itself powers the base.",
+            "An orbital market. What the colony lacks arrives by tonight.",
+            "Raw rock in one end, clean structural alloy out the other.",
+            "It swallows glacier and returns drinking water by the tank.",
+            "A caged singularity that bends the numbers. Nobody stands close."
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    // Exact mechanical effect per level, in plain words.
+    function bEffectText(i) {
+        var a = [
+            "+4 population cap per level",
+            "+12 Energy/h base per level",
+            "+10 Minerals/h base per level",
+            "+8 Water/h base per level",
+            "+4 Science/h base per level",
+            "+6% expedition ground and +1 sortie per 2 levels",
+            "+6 Credits/h base per level",
+            "+12% Science output per level",
+            "+10% to ALL production per level",
+            "+15% disaster shield per level (max 90%)",
+            "+40 Energy/h base per level",
+            "+14 Credits/h base and +180 supply drop per level",
+            "+34 Minerals/h base per level",
+            "+30 Water/h base per level",
+            "+18% to ALL production per level"
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
     // Which resource a building produces, or -1 (utility).
     function bProdRes(i) {
         var a = [-1, R_NRG, R_MIN, R_H2O, R_SCI, -1, R_CRE, -1, -1, -1,
@@ -117,8 +161,11 @@ module Sc {
         return a[_c(i, 0, B_N - 1)];
     }
     // Base production at level 1 (per hour).
+    // Credits gate every late structure, and a Satellite at 3/h could never
+    // fund one before the Trade Hub existed; Science gates the whole tech tree
+    // in the same way, so both starting taps run a notch richer.
     function bBaseProd(i) {
-        var a = [0, 12, 10, 8, 4, 0, 3, 0, 0, 0,
+        var a = [0, 12, 10, 8, 5, 0, 6, 0, 0, 0,
                  40, 14, 34, 30, 0];
         return a[_c(i, 0, B_N - 1)];
     }
@@ -132,12 +179,18 @@ module Sc {
     // Late-game structures are ALSO priced in Credits — the main credit sink.
     function bCredit(i) { return i >= B_GEO; }
 
-    // Production at a given level: 10 -> 25 -> 40 (base*(3L-1)/2).
+    // Production at a given level. The linear term alone (base*(3L-1)/2) fell
+    // ever further behind the geometric price, so a mild compounding factor
+    // rides on top: +4% of base output per level, capped at +800%. Both terms
+    // are bounded well inside 32-bit range at LVL_CAP.
     function prodAt(i, lvl) {
         if (lvl <= 0) { return 0; }
         if (lvl > LVL_CAP) { lvl = LVL_CAP; }
         var base = bBaseProd(i);
-        return base * (3 * lvl - 1) / 2;
+        var v = base * (3 * lvl - 1) / 2;
+        var scale = 100 + lvl * 4;
+        if (scale > 900) { scale = 900; }
+        return v * scale / 100;
     }
 
     // Geometric cost escalation that can never overflow a 32-bit Number: past
@@ -166,12 +219,15 @@ module Sc {
         if (lvl < 1) { lvl = 1; }
         if (lvl > LVL_CAP) { lvl = LVL_CAP; }
         var steps = lvl - 1;
-        var m = escalate(40 + i * 20, steps, 170, 185);
-        var e = escalate(25 + i * 12, steps, 170, 185);
+        // 1.70x/level outran the production curve within a dozen levels and
+        // stranded every structure behind a wall no daily player could clear;
+        // the softer slope keeps at least one upgrade in reach every session.
+        var m = escalate(40 + i * 20, steps, 138, 152);
+        var e = escalate(25 + i * 12, steps, 138, 152);
         var s = 0;
-        if (bAdvanced(i)) { s = escalate(30 + (i - B_LAUNCH) * 25, steps, 160, 178); }
+        if (bAdvanced(i)) { s = escalate(30 + (i - B_LAUNCH) * 25, steps, 134, 148); }
         var cr = 0;
-        if (bCredit(i)) { cr = escalate(150 + (i - B_GEO) * 110, steps, 170, 185); }
+        if (bCredit(i)) { cr = escalate(150 + (i - B_GEO) * 110, steps, 140, 154); }
         return [m, e, s, cr];
     }
 
@@ -211,6 +267,30 @@ module Sc {
                  "Frozen Sea of Glass", "The Living Core"];
         return a[_c(i, 0, RG_N - 1)];
     }
+    // Survey notes for the region detail card — what the crew walked into.
+    function rgLore(i) {
+        var a = [
+            "Iron sand to the horizon. The rovers came back orange and loaded.",
+            "A valley that never thaws. Our lamps threw blue shadows.",
+            "Spires taller than the mast, ringing softly when the wind turns.",
+            "Growth that leans toward the lamps and closes when we walk away.",
+            "Cut stone, sealed doors, and a stair built for something taller.",
+            "Lightning walks the basin all day. The magma below never cools.",
+            "Galleries under galleries. The survey drones ran out of power.",
+            "A frozen sea clear to the seabed. Nothing moves down there.",
+            "The planet has a heartbeat, and at this depth you can hear it."
+        ];
+        return a[_c(i, 0, RG_N - 1)];
+    }
+    // What mapping the region actually gives the player.
+    function rgEffectText(i) {
+        return "Unlocks " + bName(rgUnlockBuilding(i)) + " and " + aName(rgArtifact(i));
+    }
+    // Alien artifact recovered when the region is fully mapped.
+    function rgArtifact(i) {
+        var a = [A_GLASS, A_LENS, A_SEED, A_SPORE, A_KEY, A_COIL, A_SIGIL, A_TIDE, A_EMBER];
+        return a[_c(i, 0, RG_N - 1)];
+    }
     // Steps needed to fully map a region — later regions take multiple days.
     // 5k for the Red Desert climbing to ~101k for the Planet Core.
     function stepsForRegion(i) {
@@ -248,10 +328,112 @@ module Sc {
                  "+15% water / lvl", "+15% credits / lvl", "+20% pop growth / lvl"];
         return a[_c(i, 0, T_N - 1)];
     }
+    // Story flavour for the technology detail card.
+    function tLore(i) {
+        var a = [
+            "A thousand small fixes nobody logged. The base runs quieter.",
+            "Charge patterns that shatter rock along its own grain. No waste.",
+            "The grid stopped browning out the night this went live.",
+            "An assistant that reads every sensor at once and never gets bored.",
+            "We map the ice like a river system, then tap it where it runs.",
+            "Better contracts, better lanes, better prices. And it pays.",
+            "Gene work so colonists thrive under a sun that is not ours."
+        ];
+        return a[_c(i, 0, T_N - 1)];
+    }
+    // Exact mechanical effect per researched level.
+    function tEffectText(i) {
+        var a = [
+            "+8% to ALL production per level",
+            "+15% Minerals output per level",
+            "+15% Energy output per level",
+            "+15% Science output per level",
+            "+15% Water output per level",
+            "+15% Credits output per level",
+            "+20% faster colonist arrivals per level"
+        ];
+        return a[_c(i, 0, T_N - 1)];
+    }
+
+    // ── Alien artifacts (the collection set) ─────────────────────────────────
+    // IDs are bits in the sc_art mask — append only, never renumber.
+    const A_N     = 14;
+    const A_GLASS = 0;   // Desert Glass
+    const A_CHART = 1;   // Star Chart Disc
+    const A_LENS  = 2;   // Frost Lens
+    const A_SEED  = 3;   // Crystal Seed
+    const A_SPORE = 4;   // Spore Pod
+    const A_KEY   = 5;   // Vault Key
+    const A_COIL  = 6;   // Storm Coil
+    const A_SIGIL = 7;   // Ore Sigil
+    const A_TIDE  = 8;   // Tide Sphere
+    const A_EMBER = 9;   // Core Ember
+    const A_MASK  = 10;  // First Ones Mask
+    const A_COMP  = 11;  // Null Compass
+    const A_ECHO  = 12;  // Echo Engine
+    const A_SPARK = 13;  // Origin Spark
+
+    function aName(i) {
+        var a = ["Desert Glass", "Star Chart Disc", "Frost Lens", "Crystal Seed",
+                 "Spore Pod", "Vault Key", "Storm Coil", "Ore Sigil", "Tide Sphere",
+                 "Core Ember", "First Ones Mask", "Null Compass", "Echo Engine",
+                 "Origin Spark"];
+        return a[_c(i, 0, A_N - 1)];
+    }
+    // 0 common, 1 rare, 2 epic, 3 legendary, 4 mythic.
+    function aRarity(i) {
+        var a = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4];
+        return a[_c(i, 0, A_N - 1)];
+    }
+    function aRarityName(r) {
+        var a = ["Common", "Rare", "Epic", "Legendary", "Mythic"];
+        return a[_c(r, 0, 4)];
+    }
+    function aRarityColor(r) {
+        var a = [0x9FB0C0, 0x4CC85A, 0x8C6CFF, 0xFFC24A, 0xFF5AC0];
+        return a[_c(r, 0, 4)];
+    }
+    function aColor(i) { return aRarityColor(aRarity(i)); }
+    function aWeight(i) {
+        var a = [5, 5, 5, 15, 15, 15, 40, 40, 40, 100, 100, 100, 250, 250];
+        return a[_c(i, 0, A_N - 1)];
+    }
+    function aLegendary(i) { return aRarity(i) >= 3; }
+    function aLore(i) {
+        var a = [
+            "Fused by something far hotter than this sun ever was.",
+            "A disc of stars nobody recognises, cut before humans had maps.",
+            "Ice that never melts and shows you the valley as it was.",
+            "It grew a second spire overnight, inside a sealed sample case.",
+            "Sealed, warm, and patient. The biologists refuse to open it.",
+            "It fits a door we have found and cannot yet move.",
+            "Wound by hand, still holding the charge of an ancient storm.",
+            "A miner's mark from a crew that worked this rock before us.",
+            "A sphere of liquid that keeps the tide of a moon that is not here.",
+            "A splinter of the planet's heart, warm through containment.",
+            "It was made for a face, and the face was not a human one.",
+            "The needle ignores every pole and points somewhere off the map.",
+            "Play it back and the room hears a conversation nobody in it had.",
+            "One bright grain. Everything here grew out of one of these."
+        ];
+        return a[_c(i, 0, A_N - 1)];
+    }
+    function aOrigin(i) {
+        var a = ["Red Desert survey", "Deep space salvage", "Frozen Valley survey",
+                 "Crystal Mountains survey", "Alien Forest survey", "Ancient Ruins survey",
+                 "Storm Basin survey", "Deep Caverns survey", "Ice Ocean survey",
+                 "Planet Core survey", "Civ level 12 milestone", "Rare colony event",
+                 "Civ level 25 milestone", "Streak day 30 reward"];
+        return a[_c(i, 0, A_N - 1)];
+    }
+    function aValueText(i) {
+        return "+" + aWeight(i) + " relic score"
+             + (aLegendary(i) ? " - counts as a legendary find" : "");
+    }
     // Science cost to research the next level (steepens past SOFT_LVL).
     function tCost(i, lvl) {
         if (lvl < 0) { lvl = 0; }
-        return escalate(60 + i * 20, lvl, 180, 195);
+        return escalate(60 + i * 20, lvl, 152, 168);
     }
 
     // ── Events ────────────────────────────────────────────────────────────────
@@ -287,6 +469,20 @@ module Sc {
     const WATER_PER_POP = 25;         // water drunk by each new colonist
     const RES_CAP = 1000000000;       // stockpile ceiling (overflow guard)
     const RATE_CAP = 10000000;        // hourly-rate ceiling (overflow guard)
+
+    // ── Daily loop ───────────────────────────────────────────────────────────
+    // Seven mission varieties so a week of visits never repeats. Ids 0..3 keep
+    // their original meaning, so a live save's rotation only ever grows.
+    const DAILY_N       = 7;
+    const STREAK_STEP   = 10;   // % extra daily reward per consecutive day
+    const STREAK_CAP    = 100;  // % ceiling on that bonus (2x reward)
+    const STREAK_M1     = 3;    // milestone streak lengths
+    const STREAK_M2     = 7;    // ... grants an artifact
+    const STREAK_M3     = 14;
+    const STREAK_M4     = 30;   // ... grants an artifact
+    // Civilisation levels that hand over an artifact (one each, once).
+    const CIV_RELIC_1   = 12;
+    const CIV_RELIC_2   = 25;
 
     // ── Palette ──────────────────────────────────────────────────────────────
     const BG      = 0x05070D;

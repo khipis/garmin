@@ -1,17 +1,19 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // ColonyView.mc — The SPACE COLONY gameplay view.
 //
-// A six-screen carousel over one ColonyModel:
-//   OVERVIEW · BUILD · EXPLORE · MISSION · TECH · LOG
+// A seven-screen carousel over one ColonyModel:
+//   OVERVIEW · BUILD · EXPLORE · MISSION · TECH · RELICS · LOG
 //
 // Navigation is deliberately redundant so it works on EVERY watch + emulator:
 //   • TAP a dot in the top tab strip to jump straight to any page.
 //   • TAP the big ◀ / ▶ side chevrons to page prev/next.
 //   • Physical UP/DOWN move the row cursor on list pages and OVERFLOW into the
 //     previous/next page at the ends; on non-list pages they page directly.
-//   • SELECT / START activates the focused item (build / upgrade / explore /
-//     research / claim). Swipe left/right/up/down still work as a bonus.
-//   • BACK saves + exits.
+//   • SELECT / START opens the DETAIL CARD for the focused structure, research
+//     programme, region or relic; SELECT again on the card performs its action
+//     (build / upgrade / research / expedition) and keeps the card up. UP/DOWN
+//     browse the whole set from inside the card.
+//   • BACK closes an open card first, then saves + exits.
 //
 // A DEMO fast-track (top-left toggle, or the Demo option) auto-develops the
 // colony from an emergency pod to a rich civilisation in ~10-20s for showcase.
@@ -29,8 +31,18 @@ const SV_BLD  = 1;
 const SV_EXP  = 2;
 const SV_MIS  = 3;
 const SV_TECH = 4;
-const SV_HIST = 5;
-const SV_PAGES = 6;
+const SV_ART  = 5;
+const SV_HIST = 6;
+const SV_PAGES = 7;
+const SV_ART_COLS = 5;
+
+// Detail-card kinds. Every purchasable structure, research programme and
+// region opens the same card: a big pixel portrait, what it is, the story
+// behind it and exactly what it does for the colony.
+const CK_BLD    = 0;   // id = building index
+const CK_TECH   = 1;   // id = technology index
+const CK_REGION = 2;   // id = region index
+const CK_ART    = 3;   // id = artifact index
 
 class ColonyView extends WatchUi.View {
     hidden var _m;
@@ -50,6 +62,8 @@ class ColonyView extends WatchUi.View {
 
     hidden var _demo;            // demo fast-track running
     hidden var _demoT;           // demo sub-tick counter
+    hidden var _cardKind;        // open detail card kind, or -1
+    hidden var _cardId;
 
     hidden var _rows;            // tap rects for list rows [x,y,w,h]
     hidden var _rowIds;          // parallel building/region/tech ids
@@ -66,6 +80,7 @@ class ColonyView extends WatchUi.View {
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false;
         _explain = false;
         _demo = false; _demoT = 0;
+        _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _tabs = [];
         _rBtnA = null; _rBtnB = null; _rPrev = null; _rNext = null; _rDemo = null;
         _loadFx();
@@ -192,6 +207,38 @@ class ColonyView extends WatchUi.View {
         } catch (e) {}
     }
 
+    // ── Detail cards ──────────────────────────────────────────────────────────
+    // Opening a card is the main way to LOOK at something: the portrait, the
+    // story and the exact numbers. UP/DOWN walks the whole set without going
+    // back to the list, so the tech tree and the relic vault read like a museum.
+    function cardOpen() { return _cardKind >= 0; }
+    hidden function _openCard(kind, id) {
+        _cardKind = kind; _cardId = id;
+        _tone(0); _vibe(14, 18);
+        WatchUi.requestUpdate();
+    }
+    function closeCard() {
+        if (_cardKind < 0) { return false; }
+        _cardKind = -1;
+        _tone(0); _vibe(10, 14);
+        WatchUi.requestUpdate();
+        return true;
+    }
+    hidden function _cardCount() {
+        if (_cardKind == CK_BLD)    { return Sc.B_N; }
+        if (_cardKind == CK_TECH)   { return Sc.T_N; }
+        if (_cardKind == CK_REGION) { return Sc.RG_N; }
+        return Sc.A_N;
+    }
+    hidden function _cardStep(d) {
+        var n = _cardCount();
+        if (n < 1) { return; }
+        _cardId = ((_cardId + d) % n + n) % n;
+        _cur = _cardId;
+        _tone(0); _vibe(8, 12);
+        WatchUi.requestUpdate();
+    }
+
     // ── Navigation ────────────────────────────────────────────────────────────
     hidden function _dismiss() {
         if (_event) { return false; }   // events must be answered
@@ -204,6 +251,7 @@ class ColonyView extends WatchUi.View {
     }
     function pageMove(d) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_dismiss()) { return; }
         _page = ((_page + d) % SV_PAGES + SV_PAGES) % SV_PAGES;
         _cur = 0; _scroll = 0;
@@ -214,6 +262,7 @@ class ColonyView extends WatchUi.View {
         if (_page == SV_BLD)  { return Sc.B_N; }
         if (_page == SV_EXP)  { return Sc.RG_N; }
         if (_page == SV_TECH) { return Sc.T_N; }
+        if (_page == SV_ART)  { return Sc.A_N; }
         if (_page == SV_MIS)  { return 2; }   // CLAIM + SUPPLY DROP
         return 0;
     }
@@ -221,6 +270,7 @@ class ColonyView extends WatchUi.View {
     // page at the ends; page directly on non-list pages.
     function cursorMove(d) {
         if (_event) { _evChoice = (_evChoice + 1) % 2; _tone(0); WatchUi.requestUpdate(); return; }
+        if (cardOpen()) { _cardStep(d); return; }
         if (_dismiss()) { return; }
         var n = _listCount();
         if (n > 0) {
@@ -234,11 +284,22 @@ class ColonyView extends WatchUi.View {
     }
     function activate() {
         if (_event) { _resolveEvent(_evChoice); return; }
+        if (cardOpen()) {
+            // SELECT on an open card performs that card's action and leaves the
+            // card up, refreshed, so repeat purchases never lose the detail.
+            try {
+                if (_cardKind == CK_BLD)    { _do(_m.upgrade(_cardId)); return; }
+                if (_cardKind == CK_TECH)   { _do(_m.research(_cardId)); return; }
+                if (_cardKind == CK_REGION) { _do(_m.explore(_cardId)); return; }
+            } catch (e) {}
+            closeCard(); return;
+        }
         if (_dismiss()) { return; }
         try {
-            if (_page == SV_BLD)  { _do(_m.upgrade(_cur)); return; }
-            if (_page == SV_EXP)  { _do(_m.explore(_cur)); return; }
-            if (_page == SV_TECH) { _do(_m.research(_cur)); return; }
+            if (_page == SV_BLD)  { _openCard(CK_BLD, _cur); return; }
+            if (_page == SV_EXP)  { _openCard(CK_REGION, _cur); return; }
+            if (_page == SV_TECH) { _openCard(CK_TECH, _cur); return; }
+            if (_page == SV_ART)  { _openCard(CK_ART, _cur); return; }
             if (_page == SV_MIS)  {
                 if (_cur == 1) { _do(_m.supplyDrop()); } else { _doClaim(); }
                 return;
@@ -247,7 +308,9 @@ class ColonyView extends WatchUi.View {
         } catch (e) {}
     }
     function setPage(p) {
-        if (_event || _dismiss()) { return; }
+        if (_event) { return; }
+        if (closeCard()) { return; }
+        if (_dismiss()) { return; }
         _page = ((p % SV_PAGES) + SV_PAGES) % SV_PAGES;
         _cur = 0; _scroll = 0;
         _tone(0); _vibe(10, 15);
@@ -265,7 +328,12 @@ class ColonyView extends WatchUi.View {
     }
     hidden function _doClaim() {
         try {
-            if (_m.claimDaily()) { _popup = "Mission reward claimed!"; _popupT = 34; _tone(4); _vibe(60, 120); }
+            if (_m.claimDaily()) {
+                var bonus = _m.lastClaimBonus;
+                var msg = "Mission reward claimed!";
+                if (bonus != null && bonus.length() > 0) { msg = bonus; }
+                _popup = msg; _popupT = 34; _tone(4); _vibe(60, 120);
+            }
             else if (_m.dailyClaimed) { _popup = "Already claimed today"; _popupT = 24; }
             else { _popup = "Mission not complete"; _popupT = 24; _tone(2); }
         } catch (e) {}
@@ -290,6 +358,12 @@ class ColonyView extends WatchUi.View {
         }
         if (_welcome) { _dismiss(); return true; }
         if (_explain) { _dismiss(); return true; }
+        if (cardOpen()) {
+            if (_inR(x, y, _rBtnA)) { activate(); return true; }
+            if (_inR(x, y, _rPrev)) { _cardStep(-1); return true; }
+            if (_inR(x, y, _rNext)) { _cardStep(1); return true; }
+            closeCard(); return true;
+        }
         if (_inR(x, y, _rDemo)) { toggleDemo(); return true; }
         if (_inR(x, y, _rPrev)) { pageMove(-1); return true; }
         if (_inR(x, y, _rNext)) { pageMove(1);  return true; }
@@ -326,9 +400,11 @@ class ColonyView extends WatchUi.View {
         else if (_page == SV_EXP) { _drawExplore(dc); }
         else if (_page == SV_MIS) { _drawMissions(dc); }
         else if (_page == SV_TECH) { _drawTech(dc); }
+        else if (_page == SV_ART) { _drawArtifacts(dc); }
         else { _drawHistory(dc); }
 
         _drawTabStrip(dc);
+        if (cardOpen()) { _drawCard(dc); }
         if (_popup != null) { _drawPopup(dc); }
         if (_welcome) { _drawWelcome(dc); }
         else if (_explain) { _drawExplain(dc); }
@@ -337,11 +413,11 @@ class ColonyView extends WatchUi.View {
 
     // ── Top tab strip: page name + tappable dots + side chevrons + DEMO ───────
     hidden function _pageName(p) {
-        var a = ["OVERVIEW", "BUILD", "EXPLORE", "MISSION", "TECH", "LOG"];
+        var a = ["OVERVIEW", "BUILD", "EXPLORE", "MISSION", "TECH", "RELICS", "LOG"];
         return a[Sc._c(p, 0, SV_PAGES - 1)];
     }
     hidden function _pageColor(p) {
-        var a = [Sc.ACCENT, 0xFFC24A, 0xE0663A, Sc.GOLD, 0x4CE0C0, 0x9FB0C0];
+        var a = [Sc.ACCENT, 0xFFC24A, 0xE0663A, Sc.GOLD, 0x4CE0C0, 0xB46CFF, 0x9FB0C0];
         return a[Sc._c(p, 0, SV_PAGES - 1)];
     }
     hidden function _drawTabStrip(dc) {
@@ -428,8 +504,18 @@ class ColonyView extends WatchUi.View {
     hidden function _drawMilestoneLabel(dc) {
         var cx = _w / 2;
         var ssc = _h / 260; if (ssc < 2) { ssc = 2; }
-        var s = "X-01 - " + _m.milestoneLabel();
-        Px.gshC(dc, s, cx, _h * 20 / 100, ssc, 0xFFE9A0);
+        // The pixel font cannot scale below 2, so the label is trimmed to the
+        // chord instead of running under the bezel.
+        var y = _h * 20 / 100;
+        var maxw = _w * 78 / 100;
+        if (_w == _h) {
+            var dy = y - _h / 2;
+            var q = (_w / 2) * (_w / 2) - dy * dy;
+            if (q > 0) { maxw = Math.sqrt(q).toNumber() * 2 * 88 / 100; }
+        }
+        var s = _m.milestoneLabel();
+        while (s.length() > 4 && Px.gtxtW(s, ssc) > maxw) { s = s.substring(0, s.length() - 1); }
+        Px.gshC(dc, s, cx, y, ssc, 0xFFE9A0);
     }
 
     // Slim bottom ribbon on a dark rounded scrim, rendered entirely in the tiny
@@ -475,11 +561,18 @@ class ColonyView extends WatchUi.View {
     // full stockpile (Energy/Minerals/Water/Science/Credits) is surfaced here,
     // where it's spent, now that the overview is pure diorama.
     hidden function _drawResBar(dc, y) {
+        // Five stockpiles is a lot for a 280px round face, so the row is fitted
+        // to the actual chord at its own y rather than a fixed percentage.
         var round = (_w == _h);
-        var x0 = round ? _w * 12 / 100 : _w * 6 / 100;
-        var totw = round ? _w * 76 / 100 : _w * 88 / 100;
+        var totw = _w * 88 / 100;
+        if (round) {
+            var dy = y - _h / 2;
+            var q = (_w / 2) * (_w / 2) - dy * dy;
+            if (q > 0) { totw = Math.sqrt(q).toNumber() * 2 * 94 / 100; }
+        }
+        var x0 = _w / 2 - totw / 2;
         var cw = totw / Sc.R_N;
-        var sq = _h * 3 / 100; if (sq < 4) { sq = 4; }
+        var sq = _h * 25 / 1000; if (sq < 4) { sq = 4; }
         var midY = y + sq / 2;
         for (var i = 0; i < Sc.R_N; i++) {
             var cxx = x0 + cw * i;
@@ -580,8 +673,8 @@ class ColonyView extends WatchUi.View {
         var tx = x + rh + 4;
         _txt(dc, tx, y + rh * 16 / 100, Graphics.FONT_XTINY, Sc.TEXT, Sc.rgName(id), Graphics.TEXT_JUSTIFY_LEFT);
         if (disc) {
-            _txt(dc, tx, y + rh * 60 / 100, Graphics.FONT_XTINY, 0x6FE08A,
-                 "Mapped - " + Sc.bName(Sc.rgUnlockBuilding(id)), Graphics.TEXT_JUSTIFY_LEFT);
+            _wrap1(dc, tx, y + rh * 60 / 100, w - (tx - x) - 4, Graphics.FONT_XTINY, 0x6FE08A,
+                   "Mapped - " + Sc.bName(Sc.rgUnlockBuilding(id)));
         } else {
             // Later regions are much bigger, so surface the step budget next to
             // the bar — otherwise a stalling percentage looks like a bug.
@@ -619,6 +712,213 @@ class ColonyView extends WatchUi.View {
         var afford = _m.res[Sc.R_SCI] >= c;
         _wrap1(dc, tx, y + rh * 60 / 100, nameW, Graphics.FONT_XTINY, afford ? 0x6FE08A : Sc.MUTED,
                Sc.tDesc(id) + "  " + _fmt(c) + "S");
+    }
+
+    // ── RELICS — the alien artifact vault ────────────────────────────────────
+    hidden function _drawArtifacts(dc) {
+        var cx = _w / 2;
+        _txt(dc, cx, _h * 20 / 100, Graphics.FONT_XTINY, 0xB46CFF,
+             _m.artifactsOwned() + " / " + Sc.A_N + " recovered", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // The grid sizes itself from BOTH axes, so appending artifacts adds
+        // rows without ever pushing cells off the bottom of the display.
+        var cols = SV_ART_COLS;
+        var rows = (Sc.A_N + cols - 1) / cols;
+        if (rows < 1) { rows = 1; }
+        var bandY = _h * 25 / 100;
+        var bandH = _h * 52 / 100;
+        var cell = _w * 78 / 100 / cols;
+        if (bandH / rows < cell) { cell = bandH / rows; }
+        if (cell < 6) { cell = 6; }
+        var gx = cx - cell * cols / 2;
+        var gy = bandY + (bandH - cell * rows) / 2;
+        for (var i = 0; i < Sc.A_N; i++) {
+            var rr = i / cols; var c = i % cols;
+            var px = gx + c * cell + cell / 2;
+            var py = gy + rr * cell + cell / 2;
+            var owned = _m.hasArt(i);
+            // Rarity-tinted socket behind every slot so the vault reads as a
+            // display case rather than a row of identical dots.
+            var rc = Sc.aRarityColor(Sc.aRarity(i));
+            dc.setColor(owned ? _shade(rc, 28) : 0x141C26, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(px - cell * 44 / 100, py - cell * 44 / 100,
+                                    cell * 88 / 100, cell * 88 / 100, 4);
+            if (owned) {
+                var ap = cell * 70 / 100 / 6; if (ap < 1) { ap = 1; }
+                try { ColonyArt.artArt(dc, i, px, py, ap); } catch (e) {}
+            } else {
+                _txt(dc, px, py - cell * 30 / 100, Graphics.FONT_XTINY, 0x3A4656, "?",
+                     Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            if (i == _cur) {
+                dc.setColor(Sc.ACCENT, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(px - cell * 46 / 100, py - cell * 46 / 100,
+                                        cell * 92 / 100, cell * 92 / 100, 5);
+            }
+            _rows.add([px - cell / 2, py - cell / 2, cell, cell]);
+            _rowIds.add(i);
+        }
+        var got = _m.hasArt(_cur);
+        _txt(dc, cx, _h * 80 / 100, Graphics.FONT_XTINY, got ? Sc.aColor(_cur) : Sc.MUTED,
+             got ? Sc.aName(_cur) : "Unrecovered", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 87 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+             got ? (Sc.aRarityName(Sc.aRarity(_cur)) + " - SELECT for story") : Sc.aOrigin(_cur),
+             Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    hidden function _shade(c, pct) {
+        var r = ((c >> 16) & 0xFF) * pct / 100;
+        var g = ((c >> 8) & 0xFF) * pct / 100;
+        var b = (c & 0xFF) * pct / 100;
+        return (r << 16) | (g << 8) | b;
+    }
+
+    // ── Detail card ───────────────────────────────────────────────────────────
+    // One overlay serves every object in the colony. It answers three questions
+    // in order: what does it look like, what is it, and what does it do for me.
+    hidden function _drawCard(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x04070C, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) { dc.setColor(0x0A1420, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
+
+        var ap = _h * 20 / 100 / 6; if (ap < 2) { ap = 2; }
+        var pcy = _h * 22 / 100;
+        var name = ""; var meta = ""; var metaCol = Sc.MUTED;
+        var lore = ""; var effect = ""; var counter = "";
+        var btn = "CLOSE"; var btnCost = ""; var btnHot = false;
+
+        if (_cardKind == CK_BLD) {
+            var id = Sc._c(_cardId, 0, Sc.B_N - 1);
+            var lvl = _m.bLevel[id];
+            var unlocked = _m.isUnlocked(id);
+            counter = "STRUCTURE " + (id + 1) + "/" + Sc.B_N;
+            try { ColonyArt.bldArt(dc, id, cx, pcy, ap); } catch (e) {}
+            name = Sc.bName(id);
+            if (!unlocked) {
+                meta = "Locked - map " + Sc.rgName(Sc.bUnlockRegion(id));
+                metaCol = 0xB46CFF;
+                btn = "LOCKED";
+            } else {
+                meta = (lvl > 0) ? ("Level " + lvl + " - now " + _bNowText(id, lvl)) : "Not built yet";
+                metaCol = (lvl > 0) ? Sc.GOLD : Sc.MUTED;
+                var cost = _m.upgradeCost(id);
+                btnHot = _m.canAfford(cost);
+                btn = (lvl > 0) ? "UPGRADE" : "BUILD";
+                btnCost = _costStr(cost);
+            }
+            lore = Sc.bLore(id);
+            effect = Sc.bEffectText(id);
+        } else if (_cardKind == CK_TECH) {
+            var tid = Sc._c(_cardId, 0, Sc.T_N - 1);
+            var tlvl = _m.tech[tid];
+            counter = "RESEARCH " + (tid + 1) + "/" + Sc.T_N;
+            try { ColonyArt.techArt(dc, tid, cx, pcy, ap); } catch (e) {}
+            name = Sc.tName(tid);
+            meta = (tlvl > 0) ? ("Level " + tlvl + " - now " + _tNowText(tid, tlvl)) : "Not researched";
+            metaCol = (tlvl > 0) ? 0x4CE0C0 : Sc.MUTED;
+            lore = Sc.tLore(tid);
+            effect = Sc.tEffectText(tid);
+            var tc = _m.techCost(tid);
+            btnHot = _m.res[Sc.R_SCI] >= tc;
+            btn = "RESEARCH";
+            btnCost = _fmt(tc) + "S";
+        } else if (_cardKind == CK_REGION) {
+            var rid = Sc._c(_cardId, 0, Sc.RG_N - 1);
+            var disc = _m.isDiscovered(rid);
+            counter = "REGION " + (rid + 1) + "/" + Sc.RG_N;
+            try { ColonyArt.regionArt(dc, rid, cx, pcy, ap); } catch (e) {}
+            name = Sc.rgName(rid);
+            lore = Sc.rgLore(rid);
+            effect = Sc.rgEffectText(rid);
+            if (disc) {
+                meta = "Mapped - " + Sc.rgDiscovery(rid);
+                metaCol = 0x6FE08A;
+                btn = "MAPPED";
+            } else {
+                meta = _m.rgProg[rid] + "% surveyed - " + _fmt(Sc.stepsForRegion(rid)) + " steps";
+                metaCol = Sc.rgColor(rid);
+                var ec = Sc.exploreCostNrg(rid);
+                btnHot = (_m.res[Sc.R_NRG] >= ec) && (_m.expeditionsLeft() > 0);
+                btn = "EXPEDITION";
+                btnCost = ec + "E - " + _m.expeditionsLeft() + " LEFT";
+            }
+        } else {
+            var aid = Sc._c(_cardId, 0, Sc.A_N - 1);
+            var own = _m.hasArt(aid);
+            counter = "RELIC " + (aid + 1) + "/" + Sc.A_N;
+            if (own) {
+                try { ColonyArt.artArt(dc, aid, cx, pcy, ap); } catch (e) {}
+                name = Sc.aName(aid);
+                meta = Sc.aRarityName(Sc.aRarity(aid)) + " - " + Sc.aOrigin(aid);
+                metaCol = Sc.aColor(aid);
+                lore = Sc.aLore(aid);
+                effect = Sc.aValueText(aid);
+            } else {
+                dc.setColor(0x141C26, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cx, pcy, _h * 10 / 100);
+                _txt(dc, cx, _h * 16 / 100, Graphics.FONT_SMALL, 0x3A4656, "?", Graphics.TEXT_JUSTIFY_CENTER);
+                name = "Unrecovered";
+                meta = Sc.aRarityName(Sc.aRarity(aid)) + " relic";
+                metaCol = Sc.aColor(aid);
+                lore = "The archive knows of it. Nobody on X-01 has held one.";
+                effect = "Look in: " + Sc.aOrigin(aid);
+            }
+        }
+
+        var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
+        Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x7C8BA0);
+        _wrap(dc, cx, _h * 35 / 100, _w * 84 / 100, Graphics.FONT_TINY, Sc.TEXT, name);
+        _wrap(dc, cx, _h * 44 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
+        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xB6C6D6, lore, 3);
+        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x6FE08A, effect, 2);
+
+        // 54% wide and stopping at 92% keeps both bottom corners inside the
+        // inscribed circle of a round display.
+        var bw = _w * 54 / 100; var bx = cx - bw / 2;
+        _rBtnA = [bx, _h * 80 / 100, bw, _h * 12 / 100];
+        _cardBtn(dc, _rBtnA, btn, btnCost, btnHot);
+    }
+    // Card action button: the verb reads at FONT_XTINY while the price rides
+    // underneath in the 3x5 pixel font, the only way a four-resource cost fits
+    // inside one button on a 240px watch.
+    hidden function _cardBtn(dc, r, label, cost, hot) {
+        dc.setColor(hot ? 0x0E2A38 : Sc.PANEL, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+        dc.setColor(hot ? Sc.ACCENT : 0x2A3A4A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+        var col = hot ? 0xCDEEFF : 0x9FB2C4;
+        if (cost == null || cost.length() == 0) {
+            _txt(dc, r[0] + r[2] / 2, r[1] + r[3] / 2, Graphics.FONT_XTINY, col, label,
+                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            return;
+        }
+        _txt(dc, r[0] + r[2] / 2, r[1] + r[3] * 32 / 100, Graphics.FONT_XTINY, col, label,
+             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        var sc = _h / 200; if (sc < 1) { sc = 1; }
+        while (sc > 1 && Px.gtxtW(cost, sc) > r[2] - 8) { sc -= 1; }
+        Px.gshC(dc, cost, r[0] + r[2] / 2, r[1] + r[3] * 62 / 100, sc,
+                hot ? 0xFFD98A : 0x8A97A6);
+    }
+    // Cumulative effect of a structure at its current level, in one phrase.
+    hidden function _bNowText(id, lvl) {
+        var pr = Sc.bProdRes(id);
+        if (pr >= 0) { return "+" + _fmt(Sc.prodAt(id, lvl)) + " " + Sc.resAbbr(pr) + "/h"; }
+        if (id == Sc.B_HABITAT)  { return _m.popCap() + " pop cap"; }
+        if (id == Sc.B_LAUNCH)   { return _m.expeditionCap() + " sorties/day"; }
+        if (id == Sc.B_ALIEN)    { return "+" + (lvl * 12) + "% science"; }
+        if (id == Sc.B_ELEVATOR) { return "+" + (lvl * 10) + "% all"; }
+        if (id == Sc.B_DEFENSE)  { var s = lvl * 15; if (s > 90) { s = 90; } return s + "% shield"; }
+        return "+" + (lvl * 18) + "% all";
+    }
+    hidden function _tNowText(id, lvl) {
+        if (id == Sc.T_EFF)  { return "+" + (lvl * 8) + "% all"; }
+        if (id == Sc.T_GENE) { return "+" + (lvl * 20) + "% growth"; }
+        return "+" + (lvl * 15) + "%";
+    }
+    hidden function _costStr(c) {
+        var s = _fmt(c[0]) + "M " + _fmt(c[1]) + "E";
+        if (c[2] > 0) { s += " " + _fmt(c[2]) + "S"; }
+        if (c[3] > 0) { s += " " + _fmt(c[3]) + "C"; }
+        return s;
     }
 
     // Shared scrolling list frame with a selectable cursor.
@@ -662,24 +962,56 @@ class ColonyView extends WatchUi.View {
     // ── MISSION ─────────────────────────────────────────────────────────────
     hidden function _drawMissions(dc) {
         var cx = _w / 2;
-        _wrap(dc, cx, _h * 22 / 100, _w * 80 / 100, Graphics.FONT_TINY, Sc.TEXT, _m.dailyText());
+        _wrap(dc, cx, _h * 18 / 100, _w * 80 / 100, Graphics.FONT_TINY, Sc.TEXT, _m.dailyText());
 
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
-        var bw = _w * 62 / 100; var bx = cx - bw / 2; var by = _h * 40 / 100;
-        _bar(dc, bx, by, bw, 10, (tgt > 0 ? prog * 100 / tgt : 100), Sc.ACCENT);
-        _txt(dc, cx, by + _h * 5 / 100, Graphics.FONT_XTINY, Sc.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, by + _h * 12 / 100, Graphics.FONT_XTINY, Sc.GOLD, _m.dailyRewardText(), Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, by + _h * 19 / 100, Graphics.FONT_XTINY, Sc.TEXT,
-             "Streak " + _m.streak + "d" + _mileTag(), Graphics.TEXT_JUSTIFY_CENTER);
+        var bw = _w * 62 / 100; var bx = cx - bw / 2; var by = _h * 31 / 100;
+        _bar(dc, bx, by, bw, 9, (tgt > 0 ? prog * 100 / tgt : 100), Sc.ACCENT);
+        _txt(dc, cx, _h * 35 / 100, Graphics.FONT_XTINY, Sc.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
+        _wrap(dc, cx, _h * 41 / 100, _w * 84 / 100, Graphics.FONT_XTINY, Sc.GOLD, _rewardStr());
+
+        // Streak + its live multiplier, then the next milestone worth chasing.
+        _txt(dc, cx, _h * 48 / 100, Graphics.FONT_XTINY, Sc.TEXT,
+             "Streak " + _m.streak + "d  x" + _multStr() + _mileTag(), Graphics.TEXT_JUSTIFY_CENTER);
+        var nxt = _m.nextStreakMilestone();
+        _txt(dc, cx, _h * 54 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+             (nxt > 0) ? ("Next bonus at " + nxt + "d" + ((nxt == Sc.STREAK_M2 || nxt == Sc.STREAK_M4) ? " + relic" : ""))
+                       : "All streak bonuses earned",
+             Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Offline buffer: production only banks OFFLINE_CAP hours, so how full
+        // that store is has to be visible before it starts wasting output.
+        try { _drawStoreBar(dc, _h * 60 / 100); } catch (e) {}
 
         // Two stacked actions: claim the daily, or spend Credits on a supply
         // drop (the Credits sink — buys the Water that population growth eats).
         var bwr = _w * 52 / 100; var bxr = cx - bwr / 2; var bhr = _h * 11 / 100;
-        _rBtnA = [bxr, _h * 67 / 100, bwr, bhr];
-        _rBtnB = [bxr, _h * 80 / 100, bwr, bhr];
+        _rBtnA = [bxr, _h * 69 / 100, bwr, bhr];
+        _rBtnB = [bxr, _h * 82 / 100, bwr, bhr];
         _button(dc, _rBtnA, _m.dailyClaimed ? "CLAIMED" : "CLAIM", _cur == 0);
         var tc = _m.tradeCost();
         _button(dc, _rBtnB, "TRADE " + _fmt(tc) + "CR", _cur == 1);
+    }
+    // Abbreviated to the same one-letter resource keys the costs use, so the
+    // whole payout stays on one line even on a 240px watch.
+    hidden function _rewardStr() {
+        return "+" + _fmt(_m.dailyReward(Sc.R_SCI)) + "S  +" + _fmt(_m.dailyReward(Sc.R_MIN))
+             + "M  +" + _fmt(_m.dailyReward(Sc.R_CRE)) + "C";
+    }
+    // Streak multiplier as a one-decimal figure (integer math only).
+    hidden function _multStr() {
+        var p = 100 + _m.streakBonusPct();
+        return (p / 100) + "." + ((p / 10) % 10);
+    }
+    // Offline storage gauge: a slim bar plus "n% of 24h" so the player can see
+    // when the idle buffer is about to overflow.
+    hidden function _drawStoreBar(dc, y) {
+        var cx = _w / 2;
+        var pct = _m.offlinePct();
+        var bw = _w * 46 / 100; var bx = cx - bw / 2;
+        _txt(dc, cx, y, Graphics.FONT_XTINY, (pct >= 90) ? 0xFF8A8A : Sc.MUTED,
+             "Store " + pct + "% of " + _m.offlineCapHours() + "h", Graphics.TEXT_JUSTIFY_CENTER);
+        _bar(dc, bx, y + _h * 6 / 100, bw, 4, pct, (pct >= 90) ? 0xFF5A7A : 0x4CE0C0);
     }
     hidden function _mileTag() {
         var d = _m.daysAlive();
@@ -717,7 +1049,7 @@ class ColonyView extends WatchUi.View {
         _txt(dc, cx, _h * 13 / 100, Graphics.FONT_SMALL, Sc.ACCENT, "WELCOME BACK", Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 23 / 100, Graphics.FONT_XTINY, Sc.MUTED, "COMMANDER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var y = _h * 33 / 100; var step = _h * 8 / 100; var n = 0;
+        var y = _h * 31 / 100; var step = _h * 7 / 100; var n = 0;
         for (var i = 0; i < Sc.R_N; i++) {
             if (_m.gRes[i] > 0) {
                 _txt(dc, cx, y + n * step, Graphics.FONT_TINY, Sc.resColor(i),
@@ -728,11 +1060,18 @@ class ColonyView extends WatchUi.View {
         if (_m.gPop > 0) { _txt(dc, cx, y + n * step, Graphics.FONT_TINY, 0x6FB3FF, "+" + _m.gPop + " colonists", Graphics.TEXT_JUSTIFY_CENTER); n++; }
         if (n == 0) { _txt(dc, cx, y, Graphics.FONT_TINY, Sc.MUTED, "Colony steady", Graphics.TEXT_JUSTIFY_CENTER); }
 
-        if (_m.newDay) {
-            _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, Sc.GOLD,
-                 "Streak " + _m.streak + " day" + (_m.streak == 1 ? "" : "s"), Graphics.TEXT_JUSTIFY_CENTER);
+        // A relic recovered while you were away is the headline, not a footnote.
+        if (_m.gArt >= 0) {
+            _txt(dc, cx, _h * 74 / 100, Graphics.FONT_XTINY, Sc.aColor(_m.gArt),
+                 "Relic: " + Sc.aName(_m.gArt), Graphics.TEXT_JUSTIFY_CENTER);
         }
-        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Sc.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 81 / 100, Graphics.FONT_XTINY, Sc.GOLD,
+             "Streak " + _m.streak + "d  x" + _multStr() + " reward", Graphics.TEXT_JUSTIFY_CENTER);
+        var cpct = _m.collectedPct();
+        _txt(dc, cx, _h * 87 / 100, Graphics.FONT_XTINY, (cpct >= 95) ? 0xFF8A8A : Sc.MUTED,
+             "Store was " + cpct + "% of " + _m.offlineCapHours() + "h",
+             Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 93 / 100, Graphics.FONT_XTINY, Sc.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // First-run pixel-styled explainer: your body stats are the fuel.
@@ -771,7 +1110,7 @@ class ColonyView extends WatchUi.View {
         dc.setColor(0x0A0710, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(0x140C1E, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         var e = _m.pendingEvent;
-        _txt(dc, cx, _h * 14 / 100, Graphics.FONT_SMALL, 0xB46CFF, Sc.evTitle(e), Graphics.TEXT_JUSTIFY_CENTER);
+        _txtFit(dc, cx, _h * 17 / 100, Graphics.FONT_SMALL, 0xB46CFF, Sc.evTitle(e), _w * 76 / 100);
         _wrap(dc, cx, _h * 30 / 100, _w * 82 / 100, Graphics.FONT_XTINY, Sc.TEXT, Sc.evBody(e));
 
         var bw = _w * 60 / 100; var bx = cx - bw / 2; var bh = _h * 13 / 100;
@@ -814,6 +1153,21 @@ class ColonyView extends WatchUi.View {
     }
     hidden function _txt(dc, x, y, f, c, s, j) { dc.setColor(c, Graphics.COLOR_TRANSPARENT); dc.drawText(x, y, f, s, j); }
 
+    // Centred title that steps down a font size (and finally truncates) rather
+    // than running off the chord of a round screen.
+    hidden function _txtFit(dc, cx, y, f, c, s, maxw) {
+        var fonts = [f, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        var use = f;
+        for (var i = 0; i < fonts.size(); i++) {
+            use = fonts[i];
+            if (dc.getTextWidthInPixels(s, use) <= maxw) { break; }
+        }
+        while (s.length() > 3 && dc.getTextWidthInPixels(s, use) > maxw) {
+            s = s.substring(0, s.length() - 1);
+        }
+        _txt(dc, cx, y, use, c, s, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     // ── Numbers / text ─────────────────────────────────────────────────────────
     hidden function _fmt(n) {
         if (n < 0) { n = 0; }
@@ -837,6 +1191,34 @@ class ColonyView extends WatchUi.View {
         dc.drawText(cx, y + fh * 85 / 100, font, l2, Graphics.TEXT_JUSTIFY_CENTER);
     }
     // Single-line clamp for the log rows (truncate with ellipsis).
+    // Multi-line centred wrap. The two-line version silently ran the remainder
+    // off both edges of a round screen, which is where the longer card copy
+    // lives, so anything that still will not fit is ellipsized instead.
+    hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var fh = dc.getFontHeight(font) * 85 / 100;
+        var words = _split(s);
+        var i = 0; var line = 0;
+        while (i < words.size() && line < maxLines) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            while (cur.length() > 3 && dc.getTextWidthInPixels(cur, font) > maxw) {
+                cur = cur.substring(0, cur.length() - 1);
+            }
+            if (line == maxLines - 1 && i < words.size()) {
+                while (cur.length() > 3 && dc.getTextWidthInPixels(cur + "..", font) > maxw) {
+                    cur = cur.substring(0, cur.length() - 1);
+                }
+                cur += "..";
+            }
+            dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
+            line++;
+        }
+    }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         if (s == null) { return; }
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

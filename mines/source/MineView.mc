@@ -30,11 +30,19 @@ const MV_OVER = 0;
 const MV_DIG  = 1;
 const MV_UPG  = 2;
 const MV_COLL = 3;
-const MV_DAILY = 4;
-const MV_HIST = 5;
-const MV_PAGES = 6;
+const MV_ATLAS = 4;
+const MV_DAILY = 5;
+const MV_HIST = 6;
+const MV_PAGES = 7;
 const MV_UPG_ROWS = 11;   // Mn.B_N (9) buildings + pickaxe + cart
 const MV_COLL_COLS = 5;
+
+// Detail-card kinds. Every purchasable, findable or discoverable thing in the
+// mine opens the same card: a big pixel portrait, what it is, the story behind
+// it and exactly what it does for you.
+const CK_UPG  = 0;   // id = UPGRADE row (buildings, then pickaxe, then cart)
+const CK_COLL = 1;   // id = collectible index
+const CK_DISC = 2;   // id = depth-discovery index
 
 class MineView extends WatchUi.View {
     hidden var _m;
@@ -52,6 +60,7 @@ class MineView extends WatchUi.View {
     hidden var _tip;
 
     hidden var _demo; hidden var _demoAcc;
+    hidden var _cardKind; hidden var _cardId;
 
     hidden var _rows; hidden var _rowIds;
     hidden var _rBtnA; hidden var _rBtnB;
@@ -66,6 +75,7 @@ class MineView extends WatchUi.View {
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false; _digPulse = 0;
         _tip = false;
         _demo = false; _demoAcc = 0;
+        _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _rBtnA = null; _rBtnB = null;
         _rTabs = []; _rPrev = null; _rNext = null; _rDemo = null;
         _loadFx();
@@ -167,6 +177,36 @@ class MineView extends WatchUi.View {
         } catch (e) {}
     }
 
+    // ── Detail cards ──────────────────────────────────────────────────────────
+    // Opening a card is the main way to LOOK at something: the portrait, the
+    // story and the exact numbers. UP/DOWN walks the whole set without going
+    // back to the list, so the collection and the atlas read like a museum.
+    function cardOpen() { return _cardKind >= 0; }
+    hidden function _openCard(kind, id) {
+        _cardKind = kind; _cardId = id;
+        _tone(0); _vibe(14, 18);
+        WatchUi.requestUpdate();
+    }
+    function closeCard() {
+        if (_cardKind < 0) { return false; }
+        _cardKind = -1;
+        _tone(0); _vibe(10, 14);
+        WatchUi.requestUpdate();
+        return true;
+    }
+    hidden function _cardCount() {
+        if (_cardKind == CK_UPG)  { return MV_UPG_ROWS; }
+        if (_cardKind == CK_COLL) { return Mn.C_N; }
+        return Mn.D_N;
+    }
+    hidden function _cardStep(d) {
+        var n = _cardCount();
+        _cardId = ((_cardId + d) % n + n) % n;
+        _cur = _cardId;
+        _tone(0); _vibe(8, 12);
+        WatchUi.requestUpdate();
+    }
+
     // ── Navigation ────────────────────────────────────────────────────────────
     hidden function _dismiss() {
         if (_event) { return false; }
@@ -176,6 +216,7 @@ class MineView extends WatchUi.View {
     }
     function pageMove(d) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_dismiss()) { return; }
         _page = ((_page + d) % MV_PAGES + MV_PAGES) % MV_PAGES;
         _cur = 0; _scroll = 0;
@@ -184,6 +225,7 @@ class MineView extends WatchUi.View {
     }
     function setPage(p) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_dismiss()) { return; }
         _page = ((p % MV_PAGES) + MV_PAGES) % MV_PAGES;
         _cur = 0; _scroll = 0;
@@ -195,6 +237,7 @@ class MineView extends WatchUi.View {
     // page at the ends so the whole game is reachable with only two buttons.
     function cursorMove(d) {
         if (_event) { _evChoice = (_evChoice + 1) % 2; _tone(0); WatchUi.requestUpdate(); return; }
+        if (cardOpen()) { _cardStep(d); return; }
         if (_dismiss()) { return; }
 
         if (_page == MV_UPG) {
@@ -204,10 +247,18 @@ class MineView extends WatchUi.View {
             _cur = nc; _tone(0); WatchUi.requestUpdate(); return;
         }
         if (_page == MV_COLL) {
-            var nc2 = _cur + d * MV_COLL_COLS;
+            // One step = one gem. Stepping a whole row at a time used to make
+            // 16 of the 20 finds unreachable with the buttons.
+            var nc2 = _cur + d;
             if (nc2 < 0) { pageMove(-1); return; }
             if (nc2 >= Mn.C_N) { pageMove(1); return; }
             _cur = nc2; _tone(0); WatchUi.requestUpdate(); return;
+        }
+        if (_page == MV_ATLAS) {
+            var nc3 = _cur + d;
+            if (nc3 < 0) { pageMove(-1); return; }
+            if (nc3 >= Mn.D_N) { pageMove(1); return; }
+            _cur = nc3; _tone(0); WatchUi.requestUpdate(); return;
         }
         if (_page == MV_HIST) {
             var maxScroll = _m.history().size() - 6;
@@ -223,16 +274,19 @@ class MineView extends WatchUi.View {
 
     function activate() {
         if (_event) { _resolveEvent(_evChoice); return; }
+        if (cardOpen()) {
+            // On an upgrade card SELECT buys and the card stays open with the
+            // new level and price, so repeat purchases never leave the detail.
+            if (_cardKind == CK_UPG) { _doUpgrade(_cardId); return; }
+            closeCard(); return;
+        }
         if (_dismiss()) { return; }
         if (_page == MV_OVER)  { setPage(MV_DIG); return; }
         if (_page == MV_DIG)   { _doDig(); return; }
-        if (_page == MV_UPG)   { _doUpgrade(_cur); return; }
+        if (_page == MV_UPG)   { _openCard(CK_UPG, _cur); return; }
         if (_page == MV_DAILY) { _doClaim(); return; }
-        if (_page == MV_COLL) {
-            var owned = _m.hasColl(_cur);
-            _popup = Mn.cName(_cur) + " - " + (owned ? Mn.rarityName(Mn.cRarity(_cur)) : "undiscovered");
-            _popupT = 28; _tone(0); WatchUi.requestUpdate(); return;
-        }
+        if (_page == MV_COLL)  { _openCard(CK_COLL, _cur); return; }
+        if (_page == MV_ATLAS) { _openCard(CK_DISC, _cur); return; }
     }
 
     hidden function _doDig() {
@@ -289,6 +343,12 @@ class MineView extends WatchUi.View {
         }
         if (_welcome) { _dismiss(); return true; }
         if (_tip) { _dismiss(); return true; }
+        if (cardOpen()) {
+            if (_inR(x, y, _rBtnA)) { activate(); return true; }
+            if (_inR(x, y, _rPrev)) { _cardStep(-1); return true; }
+            if (_inR(x, y, _rNext)) { _cardStep(1); return true; }
+            closeCard(); return true;
+        }
         // Rows / grid cells first (they overlap the edge chevron zones).
         for (var i = 0; i < _rows.size(); i++) {
             if (_inR(x, y, _rows[i])) { _cur = _rowIds[i]; activate(); return true; }
@@ -326,10 +386,12 @@ class MineView extends WatchUi.View {
         else if (_page == MV_DIG) { _drawDig(dc); }
         else if (_page == MV_UPG) { _drawUpgrade(dc); }
         else if (_page == MV_COLL) { _drawCollection(dc); }
+        else if (_page == MV_ATLAS) { _drawAtlas(dc); }
         else if (_page == MV_DAILY) { _drawDaily(dc); }
         else { _drawHistory(dc); }
 
         _drawChrome(dc);
+        if (cardOpen()) { _drawCard(dc); }
         if (_demo) { _drawDemoBorder(dc); }
         if (_popup != null) { _drawPopup(dc); }
         if (_welcome) { _drawWelcome(dc); }
@@ -343,12 +405,14 @@ class MineView extends WatchUi.View {
         if (p == MV_DIG)  { return "DIG"; }
         if (p == MV_UPG)  { return "UPGRADE"; }
         if (p == MV_COLL) { return "COLLECT"; }
+        if (p == MV_ATLAS){ return "ATLAS"; }
         if (p == MV_DAILY){ return "DAILY"; }
         return "MINE LOG";
     }
     hidden function _pageColor(p) {
         if (p == MV_UPG)  { return Mn.GOLD; }
         if (p == MV_COLL) { return 0xFFD24A; }
+        if (p == MV_ATLAS){ return 0xB46CFF; }
         if (p == MV_DAILY){ return Mn.GOLD; }
         if (p == MV_HIST) { return 0x9FB0C0; }
         return Mn.ACCENT;
@@ -412,8 +476,8 @@ class MineView extends WatchUi.View {
         // Scale the mine cross-section down to 85% (15% smaller) of the inset
         // box, kept centred on the display so the scene breathes and never
         // crowds the edges.
-        var bw = (_w - mx * 2) * 85 / 100;
-        var bh = (_h - my * 2) * 85 / 100;
+        var bw = _w - mx * 2;
+        var bh = _h - my * 2;
         var bx = cx - bw / 2;
         var by = _h / 2 - bh / 2;
         try {
@@ -468,15 +532,26 @@ class MineView extends WatchUi.View {
     // Compact wallet strip (icon + count for all four resources) surfaced on the
     // DIG page header so the spendable currency counts stay reachable now that
     // the overview is pure diorama. Centred on y, height chipH.
+    // The strip has to live inside the chord of a round screen at its own y,
+    // not inside the full width — a fixed 88% strip lost the outer two numbers
+    // to the bezel.
     hidden function _resStrip(dc, y, chipH) {
         if (chipH < 12) { chipH = 12; }
-        var cellW = _w * 22 / 100;
-        var totalW = cellW * Mn.R_N;
-        var x0 = _w / 2 - totalW / 2;
+        var cx = _w / 2;
+        var dy = y + chipH / 2 - _h / 2;
+        var half = _w / 2;
+        if (_w == _h) {
+            var rr = _w / 2;
+            var q = rr * rr - dy * dy;
+            half = (q > 0) ? Math.sqrt(q).toNumber() : rr;
+            half = half * 92 / 100;
+        }
+        var cellW = half * 2 / Mn.R_N;
+        var x0 = cx - half;
         for (var i = 0; i < Mn.R_N; i++) {
             var cxi = x0 + i * cellW;
-            MineArt.resIcon(dc, cxi + chipH * 40 / 100, y, chipH * 30 / 100, i);
-            _txt(dc, cxi + chipH * 80 / 100, y, Graphics.FONT_XTINY, Mn.resColor(i), _fmt(_m.res[i]),
+            MineArt.resIcon(dc, cxi + cellW * 18 / 100, y + chipH / 4, chipH * 26 / 100, i);
+            _txt(dc, cxi + cellW * 34 / 100, y, Graphics.FONT_XTINY, Mn.resColor(i), _fmt(_m.res[i]),
                  Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
@@ -484,19 +559,19 @@ class MineView extends WatchUi.View {
     // ── DIG ───────────────────────────────────────────────────────────────────
     hidden function _drawDig(dc) {
         var cx = _w / 2;
-        try { _resStrip(dc, _h * 185 / 1000, _h * 9 / 100); } catch (e) {}
-        _txt(dc, cx, _h * 23 / 100, Graphics.FONT_XTINY, Mn.MUTED, Mn.zName(_m.zone()), Graphics.TEXT_JUSTIFY_CENTER);
+        try { _resStrip(dc, _h * 13 / 100, _h * 9 / 100); } catch (e) {}
+        _txt(dc, cx, _h * 24 / 100, Graphics.FONT_XTINY, Mn.MUTED, Mn.zName(_m.zone()), Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 31 / 100, Graphics.FONT_NUMBER_MEDIUM, Mn.GOLD, "" + _m.depth, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 47 / 100, Graphics.FONT_XTINY, Mn.MUTED, "meters deep", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 50 / 100, Graphics.FONT_XTINY, Mn.MUTED, "meters deep", Graphics.TEXT_JUSTIFY_CENTER);
 
         var next = _nextMark();
         var prev = _prevMark();
         var pct = 100;
         if (next > prev) { pct = (_m.depth - prev) * 100 / (next - prev); }
-        var bw = _w * 64 / 100; var bx = cx - bw / 2; var by = _h * 55 / 100;
+        var bw = _w * 64 / 100; var bx = cx - bw / 2; var by = _h * 58 / 100;
         _bar(dc, bx, by, bw, 8, pct, 0x8C6CFF);
-        var nlabel = (next > _m.depth) ? ("Next: " + _nextMarkName() + " @ " + next + "m") : "All layers found";
-        _txt(dc, cx, by + _h * 6 / 100, Graphics.FONT_XTINY, Mn.MUTED, nlabel, Graphics.TEXT_JUSTIFY_CENTER);
+        var nlabel = (next > _m.depth) ? (_nextMarkName() + " @ " + next + "m") : "All layers found";
+        _txtFit(dc, cx, by + _h * 4 / 100, Graphics.FONT_XTINY, Mn.MUTED, nlabel, _w * 72 / 100);
 
         var bwr = _w * 54 / 100; var bxr = cx - bwr / 2; var byr = _h * 73 / 100; var bhr = _h * 14 / 100;
         _rBtnA = [bxr, byr, bwr, bhr];
@@ -506,9 +581,9 @@ class MineView extends WatchUi.View {
         // rate keeps falling below 1200m, and which building answers it.
         var pp = 100;
         try { pp = _m.pressurePct(); } catch (e) { pp = 100; }
-        var hint = "SELECT / TAP to dig"; var hintCol = Mn.MUTED;
-        if (pp < 100) { hint = "Pressure " + pp + "% - build Rig"; hintCol = 0xFF8A5A; }
-        _txt(dc, cx, _h * 92 / 100, Graphics.FONT_XTINY, hintCol, hint, Graphics.TEXT_JUSTIFY_CENTER);
+        var hint = "SELECT to dig"; var hintCol = Mn.MUTED;
+        if (pp < 100) { hint = "Pressure " + pp + "%"; hintCol = 0xFF8A5A; }
+        _txtFit(dc, cx, _h * 88 / 100, Graphics.FONT_XTINY, hintCol, hint, _w * 56 / 100);
     }
     hidden function _nextMark() {
         for (var i = 0; i < Mn.D_N; i++) { if (Mn.dDepth(i) > _m.depth) { return Mn.dDepth(i); } }
@@ -629,21 +704,62 @@ class MineView extends WatchUi.View {
             var px = gx + c * cell + cell / 2;
             var py = gy + rr * cell + cell / 2;
             var owned = _m.hasColl(i);
-            if (i == _cur) { dc.setColor(Mn.ACCENT, Graphics.COLOR_TRANSPARENT); dc.drawCircle(px, py, cell * 40 / 100); }
+            // Rarity-tinted socket behind every slot so the grid reads as a
+            // display case rather than a row of identical dots.
+            var rc = Mn.rarityColor(Mn.cRarity(i));
+            dc.setColor(owned ? _shade(rc, 28) : 0x191410, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(px - cell * 44 / 100, py - cell * 44 / 100,
+                                    cell * 88 / 100, cell * 88 / 100, 4);
             if (owned) {
-                MineArt.collectibleIcon(dc, px, py, cell * 30 / 100, Mn.cRarity(i));
+                // Each find has its own portrait — the same one the card shows.
+                var ap = cell * 70 / 100 / 6; if (ap < 1) { ap = 1; }
+                MineArt.collArt(dc, i, px, py, ap);
             } else {
-                dc.setColor(0x241E16, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px, py, cell * 26 / 100);
+                dc.setColor(0x3A2E22, Graphics.COLOR_TRANSPARENT);
+                _txt(dc, px, py - cell * 30 / 100, Graphics.FONT_XTINY, 0x4A3C2C, "?", Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            if (i == _cur) {
+                dc.setColor(Mn.ACCENT, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(px - cell * 46 / 100, py - cell * 46 / 100,
+                                        cell * 92 / 100, cell * 92 / 100, 5);
             }
             _rows.add([px - cell / 2, py - cell / 2, cell, cell]);
             _rowIds.add(i);
         }
         var owned2 = _m.hasColl(_cur);
-        _txt(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, owned2 ? Mn.cColor(_cur) : Mn.MUTED,
-             Mn.cName(_cur) + (owned2 ? "" : " ?"), Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 91 / 100, Graphics.FONT_XTINY, Mn.GOLD,
-             (owned2 ? Mn.rarityName(Mn.cRarity(_cur)) : "Legendary: " + _m.legendaryFinds()), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 83 / 100, Graphics.FONT_XTINY, owned2 ? Mn.cColor(_cur) : Mn.MUTED,
+             owned2 ? Mn.cName(_cur) : "Undiscovered", Graphics.TEXT_JUSTIFY_CENTER);
+        // Short enough to survive the narrow chord this far down a round face.
+        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Mn.MUTED,
+             owned2 ? "SEL = story" : Mn.rarityName(Mn.cRarity(_cur)), Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    hidden function _shade(c, pct) {
+        var r = ((c >> 16) & 0xFF) * pct / 100;
+        var g = ((c >> 8) & 0xFF) * pct / 100;
+        var b = (c & 0xFF) * pct / 100;
+        return (r << 16) | (g << 8) | b;
+    }
+
+    // ── ATLAS — the depth landmarks the crew has cut through ──────────────────
+    hidden function _drawAtlas(dc) {
+        _drawListFrame(dc, Mn.D_N, method(:_drawAtlasRow));
+    }
+    function _drawAtlasRow(dc, id, x, y, w, rh, sel) {
+        var found = _m.isDiscovered(id);
+        var icx = x + rh / 2; var icy = y + rh / 2;
+        if (found) {
+            var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+            MineArt.discArt(dc, id, icx, icy, ap);
+        } else {
+            dc.setColor(0x2A2216, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(icx, icy, rh / 3);
+            _txt(dc, icx, icy - rh / 4, Graphics.FONT_XTINY, 0x5A4A36, "?", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        var tx = x + rh + 4; var tw = w - rh - 8;
+        _wrap1(dc, tx, y + rh * 18 / 100, tw, Graphics.FONT_XTINY,
+               found ? Mn.TEXT : Mn.MUTED, found ? Mn.dName(id) : "Sealed layer");
+        _wrap1(dc, tx, y + rh * 60 / 100, tw, Graphics.FONT_XTINY,
+               found ? 0x8FE080 : 0xB46CFF, Mn.dDepth(id) + "m" + (found ? " · reached" : " · dig deeper"));
     }
 
     // ── DAILY ─────────────────────────────────────────────────────────────────
@@ -652,12 +768,20 @@ class MineView extends WatchUi.View {
         _wrap(dc, cx, _h * 24 / 100, _w * 78 / 100, Graphics.FONT_TINY, Mn.TEXT, _m.dailyText());
 
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
-        var bw = _w * 60 / 100; var bx = cx - bw / 2; var by = _h * 45 / 100;
+        var bw = _w * 60 / 100; var bx = cx - bw / 2; var by = _h * 43 / 100;
         _bar(dc, bx, by, bw, 10, (tgt > 0 ? prog * 100 / tgt : 100), Mn.ACCENT);
-        _txt(dc, cx, by + _h * 6 / 100, Graphics.FONT_XTINY, Mn.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, by + _h * 13 / 100, Graphics.FONT_XTINY, Mn.GOLD, _m.dailyRewardText(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, by + _h * 5 / 100, Graphics.FONT_XTINY, Mn.MUTED, prog + " / " + tgt, Graphics.TEXT_JUSTIFY_CENTER);
+        _wrapN(dc, cx, by + _h * 11 / 100, _w * 80 / 100, Graphics.FONT_XTINY, Mn.GOLD,
+               _m.dailyRewardText(), 2);
+        // The streak multiplier is the reason to come back tomorrow, so it is
+        // stated as a number next to the reward it scales.
+        var sp = _m.streakPct();
         _txt(dc, cx, by + _h * 20 / 100, Graphics.FONT_XTINY, Mn.TEXT,
-             "Streak " + _m.streak + "d  ·  " + _m.ageDayLabel(), Graphics.TEXT_JUSTIFY_CENTER);
+             "Streak " + _m.streak + "d  x" + (sp / 100) + "." + ((sp / 10) % 10), Graphics.TEXT_JUSTIFY_CENTER);
+        var nm = _m.nextMilestone();
+        _txt(dc, cx, by + _h * 27 / 100, Graphics.FONT_XTINY, 0x8FE080,
+             (nm > 0) ? ("Bonus haul at day " + nm) : "All streak bonuses paid",
+             Graphics.TEXT_JUSTIFY_CENTER);
 
         var bwr = _w * 46 / 100; var bxr = cx - bwr / 2; var byr = _h * 82 / 100; var bhr = _h * 12 / 100;
         _rBtnA = [bxr, byr, bwr, bhr];
@@ -704,8 +828,18 @@ class MineView extends WatchUi.View {
         if (n == 0) { _txt(dc, cx, y, Graphics.FONT_TINY, Mn.MUTED, "Miners idle", Graphics.TEXT_JUSTIFY_CENTER); }
 
         if (_m.newDay) {
-            _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, Mn.GOLD,
-                 "Streak " + _m.streak + " day" + (_m.streak == 1 ? "" : "s"), Graphics.TEXT_JUSTIFY_CENTER);
+            var sp = _m.streakPct();
+            _txt(dc, cx, _h * 76 / 100, Graphics.FONT_XTINY, Mn.GOLD,
+                 "Streak " + _m.streak + "d  ·  rewards x" + (sp / 100) + "." + ((sp / 10) % 10),
+                 Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        // A near-full buffer means the miners ran out of cart space while you
+        // were away — the clearest possible nudge to check in sooner.
+        var fill = _m.offlineFillPct();
+        if (fill >= 60) {
+            _txt(dc, cx, _h * 83 / 100, Graphics.FONT_XTINY, fill >= 95 ? 0xFF8A5A : 0xB2A48E,
+                 fill >= 95 ? "Carts overflowed" : ("Carts " + fill + "% full"),
+                 Graphics.TEXT_JUSTIFY_CENTER);
         }
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Mn.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -733,12 +867,147 @@ class MineView extends WatchUi.View {
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Mn.GOLD, "tap to start mining", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // ── Detail card ───────────────────────────────────────────────────────────
+    // One overlay serves every object in the mine. It answers three questions
+    // in order: what does it look like, what is it, and what does it do for me.
+    hidden function _drawCard(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x06050B, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) { dc.setColor(0x15110A, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
+
+        var ap = _h * 20 / 100 / 6; if (ap < 2) { ap = 2; }
+        var name = ""; var meta = ""; var metaCol = Mn.MUTED;
+        var lore = ""; var effect = ""; var counter = "";
+        var btn = "CLOSE"; var btnHot = false;
+
+        if (_cardKind == CK_UPG) {
+            counter = "UPGRADE " + (_cardId + 1) + "/" + MV_UPG_ROWS;
+            if (_cardId < Mn.B_N) {
+                var id = _cardId;
+                var lvl = _m.bLevel[id];
+                var unlocked = _m.isUnlocked(id);
+                MineArt.bldArt(dc, id, cx, _h * 22 / 100, ap);
+                name = Mn.bName(id);
+                if (!unlocked) {
+                    meta = "Locked · dig to " + Mn.bUnlockDepth(id) + "m";
+                    metaCol = 0xB46CFF;
+                    btn = "LOCKED";
+                } else {
+                    meta = (lvl > 0) ? ("Level " + lvl + " · now " + _bNowText(id, lvl)) : "Not built yet";
+                    metaCol = (lvl > 0) ? Mn.GOLD : Mn.MUTED;
+                    var cost = _m.bCost(id);
+                    btnHot = _m.canAfford(cost);
+                    btn = (lvl > 0 ? "UPGRADE  " : "BUILD  ") + _costStr(cost);
+                }
+                lore = Mn.bLore(id);
+                effect = Mn.bEffectText(id);
+            } else if (_cardId == Mn.B_N) {
+                MineArt.pickIcon(dc, cx, _h * 22 / 100, _h * 10 / 100, _m.pickTier);
+                name = Mn.pickName(_m.pickTier);
+                meta = "Tier " + (_m.pickTier + 1) + "/" + Mn.PICK_N + " · " + Mn.pickPowerPct(_m.pickTier) + "% power";
+                metaCol = Mn.GOLD;
+                lore = Mn.pickLore(_m.pickTier);
+                if (_m.pickTier >= Mn.PICK_N - 1) {
+                    effect = "Fully forged. Nothing bites harder.";
+                    btn = "MAX TIER";
+                } else {
+                    effect = "Next: " + Mn.pickName(_m.pickTier + 1) + " · "
+                           + Mn.pickPowerPct(_m.pickTier + 1) + "% power";
+                    var pc = _m.pickCost();
+                    btnHot = _m.canAfford(pc);
+                    btn = "FORGE  " + _costStr(pc);
+                }
+            } else {
+                MineArt.cartIcon(dc, cx, _h * 22 / 100, _h * 10 / 100, _m.cartTier);
+                name = Mn.cartName(_m.cartTier);
+                meta = "Tier " + (_m.cartTier + 1) + "/" + Mn.CART_N + " · " + Mn.cartMultPct(_m.cartTier) + "% haul";
+                metaCol = Mn.GOLD;
+                lore = Mn.cartLore(_m.cartTier);
+                if (_m.cartTier >= Mn.CART_N - 1) {
+                    effect = "Nothing is left to haul faster.";
+                    btn = "MAX TIER";
+                } else {
+                    effect = "Next: " + Mn.cartName(_m.cartTier + 1) + " · "
+                           + Mn.cartMultPct(_m.cartTier + 1) + "% haul";
+                    var cc = _m.cartCost();
+                    btnHot = _m.canAfford(cc);
+                    btn = "BUY  " + _costStr(cc);
+                }
+            }
+        } else if (_cardKind == CK_COLL) {
+            var owned = _m.hasColl(_cardId);
+            counter = "FIND " + (_cardId + 1) + "/" + Mn.C_N;
+            if (owned) {
+                MineArt.collArt(dc, _cardId, cx, _h * 22 / 100, ap);
+                name = Mn.cName(_cardId);
+                meta = Mn.rarityName(Mn.cRarity(_cardId)) + " · " + Mn.cOrigin(_cardId);
+                metaCol = Mn.cColor(_cardId);
+                lore = Mn.cLore(_cardId);
+                effect = Mn.cValueText(_cardId);
+            } else {
+                dc.setColor(0x1E1810, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cx, _h * 22 / 100, _h * 10 / 100);
+                _txt(dc, cx, _h * 16 / 100, Graphics.FONT_SMALL, 0x4A3C2C, "?", Graphics.TEXT_JUSTIFY_CENTER);
+                name = "Undiscovered";
+                meta = Mn.rarityName(Mn.cRarity(_cardId)) + " find";
+                metaCol = Mn.cColor(_cardId);
+                lore = "The camp has heard of it. Nobody here has held one.";
+                effect = "Look in: " + Mn.cOrigin(_cardId);
+            }
+        } else {
+            var got = _m.isDiscovered(_cardId);
+            counter = "ATLAS " + (_cardId + 1) + "/" + Mn.D_N;
+            if (got) {
+                MineArt.discArt(dc, _cardId, cx, _h * 22 / 100, ap);
+                name = Mn.dName(_cardId);
+                meta = Mn.dDepth(_cardId) + "m · " + Mn.zName(Mn.zoneOf(Mn.dDepth(_cardId)));
+                metaCol = 0xB46CFF;
+                lore = Mn.dLore(_cardId);
+                effect = Mn.dEffectText(_cardId);
+            } else {
+                dc.setColor(0x1A1610, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cx, _h * 22 / 100, _h * 10 / 100);
+                _txt(dc, cx, _h * 16 / 100, Graphics.FONT_SMALL, 0x4A3C2C, "?", Graphics.TEXT_JUSTIFY_CENTER);
+                name = "Sealed layer";
+                var left = Mn.dDepth(_cardId) - _m.depth; if (left < 0) { left = 0; }
+                meta = Mn.dDepth(_cardId) + "m · " + _fmt(left) + "m to go";
+                metaCol = 0xFF8A5A;
+                lore = "The maps stop here. The crew keeps digging anyway.";
+                effect = "Reaching it unlocks a discovery and a find.";
+            }
+        }
+
+        var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
+        Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x9A8A76);
+        _wrapN(dc, cx, _h * 34 / 100, _w * 84 / 100, Graphics.FONT_TINY, Mn.TEXT, name, 1);
+        _wrapN(dc, cx, _h * 43 / 100, _w * 82 / 100, Graphics.FONT_XTINY, metaCol, meta, 1);
+        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xC9BCA8, lore, 3);
+        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x8FE080, effect, 2);
+
+        var bw = _w * 62 / 100; var bx = cx - bw / 2;
+        var by = _h * 81 / 100; var bh = _h * 12 / 100;
+        _rBtnA = [bx, by, bw, bh];
+        _button(dc, _rBtnA, btn, btnHot);
+    }
+    // Cumulative effect of a building at its current level, in one short phrase.
+    hidden function _bNowText(id, lvl) {
+        if (id == Mn.B_SHAFT)    { return "+" + (lvl * 4) + " m/h"; }
+        if (id == Mn.B_FORGE)    { return "+" + (lvl * 15) + "% ore"; }
+        if (id == Mn.B_ELEVATOR) { return "+" + (lvl * 15) + "% travel"; }
+        if (id == Mn.B_CAMP)     { return _m.workers() + " workers"; }
+        if (id == Mn.B_LAB)      { return "+" + (lvl * 12) + "% all"; }
+        if (id == Mn.B_GEMWS)    { return "+" + (lvl * 20) + "% gems"; }
+        if (id == Mn.B_SCANNER)  { return (lvl * 8) + "/1000 per dig"; }
+        if (id == Mn.B_RIG)      { return "+" + (lvl * 25) + "% pressure"; }
+        return "+" + (lvl * 12) + " m/h";
+    }
+
     hidden function _drawEvent(dc) {
         var cx = _w / 2;
         dc.setColor(0x0A0705, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(0x1A130C, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         var e = _m.pendingEvent;
-        _txt(dc, cx, _h * 14 / 100, Graphics.FONT_SMALL, Mn.ACCENT, Mn.evTitle(e), Graphics.TEXT_JUSTIFY_CENTER);
+        _txtFit(dc, cx, _h * 17 / 100, Graphics.FONT_SMALL, Mn.ACCENT, Mn.evTitle(e), _w * 76 / 100);
         _wrap(dc, cx, _h * 30 / 100, _w * 80 / 100, Graphics.FONT_XTINY, Mn.TEXT, Mn.evBody(e));
 
         var bw = _w * 58 / 100; var bx = cx - bw / 2; var bh = _h * 13 / 100;
@@ -809,6 +1078,21 @@ class MineView extends WatchUi.View {
     }
     hidden function _txt(dc, x, y, f, c, s, j) { dc.setColor(c, Graphics.COLOR_TRANSPARENT); dc.drawText(x, y, f, s, j); }
 
+    // Centred title that steps down a font size (and finally truncates) rather
+    // than running off the chord of a round screen.
+    hidden function _txtFit(dc, cx, y, f, c, s, maxw) {
+        var fonts = [f, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        var use = f;
+        for (var i = 0; i < fonts.size(); i++) {
+            use = fonts[i];
+            if (dc.getTextWidthInPixels(s, use) <= maxw) { break; }
+        }
+        while (s.length() > 3 && dc.getTextWidthInPixels(s, use) > maxw) {
+            s = s.substring(0, s.length() - 1);
+        }
+        _txt(dc, cx, y, use, c, s, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     hidden function _fmt(n) {
         if (n < 0) { n = 0; }
         if (n >= 1000000) { return (n / 1000000) + "." + ((n / 100000) % 10) + "M"; }
@@ -829,6 +1113,35 @@ class MineView extends WatchUi.View {
         var fh = dc.getFontHeight(font);
         dc.drawText(cx, y, font, l1, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(cx, y + fh * 85 / 100, font, l2, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    // Multi-line centred wrap. The two-line version silently ran the remainder
+    // off both edges of a round screen, which is where the longer card copy
+    // lives, so anything that still will not fit is ellipsized instead.
+    hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var fh = dc.getFontHeight(font) * 85 / 100;
+        var words = _split(s);
+        var i = 0; var line = 0;
+        while (i < words.size() && line < maxLines) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            // A single word wider than the column still has to be cut down.
+            while (cur.length() > 3 && dc.getTextWidthInPixels(cur, font) > maxw) {
+                cur = cur.substring(0, cur.length() - 1);
+            }
+            if (line == maxLines - 1 && i < words.size()) {
+                while (cur.length() > 3 && dc.getTextWidthInPixels(cur + "..", font) > maxw) {
+                    cur = cur.substring(0, cur.length() - 1);
+                }
+                cur += "..";
+            }
+            dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
+            line++;
+        }
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

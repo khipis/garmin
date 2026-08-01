@@ -3,8 +3,8 @@
 //
 // Builds the MenuConfig (title, colours, OPTIONS, signature art) and the
 // GameHooks: START launches the colony view, the art band shows a live mini
-// render of YOUR colony skyline, and LEADERBOARD opens a five-category picker
-// (Civ · Colony · Tech · Age · Explore) instead of a single board.
+// render of YOUR colony skyline, and LEADERBOARD opens a six-category picker
+// (Civ · Colony · Tech · Age · Explore · Relic) instead of a single board.
 // ═══════════════════════════════════════════════════════════════════════════
 using Toybox.WatchUi;
 using Toybox.Graphics;
@@ -40,8 +40,7 @@ class ColonyHooks extends GameHooks {
         try {
             if (_preview == null) { return null; }
             if (!_preview.started) { return "New colony · Planet X-01"; }
-            return "Civ " + _preview.civLevel() + " · Pop " + _preview.population
-                 + " · " + _preview.ageDayLabel();
+            return "Civ " + _preview.civLevel() + " · Pop " + _preview.population;
         } catch (e) { return null; }
     }
 
@@ -73,6 +72,7 @@ class ScBoardMenu extends WatchUi.Menu2 {
         addItem(new WatchUi.MenuItem("Technology", "Most advanced", Sc.LB_TECH, null));
         addItem(new WatchUi.MenuItem("Oldest Colony", "Days alive", Sc.LB_AGE, null));
         addItem(new WatchUi.MenuItem("Explorer", "Planet mapped", Sc.LB_EXPLORE, null));
+        addItem(new WatchUi.MenuItem("Relic Vault", "Artifacts recovered", Sc.LB_RELIC, null));
     }
 }
 

@@ -67,8 +67,11 @@ module Mn {
         return a[_c(i, 0, Z_N - 1)];
     }
     function zColor(i) {
-        var a = [0x6E5A44, 0x4A6A78, 0x6A4A78, 0x3A5A8A, 0x2A2038,
-                 0x5A2618, 0x24304E, 0x1A2430, 0x2E1424, 0x120A18];
+        // Anchored on the watch's 64-colour palette (channels 00/55/AA/FF):
+        // anything in between snapped to a muddy neighbour and the strata read
+        // as a stack of saturated stripes instead of rock.
+        var a = [0xAA5500, 0xAA5555, 0xAAAAAA, 0x555555, 0x550000,
+                 0x555500, 0x005555, 0x005500, 0x550055, 0x000055];
         return a[_c(i, 0, Z_N - 1)];
     }
     // Relative resource yield weights per zone [stone, iron, gold, gem].
@@ -135,6 +138,37 @@ module Mn {
         var a = [0, 0, 0, 0, 250, 100, 500, 1500, 6000];
         return a[_c(i, 0, B_N - 1)];
     }
+    // Story flavour shown on the building info card — two short sentences that
+    // place the structure inside the mine and hint at why it matters.
+    function bLore(i) {
+        var a = [
+            "The first hole your grandfather sank. Every metre below starts here.",
+            "Coal-fired and never cold. Bad ore goes in, clean metal comes out.",
+            "A rattling cage on frayed cable. It turns a long climb into a short drop.",
+            "Bunks, stew and lanterns. Rested miners swing harder for longer.",
+            "Chalkboards full of rock maths. Someone finally read the geology.",
+            "Cutting wheels sing all night. Rough stones leave here as jewels.",
+            "It listens to the rock and paints what it hears on a cracked screen.",
+            "Pistons thicker than a man. It holds the deep dark open by force.",
+            "Nobody at the camp understands it. It simply eats the stone away."
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    // Exact mechanical effect per level, in plain words.
+    function bEffectText(i) {
+        var a = [
+            "+4 m/h dig speed per level",
+            "+15% ore yield per level",
+            "+depth travel speed per level",
+            "+2 workers per level (+8% output each)",
+            "+12% to ALL output per level",
+            "+20% gem yield per level",
+            "+0.8% find chance per dig, per level",
+            "+25% pressure resistance per level",
+            "+12 m/h flat dig speed per level"
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
     // Upgrade cost for next level -> [stone, iron, gold, gem].
     // Generic in i; the deep tier (7,8) starts far steeper and always costs gems
     // so it stays an end-game sink. The growth loop is bounded and value-capped
@@ -169,6 +203,20 @@ module Mn {
         var a = [100, 150, 220, 320, 460, 650, 900, 1250, 1700];
         return a[_c(t, 0, PICK_N - 1)];
     }
+    function pickLore(t) {
+        var a = [
+            "Splintered handle, chipped head. It still opened this whole mine.",
+            "Forge-hammered and balanced. Iron bites where wood only bruised.",
+            "A gem edge that never dulls. Rock parts like old bread.",
+            "Runs hot and hums. The crystal head cuts a tunnel a shift wide.",
+            "The bit is somewhere and nowhere. Stone gives up arguing.",
+            "A lance of contained star-fire. Walls glow orange behind it.",
+            "It borrows a little gravity from the rock and the rock collapses.",
+            "It opens a seam in the dark itself. Miners look away when it fires.",
+            "The mountain remembers this tool. That is why the mountain moves."
+        ];
+        return a[_c(t, 0, PICK_N - 1)];
+    }
     // Cost to upgrade FROM tier t to t+1 -> [stone, iron, gold, gem].
     function pickCost(t) {
         var a = [
@@ -194,6 +242,17 @@ module Mn {
     }
     function cartMultPct(t) {
         var a = [100, 145, 200, 280, 400, 560];
+        return a[_c(t, 0, CART_N - 1)];
+    }
+    function cartLore(t) {
+        var a = [
+            "One squeaky wheel and a rope. Half the haul falls out on the bends.",
+            "Oak sides, iron rails. Two shifts of ore in a single push.",
+            "It rolls back down on its own and waits at the face for you.",
+            "Floats a finger above the rail. Nothing is lost to friction now.",
+            "The load simply refuses to weigh anything on the way up.",
+            "Ore leaves the seam here and lands at the surface. No journey between."
+        ];
         return a[_c(t, 0, CART_N - 1)];
     }
     function cartCost(t) {
@@ -239,6 +298,51 @@ module Mn {
         return a[_c(i, 0, C_N - 1)];
     }
     function cLegendary(i) { return cRarity(i) >= 3; }
+    // Museum text for the collection cards: what the find actually is, told as
+    // a line from the mine's own logbook.
+    function cLore(i) {
+        var a = [
+            "Black bread of the shallow seams. Burns hot, pays little, always there.",
+            "A creature pressed flat by a hundred million winters of rock.",
+            "Bright enough to make a whole shift stop and stare at one hand.",
+            "It grew in a hollow with no light, and still came out shining.",
+            "It fell before there was a mine here. It was waiting for you.",
+            "Some miner cut this handle by fire. His seam is still on the map.",
+            "The hardest thing anyone here has ever held. It cuts the cutters.",
+            "Gears the size of doors, half swallowed by stone, still faintly warm.",
+            "Not made by the camp. Not made by anyone the camp knows about.",
+            "Gold poured into bone. Somebody down here was worshipped, or feared.",
+            "It ticks. Bring it near the Laboratory and the instruments panic.",
+            "It answers questions nobody asked and hums the same note as the Abyss.",
+            "A pocket of the world's furnace, cooled just enough to carry.",
+            "Carved from frozen lava, faceless, and heavier than it should be.",
+            "A piece of the gap between the layers. Light goes in and does not leave.",
+            "Warm, patient, and slowly cracking. Whatever is inside is not finished.",
+            "One rib of something that walked when the mountains were young.",
+            "It still remembers the sky it fell out of and glows when you sleep.",
+            "Hold it and yesterday's shift feels like it happened twice.",
+            "The bottom of the mine holds a seed. Every world above grew out of one."
+        ];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Where the find turns up — sets the player a concrete next goal.
+    function cOrigin(i) {
+        var a = [
+            "Surface seams", "Surface seams", "Surface seams",
+            "Crystal Cave, 100m", "Meteor pockets", "Ancient Ruins, 250m",
+            "Deep digs past 700m", "Lost Vault, 500m", "Rare deep strikes",
+            "Legendary strike", "The Abyss Gate, 1500m", "Unknown Signal, 1000m",
+            "Magma Vents, 2500m", "Obsidian Halls, 4000m", "Void Resonator, 7000m",
+            "Hollow Sea, 11000m", "Titan Ribcage, 18000m", "World Engine, 30000m",
+            "Deepest strikes", "The Last Door, 50000m"
+        ];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Why the player should care: the collection feeds two leaderboards.
+    function cValueText(i) {
+        return "+" + cWeight(i) + " collection score"
+             + (cLegendary(i) ? " · counts as a legendary find" : "");
+    }
 
     // ── Depth discoveries ──────────────────────────────────────────────────────
     // Marks the depth thresholds that reveal a discovery (name + collectible).
@@ -258,6 +362,28 @@ module Mn {
                  "Heat Shielding", "Obsidian Cutting", "Void Resonance", "Hollow Mapping",
                  "Titan Salvage", "Engine Tuning", "Final Secrets"];
         return a[_c(i, 0, D_N - 1)];
+    }
+    // Field notes for the ATLAS cards: what the crew found down there.
+    function dLore(i) {
+        var a = [
+            "A cavern roofed in blue spines. The lamps were barely needed.",
+            "Cut steps, a doorway, and dust that nobody in camp had walked in.",
+            "Sealed from the inside. Whatever locked it wanted to stay in.",
+            "A repeating pulse from below. It got louder the deeper we went.",
+            "The floor simply stops. Dropped stones are never heard landing.",
+            "Rock runs like syrup here. The rig glows red between shifts.",
+            "Halls of black glass that show you a shift that never happened.",
+            "The whole seam rings at one note. Tools shiver in your hands.",
+            "A dry ocean bed a kilometre under the ocean bed.",
+            "We walked the length of one bone for two hours.",
+            "It is still turning. Something built this and left it running.",
+            "There is a door at the bottom of the world. Now it is open."
+        ];
+        return a[_c(i, 0, D_N - 1)];
+    }
+    // What crossing that depth actually gives the player.
+    function dEffectText(i) {
+        return "Unlocks " + dUnlockText(i) + " · grants " + cName(dColl(i));
     }
     // Collectible granted by this discovery. Every entry must stay < C_N.
     function dColl(i) {

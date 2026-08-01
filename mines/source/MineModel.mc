@@ -41,6 +41,8 @@ class MineModel {
 
     var streak; var lastDay;
     var dailyDay; var dUpgrades; var dDepthStart; var dGained; var dailyClaimed; var dailyCollected;
+    var dDigs; var dFinds;
+    var streakPaid;       // bitmask of streak milestones already paid this run
     var log;
     var pendingEvent;
 
@@ -87,6 +89,9 @@ class MineModel {
         dGained    = _num("mn_dg", 0, 0, MAX_RES);
         dailyClaimed   = _bool("mn_dclaim");
         dailyCollected = _bool("mn_dcol");
+        dDigs      = _num("mn_ddig", 0, 0, 1000000);
+        dFinds     = _num("mn_dfind", 0, 0, 1000000);
+        streakPaid = _num("mn_spaid", 0, 0, 0x7FFFFFFF);
         discMask   = _num("mn_disc", 0, 0, 0x7FFFFFFF);
         collMask   = _num("mn_coll", 0, 0, 0x7FFFFFFF);
         mileMask   = _num("mn_mile", 0, 0, 0x7FFFFFFF);
@@ -123,6 +128,9 @@ class MineModel {
         _set("mn_dg", dGained);
         _set("mn_dclaim", dailyClaimed);
         _set("mn_dcol", dailyCollected);
+        _set("mn_ddig", dDigs);
+        _set("mn_dfind", dFinds);
+        _set("mn_spaid", streakPaid);
         _set("mn_disc", discMask);
         _set("mn_coll", collMask);
         _set("mn_mile", mileMask);
@@ -139,7 +147,8 @@ class MineModel {
         var keys = ["mn_started", "mn_born", "mn_last", "mn_depth", "mn_pick",
                     "mn_cart", "mn_streak", "mn_lday", "mn_dday", "mn_dup",
                     "mn_dds", "mn_dg", "mn_dclaim", "mn_dcol", "mn_disc",
-                    "mn_coll", "mn_mile", "mn_pev", "mn_log", "mn_lbday"];
+                    "mn_coll", "mn_mile", "mn_pev", "mn_log", "mn_lbday",
+                    "mn_ddig", "mn_dfind", "mn_spaid"];
         for (var i = 0; i < keys.size(); i++) { try { Application.Storage.deleteValue(keys[i]); } catch (e) {} }
         for (var r = 0; r < Mn.R_N; r++) { try { Application.Storage.deleteValue("mn_r" + r); } catch (e) {} }
         for (var b = 0; b < Mn.B_N; b++) { try { Application.Storage.deleteValue("mn_b" + b); } catch (e) {} }
@@ -322,13 +331,13 @@ class MineModel {
         if (td != lastDay) {
             newDay = true;
             if (lastDay != 0 && td == lastDay + 1) { streak += 1; }
-            else { streak = 1; }
+            else { streak = 1; streakPaid = 0; }   // a broken streak can be re-earned
             lastDay = td;
         }
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
             dailyDay = td; dUpgrades = 0; dailyClaimed = false; dailyCollected = false;
-            dDepthStart = depth; dGained = 0;
+            dDepthStart = depth; dGained = 0; dDigs = 0; dFinds = 0;
         }
 
         var elapsed = now - lastSec;
@@ -443,6 +452,7 @@ class MineModel {
         var add = 2 + pickTier + bLevel[Mn.B_SHAFT];
         if (add < 1) { add = 1; }
         var before = discoveries();
+        dDigs += 1;
         _addDepth(add);
         // small ore reward by zone.
         var z = zone();
@@ -516,6 +526,7 @@ class MineModel {
     hidden function _grantCollectible(i) {
         if (i < 0 || i >= Mn.C_N || hasColl(i)) { return false; }
         collMask = collMask | (1 << i);
+        dFinds += 1;
         _logAdd("Found " + Mn.cName(i) + " (" + Mn.rarityName(Mn.cRarity(i)) + ")");
         return true;
     }
@@ -553,39 +564,119 @@ class MineModel {
     }
 
     // ── Daily challenge ─────────────────────────────────────────────────────────
-    function dailyId() { var d = dailyDay % 4; return (d < 0) ? 0 : d; }
+    // Seven rotating jobs, so a week of daily play never repeats the same task.
+    function dailyId() { var d = dailyDay % 7; return (d < 0) ? 0 : d; }
     function dailyText() {
         var id = dailyId();
         if (id == 0) { return "Mine " + dailyTarget() + " meters"; }
-        if (id == 1) { return "Collect 100 resources"; }
+        if (id == 1) { return "Collect " + dailyTarget() + " resources"; }
         if (id == 2) { return "Upgrade equipment"; }
-        return "Walk 5000 steps";
+        if (id == 3) { return "Walk 5000 steps"; }
+        if (id == 4) { return "Swing the pick 15 times"; }
+        if (id == 5) { return "Buy 3 upgrades"; }
+        return "Pull a new find from the rock";
     }
     function dailyTarget() {
         var id = dailyId();
-        // The dig target scales with the zone — 500m is a rounding error at
-        // 20km down, where a day's progress is measured in thousands.
+        // Both haul targets scale with the zone — 500m and 100 stone are a
+        // rounding error at 20km down, where a day is measured in thousands.
         if (id == 0) { return 500 * (1 + zone()); }
-        if (id == 1) { return 100; }
+        if (id == 1) { return 100 * (1 + zone()); }
         if (id == 3) { return 5000; }
+        if (id == 4) { return 15; }
+        if (id == 5) { return 3; }
         return 1;
     }
     function dailyProgress() {
         var id = dailyId();
-        if (id == 0) { var m = depth - dDepthStart; return (m < 0) ? 0 : m; }
-        if (id == 1) { return (dGained > 100) ? 100 : dGained; }
+        var t = dailyTarget();
+        if (id == 0) { var m = depth - dDepthStart; if (m < 0) { m = 0; } return (m > t) ? t : m; }
+        if (id == 1) { return (dGained > t) ? t : dGained; }
         if (id == 2) { return dUpgrades > 0 ? 1 : 0; }
-        var s = Sensors.getStepsToday(); return (s > 5000) ? 5000 : s;
+        if (id == 3) { var s = Sensors.getStepsToday(); return (s > 5000) ? 5000 : s; }
+        if (id == 4) { return (dDigs > 15) ? 15 : dDigs; }
+        if (id == 5) { return (dUpgrades > 3) ? 3 : dUpgrades; }
+        // A full collection would strand this job forever and silently kill the
+        // streak, so it counts as done once there is nothing left to find.
+        if (collectiblesOwned() >= Mn.C_N) { return 1; }
+        return dFinds > 0 ? 1 : 0;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
-    function dailyRewardText() { return "+400 STN  +60 IRN  +8 GLD"; }
+
+    // Rewards keep pace with the mine: a flat base, a slice of the current
+    // hourly output, and a streak multiplier that pays for showing up daily.
+    function streakPct() {
+        var p = 100 + (streak - 1) * 10;
+        if (p > 200) { p = 200; }
+        return p;
+    }
+    hidden function _dailyBase(r) {
+        var flat = [400, 60, 8, 0];
+        var lvl  = [60, 12, 3, 0];
+        var v = flat[r] + mineLevel() * lvl[r] + _accrue(hourlyRate(r), 7200);
+        v = v * streakPct() / 100;
+        if (v > MAX_RES) { v = MAX_RES; }
+        return v;
+    }
+    hidden function _short(n) {
+        if (n >= 1000000) { return (n / 1000000) + "." + ((n / 100000) % 10) + "M"; }
+        if (n >= 1000)    { return (n / 1000) + "." + ((n / 100) % 10) + "k"; }
+        return "" + n;
+    }
+    function dailyRewardText() {
+        return "+" + _short(_dailyBase(Mn.R_STONE)) + " STN  +" + _short(_dailyBase(Mn.R_IRON))
+             + " IRN  +" + _short(_dailyBase(Mn.R_GOLD)) + " GLD";
+    }
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        _addRes(Mn.R_STONE, 400); _addRes(Mn.R_IRON, 60); _addRes(Mn.R_GOLD, 8);
+        for (var r = 0; r < Mn.R_N; r++) {
+            var g = _dailyBase(r);
+            if (g > 0) { _addRes(r, g); }
+        }
         if (_rand(100) < 22) { _grantRandomCollectible(); }
+        _payStreakMilestone();
         save();
         return true;
+    }
+
+    // ── Streak milestones ────────────────────────────────────────────────────
+    // Paid once per streak run at 3, 7, 14 and 30 consecutive days. Breaking the
+    // streak clears the ledger so the rewards can be chased again.
+    function milestoneDay(i) {
+        var a = [3, 7, 14, 30];
+        return a[Mn._c(i, 0, 3)];
+    }
+    function nextMilestone() {
+        for (var i = 0; i < 4; i++) {
+            if (streak < milestoneDay(i) || (streakPaid & (1 << i)) == 0) { return milestoneDay(i); }
+        }
+        return 0;
+    }
+    hidden function _payStreakMilestone() {
+        for (var i = 0; i < 4; i++) {
+            var d = milestoneDay(i);
+            if (streak < d) { return; }
+            if ((streakPaid & (1 << i)) != 0) { continue; }
+            streakPaid = streakPaid | (1 << i);
+            var mult = 100 + mineLevel() * 20;
+            _addRes(Mn.R_STONE, 1200 * d * mult / 100 / 10);
+            _addRes(Mn.R_IRON,  260 * d * mult / 100 / 10);
+            _addRes(Mn.R_GOLD,  40 * d * mult / 100 / 10);
+            if (d >= 14) { _addRes(Mn.R_GEM, d / 2); }
+            if (d == 7 || d == 30) { _grantRandomCollectible(); }
+            _logAdd(d + "-day streak bonus paid");
+            return;
+        }
+    }
+
+    // How full the 24h offline buffer was on the last return. Anything near 100
+    // means output was being thrown away, which is the nudge to come back sooner.
+    function offlineFillPct() {
+        var p = gSecs * 100 / Mn.OFFLINE_CAP;
+        if (p < 0) { p = 0; }
+        if (p > 100) { p = 100; }
+        return p;
     }
 
     // ── DEMO fast-track (fully guarded; uses existing mutators) ───────────────

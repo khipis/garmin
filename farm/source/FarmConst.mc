@@ -168,17 +168,107 @@ module Fa {
         return a[_c(i, 0, B_N - 1)];
     }
 
-    // Production at level: base*(3L-1)/2.
+    // ── Detail-card flavour: what a structure is, and exactly what it does ────
+    function bLore(i) {
+        var a = [
+            "A crooked little coop. The hens were here before the fence was.",
+            "Rain filled a hollow and the ducks moved in the same afternoon.",
+            "Mud, straw and contentment. They out-eat everything else you own.",
+            "Warm, dim and smelling of hay. The heart of any working farm.",
+            "Gold to the fence line. It bends in the wind like slow water.",
+            "Neat green tufts hiding sweet roots. The animals know where.",
+            "Grandmother planted the first row. You still prune it her way.",
+            "Thorny, generous, and always picked over by somebody's children.",
+            "A plank, a scale and an honesty box. Half the valley stops here.",
+            "Its sails turned through four owners and never missed a harvest.",
+            "The smell reaches the road. That is the entire marketing plan.",
+            "Small hands, patient animals, and a queue every single weekend.",
+            "Painted the colour of a good year. Visitors photograph it first.",
+            "Warm glass and green light. Everything outside grows faster too.",
+            "Champion three shows running. He knows it, and he poses.",
+            "Painted by the whole village one summer. It stores more than grain.",
+            "Curious, woolly, faintly disapproving. The children adore them.",
+            "A field of faces that follow the sun and feed the whole herd.",
+            "Cold rooms, copper churns, and butter with a waiting list.",
+            "The old press wakes each autumn and the yard smells of apples.",
+            "Silver boards that glow after dusk. The animals sleep better here.",
+            "It hangs low over the ridge and refuses to set. Everything ripens."
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    function bEffectText(i) {
+        var a = [
+            "+2 herd space per level",
+            "+4 herd space per level",
+            "+8 herd space per level",
+            "+16 herd space per level",
+            "+10 grain/h at Lv1, more every level",
+            "+8 feed/h at Lv1, more every level",
+            "+12 wood/h at Lv1, more every level",
+            "+8 coins/h at Lv1, more every level",
+            "+15 coins/h and +1 attraction per level",
+            "+22 coins/h and +2 attraction per level",
+            "+30 coins/h and +3 attraction per level",
+            "+45 coins/h and +4 attraction per level",
+            "+60 coins/h and +2 attraction per level",
+            "+10% to ALL production per level",
+            "+80 coins/h and +3 attraction per level",
+            "+15% to ALL production per level",
+            "+28 herd space and +2 attraction per level",
+            "+70 feed/h and +1 attraction per level",
+            "+110 coins/h and +5 attraction per level",
+            "+200 coins/h and +7 attraction per level",
+            "+320 coins/h, +24 herd, +6 attraction per level",
+            "+25% to ALL production per level"
+        ];
+        return a[_c(i, 0, B_N - 1)];
+    }
+
+    // ── Scene placement: which depth lane a structure stands in, and where ────
+    // The HOME diorama is a three-lane stage. Every structure owns one explicit
+    // slot so the farm reads as fields receding into the distance instead of a
+    // single row. Slot x runs -100..100 and is narrowed per lane by laneSpread
+    // so the top and bottom lanes stay inside a round watch's inscribed circle.
+    const LN_BACK  = 0;
+    const LN_MID   = 1;
+    const LN_FRONT = 2;
+    const LN_N     = 3;
+
+    function laneY(l)      { var a = [50, 67, 82];  return a[_c(l, 0, LN_N - 1)]; }
+    function laneScale(l)  { var a = [72, 88, 106]; return a[_c(l, 0, LN_N - 1)]; }
+    function laneSpread(l) { var a = [96, 92, 76];  return a[_c(l, 0, LN_N - 1)]; }
+
+    function bLane(i) {
+        var a = [1, 2, 2, 1, 1, 2, 0, 2, 2, 0, 1, 1,
+                 0, 0, 0, 0, 1, 1, 2, 0, 0, 0];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    function bSlotX(i) {
+        var a = [-56, 24, -42, -78, -14, -72, -84, 80, -10, 40, 26, 54,
+                 -34, -8, 16, 64, 84, -96, 52, 86, -58, -66];
+        return a[_c(i, 0, B_N - 1)];
+    }
+    function cLane(i) {
+        var a = [2, 1, 2, 2, 2, 1, 1, 0, 2, 0, 2, 1, 0, 0, 2];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    function cSlotX(i) {
+        var a = [-88, -30, -56, 8, 34, 8, -80, 2, 66, -72, -24, 40, 28, -46, 90];
+        return a[_c(i, 0, C_N - 1)];
+    }
+
+    // Production at level: base*L*(L+3)/4 — a quadratic curve, so upgrades keep
+    // pace with the exponential cost ladder instead of falling behind it.
     function prodAt(i, lvl) {
         if (lvl <= 0) { return 0; }
         if (lvl > LVL_MAX) { lvl = LVL_MAX; }
-        return bBaseProd(i) * (3 * lvl - 1) / 2;
+        return bBaseProd(i) * lvl * (lvl + 3) / 4;
     }
     // Cost for the next level -> [coins, wood, grain].
-    // x1.6 per level up to level 12, then a steeper x1.75 so the late game stays
-    // a real climb. The escalation runs in 64-bit and is capped at COST_MAX:
-    // in 32-bit maths it wraps negative around level 30, which would hand out
-    // free upgrades forever.
+    // x1.6 per level up to COST_SOFT_LVL, then a steeper x1.68 so the late game
+    // stays a climb without walling off. The escalation runs in 64-bit and is
+    // capped at COST_MAX: in 32-bit maths it wraps negative around level 30,
+    // which would hand out free upgrades forever.
     function costAt(i, lvl) {
         i = _c(i, 0, B_N - 1);
         if (lvl < 1) { lvl = 1; }
@@ -189,7 +279,7 @@ module Fa {
         var grain = ((i >= 4 && i != B_WHEAT) ? (8 + i * 4) : 0).toLong();
         var cap = COST_MAX.toLong();
         for (var k = 1; k < lvl; k++) {
-            var n = (k < COST_SOFT_LVL) ? 16l  : 175l;
+            var n = (k < COST_SOFT_LVL) ? 16l  : 168l;
             var d = (k < COST_SOFT_LVL) ? 10l  : 100l;
             coin  = coin  * n / d;
             wood  = wood  * n / d;
@@ -241,6 +331,31 @@ module Fa {
         var a = [-1, -1, -1, -1, C_RIBBON, -1, -1, C_LANTERN, -1];
         return a[_c(i, 0, AR_N - 1)];
     }
+    // ── Detail-card flavour for the expeditions ───────────────────────────────
+    function arLore(i) {
+        var a = [
+            "Waist-high grass and bees. Walk it once and the paths appear.",
+            "Old timber, soft light, and a stump wide enough to eat lunch on.",
+            "Still water at the bottom of the paddock, warmer than it should be.",
+            "A long climb for a short view, and the view is worth every step.",
+            "The roof is gone but the hearth is intact. Somebody farmed here.",
+            "A whole valley facing south, yellow ridge to ridge by August.",
+            "The press has not turned in years. The apples kept growing anyway.",
+            "Reeds, mist, and one steady light that nobody can walk up to.",
+            "The highest ground you own. On clear nights the moon sits on it."
+        ];
+        return a[_c(i, 0, AR_N - 1)];
+    }
+    // What the expedition finds and what finishing it opens up.
+    function arEffectText(i) {
+        i = _c(i, 0, AR_N - 1);
+        var b = arUnlockBuilding(i);
+        if (b >= 0) { return "Finds " + arDiscovery(i) + " - unlocks " + bName(b); }
+        var g = arGrantColl(i);
+        if (g >= 0) { return "Finds " + arDiscovery(i) + " - grants " + cName(g); }
+        return "Finds " + arDiscovery(i);
+    }
+
     // Steps needed to walk an area open — later areas take several days.
     function stepsForArea(i) {
         return STEPS_PER_AREA + _c(i, 0, AR_N - 1) * STEPS_PER_AREA_INC;
@@ -283,6 +398,40 @@ module Fa {
         return a[_c(i, 0, C_N - 1)];
     }
     function cWeight(i) { return cRare(i) ? 5 : 2; }
+    function cLore(i) {
+        var a = [
+            "Planted the spring the farm opened. It never needed any help.",
+            "Stuffed with last year's straw. The crows respect him, mostly.",
+            "Stacked by hand at dusk. Cats sleep on top, all of them at once.",
+            "One hen, one morning, one egg that would not crack. Never sold.",
+            "They arrived on their own and stayed. The pond is theirs now.",
+            "She was born after a storm with a coat nobody can explain.",
+            "The bucket still comes up cold. Visitors throw in coins and hope.",
+            "First place at the county fair. The nail it hangs on came with it.",
+            "Long table, short speeches, everything on it grown right here.",
+            "The bees moved in uninvited and doubled the orchard that year.",
+            "Older than the farm. The mason's initials are still under the moss.",
+            "Found lit in the marsh with nobody near it. It has not gone out.",
+            "Woven at midsummer from the tallest sunflowers in the whole vale.",
+            "It rolls without a horse on full moons. Nobody rides it twice.",
+            "Turns ground that grew nothing into a field before breakfast."
+        ];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Where a charm turns up — every locked slot is a concrete next goal.
+    function cOrigin(i) {
+        var a = ["Farm level 10", "Farm events", "Farm events", "Farm level 35",
+                 "Farm level 20", "Farm level 60", "Farm events",
+                 "Explore the Old Homestead", "Farm level 100",
+                 "Farm level 150", "Farm level 220", "Explore the Foggy Marsh",
+                 "Farm level 300", "Farm level 400", "Farm level 550"];
+        return a[_c(i, 0, C_N - 1)];
+    }
+    // Charms feed the Charm and Collection boards at x4 their weight.
+    function cValueText(i) {
+        i = _c(i, 0, C_N - 1);
+        return "+" + (cWeight(i) * 4) + " charm score" + (cRare(i) ? " - a rare charm" : "");
+    }
 
     // ── Guests ────────────────────────────────────────────────────────────────
     function visitorType(i) {
@@ -320,10 +469,25 @@ module Fa {
     const VISITOR_INTERVAL  = 1200;        // seconds per new guest
     const EXPLORE_COST_COIN = 40;          // coins per manual scouting trip (area 0)
     const STEPS_PER_AREA    = 5000;        // steps for the first area
-    const STEPS_PER_AREA_INC= 3500;        // added per later area
-    const EXPLORE_TRIP_STEPS= 900;         // step-equivalent of one manual trip
+    const STEPS_PER_AREA_INC= 2500;        // added per later area
+    const EXPLORE_TRIP_STEPS= 1200;        // step-equivalent of one manual trip
     const FEED_PER_ANIMAL   = 4;           // feed eaten by each new animal
-    const COST_SOFT_LVL     = 12;          // x1.6 below this level, x1.75 above
+    const COST_SOFT_LVL     = 15;          // x1.6 below this level, x1.68 above
+
+    // ── Daily loop ────────────────────────────────────────────────────────────
+    // The floor of the daily bundle; the real payout scales with farm level and
+    // the current hourly rate on top of this, then by the streak multiplier.
+    const DAILY_N          = 8;            // challenge varieties in the rotation
+    const DAILY_BASE_COIN  = 250;
+    const DAILY_BASE_WOOD  = 80;
+    const DAILY_BASE_FEED  = 20;
+    const STREAK_STEP_PCT  = 10;           // +10% per consecutive day
+    const STREAK_MAX_PCT   = 200;          // capped at +100%
+    const MILE_N           = 4;
+    function mileDay(i)  { var a = [3, 7, 14, 30]; return a[_c(i, 0, MILE_N - 1)]; }
+    function mileMult(i) { var a = [2, 4, 8, 12];  return a[_c(i, 0, MILE_N - 1)]; }
+    // Milestones that hand over a guaranteed charm as well as the bundle.
+    function mileCharm(i) { i = _c(i, 0, MILE_N - 1); return i == 1 || i == 3; }
     const COST_MAX          = 2000000000;  // upgrade-cost ceiling (32-bit safe)
     const RES_MAX           = 2000000000;  // resource ceiling (32-bit safe)
     const LVL_MAX           = 400;         // bounds cost/production loops

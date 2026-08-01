@@ -21,15 +21,18 @@ class ColonyModel {
     var tech;             // [T_N] tech levels
     var rgProg;           // [RG_N] exploration progress %
     var discMask;         // bitmask of discovered regions
+    var artMask;          // bitmask of recovered alien artifacts
+    var relicMask;        // bitmask of one-shot artifact grants already paid
 
-    var streak; var lastDay;
-    var dailyDay; var dUpgrades; var dExpl; var dailyClaimed; var dailyCollected;
+    var streak; var lastDay; var streakPaid;
+    var dailyDay; var dUpgrades; var dExpl; var dRes; var dailyClaimed; var dailyCollected;
     var stepBase;         // steps already converted into expedition progress today
     var log;              // Array<String> history (newest first, cap 8)
     var pendingEvent;     // EV_* awaiting a choice, or EV_NONE
 
     // Idle summary (for WELCOME BACK)
-    var gRes; var gSecs; var gPop; var newDay; var gEvent;
+    var gRes; var gSecs; var gPop; var newDay; var gEvent; var gArt;
+    var lastClaimBonus;   // streak-milestone line from the last daily claim
 
     function initialize() { _load(); }
 
@@ -70,10 +73,14 @@ class ColonyModel {
         dailyDay = _num("sc_dday", 0, 0, 0x7FFFFFFF);
         dUpgrades= _num("sc_dup", 0, 0, 100000);
         dExpl    = _num("sc_dexp", 0, 0, 100000);
+        dRes     = _num("sc_dres", 0, 0, 100000);     // appended key -> 0 on old saves
         dailyClaimed  = _bool("sc_dclaim", false);
         dailyCollected= _bool("sc_dcol", false);
         stepBase = _num("sc_stepb", 0, 0, 1000000);   // absent in old saves -> 0
         discMask = _num("sc_disc", 0, 0, (1 << Sc.RG_N) - 1);
+        artMask  = _num("sc_art", 0, 0, (1 << Sc.A_N) - 1);
+        relicMask= _num("sc_amile", 0, 0, 0x7FFFFFFF);
+        streakPaid = _num("sc_spaid", 0, 0, 100000);
         pendingEvent = _num("sc_pev", Sc.EV_NONE, Sc.EV_NONE, Sc.EV_RARE);
 
         // New indices simply aren't in old saves — they default to 0 here.
@@ -100,7 +107,8 @@ class ColonyModel {
 
         gRes = new [Sc.R_N];
         for (var g = 0; g < Sc.R_N; g++) { gRes[g] = 0; }
-        gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE;
+        gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
+        lastClaimBonus = "";
     }
 
     // Clamped stockpile add — keeps every resource inside 32-bit range so a
@@ -129,10 +137,14 @@ class ColonyModel {
         _set("sc_dday", dailyDay);
         _set("sc_dup", dUpgrades);
         _set("sc_dexp", dExpl);
+        _set("sc_dres", dRes);
         _set("sc_dclaim", dailyClaimed);
         _set("sc_dcol", dailyCollected);
         _set("sc_stepb", stepBase);
         _set("sc_disc", discMask);
+        _set("sc_art", artMask);
+        _set("sc_amile", relicMask);
+        _set("sc_spaid", streakPaid);
         _set("sc_pev", pendingEvent);
         for (var i = 0; i < Sc.R_N; i++) { _set("sc_r" + i, res[i]); }
         for (var b = 0; b < Sc.B_N; b++) { _set("sc_b" + b, bLevel[b]); }
@@ -147,7 +159,8 @@ class ColonyModel {
     function resetAll() {
         var keys = ["sc_started", "sc_born", "sc_last", "sc_pop", "sc_streak",
                     "sc_lday", "sc_dday", "sc_dup", "sc_dexp", "sc_dclaim",
-                    "sc_dcol", "sc_disc", "sc_pev", "sc_log", "sc_lbday", "sc_stepb"];
+                    "sc_dcol", "sc_disc", "sc_pev", "sc_log", "sc_lbday", "sc_stepb",
+                    "sc_dres", "sc_art", "sc_amile", "sc_spaid"];
         for (var i = 0; i < keys.size(); i++) { try { Application.Storage.deleteValue(keys[i]); } catch (e) {} }
         for (var r = 0; r < Sc.R_N; r++)  { try { Application.Storage.deleteValue("sc_r" + r); } catch (e) {} }
         for (var b = 0; b < Sc.B_N; b++)  { try { Application.Storage.deleteValue("sc_b" + b); } catch (e) {} }
@@ -197,6 +210,67 @@ class ColonyModel {
         return c;
     }
     function isDiscovered(i) { return (discMask & (1 << i)) != 0; }
+
+    // ── Alien artifacts ───────────────────────────────────────────────────────
+    // The payoff for exploring: every mapped region hands over one relic, rare
+    // events and civilisation milestones hand over the rest. Purely a score +
+    // collection set, so granting one can never unbalance production.
+    function hasArt(i) {
+        if (i < 0 || i >= Sc.A_N) { return false; }
+        return (artMask & (1 << i)) != 0;
+    }
+    function grantArt(i) {
+        if (i < 0 || i >= Sc.A_N || hasArt(i)) { return false; }
+        artMask = artMask | (1 << i);
+        gArt = i;
+        _logAdd("Recovered " + Sc.aName(i) + " (" + Sc.aRarityName(Sc.aRarity(i)) + ")");
+        return true;
+    }
+    function artifactsOwned() {
+        var c = 0;
+        for (var i = 0; i < Sc.A_N; i++) { if (hasArt(i)) { c++; } }
+        return c;
+    }
+    function artifactScore() {
+        var s = 0;
+        for (var i = 0; i < Sc.A_N; i++) { if (hasArt(i)) { s += Sc.aWeight(i); } }
+        return s;
+    }
+    function legendaryRelics() {
+        var c = 0;
+        for (var i = 0; i < Sc.A_N; i++) { if (hasArt(i) && Sc.aLegendary(i)) { c++; } }
+        return c;
+    }
+    // Hand over the rarest relic the colony has not found yet, preferring the
+    // band the player has actually earned so a first find is never a Mythic.
+    hidden function _grantRandomArt(maxRarity) {
+        if (maxRarity < 0) { maxRarity = 0; }
+        if (maxRarity > 4) { maxRarity = 4; }
+        var avail = [];
+        for (var i = 0; i < Sc.A_N; i++) {
+            if (!hasArt(i) && Sc.aRarity(i) <= maxRarity) { avail.add(i); }
+        }
+        if (avail.size() == 0) {
+            for (var j = 0; j < Sc.A_N; j++) { if (!hasArt(j)) { avail.add(j); } }
+        }
+        if (avail.size() == 0) { return -1; }
+        var pick = avail[_rand(avail.size())];
+        grantArt(pick);
+        return pick;
+    }
+    // One-shot civilisation-level relic grants. Each bit is claimed once ever,
+    // so a level that is later re-crossed cannot farm the same reward twice.
+    hidden function _checkRelicMilestones() {
+        var civ = civLevel();
+        if ((relicMask & 1) == 0 && civ >= Sc.CIV_RELIC_1) {
+            relicMask = relicMask | 1;
+            grantArt(Sc.A_MASK);
+        }
+        if ((relicMask & 2) == 0 && civ >= Sc.CIV_RELIC_2) {
+            relicMask = relicMask | 2;
+            grantArt(Sc.A_ECHO);
+        }
+    }
 
     function buildingsBuilt() {
         var c = 0;
@@ -281,18 +355,19 @@ class ColonyModel {
     function collectOffline() {
         var now = nowSec();
         for (var z = 0; z < Sc.R_N; z++) { gRes[z] = 0; }
-        gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE;
+        gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
 
         var td = today();
         if (td != lastDay) {
             newDay = true;
             if (lastDay != 0 && td == lastDay + 1) { streak += 1; }
-            else { streak = 1; }
+            else { streak = 1; streakPaid = 0; }   // a broken run re-earns its milestones
             lastDay = td;
         }
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
-            dailyDay = td; dUpgrades = 0; dExpl = 0; dailyClaimed = false; dailyCollected = false;
+            dailyDay = td; dUpgrades = 0; dExpl = 0; dRes = 0;
+            dailyClaimed = false; dailyCollected = false;
         }
 
         var elapsed = now - lastSec;
@@ -321,6 +396,8 @@ class ColonyModel {
         if (elapsed > 2 * 3600 && pendingEvent == Sc.EV_NONE) {
             if (_rand(100) < 45) { _rollEvent(); }
         }
+
+        _checkRelicMilestones();
 
         lastSec = now;
         save();
@@ -391,6 +468,11 @@ class ColonyModel {
             var rr = _rand(Sc.R_N);
             var bb = _addRes(rr, 80 + _rand(160)); gEvent = e;
             _logAdd("Rare find +" + bb + " " + Sc.resName(rr));
+            // A rare survey strike is the only random source of a relic, and
+            // the band it can roll widens with how much of the planet is mapped.
+            if (_rand(100) < 30) {
+                _grantRandomArt(1 + regionsDiscovered() / 3);
+            }
         }
     }
 
@@ -454,6 +536,7 @@ class ColonyModel {
         bLevel[i] += 1;
         dUpgrades += 1;
         if (wasNew) { _logAdd("Built " + Sc.bName(i)); }
+        _checkRelicMilestones();
         save();
         var verb = wasNew ? "Built " : "Upgraded ";
         return verb + Sc.bName(i) + " Lv" + bLevel[i];
@@ -476,6 +559,7 @@ class ColonyModel {
             // Discovery reward scales with how deep into the planet you are.
             _addRes(Sc.R_SCI, 60 + i * 90);
             _addRes(Sc.R_CRE, 40 + i * 70);
+            grantArt(Sc.rgArtifact(i));
             return true;
         }
         return false;
@@ -551,14 +635,18 @@ class ColonyModel {
         if (res[Sc.R_SCI] < c) { return "Need " + c + " science"; }
         _subRes(Sc.R_SCI, c);
         tech[i] += 1;
+        dRes += 1;
         _logAdd("Researched " + Sc.tName(i) + " Lv" + tech[i]);
+        _checkRelicMilestones();
         save();
         return Sc.tName(i) + " -> Lv" + tech[i];
     }
 
     // ── Daily mission ──────────────────────────────────────────────────────────
+    // Seven varieties so a week of daily visits never asks the same thing
+    // twice. Ids 0..3 keep the meaning they shipped with.
     function dailyId() {
-        var d = dailyDay % 4;
+        var d = dailyDay % Sc.DAILY_N;
         return (d < 0) ? 0 : d;
     }
     function dailyText() {
@@ -566,11 +654,16 @@ class ColonyModel {
         if (id == 0) { return "Collect offline output"; }
         if (id == 1) { return "Upgrade a building"; }
         if (id == 2) { return "Walk 5000 steps"; }
-        return "Run an expedition";
+        if (id == 3) { return "Run an expedition"; }
+        if (id == 4) { return "Upgrade 3 structures"; }
+        if (id == 5) { return "Research a technology"; }
+        return "Run 3 expeditions";
     }
     function dailyTarget() {
         var id = dailyId();
         if (id == 2) { return 5000; }
+        if (id == 4) { return 3; }
+        if (id == 6) { return 3; }
         return 1;
     }
     function dailyProgress() {
@@ -578,16 +671,108 @@ class ColonyModel {
         if (id == 0) { return dailyCollected ? 1 : 0; }
         if (id == 1) { return dUpgrades > 0 ? 1 : 0; }
         if (id == 2) { var s = Sensors.getStepsToday(); return (s > 5000) ? 5000 : s; }
-        return dExpl > 0 ? 1 : 0;
+        if (id == 3) { return dExpl > 0 ? 1 : 0; }
+        if (id == 4) { return (dUpgrades > 3) ? 3 : dUpgrades; }
+        if (id == 5) { return dRes > 0 ? 1 : 0; }
+        return (dExpl > 3) ? 3 : dExpl;
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
-    function dailyRewardText() { return "+120 SCI  +200 MIN  +50 CR"; }
+
+    // Streak bonus as a percentage of the base reward: +10% per consecutive
+    // day beyond the first, capped at +100%.
+    function streakBonusPct() {
+        var p = (streak - 1) * Sc.STREAK_STEP;
+        if (p < 0) { p = 0; }
+        if (p > Sc.STREAK_CAP) { p = Sc.STREAK_CAP; }
+        return p;
+    }
+    // Base daily payout, scaled off real progress (civ level plus two hours of
+    // current output) so the reward never turns into pocket change late on.
+    hidden function _dailyBase(r, flat, perCiv) {
+        var v = flat + civLevel() * perCiv + _accrue(hourlyRate(r), 2 * 3600);
+        if (v > Sc.RES_CAP) { v = Sc.RES_CAP; }
+        return v;
+    }
+    function dailyReward(r) {
+        var v = 0;
+        if (r == Sc.R_SCI)      { v = _dailyBase(r, 120, 30); }
+        else if (r == Sc.R_MIN) { v = _dailyBase(r, 200, 50); }
+        else if (r == Sc.R_CRE) { v = _dailyBase(r, 50, 15); }
+        else { return 0; }
+        return _pct(v, 100 + streakBonusPct());
+    }
+    // Next streak milestone still unpaid in this run, or 0 when all are done.
+    function nextStreakMilestone() {
+        if (streakPaid < Sc.STREAK_M1) { return Sc.STREAK_M1; }
+        if (streakPaid < Sc.STREAK_M2) { return Sc.STREAK_M2; }
+        if (streakPaid < Sc.STREAK_M3) { return Sc.STREAK_M3; }
+        if (streakPaid < Sc.STREAK_M4) { return Sc.STREAK_M4; }
+        return 0;
+    }
+    // Milestone payouts ride on the same civ scale as the daily reward, so a
+    // 30-day streak is still worth claiming on a mature colony.
+    hidden function _mileScale(v) { return _pct(v, 100 + civLevel() * 20); }
+    hidden function _payStreakMilestone() {
+        var msg = "";
+        if (streak >= Sc.STREAK_M1 && streakPaid < Sc.STREAK_M1) {
+            streakPaid = Sc.STREAK_M1;
+            _addRes(Sc.R_MIN, _mileScale(600)); _addRes(Sc.R_SCI, _mileScale(300));
+            _logAdd("Streak 3 days - supply bonus");
+            msg = "3-day streak bonus!";
+        } else if (streak >= Sc.STREAK_M2 && streakPaid < Sc.STREAK_M2) {
+            streakPaid = Sc.STREAK_M2;
+            _addRes(Sc.R_SCI, _mileScale(800)); _addRes(Sc.R_CRE, _mileScale(400));
+            var a1 = _grantRandomArt(2);
+            _logAdd("Streak 7 days - artifact recovered");
+            msg = (a1 >= 0) ? ("7-day streak: " + Sc.aName(a1) + "!") : "7-day streak bonus!";
+        } else if (streak >= Sc.STREAK_M3 && streakPaid < Sc.STREAK_M3) {
+            streakPaid = Sc.STREAK_M3;
+            _addRes(Sc.R_MIN, _mileScale(1500)); _addRes(Sc.R_CRE, _mileScale(900));
+            _logAdd("Streak 14 days - trade windfall");
+            msg = "14-day streak bonus!";
+        } else if (streak >= Sc.STREAK_M4 && streakPaid < Sc.STREAK_M4) {
+            streakPaid = Sc.STREAK_M4;
+            _addRes(Sc.R_SCI, _mileScale(3000)); _addRes(Sc.R_CRE, _mileScale(2000));
+            if (population < popCap()) { population += 1; }
+            var a2 = grantArt(Sc.A_SPARK) ? Sc.A_SPARK : _grantRandomArt(4);
+            _logAdd("Streak 30 days - Origin Spark");
+            msg = (a2 >= 0) ? ("30-day streak: " + Sc.aName(a2) + "!") : "30-day streak bonus!";
+        }
+        return msg;
+    }
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
-        _addRes(Sc.R_SCI, 120); _addRes(Sc.R_MIN, 200); _addRes(Sc.R_CRE, 50);
+        _addRes(Sc.R_SCI, dailyReward(Sc.R_SCI));
+        _addRes(Sc.R_MIN, dailyReward(Sc.R_MIN));
+        _addRes(Sc.R_CRE, dailyReward(Sc.R_CRE));
+        lastClaimBonus = _payStreakMilestone();
         save();
         return true;
+    }
+
+    // ── Offline storage buffer ────────────────────────────────────────────────
+    // Production only banks up to OFFLINE_CAP, so the player needs to see how
+    // full that buffer is before it starts wasting output.
+    function offlineSecs() {
+        var s = nowSec() - lastSec;
+        if (s < 0) { s = 0; }
+        if (s > Sc.OFFLINE_CAP) { s = Sc.OFFLINE_CAP; }
+        return s;
+    }
+    function offlinePct() {
+        if (Sc.OFFLINE_CAP <= 0) { return 0; }
+        return offlineSecs() * 100 / Sc.OFFLINE_CAP;
+    }
+    function offlineCapHours() { return Sc.OFFLINE_CAP / 3600; }
+    // How full the buffer was on the visit that just banked it — the number
+    // that tells the player whether they left output on the table.
+    function collectedPct() {
+        if (Sc.OFFLINE_CAP <= 0) { return 0; }
+        var s = gSecs;
+        if (s < 0) { s = 0; }
+        if (s > Sc.OFFLINE_CAP) { s = Sc.OFFLINE_CAP; }
+        return s * 100 / Sc.OFFLINE_CAP;
     }
 
     // ── History / milestones ────────────────────────────────────────────────
@@ -618,14 +803,16 @@ class ColonyModel {
                 "civ"    => civLevel(),
                 "pop"    => population,
                 "buildings" => totalBuildingLevels(),
-                "regions"   => regionsDiscovered()
+                "regions"   => regionsDiscovered(),
+                "relics"    => artifactsOwned()
             };
             Leaderboard.submitScoreBatch(Sc.GAME_ID, [
                 { :score => civLevel(),   :variant => Sc.LB_CIV,     :meta => meta },
                 { :score => population,   :variant => Sc.LB_COLONY,  :meta => meta },
                 { :score => totalTech() + bLevel[Sc.B_LAB], :variant => Sc.LB_TECH, :meta => meta },
                 { :score => daysAlive() + 1, :variant => Sc.LB_AGE,  :meta => meta },
-                { :score => regionsDiscovered() * 100 + _expPct(), :variant => Sc.LB_EXPLORE, :meta => meta }
+                { :score => regionsDiscovered() * 100 + _expPct(), :variant => Sc.LB_EXPLORE, :meta => meta },
+                { :score => artifactScore(), :variant => Sc.LB_RELIC, :meta => meta }
             ]);
         } catch (e) {}
     }

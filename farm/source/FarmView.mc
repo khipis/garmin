@@ -30,6 +30,13 @@ const IV_COLL = 4;
 const IV_HIST = 5;
 const IV_PAGES = 6;
 
+// Detail-card kinds. Every buildable, walkable or collectable thing on the farm
+// opens the same card: a big pixel portrait, what it is, the story behind it and
+// exactly what it does for you.
+const CK_BLD  = 0;   // id = structure index
+const CK_AREA = 1;   // id = exploration area index
+const CK_COLL = 2;   // id = charm index
+
 class FarmView extends WatchUi.View {
     hidden var _m;
     hidden var _page;
@@ -45,6 +52,7 @@ class FarmView extends WatchUi.View {
 
     hidden var _demo; hidden var _demoT;
     hidden var _intro;
+    hidden var _cardKind; hidden var _cardId;
 
     hidden var _rows; hidden var _rowIds;
     hidden var _rBtnA; hidden var _rBtnB;
@@ -59,6 +67,7 @@ class FarmView extends WatchUi.View {
         _popup = null; _popupT = 0;
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false;
         _demo = false; _demoT = 0; _intro = false;
+        _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _rBtnA = null; _rBtnB = null;
         _rPrev = null; _rNext = null; _rDemo = null; _tabRects = [];
         _loadFx();
@@ -141,6 +150,37 @@ class FarmView extends WatchUi.View {
         } catch (e) {}
     }
 
+    // ── Detail cards ──────────────────────────────────────────────────────────
+    // Opening a card is the main way to LOOK at something: the portrait, the
+    // story and the exact numbers. UP/DOWN walks the whole set without going
+    // back to the list, so the collection reads like a museum.
+    function cardOpen() { return _cardKind >= 0; }
+    hidden function _openCard(kind, id) {
+        _cardKind = kind; _cardId = id;
+        _tone(0); _vibe(14, 18);
+        WatchUi.requestUpdate();
+    }
+    function closeCard() {
+        if (_cardKind < 0) { return false; }
+        _cardKind = -1;
+        _tone(0); _vibe(10, 14);
+        WatchUi.requestUpdate();
+        return true;
+    }
+    hidden function _cardCount() {
+        if (_cardKind == CK_BLD)  { return Fa.B_N; }
+        if (_cardKind == CK_AREA) { return Fa.AR_N; }
+        return Fa.C_N;
+    }
+    hidden function _cardStep(d) {
+        var n = _cardCount();
+        if (n < 1) { return; }
+        _cardId = ((_cardId + d) % n + n) % n;
+        _cur = _cardId;
+        _tone(0); _vibe(8, 12);
+        WatchUi.requestUpdate();
+    }
+
     // ── Navigation ────────────────────────────────────────────────────────────
     hidden function _dismiss() {
         if (_event) { return false; }
@@ -150,6 +190,7 @@ class FarmView extends WatchUi.View {
     }
     function pageMove(d) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_dismiss()) { return; }
         _page = ((_page + d) % IV_PAGES + IV_PAGES) % IV_PAGES;
         _cur = 0; _scroll = 0;
@@ -159,6 +200,7 @@ class FarmView extends WatchUi.View {
     // Jump directly to a page (tapped tab dot).
     function jumpTo(p) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_intro) { _seenIntro(); return; }
         if (_welcome) { _welcome = false; }
         _page = ((p % IV_PAGES) + IV_PAGES) % IV_PAGES;
@@ -175,6 +217,7 @@ class FarmView extends WatchUi.View {
     // UP/DOWN: move cursor on list pages (with overflow paging), else page.
     function cursorMove(d) {
         if (_event) { _evChoice = (_evChoice + 1) % 2; _tone(0); WatchUi.requestUpdate(); return; }
+        if (cardOpen()) { _cardStep(d); return; }
         if (_dismiss()) { return; }
         var n = _listCount();
         if (n > 0) {
@@ -188,23 +231,27 @@ class FarmView extends WatchUi.View {
     }
     function activate() {
         if (_event) { _resolveEvent(_evChoice); return; }
+        if (cardOpen()) {
+            // SELECT on an open card performs the action and leaves the card up,
+            // refreshed, so repeat purchases never bounce back to the list.
+            if (_cardKind == CK_BLD)  { _do(_m.upgrade(_cardId)); return; }
+            if (_cardKind == CK_AREA) { _do(_m.explore(_cardId)); return; }
+            closeCard(); return;
+        }
         if (_dismiss()) { return; }
-        if (_page == IV_BUILD) { _do(_m.upgrade(_cur)); return; }
-        if (_page == IV_DISC)  { _do(_m.explore(_cur)); return; }
+        if (_page == IV_BUILD) { _openCard(CK_BLD, _cur); return; }
+        if (_page == IV_DISC)  { _openCard(CK_AREA, _cur); return; }
         if (_page == IV_HOME)  {
             if (_m.dailyComplete() && !_m.dailyClaimed) { _doClaim(); } else { setPage(IV_BUILD); }
             return;
         }
         if (_page == IV_RES)   { _doClaim(); return; }
-        if (_page == IV_COLL)  {
-            var owned = _m.hasColl(_cur);
-            _popup = Fa.cName(_cur) + (owned ? " - owned" : " - locked"); _popupT = 26;
-            WatchUi.requestUpdate();
-            return;
-        }
+        if (_page == IV_COLL)  { _openCard(CK_COLL, _cur); return; }
     }
     function setPage(p) {
-        if (_event || _dismiss()) { return; }
+        if (_event) { return; }
+        if (closeCard()) { return; }
+        if (_dismiss()) { return; }
         _page = ((p % IV_PAGES) + IV_PAGES) % IV_PAGES;
         _cur = 0; _scroll = 0;
         WatchUi.requestUpdate();
@@ -254,6 +301,12 @@ class FarmView extends WatchUi.View {
             return true;
         }
         if (_intro || _welcome) { _dismiss(); return true; }
+        if (cardOpen()) {
+            if (_inR(x, y, _rBtnA)) { activate(); return true; }
+            if (_inR(x, y, _rPrev)) { _cardStep(-1); return true; }
+            if (_inR(x, y, _rNext)) { _cardStep(1);  return true; }
+            closeCard(); return true;
+        }
         // Tab dots — jump straight to a page.
         for (var i = 0; i < _tabRects.size(); i++) {
             if (_inR(x, y, _tabRects[i])) { jumpTo(i); return true; }
@@ -297,6 +350,7 @@ class FarmView extends WatchUi.View {
         else { _drawHistory(dc); }
 
         _drawTabStrip(dc);
+        if (cardOpen()) { _drawCard(dc); }
         if (_popup != null) { _drawPopup(dc); }
         if (_welcome) { _drawWelcome(dc); }
         if (_intro) { _drawIntro(dc); }
@@ -336,9 +390,9 @@ class FarmView extends WatchUi.View {
         var sc = _h / 220; if (sc < 2) { sc = 2; }
         var gh = 5 * sc;
         var barH = gh + sc * 4; if (barH < 13) { barH = 13; }
-        var barW = round ? _w * 62 / 100 : _w * 80 / 100;
+        var barW = round ? _w * 56 / 100 : _w * 80 / 100;
         var bx = cx - barW / 2;
-        var by = round ? (_h * 85 / 100 - barH / 2) : (_h - barH - _h * 3 / 100);
+        var by = round ? (_h * 90 / 100 - barH / 2) : (_h - barH - _h * 3 / 100);
         var midY = by + barH / 2;
         var gy = midY - gh / 2;
         var pad = barH / 4; if (pad < 3) { pad = 3; }
@@ -388,13 +442,17 @@ class FarmView extends WatchUi.View {
         _drawListFrame(dc, Fa.B_N, method(:_drawBuildRow));
     }
     function _drawBuildRow(dc, id, x, y, w, rh, sel) {
-        var col = Fa.bColor(id);
         var lvl = _m.bLevel[id];
         var unlocked = _m.isUnlocked(id);
-        var dim = !unlocked;
-        _catIcon(dc, Fa.bCat(id), dim ? 0x2A3A2C : col, x + rh / 2, y + rh / 2, rh / 3);
+        if (unlocked) {
+            var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+            FarmArt.bldArt(dc, id, x + rh / 2, y + rh / 2, ap);
+        } else {
+            _catIcon(dc, Fa.bCat(id), 0x2A3A2C, x + rh / 2, y + rh / 2, rh / 3);
+        }
 
         var tx = x + rh + 4;
+        var dim = !unlocked;
         var nm = Fa.bName(id) + (lvl > 0 ? "  L" + lvl : "");
         _txt(dc, tx, y + rh * 18 / 100, Graphics.FONT_XTINY, dim ? Fa.MUTED : Fa.TEXT, nm, Graphics.TEXT_JUSTIFY_LEFT);
 
@@ -418,7 +476,7 @@ class FarmView extends WatchUi.View {
     // ── RESOURCES ───────────────────────────────────────────────────────────
     hidden function _drawResources(dc) {
         var cx = _w / 2;
-        var y = _h * 22 / 100; var rowH = _h * 11 / 100;
+        var y = _h * 20 / 100; var rowH = _h * 7 / 100;
         var lx = _w * 16 / 100; var rx = _w - _w * 10 / 100;
         for (var i = 0; i < Fa.R_N; i++) {
             var ry = y + i * rowH;
@@ -430,7 +488,7 @@ class FarmView extends WatchUi.View {
             _txt(dc, rx, ry, Graphics.FONT_XTINY, rate > 0 ? 0x9AE070 : Fa.MUTED,
                  (rate > 0 ? "+" + _fmt(rate) : "-") + "/h", Graphics.TEXT_JUSTIFY_RIGHT);
         }
-        var yy = y + Fa.R_N * rowH + _h * 2 / 100;
+        var yy = y + Fa.R_N * rowH + _h * 1 / 100;
         dc.setColor(0xF0C060, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_w * 11 / 100, yy + rowH * 22 / 100, 5);
         _txt(dc, lx, yy, Graphics.FONT_XTINY, 0xF0C060, "Herd", Graphics.TEXT_JUSTIFY_LEFT);
@@ -447,27 +505,44 @@ class FarmView extends WatchUi.View {
              _m.guestTypeName(), Graphics.TEXT_JUSTIFY_RIGHT);
         _txt(dc, rx, yy + rowH, Graphics.FONT_XTINY, Fa.TEXT, _m.visitors + "/" + _m.visitorsCap(), Graphics.TEXT_JUSTIFY_RIGHT);
 
+        try { _drawBarn(dc, yy + rowH * 2 + _h * 1 / 100); } catch (e) {}
         // Daily challenge card (relocated off HOME so HOME is pure diorama).
-        try { _drawDailyCard(dc, yy + rowH * 2 + _h * 2 / 100); } catch (e) {}
+        try { _drawDailyCard(dc, yy + rowH * 2 + _h * 7 / 100); } catch (e) {}
+    }
+
+    // Offline-cap meter: idle production only banks for OFFLINE_CAP hours, so a
+    // full barn means income was left standing in the field.
+    hidden function _drawBarn(dc, by) {
+        var cx = _w / 2;
+        var full = _m.barnFull();
+        var pct = _m.barnPct();
+        var col = full ? 0xFF8A6A : Fa.ACCENT;
+        _txt(dc, _w * 10 / 100, by, Graphics.FONT_XTINY, col, "BARN", Graphics.TEXT_JUSTIFY_LEFT);
+        _txt(dc, _w - _w * 10 / 100, by, Graphics.FONT_XTINY, col,
+             full ? "FULL - visit sooner" : (pct + "% of " + _m.barnHours() + "h"),
+             Graphics.TEXT_JUSTIFY_RIGHT);
+        var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
+        _bar(dc, _w * 10 / 100, by + fhX * 85 / 100, _w * 80 / 100, 4, pct, col);
     }
 
     // Compact daily card used on the RESOURCES page. Sets _rBtnA so SELECT/tap
-    // claims the reward when it's ready.
+    // claims the reward when it's ready. The streak multiplier and the next
+    // milestone are surfaced here so the reason to come back tomorrow is plain.
     hidden function _drawDailyCard(dc, cardY) {
         var cx = _w / 2;
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
         var pad = fhX / 3; if (pad < 2) { pad = 2; }
         var cw = _w * 84 / 100; var cxx = cx - cw / 2;
         var cardH = fhX * 3 + pad * 4;
-        if (cardY + cardH > _h * 96 / 100) { cardY = _h * 96 / 100 - cardH; }
+        if (cardY + cardH > _h * 97 / 100) { cardY = _h * 97 / 100 - cardH; }
         dc.setColor(Fa.PANEL, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(cxx, cardY, cw, cardH, 8);
         _txt(dc, cxx + 10, cardY + pad, Graphics.FONT_XTINY, Fa.GOLD, "DAILY", Graphics.TEXT_JUSTIFY_LEFT);
-        _txt(dc, cxx + cw - 10, cardY + pad, Graphics.FONT_XTINY, Fa.MUTED,
-             "Streak " + _m.streak + "d", Graphics.TEXT_JUSTIFY_RIGHT);
-        _txt(dc, cx, cardY + pad + fhX + pad / 2, Graphics.FONT_XTINY, Fa.TEXT, _m.dailyText(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cxx + cw - 10, cardY + pad, Graphics.FONT_XTINY, 0xFFD24A,
+             "Streak " + _m.streak + "d x" + _multText(), Graphics.TEXT_JUSTIFY_RIGHT);
+        _wrap1(dc, cxx + 10, cardY + pad + fhX * 90 / 100, cw - 20, Graphics.FONT_XTINY, Fa.TEXT, _m.dailyText());
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
-        var barY = cardY + pad + fhX * 2 + pad;
+        var barY = cardY + pad + fhX * 2;
         _bar(dc, cxx + 12, barY, cw - 24, 4, (tgt > 0 ? prog * 100 / tgt : 100), Fa.ACCENT);
         var can = _m.dailyComplete() && !_m.dailyClaimed;
         var pw = cw * 40 / 100; var px = cx - pw / 2;
@@ -475,6 +550,11 @@ class FarmView extends WatchUi.View {
         if (ph < fhX) { ph = fhX; }
         _rBtnA = [px, py, pw, ph];
         _button(dc, _rBtnA, _m.dailyClaimed ? "CLAIMED" : "CLAIM", can);
+    }
+    // Streak multiplier as a short "1.4" style label.
+    hidden function _multText() {
+        var p = _m.streakPct();
+        return (p / 100) + "." + ((p / 10) % 10);
     }
 
     // ── EXPLORE ─────────────────────────────────────────────────────────────
@@ -484,11 +564,14 @@ class FarmView extends WatchUi.View {
     function _drawAreaRow(dc, id, x, y, w, rh, sel) {
         var col = Fa.arColor(id);
         var disc = _m.isDiscovered(id);
-        dc.setColor(disc ? col : 0x2A3A2C, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x + rh / 2, y + rh / 2, rh / 3);
         if (disc) {
-            dc.setColor(0x0A1E10, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(x + rh / 2, y + rh / 2, Graphics.FONT_XTINY, "*",
+            var ap = rh * 62 / 100 / 6; if (ap < 1) { ap = 1; }
+            FarmArt.areaArt(dc, id, x + rh / 2, y + rh / 2, ap);
+        } else {
+            dc.setColor(0x2A3A2C, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + rh / 2, y + rh / 2, rh / 3);
+            dc.setColor(0x5A6A56, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + rh / 2, y + rh / 2, Graphics.FONT_XTINY, "?",
                         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
         // Font-metric layout: name on the top line, the progress bar strictly
@@ -523,33 +606,53 @@ class FarmView extends WatchUi.View {
         var cx = _w / 2;
         _txt(dc, cx, _h * 20 / 100, Graphics.FONT_XTINY, 0xFFD24A,
              _m.collectiblesOwned() + " / " + Fa.C_N + " found", Graphics.TEXT_JUSTIFY_CENTER);
-        // 5 columns keeps the full 15-charm set inside the dial.
+        // 5 columns keeps the full 15-charm set inside the dial; the grid sizes
+        // itself off BOTH axes so appending charms adds rows without ever
+        // pushing cells off the bottom.
         var cols = 5;
-        var gx = _w * 10 / 100; var gy = _h * 26 / 100;
-        var cw = _w * 80 / 100; var cell = cw / cols;
+        var rowsN = (Fa.C_N + cols - 1) / cols; if (rowsN < 1) { rowsN = 1; }
+        var bandY = _h * 26 / 100; var bandH = _h * 50 / 100;
+        var cell = _w * 80 / 100 / cols;
+        if (bandH / rowsN < cell) { cell = bandH / rowsN; }
         if (cell < 6) { cell = 6; }
+        var gx = cx - cell * cols / 2;
+        var gy = bandY + (bandH - cell * rowsN) / 2;
         for (var i = 0; i < Fa.C_N; i++) {
             var r = i / cols; var c = i % cols;
             var px = gx + c * cell + cell / 2;
             var py = gy + r * cell + cell / 2;
             var owned = _m.hasColl(i);
-            var sel = (i == _cur);
-            if (sel) {
-                dc.setColor(Fa.ACCENT, Graphics.COLOR_TRANSPARENT);
-                dc.drawCircle(px, py, cell * 40 / 100);
+            // Rarity-tinted socket behind every slot so the grid reads as a
+            // display case rather than a row of identical dots.
+            dc.setColor(owned ? _shade(Fa.cColor(i), 30) : 0x18301A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(px - cell * 44 / 100, py - cell * 44 / 100,
+                                    cell * 88 / 100, cell * 88 / 100, 4);
+            if (owned) {
+                var ap = cell * 70 / 100 / 6; if (ap < 1) { ap = 1; }
+                FarmArt.collArt(dc, i, px, py, ap);
+            } else {
+                _txt(dc, px, py - cell * 30 / 100, Graphics.FONT_XTINY, 0x46603F, "?", Graphics.TEXT_JUSTIFY_CENTER);
             }
-            dc.setColor(owned ? Fa.cColor(i) : 0x243425, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(px, py, cell * 30 / 100);
-            if (owned && Fa.cRare(i)) {
-                dc.setColor(0xFFF0B0, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px, py, cell * 10 / 100);
+            if (i == _cur) {
+                dc.setColor(Fa.ACCENT, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(px - cell * 46 / 100, py - cell * 46 / 100,
+                                        cell * 92 / 100, cell * 92 / 100, 5);
             }
             _rows.add([px - cell / 2, py - cell / 2, cell, cell]);
             _rowIds.add(i);
         }
-        var name = Fa.cName(_cur) + (_m.hasColl(_cur) ? "" : " (locked)");
-        _txt(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, _m.hasColl(_cur) ? Fa.TEXT : Fa.MUTED, name, Graphics.TEXT_JUSTIFY_CENTER);
+        var own = _m.hasColl(_cur);
+        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, own ? Fa.cColor(_cur) : Fa.MUTED,
+             own ? Fa.cName(_cur) : "Undiscovered", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, own ? Fa.MUTED : 0xB46CFF,
+             own ? "SELECT for the story" : Fa.cOrigin(_cur), Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Fa.GOLD, "Charm " + _m.charmScore(), Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    hidden function _shade(c, pct) {
+        var r = ((c >> 16) & 0xFF) * pct / 100;
+        var g = ((c >> 8) & 0xFF) * pct / 100;
+        var b = (c & 0xFF) * pct / 100;
+        return (r << 16) | (g << 8) | b;
     }
 
     // ── HISTORY ─────────────────────────────────────────────────────────────
@@ -566,6 +669,7 @@ class FarmView extends WatchUi.View {
             dc.fillCircle(_w * 12 / 100, ry + step / 3, 2);
             _wrap1(dc, _w * 16 / 100, ry, _w * 74 / 100, Graphics.FONT_XTINY, Fa.TEXT, lg[i]);
         }
+        _txt(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, Fa.MUTED, _m.milestoneText(), Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Fa.GOLD, _m.milestoneLabel(), Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -588,10 +692,12 @@ class FarmView extends WatchUi.View {
         if (_m.gPop > 0) { _txt(dc, cx, y + n * step, Graphics.FONT_TINY, 0xF0C060, "+" + _m.gPop + " animals", Graphics.TEXT_JUSTIFY_CENTER); n++; }
         if (n == 0) { _txt(dc, cx, y, Graphics.FONT_TINY, Fa.MUTED, "Farm is quiet", Graphics.TEXT_JUSTIFY_CENTER); }
 
-        if (_m.newDay) {
-            _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, Fa.GOLD,
-                 "Streak " + _m.streak + " day" + (_m.streak == 1 ? "" : "s"), Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        // The two reasons to come back tomorrow: the streak bonus that grows and
+        // the barn that stops filling once the offline cap is reached.
+        _txt(dc, cx, _h * 76 / 100, Graphics.FONT_XTINY, Fa.GOLD,
+             "Streak " + _m.streak + "d - daily x" + _multText(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, _m.barnFull() ? 0xFF8A6A : Fa.MUTED,
+             _m.barnText(), Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Fa.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -625,7 +731,7 @@ class FarmView extends WatchUi.View {
         dc.setColor(0x0A140A, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(0x14301A, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         var e = _m.pendingEvent;
-        _txt(dc, cx, _h * 14 / 100, Graphics.FONT_SMALL, Fa.GOLD, Fa.evTitle(e), Graphics.TEXT_JUSTIFY_CENTER);
+        _txtFit(dc, cx, _h * 17 / 100, Graphics.FONT_SMALL, Fa.GOLD, Fa.evTitle(e), _w * 76 / 100);
         _wrap(dc, cx, _h * 30 / 100, _w * 82 / 100, Graphics.FONT_XTINY, Fa.TEXT, Fa.evBody(e));
 
         var bw = _w * 60 / 100; var bx = cx - bw / 2; var bh = _h * 13 / 100;
@@ -635,6 +741,117 @@ class FarmView extends WatchUi.View {
         var a = (e == Fa.EV_TREASURE) ? "OPEN CRATE" : "TRADE";
         _button(dc, _rBtnA, a, _evChoice == 0);
         _button(dc, _rBtnB, "IGNORE", _evChoice == 1);
+    }
+
+    // ── Detail card ───────────────────────────────────────────────────────────
+    // One overlay serves every object on the farm. It answers three questions in
+    // order: what does it look like, what is it, and what does it do for me.
+    hidden function _drawCard(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x060F08, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) { dc.setColor(0x0F2612, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
+
+        var ap = _h * 20 / 100 / 6; if (ap < 2) { ap = 2; }
+        var py = _h * 22 / 100;
+        var name = ""; var meta = ""; var metaCol = Fa.MUTED;
+        var lore = ""; var effect = ""; var counter = "";
+        var btn = "CLOSE"; var btnHot = false;
+
+        if (_cardKind == CK_BLD) {
+            var id = Fa._c(_cardId, 0, Fa.B_N - 1);
+            counter = "BUILD " + (id + 1) + "/" + Fa.B_N;
+            var lvl = _m.bLevel[id];
+            var unlocked = _m.isUnlocked(id);
+            FarmArt.bldArt(dc, id, cx, py, ap);
+            name = Fa.bName(id);
+            if (!unlocked) {
+                meta = "Locked - explore " + Fa.arName(Fa.bUnlockArea(id));
+                metaCol = 0xB46CFF;
+                btn = "LOCKED";
+            } else if (lvl >= Fa.LVL_MAX) {
+                meta = "Level " + lvl + " - " + _bNowText(id, lvl);
+                metaCol = Fa.GOLD;
+                btn = "MAX LEVEL";
+            } else {
+                meta = (lvl > 0) ? ("Level " + lvl + " - " + _bNowText(id, lvl)) : "Not built yet";
+                metaCol = (lvl > 0) ? Fa.GOLD : Fa.MUTED;
+                var cost = _m.upgradeCost(id);
+                btnHot = _m.canAfford(cost);
+                btn = (lvl > 0 ? "UPGRADE  " : "BUILD  ") + _costStr(cost);
+            }
+            lore = Fa.bLore(id);
+            effect = Fa.bEffectText(id);
+        } else if (_cardKind == CK_AREA) {
+            var ai = Fa._c(_cardId, 0, Fa.AR_N - 1);
+            counter = "AREA " + (ai + 1) + "/" + Fa.AR_N;
+            var disc = _m.isDiscovered(ai);
+            FarmArt.areaArt(dc, ai, cx, py, ap);
+            name = Fa.arName(ai);
+            lore = Fa.arLore(ai);
+            effect = Fa.arEffectText(ai);
+            if (disc) {
+                meta = "Explored - " + Fa.arDiscovery(ai);
+                metaCol = 0x9AE070;
+                btn = "ALL EXPLORED";
+            } else {
+                meta = _m.arProg[ai] + "% walked - " + _fmt(Fa.stepsForArea(ai)) + " steps total";
+                metaCol = Fa.ACCENT;
+                var ec = Fa.exploreCost(ai);
+                btnHot = _m.res[Fa.R_COIN] >= ec;
+                btn = "SCOUT  " + _fmt(ec) + "c";
+            }
+        } else {
+            var ci = Fa._c(_cardId, 0, Fa.C_N - 1);
+            counter = "CHARM " + (ci + 1) + "/" + Fa.C_N;
+            if (_m.hasColl(ci)) {
+                FarmArt.collArt(dc, ci, cx, py, ap);
+                name = Fa.cName(ci);
+                meta = (Fa.cRare(ci) ? "Rare" : "Common") + " - " + Fa.cOrigin(ci);
+                metaCol = Fa.cColor(ci);
+                lore = Fa.cLore(ci);
+                effect = Fa.cValueText(ci);
+            } else {
+                dc.setColor(0x182A19, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cx, py, _h * 10 / 100);
+                _txt(dc, cx, py - _h * 6 / 100, Graphics.FONT_SMALL, 0x3E5A3E, "?", Graphics.TEXT_JUSTIFY_CENTER);
+                name = "Undiscovered";
+                meta = (Fa.cRare(ci) ? "Rare" : "Common") + " charm";
+                metaCol = Fa.cColor(ci);
+                lore = "The valley talks about it. Nobody here has one yet.";
+                effect = "Look in: " + Fa.cOrigin(ci);
+            }
+        }
+
+        var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
+        Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x8AA088);
+        _wrap(dc, cx, _h * 35 / 100, _w * 84 / 100, Graphics.FONT_TINY, Fa.TEXT, name);
+        _wrap(dc, cx, _h * 44 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
+        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xC2D2B8, lore, 3);
+        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x9AE070, effect, 2);
+
+        // Edge zones step to the previous/next item of the same kind.
+        _rPrev = [0, _h * 30 / 100, _w * 14 / 100, _h * 44 / 100];
+        _rNext = [_w * 86 / 100, _h * 30 / 100, _w * 14 / 100, _h * 44 / 100];
+        var bw = _w * 62 / 100; var bx = cx - bw / 2;
+        var by = _h * 81 / 100; var bh = _h * 12 / 100;
+        _rBtnA = [bx, by, bw, bh];
+        _button(dc, _rBtnA, btn, btnHot);
+    }
+    // What a structure is already giving the farm at its current level.
+    hidden function _bNowText(id, lvl) {
+        id = Fa._c(id, 0, Fa.B_N - 1);
+        var pr = Fa.bProdRes(id);
+        if (pr >= 0) { return "+" + _fmt(Fa.prodAt(id, lvl)) + " " + Fa.resAbbr(pr) + "/h"; }
+        if (Fa.bPopPer(id) > 0) { return "+" + (lvl * Fa.bPopPer(id)) + " herd"; }
+        if (id == Fa.B_GREENHSE) { return "+" + (lvl * 10) + "% all"; }
+        if (id == Fa.B_SILO)     { return "+" + (lvl * 15) + "% all"; }
+        if (id == Fa.B_HARVMOON) { return "+" + (lvl * 25) + "% all"; }
+        return "+" + (lvl * Fa.bAttract(id)) + " attraction";
+    }
+    hidden function _costStr(cost) {
+        var s = _fmt(cost[0]) + "c " + _fmt(cost[1]) + "w";
+        if (cost[2] > 0) { s += " " + _fmt(cost[2]) + "g"; }
+        return s;
     }
 
     // ── Tab strip (persistent, top) ───────────────────────────────────────────
@@ -752,6 +969,21 @@ class FarmView extends WatchUi.View {
     }
     hidden function _txt(dc, x, y, f, c, s, j) { dc.setColor(c, Graphics.COLOR_TRANSPARENT); dc.drawText(x, y, f, s, j); }
 
+    // Centred title that steps down a font size (and finally truncates) rather
+    // than running off the chord of a round screen.
+    hidden function _txtFit(dc, cx, y, f, c, s, maxw) {
+        var fonts = [f, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        var use = f;
+        for (var i = 0; i < fonts.size(); i++) {
+            use = fonts[i];
+            if (dc.getTextWidthInPixels(s, use) <= maxw) { break; }
+        }
+        while (s.length() > 3 && dc.getTextWidthInPixels(s, use) > maxw) {
+            s = s.substring(0, s.length() - 1);
+        }
+        _txt(dc, cx, y, use, c, s, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     hidden function _fmt(n) {
         if (n < 0) { n = 0; }
         if (n >= 1000000) { return (n / 1000000) + "." + ((n / 100000) % 10) + "M"; }
@@ -772,6 +1004,34 @@ class FarmView extends WatchUi.View {
         var fh = dc.getFontHeight(font);
         dc.drawText(cx, y, font, l1, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(cx, y + fh * 85 / 100, font, l2, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    // Multi-line centred wrap. The two-line version silently ran the remainder
+    // off both edges of a round screen, which is where the longer card copy
+    // lives, so anything that still will not fit is ellipsized instead.
+    hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var fh = dc.getFontHeight(font) * 85 / 100;
+        var words = _split(s);
+        var i = 0; var line = 0;
+        while (i < words.size() && line < maxLines) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            while (cur.length() > 3 && dc.getTextWidthInPixels(cur, font) > maxw) {
+                cur = cur.substring(0, cur.length() - 1);
+            }
+            if (line == maxLines - 1 && i < words.size()) {
+                while (cur.length() > 3 && dc.getTextWidthInPixels(cur + "..", font) > maxw) {
+                    cur = cur.substring(0, cur.length() - 1);
+                }
+                cur += "..";
+            }
+            dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
+            line++;
+        }
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

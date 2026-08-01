@@ -39,7 +39,7 @@ class MineHooks extends GameHooks {
         try {
             if (_preview == null) { return null; }
             if (!_preview.started) { return "Open Bitochi Mine #001"; }
-            return _preview.depth + "m · " + Mn.zName(_preview.zone()) + " · Lv " + _preview.mineLevel();
+            return _preview.depth + "m · Lv " + _preview.mineLevel();
         } catch (e) { return null; }
     }
 

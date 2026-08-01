@@ -39,8 +39,7 @@ class IslandHooks extends GameHooks {
         try {
             if (_preview == null) { return null; }
             if (!_preview.started) { return "New island paradise"; }
-            return "Lv " + _preview.islandLevel() + " · Pop " + _preview.population
-                 + " · " + _preview.ageDayLabel();
+            return "Lv " + _preview.islandLevel() + " · Pop " + _preview.population;
         } catch (e) { return null; }
     }
 

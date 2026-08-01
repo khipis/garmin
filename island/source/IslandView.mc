@@ -36,6 +36,13 @@ const IV_COLL = 4;
 const IV_HIST = 5;
 const IV_PAGES = 6;
 
+// Detail-card kinds. Every buildable, discoverable or collectable thing on the
+// island opens the same card: a big pixel portrait, what it is, the story behind
+// it and exactly what it does for you.
+const CK_BLD  = 0;   // id = building index
+const CK_AREA = 1;   // id = discovery area index
+const CK_COLL = 2;   // id = collectible index
+
 class IslandView extends WatchUi.View {
     hidden var _m;
     hidden var _page;
@@ -51,6 +58,7 @@ class IslandView extends WatchUi.View {
 
     hidden var _demo; hidden var _demoT;
     hidden var _intro;
+    hidden var _cardKind; hidden var _cardId;
 
     hidden var _rows; hidden var _rowIds;
     hidden var _rBtnA; hidden var _rBtnB;
@@ -65,6 +73,7 @@ class IslandView extends WatchUi.View {
         _popup = null; _popupT = 0;
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false;
         _demo = false; _demoT = 0; _intro = false;
+        _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _rBtnA = null; _rBtnB = null;
         _rPrev = null; _rNext = null; _rDemo = null; _tabRects = [];
         _loadFx();
@@ -145,6 +154,37 @@ class IslandView extends WatchUi.View {
         } catch (e) {}
     }
 
+    // ── Detail cards ──────────────────────────────────────────────────────────
+    // Opening a card is the main way to LOOK at something: the portrait, the
+    // story and the exact numbers. UP/DOWN walks the whole set without going
+    // back to the list, so the collection reads like a museum.
+    function cardOpen() { return _cardKind >= 0; }
+    hidden function _openCard(kind, id) {
+        _cardKind = kind; _cardId = id;
+        _tone(0); _vibe(14, 18);
+        WatchUi.requestUpdate();
+    }
+    function closeCard() {
+        if (_cardKind < 0) { return false; }
+        _cardKind = -1;
+        _tone(0); _vibe(10, 14);
+        WatchUi.requestUpdate();
+        return true;
+    }
+    hidden function _cardCount() {
+        if (_cardKind == CK_BLD)  { return Is.B_N; }
+        if (_cardKind == CK_AREA) { return Is.AR_N; }
+        return Is.C_N;
+    }
+    hidden function _cardStep(d) {
+        var n = _cardCount();
+        if (n < 1) { return; }
+        _cardId = ((_cardId + d) % n + n) % n;
+        _cur = _cardId;
+        _tone(0); _vibe(8, 12);
+        WatchUi.requestUpdate();
+    }
+
     // ── Navigation ────────────────────────────────────────────────────────────
     hidden function _dismiss() {
         if (_event) { return false; }
@@ -154,6 +194,7 @@ class IslandView extends WatchUi.View {
     }
     function pageMove(d) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_dismiss()) { return; }
         _page = ((_page + d) % IV_PAGES + IV_PAGES) % IV_PAGES;
         _cur = 0; _scroll = 0;
@@ -163,6 +204,7 @@ class IslandView extends WatchUi.View {
     // Jump directly to a page (tapped tab dot).
     function jumpTo(p) {
         if (_event) { return; }
+        if (closeCard()) { return; }
         if (_intro) { _seenIntro(); return; }
         if (_welcome) { _welcome = false; }
         _page = ((p % IV_PAGES) + IV_PAGES) % IV_PAGES;
@@ -179,6 +221,7 @@ class IslandView extends WatchUi.View {
     // UP/DOWN: move cursor on list pages (with overflow paging), else page.
     function cursorMove(d) {
         if (_event) { _evChoice = (_evChoice + 1) % 2; _tone(0); WatchUi.requestUpdate(); return; }
+        if (cardOpen()) { _cardStep(d); return; }
         if (_dismiss()) { return; }
         var n = _listCount();
         if (n > 0) {
@@ -192,23 +235,28 @@ class IslandView extends WatchUi.View {
     }
     function activate() {
         if (_event) { _resolveEvent(_evChoice); return; }
+        if (cardOpen()) {
+            // On a building or area card SELECT performs the action and the card
+            // stays open with the new level/progress, so repeat purchases and
+            // repeat expeditions never kick the player back to the list.
+            if (_cardKind == CK_BLD)  { _do(_m.upgrade(_cardId)); return; }
+            if (_cardKind == CK_AREA && !_m.isDiscovered(_cardId)) { _do(_m.explore(_cardId)); return; }
+            closeCard(); return;
+        }
         if (_dismiss()) { return; }
-        if (_page == IV_BUILD) { _do(_m.upgrade(_cur)); return; }
-        if (_page == IV_DISC)  { _do(_m.explore(_cur)); return; }
+        if (_page == IV_BUILD) { _openCard(CK_BLD, _cur); return; }
+        if (_page == IV_DISC)  { _openCard(CK_AREA, _cur); return; }
+        if (_page == IV_COLL)  { _openCard(CK_COLL, _cur); return; }
         if (_page == IV_HOME)  {
             if (_m.dailyComplete() && !_m.dailyClaimed) { _doClaim(); } else { setPage(IV_BUILD); }
             return;
         }
         if (_page == IV_RES)   { _doClaim(); return; }
-        if (_page == IV_COLL)  {
-            var owned = _m.hasColl(_cur);
-            _popup = Is.cName(_cur) + (owned ? " - owned" : " - locked"); _popupT = 26;
-            WatchUi.requestUpdate();
-            return;
-        }
     }
     function setPage(p) {
-        if (_event || _dismiss()) { return; }
+        if (_event) { return; }
+        if (closeCard()) { return; }
+        if (_dismiss()) { return; }
         _page = ((p % IV_PAGES) + IV_PAGES) % IV_PAGES;
         _cur = 0; _scroll = 0;
         WatchUi.requestUpdate();
@@ -258,6 +306,14 @@ class IslandView extends WatchUi.View {
             return true;
         }
         if (_intro || _welcome) { _dismiss(); return true; }
+        // A card owns the whole screen: the action button acts, the edge bands
+        // browse the set, anything else closes it.
+        if (cardOpen()) {
+            if (_inR(x, y, _rBtnA)) { activate(); return true; }
+            if (_inR(x, y, _rPrev)) { _cardStep(-1); return true; }
+            if (_inR(x, y, _rNext)) { _cardStep(1); return true; }
+            closeCard(); return true;
+        }
         // Tab dots — jump straight to a page.
         for (var i = 0; i < _tabRects.size(); i++) {
             if (_inR(x, y, _tabRects[i])) { jumpTo(i); return true; }
@@ -301,6 +357,7 @@ class IslandView extends WatchUi.View {
         else { _drawHistory(dc); }
 
         _drawTabStrip(dc);
+        if (cardOpen()) { try { _drawCard(dc); } catch (e) { closeCard(); } }
         if (_popup != null) { _drawPopup(dc); }
         if (_welcome) { _drawWelcome(dc); }
         if (_intro) { _drawIntro(dc); }
@@ -503,32 +560,58 @@ class IslandView extends WatchUi.View {
     }
 
     // ── RESOURCES ───────────────────────────────────────────────────────────
+    // Row pitch comes from the real glyph height so the six stat rows, the idle
+    // store bar and the daily card all fit between the tab strip and the bottom
+    // without ever writing on top of each other.
     hidden function _drawResources(dc) {
         var cx = _w / 2;
-        var y = _h * 22 / 100; var rowH = _h * 11 / 100;
+        var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
+        var rowH = fhX * 3 / 2;
+        var minH = _h * 7 / 100; if (rowH < minH) { rowH = minH; }
+        var y = _h * 19 / 100;
         var lx = _w * 16 / 100; var rx = _w - _w * 10 / 100;
         for (var i = 0; i < Is.R_N; i++) {
             var ry = y + i * rowH;
             dc.setColor(Is.resColor(i), Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(_w * 11 / 100, ry + rowH * 22 / 100, 5);
+            dc.fillCircle(_w * 11 / 100, ry + fhX / 2, 5);
             _txt(dc, lx, ry, Graphics.FONT_XTINY, Is.resColor(i), Is.resAbbr(i), Graphics.TEXT_JUSTIFY_LEFT);
             _txt(dc, cx + _w * 10 / 100, ry, Graphics.FONT_XTINY, Is.TEXT, _fmt(_m.res[i]), Graphics.TEXT_JUSTIFY_RIGHT);
             var rate = _m.hourlyRate(i);
             _txt(dc, rx, ry, Graphics.FONT_XTINY, rate > 0 ? 0x6FE08A : Is.MUTED,
                  (rate > 0 ? "+" + _fmt(rate) : "-") + "/h", Graphics.TEXT_JUSTIFY_RIGHT);
         }
-        var yy = y + Is.R_N * rowH + _h * 2 / 100;
+        var yy = y + Is.R_N * rowH;
         dc.setColor(0x6FB3FF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 11 / 100, yy + rowH * 22 / 100, 5);
+        dc.fillCircle(_w * 11 / 100, yy + fhX / 2, 5);
         _txt(dc, lx, yy, Graphics.FONT_XTINY, 0x6FB3FF, "Pop", Graphics.TEXT_JUSTIFY_LEFT);
         _txt(dc, rx, yy, Graphics.FONT_XTINY, Is.TEXT, _m.population + "/" + _m.popCap(), Graphics.TEXT_JUSTIFY_RIGHT);
         dc.setColor(0xFF9AC0, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 11 / 100, yy + rowH + rowH * 22 / 100, 5);
+        dc.fillCircle(_w * 11 / 100, yy + rowH + fhX / 2, 5);
         _txt(dc, lx, yy + rowH, Graphics.FONT_XTINY, 0xFF9AC0, "Visitors", Graphics.TEXT_JUSTIFY_LEFT);
         _txt(dc, rx, yy + rowH, Graphics.FONT_XTINY, Is.TEXT, _m.visitors + "/" + _m.visitorsCap(), Graphics.TEXT_JUSTIFY_RIGHT);
 
-        // Daily challenge card (relocated off HOME so HOME is pure diorama).
-        try { _drawDailyCard(dc, yy + rowH * 2 + _h * 2 / 100); } catch (e) {}
+        // Idle store bar + daily challenge card (both relocated off HOME so HOME
+        // stays a pure diorama).
+        var idleY = yy + rowH * 2 + fhX / 2;
+        var cardY = idleY + fhX;
+        try { _drawIdleBar(dc, idleY); } catch (e) {}
+        try { _drawDailyCard(dc, cardY); } catch (e) {}
+    }
+
+    // Idle-storage readout: the 24h store, how full it was on the last return
+    // and the streak multiplier riding on the daily reward. Together they make
+    // "come back sooner, come back tomorrow" a visible pair of numbers.
+    hidden function _drawIdleBar(dc, y) {
+        var cx = _w / 2;
+        var bw = _w * 70 / 100; var bx = cx - bw / 2;
+        var fill = _m.offlineFillPct();
+        var col = (fill >= 100) ? 0xFF8A5A : Is.ACCENT;
+        _bar(dc, bx, y, bw, 4, fill, col);
+        var label = "IDLE STORE " + _m.offlineCapHours() + "H";
+        var right = (fill >= 100) ? "FULL - was wasting" : (_m.offlineGapHours() + "h gap");
+        var sc = _h / 240; if (sc < 2) { sc = 2; }
+        Px.gtxt(dc, label, bx, y - 6 * sc, sc, Is.MUTED);
+        Px.gtxt(dc, right, bx + bw - Px.gtxtW(right, sc), y - 6 * sc, sc, col);
     }
 
     // Compact daily card used on the RESOURCES page. Sets _rBtnA so SELECT/tap
@@ -537,17 +620,23 @@ class IslandView extends WatchUi.View {
         var cx = _w / 2;
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
         var pad = fhX / 3; if (pad < 2) { pad = 2; }
-        var cw = _w * 84 / 100; var cxx = cx - cw / 2;
-        var cardH = fhX * 3 + pad * 4;
-        if (cardY + cardH > _h * 96 / 100) { cardY = _h * 96 / 100 - cardH; }
+        var cardH = fhX * 4 + pad * 2;
+        if (cardY + cardH > _h * 95 / 100) { cardY = _h * 95 / 100 - cardH; }
+        var cw = _w * 84 / 100;
+        var fit = (_circHalf(cardY + cardH) - 4) * 2;
+        if (fit < cw) { cw = fit; }
+        var minW = _w * 50 / 100; if (cw < minW) { cw = minW; }
+        var cxx = cx - cw / 2;
         dc.setColor(Is.PANEL, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(cxx, cardY, cw, cardH, 8);
         _txt(dc, cxx + 10, cardY + pad, Graphics.FONT_XTINY, Is.GOLD, "DAILY", Graphics.TEXT_JUSTIFY_LEFT);
-        _txt(dc, cxx + cw - 10, cardY + pad, Graphics.FONT_XTINY, Is.MUTED,
-             "Streak " + _m.streak + "d", Graphics.TEXT_JUSTIFY_RIGHT);
-        _txt(dc, cx, cardY + pad + fhX + pad / 2, Graphics.FONT_XTINY, Is.TEXT, _m.dailyText(), Graphics.TEXT_JUSTIFY_CENTER);
+        var sp = _m.streakPct();
+        _txt(dc, cxx + cw - 10, cardY + pad, Graphics.FONT_XTINY, sp > 0 ? Is.GOLD : Is.MUTED,
+             "Streak " + _m.streak + "d +" + sp + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+        _txt(dc, cx, cardY + pad + fhX * 9 / 10, Graphics.FONT_XTINY, Is.TEXT, _m.dailyText(), Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, cardY + pad + fhX * 18 / 10, Graphics.FONT_XTINY, 0x6FE08A, _m.dailyRewardText(), Graphics.TEXT_JUSTIFY_CENTER);
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
-        var barY = cardY + pad + fhX * 2 + pad;
+        var barY = cardY + pad + fhX * 28 / 10;
         _bar(dc, cxx + 12, barY, cw - 24, 4, (tgt > 0 ? prog * 100 / tgt : 100), Is.ACCENT);
         var can = _m.dailyComplete() && !_m.dailyClaimed;
         var pw = cw * 40 / 100; var px = cx - pw / 2;
@@ -608,23 +697,37 @@ class IslandView extends WatchUi.View {
             var px = gx + c * cell + cell / 2;
             var py = gy + r * cell + cell / 2;
             var owned = _m.hasColl(i);
-            var sel = (i == _cur);
-            if (sel) {
-                dc.setColor(Is.ACCENT, Graphics.COLOR_TRANSPARENT);
-                dc.drawCircle(px, py, cell * 40 / 100);
+            // Rarity-tinted socket behind every slot so the grid reads as a
+            // display case rather than a row of identical dots.
+            dc.setColor(owned ? _shade(Is.cColor(i), 30) : 0x16242E, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(px - cell * 44 / 100, py - cell * 44 / 100,
+                                    cell * 88 / 100, cell * 88 / 100, 4);
+            if (owned) {
+                // Each piece has its own portrait — the same one the card shows.
+                var ap = cell * 70 / 100 / 6; if (ap < 1) { ap = 1; }
+                try { IslandArt.collArt(dc, i, px, py, ap); } catch (e) {}
+                if (Is.cRare(i)) {
+                    dc.setColor(Is.GOLD, Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(px + cell * 30 / 100, py - cell * 42 / 100, 2, 2);
+                }
+            } else {
+                _txt(dc, px, py - cell * 30 / 100, Graphics.FONT_XTINY, 0x33505E, "?", Graphics.TEXT_JUSTIFY_CENTER);
             }
-            dc.setColor(owned ? Is.cColor(i) : 0x243440, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(px, py, cell * 30 / 100);
-            if (owned && Is.cRare(i)) {
-                dc.setColor(0xFFF0B0, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px, py, cell * 10 / 100);
+            if (i == _cur) {
+                dc.setColor(Is.ACCENT, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(px - cell * 46 / 100, py - cell * 46 / 100,
+                                        cell * 92 / 100, cell * 92 / 100, 5);
             }
             _rows.add([px - cell / 2, py - cell / 2, cell, cell]);
             _rowIds.add(i);
         }
-        var name = Is.cName(_cur) + (_m.hasColl(_cur) ? "" : " (locked)");
-        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, _m.hasColl(_cur) ? Is.TEXT : Is.MUTED, name, Graphics.TEXT_JUSTIFY_CENTER);
-        _txt(dc, cx, _h * 86 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(), Graphics.TEXT_JUSTIFY_CENTER);
+        var got = _m.hasColl(_cur);
+        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, got ? Is.cColor(_cur) : Is.MUTED,
+             got ? Is.cName(_cur) : "Undiscovered", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 855 / 1000, Graphics.FONT_XTINY, Is.MUTED,
+             got ? (Is.cRareName(_cur) + " - SELECT for story") : Is.cOrigin(_cur),
+             Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 92 / 100, Graphics.FONT_XTINY, Is.GOLD, "Beauty " + _m.beautyScore(), Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── HISTORY ─────────────────────────────────────────────────────────────
@@ -651,7 +754,17 @@ class IslandView extends WatchUi.View {
         if (_w == _h) { dc.setColor(Is.CIRCLE, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         _txt(dc, cx, _h * 15 / 100, Graphics.FONT_SMALL, Is.ACCENT, "WELCOME BACK", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var y = _h * 30 / 100; var step = _h * 8 / 100; var n = 0;
+        // Pitch comes from the number of gain lines, so a rich return (four
+        // resources plus visitors plus residents) still stops short of the
+        // streak footer instead of writing over it.
+        var lines = 0;
+        for (var c = 0; c < Is.R_N; c++) { if (_m.gRes[c] > 0) { lines++; } }
+        if (_m.gVis > 0) { lines++; }
+        if (_m.gPop > 0) { lines++; }
+        if (lines < 1) { lines = 1; }
+        var step = _h * 40 / 100 / lines;
+        var maxStep = _h * 8 / 100; if (step > maxStep) { step = maxStep; }
+        var y = _h * 29 / 100; var n = 0;
         for (var i = 0; i < Is.R_N; i++) {
             if (_m.gRes[i] > 0) {
                 _txt(dc, cx, y + n * step, Graphics.FONT_TINY, Is.resColor(i),
@@ -663,11 +776,25 @@ class IslandView extends WatchUi.View {
         if (_m.gPop > 0) { _txt(dc, cx, y + n * step, Graphics.FONT_TINY, 0x6FB3FF, "+" + _m.gPop + " residents", Graphics.TEXT_JUSTIFY_CENTER); n++; }
         if (n == 0) { _txt(dc, cx, y, Graphics.FONT_TINY, Is.MUTED, "Island is calm", Graphics.TEXT_JUSTIFY_CENTER); }
 
-        if (_m.newDay) {
-            _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, Is.GOLD,
-                 "Streak " + _m.streak + " day" + (_m.streak == 1 ? "" : "s"), Graphics.TEXT_JUSTIFY_CENTER);
+        // The idle store filled while away: a full store means production was
+        // being thrown on the floor, so say so plainly.
+        var fill = _m.offlineFillPct();
+        _txt(dc, cx, _h * 715 / 1000, Graphics.FONT_XTINY, fill >= 100 ? 0xFF8A5A : Is.MUTED,
+             fill >= 100 ? ("Store was FULL - " + _m.offlineCapHours() + "h max")
+                         : ("Idle store " + fill + "% of " + _m.offlineCapHours() + "h"),
+             Graphics.TEXT_JUSTIFY_CENTER);
+        var sp = _m.streakPct();
+        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, Is.GOLD,
+             "Streak " + _m.streak + " day" + (_m.streak == 1 ? "" : "s")
+             + (sp > 0 ? "  reward +" + sp + "%" : ""), Graphics.TEXT_JUSTIFY_CENTER);
+        // The chord is at its narrowest down here, so the milestone teaser and
+        // the dismiss hint get a line each instead of being joined into one
+        // string that ran off both sides.
+        var nx = _m.nextMilestoneDay();
+        if (nx > 0) {
+            _txtFit(dc, cx, _h * 84 / 100, Graphics.FONT_XTINY, Is.MUTED, "Bonus at " + nx + " days", _w * 58 / 100);
         }
-        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Is.MUTED, "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+        _txtFit(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Is.MUTED, "tap to continue", _w * 50 / 100);
     }
 
     // First-run explainer: makes STATS = CURRENCY unmistakable.
@@ -695,12 +822,142 @@ class IslandView extends WatchUi.View {
         _txt(dc, cx + _w * 37 / 100, y, Graphics.FONT_XTINY, Is.TEXT, b, Graphics.TEXT_JUSTIFY_RIGHT);
     }
 
+    // ── Detail card ───────────────────────────────────────────────────────────
+    // One overlay serves every object on the island. It answers three questions
+    // in order: what does it look like, what is it, and what does it do for me.
+    hidden function _drawCard(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x03121A, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) { dc.setColor(0x0A2536, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
+
+        var ap = _h * 20 / 100 / 6; if (ap < 2) { ap = 2; }
+        var py = _h * 22 / 100;
+        var name = ""; var meta = ""; var metaCol = Is.MUTED;
+        var lore = ""; var effect = ""; var counter = "";
+        var btn = "CLOSE"; var btnHot = false;
+
+        if (_cardKind == CK_BLD) {
+            var id = Is._c(_cardId, 0, Is.B_N - 1);
+            counter = "BUILD " + (id + 1) + "/" + Is.B_N;
+            try { IslandArt.bldArt(dc, id, cx, py, ap); } catch (e) {}
+            name = Is.bName(id);
+            var lvl = _m.bLevel[id];
+            if (!_m.isUnlocked(id)) {
+                meta = "Locked - explore " + Is.arName(Is.bUnlockArea(id));
+                metaCol = 0xB46CFF;
+                btn = "LOCKED";
+            } else {
+                meta = (lvl > 0) ? ("Level " + lvl + " - now " + _bNowText(id, lvl)) : "Not built yet";
+                metaCol = (lvl > 0) ? Is.GOLD : Is.MUTED;
+                var cost = _m.upgradeCost(id);
+                btnHot = _m.canAfford(cost);
+                btn = (lvl > 0 ? "UPGRADE  " : "BUILD  ") + _costStr(cost);
+            }
+            lore = Is.bLore(id);
+            effect = Is.bEffectText(id);
+        } else if (_cardKind == CK_AREA) {
+            var aid = Is._c(_cardId, 0, Is.AR_N - 1);
+            counter = "AREA " + (aid + 1) + "/" + Is.AR_N;
+            name = Is.arName(aid);
+            lore = Is.arLore(aid);
+            effect = Is.arEffectText(aid);
+            if (_m.isDiscovered(aid)) {
+                try { IslandArt.areaArt(dc, aid, cx, py, ap); } catch (e) {}
+                meta = Is.arDiscovery(aid) + " - found";
+                metaCol = 0x6FE08A;
+                btn = "EXPLORED";
+            } else {
+                _cardMystery(dc, cx, py);
+                meta = _m.arProg[aid] + "% of " + (Is.stepsForArea(aid) / 1000) + "k steps";
+                metaCol = Is.ACCENT;
+                var fee = Is.exploreCost(aid);
+                btnHot = (_m.res[Is.R_COIN] >= fee);
+                btn = "EXPEDITION  " + _fmt(fee) + "c";
+            }
+        } else {
+            var cid = Is._c(_cardId, 0, Is.C_N - 1);
+            counter = "PIECE " + (cid + 1) + "/" + Is.C_N;
+            if (_m.hasColl(cid)) {
+                try { IslandArt.collArt(dc, cid, cx, py, ap); } catch (e) {}
+                name = Is.cName(cid);
+                meta = Is.cRareName(cid) + " - " + Is.cOrigin(cid);
+                metaCol = Is.cColor(cid);
+                lore = Is.cLore(cid);
+                effect = Is.cValueText(cid);
+            } else {
+                _cardMystery(dc, cx, py);
+                name = "Undiscovered";
+                meta = Is.cRareName(cid) + " piece";
+                metaCol = Is.cColor(cid);
+                lore = "The island keeps this one hidden a while longer.";
+                effect = "Look for it: " + Is.cOrigin(cid);
+            }
+        }
+
+        var hsc = _h / 220; if (hsc < 2) { hsc = 2; }
+        Px.gshC(dc, counter, cx, _h * 6 / 100, hsc, 0x7FA0AC);
+        _wrap(dc, cx, _h * 34 / 100, _w * 84 / 100, Graphics.FONT_TINY, Is.TEXT, name);
+        _wrap(dc, cx, _h * 43 / 100, _w * 86 / 100, Graphics.FONT_XTINY, metaCol, meta);
+        _wrapN(dc, cx, _h * 51 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0xBFD8E8, lore, 3);
+        _wrapN(dc, cx, _h * 70 / 100, _w * 80 / 100, Graphics.FONT_XTINY, 0x6FE08A, effect, 2);
+
+        // Edge bands step through the set; the button performs the action. The
+        // button sits clear of the bottom bezel so a round watch keeps it whole.
+        _rPrev = [0, _h * 28 / 100, _w * 14 / 100, _h * 44 / 100];
+        _rNext = [_w * 86 / 100, _h * 28 / 100, _w * 14 / 100, _h * 44 / 100];
+        var bw = _w * 62 / 100; var bx = cx - bw / 2;
+        var by = _h * 77 / 100; var bh = _h * 11 / 100;
+        _rBtnA = [bx, by, bw, bh];
+        _button(dc, _rBtnA, btn, btnHot);
+    }
+    // Placeholder portrait for anything the player has not uncovered yet.
+    hidden function _cardMystery(dc, cx, cy) {
+        dc.setColor(0x123044, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, _h * 10 / 100);
+        _txt(dc, cx, cy - _h * 6 / 100, Graphics.FONT_SMALL, 0x3A5A6A, "?", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    // Cumulative effect of a building at its current level, in one short phrase.
+    hidden function _bNowText(id, lvl) {
+        var pr = Is.bProdRes(id);
+        if (pr >= 0) { return "+" + _fmt(Is.prodAt(id, lvl)) + " " + Is.resAbbr(pr).substring(0, 1) + "/h"; }
+        if (Is.bPopPer(id) > 0) { return "+" + (lvl * Is.bPopPer(id)) + " pop cap"; }
+        if (id == Is.B_CRYSTAL) { return "+" + (lvl * 10) + "% all"; }
+        if (id == Is.B_SKY) { return "+" + (lvl * 15) + "% all"; }
+        return "Lv " + lvl;
+    }
+    hidden function _costStr(cost) {
+        var s = _fmt(cost[0]) + "c " + _fmt(cost[1]) + "w";
+        if (cost[2] > 0) { s += " " + _fmt(cost[2]) + "s"; }
+        return s;
+    }
+    // Half-width of the usable screen at row y. On a round watch a wide panel
+    // placed low has its corners eaten by the bezel, so anything near the bottom
+    // asks for the chord here instead of assuming the full width.
+    hidden function _circHalf(y) {
+        if (_w != _h) { return _w / 2; }
+        var r = _w / 2;
+        var dy = y - r; if (dy < 0) { dy = -dy; }
+        if (dy >= r) { return 0; }
+        var v = r * r - dy * dy;
+        var half = r;
+        try { half = Math.sqrt(v.toFloat()).toNumber(); } catch (e) { half = r; }
+        return half;
+    }
+
+    // Darken a palette colour for the collection sockets.
+    hidden function _shade(c, pct) {
+        var r = ((c >> 16) & 0xFF) * pct / 100;
+        var g = ((c >> 8) & 0xFF) * pct / 100;
+        var b = (c & 0xFF) * pct / 100;
+        return (r << 16) | (g << 8) | b;
+    }
+
     hidden function _drawEvent(dc) {
         var cx = _w / 2;
         dc.setColor(0x0A0F14, Graphics.COLOR_TRANSPARENT); dc.clear();
         if (_w == _h) { dc.setColor(0x122430, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, _h / 2, _w / 2 - 1); }
         var e = _m.pendingEvent;
-        _txt(dc, cx, _h * 14 / 100, Graphics.FONT_SMALL, Is.GOLD, Is.evTitle(e), Graphics.TEXT_JUSTIFY_CENTER);
+        _txtFit(dc, cx, _h * 17 / 100, Graphics.FONT_SMALL, Is.GOLD, Is.evTitle(e), _w * 76 / 100);
         _wrap(dc, cx, _h * 30 / 100, _w * 82 / 100, Graphics.FONT_XTINY, Is.TEXT, Is.evBody(e));
 
         var bw = _w * 60 / 100; var bx = cx - bw / 2; var bh = _h * 13 / 100;
@@ -838,6 +1095,21 @@ class IslandView extends WatchUi.View {
     }
     hidden function _txt(dc, x, y, f, c, s, j) { dc.setColor(c, Graphics.COLOR_TRANSPARENT); dc.drawText(x, y, f, s, j); }
 
+    // Centred title that steps down a font size (and finally truncates) rather
+    // than running off the chord of a round screen.
+    hidden function _txtFit(dc, cx, y, f, c, s, maxw) {
+        var fonts = [f, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        var use = f;
+        for (var i = 0; i < fonts.size(); i++) {
+            use = fonts[i];
+            if (dc.getTextWidthInPixels(s, use) <= maxw) { break; }
+        }
+        while (s.length() > 3 && dc.getTextWidthInPixels(s, use) > maxw) {
+            s = s.substring(0, s.length() - 1);
+        }
+        _txt(dc, cx, y, use, c, s, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     hidden function _fmt(n) {
         if (n < 0) { n = 0; }
         if (n >= 1000000) { return (n / 1000000) + "." + ((n / 100000) % 10) + "M"; }
@@ -858,6 +1130,34 @@ class IslandView extends WatchUi.View {
         var fh = dc.getFontHeight(font);
         dc.drawText(cx, y, font, l1, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(cx, y + fh * 85 / 100, font, l2, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    // Multi-line centred wrap. The two-line version silently ran the remainder
+    // off both edges of a round screen, which is where the longer card copy
+    // lives, so anything that still will not fit is ellipsized instead.
+    hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var fh = dc.getFontHeight(font) * 85 / 100;
+        var words = _split(s);
+        var i = 0; var line = 0;
+        while (i < words.size() && line < maxLines) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            while (cur.length() > 3 && dc.getTextWidthInPixels(cur, font) > maxw) {
+                cur = cur.substring(0, cur.length() - 1);
+            }
+            if (line == maxLines - 1 && i < words.size()) {
+                while (cur.length() > 3 && dc.getTextWidthInPixels(cur + "..", font) > maxw) {
+                    cur = cur.substring(0, cur.length() - 1);
+                }
+                cur += "..";
+            }
+            dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
+            line++;
+        }
     }
     hidden function _wrap1(dc, x, y, maxw, font, col, s) {
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);

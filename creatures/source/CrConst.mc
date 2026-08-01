@@ -164,6 +164,67 @@ module Cr {
         var a = [TR_LCK, TR_SPD, TR_STR, TR_INT, TR_NRG];
         return a[_clamp(i, 0, 4)];
     }
+    // Short power blurb shown when the player picks / reviews a path.
+    function pathPower(i) {
+        var a = [
+            "Wild: luckier finds",
+            "Runner: cheap quests",
+            "Warrior: harder trains",
+            "Dreamer: rich idle XP",
+            "Dynamo: better feeds"
+        ];
+        return a[_clamp(i, 0, 4)];
+    }
+
+    // ── Expedition destinations (QUEST replaces flat EXPLORE) ────────────────
+    const DEST_N      = 4;
+    const DEST_FOREST = 0;  // food haul
+    const DEST_PEAK   = 1;  // XP + trait spark
+    const DEST_RUINS  = 2;  // DNA + relics
+    const DEST_NIGHT  = 3;  // mood bond + rare luck (costs more)
+
+    function destName(i) {
+        var a = ["Forest", "Peak", "Ruins", "Night"];
+        return a[_clamp(i, 0, DEST_N - 1)];
+    }
+    function destHint(i) {
+        var a = ["+food", "+XP/trait", "+DNA/relic", "+bond/luck"];
+        return a[_clamp(i, 0, DEST_N - 1)];
+    }
+    function destEnergy(i) {
+        var a = [8, 10, 12, 14];
+        return a[_clamp(i, 0, DEST_N - 1)];
+    }
+
+    // ── Relics (collection depth beyond the 5 species) ────────────────────────
+    const RELIC_N = 8;
+    function relicName(i) {
+        var a = ["Ember Shard", "Tide Pearl", "Storm Core", "Root Charm",
+                 "Shade Veil", "Bone Idol", "Star Map", "Dragon Scale"];
+        return a[_clamp(i, 0, RELIC_N - 1)];
+    }
+
+    // ── Ascension perks (pick ONE on each rebirth — permanent) ────────────────
+    const PERK_N       = 5;
+    const PERK_HATCH   = 0;  // faster incubation
+    const PERK_LUCK    = 1;  // +LCK floor on hatch
+    const PERK_FEED    = 2;  // cheaper / stronger feeds
+    const PERK_IDLE    = 3;  // richer offline XP
+    const PERK_DAILY   = 4;  // double daily DNA
+
+    function perkName(i) {
+        var a = ["Swift Nest", "Lucky Blood", "Hearty Appetite",
+                 "Deep Dreams", "Daily Blessing"];
+        return a[_clamp(i, 0, PERK_N - 1)];
+    }
+    function perkHint(i) {
+        var a = ["faster hatch", "+2 LCK floor", "better feeds",
+                 "+25% idle XP", "2 DNA on claim"];
+        return a[_clamp(i, 0, PERK_N - 1)];
+    }
+
+    // ── Bond weekly contract ─────────────────────────────────────────────────
+    const BOND_N = 4;
 
     // ── Progression tuning ───────────────────────────────────────────────────
     const HATCH_SECONDS = 6 * 3600;   // real time for an egg to hatch
@@ -173,7 +234,10 @@ module Cr {
     const MOOD_MAX      = 100;
     const FEED_COST     = 3;          // food per feed
     const TRAIN_ENERGY  = 12;         // energy per training
-    const EXPLORE_ENERGY= 8;          // energy per explore
+    const EXPLORE_ENERGY= 8;          // legacy flat explore (quests use destEnergy)
+    const MOOD_SULK     = 22;         // below this: train blocked
+    const MOOD_LOW      = 40;         // below this: quest rewards dented
+    const MOOD_HIGH     = 78;         // at/above: bonus finds + train XP
 
     // Level curve. The linear term keeps levels 1-10 almost exactly where they
     // were; the quadratic term is what turns levels 70-100 into a long haul.

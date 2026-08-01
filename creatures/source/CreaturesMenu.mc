@@ -65,10 +65,16 @@ class CreaturesHooks extends GameHooks {
     // Confirmed ascend. Re-reads the save first so this can never rebirth a
     // creature that was already ascended from inside the game this session.
     function doAscend() as Void {
+        askPerk();
+    }
+    function askPerk() as Void {
+        crOpenPerkPick(self);
+    }
+    function doAscendWithPerk(p) as Void {
         try {
             var m = new CreatureModel();
             if (!m.canAscend()) { return; }
-            m.ascend();
+            m.ascendWithPerk(p);
             _preview = m;
         } catch (e) {}
     }
@@ -143,9 +149,42 @@ class CrAscendConfirmDelegate extends WatchUi.Menu2InputDelegate {
     function onSelect(item) {
         var id = item.getId();
         if (id == :yes && _target != null) {
-            try { _target.doAscend(); } catch (e) {}
+            WatchUi.popView(WatchUi.SLIDE_DOWN);
+            // Ascension always picks a permanent perk — the real decision.
+            try { _target.askPerk(); } catch (e) {
+                try { _target.doAscend(); } catch (e2) {}
+            }
+            return;
         }
         WatchUi.popView(WatchUi.SLIDE_DOWN);
+    }
+}
+
+// ── Ascension perk picker ────────────────────────────────────────────────────
+function crOpenPerkPick(target) as Void {
+    try {
+        var m = new WatchUi.Menu2({ :title => "LEGACY PERK" });
+        for (var i = 0; i < Cr.PERK_N; i++) {
+            m.addItem(new WatchUi.MenuItem(
+                Cr.perkName(i), Cr.perkHint(i), i, null));
+        }
+        WatchUi.pushView(m, new CrPerkPickDelegate(target), WatchUi.SLIDE_UP);
+    } catch (e) {}
+}
+
+class CrPerkPickDelegate extends WatchUi.Menu2InputDelegate {
+    hidden var _target;
+    function initialize(target) {
+        Menu2InputDelegate.initialize();
+        _target = target;
+    }
+    function onSelect(item) {
+        var id = item.getId();
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
+        if (_target == null) { return; }
+        try { _target.doAscendWithPerk(id); } catch (e) {
+            try { _target.doAscend(); } catch (e2) {}
+        }
     }
 }
 

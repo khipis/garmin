@@ -43,6 +43,14 @@ class CreatureModel {
     var actions;      // lifetime actions (trainer leaderboard)
     var trains;       // lifetime trainings
 
+    // ── Depth systems (paths / perks / relics / bond) ─────────────────────────
+    var perk;         // Cr.PERK_* permanent ascension perk (survives rebirth)
+    var relicMask;    // bitmask of found relics (0..RELIC_N)
+    var bondWeek;     // week index of current bond contract
+    var bondId;       // which contract (0..BOND_N-1)
+    var bondProg;     // progress toward bond target
+    var bondClaimed;  // Boolean
+
     // ── Daily challenge (per-day counters) ────────────────────────────────────
     var dailyDay;     // day index the current challenge belongs to
     var dFeed; var dTrain; var dExpl;
@@ -51,6 +59,7 @@ class CreatureModel {
     // ── Last idle summary (for WELCOME BACK) ─────────────────────────────────
     var gXp; var gFood; var gMut; var gSecs;
     var newDay;       // did a new calendar day begin on this open?
+    var justEvolved;  // set when checkEvolution advances a stage (UI flash)
 
     function initialize() {
         _load();
@@ -107,6 +116,12 @@ class CreatureModel {
         dExpl     = _getNum("cr_dexpl", 0);
         dailyClaimed = _getBool("cr_dclaim", false);
         asc       = _getNum("cr_asc", 0);
+        perk      = _getNum("cr_perk", 0);
+        relicMask = _getNum("cr_relic", 0);
+        bondWeek  = _getNum("cr_bweek", 0);
+        bondId    = _getNum("cr_bid", 0);
+        bondProg  = _getNum("cr_bprog", 0);
+        bondClaimed = _getBool("cr_bclaim", false);
 
         traits = new [Cr.TR_N];
         for (var i = 0; i < Cr.TR_N; i++) {
@@ -134,12 +149,17 @@ class CreatureModel {
         if (asc < 0) { asc = 0; }
         if (asc > 9999) { asc = 9999; }
         if (seenMask < 0) { seenMask = 0; }
+        if (relicMask < 0) { relicMask = 0; }
+        if (bondWeek < 0) { bondWeek = 0; }
+        if (bondProg < 0) { bondProg = 0; }
         species  = Cr._clamp(species, 0, Cr.SPECIES_N - 1);
         path     = Cr._clamp(path, Cr.PATH_NONE, Cr.PATH_ENERGY);
+        perk     = Cr._clamp(perk, 0, Cr.PERK_N - 1);
+        bondId   = Cr._clamp(bondId, 0, Cr.BOND_N - 1);
         energy = Cr._clamp(energy, 0, Cr.ENERGY_MAX);
         mood   = Cr._clamp(mood, 0, Cr.MOOD_MAX);
         evo    = Cr._clamp(evo, Cr.EV_EGG, Cr.EV_COSMIC);
-        gXp = 0; gFood = 0; gMut = 0; gSecs = 0; newDay = false;
+        gXp = 0; gFood = 0; gMut = 0; gSecs = 0; newDay = false; justEvolved = false;
     }
 
     function save() {
@@ -168,6 +188,12 @@ class CreatureModel {
         _set("cr_dexpl", dExpl);
         _set("cr_dclaim", dailyClaimed);
         _set("cr_asc", asc);
+        _set("cr_perk", perk);
+        _set("cr_relic", relicMask);
+        _set("cr_bweek", bondWeek);
+        _set("cr_bid", bondId);
+        _set("cr_bprog", bondProg);
+        _set("cr_bclaim", bondClaimed);
         for (var i = 0; i < Cr.TR_N; i++) { _set("cr_t" + i, traits[i]); }
     }
 
@@ -180,7 +206,8 @@ class CreatureModel {
                     "cr_en", "cr_mood", "cr_evo", "cr_mut", "cr_streak",
                     "cr_lday", "cr_seen", "cr_act", "cr_train", "cr_dday",
                     "cr_dfeed", "cr_dtrain", "cr_dexpl", "cr_dclaim", "cr_lbday",
-                    "cr_asc"];
+                    "cr_asc", "cr_perk", "cr_relic", "cr_bweek", "cr_bid",
+                    "cr_bprog", "cr_bclaim"];
         for (var i = 0; i < keys.size(); i++) {
             try { Application.Storage.deleteValue(keys[i]); } catch (e) {}
         }
@@ -228,14 +255,21 @@ class CreatureModel {
     }
 
     // ── Egg phase ─────────────────────────────────────────────────────────────
-    function hatchTargetSec() { return bornSec + Cr.HATCH_SECONDS - boostSec; }
+    function hatchTargetSec() {
+        var need = Cr.HATCH_SECONDS;
+        if (perk == Cr.PERK_HATCH) { need = need * 2 / 3; }  // Swift Nest: ~4h
+        return bornSec + need - boostSec;
+    }
     function hatchRemaining() {
         var r = hatchTargetSec() - nowSec();
         return (r < 0) ? 0 : r;
     }
     function hatchPct() {
+        var need = Cr.HATCH_SECONDS;
+        if (perk == Cr.PERK_HATCH) { need = need * 2 / 3; }
+        if (need < 1) { need = 1; }
         var done = nowSec() - bornSec + boostSec;
-        var p = done * 100 / Cr.HATCH_SECONDS;
+        var p = done * 100 / need;
         return Cr._clamp(p, 0, 100);
     }
     // BOOST action while an egg: shave time off (encourages a second look today).
@@ -266,6 +300,9 @@ class CreatureModel {
         for (var i = 0; i < Cr.TR_N; i++) {
             traits[i] = Cr._clamp(lo + (_hash(10 + i) % 8), 1, Cr.TRAIT_MAX);
         }
+        if (perk == Cr.PERK_LUCK) {
+            traits[Cr.TR_LCK] = Cr._clamp(traits[Cr.TR_LCK] + 2, 1, Cr.TRAIT_MAX);
+        }
         // Activity-driven bias at birth.
         var dom = Sensors.dominantPath();
         if (dom != Cr.PATH_NONE) {
@@ -291,6 +328,18 @@ class CreatureModel {
         for (var i = 0; i < Cr.SPECIES_N; i++) { if (isSeen(i)) { c++; } }
         return c;
     }
+    function hasRelic(i) { return (relicMask & (1 << i)) != 0; }
+    function relicCount() {
+        var c = 0;
+        for (var i = 0; i < Cr.RELIC_N; i++) { if (hasRelic(i)) { c++; } }
+        return c;
+    }
+    hidden function _grantRelic(i) {
+        i = Cr._clamp(i, 0, Cr.RELIC_N - 1);
+        if (hasRelic(i)) { return false; }
+        relicMask = relicMask | (1 << i);
+        return true;
+    }
 
     // ── Offline / idle progression + daily rollover ──────────────────────────
     // Call once when the game view opens. Fills g* summary fields.
@@ -312,6 +361,7 @@ class CreatureModel {
             dailyDay = td;
             dFeed = 0; dTrain = 0; dExpl = 0; dailyClaimed = false;
         }
+        _rollBondWeek();
 
         if (!hatched) {
             lastSec = now;
@@ -328,12 +378,18 @@ class CreatureModel {
         gXp   = elapsed * Cr.idleXpPerHour(level) / 3600;
         gFood = elapsed * 3 / 3600;
         if (newDay) { gXp += Sensors.getStepsToday() / 60; }   // once/day step bonus
+        // Path + perk idle multipliers — Dreamer / Deep Dreams / Runner steps.
+        if (path == Cr.PATH_DREAM) { gXp = gXp * 135 / 100; }
+        if (perk == Cr.PERK_IDLE)  { gXp = gXp * 125 / 100; }
+        if (path == Cr.PATH_RUNNER && newDay) {
+            gXp += Sensors.getStepsToday() / 40;
+        }
 
-        // DNA mutation rolls (bounded, luck-weighted). Capped below certainty so
-        // a trait-20 creature can't farm a guaranteed mutation every window.
+        // DNA mutation rolls (bounded, luck-weighted).
         var slots = elapsed / (5 * 3600);
         if (slots > 3) { slots = 3; }
-        var chance = 28 + traits[Cr.TR_LCK] * 5;   // %
+        var chance = 28 + traits[Cr.TR_LCK] * 5;
+        if (path == Cr.PATH_NONE) { chance += 8; }   // Wild: luckier DNA
         if (chance > 85) { chance = 85; }
         for (var i = 0; i < slots; i++) {
             if (_rand(100) < chance) { gMut += 1; }
@@ -341,14 +397,18 @@ class CreatureModel {
 
         // Apply.
         food += gFood;
-        energy = Cr._clamp(energy + elapsed * 9 / 3600, 0, Cr.ENERGY_MAX);
+        var enRegen = elapsed * 9 / 3600;
+        if (path == Cr.PATH_DREAM) { enRegen = enRegen * 5 / 4; }
+        energy = Cr._clamp(energy + enRegen, 0, Cr.ENERGY_MAX);
         if (gMut > 0) { _applyMutations(gMut); }
         _addXp(gXp);
-        gXp = ascXpGain(gXp);   // report the legacy-boosted amount actually granted
+        gXp = ascXpGain(gXp);
 
-        // Mood drifts toward contentment, dented by empty energy.
-        var target = (energy > 25) ? 72 : 40;
-        if (mood < target) { mood += 4; } else if (mood > target) { mood -= 2; }
+        // Mood drifts — neglect (empty energy) hurts; care recovers.
+        var target = (energy > 25) ? 72 : 35;
+        if (mood < target) { mood += 3; } else if (mood > target) { mood -= 3; }
+        // Long absence without energy: sulk.
+        if (elapsed > 8 * 3600 && energy < 30) { mood -= 8; }
         mood = Cr._clamp(mood, 0, Cr.MOOD_MAX);
 
         lastSec = now;
@@ -402,61 +462,183 @@ class CreatureModel {
 
     // ── Actions ───────────────────────────────────────────────────────────────
     // Each returns a short result string for the on-screen popup.
+    function feedCost() {
+        var c = Cr.FEED_COST;
+        if (path == Cr.PATH_ENERGY || perk == Cr.PERK_FEED) { c = 2; }
+        if (c < 2) { c = 2; }
+        return c;
+    }
     function feed() {
-        if (food < Cr.FEED_COST) { return "No food. EXPLORE to find some."; }
-        food -= Cr.FEED_COST;
-        energy = Cr._clamp(energy + 22, 0, Cr.ENERGY_MAX);
-        mood   = Cr._clamp(mood + 10, 0, Cr.MOOD_MAX);
+        var cost = feedCost();
+        if (food < cost) { return "No food. QUEST to find some."; }
+        food -= cost;
+        var en = 22;
+        if (path == Cr.PATH_ENERGY) { en += 8; }
+        if (perk == Cr.PERK_FEED)   { en += 6; }
+        energy = Cr._clamp(energy + en, 0, Cr.ENERGY_MAX);
+        mood   = Cr._clamp(mood + 12, 0, Cr.MOOD_MAX);
         _addXp(15);
         _bump(true); dFeed += 1;
+        _bondBump(0);   // feed-type bond
         checkEvolution();
         save();
-        return "Yum! +22 energy  +15 XP";
+        return "Yum! +" + en + " energy  +15 XP";
     }
 
     function train(focus) {
+        if (mood < Cr.MOOD_SULK) {
+            return "Sulking. FEED to cheer it up.";
+        }
         if (energy < Cr.TRAIN_ENERGY) { return "Too tired. FEED first."; }
         energy -= Cr.TRAIN_ENERGY;
-        _addXp(35);
-        mood = Cr._clamp(mood + 4, 0, Cr.MOOD_MAX);
+        var xpGain = 35;
+        if (path == Cr.PATH_WARRIOR) { xpGain = 50; }
+        if (mood >= Cr.MOOD_HIGH) { xpGain = xpGain * 110 / 100; }
+        _addXp(xpGain);
+        // Training is effort — mild mood cost unless Warrior path.
+        if (path == Cr.PATH_WARRIOR) { mood = Cr._clamp(mood + 3, 0, Cr.MOOD_MAX); }
+        else { mood = Cr._clamp(mood - 2, 0, Cr.MOOD_MAX); }
         trains += 1; dTrain += 1;
-        // Grow the focused trait (or a live-activity-driven one on AUTO).
         var ti = focus;
         if (!(ti instanceof Lang.Number) || ti < 0) {
-            var dom = Sensors.dominantPath();
-            ti = (dom != Cr.PATH_NONE) ? Cr.pathTrait(dom) : _rand(Cr.TR_N);
+            if (path != Cr.PATH_NONE) { ti = Cr.pathTrait(path); }
+            else {
+                var dom = Sensors.dominantPath();
+                ti = (dom != Cr.PATH_NONE) ? Cr.pathTrait(dom) : _rand(Cr.TR_N);
+            }
         }
         ti = Cr._clamp(ti, 0, Cr.TR_N - 1);
-        traits[ti] = Cr._clamp(traits[ti] + 1, 1, Cr.TRAIT_MAX);
+        var grow = 1;
+        if (path == Cr.PATH_WARRIOR && _rand(100) < 35) { grow = 2; }
+        traits[ti] = Cr._clamp(traits[ti] + grow, 1, Cr.TRAIT_MAX);
         _bump(true);
+        _bondBump(1);
         checkEvolution();
         save();
-        return "Trained " + Cr.traitName(ti) + "!  +35 XP";
+        var gTxt = (grow > 1) ? " x2!" : "!";
+        return "Trained " + Cr.traitName(ti) + gTxt + "  +" + xpGain + " XP";
     }
 
-    function explore() {
-        if (energy < Cr.EXPLORE_ENERGY) { return "Too tired. FEED first."; }
-        energy -= Cr.EXPLORE_ENERGY;
-        var f = 2 + _rand(4 + traits[Cr.TR_LCK] / 2);
-        food += f;
-        _addXp(20);
-        dExpl += 1;
-        var extra = "";
-        // Lucky DNA fragment find (capped below certainty at trait 20).
-        var find = 15 + traits[Cr.TR_LCK] * 4;
-        if (find > 85) { find = 85; }
-        if (_rand(100) < find) {
-            _applyMutations(1);
-            extra = "  +1 DNA!";
+    // Legacy flat explore → Forest quest (keeps old callers working).
+    function explore() { return quest(Cr.DEST_FOREST); }
+
+    // Destination quest — the real explore depth.
+    function quest(dest) {
+        dest = Cr._clamp(dest, 0, Cr.DEST_N - 1);
+        if (mood < Cr.MOOD_SULK && dest != Cr.DEST_NIGHT) {
+            return "Won't go. FEED first.";
         }
+        var cost = Cr.destEnergy(dest);
+        if (path == Cr.PATH_RUNNER) { cost -= 3; }
+        if (cost < 5) { cost = 5; }
+        if (energy < cost) { return "Too tired. FEED first."; }
+        energy -= cost;
+
+        var low = mood < Cr.MOOD_LOW;
+        var high = mood >= Cr.MOOD_HIGH;
+        var luck = traits[Cr.TR_LCK];
+        if (path == Cr.PATH_NONE) { luck += 2; }
+
+        var msg = Cr.destName(dest) + ": ";
+        var foundRelic = false;
+
+        if (dest == Cr.DEST_FOREST) {
+            var f = 3 + _rand(4 + luck / 2);
+            if (low) { f = f * 7 / 10; }
+            if (f < 1) { f = 1; }
+            food += f;
+            _addXp(low ? 14 : 22);
+            msg += "+" + f + " food";
+        } else if (dest == Cr.DEST_PEAK) {
+            var px = high ? 40 : 28;
+            if (path == Cr.PATH_WARRIOR) { px += 10; }
+            if (low) { px = px * 7 / 10; }
+            _addXp(px);
+            var ti = Cr.pathTrait(path != Cr.PATH_NONE ? path : Cr.PATH_RUNNER);
+            if (_rand(100) < (high ? 55 : 30)) {
+                traits[ti] = Cr._clamp(traits[ti] + 1, 1, Cr.TRAIT_MAX);
+                msg += Cr.traitAbbr(ti) + "+ +" + px + " XP";
+            } else {
+                msg += "+" + px + " XP";
+            }
+            mood = Cr._clamp(mood - 3, 0, Cr.MOOD_MAX);
+        } else if (dest == Cr.DEST_RUINS) {
+            _addXp(low ? 16 : 24);
+            var find = 22 + luck * 4;
+            if (high) { find += 15; }
+            if (find > 90) { find = 90; }
+            if (_rand(100) < find) {
+                _applyMutations(1);
+                msg += "+1 DNA";
+            } else {
+                msg += "dusty ruins";
+            }
+            // Relic chance — species-linked first, then random empty slot.
+            var rChance = 12 + luck * 2 + (high ? 10 : 0);
+            if (_rand(100) < rChance) {
+                var ri = species;   // prefer matching element relic 0..4
+                if (hasRelic(ri) || _rand(100) < 40) {
+                    ri = _rand(Cr.RELIC_N);
+                }
+                // Dragon Scale only after Apex + 4 other relics.
+                if (ri == 7 && (evo < Cr.EV_APEX || relicCount() < 4)) {
+                    ri = _rand(7);
+                }
+                if (_grantRelic(ri)) {
+                    foundRelic = true;
+                    msg += " +" + Cr.relicName(ri) + "!";
+                }
+            }
+            mood = Cr._clamp(mood - 2, 0, Cr.MOOD_MAX);
+        } else { // DEST_NIGHT
+            _addXp(high ? 30 : 20);
+            mood = Cr._clamp(mood + 18, 0, Cr.MOOD_MAX);
+            var nf = 18 + luck * 5;
+            if (path == Cr.PATH_NONE) { nf += 12; }
+            if (_rand(100) < nf) {
+                _applyMutations(1);
+                msg += "bond+ +1 DNA";
+            } else {
+                msg += "bond+ moonlit";
+            }
+            _bondBump(2);
+        }
+
+        dExpl += 1;
         _bump(true);
+        _bondBump(3);   // any quest
         checkEvolution();
         save();
-        return "Found +" + f + " food" + extra;
+        if (foundRelic) { return msg; }
+        return msg;
     }
 
     hidden function _bump(counts) {
         if (counts) { actions += 1; }
+    }
+
+    // True once the creature is Juvenile+ and still pathless — UI must offer pick.
+    function needsPathPick() {
+        return hatched && evo >= Cr.EV_JUV && path == Cr.PATH_NONE;
+    }
+    function suggestedPath() {
+        var focus = _get("cr_focus", 0);
+        if (focus == 1) { return Cr.PATH_RUNNER; }
+        if (focus == 2) { return Cr.PATH_WARRIOR; }
+        if (focus == 3) { return Cr.PATH_DREAM; }
+        if (focus == 4) { return Cr.PATH_ENERGY; }
+        var dom = Sensors.dominantPath();
+        if (dom != Cr.PATH_NONE) { return dom; }
+        return Cr.PATH_RUNNER + (_hash(3) % 4);
+    }
+    function pickPath(p) {
+        if (!needsPathPick()) { return false; }
+        path = Cr._clamp(p, Cr.PATH_RUNNER, Cr.PATH_ENERGY);
+        // Instant path-trait bump so the choice feels real.
+        var ti = Cr.pathTrait(path);
+        traits[ti] = Cr._clamp(traits[ti] + 2, 1, Cr.TRAIT_MAX);
+        save();
+        return true;
     }
 
     // ── Evolution ─────────────────────────────────────────────────────────────
@@ -474,21 +656,17 @@ class CreatureModel {
 
         if (target > evo) {
             evo = target;
-            if (path == Cr.PATH_NONE) { _lockPath(); }
+            justEvolved = true;
+            // Path is NOT auto-locked — Juvenile+ triggers needsPathPick() so the
+            // player chooses Runner/Warrior/Dreamer/Dynamo intentionally.
             return true;
         }
         return false;
     }
 
+    // Kept for Options focus → soft suggestion only (no longer force-locks).
     hidden function _lockPath() {
-        // Player's Options focus wins; otherwise live Garmin activity decides.
-        var focus = _get("cr_focus", 0);   // 0=AUTO,1=SPEED,2=STR,3=MIND,4=NRG
-        if (focus == 1) { path = Cr.PATH_RUNNER; return; }
-        if (focus == 2) { path = Cr.PATH_WARRIOR; return; }
-        if (focus == 3) { path = Cr.PATH_DREAM; return; }
-        if (focus == 4) { path = Cr.PATH_ENERGY; return; }
-        var dom = Sensors.dominantPath();
-        path = (dom != Cr.PATH_NONE) ? dom : (Cr.PATH_RUNNER + (_hash(3) % 4));
+        path = suggestedPath();
     }
 
     // The next stage the creature is working toward, or -1 at the final stage.
@@ -514,12 +692,16 @@ class CreatureModel {
     // playable creature rather than a wiped save.
     function canAscend() { return hatched && evo >= Cr.EV_APEX; }
 
-    function ascend() {
+    // Rebirth. `newPerk` is the permanent perk chosen in the perk menu (0..PERK_N-1).
+    function ascend() { return ascendWithPerk(perk); }
+
+    function ascendWithPerk(newPerk) {
         if (!canAscend()) { return false; }
         var next = asc + 1;
         if (next > 9999) { next = 9999; }
+        perk = Cr._clamp(newPerk, 0, Cr.PERK_N - 1);
 
-        seed = 0;              // ensureEgg() rolls a fresh DNA seed
+        seed = 0;
         hatched = false;
         evo = Cr.EV_EGG;
         boostSec = 0;
@@ -534,7 +716,8 @@ class CreatureModel {
         asc = next;
         bornSec = 0;
         lastSec = nowSec();
-        ensureEgg();           // sets seed/born/last/day and saves
+        // Relics + seen mask + streak + trainer totals survive.
+        ensureEgg();
         save();
         return true;
     }
@@ -559,7 +742,7 @@ class CreatureModel {
         var sum = 0;
         for (var i = 0; i < Cr.TR_N; i++) { sum += traits[i]; }
         return sum * 10 + traits[Cr.TR_LCK] * 15 + mutations * 18
-             + evo * 60 + asc * Cr.ASC_RARITY;
+             + evo * 60 + asc * Cr.ASC_RARITY + relicCount() * 35;
     }
     function rarityTier() {
         var s = rarityScore();
@@ -626,33 +809,96 @@ class CreatureModel {
         return n;
     }
     function dailyRewardText() {
+        if (perk == Cr.PERK_DAILY) {
+            return "+" + ascXpGain(dailyXpReward()) + " XP +6 food +2 DNA";
+        }
         return "+" + ascXpGain(dailyXpReward()) + " XP +6 food +1 DNA";
     }
-    // Grant the daily reward once. Returns true if granted now.
     function claimDaily() {
         if (dailyClaimed || !dailyComplete()) { return false; }
         dailyClaimed = true;
         _addXp(dailyXpReward());
         food += 6;
         _applyMutations(1);
+        if (perk == Cr.PERK_DAILY) { _applyMutations(1); }
         checkEvolution();
         save();
         return true;
     }
 
+    // ── Weekly bond contract ──────────────────────────────────────────────────
+    function weekIndex() { return nowSec() / (7 * 86400); }
+    hidden function _rollBondWeek() {
+        var w = weekIndex();
+        if (bondWeek == w) { return; }
+        bondWeek = w;
+        bondId = (w + seed) % Cr.BOND_N;
+        if (bondId < 0) { bondId = 0; }
+        bondProg = 0;
+        bondClaimed = false;
+    }
+    function bondText() {
+        if (bondId == 0) { return "Feed 8 times"; }
+        if (bondId == 1) { return "Train 6 times"; }
+        if (bondId == 2) { return "Night quest x3"; }
+        return "Any quest x10";
+    }
+    function bondTarget() {
+        if (bondId == 0) { return 8; }
+        if (bondId == 1) { return 6; }
+        if (bondId == 2) { return 3; }
+        return 10;
+    }
+    function bondComplete() { return bondProg >= bondTarget(); }
+    // kind: 0=feed 1=train 2=night 3=any quest
+    hidden function _bondBump(kind) {
+        if (bondClaimed) { return; }
+        if (bondId == 0 && kind == 0) { bondProg += 1; }
+        else if (bondId == 1 && kind == 1) { bondProg += 1; }
+        else if (bondId == 2 && kind == 2) { bondProg += 1; }
+        else if (bondId == 3 && kind == 3) { bondProg += 1; }
+    }
+    function claimBond() {
+        if (bondClaimed || !bondComplete()) { return false; }
+        bondClaimed = true;
+        _addXp(120 + level * 8);
+        food += 10;
+        _applyMutations(2);
+        mood = Cr._clamp(mood + 15, 0, Cr.MOOD_MAX);
+        // Guaranteed relic roll on bond claim.
+        var ri = _rand(Cr.RELIC_N);
+        if (ri == 7 && (evo < Cr.EV_APEX || relicCount() < 4)) { ri = _rand(7); }
+        var extra = "";
+        if (_grantRelic(ri)) { extra = " +" + Cr.relicName(ri); }
+        checkEvolution();
+        save();
+        return true;
+    }
+    function bondRewardText() {
+        return "+XP +10 food +2 DNA +relic?";
+    }
+
     // ── Journal (derived from milestones) ────────────────────────────────────
-    // Returns an Array of [dayLabel, text] rows.
     function journal() {
         var rows = [];
-        rows.add(["Day 1", "Hatched from egg #" + (seed % 100000)]);
+        rows.add([givenName(), displayName()]);
+        rows.add(["Rarity", Cr.rarityName(rarityTier()) + " · " + rarityScore()]);
+        if (path != Cr.PATH_NONE) {
+            rows.add([Cr.pathName(path), Cr.pathPower(path)]);
+        }
+        if (asc > 0) {
+            rows.add(["Perk", Cr.perkName(perk)]);
+            rows.add(["Legacy", asc + " ascension(s)"]);
+        }
         if (mutations > 0) { rows.add(["Mutations", mutations + " DNA shift(s)"]); }
-        // One row per stage reached, labelled from the gate table.
         for (var s = Cr.EV_JUV; s <= Cr.EV_MAX; s++) {
             if (evo >= s) {
                 rows.add(["Day " + Cr.evoDays(s) + "+", "Reached " + Cr.stageName(s)]);
             }
         }
-        if (asc > 0) { rows.add(["Legacy", asc + " ascension(s)"]); }
+        if (relicCount() > 0) {
+            rows.add(["Relics", relicCount() + "/" + Cr.RELIC_N + " found"]);
+        }
         if (streak >= 7) { rows.add(["Streak", streak + "-day bond"]); }
         return rows;
     }
@@ -684,7 +930,8 @@ class CreatureModel {
                 "pa" => path, "mo" => mood, "sd" => seed,
                 // Appended (never remove/rename the keys above): ascension count
                 // so the site can badge veterans.
-                "asc" => asc
+                "asc" => asc,
+                "relics" => relicCount()
             };
             Leaderboard.submitScoreBatch(Cr.GAME_ID, [
                 { :score => rarityScore(),   :variant => Cr.LB_RARITY,  :meta => meta },

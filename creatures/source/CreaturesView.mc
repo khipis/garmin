@@ -39,14 +39,17 @@ class CreaturesView extends WatchUi.View {
     hidden var _welcome;         // showing idle-summary overlay
     hidden var _hatchFlash;      // showing the just-hatched celebration
     hidden var _intro;           // first-run "stats are the currency" explainer
-    hidden var _actCursor;       // 0=FEED 1=TRAIN 2=EXPLORE (actions page)
+    hidden var _actCursor;       // 0=FEED 1=TRAIN 2=QUEST (or dest when questing)
+    hidden var _questPick;       // ACTIONS sub-mode: pick expedition destination
+    hidden var _pathPick;        // overlay: choose evolution path
+    hidden var _pathCursor;      // 0..3 → Runner..Dynamo
     hidden var _colScroll;
 
     hidden var _demo;            // DEMO fast-track active
     hidden var _demoCtr;         // sub-tick counter for demo pacing
 
     // Tap rects [x,y,w,h] recomputed each draw.
-    hidden var _rBtnA; hidden var _rBtnB; hidden var _rBtnC;
+    hidden var _rBtnA; hidden var _rBtnB; hidden var _rBtnC; hidden var _rBtnD;
     hidden var _rPrev; hidden var _rNext;
     hidden var _rTabs;           // array of 5 tab-dot hit rects
     hidden var _rDemo;           // DEMO toggle pill
@@ -58,9 +61,9 @@ class CreaturesView extends WatchUi.View {
         _w = 0; _h = 0; _t = 0; _timer = null;
         _popup = null; _popupT = 0;
         _welcome = false; _hatchFlash = false; _intro = false;
-        _actCursor = 0; _colScroll = 0;
+        _actCursor = 0; _questPick = false; _pathPick = false; _pathCursor = 0; _colScroll = 0;
         _demo = false; _demoCtr = 0;
-        _rBtnA = null; _rBtnB = null; _rBtnC = null;
+        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null;
         _rPrev = null; _rNext = null; _rTabs = null; _rDemo = null;
         _loadFx();
         _loadDemo();
@@ -73,6 +76,7 @@ class CreaturesView extends WatchUi.View {
         try { _m.collectOffline(); } catch (e) {}
         if (wasEgg && _m.hatched) { _hatchFlash = true; }
         else if (_m.hatched && (_m.gXp > 0 || _m.gFood > 0 || _m.gMut > 0)) { _welcome = true; }
+        try { if (_m.needsPathPick()) { _pathPick = true; _pathCursor = _m.suggestedPath() - 1; if (_pathCursor < 0) { _pathCursor = 0; } } } catch (e) {}
         try { _m.submitScores(); } catch (e) {}
 
         // One-time explainer: Garmin stats are the currency here.
@@ -192,20 +196,35 @@ class CreaturesView extends WatchUi.View {
     }
 
     hidden function _colMaxScroll() {
-        var over = Cr.SPECIES_N - 4;   // ~4 rows fit; allow scrolling the rest
-        return (over > 0) ? over : 0;
+        // species + relics + a few journal lines
+        var n = Cr.SPECIES_N + Cr.RELIC_N + 6 - 5;
+        return (n < 0) ? 0 : n;
     }
 
     // UP/DOWN: move a cursor where there is a list, else page. At a list's end,
     // "overflow" to the adjacent page so you can traverse the whole game.
     function cursorMove(d) {
+        if (_pathPick) {
+            var np = _pathCursor + d;
+            if (np < 0) { np = 3; }
+            if (np > 3) { np = 0; }
+            _pathCursor = np; _tone(0); WatchUi.requestUpdate();
+            return;
+        }
         if (_dismissOverlay()) { return; }
         if (!_m.hatched) { return; }          // egg screen: nothing to scroll
 
         if (_page == CV_ACT) {
+            var maxC = _questPick ? 3 : 2;
             var nc = _actCursor + d;
-            if (nc < 0) { pageMove(-1); return; }
-            if (nc > 2) { pageMove(1);  return; }
+            if (nc < 0) {
+                if (_questPick) { _questPick = false; _actCursor = 2; WatchUi.requestUpdate(); return; }
+                pageMove(-1); return;
+            }
+            if (nc > maxC) {
+                if (_questPick) { _questPick = false; pageMove(1); return; }
+                pageMove(1);  return;
+            }
             _actCursor = nc; _tone(0); WatchUi.requestUpdate();
             return;
         }
@@ -221,16 +240,24 @@ class CreaturesView extends WatchUi.View {
 
     // Context activation (SELECT / ENTER).
     function activate() {
+        if (_pathPick) { doPickPath(); return; }
         if (_dismissOverlay()) { return; }
         if (!_m.hatched) { doBoost(); return; }
         if (_page == CV_HOME) { setPage(CV_ACT); return; }
         if (_page == CV_ACT) {
+            if (_questPick) { doQuest(_actCursor); return; }
             if (_actCursor == 0) { doFeed(); }
             else if (_actCursor == 1) { doTrain(); }
-            else { doExplore(); }
+            else { _questPick = true; _actCursor = 0; WatchUi.requestUpdate(); }
             return;
         }
-        if (_page == CV_DAY) { doClaim(); return; }
+        if (_page == CV_DAY) {
+            // Prefer bond claim when daily already claimed / incomplete.
+            try {
+                if (_m.bondComplete() && !_m.bondClaimed) { doClaimBond(); return; }
+            } catch (e) {}
+            doClaim(); return;
+        }
         if (_page == CV_EVO) {
             // SELECT on EVOLVE is the button-only route to ASCEND (it always
             // goes through the confirmation menu, so it can't wipe by accident).
@@ -250,15 +277,19 @@ class CreaturesView extends WatchUi.View {
             crOpenAscend(self);
         } catch (e) {}
     }
-    // Called by CrAscendConfirmDelegate once the player confirms.
-    function doAscend() as Void {
+    // Confirm → perk menu (askPerk) → doAscendWithPerk.
+    function doAscend() as Void { askPerk(); }
+    function askPerk() as Void {
+        try { if (!_m.canAscend()) { return; } crOpenPerkPick(self); } catch (e) {}
+    }
+    function doAscendWithPerk(perkId) as Void {
         try {
             if (!_m.canAscend()) { return; }
-            _m.ascend();
+            _m.ascendWithPerk(perkId);
             _page = CV_HOME;
-            _welcome = false; _hatchFlash = false;
+            _welcome = false; _hatchFlash = false; _pathPick = false; _questPick = false;
             _actCursor = 0; _colScroll = 0;
-            _popup = "ASCENDED! A new egg awaits"; _popupT = 44;
+            _popup = "ASCENDED! " + Cr.perkName(perkId); _popupT = 44;
             _tone(4); _vibe(80, 160);
             WatchUi.requestUpdate();
         } catch (e) {}
@@ -279,6 +310,13 @@ class CreaturesView extends WatchUi.View {
         if (_m.evo > evoBefore) {
             _popup = "EVOLVED! " + Cr.stageName(_m.evo);
             _popupT = 40; _tone(4); _vibe(70, 140);
+            try {
+                if (_m.needsPathPick()) {
+                    _pathPick = true;
+                    _pathCursor = _m.suggestedPath() - 1;
+                    if (_pathCursor < 0) { _pathCursor = 0; }
+                }
+            } catch (e) {}
         } else {
             _popup = res; _popupT = 26;
         }
@@ -303,11 +341,40 @@ class CreaturesView extends WatchUi.View {
             _tone(1); _vibe(35, 45); _act(r, e);
         } catch (ex) {}
     }
-    function doExplore() {
+    function doExplore() { doQuest(Cr.DEST_FOREST); }
+    function doQuest(dest) {
         try {
-            var e = _m.evo; var r = _m.explore();
-            _tone(3); _vibe(25, 35); _act(r, e);
+            var e = _m.evo; var r = _m.quest(dest);
+            _questPick = false; _actCursor = 2;
+            _tone(0); _vibe(20, 30); _act(r, e);
+            try {
+                if (_m.needsPathPick()) {
+                    _pathPick = true;
+                    _pathCursor = _m.suggestedPath() - 1;
+                    if (_pathCursor < 0) { _pathCursor = 0; }
+                }
+            } catch (e2) {}
         } catch (ex) {}
+    }
+    function doPickPath() {
+        try {
+            var p = Cr.PATH_RUNNER + _pathCursor;
+            if (_m.pickPath(p)) {
+                _pathPick = false;
+                _popup = Cr.pathName(p) + "! " + Cr.pathPower(p);
+                _popupT = 40; _tone(4); _vibe(60, 120);
+                WatchUi.requestUpdate();
+            }
+        } catch (e) {}
+    }
+    function doClaimBond() {
+        try {
+            if (_m.claimBond()) {
+                _popup = "BOND REWARD! " + _m.bondRewardText();
+                _popupT = 36; _tone(4); _vibe(50, 100);
+                WatchUi.requestUpdate();
+            }
+        } catch (e) {}
     }
     function doBoost() {
         try {
@@ -332,6 +399,15 @@ class CreaturesView extends WatchUi.View {
 
     // ── Tap hit-testing (called by delegate) ──────────────────────────────────
     function onTapXY(x, y) {
+        if (_pathPick) {
+            // Four path buttons A/B/C + reuse prev/next area as 4th via cursor cycle;
+            // tap a row to select that path index.
+            if (_inRect(x, y, _rBtnA)) { _pathCursor = 0; doPickPath(); return true; }
+            if (_inRect(x, y, _rBtnB)) { _pathCursor = 1; doPickPath(); return true; }
+            if (_inRect(x, y, _rBtnC)) { _pathCursor = 2; doPickPath(); return true; }
+            if (_inRect(x, y, _rBtnD)) { _pathCursor = 3; doPickPath(); return true; }
+            doPickPath(); return true;
+        }
         if (_welcome || _hatchFlash || _intro) { _dismissOverlay(); return true; }
 
         // DEMO pill is always live.
@@ -353,12 +429,28 @@ class CreaturesView extends WatchUi.View {
         if (_inRect(x, y, _rNext)) { pageMove(1);  return true; }
 
         if (_page == CV_ACT) {
+            if (_questPick) {
+                if (_inRect(x, y, _rBtnA)) { _actCursor = 0; doQuest(0); return true; }
+                if (_inRect(x, y, _rBtnB)) { _actCursor = 1; doQuest(1); return true; }
+                if (_inRect(x, y, _rBtnC)) { _actCursor = 2; doQuest(2); return true; }
+                if (_inRect(x, y, _rBtnD)) { _actCursor = 3; doQuest(3); return true; }
+                return true;
+            }
             if (_inRect(x, y, _rBtnA)) { _actCursor = 0; doFeed(); return true; }
             if (_inRect(x, y, _rBtnB)) { _actCursor = 1; doTrain(); return true; }
-            if (_inRect(x, y, _rBtnC)) { _actCursor = 2; doExplore(); return true; }
+            if (_inRect(x, y, _rBtnC)) {
+                _actCursor = 2; _questPick = true; _actCursor = 0;
+                WatchUi.requestUpdate(); return true;
+            }
         }
         if (_page == CV_DAY) {
-            if (_inRect(x, y, _rBtnA)) { doClaim(); return true; }
+            if (_inRect(x, y, _rBtnA)) {
+                try {
+                    if (_m.bondComplete() && !_m.bondClaimed) { doClaimBond(); return true; }
+                } catch (e) {}
+                doClaim(); return true;
+            }
+            if (_inRect(x, y, _rBtnB)) { doClaimBond(); return true; }
         }
         if (_page == CV_EVO) {
             if (_inRect(x, y, _rBtnA)) { askAscend(); return true; }
@@ -380,7 +472,7 @@ class CreaturesView extends WatchUi.View {
     hidden function _draw(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         var cx = _w / 2;
-        _rBtnA = null; _rBtnB = null; _rBtnC = null;
+        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null;
         _rTabs = null; _rPrev = null; _rNext = null;
 
         dc.setColor(Cr.BG, Cr.BG); dc.clear();
@@ -414,6 +506,7 @@ class CreaturesView extends WatchUi.View {
         if (_welcome) { _drawWelcome(dc); }
         if (_hatchFlash) { _drawHatch(dc); }
         if (_intro && _m.hatched && !_welcome && !_hatchFlash) { _drawIntro(dc); }
+        if (_pathPick && _m.hatched && !_welcome && !_hatchFlash && !_intro) { _drawPathPick(dc); }
     }
 
     // ── Small helpers ──────────────────────────────────────────────────────────
@@ -609,6 +702,7 @@ class CreaturesView extends WatchUi.View {
             var need = _m.xpNeeded(); if (need < 1) { need = 1; }
             return "XP " + (_m.xp * 100 / need) + "%";
         }
+        if (_m.path != Cr.PATH_NONE) { return Cr.pathName(_m.path); }
         return "ASC " + _m.asc;
     }
 
@@ -626,7 +720,7 @@ class CreaturesView extends WatchUi.View {
         _txt(dc, cx, _h * 52 / 100, Graphics.FONT_SMALL, Cr.ACCENT,
              "YOUR STATS = FUEL", Graphics.TEXT_JUSTIFY_CENTER);
         _wrapText(dc, cx, _h * 62 / 100, _w * 82 / 100, Graphics.FONT_XTINY, Cr.TEXT,
-                  "Your steps, heart rate & activity are the currency here \u2014 move to grow your menagerie.");
+                  "Feed, train, QUEST to relics. Pick a path at Juvenile. Mood matters.");
         _txt(dc, cx, _h * 82 / 100, Graphics.FONT_XTINY, Cr.GOLD,
              "steps \u2192 growth   HR \u2192 energy", Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, _h * 91 / 100, Graphics.FONT_XTINY, Cr.MUTED,
@@ -667,15 +761,40 @@ class CreaturesView extends WatchUi.View {
         _bar(dc, cx + 4, bar2Y, bw / 2 - 4, barH, _m.mood, 0xFF5A9A);
 
         var bwb = _w * 56 / 100; var bxb = cx - bwb / 2;
-        var bh = _h * 12 / 100;
-        var gap = _h * 2 / 100;
-        var y0 = _h * 50 / 100;
-        _rBtnA = [bxb, y0, bwb, bh];
-        _rBtnB = [bxb, y0 + bh + gap, bwb, bh];
-        _rBtnC = [bxb, y0 + (bh + gap) * 2, bwb, bh];
-        _button(dc, _rBtnA, "FEED", _actCursor == 0);
-        _button(dc, _rBtnB, "TRAIN", _actCursor == 1);
-        _button(dc, _rBtnC, "EXPLORE", _actCursor == 2);
+        var bh = _h * 11 / 100;
+        var gap = _h * 15 / 1000;
+        var y0 = _h * 48 / 100;
+        if (_questPick) {
+            // Compact 4-destination expedition picker.
+            bh = _h * 9 / 100;
+            y0 = _h * 46 / 100;
+            _rBtnA = [bxb, y0, bwb, bh];
+            _rBtnB = [bxb, y0 + bh + gap, bwb, bh];
+            _rBtnC = [bxb, y0 + (bh + gap) * 2, bwb, bh];
+            _rBtnD = [bxb, y0 + (bh + gap) * 3, bwb, bh];
+            for (var d = 0; d < 4; d++) {
+                var rr = (d == 0) ? _rBtnA : ((d == 1) ? _rBtnB : ((d == 2) ? _rBtnC : _rBtnD));
+                var lab = Cr.destName(d) + " " + Cr.destHint(d);
+                _button(dc, rr, lab, _actCursor == d);
+            }
+            Px.gtxtC(dc, "QUEST  energy cost shown in result", cx, _h * 92 / 100, sc, Cr.MUTED);
+        } else {
+            _rBtnA = [bxb, y0, bwb, bh];
+            _rBtnB = [bxb, y0 + bh + gap, bwb, bh];
+            _rBtnC = [bxb, y0 + (bh + gap) * 2, bwb, bh];
+            _button(dc, _rBtnA, "FEED", _actCursor == 0);
+            _button(dc, _rBtnB, "TRAIN", _actCursor == 1);
+            _button(dc, _rBtnC, "QUEST", _actCursor == 2);
+            var moodHint = "";
+            if (_m.mood < Cr.MOOD_SULK) { moodHint = "SULKING — feed me"; }
+            else if (_m.mood < Cr.MOOD_LOW) { moodHint = "Low mood — weaker quests"; }
+            else if (_m.path != Cr.PATH_NONE) { moodHint = Cr.pathPower(_m.path); }
+            if (moodHint.length() > 0) {
+                var mcol = Cr.MUTED;
+                if (_m.mood < Cr.MOOD_LOW) { mcol = 0xFF8A3A; }
+                Px.gtxtC(dc, moodHint, cx, _h * 92 / 100, sc, mcol);
+            }
+        }
     }
 
     // ── EVOLUTION ───────────────────────────────────────────────────────────────
@@ -723,34 +842,39 @@ class CreaturesView extends WatchUi.View {
         }
     }
 
-    // ── DAILY ───────────────────────────────────────────────────────────────────
+    // ── DAILY + weekly BOND ─────────────────────────────────────────────────────
     hidden function _drawDaily(dc) {
         var cx = _w / 2;
-
-        var yy = _h * 23 / 100;
+        var yy = _h * 20 / 100;
         var sc = _h / 220; if (sc < 2) { sc = 2; }
-        _wrapText(dc, cx, yy, _w * 78 / 100, Graphics.FONT_XTINY, Cr.TEXT, _m.dailyText());
+        Px.gtxtC(dc, "DAILY", cx, yy, sc, Cr.MUTED);
+        _wrapText(dc, cx, yy + _h * 5 / 100, _w * 78 / 100, Graphics.FONT_XTINY, Cr.TEXT, _m.dailyText());
 
         var prog = _m.dailyProgress(); var tgt = _m.dailyTarget();
         var bw = _w * 62 / 100; var bx = cx - bw / 2;
-        var by = _h * 43 / 100;
+        var by = _h * 36 / 100;
         var pct = (tgt > 0) ? prog * 100 / tgt : 100;
-        _bar(dc, bx, by, bw, 10, pct, Cr.ACCENT);
-        Px.gtxtC(dc, prog + " / " + tgt, cx, by + _h * 7 / 100, sc, Cr.MUTED);
+        _bar(dc, bx, by, bw, 8, pct, Cr.ACCENT);
+        Px.gtxtC(dc, prog + "/" + tgt + "  " + _m.dailyRewardText(), cx, by + _h * 5 / 100, sc, Cr.GOLD);
 
-        Px.gtxtC(dc, _m.dailyRewardText(), cx, by + _h * 15 / 100, sc, Cr.GOLD);
+        // Weekly bond contract.
+        Px.gtxtC(dc, "BOND WEEK", cx, by + _h * 12 / 100, sc, 0xB46CFF);
+        _wrapText(dc, cx, by + _h * 17 / 100, _w * 78 / 100, Graphics.FONT_XTINY, Cr.TEXT, _m.bondText());
+        var bp = _m.bondProg; var bt = _m.bondTarget();
+        var bpct = (bt > 0) ? bp * 100 / bt : 100;
+        _bar(dc, bx, by + _h * 28 / 100, bw, 8, bpct, 0xB46CFF);
+        Px.gtxtC(dc, bp + "/" + bt + "  streak " + _m.streak + "d", cx, by + _h * 33 / 100, sc, Cr.MUTED);
 
-        // Streak.
-        Px.gtxtC(dc, "STREAK " + _m.streak + "D" + _streakMile(),
-                 cx, by + _h * 23 / 100, sc, Cr.TEXT);
-
-        // Claim button.
-        var bwr = _w * 46 / 100; var bxr = cx - bwr / 2;
-        var byr = _h * 80 / 100; var bhr = _h * 11 / 100;
-        _rBtnA = [bxr, byr, bwr, bhr];
+        var bwr = _w * 40 / 100; var bhr = _h * 10 / 100;
+        var byr = _h * 78 / 100;
+        _rBtnA = [cx - bwr - 4, byr, bwr, bhr];
+        _rBtnB = [cx + 4, byr, bwr, bhr];
         var done = _m.dailyClaimed;
         var can = _m.dailyComplete() && !done;
-        _button(dc, _rBtnA, done ? "CLAIMED" : "CLAIM", can);
+        var bDone = _m.bondClaimed;
+        var bCan = _m.bondComplete() && !bDone;
+        _button(dc, _rBtnA, done ? "DAILY OK" : "CLAIM", can);
+        _button(dc, _rBtnB, bDone ? "BOND OK" : "BOND", bCan);
     }
 
     hidden function _streakMile() {
@@ -759,36 +883,81 @@ class CreaturesView extends WatchUi.View {
         return "";
     }
 
-    // ── COLLECTION ──────────────────────────────────────────────────────────────
+    // ── INDEX — species + relics + journal ─────────────────────────────────────
     hidden function _drawCollection(dc) {
         var cx = _w / 2;
         var sc = _h / 220; if (sc < 2) { sc = 2; }
         var gh = 5 * sc;
-        Px.gtxtC(dc, "DISCOVERED " + _m.seenCount() + "/" + Cr.SPECIES_N,
-                 cx, _h * 22 / 100, sc, Cr.MUTED);
+        // Header: your creature identity.
+        Px.gtxtC(dc, _m.givenName(), cx, _h * 18 / 100, sc, Cr.GOLD);
+        Px.gtxtC(dc, _m.displayName(), cx, _h * 24 / 100, sc, Cr.TEXT);
+        Px.gtxtC(dc, Cr.rarityName(_m.rarityTier()) + " · relics " + _m.relicCount() + "/" + Cr.RELIC_N,
+                 cx, _h * 30 / 100, sc, Cr.rarityColor(_m.rarityTier()));
 
-        var y = _h * 29 / 100;
-        var rowH = _h * 11 / 100;
-        var bx = _w * 14 / 100;
+        var y = _h * 36 / 100;
+        var rowH = _h * 8 / 100;
+        var bx = _w * 12 / 100;
         var start = _colScroll;
         if (start < 0) { start = 0; }
-        for (var i = 0; i < Cr.SPECIES_N; i++) {
-            var idx = i + start;
-            if (idx >= Cr.SPECIES_N) { break; }
-            var ry = y + i * rowH;
-            if (ry > _h * 80 / 100) { break; }
-            var seen = _m.isSeen(idx);
-            var name = seen ? Cr.speciesName(idx) : "LOCKED";
-            var mpx = _h * 8 / 100 / 8; if (mpx < 2) { mpx = 2; }
-            try { CreatureArt.drawMob(dc, idx, bx, ry + rowH * 7 / 10, mpx, _t, false, seen); } catch (e) {}
-            var ly = ry + rowH * 35 / 100 - gh / 2;
-            Px.gtxt(dc, name, bx + _w * 7 / 100, ly, sc, seen ? Cr.TEXT : Cr.MUTED);
-            var rp = Cr.rarityPct(seen ? _m.rarityTier() : Cr.RA_COMMON);
-            Px.gtxt(dc, rp, _w - bx - Px.gtxtW(rp, sc), ly, sc, Cr.MUTED);
+        // Scrollable mix: 5 species then relics then journal lines.
+        var rows = [];
+        for (var si = 0; si < Cr.SPECIES_N; si++) {
+            var sn = _m.isSeen(si) ? Cr.speciesName(si) : "???";
+            rows.add(["SP", sn, _m.isSeen(si)]);
         }
+        for (var ri = 0; ri < Cr.RELIC_N; ri++) {
+            var rn = _m.hasRelic(ri) ? Cr.relicName(ri) : "····";
+            rows.add(["RL", rn, _m.hasRelic(ri)]);
+        }
+        try {
+            var jr = _m.journal();
+            for (var ji = 0; ji < jr.size() && ji < 6; ji++) {
+                var jrow = jr[ji];
+                rows.add(["JN", jrow[0] + ": " + jrow[1], true]);
+            }
+        } catch (e) {}
 
-        // A rare "legendary" entry for aspiration.
-        Px.gtxtC(dc, "ANCIENT FLAME DRAGON 0.4%", cx, _h * 86 / 100, sc, Cr.GOLD);
+        var shown = 0;
+        for (var i = start; i < rows.size() && shown < 5; i++) {
+            var ry = y + shown * rowH;
+            var row = rows[i];
+            var col = row[2] ? Cr.TEXT : Cr.MUTED;
+            if (row[0].equals("RL") && row[2]) { col = Cr.GOLD; }
+            if (row[0].equals("JN")) { col = 0x9FB2C4; }
+            Px.gtxt(dc, row[1], bx, ry, sc, col);
+            shown += 1;
+        }
+        if (start + 5 < rows.size()) {
+            Px.gtxtC(dc, "▼ more", cx, _h * 88 / 100, sc, Cr.MUTED);
+        }
+    }
+
+    hidden function _drawPathPick(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x060A0F, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(Cr.CIRCLE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        var sc = _h / 220; if (sc < 2) { sc = 2; }
+        Px.gtxtC(dc, "CHOOSE PATH", cx, _h * 10 / 100, sc, Cr.ACCENT);
+        Px.gtxtC(dc, "locks forever this life", cx, _h * 16 / 100, sc, Cr.MUTED);
+        var bwb = _w * 70 / 100; var bxb = cx - bwb / 2;
+        var bh = _h * 12 / 100; var gap = _h * 2 / 100;
+        var y0 = _h * 24 / 100;
+        _rBtnA = [bxb, y0, bwb, bh];
+        _rBtnB = [bxb, y0 + bh + gap, bwb, bh];
+        _rBtnC = [bxb, y0 + (bh + gap) * 2, bwb, bh];
+        _rBtnD = [bxb, y0 + (bh + gap) * 3, bwb, bh];
+        for (var i = 0; i < 4; i++) {
+            var p = Cr.PATH_RUNNER + i;
+            var rr = (i == 0) ? _rBtnA : ((i == 1) ? _rBtnB : ((i == 2) ? _rBtnC : _rBtnD));
+            var lab = Cr.pathName(p);
+            if (i == _pathCursor) { lab = "> " + lab; }
+            _button(dc, rr, lab, i == _pathCursor);
+        }
+        Px.gtxtC(dc, Cr.pathPower(Cr.PATH_RUNNER + _pathCursor),
+                 cx, _h * 88 / 100, sc, Cr.GOLD);
     }
 
     // ── Chrome: buttons / badges ──────────────────────────────────────────────

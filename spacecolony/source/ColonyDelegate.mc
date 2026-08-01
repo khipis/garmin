@@ -48,6 +48,8 @@ class ColonyDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        // A detail card is a layer inside the game, not a way out of it.
+        try { if (_v.closeCard()) { return true; } } catch (e) {}
         try { _v.model().save(); } catch (e) {}
         return false;
     }
