@@ -448,12 +448,19 @@ class LbFetch {
     hidden var _params;
     hidden var _timer;
     hidden var _attempt;
+    hidden var _waitBusy;
+    hidden var _cancelled;
 
-    function initialize() { _listener = null; _params = null; _timer = null; _attempt = 0; }
+    function initialize() {
+        _listener = null; _params = null; _timer = null;
+        _attempt = 0; _waitBusy = 0; _cancelled = false;
+    }
 
     function fetch(game, variant, user, period, listener, nocache) {
+        _cancelled = false;
         _listener = listener;
         _attempt = 0;
+        _waitBusy = 0;
         _params = {
             "game"   => game,
             "period" => (period != null) ? period : "all"
@@ -466,11 +473,32 @@ class LbFetch {
         _doFetch();
     }
 
-    // PUBLIC — Timer callback for retries. UI GETs do NOT take the busy lock:
-    // waiting on the launch pipeline used to freeze the board on "Loading..."
-    // for ~12s and then show "No connection". Instead we fire immediately and
-    // briefly retry if the single-flight channel was busy at the firmware level.
+    // Drop in-flight retries when the board is dismissed / replaced, so a late
+    // GET cannot steal the single Communications channel from the next view.
+    function cancel() as Void {
+        _cancelled = true;
+        _listener = null;
+        if (_timer != null) {
+            try { _timer.stop(); } catch (e) {}
+            _timer = null;
+        }
+    }
+
+    // PUBLIC — Timer callback for idle-waits and retries.
+    // Wait out score POSTs / launch pings first. Firing a GET into a busy
+    // channel fails on several firmwares; the old "fire immediately + 3 short
+    // retries" policy exhausted itself inside the 15s busy window and painted
+    // every board as "No connection" (menu open AND post-game).
     function _doFetch() as Void {
+        if (_cancelled) { return; }
+        if (Leaderboard.isBusy() || !Leaderboard.scoreQueueIdle()) {
+            if (_waitBusy >= 50) { _notify(false, null); return; }  // ~25 s
+            _waitBusy = _waitBusy + 1;
+            if (_timer == null) { _timer = new Timer.Timer(); }
+            try { _timer.start(method(:_doFetch), 500, false); } catch (e) { _notify(false, null); }
+            return;
+        }
+        _waitBusy = 0;
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_GET,
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
@@ -485,23 +513,32 @@ class LbFetch {
 
     function _onResp(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        if (_cancelled) { return; }
         if (responseCode == 200 && data instanceof Lang.Dictionary) {
+            // Worker soft-degrade returns 503 normally, but treat empty ok:false
+            // payloads as failure so we retry instead of drawing a blank board.
+            if (data["degraded"] == true) { _retryOrFail(); return; }
             _notify(true, data); return;
         }
-        // Network / collision / 5xx → short retry. 4xx is final.
+        // 429 = shared phone NAT rate limit — retry. Other 4xx are final.
+        if (responseCode == 429 || responseCode < 0 || responseCode >= 500) {
+            _retryOrFail(); return;
+        }
         if (responseCode >= 400 && responseCode < 500) { _notify(false, null); return; }
         _retryOrFail();
     }
 
     hidden function _retryOrFail() as Void {
-        if (_attempt >= 3) { _notify(false, null); return; }
-        var delay = [600, 1200, 2000][_attempt];
+        if (_cancelled) { return; }
+        if (_attempt >= 4) { _notify(false, null); return; }
+        var delay = [800, 1500, 2500, 4000][_attempt];
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_doFetch), delay, false); } catch (e) { _notify(false, null); }
     }
 
     hidden function _notify(ok, data) {
+        if (_cancelled) { return; }
         if (_listener != null) { _listener.onLeaderboard(ok, data); }
     }
 }
@@ -728,6 +765,10 @@ class LbScoresView extends WatchUi.View {
     function onHide() {
         _alive = false;
         if (_retryTimer != null) { _retryTimer.stop(); _retryTimer = null; }
+        if (_fetch != null) {
+            try { _fetch.cancel(); } catch (e) {}
+            _fetch = null;
+        }
     }
 
     // Post-game only: the score POST is async and may not have committed to the
@@ -742,6 +783,9 @@ class LbScoresView extends WatchUi.View {
     hidden function _doFetch() {
         _state     = 0;
         _scrollOff = 0;
+        if (_fetch != null) {
+            try { _fetch.cancel(); } catch (e) {}
+        }
         _fetch     = new LbFetch();
         _fetch.fetch(_game, _variant, _user, LB_PERIODS[_periodIdx], self, _postGame);
         WatchUi.requestUpdate();

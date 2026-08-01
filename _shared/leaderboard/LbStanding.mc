@@ -29,12 +29,19 @@ class LbStandingFetch {
     hidden var _params;
     hidden var _timer;
     hidden var _attempt;
+    hidden var _waitBusy;
+    hidden var _cancelled;
 
-    function initialize() { _listener = null; _params = null; _timer = null; _attempt = 0; }
+    function initialize() {
+        _listener = null; _params = null; _timer = null;
+        _attempt = 0; _waitBusy = 0; _cancelled = false;
+    }
 
     function fetch(game, variant, user, listener) {
+        _cancelled = false;
         _listener = listener;
         _attempt = 0;
+        _waitBusy = 0;
         _params = { "game" => game };
         if (variant != null && variant.length() > 0) { _params["variant"] = variant; }
         if (user != null && user.length() > 0)       { _params["user"]    = user;    }
@@ -42,9 +49,31 @@ class LbStandingFetch {
         _doFetch();
     }
 
-    // PUBLIC — Timer callback for retries. Same policy as LbFetch: do not wait
-    // on the advisory busy lock (that froze the UI); fire and retry briefly.
+    // Stop retries when the standing card is dismissed. Otherwise a late
+    // makeWebRequest steals Garmin's single network channel from the board
+    // that opens next — which surfaces as "You're on the board" → "No connection".
+    function cancel() as Void {
+        _cancelled = true;
+        _listener = null;
+        if (_timer != null) {
+            try { _timer.stop(); } catch (e) {}
+            _timer = null;
+        }
+    }
+
+    // PUBLIC — Timer callback for retries / busy-waits.
     function _doFetch() as Void {
+        if (_cancelled) { return; }
+        // Wait out score POSTs / launch pipeline. Firing a GET into a busy
+        // channel fails the request on several firmwares (and can kill the app).
+        if (Leaderboard.isBusy() || !Leaderboard.scoreQueueIdle()) {
+            if (_waitBusy >= 40) { _notify(false, null); return; }  // ~20 s
+            _waitBusy = _waitBusy + 1;
+            if (_timer == null) { _timer = new Timer.Timer(); }
+            try { _timer.start(method(:_doFetch), 500, false); } catch (e) { _notify(false, null); }
+            return;
+        }
+        _waitBusy = 0;
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_GET,
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
@@ -59,20 +88,27 @@ class LbStandingFetch {
 
     function _onResp(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        if (_cancelled) { return; }
         if (responseCode == 200 && data instanceof Lang.Dictionary) { _notify(true, data); return; }
+        // 429 = shared phone NAT rate limit — retry. Other 4xx are final.
+        if (responseCode == 429 || responseCode < 0 || responseCode >= 500) {
+            _retryOrFail(); return;
+        }
         if (responseCode >= 400 && responseCode < 500) { _notify(false, null); return; }
         _retryOrFail();
     }
 
     hidden function _retryOrFail() as Void {
-        if (_attempt >= 3) { _notify(false, null); return; }
-        var delay = [600, 1200, 2000][_attempt];
+        if (_cancelled) { return; }
+        if (_attempt >= 4) { _notify(false, null); return; }
+        var delay = [800, 1500, 2500, 4000][_attempt];
         _attempt = _attempt + 1;
         if (_timer == null) { _timer = new Timer.Timer(); }
         try { _timer.start(method(:_doFetch), delay, false); } catch (e) { _notify(false, null); }
     }
 
     hidden function _notify(ok, data) {
+        if (_cancelled) { return; }
         if (_listener != null) { _listener.onStanding(ok, data); }
     }
 }
@@ -112,11 +148,18 @@ class LbStandingView extends WatchUi.View {
     function onHide() {
         _alive = false;
         if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
+        // Cancel the network fetcher — do not let its retries collide with the
+        // leaderboard board that this card chains into on dismiss.
+        if (_fetch != null) {
+            try { _fetch.cancel(); } catch (e) {}
+            _fetch = null;
+        }
     }
 
     hidden function _doFetch() {
         try {
             _state = 0;
+            if (_fetch != null) { try { _fetch.cancel(); } catch (e) {} }
             _fetch = new LbStandingFetch();
             _fetch.fetch(_game, _variant, Leaderboard.loadUser(), self);
         } catch (e) {
@@ -234,8 +277,18 @@ class LbStandingView extends WatchUi.View {
         var allRank  = _num(all, "myRank");
         var allCount = _num(all, "count");
 
-        if (_state == 2 || allRank == null) {
-            // No rank yet (brand-new / offline). Friendly nudge, still dismissable.
+        if (_state == 2) {
+            // Network failed — do NOT pretend the player is ranked. Dismiss still
+            // opens the board, which will retry on its own channel.
+            dc.setColor(LB_TEXT, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h / 2 - lineH / 2, Graphics.FONT_XTINY, "No connection", VC);
+            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h / 2 + lineH / 2 + 2, Graphics.FONT_XTINY, "Tap for leaderboard", VC);
+            _footer(dc, cx, fh);
+            return;
+        }
+        if (allRank == null) {
+            // Fetch ok, but this name has no score on this board yet.
             dc.setColor(LB_TEXT, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, _h / 2 - lineH, Graphics.FONT_SMALL, "You're on", VC);
             dc.drawText(cx, _h / 2, Graphics.FONT_SMALL, "the board!", VC);
