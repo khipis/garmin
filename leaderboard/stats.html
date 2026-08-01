@@ -41,6 +41,7 @@
     padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: .74rem;
   }
   .hbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .hbtn:disabled { opacity: .45; cursor: wait; }
   .hsel {
     background: var(--card); border: 1px solid var(--border); color: var(--text);
     font-size: .72rem; padding: 4px 8px; border-radius: 8px; margin-left: 8px;
@@ -546,8 +547,8 @@
   <div class="badge">Admin · Real Traffic Only</div>
   <div class="spacer"></div>
   <span id="updated-tag" style="font-size:.68rem;color:var(--muted);margin-right:8px"></span>
-  <button class="hbtn" onclick="loadStats()">↺ Refresh stats</button>
-  <button class="hbtn" onclick="loadStats(true)" title="Rescan every score row for the lifetime totals (costs a lot of D1 reads)">⟳ Recompute totals</button>
+  <button class="hbtn" id="btn-refresh" onclick="refreshDashboard()" title="Reload live panels (hot, launches, daily) and re-fetch cached lifetime totals">↺ Refresh</button>
+  <button class="hbtn" id="btn-recompute" onclick="loadStats(true)" title="Rescan every score row for the lifetime totals (needs LB_KEY, ~10–60s)">⟳ Recompute totals</button>
 </header>
 
 <div class="layout">
@@ -926,22 +927,80 @@ function showOverview() {
 // the API serves them a few hours old rather than rescanning the table on each
 // refresh — that scan is what used to blow the D1 free-plan read budget. Pass
 // force to spend a recompute when the current figure actually matters.
-async function loadStats(force) {
+function setStatsBusy(busy, label) {
+  const ref = document.getElementById('btn-refresh');
+  const rec = document.getElementById('btn-recompute');
+  const tag = document.getElementById('updated-tag');
+  if (ref) ref.disabled = !!busy;
+  if (rec) rec.disabled = !!busy;
+  if (busy && tag && label) tag.textContent = label;
+}
+
+async function refreshDashboard() {
+  setStatsBusy(true, 'Refreshing…');
   try {
+    await Promise.all([
+      loadStats(false),
+      loadLaunches(),
+      loadHot(),
+      loadDailyStats(),
+      typeof loadActivity === 'function' ? loadActivity() : Promise.resolve(),
+    ]);
+  } finally {
+    setStatsBusy(false);
+  }
+}
+
+async function loadStats(force) {
+  const prevComputed = statsData && (statsData.computed || statsData.updated);
+  try {
+    if (force) setStatsBusy(true, 'Recomputing lifetime totals…');
     const headers = {};
     let qs = `${API}/stats`;
     if (force) {
-      const k = lbKey('Enter LB_KEY to recompute the lifetime totals:');
+      // Always re-prompt if the stored key was rejected once.
+      let k = sessionStorage.getItem('lb_key');
+      if (!k) k = lbKey('Enter LB_KEY to recompute the lifetime totals:');
       if (!k) return;
       headers['X-LB-Key'] = k;
       qs += '&fresh=1';
     }
     const r = await fetch(qs, { cache: 'no-store', headers });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    statsData = await r.json();
+    if (r.status === 403) {
+      sessionStorage.removeItem('lb_key');
+      if (force) {
+        const again = prompt('Wrong LB_KEY. Enter it again:');
+        if (!again) throw new Error('Recompute cancelled (bad LB_KEY)');
+        sessionStorage.setItem('lb_key', again);
+        return await loadStats(true);
+      }
+      throw new Error('forbidden');
+    }
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || d.degraded) {
+      throw new Error(d.error || (r.status === 503
+        ? 'Recompute timed out — try again'
+        : `HTTP ${r.status}`));
+    }
+    statsData = d;
     renderStats();
+    if (force) {
+      const tag = document.getElementById('updated-tag');
+      if (tag) tag.textContent = (tag.textContent || '') + ' · recomputed';
+    } else if (prevComputed && statsData.computed === prevComputed) {
+      const tag = document.getElementById('updated-tag');
+      if (tag && !/cached/.test(tag.textContent || '')) {
+        tag.textContent = (tag.textContent || '') + ' · cached (use Recompute)';
+      }
+    }
   } catch(e) {
-    document.getElementById('per-game').innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+    const msg = String(e.message || e);
+    const tag = document.getElementById('updated-tag');
+    if (tag) tag.textContent = '⚠️ ' + msg;
+    const el = document.getElementById('per-game');
+    if (el && force) el.innerHTML = `<div class="state">⚠️ ${esc(msg)}</div>`;
+  } finally {
+    if (force) setStatsBusy(false);
   }
 }
 

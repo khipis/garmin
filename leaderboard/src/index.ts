@@ -983,21 +983,37 @@ function wantsFresh(req: Request, url: URL, env: Env): boolean {
     && req.headers.get("X-LB-Key") === env.LB_KEY;
 }
 
+// fresh=1 without a valid key used to silently serve the stale cache (HTTP 200),
+// which made the admin "Recompute" button look broken. Reject instead.
+function rejectStaleFresh(req: Request, url: URL, env: Env): Response | null {
+  if (url.searchParams.get("fresh") !== "1") return null;
+  const key = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || key !== env.LB_KEY) return err("forbidden", 403);
+  return null;
+}
+
 async function handleGetStats(req: Request, url: URL, env: Env): Promise<Response> {
+  const denied = rejectStaleFresh(req, url, env);
+  if (denied) return denied;
+  const fresh = wantsFresh(req, url, env);
+
   let payload: StatsPayload;
   try {
     // stats:2 — includes classic D1/D3/D7 cohort fields (invalidate old payload shape).
     payload = await cached(env, "stats:2", AGG_TTL_LIFETIME,
-      () => computeStats(env), wantsFresh(req, url, env));
+      () => computeStats(env), fresh);
   } catch (e) {
     console.error("DB stats error:", e);
     return err("db error", 500);
   }
 
   return json(
-    { updated: Math.floor(Date.now() / 1000), ...payload },
+    { updated: Math.floor(Date.now() / 1000), fresh, ...payload },
     200,
-    { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
+    // Fresh recomputes must not sit in a shared CDN/browser cache.
+    fresh
+      ? { "Cache-Control": "private, no-store" }
+      : { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
   );
 }
 
@@ -1445,20 +1461,31 @@ async function computeLaunchRecent(env: Env): Promise<LaunchRecent> {
 }
 
 async function handleGetLaunchStats(req: Request, url: URL, env: Env): Promise<Response> {
+  const denied = rejectStaleFresh(req, url, env);
+  if (denied) return denied;
+  const fresh = wantsFresh(req, url, env);
+
   let lifetime: LaunchLifetime;
   let recent: LaunchRecent;
   try {
     [lifetime, recent] = await Promise.all([
       cached(env, "lstats:life", AGG_TTL_LIFETIME,
-        () => computeLaunchLifetime(env), wantsFresh(req, url, env)),
-      cached(env, "lstats:recent", AGG_TTL_DASH, () => computeLaunchRecent(env)),
+        () => computeLaunchLifetime(env), fresh),
+      // Recent windows are cheap — always refresh them on ?fresh=1.
+      cached(env, "lstats:recent", AGG_TTL_DASH, () => computeLaunchRecent(env), fresh),
     ]);
   } catch (e) {
     console.error("launch stats error:", e);
     return err("db error", 500);
   }
 
-  return json({ updated: Math.floor(Date.now() / 1000), ...lifetime, ...recent });
+  return json(
+    { updated: Math.floor(Date.now() / 1000), fresh, ...lifetime, ...recent },
+    200,
+    fresh
+      ? { "Cache-Control": "private, no-store" }
+      : { "Cache-Control": "public, max-age=30, stale-while-revalidate=60" }
+  );
 }
 
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
@@ -2397,6 +2424,16 @@ export default {
       return err("rate limit exceeded — try again shortly", 429);
     }
 
+    // Admin lifetime recomputes scan the whole scores/launches tables and need
+    // far more than the public 7s budget — without this the Recompute button
+    // almost always got a degraded 503 and looked dead.
+    const path = url.pathname;
+    const adminFresh = method === "GET"
+      && (path === "/stats" || path === "/launches")
+      && url.searchParams.get("fresh") === "1"
+      && !!req.headers.get("X-LB-Key");
+    const timeoutMs = adminFresh ? 60_000 : REQUEST_TIMEOUT_MS;
+
     // Race the actual routing against a hard timeout so a hung D1 call can never
     // stall the response. Any handler error also degrades cleanly.
     const handlerP = route(req, env, url, method).catch((e) => {
@@ -2404,7 +2441,7 @@ export default {
       return degraded();
     });
     const timeoutP = new Promise<Response>((resolve) =>
-      setTimeout(() => resolve(degraded()), REQUEST_TIMEOUT_MS)
+      setTimeout(() => resolve(degraded()), timeoutMs)
     );
     return Promise.race([handlerP, timeoutP]);
   },
