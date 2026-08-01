@@ -73,7 +73,6 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         if (_v.navBack()) { WatchUi.requestUpdate(); return true; }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return SaveResume.confirmExit("minesweeper", _v.method(:exportSave));
     }
 }

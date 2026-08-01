@@ -18,6 +18,7 @@ class MainView extends WatchUi.View {
     hidden var _sh;
     hidden var _curMs;
     hidden var _started;   // auto-start the run on first layout
+    hidden var _skipStart; // true when a SaveResume blob was applied
     hidden var _dailyMsg;  // one-shot login-streak toast (or null)
     hidden var _dailyMsgT; // frames the toast stays visible
 
@@ -27,7 +28,20 @@ class MainView extends WatchUi.View {
         _timer = null;
         _sw = 0; _sh = 0; _curMs = 210;
         _started = false;
+        _skipStart = false;
         _dailyMsg = null; _dailyMsgT = 0;
+    }
+
+    // Apply a SaveResume blob before the first paint (called from ManpacHooks).
+    function loadResume(data) as Void {
+        if (data != null && ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return ctrl.exportSave();
     }
 
     function onShow() {
@@ -63,8 +77,9 @@ class MainView extends WatchUi.View {
         dc.setColor(0x000000, 0x000000); dc.clear();
 
         // Menu lives in the shared root view — drop straight into a run and
-        // never render an in-game menu here.
-        if (!_started || ctrl.state == GS_MENU) {
+        // never render an in-game menu here. _skipStart guards a just-applied
+        // SaveResume blob from being wiped by the auto-start.
+        if (!_skipStart && (!_started || ctrl.state == GS_MENU)) {
             ctrl.startGame();
             _started = true;
         }

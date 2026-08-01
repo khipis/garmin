@@ -9,9 +9,10 @@
 //   • the OPTIONS list: per-game settings (difficulty / speed / mode / …)
 //   • leaderboard id + title (+ dynamic variant via GameHooks)
 //
-// The main menu itself is ALWAYS the same three clean rows:
-//   START · OPTIONS · LEADERBOARD
-// so every game feels identical and premium; per-game knobs live in OPTIONS.
+// The main menu rows:
+//   [RESUME] · START · OPTIONS · LEADERBOARD
+// RESUME appears only when GameHooks.hasResume() (SaveResume blob).
+// Per-game knobs live in OPTIONS.
 // ═══════════════════════════════════════════════════════════════════════════
 using Toybox.Application;
 using Toybox.Lang;
@@ -24,8 +25,13 @@ class GameHooks {
     function initialize() {}
 
     // REQUIRED: launch the actual gameplay (push the game view). Called when the
-    // player picks START.
+    // player picks START (always a fresh run — clear any save first in overrides).
     function startGame() as Void {}
+
+    // Optional mid-run resume (SaveResume). When hasResume() is true the main
+    // menu shows a RESUME row above START.
+    function hasResume() as Lang.Boolean { return false; }
+    function resumeGame() as Void {}
 
     // Draw the game's signature art inside the reserved band. (cx,cy) is the
     // band centre; w/h are the full screen dims. Default: nothing.

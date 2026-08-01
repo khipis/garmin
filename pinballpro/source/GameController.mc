@@ -714,6 +714,7 @@ class GameController {
 
         if (lives <= 0) {
             state = GS_OVER;
+            try { SaveResume.clear("pinballpro"); } catch (e) {}
             Leaderboard.submitScore(LB_GAME_ID, score, TableLibrary.NAMES[tableIdx]);
             Leaderboard.showPostGame(LB_GAME_ID, TableLibrary.NAMES[tableIdx], "PINBALL PRO");
             return;
@@ -751,5 +752,73 @@ class GameController {
         if (!(Toybox has :Attention)) { return; }
         if (!(Attention has :vibrate)) { return; }
         try { Attention.vibrate([new Attention.VibeProfile(intensity, duration)]); } catch (e) {}
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Saved ONLY at GS_LAUNCH — the ball is parked on the plunger lane and
+    // every system (combo, missions, jackpot, drop bank) is fully settled,
+    // so it's the one moment that's safe & cheap to snapshot.
+    function exportSave() {
+        if (state != GS_LAUNCH) { return null; }
+        var dropsDown = new [drops.size()];
+        for (var i = 0; i < drops.size(); i++) { dropsDown[i] = drops[i].down ? 1 : 0; }
+        return {
+            "score" => score,
+            "lives" => lives,
+            "table" => tableIdx,
+            "nextExtraBallAt" => nextExtraBallAt,
+            "combo" => combo,
+            "comboTimer" => comboTimer,
+            "multiplier" => multiplier,
+            "bestCombo" => bestCombo,
+            "missionIndex" => missionIndex,
+            "missionProgress" => missionProgress,
+            "jackpot" => jackpot,
+            "ballBonus" => ballBonus,
+            "bonusMult" => bonusMult,
+            "drops" => dropsDown
+        };
+    }
+
+    // Apply a SaveResume blob once the screen is laid out (called from
+    // MainView after setScreen so the table geometry already matches).
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var t = data["table"];
+            if (!(t instanceof Number) || t < 0 || t >= TableLibrary.COUNT) { return false; }
+            // Rebuilds bumpers/drops/slings + missionList for the saved table.
+            selectTable(t);
+
+            score = data["score"];
+            lives = data["lives"];
+            nextExtraBallAt = data["nextExtraBallAt"];
+            combo = data["combo"];
+            comboTimer = data["comboTimer"];
+            multiplier = data["multiplier"];
+            bestCombo = data["bestCombo"];
+            missionIndex = data["missionIndex"];
+            jackpot = data["jackpot"];
+            ballBonus = data["ballBonus"];
+            bonusMult = data["bonusMult"];
+
+            _loadMissionStep();
+            var mp = data["missionProgress"];
+            missionProgress = (mp instanceof Number) ? mp : 0;
+
+            var dd = data["drops"];
+            if (dd instanceof Array) {
+                for (var i = 0; i < drops.size() && i < dd.size(); i++) {
+                    if (dd[i] == 1) { drops[i].knockDown(); drops[i].flash = 0; }
+                }
+            }
+
+            for (var j = 0; j < MAX_BALLS; j++) { balls[j].kill(); }
+            _parkBallForLaunch();
+            fxOn = (_loadInt("fx", 0) == 0);
+            state = GS_LAUNCH;
+            return true;
+        } catch (e) {}
+        return false;
     }
 }

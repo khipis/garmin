@@ -280,49 +280,36 @@ _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_41_12_41_70_if_end:
         %tmp.12 = getv ? :_preview;
         symbol [ depth %tmp.13 42 28 33 ];
         %tmp.13 = getv %tmp.12 :depth;
-        %tmp.14 = "m · ";
+        %tmp.14 = "m · Lv ";
         %tmp.15 = add %tmp.13 %tmp.14;
-        symbol [ Mn %tmp.17 42 45 47 ];
-        %tmp.17 = getv ? :Mn;
-        symbol [ zName %tmp.18 42 48 53 ];
-        %tmp.18 = getv function %tmp.17 :zName;
-        symbol [ _preview %tmp.20 42 54 62 ];
-        %tmp.20 = getv ? :_preview;
-        symbol [ zone %tmp.21 42 63 67 ];
-        %tmp.21 = getv function %tmp.20 :zone;
-        %tmp.22 = invoke %tmp.20 %tmp.21();
-        %tmp.23 = invoke %tmp.17 %tmp.18(%tmp.22);
-        %tmp.24 = add %tmp.15 %tmp.23;
-        %tmp.25 = " · Lv ";
-        %tmp.26 = add %tmp.24 %tmp.25;
-        symbol [ _preview %tmp.28 42 84 92 ];
-        %tmp.28 = getv ? :_preview;
-        symbol [ mineLevel %tmp.29 42 93 102 ];
-        %tmp.29 = getv function %tmp.28 :mineLevel;
-        %tmp.30 = invoke %tmp.28 %tmp.29();
-        %tmp.31 = add %tmp.26 %tmp.30;
+        symbol [ _preview %tmp.17 42 48 56 ];
+        %tmp.17 = getv ? :_preview;
+        symbol [ mineLevel %tmp.18 42 57 66 ];
+        %tmp.18 = getv function %tmp.17 :mineLevel;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = add %tmp.15 %tmp.19;
         jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
-        ret %tmp.31;
+        ret %tmp.20;
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_12_43_8_stop:
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_endTry:
         jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
         goto @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_end;
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch:
-        %tmp.32 = exception;
-        push %tmp.32;
+        %tmp.21 = exception;
+        push %tmp.21;
 [ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 43 10 ]
         [ "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch" "_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end" ]
         %e.1 = local;
         symbol [ e %e.1 43 17 18 ];
-        %tmp.33 = dup %tmp.32;
-        lputv %e.1 %tmp.33;
+        %tmp.22 = dup %tmp.21;
+        lputv %e.1 %tmp.22;
         symbol [ e %e.1 43 17 18 ];
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_20_43_35_start:
 [ "/Users/kkorolczuk/work/garmin/mines/source/MineMenu.mc" 43 22 ]
         pop;
-        %tmp.34 = null;
+        %tmp.23 = null;
         jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
-        ret %tmp.34;
+        ret %tmp.23;
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_20_43_35_stop:
         jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
         pop;
@@ -330,7 +317,7 @@ _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_20_43_35_stop:
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end:
         try @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_catch @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_43_10_43_35_end @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
         jsr @_Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally;
-        throw %tmp.32;
+        throw %tmp.21;
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_finally:
         jsrret;
 _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_39_8_43_35_end:
@@ -776,7 +763,7 @@ _Users_kkorolczuk_work_garmin_mines_source_MineMenu_mc_90_39_108_0_start:
     %tmp.53 = aputv %tmp.52 %tmp.48 %tmp.51;
     %tmp.55 = const :lbTitle;
     symbol [ lbTitle %tmp.55 100 9 16 const ];
-    %tmp.56 = "BITOCHI MINES";
+    %tmp.56 = "MINES";
     %tmp.57 = dup %tmp.53;
     %tmp.58 = aputv %tmp.57 %tmp.55 %tmp.56;
     %tmp.60 = const :hooks;

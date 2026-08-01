@@ -9,7 +9,16 @@ using Toybox.Lang;
 class CheckersHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("checkers"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiCheckersView();
+        v.loadResume(SaveResume.load("checkers"));
+        WatchUi.pushView(v, new BitochiCheckersDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("checkers");
         var v = new BitochiCheckersView();
         WatchUi.pushView(v, new BitochiCheckersDelegate(v), WatchUi.SLIDE_LEFT);
     }

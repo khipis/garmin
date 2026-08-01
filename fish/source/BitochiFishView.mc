@@ -5,6 +5,7 @@ using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Sensor;
 
 enum { GS_MENU, GS_IDLE, GS_POWER, GS_CAST, GS_WAIT, GS_BITE, GS_FIGHT, GS_REEL, GS_CAUGHT, GS_LOST, GS_SNAP, GS_GAMEOVER }
 
@@ -25,6 +26,7 @@ class BitochiFishView extends WatchUi.View {
 
     hidden var _w; hidden var _h; hidden var _cx; hidden var _cy;
     hidden var _timer; hidden var _tick;
+    hidden var _sensorOn;
     hidden var _power; hidden var _powerDir; hidden var _castDist;
     hidden var _bobX; hidden var _bobY; hidden var _bobVy;
     hidden var _waterY; hidden var _rodTipX; hidden var _rodTipY;
@@ -121,6 +123,7 @@ class BitochiFishView extends WatchUi.View {
         _w = ds.screenWidth; _h = ds.screenHeight;
         _cx = _w / 2; _cy = _h / 2;
         accelX = 0; accelY = 0; _tick = 0;
+        _sensorOn = false;
         _waterY = _h * 51 / 100;
         _rodTipX = _w * 70 / 100; _rodTipY = _waterY - 18;
         _power = 0.0; _powerDir = 1; _castDist = 0.0;
@@ -199,6 +202,16 @@ class BitochiFishView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true);
+        // Sensor lifecycle mirrors the timer above: on while this view is the
+        // visible top of the stack, off the instant something (leaderboard,
+        // the SaveResume exit prompt) covers it — and back on automatically
+        // if the player cancels out and this view is re-shown.
+        if (!_sensorOn && Toybox has :Sensor && Sensor has :enableSensorEvents) {
+            try {
+                Sensor.enableSensorEvents(method(:onSensor));
+                _sensorOn = true;
+            } catch (e) {}
+        }
         // The main menu is the shared root view; drop straight into a session.
         // Only auto-start from a fresh launch (GS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the session.
@@ -217,10 +230,22 @@ class BitochiFishView extends WatchUi.View {
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); _timer = null; }
-        // Safety net: whenever the game view goes away (back to menu, app
-        // suspend, watch closes the app) record this session's progress so
-        // leaving mid-run still counts — you don't have to "lose" to rank.
-        submitProgress();
+        if (_sensorOn) {
+            try { Sensor.enableSensorEvents(null); } catch (e) {}
+            _sensorOn = false;
+        }
+        // Do NOT submitProgress here — pushing the SAVE PROGRESS? menu also
+        // hides this view, and an early submit would lock _progressSubmitted
+        // so a Cancel → keep fishing → quit later never posts the better score.
+        // Real exits submit via confirmExitQuit / game-over / null-export quit.
+    }
+
+    function onSensor(info as Sensor.Info) as Void {
+        if (info == null) { return; }
+        var a = info.accel;
+        if (a == null) { return; }
+        accelX = a[0];
+        accelY = a[1];
     }
 
     // Report this session to the global boards, exactly once per gameplay
@@ -467,12 +492,13 @@ class BitochiFishView extends WatchUi.View {
             if (_resultTick > 70) {
                 if (_fishLives <= 0) {
                     gameState = GS_GAMEOVER; _resultTick = 0;
+                    try { SaveResume.clear("fish"); } catch (e) {}
                     // Session over — report score (by difficulty) + progress
                     // (level reached) to the global boards, then show the card.
                     submitProgress();
                     Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "FISHING");
                 }
-                else { gameState = GS_IDLE; _emotion = 0; }
+                else { enterIdle(); }
             }
         } else if (gameState == GS_GAMEOVER) {
             _resultTick++;
@@ -669,7 +695,7 @@ class BitochiFishView extends WatchUi.View {
                 _progressSubmitted = false;
                 _pgUnlockMsg = null;
                 _sessionStartTick = _tick;
-                setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
+                setLevelGoal(); _envType = 0; spawnAmbPool(); enterIdle();
             }
             return;
         }
@@ -685,8 +711,8 @@ class BitochiFishView extends WatchUi.View {
             if (_fishHP <= 0.0) { gameState = GS_REEL; doVibe(60, 80); _emotion = 2; }
             return;
         }
-        if (gameState == GS_CAUGHT) { if (_resultTick > 15) { gameState = GS_IDLE; } return; }
-        if (gameState == GS_LOST || gameState == GS_SNAP) { if (_resultTick > 15) { gameState = GS_IDLE; _emotion = 0; } return; }
+        if (gameState == GS_CAUGHT) { if (_resultTick > 15) { enterIdle(); } return; }
+        if (gameState == GS_LOST || gameState == GS_SNAP) { if (_resultTick > 15) { enterIdle(); } return; }
     }
 
     // ── title-screen menu (START / LEADERBOARD) ───────────────────────────────
@@ -706,7 +732,91 @@ class BitochiFishView extends WatchUi.View {
         _progressSubmitted = false;
         _pgUnlockMsg = null;
         _sessionStartTick = _tick;
-        setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
+        setLevelGoal(); _envType = 0; spawnAmbPool(); enterIdle();
+    }
+
+    // ── SaveResume (see _shared/menu/SaveResume.mc) ─────────────────────────
+    // Checkpoint whenever the bob is idle, AND on BACK from any live state so
+    // quitting mid-cast/fight still overwrites the previous save (otherwise
+    // RESUME kept restoring the first idle snapshot forever).
+
+    function loadResume(data) as Void {
+        applySave(data);
+    }
+
+    // Return to idle + refresh the on-disk checkpoint so progress is current
+    // even if the player force-quits without the BACK prompt.
+    hidden function enterIdle() as Void {
+        gameState = GS_IDLE;
+        _emotion = 0;
+        autoSaveCheckpoint();
+    }
+
+    hidden function snapshotDict() {
+        return {
+            "score"  => _score,
+            "caught" => _fishCaught,
+            "combo"  => _combo,
+            "level"  => _level,
+            "lives"  => _fishLives,
+            "lc"     => _levelCatches,
+            "lgs"    => _levelGotSpecial ? 1 : 0,
+            "gc"     => _goalCount,
+            "gmt"    => _goalMinType,
+            "ltb"    => _lineTensionBonus.toNumber(),
+            "env"    => _envType
+        };
+    }
+
+    hidden function autoSaveCheckpoint() as Void {
+        try { SaveResume.save("fish", snapshotDict()); } catch (e) {}
+    }
+
+    // Any live session state is worth saving (mid-action resumes as idle with
+    // the same score/level/lives). Only menu / game-over have nothing to keep.
+    function exportSave() {
+        if (gameState == GS_MENU || gameState == GS_GAMEOVER) { return null; }
+        return snapshotDict();
+    }
+
+    // Called by FishExitConfirmDelegate after Yes/No so LB gets the final run.
+    function confirmExitQuit() as Void {
+        submitProgress();
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var lvl = data["level"];
+            if (!(lvl instanceof Number) || lvl < 1) { return false; }
+            if (lvl > 15) { lvl = 15; }
+            var lives = data["lives"];
+            if (!(lives instanceof Number)) { return false; }
+
+            _level     = lvl;
+            _fishLives = lives;
+            if (_fishLives < 0) { _fishLives = 0; }
+            var score = data["score"];   _score        = (score instanceof Number)  ? score  : 0;
+            var caught = data["caught"]; _fishCaught   = (caught instanceof Number) ? caught : 0;
+            var combo = data["combo"];   _combo        = (combo instanceof Number)  ? combo  : 0;
+            var lc = data["lc"];         _levelCatches = (lc instanceof Number)     ? lc     : 0;
+            var lgs = data["lgs"];       _levelGotSpecial = (lgs instanceof Number && lgs != 0);
+            var gc = data["gc"];         _goalCount    = (gc instanceof Number)     ? gc     : 1;
+            var gmt = data["gmt"];       _goalMinType  = (gmt instanceof Number)    ? gmt    : 0;
+            var ltb = data["ltb"];       _lineTensionBonus = (ltb instanceof Number) ? ltb.toFloat() : 0.0;
+            var env = data["env"];       _envType      = (env instanceof Number)    ? env    : 0;
+
+            _progressSubmitted = false;
+            _pgUnlockMsg = null;
+            _sessionStartTick = 0;
+            spawnAmbPool();
+            gameState = GS_IDLE;
+            // Refresh checkpoint so a subsequent mid-action quit still has
+            // this resumed baseline until the next idle auto-save.
+            autoSaveCheckpoint();
+            return true;
+        } catch (e) {}
+        return false;
     }
 
     // Open the shared global leaderboard view for the selected difficulty.
@@ -842,9 +952,9 @@ class BitochiFishView extends WatchUi.View {
             drawGameOver(dc);
             return;
         }
-        // Gameplay: render the whole scene inside a centered box at 90% of the
-        // real screen, leaving a thin uniform border all around it.
-        _w = rw * 9 / 10; _h = rh * 9 / 10;
+        // Gameplay: centered scene box at 85% of the real screen (−5% vs the
+        // previous 90%) so HUD / bezel labels stay clear of the rim.
+        _w = rw * 85 / 100; _h = rh * 85 / 100;
         var bx = (rw - _w) / 2; var by = (rh - _h) / 2;
         _cx = _w / 2; _cy = _h / 2;
         _waterY = _h * 51 / 100;
@@ -1254,13 +1364,16 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawPowerBar(dc, ox, oy) {
-        var bW = _w * 42 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 74 / 100;
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (fh < 10) { fh = 10; }
+        var bW = _w * 42 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 72 / 100;
         dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1 + ox, bY - 1 + oy, bW + 2, bH + 2);
         dc.setColor(0x2A2A3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX + ox, bY + oy, bW, bH);
         var fill = (_power / 100.0 * bW.toFloat()).toNumber();
         var fc = (_power > 76.0) ? 0xFF4444 : ((_power > 46.0) ? 0xFFAA44 : 0x44CC44);
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX + ox, bY + oy, fill, bH);
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, bY - 14 + oy, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + ox, bY - fh - 2 + oy, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Predicted cast trajectory — simulate the REAL bob physics (gravity
         // 0.30/tick, horizontal step power*0.044) and lay a faint dotted arc
@@ -1303,18 +1416,25 @@ class BitochiFishView extends WatchUi.View {
         }
         if (nearDist2 < 28.0 && nearName.length() > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx + ox, bY - 28 + oy, Graphics.FONT_XTINY, nearName + "!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx + ox, bY - fh * 2 - 4 + oy, Graphics.FONT_XTINY, nearName + "!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawWaitInd(dc, ox, oy) {
-        var dots = (_tick / 7) % 4; var txt = "Waiting";
-        for (var d = 0; d < dots; d++) { txt += "."; }
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 84 / 100 + oy, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (fh < 10) { fh = 10; }
+        var baseY = _h * 78 / 100;
         if (_nearAmbIdx >= 0 && _nearAmbIdx < MAX_AMB) {
             dc.setColor(0xFFCC66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx + ox, _h * 76 / 100 + oy, Graphics.FONT_XTINY, "Target: " + _fishNames[_ambType[_nearAmbIdx]], Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx + ox, baseY + oy, Graphics.FONT_XTINY,
+                        "Target: " + _fishNames[_ambType[_nearAmbIdx]],
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            baseY += fh + 2;
         }
+        var dots = (_tick / 7) % 4; var txt = "Waiting";
+        for (var d = 0; d < dots; d++) { txt += "."; }
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + ox, baseY + oy, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawBiteAlert(dc, ox, oy) {
@@ -1329,8 +1449,11 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawFightHUD(dc, ox, oy) {
-        // ── Tension bar (top) ─────────────────────────────────────────────
-        var tBarY = _h * 8 / 100; var tBW = _w * 65 / 100; var tBX = (_w - tBW) / 2;
+        // ── Tension bar — sit below the compact score/lives HUD row ───────
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (fh < 10) { fh = 10; }
+        var tBarY = 2 + fh + 1 + fh + 3;   // under both HUD rows
+        var tBW = _w * 62 / 100; var tBX = (_w - tBW) / 2;
         dc.setColor(0x181828, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX - 1 + ox, tBarY - 1 + oy, tBW + 2, 12);
         dc.setColor(0x282838, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX + ox, tBarY + oy, tBW, 10);
         var tf = (_tension / _maxTension * tBW.toFloat()).toNumber();
@@ -1343,10 +1466,13 @@ class BitochiFishView extends WatchUi.View {
             dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT);
             dc.drawText(tBX + tBW + 4 + ox, tBarY - 2 + oy, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT);
         }
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, tBarY + 12 + oy, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_LEFT);
+        // Species + HP on one row under the bar (not stacked on the HUD).
+        var nameY = tBarY + 12;
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(4 + ox, nameY + oy, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_LEFT);
         var hpW = _w * 26 / 100; var hpFill = (_fishHP / _fishMaxHP * hpW.toFloat()).toNumber(); if (hpFill < 0) { hpFill = 0; }
-        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, tBarY + 12 + oy, hpW, 4);
-        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, tBarY + 12 + oy, hpFill, 4);
+        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, nameY + 3 + oy, hpW, 4);
+        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, nameY + 3 + oy, hpFill, 4);
 
         // ── Tug-of-war fight bar (center) ────────────────────────────────
         // _fightCursor: -100 (far left) to +100 (far right)
@@ -1400,17 +1526,19 @@ class BitochiFishView extends WatchUi.View {
         if (aPos > aBarX + aBarW - 2) { aPos = aBarX + aBarW - 2; }
         dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aPos - 3 + ox, aBarY - 1 + oy, 6, 7);
 
-        // ── Fish direction + counter-tilt hint ────────────────────────────
+        // ── Fish direction + counter-tilt hint (spaced by font height) ────
         var fishGoesRight = (_fishPullDir < 100.0);
         var dirTxt    = fishGoesRight ? "FISH >>>" : "<<< FISH";
         var counterTxt = fishGoesRight ? "<< TILT" : "TILT >>";
-        var hintY = _h * 66 / 100;
+        var hintFh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (hintFh < 10) { hintFh = 10; }
+        var hintY = _h * 64 / 100;
         dc.setColor((_tick % 8 < 5) ? 0xFF8844 : 0xFF5500, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx + ox, hintY + oy, Graphics.FONT_XTINY, dirTxt, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 6 < 3) ? 0x66FF88 : 0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx + ox, hintY + 14 + oy, Graphics.FONT_XTINY, counterTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + ox, hintY + hintFh + 2 + oy, Graphics.FONT_XTINY, counterTxt, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x4477AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx + ox, _h * 84 / 100 + oy, Graphics.FONT_XTINY, "Tap = reel boost", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + ox, hintY + hintFh * 2 + 6 + oy, Graphics.FONT_XTINY, "Tap = reel boost", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawReelAnim(dc, ox, oy) {
@@ -1420,20 +1548,35 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawResultMsg(dc, ox, oy) {
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (fh < 10) { fh = 10; }
         if (gameState == GS_CAUGHT) {
-            var msgY = _h * 20 / 100;
+            var msgY = _h * 18 / 100;
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, msgY + 1 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, msgY + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 68 / 100 + oy, Graphics.FONT_XTINY, "+" + _lastPts + " pts", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 78 / 100 + oy, Graphics.FONT_XTINY, _levelCatches + "/" + _goalCount + " this level", Graphics.TEXT_JUSTIFY_CENTER);
-            if (_combo > 1) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 87 / 100 + oy, Graphics.FONT_XTINY, "COMBO x" + _combo, Graphics.TEXT_JUSTIFY_CENTER); }
+            // Bottom stack, spaced by font height so pts / goal / combo never overlap.
+            var stackY = _h * 70 / 100;
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx + ox, stackY + oy, Graphics.FONT_XTINY, "+" + _lastPts + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+            stackY += fh + 2;
+            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx + ox, stackY + oy, Graphics.FONT_XTINY,
+                        _levelCatches + "/" + _goalCount + " this level",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            if (_combo > 1) {
+                stackY += fh + 2;
+                dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_cx + ox, stackY + oy, Graphics.FONT_XTINY, "COMBO x" + _combo, Graphics.TEXT_JUSTIFY_CENTER);
+            }
         } else {
             var mc = (gameState == GS_SNAP) ? 0xFF4444 : 0xFF8844;
             var msgY2 = _h * 26 / 100;
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, msgY2 + 1 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(mc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, msgY2 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
             var heartStr = ""; for (var li = 0; li < _fishLives; li++) { heartStr = heartStr + "*"; }
-            dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 46 / 100 + oy, Graphics.FONT_XTINY, _fishLives > 0 ? heartStr : "GAME OVER!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx + ox, msgY2 + dc.getFontHeight(Graphics.FONT_SMALL) + 4 + oy, Graphics.FONT_XTINY,
+                        _fishLives > 0 ? heartStr : "GAME OVER!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -1484,13 +1627,38 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawHUD(dc, ox, oy) {
-        dc.setColor(0xEEFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4 + ox, 2 + oy, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
-        var heartStr = ""; for (var li = 0; li < _fishLives; li++) { heartStr = heartStr + "*"; }
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4 + ox, 14 + oy, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_RIGHT);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, 2 + oy, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
+        // Two clean rows using real font height so labels never collide, and
+        // a reserved centre lane so left (level/goal) never runs into right
+        // (score/lives) on small round screens.
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (fh < 10) { fh = 10; }
+        var y0 = 2 + oy;
+        var y1 = y0 + fh + 1;
+        var leftX  = 4 + ox;
+        var rightX = _w - 4 + ox;
+
+        dc.setColor(0xEEFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(rightX, y0, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
+        var heartStr = "";
+        for (var li = 0; li < _fishLives; li++) { heartStr = heartStr + "*"; }
+        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(rightX, y1, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_RIGHT);
+
+        // During fight the tension bar owns the top band — keep only the
+        // compact score/lives on the right so names don't stack.
+        if (gameState == GS_FIGHT || gameState == GS_REEL) { return; }
+
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(leftX, y0, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
         var goalTxt = _levelCatches + "/" + _goalCount;
-        if (_goalMinType > 0 && !_levelGotSpecial) { goalTxt = goalTxt + " +" + _fishNames[_goalMinType]; }
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, 14 + oy, Graphics.FONT_XTINY, goalTxt, Graphics.TEXT_JUSTIFY_LEFT);
+        if (_goalMinType > 0 && !_levelGotSpecial) {
+            // Short species tag (first 6 chars) so it can't collide with score.
+            var nm = _fishNames[_goalMinType];
+            if (nm.length() > 6) { nm = nm.substring(0, 6); }
+            goalTxt = goalTxt + " +" + nm;
+        }
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(leftX, y1, Graphics.FONT_XTINY, goalTxt, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function drawGameOver(dc) {

@@ -260,6 +260,7 @@ class GameController {
         lives = lives - 1;
         if (lives <= 0) {
             state = CS_OVER;
+            try { SaveResume.clear("chickencross"); } catch (e) {}
             if (score > bestScore) { bestScore = score; _saveBest(); }
             // Final splat — heavy fail sting + long jolt.
             _tone(4);
@@ -278,6 +279,7 @@ class GameController {
         score = score + 200 + level * 50;
         if (level >= 9) {
             state = CS_WIN;
+            try { SaveResume.clear("chickencross"); } catch (e) {}
             if (score > bestScore) { bestScore = score; _saveBest(); }
             // Victory fanfare.
             _tone(3);
@@ -290,5 +292,42 @@ class GameController {
         _tone(3);
         _vibe(60, 120);
         _spawnRound();
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Light save: level/lives/score only. Resuming re-spawns the round
+    // (fresh obstacles + chicken at the start row) rather than trying to
+    // reconstruct in-flight lane traffic mid-hop.
+    function exportSave() {
+        if (state != CS_PLAY) { return null; }
+        return {
+            "level" => level,
+            "lives" => lives,
+            "score" => score,
+            "menuDiff" => menuDiff
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var lv = data["level"];
+            var li = data["lives"];
+            var sc = data["score"];
+            if (!(lv instanceof Number) || !(li instanceof Number) || !(sc instanceof Number)) {
+                return false;
+            }
+            level = lv;
+            lives = li;
+            score = sc;
+            var md = data["menuDiff"];
+            if (md instanceof Number && md >= 0 && md <= 2) { menuDiff = md; }
+            _submitted = false;
+            _fxOn = _loadFx();
+            _spawnRound();
+            state = CS_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
     }
 }

@@ -68,6 +68,10 @@ class BitochiPokerView extends WatchUi.View {
     // Sound + haptics master switch (OPTIONS: pk_fx). 0/unset = ON, 1 = OFF.
     hidden var _fxOn;
 
+    // true once a SaveResume blob has been applied — skips the auto-start
+    // that would otherwise begin a fresh session on first show/update.
+    hidden var _skipStart;
+
     // Layout
     hidden var _cw; hidden var _ch; hidden var _gap;
     hidden var _startX; hidden var _pY; hidden var _aY;
@@ -99,6 +103,7 @@ class BitochiPokerView extends WatchUi.View {
         _fxOn = _loadFx();
         _w = 240; _h = 240;
         _timer = null;
+        _skipStart = false;
     }
 
     function onLayout(dc) {
@@ -113,8 +118,11 @@ class BitochiPokerView extends WatchUi.View {
         }
         // The main menu is the shared root view; drop straight into a session.
         // Only auto-start from a fresh launch (PK_MENU) so returning from the
-        // post-game leaderboard card doesn't restart the session.
-        if (_gs == PK_MENU) { startGame(); }
+        // post-game leaderboard card doesn't restart the session. A resumed
+        // session (_skipStart) already has _gs != PK_MENU; clear the one-shot
+        // flag once consumed so a later fresh session still auto-starts.
+        if (_gs == PK_MENU && !_skipStart) { startGame(); }
+        _skipStart = false;
         // Surface today's login-streak bonus as a one-shot table toast (queued
         // by the App's checkIn on the day's first launch).
         try {
@@ -219,13 +227,113 @@ class BitochiPokerView extends WatchUi.View {
         }
     }
 
-    // BACK returns to the shared menu (framework pops this pushed view).
-    // Submit the peak-chip score once so the session still counts.
+    // BACK: submit the peak-chip score once so the session still counts
+    // (matches prior behaviour on every exit attempt), then offer to save
+    // progress (SaveResume) before leaving. exportSave() gates the actual
+    // save to safe checkpoints (PK_EXCHANGE / PK_SHOWDOWN) — elsewhere the
+    // prompt is skipped and confirmExit just pops the view.
     function doBack() {
         if (!_scoreSubmitted) {
             _scoreSubmitted = true;
             Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
         }
+        return SaveResume.confirmExit("poker", method(:exportSave));
+    }
+
+    // ─── Mid-run save / resume (shared SaveResume) ─────────────────────────────
+
+    // Apply a SaveResume blob before the first paint (called from resumeGame).
+    function loadResume(data) as Void {
+        if (data != null && _applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    // Only safe checkpoints: exchanging cards, or settled between hands
+    // (PK_SHOWDOWN). Never mid dealer/AI animation (PK_DEAL / PK_AI_DRAW).
+    function exportSave() {
+        if (_gs != PK_EXCHANGE && _gs != PK_SHOWDOWN) { return null; }
+
+        var deck = [];
+        for (var i = 0; i < 52; i++) { deck.add(_deck[i]); }
+        var pHand = [_pHand[0], _pHand[1], _pHand[2], _pHand[3], _pHand[4]];
+        var aHand = [_aHand[0], _aHand[1], _aHand[2], _aHand[3], _aHand[4]];
+        var disc = [];
+        for (var i = 0; i < 5; i++) { disc.add(_discard[i] ? 1 : 0); }
+
+        return {
+            "gs"       => _gs,
+            "deck"     => deck,
+            "top"      => _deckTop,
+            "pHand"    => pHand,
+            "aHand"    => aHand,
+            "disc"     => disc,
+            "cursor"   => _cursor,
+            "pChips"   => _pChips,
+            "aChips"   => _aChips,
+            "pot"      => _pot,
+            "peak"     => _peakChips,
+            "handsIdx" => _handsIdx,
+            "played"   => _handsPlayed,
+            "scoreSub" => _scoreSubmitted ? 1 : 0,
+            "result"   => _resultMsg
+        };
+    }
+
+    hidden function _applySave(data) {
+        try {
+            var gs = data["gs"];
+            if (!(gs instanceof Number) || (gs != PK_EXCHANGE && gs != PK_SHOWDOWN)) {
+                return false;
+            }
+            var deck  = data["deck"];
+            var pHand = data["pHand"];
+            var aHand = data["aHand"];
+            var disc  = data["disc"];
+            if (!(deck instanceof Array) || !(pHand instanceof Array) ||
+                !(aHand instanceof Array) || !(disc instanceof Array)) {
+                return false;
+            }
+            if (deck.size() < 52 || pHand.size() < 5 || aHand.size() < 5 || disc.size() < 5) {
+                return false;
+            }
+
+            if (_cw == 0 && _w > 0) { setupLayout(); }
+
+            for (var i = 0; i < 52; i++) { _deck[i] = deck[i]; }
+            var top = data["top"];
+            _deckTop = (top instanceof Number) ? top : 0;
+            for (var i = 0; i < 5; i++) {
+                _pHand[i] = pHand[i];
+                _aHand[i] = aHand[i];
+                var d = disc[i];
+                _discard[i] = (d instanceof Number && d != 0);
+            }
+
+            var cur = data["cursor"];
+            _cursor = (cur instanceof Number) ? cur : 5;
+            var pc = data["pChips"];
+            _pChips = (pc instanceof Number) ? pc : POKER_START_CHIPS;
+            var ac = data["aChips"];
+            _aChips = (ac instanceof Number) ? ac : POKER_START_CHIPS;
+            var pot = data["pot"];
+            _pot = (pot instanceof Number) ? pot : 0;
+            var pk = data["peak"];
+            _peakChips = (pk instanceof Number) ? pk : _pChips;
+            var hi = data["handsIdx"];
+            _handsIdx = (hi instanceof Number && hi >= 0 && hi <= 2) ? hi : _handsIdx;
+            _handLimit = [10, 20, 40][_handsIdx];
+            var pl = data["played"];
+            _handsPlayed = (pl instanceof Number) ? pl : 0;
+            var ss = data["scoreSub"];
+            _scoreSubmitted = (ss instanceof Number && ss != 0);
+            var rm = data["result"];
+            _resultMsg = (rm instanceof String) ? rm : "";
+            _pgUnlockMsg = null;
+            _fxOn = _loadFx();
+            _gs = gs;
+            return true;
+        } catch (e) {}
         return false;
     }
 
@@ -284,6 +392,7 @@ class BitochiPokerView extends WatchUi.View {
     // meaningful high score; the peak stack rewards how high the player grew
     // their chips. HIGHER is better. No variant.
     hidden function endSession() {
+        try { SaveResume.clear("poker"); } catch (e) {}
         if (_scoreSubmitted) { return; }
         _scoreSubmitted = true;
         Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());

@@ -9,7 +9,16 @@ using Toybox.Lang;
 class MakaoHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("makao_lite"); }
+
+    function resumeGame() as Void {
+        var v = new GameView();
+        v.loadResume(SaveResume.load("makao_lite"));
+        WatchUi.pushView(v, new GameDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("makao_lite");
         var v = new GameView();
         WatchUi.pushView(v, new GameDelegate(v), WatchUi.SLIDE_LEFT);
     }

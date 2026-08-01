@@ -12,12 +12,12 @@ class BitochiMinigolfDelegate extends WatchUi.BehaviorDelegate {
         var key = evt.getKey();
         if (key == WatchUi.KEY_UP)   { _view.doUp();   WatchUi.requestUpdate(); return true; }
         if (key == WatchUi.KEY_DOWN) { _view.doDown(); WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_MENU) { _view.doMenu(); WatchUi.requestUpdate(); return true; }
+        if (key == WatchUi.KEY_MENU) { var h = onBack(); WatchUi.requestUpdate(); return h; }
         return false;
     }
 
     function onSelect()       { _view.doSelect(); WatchUi.requestUpdate(); return true; }
-    function onBack()         { var h = _view.doBack(); WatchUi.requestUpdate(); return h; }
+    function onBack()         { return SaveResume.confirmExit("minigolf", _view.method(:exportSave)); }
     function onPreviousPage() { _view.doUp();     WatchUi.requestUpdate(); return true; }
     function onNextPage()     { _view.doDown();   WatchUi.requestUpdate(); return true; }
 

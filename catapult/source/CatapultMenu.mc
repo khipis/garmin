@@ -9,7 +9,16 @@ using Toybox.Lang;
 class CatapultHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("catapult"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiCatapultView();
+        v.loadResume(SaveResume.load("catapult"));
+        WatchUi.pushView(v, new BitochiCatapultDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("catapult");
         var v = new BitochiCatapultView();
         WatchUi.pushView(v, new BitochiCatapultDelegate(v), WatchUi.SLIDE_LEFT);
     }

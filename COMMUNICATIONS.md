@@ -242,11 +242,11 @@ once fetched. Example from `breathtrainingtool`:
 
 ```monkeyc
 Leaderboard.announce("breathtrainingtool", {
-    "title"     => "Go deeper with PRO",
-    "body"      => "Loving this tool? Breath Training System adds a coach, adaptive plans and progression. Find it on the Connect IQ Store.",
-    "url"       => "https://apps.garmin.com/apps/bitochi",
-    "url_label" => "Get the System",
-    "min_gap_s" => 172800
+    "title"     => "You're on the free lite",
+    "body"      => "Breath Training System is the real one — distraction-free, fully featured, with a coach, adaptive plans, readiness and way more. Open on your phone:",
+    "url"       => "https://bitochi.com/pro",
+    "url_label" => "Get Breath Training System",
+    "min_gap_s" => 1800
 });
 ```
 
@@ -360,3 +360,22 @@ dismiss to the leaderboard board. It can **never** crash the host game.
 
 **Code:** `_shared/leaderboard/LbStanding.mc` (`LbStandingFetch`,
 `LbStandingView`, `LbStandingDelegate`); wired from `LbPostGame._fire`.
+
+---
+
+## 10. Raid / fight inbox (async rivalry)
+
+Lightweight player-to-player notices for **Space Colony** and **Creatures**.
+Not a push notification and not authoritative PvP — the attacker still resolves
+the fight locally, then posts a short event so the victim sees *"X attacked you"*
+on their next launch (WAR LOG / ARENA log + RAID ALERT overlay).
+
+| Method & path | Auth | Purpose |
+|---------------|------|---------|
+| `POST /event` | `X-LB-Key` | `{ game, from, to, kind:"raid"\|"fight", won:0\|1 }` |
+| `GET /inbox?game=&user=&since=` | none | Events for `user` with `id > since` (client watermark) |
+
+Caps: 12 posts / from / game / day, 2 per from→to pair / day. Rows older than
+14 days are pruned on the weekly cron. Client: `_shared/raidmail/LbEvents.mc`
+(`RaidMail.notify`, `LbRaidInbox`) — wired only into Space Colony / Creatures.
+Offline watches keep the local defence RNG.

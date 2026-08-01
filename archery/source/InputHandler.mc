@@ -143,8 +143,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var consumed = _v.navBack();
         WatchUi.requestUpdate();
         if (consumed) { return true; }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return SaveResume.confirmExit(LB_GAME_ID, _v.method(:exportSave));
     }
 
     // ── Touch ─────────────────────────────────────────────

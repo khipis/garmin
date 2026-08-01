@@ -13,7 +13,16 @@ using Toybox.Lang;
 class SniperScopeHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists(SS_LB_GAME_ID); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load(SS_LB_GAME_ID));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear(SS_LB_GAME_ID);
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

@@ -803,6 +803,82 @@ class BitochiMinigolfView extends WatchUi.View {
         _gs = MG_AIM;
     }
 
+    // ── SaveResume (see _shared/menu/SaveResume.mc) ─────────────────────────
+    // Settled points only: MG_AIM (ball at rest, about to shoot) and MG_HOLED
+    // (between-holes card, waiting for a tap) — never mid-roll/mid-power.
+    // Course geometry (walls/obstacles/tee/cup) isn't serialized; it's
+    // deterministically rebuilt from _holeIdx via loadHole() on resume.
+    function loadResume(data) as Void {
+        applySave(data);
+    }
+
+    function exportSave() {
+        if (_gs != MG_AIM && _gs != MG_HOLED) { return null; }
+        return {
+            "diff"     => _difficulty,
+            "hole"     => _holeIdx,
+            "strokes"  => _strokes,
+            "total"    => _totalStrokes,
+            "lives"    => _lives,
+            "score"    => _score,
+            "sunk"     => _holesSunk,
+            "ool"      => _outOfLives ? 1 : 0,
+            "aces"     => _aceCount,
+            "flawless" => _flawless ? 1 : 0,
+            "card"     => _scoreCard,
+            "gs"       => _gs,
+            "bx"       => _bx,
+            "by"       => _by,
+            "aim"      => _aimAngle,
+            "hmsg"     => _holeMsg,
+            "hwait"    => _holeWait
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var diff = data["diff"];
+            if (!(diff instanceof Number) || diff < 0 || diff > 2) { return false; }
+            var hole = data["hole"];
+            if (!(hole instanceof Number) || hole < 0 || hole >= MG_HOLES) { return false; }
+            var card = data["card"];
+            if (!(card instanceof Array) || card.size() != MG_HOLES) { return false; }
+            var gsv = data["gs"];
+            if (!(gsv instanceof Number) || (gsv != MG_AIM && gsv != MG_HOLED)) { return false; }
+
+            _difficulty = diff;
+            _holeIdx = hole;
+            loadHole(_holeIdx);   // rebuilds walls/obstacles/tee/cup + difficulty-based ball allowance
+
+            for (var i = 0; i < MG_HOLES; i++) {
+                var v = card[i];
+                _scoreCard[i] = (v instanceof Number) ? v : -1;
+            }
+
+            var strokes = data["strokes"]; _strokes = (strokes instanceof Number) ? strokes : 0;
+            var total = data["total"]; _totalStrokes = (total instanceof Number) ? total : 0;
+            var lives = data["lives"]; _lives = (lives instanceof Number) ? lives : MG_START_LIVES;
+            var score = data["score"]; _score = (score instanceof Number) ? score : 0;
+            var sunk = data["sunk"]; _holesSunk = (sunk instanceof Number) ? sunk : 0;
+            var ool = data["ool"]; _outOfLives = (ool instanceof Number && ool != 0);
+            var aces = data["aces"]; _aceCount = (aces instanceof Number) ? aces : 0;
+            var fl = data["flawless"]; _flawless = (fl instanceof Number && fl != 0);
+
+            var bxv = data["bx"]; if (bxv instanceof Number) { _bx = bxv; }
+            var byv = data["by"]; if (byv instanceof Number) { _by = byv; }
+            _lastBx = _bx; _lastBy = _by;
+            var aim = data["aim"]; if (aim instanceof Number) { _aimAngle = aim; }
+
+            var hmsg = data["hmsg"]; _holeMsg = (hmsg instanceof String) ? hmsg : "";
+            var hwait = data["hwait"]; _holeWait = (hwait instanceof Number) ? hwait : 0;
+
+            _gs = gsv;
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     hidden function nextHole() {
         // Run ends the moment the player is out of lives…
         if (_lives <= 0) {
@@ -824,6 +900,7 @@ class BitochiMinigolfView extends WatchUi.View {
     // Submit the points total (HIGHER is better) for this difficulty and show
     // the post-game leaderboard.
     hidden function endRun() {
+        try { SaveResume.clear("minigolf"); } catch (e) {}
         // Flawless Round — finished every hole without ever losing a life.
         if (!_outOfLives && _lives == MG_START_LIVES) {
             _flawless = true;

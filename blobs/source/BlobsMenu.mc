@@ -9,7 +9,16 @@ using Toybox.Lang;
 class BlobsHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("blobs"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiBlobsView();
+        v.loadResume(SaveResume.load("blobs"));
+        WatchUi.pushView(v, new BitochiBlobsDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("blobs");
         var v = new BitochiBlobsView();
         WatchUi.pushView(v, new BitochiBlobsDelegate(v), WatchUi.SLIDE_LEFT);
     }

@@ -71,6 +71,7 @@ class ColonyView extends WatchUi.View {
     hidden var _pendingWelcome;
     hidden var _explain;         // first-run stats-as-currency explainer
     hidden var _raidResult;      // showing the WON/LOST raid overlay
+    hidden var _raidMail;        // async "you were raided" inbox overlay
 
     hidden var _demo;            // demo fast-track running
     hidden var _demoT;           // demo sub-tick counter
@@ -83,6 +84,7 @@ class ColonyView extends WatchUi.View {
     hidden var _rBtnA; hidden var _rBtnB;
     hidden var _rPrev; hidden var _rNext; hidden var _rDemo;
     hidden var _roster;          // once-a-day rival fetch (never blocks play)
+    hidden var _inbox;           // async raid-mail pull (never blocks play)
 
     function initialize() {
         View.initialize();
@@ -91,12 +93,12 @@ class ColonyView extends WatchUi.View {
         _cur = 0; _scroll = 0;
         _popup = null; _popupT = 0;
         _welcome = false; _event = false; _evChoice = 0; _pendingWelcome = false;
-        _explain = false; _raidResult = false;
+        _explain = false; _raidResult = false; _raidMail = false;
         _demo = false; _demoT = 0;
         _cardKind = -1; _cardId = 0;
         _rows = []; _rowIds = []; _tabs = [];
         _rBtnA = null; _rBtnB = null; _rPrev = null; _rNext = null; _rDemo = null;
-        _roster = null;
+        _roster = null; _inbox = null;
         _loadFx();
         _loadDemo();
 
@@ -142,15 +144,22 @@ class ColonyView extends WatchUi.View {
             if (_roster == null) { _roster = new RivalRoster(_m); }
             _roster.schedule();
         } catch (e) {}
+        try {
+            if (_inbox == null) { _inbox = new LbRaidInbox(Sc.GAME_ID, _m); }
+            _inbox.arm();
+        } catch (e) {}
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
         try { if (_roster != null) { _roster.stop(); } } catch (e) {}
+        try { if (_inbox != null) { _inbox.stop(); } } catch (e) {}
         try { _m.save(); } catch (e) {}
     }
     function _tick() as Void {
         _t = (_t + 1) % 1000000;
         try { if (_roster != null) { _roster.poll(); } } catch (e) {}
+        try { if (_inbox != null) { _inbox.poll(); } } catch (e) {}
+        try { _checkRaidMail(); } catch (e) {}
         if (_popupT > 0) { _popupT -= 1; if (_popupT == 0) { _popup = null; } }
         if (_demo && !_event && !_welcome) {
             _demoT += 1;
@@ -267,6 +276,7 @@ class ColonyView extends WatchUi.View {
     hidden function _dismiss() {
         if (_event) { return false; }   // events must be answered
         if (_raidResult) { _raidResult = false; WatchUi.requestUpdate(); return true; }
+        if (_raidMail) { _raidMail = false; WatchUi.requestUpdate(); return true; }
         if (_welcome) { _welcome = false; WatchUi.requestUpdate(); return true; }
         if (_explain) { _explain = false; _markExplainSeen(); WatchUi.requestUpdate(); return true; }
         return false;
@@ -411,6 +421,7 @@ class ColonyView extends WatchUi.View {
             return true;
         }
         if (_raidResult) { _dismiss(); return true; }
+        if (_raidMail) { _dismiss(); return true; }
         if (_welcome) { _dismiss(); return true; }
         if (_explain) { _dismiss(); return true; }
         if (cardOpen()) {
@@ -463,6 +474,7 @@ class ColonyView extends WatchUi.View {
         if (cardOpen()) { _drawCard(dc); }
         if (_popup != null) { _drawPopup(dc); }
         if (_raidResult) { _drawRaidResult(dc); }
+        else if (_raidMail) { _drawRaidMail(dc); }
         else if (_welcome) { _drawWelcome(dc); }
         else if (_explain) { _drawExplain(dc); }
         if (_event) { _drawEvent(dc); }
@@ -1272,6 +1284,45 @@ class ColonyView extends WatchUi.View {
     }
 
     // ── Overlays ──────────────────────────────────────────────────────────────
+    // Inbox arrives ~12 s after open. If WELCOME BACK is still up the summary
+    // line updates on the next frame; otherwise surface a short RAID ALERT.
+    hidden function _checkRaidMail() {
+        if (!_m.mailAlert) { return; }
+        _m.mailAlert = false;
+        if (_welcome || _event || _raidResult || _raidMail) { return; }
+        _raidMail = true;
+        try { _tone(2); _vibe(40, 80); } catch (e) {}
+    }
+
+    hidden function _drawRaidMail(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x14060A, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(0x241014, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        _txt(dc, cx, _h * 15 / 100, Graphics.FONT_SMALL, 0xFF6A6A,
+             "RAID ALERT", Graphics.TEXT_JUSTIFY_CENTER);
+        var sum = "";
+        try { sum = _m.defenceSummary(); } catch (e) { sum = ""; }
+        if (sum.length() > 0) {
+            _txtFit(dc, cx, _h * 30 / 100, Graphics.FONT_TINY,
+                    _m.defenceAllHeld() ? 0x6FE08A : 0xFF8A8A, sum, _w * 78 / 100);
+        }
+        var who = "";
+        try { who = _m.defenceText(0); } catch (e) { who = ""; }
+        if (who.length() > 0) {
+            _wrap(dc, cx, _h * 42 / 100, _w * 80 / 100, Graphics.FONT_XTINY, Sc.TEXT, who);
+        }
+        _txt(dc, cx, _h * 62 / 100, Graphics.FONT_XTINY, Sc.GOLD,
+             Sc.warRankName(_m.warPts) + "  " + _m.warWins + "W-" + _m.warLosses + "L",
+             Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 78 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+             "see WAR LOG for details", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Sc.MUTED,
+             "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     hidden function _drawWelcome(dc) {
         var cx = _w / 2;
         dc.setColor(0x040609, Graphics.COLOR_TRANSPARENT); dc.clear();

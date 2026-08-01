@@ -47,6 +47,17 @@ class BilliardView extends WatchUi.View {
         _game.setScreenSize(dc.getWidth(), dc.getHeight());
     }
 
+    // ── SaveResume passthrough (see BilliardGame.exportSave/applySave) ──
+    // Called before pushView() so the game is already sitting at BS_AIM
+    // (not BS_MENU) by the time onShow()/onUpdate() run their auto-start
+    // checks below, and they naturally no-op.
+    function loadResume(data) as Void {
+        _game.applySave(data);
+    }
+    function exportSave() {
+        return _game.exportSave();
+    }
+
     // Build (or rebuild, if the screen size ever changes) the cached table
     // background. Guarded with a try/catch — if bitmap creation isn't
     // available/fails for any reason we just keep drawing the table live

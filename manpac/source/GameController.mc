@@ -397,6 +397,7 @@ class GameController {
 
     hidden function _onWin() {
         state = GS_WIN;
+        try { SaveResume.clear("manpac"); } catch (e) {}
         // Victory fanfare.
         _tone(1);
         _vibe(100, 250);
@@ -408,6 +409,7 @@ class GameController {
     }
     hidden function _onGameOver() {
         state = GS_OVER;
+        try { SaveResume.clear("manpac"); } catch (e) {}
         // Game-over sting.
         _tone(2);
         _vibe(100, 200);
@@ -446,5 +448,77 @@ class GameController {
         } catch (e) {}
         if (sel == 1 && Progress.owns("manpac_skin2")) { return 0x33FFCC; }
         return 0xFFE100;
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Manpac's tick fully resolves each move before returning control, so
+    // GS_PLAY is always a settled snapshot point — never mid-animation.
+    // Captures level/score/lives/maze pellets + player & ghost positions.
+    function exportSave() {
+        if (state != GS_PLAY) { return null; }
+        var gridArr = new [n * n];
+        for (var i = 0; i < n * n; i++) { gridArr[i] = grid[i]; }
+
+        var gCount = ghosts.size();
+        var gr = new [4]; var gc = new [4]; var gdir = new [4]; var gtype = new [4];
+        var ghr = new [4]; var ghc = new [4]; var gfr = new [4]; var grt = new [4];
+        for (var i = 0; i < 4; i++) {
+            if (i < gCount) {
+                var g = ghosts[i];
+                gr[i] = g.r; gc[i] = g.c; gdir[i] = g.dir; gtype[i] = g.type;
+                ghr[i] = g.homeR; ghc[i] = g.homeC;
+                gfr[i] = g.frightened ? 1 : 0; grt[i] = g.respawnTicks;
+            } else {
+                gr[i] = 0; gc[i] = 0; gdir[i] = 0; gtype[i] = 0;
+                ghr[i] = 0; ghc[i] = 0; gfr[i] = 0; grt[i] = 0;
+            }
+        }
+
+        return {
+            "level" => level, "score" => score, "lives" => lives,
+            "pelletsLeft" => pelletsLeft, "frightTicks" => frightTicks, "fearChain" => fearChain,
+            "grid" => gridArr,
+            "pr" => player.r, "pc" => player.c, "pdir" => player.dir,
+            "pndir" => player.nextDir, "pmp" => player.mouthPhase,
+            "gCount" => gCount,
+            "gr" => gr, "gc" => gc, "gdir" => gdir, "gtype" => gtype,
+            "ghr" => ghr, "ghc" => ghc, "gfr" => gfr, "grt" => grt
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from ManpacHooks).
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var gridArr = data["grid"];
+            if (!(gridArr instanceof Array) || gridArr.size() != n * n) { return false; }
+
+            level = data["level"]; score = data["score"]; lives = data["lives"];
+            pelletsLeft = data["pelletsLeft"]; frightTicks = data["frightTicks"]; fearChain = data["fearChain"];
+
+            grid = new [n * n];
+            for (var i = 0; i < n * n; i++) { grid[i] = gridArr[i]; }
+
+            player.r = data["pr"]; player.c = data["pc"]; player.dir = data["pdir"];
+            player.nextDir = data["pndir"]; player.mouthPhase = data["pmp"];
+
+            var gCount = data["gCount"];
+            var gr = data["gr"]; var gc = data["gc"]; var gdir = data["gdir"]; var gtype = data["gtype"];
+            var ghr = data["ghr"]; var ghc = data["ghc"]; var gfr = data["gfr"]; var grt = data["grt"];
+            ghosts = [];
+            for (var i = 0; i < gCount; i++) {
+                var g = new Ghost(gr[i], gc[i], gtype[i]);
+                g.dir = gdir[i]; g.homeR = ghr[i]; g.homeC = ghc[i];
+                g.frightened = (gfr[i] == 1); g.respawnTicks = grt[i];
+                ghosts.add(g);
+            }
+
+            pgUnlockMsg = null;
+            _fxOn = _loadFx();
+            _pelletCd = 0;
+            state = GS_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
     }
 }

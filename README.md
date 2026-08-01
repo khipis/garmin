@@ -63,6 +63,41 @@ Medieval siege game — 16 fairy-tale rounds of castle destruction. Aim angle th
 
 ---
 
+### 🏀 Daily Sport Challenge
+![dailysport](_LOGOS/dailysport_hero.png)
+**Folder:** `dailysport/` | **Type:** Sports / Daily Skill  
+One challenge a day, identical for every player on the planet, generated from the date itself so no server is needed. Six sports rotate through it — basketball, football, archery, tennis, golf and a ski hill — each with real 2D physics (drag, bounce, a target you can read off the screen) behind the same three-beat angle / power / release shot and the same honest predicted arc. Four rotating objectives (sprint, perfect, streak, tight target), free unranked practice on any sport, four venues and three balls to unlock, steps and active minutes converted into extra ranked attempts, day streaks and a global leaderboard per sport and objective.
+
+---
+
+### 🗝️ Dungeon Master
+![dungeonmaster](_LOGOS/dungeonmaster_hero.png)
+**Folder:** `dungeonmaster/` | **Type:** RPG / Dungeon Crawler  
+First-person pseudo-3D crawler in the spirit of Dungeon Master and Eye of the Beholder. Lightweight raycasting engine, grid movement, turn-based combat, procedural floors with secrets and traps, loot and level-ups, boss floors, daily dungeon seed and save/resume.
+
+---
+
+### 🏰 Tower Defense
+![towerdefense](_LOGOS/towerdefense_hero.png)
+**Folder:** `towerdefense/` | **Type:** Strategy / Tower Defense  
+Place and upgrade towers along a path to stop escalating waves. Seven towers with four visible tiers and per-tower targeting, seven enemy types plus bosses with rotating abilities, wave modifiers, airstrike and deep freeze, interest on unspent coins, four maps + daily challenge, save/resume, and global leaderboard scoring.
+
+---
+
+### 🚪 Backrooms Run
+![backrooms](_LOGOS/backrooms_hero.png)
+**Folder:** `backrooms/` | **Type:** Horror / Pseudo-3D Escape  
+Wolfenstein-style raycasting horror on a watch, with textured wallpaper, ceiling tiles and carpet drawn without a single bitmap. Sanity and torch battery both drain; the beam is the only thing that pushes back on the Shadow. Three entities that are never quite there, procedural floors, random horror events (lights out, shifting walls, glitch), daily seeded run, save/resume and multi-board leaderboards.
+
+---
+
+### 🧟 Zombie Survival: Last Stand
+![zombiesurvival](_LOGOS/zombiesurvival_hero.png)
+**Folder:** `zombiesurvival/` | **Type:** Idle / Base Defence  
+Idle base defence driven by real steps. You never run a character: the day is spent turning movement into scrap and scrap into walls, MG nests, mortars, tesla coils and traps, and at 21:00 local the horde arrives on its own — online or off, once per calendar day. Every screen carries the countdown. Watch the night and you see your turrets fight without you, with one concession to presence: hold SELECT and the survivor at the barricade fires his rifle. Holding unlocks a bigger night; being overrun costs a day and nothing you built. Burning-city parallax, blood moons and fog nights, all drawn from primitives without a single bitmap.
+
+---
+
 ### 🌌 Star Colony
 ![colony](_LOGOS/colony_hero.png)
 **Folder:** `colony/` | **Type:** Idle / Clicker  

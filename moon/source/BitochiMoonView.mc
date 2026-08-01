@@ -125,6 +125,10 @@ class BitochiMoonView extends WatchUi.View {
     hidden var _toastMsg;      // String or null
     hidden var _toastT;        // remaining ticks
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh MS_MENU start.
+    hidden var _skipStart;
+
     // ── Lander geometry constants (pixels) ─────────────────────────────────
     hidden var HW;   // hull half-width
     hidden var HH;   // hull height
@@ -191,6 +195,7 @@ class BitochiMoonView extends WatchUi.View {
         _lastQBonus = 0; _lastStreakBonus = 0;
         _pgUnlockMsg = null; _pgAwarded = false; _pgCoinsGain = 0;
         _toastMsg = null; _toastT = 0;
+        _skipStart = false;
     }
 
     // ── Level start ──────────────────────────────────────────────────────────
@@ -277,8 +282,9 @@ class BitochiMoonView extends WatchUi.View {
         _timer.start(method(:onTick), 50, true);
         // The main menu is the shared root view; drop straight into a game.
         // Only auto-start from a fresh launch (MS_MENU) so returning from the
-        // post-game leaderboard card doesn't restart the game.
-        if (_gs == MS_MENU) {
+        // post-game leaderboard card doesn't restart the game. _skipStart
+        // guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && _gs == MS_MENU) {
             startGame();
             // Surface today's login-streak bonus as a one-shot toast (queued
             // by the App's checkIn on the day's first launch).
@@ -436,6 +442,7 @@ class BitochiMoonView extends WatchUi.View {
                         Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
                         Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "MOON LANDER");
                         _awardProgress();
+                        try { SaveResume.clear("moon"); } catch (e) {}
                     }
                     doVibe(2);
                 }
@@ -632,6 +639,31 @@ class BitochiMoonView extends WatchUi.View {
         _pgAwarded = false; _pgUnlockMsg = null; _pgCoinsGain = 0;
         _clearParticles();
         startLevel();
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export at MS_WIN — the between-level checkpoint, right after
+    // touchdown — never mid-flight while the lander is still live.
+    function exportSave() {
+        if (_gs != MS_WIN) { return null; }
+        return {
+            "level" => _level, "lives" => _lives, "score" => _score,
+            "landStreak" => _landStreak
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from
+    // MoonHooks). Replays the same advance a tap on the WIN screen would
+    // do (doAction's MS_WIN branch): bump the level, then start it.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _level = data["level"]; _lives = data["lives"]; _score = data["score"];
+            _landStreak = data["landStreak"];
+            _level++;
+            startLevel();
+            _skipStart = true;
+        } catch (e) {}
     }
 
     function openLeaderboard() {

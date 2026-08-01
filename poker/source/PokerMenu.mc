@@ -9,7 +9,16 @@ using Toybox.Lang;
 class PokerHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("poker"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiPokerView();
+        v.loadResume(SaveResume.load("poker"));
+        WatchUi.pushView(v, new BitochiPokerDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("poker");
         var v = new BitochiPokerView();
         WatchUi.pushView(v, new BitochiPokerDelegate(v), WatchUi.SLIDE_LEFT);
     }

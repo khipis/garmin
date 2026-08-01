@@ -13,8 +13,17 @@ using Toybox.Lang;
 class BattleshipHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("battleship"); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load("battleship"));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     // START → drop straight into ship setup / a live match.
     function startGame() as Void {
+        SaveResume.clear("battleship");
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

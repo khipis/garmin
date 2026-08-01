@@ -1,0 +1,894 @@
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Lang,16,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 18; @symbol_classdef = [Raycaster,18,6,15]; ]
+class Raycaster {
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 18; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 18; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 19; @position = 8; @symbol_vardef = [cols,19,8,12]; ]
+    var cols;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 20; @position = 8; @symbol_vardef = [dist,20,8,12]; ]
+    var dist;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 21; @position = 8; @symbol_vardef = [side,21,8,12]; ]
+    var side;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 22; @position = 8; @symbol_vardef = [texX,22,8,12]; ]
+    var texX;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 23; @position = 8; @symbol_vardef = [cx,23,8,10]; ]
+    var cx;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 24; @position = 8; @symbol_vardef = [cy,24,8,10]; ]
+    var cy;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 25; @position = 8; @symbol_vardef = [dark,25,8,12]; ]
+    var dark;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 27; @symbol_functiondef = [initialize,27,13,23]; @symbol_param<0> = [n,27,24,25]; ]
+    function initialize(n) as Void {
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_27_27_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 28 8 ]
+        %tmp.1 = 0;
+        symbol [ cols ? 28 8 12 ];
+        putv self :cols %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 29 8 ]
+        %tmp.2 = self;
+        symbol [ resize %tmp.3 29 8 14 ];
+        %tmp.3 = getv function %tmp.2 :resize;
+        %tmp.4 = lgetv %n;
+        symbol [ n %tmp.4 29 15 16 ];
+        invoke %tmp.2 %tmp.3(%tmp.4);
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_27_27_30_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 32; @symbol_functiondef = [resize,32,13,19]; @symbol_param<0> = [n,32,20,21]; ]
+    function resize(n) {
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_32_23_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 33 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_8_33_28_if_stmt:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 33 12 13 ];
+        %tmp.2 = 8;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_8_33_28_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_8_33_28_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_19_33_28_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 33 21 ]
+        %tmp.4 = 8;
+        lputv %n %tmp.4;
+        symbol [ n %n 33 21 22 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_19_33_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_8_33_28_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_33_8_33_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_8_34_33_if_stmt:
+        %tmp.5 = lgetv %n;
+        symbol [ n %tmp.5 34 12 13 ];
+        symbol [ cols %tmp.7 34 17 21 ];
+        %tmp.7 = getv ? :cols;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_8_34_33_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_8_34_33_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_23_34_33_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 34 25 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_23_34_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_8_34_33_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_34_8_34_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 35 8 ]
+        %tmp.9 = lgetv %n;
+        symbol [ n %tmp.9 35 15 16 ];
+        symbol [ cols ? 35 8 12 ];
+        putv self :cols %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 36 8 ]
+        %tmp.11 = lgetv %n;
+        symbol [ n %tmp.11 36 20 21 ];
+        %tmp.10 = newa %tmp.11;
+        symbol [ dist ? 36 8 12 ];
+        putv self :dist %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 37 8 ]
+        %tmp.13 = lgetv %n;
+        symbol [ n %tmp.13 37 20 21 ];
+        %tmp.12 = newa %tmp.13;
+        symbol [ side ? 37 8 12 ];
+        putv self :side %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 38 8 ]
+        %tmp.15 = lgetv %n;
+        symbol [ n %tmp.15 38 20 21 ];
+        %tmp.14 = newa %tmp.15;
+        symbol [ texX ? 38 8 12 ];
+        putv self :texX %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 39 8 ]
+        %tmp.17 = lgetv %n;
+        symbol [ n %tmp.17 39 18 19 ];
+        %tmp.16 = newa %tmp.17;
+        symbol [ cx ? 39 8 10 ];
+        putv self :cx %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 40 8 ]
+        %tmp.19 = lgetv %n;
+        symbol [ n %tmp.19 40 18 19 ];
+        %tmp.18 = newa %tmp.19;
+        symbol [ cy ? 40 8 10 ];
+        putv self :cy %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 41 8 ]
+        %tmp.21 = lgetv %n;
+        symbol [ n %tmp.21 41 20 21 ];
+        %tmp.20 = newa %tmp.21;
+        symbol [ dark ? 41 8 12 ];
+        putv self :dark %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 42 8 ]
+        for @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_test @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_incr @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_begin" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 42 17 18 ];
+        %tmp.22 = 0;
+        lputv %i.1 %tmp.22;
+        symbol [ i %i.1 42 17 18 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_test:
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 42 24 25 ];
+        %tmp.24 = lgetv %n;
+        symbol [ n %tmp.24 42 28 29 ];
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_begin:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_36_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 43 12 ]
+        symbol [ dist %tmp.26 43 12 16 ];
+        %tmp.26 = getv self :dist;
+        %tmp.27 = 99.0;
+        %tmp.28 = lgetv %i.1;
+        symbol [ i %tmp.28 43 17 18 ];
+        aputv %tmp.26 %tmp.28 %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 43 28 ]
+        symbol [ side %tmp.29 43 28 32 ];
+        %tmp.29 = getv self :side;
+        %tmp.30 = 0;
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 43 33 34 ];
+        aputv %tmp.29 %tmp.31 %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 43 41 ]
+        symbol [ texX %tmp.32 43 41 45 ];
+        %tmp.32 = getv self :texX;
+        %tmp.33 = 0.0;
+        %tmp.34 = lgetv %i.1;
+        symbol [ i %tmp.34 43 46 47 ];
+        aputv %tmp.32 %tmp.34 %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 44 12 ]
+        symbol [ cx %tmp.35 44 12 14 ];
+        %tmp.35 = getv self :cx;
+        %tmp.36 = 0;
+        %tmp.37 = lgetv %i.1;
+        symbol [ i %tmp.37 44 15 16 ];
+        aputv %tmp.35 %tmp.37 %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 44 23 ]
+        symbol [ cy %tmp.38 44 23 25 ];
+        %tmp.38 = getv self :cy;
+        %tmp.39 = 0;
+        %tmp.40 = lgetv %i.1;
+        symbol [ i %tmp.40 44 26 27 ];
+        aputv %tmp.38 %tmp.40 %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 44 34 ]
+        symbol [ dark %tmp.41 44 34 38 ];
+        %tmp.41 = getv self :dark;
+        %tmp.42 = 0;
+        %tmp.43 = lgetv %i.1;
+        symbol [ i %tmp.43 44 39 40 ];
+        aputv %tmp.41 %tmp.43 %tmp.42;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_36_45_8_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 42 ]
+        %tmp.46 = lgetv %i.1;
+        symbol [ i %tmp.46 42 31 32 ];
+        %tmp.47 = add %tmp.46 1;
+        lputv %i.1 %tmp.47;
+        symbol [ i %i.1 42 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_test;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_42_8_45_8_for_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_32_23_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 50; @symbol_functiondef = [cast,50,13,17]; @symbol_param<0> = [map,50,18,21]; @symbol_param<1> = [px,50,23,25]; @symbol_param<2> = [py,50,27,29]; @symbol_param<3> = [dirX,50,31,35]; @symbol_param<4> = [dirY,50,37,41]; @symbol_param<5> = [planeX,50,43,49]; @symbol_param<6> = [planeY,50,51,57]; ]
+    function cast(map, px, py, dirX, dirY, planeX, planeY) as Void {
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 51 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 51 12 13 ];
+        symbol [ cols %tmp.2 51 16 20 ];
+        %tmp.2 = getv ? :cols;
+        lputv %n.1 %tmp.2;
+        symbol [ n %n.1 51 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 52 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_stop" ]
+        %last.2 = local;
+        symbol [ last %last.2 52 12 16 ];
+        %tmp.3 = lgetv %n.1;
+        symbol [ n %tmp.3 52 19 20 ];
+        %tmp.4 = 1;
+        %tmp.5 = sub %tmp.3 %tmp.4;
+        lputv %last.2 %tmp.5;
+        symbol [ last %last.2 52 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 53 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_8_53_34_if_stmt:
+        %tmp.6 = lgetv %last.2;
+        symbol [ last %tmp.6 53 12 16 ];
+        %tmp.7 = 1;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_8_53_34_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_8_53_34_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_22_53_34_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 53 24 ]
+        %tmp.9 = 1;
+        lputv %last.2 %tmp.9;
+        symbol [ last %last.2 53 24 28 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_22_53_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_8_53_34_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_53_8_53_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 55 8 ]
+        for @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_test @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_incr @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_begin" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_end" ]
+        %c.3 = local;
+        symbol [ c %c.3 55 17 18 ];
+        %tmp.10 = 0;
+        lputv %c.3 %tmp.10;
+        symbol [ c %c.3 55 17 18 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_test:
+        %tmp.11 = lgetv %c.3;
+        symbol [ c %tmp.11 55 24 25 ];
+        %tmp.12 = lgetv %n.1;
+        symbol [ n %tmp.12 55 28 29 ];
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_begin:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 57 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %camX.4 = local;
+        symbol [ camX %camX.4 57 16 20 ];
+        %tmp.14 = 2.0;
+        %tmp.15 = lgetv %c.3;
+        symbol [ c %tmp.15 57 29 30 ];
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %last.2;
+        symbol [ last %tmp.17 57 33 37 ];
+        %tmp.18 = div %tmp.16 %tmp.17;
+        %tmp.19 = 1.0;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        lputv %camX.4 %tmp.20;
+        symbol [ camX %camX.4 57 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 58 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %rdx.5 = local;
+        symbol [ rdx %rdx.5 58 16 19 ];
+        %tmp.21 = lgetv %dirX;
+        symbol [ dirX %tmp.21 58 22 26 ];
+        %tmp.22 = lgetv %planeX;
+        symbol [ planeX %tmp.22 58 29 35 ];
+        %tmp.23 = lgetv %camX.4;
+        symbol [ camX %tmp.23 58 38 42 ];
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = add %tmp.21 %tmp.24;
+        lputv %rdx.5 %tmp.25;
+        symbol [ rdx %rdx.5 58 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 59 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %rdy.6 = local;
+        symbol [ rdy %rdy.6 59 16 19 ];
+        %tmp.26 = lgetv %dirY;
+        symbol [ dirY %tmp.26 59 22 26 ];
+        %tmp.27 = lgetv %planeY;
+        symbol [ planeY %tmp.27 59 29 35 ];
+        %tmp.28 = lgetv %camX.4;
+        symbol [ camX %tmp.28 59 38 42 ];
+        %tmp.29 = mul %tmp.27 %tmp.28;
+        %tmp.30 = add %tmp.26 %tmp.29;
+        lputv %rdy.6 %tmp.30;
+        symbol [ rdy %rdy.6 59 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 61 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %mx.7 = local;
+        symbol [ mx %mx.7 61 16 18 ];
+        %tmp.31 = lgetv %px;
+        symbol [ px %tmp.31 61 21 23 ];
+        symbol [ toNumber %tmp.32 61 24 32 ];
+        %tmp.32 = getv function %tmp.31 :toNumber;
+        %tmp.33 = invoke %tmp.31 %tmp.32();
+        lputv %mx.7 %tmp.33;
+        symbol [ mx %mx.7 61 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 62 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %my.8 = local;
+        symbol [ my %my.8 62 16 18 ];
+        %tmp.34 = lgetv %py;
+        symbol [ py %tmp.34 62 21 23 ];
+        symbol [ toNumber %tmp.35 62 24 32 ];
+        %tmp.35 = getv function %tmp.34 :toNumber;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        lputv %my.8 %tmp.36;
+        symbol [ my %my.8 62 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 64 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %ddx.9 = local;
+        symbol [ ddx %ddx.9 64 16 19 ];
+        %tmp.37 = 1000000.0;
+        lputv %ddx.9 %tmp.37;
+        symbol [ ddx %ddx.9 64 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 65 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_12_65_74_if_stmt:
+        %tmp.38 = lgetv %rdx.5;
+        symbol [ rdx %tmp.38 65 16 19 ];
+        %tmp.39 = 0.0;
+        %tmp.40 = ne %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_12_65_74_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_12_65_74_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_28_65_74_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 65 30 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_begin:
+        %tmp.41 = lgetv %rdx.5;
+        symbol [ rdx %tmp.41 65 37 40 ];
+        %tmp.42 = 0.0;
+        %tmp.43 = lt %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_true:
+        %tmp.44 = -1.0;
+        %tmp.45 = lgetv %rdx.5;
+        symbol [ rdx %tmp.45 65 57 60 ];
+        %tmp.46 = div %tmp.44 %tmp.45;
+        push %tmp.46;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_else_false:
+        %tmp.47 = 1.0;
+        %tmp.48 = lgetv %rdx.5;
+        symbol [ rdx %tmp.48 65 69 72 ];
+        %tmp.49 = div %tmp.47 %tmp.48;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_end:
+        %tmp.50 = phi [%tmp.43 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_begin] [%tmp.46 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_else_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_36_65_69_end];
+        lputv %ddx.9 %tmp.50;
+        symbol [ ddx %ddx.9 65 30 33 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_28_65_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_12_65_74_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_65_12_65_74_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 66 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %ddy.10 = local;
+        symbol [ ddy %ddy.10 66 16 19 ];
+        %tmp.51 = 1000000.0;
+        lputv %ddy.10 %tmp.51;
+        symbol [ ddy %ddy.10 66 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 67 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_12_67_74_if_stmt:
+        %tmp.52 = lgetv %rdy.6;
+        symbol [ rdy %tmp.52 67 16 19 ];
+        %tmp.53 = 0.0;
+        %tmp.54 = ne %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_12_67_74_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_12_67_74_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_28_67_74_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 67 30 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_begin:
+        %tmp.55 = lgetv %rdy.6;
+        symbol [ rdy %tmp.55 67 37 40 ];
+        %tmp.56 = 0.0;
+        %tmp.57 = lt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_true:
+        %tmp.58 = -1.0;
+        %tmp.59 = lgetv %rdy.6;
+        symbol [ rdy %tmp.59 67 57 60 ];
+        %tmp.60 = div %tmp.58 %tmp.59;
+        push %tmp.60;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_else_false:
+        %tmp.61 = 1.0;
+        %tmp.62 = lgetv %rdy.6;
+        symbol [ rdy %tmp.62 67 69 72 ];
+        %tmp.63 = div %tmp.61 %tmp.62;
+        push %tmp.63;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_end:
+        %tmp.64 = phi [%tmp.57 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_begin] [%tmp.60 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_true] [%tmp.63 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_else_false] [%tmp.64 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_36_67_69_end];
+        lputv %ddy.10 %tmp.64;
+        symbol [ ddy %ddy.10 67 30 33 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_28_67_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_12_67_74_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_67_12_67_74_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 69 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %stepX.11 = local;
+        symbol [ stepX %stepX.11 69 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 69 23 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %sdx.12 = local;
+        symbol [ sdx %sdx.12 69 27 30 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 70 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_stmt:
+        %tmp.65 = lgetv %rdx.5;
+        symbol [ rdx %tmp.65 70 16 19 ];
+        %tmp.66 = 0.0;
+        %tmp.67 = lt %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_27_70_64_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 70 29 ]
+        %tmp.68 = -1;
+        lputv %stepX.11 %tmp.68;
+        symbol [ stepX %stepX.11 70 29 34 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 70 41 ]
+        %tmp.69 = lgetv %px;
+        symbol [ px %tmp.69 70 48 50 ];
+        %tmp.70 = lgetv %mx.7;
+        symbol [ mx %tmp.70 70 53 55 ];
+        %tmp.71 = sub %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %ddx.9;
+        symbol [ ddx %tmp.72 70 59 62 ];
+        %tmp.73 = mul %tmp.71 %tmp.72;
+        lputv %sdx.12 %tmp.73;
+        symbol [ sdx %sdx.12 70 41 44 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_27_70_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_71_27_71_70_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 71 29 ]
+        %tmp.74 = 1;
+        lputv %stepX.11 %tmp.74;
+        symbol [ stepX %stepX.11 71 29 34 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 71 41 ]
+        %tmp.75 = lgetv %mx.7;
+        symbol [ mx %tmp.75 71 48 50 ];
+        %tmp.76 = 1.0;
+        %tmp.77 = add %tmp.75 %tmp.76;
+        %tmp.78 = lgetv %px;
+        symbol [ px %tmp.78 71 59 61 ];
+        %tmp.79 = sub %tmp.77 %tmp.78;
+        %tmp.80 = lgetv %ddx.9;
+        symbol [ ddx %tmp.80 71 65 68 ];
+        %tmp.81 = mul %tmp.79 %tmp.80;
+        lputv %sdx.12 %tmp.81;
+        symbol [ sdx %sdx.12 71 41 44 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_71_27_71_70_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_70_12_71_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 72 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %stepY.13 = local;
+        symbol [ stepY %stepY.13 72 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 72 23 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %sdy.14 = local;
+        symbol [ sdy %sdy.14 72 27 30 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 73 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_stmt:
+        %tmp.82 = lgetv %rdy.6;
+        symbol [ rdy %tmp.82 73 16 19 ];
+        %tmp.83 = 0.0;
+        %tmp.84 = lt %tmp.82 %tmp.83;
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_27_73_64_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 73 29 ]
+        %tmp.85 = -1;
+        lputv %stepY.13 %tmp.85;
+        symbol [ stepY %stepY.13 73 29 34 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 73 41 ]
+        %tmp.86 = lgetv %py;
+        symbol [ py %tmp.86 73 48 50 ];
+        %tmp.87 = lgetv %my.8;
+        symbol [ my %tmp.87 73 53 55 ];
+        %tmp.88 = sub %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %ddy.10;
+        symbol [ ddy %tmp.89 73 59 62 ];
+        %tmp.90 = mul %tmp.88 %tmp.89;
+        lputv %sdy.14 %tmp.90;
+        symbol [ sdy %sdy.14 73 41 44 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_27_73_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_74_27_74_70_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 74 29 ]
+        %tmp.91 = 1;
+        lputv %stepY.13 %tmp.91;
+        symbol [ stepY %stepY.13 74 29 34 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 74 41 ]
+        %tmp.92 = lgetv %my.8;
+        symbol [ my %tmp.92 74 48 50 ];
+        %tmp.93 = 1.0;
+        %tmp.94 = add %tmp.92 %tmp.93;
+        %tmp.95 = lgetv %py;
+        symbol [ py %tmp.95 74 59 61 ];
+        %tmp.96 = sub %tmp.94 %tmp.95;
+        %tmp.97 = lgetv %ddy.10;
+        symbol [ ddy %tmp.97 74 65 68 ];
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        lputv %sdy.14 %tmp.98;
+        symbol [ sdy %sdy.14 74 41 44 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_74_27_74_70_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_73_12_74_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 76 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %hit.15 = local;
+        symbol [ hit %hit.15 76 16 19 ];
+        %tmp.99 = false;
+        lputv %hit.15 %tmp.99;
+        symbol [ hit %hit.15 76 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 77 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %sd.16 = local;
+        symbol [ sd %sd.16 77 16 18 ];
+        %tmp.100 = 0;
+        lputv %sd.16 %tmp.100;
+        symbol [ sd %sd.16 77 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 78 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %guard.17 = local;
+        symbol [ guard %guard.17 78 16 21 ];
+        %tmp.101 = 0;
+        lputv %guard.17 %tmp.101;
+        symbol [ guard %guard.17 78 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 79 12 ]
+        while @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_test @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_test:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_19_79_38_begin:
+        %tmp.102 = lgetv %hit.15;
+        symbol [ hit %tmp.102 79 20 23 ];
+        %tmp.103 = not %tmp.102;
+        %tmp.104 = dup %tmp.103;
+        bf %tmp.104 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_27_79_38_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_27_79_38_true:
+        %tmp.105 = lgetv %guard.17;
+        symbol [ guard %tmp.105 79 27 32 ];
+        symbol [ Br %tmp.107 79 35 37 ];
+        %tmp.107 = getv ? :Br;
+        symbol [ MAX_DDA %tmp.108 79 38 45 ];
+        %tmp.108 = getv %tmp.107 :MAX_DDA;
+        %tmp.109 = lt %tmp.105 %tmp.108;
+        %tmp.110 = and %tmp.103 %tmp.109;
+        push %tmp.110;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_27_79_38_end:
+        %tmp.111 = phi [%tmp.104 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_19_79_38_begin] [%tmp.110 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_27_79_38_true] [%tmp.111 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_27_79_38_end];
+        bf %tmp.111 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_begin:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_47_84_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 80 16 ]
+        %tmp.112 = lgetv %guard.17;
+        symbol [ guard %tmp.112 80 16 21 ];
+        %tmp.113 = 1;
+        %tmp.114 = add %tmp.112 %tmp.113;
+        lputv %guard.17 %tmp.114;
+        symbol [ guard %guard.17 80 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 81 16 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_stmt:
+        %tmp.115 = lgetv %sdx.12;
+        symbol [ sdx %tmp.115 81 20 23 ];
+        %tmp.116 = lgetv %sdy.14;
+        symbol [ sdy %tmp.116 81 26 29 ];
+        %tmp.117 = lt %tmp.115 %tmp.116;
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_31_81_66_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 81 33 ]
+        %tmp.118 = lgetv %sdx.12;
+        symbol [ sdx %tmp.118 81 33 36 ];
+        %tmp.119 = lgetv %ddx.9;
+        symbol [ ddx %tmp.119 81 40 43 ];
+        %tmp.120 = add %tmp.118 %tmp.119;
+        lputv %sdx.12 %tmp.120;
+        symbol [ sdx %sdx.12 81 33 36 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 81 45 ]
+        %tmp.121 = lgetv %mx.7;
+        symbol [ mx %tmp.121 81 45 47 ];
+        %tmp.122 = lgetv %stepX.11;
+        symbol [ stepX %tmp.122 81 51 56 ];
+        %tmp.123 = add %tmp.121 %tmp.122;
+        lputv %mx.7 %tmp.123;
+        symbol [ mx %mx.7 81 45 47 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 81 58 ]
+        %tmp.124 = 0;
+        lputv %sd.16 %tmp.124;
+        symbol [ sd %sd.16 81 58 60 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_31_81_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_82_31_82_66_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 82 33 ]
+        %tmp.125 = lgetv %sdy.14;
+        symbol [ sdy %tmp.125 82 33 36 ];
+        %tmp.126 = lgetv %ddy.10;
+        symbol [ ddy %tmp.126 82 40 43 ];
+        %tmp.127 = add %tmp.125 %tmp.126;
+        lputv %sdy.14 %tmp.127;
+        symbol [ sdy %sdy.14 82 33 36 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 82 45 ]
+        %tmp.128 = lgetv %my.8;
+        symbol [ my %tmp.128 82 45 47 ];
+        %tmp.129 = lgetv %stepY.13;
+        symbol [ stepY %tmp.129 82 51 56 ];
+        %tmp.130 = add %tmp.128 %tmp.129;
+        lputv %my.8 %tmp.130;
+        symbol [ my %my.8 82 45 47 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 82 58 ]
+        %tmp.131 = 1;
+        lputv %sd.16 %tmp.131;
+        symbol [ sd %sd.16 82 58 60 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_82_31_82_66_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_81_16_82_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 83 16 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_16_83_54_if_stmt:
+        %tmp.132 = lgetv %map;
+        symbol [ map %tmp.132 83 20 23 ];
+        symbol [ isWall %tmp.133 83 24 30 ];
+        %tmp.133 = getv function %tmp.132 :isWall;
+        %tmp.134 = lgetv %mx.7;
+        symbol [ mx %tmp.134 83 31 33 ];
+        %tmp.135 = lgetv %my.8;
+        symbol [ my %tmp.135 83 35 37 ];
+        %tmp.136 = invoke %tmp.132 %tmp.133(%tmp.134, %tmp.135);
+        bf %tmp.136 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_16_83_54_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_16_83_54_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_40_83_54_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 83 42 ]
+        %tmp.137 = true;
+        lputv %hit.15 %tmp.137;
+        symbol [ hit %hit.15 83 42 45 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_40_83_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_16_83_54_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_83_16_83_54_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_47_84_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_test;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_79_12_84_12_while_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 86 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %perp.18 = local;
+        symbol [ perp %perp.18 86 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 87 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_stmt:
+        %tmp.138 = lgetv %sd.16;
+        symbol [ sd %tmp.138 87 16 18 ];
+        %tmp.139 = 0;
+        %tmp.140 = eq %tmp.138 %tmp.139;
+        bf %tmp.140 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_25_87_45_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 87 27 ]
+        %tmp.141 = lgetv %sdx.12;
+        symbol [ sdx %tmp.141 87 34 37 ];
+        %tmp.142 = lgetv %ddx.9;
+        symbol [ ddx %tmp.142 87 40 43 ];
+        %tmp.143 = sub %tmp.141 %tmp.142;
+        lputv %perp.18 %tmp.143;
+        symbol [ perp %perp.18 87 27 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_25_87_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_88_25_88_45_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 88 27 ]
+        %tmp.144 = lgetv %sdy.14;
+        symbol [ sdy %tmp.144 88 34 37 ];
+        %tmp.145 = lgetv %ddy.10;
+        symbol [ ddy %tmp.145 88 40 43 ];
+        %tmp.146 = sub %tmp.144 %tmp.145;
+        lputv %perp.18 %tmp.146;
+        symbol [ perp %perp.18 88 27 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_88_25_88_45_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_87_12_88_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 89 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_12_89_44_if_stmt:
+        %tmp.147 = lgetv %perp.18;
+        symbol [ perp %tmp.147 89 16 20 ];
+        %tmp.148 = 0.06;
+        %tmp.149 = lt %tmp.147 %tmp.148;
+        bf %tmp.149 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_12_89_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_12_89_44_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_29_89_44_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 89 31 ]
+        %tmp.150 = 0.06;
+        lputv %perp.18 %tmp.150;
+        symbol [ perp %perp.18 89 31 35 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_29_89_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_12_89_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_89_12_89_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 90 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_12_90_37_if_stmt:
+        %tmp.151 = lgetv %hit.15;
+        symbol [ hit %tmp.151 90 17 20 ];
+        %tmp.152 = not %tmp.151;
+        bf %tmp.152 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_12_90_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_12_90_37_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_22_90_37_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 90 24 ]
+        %tmp.153 = 60.0;
+        lputv %perp.18 %tmp.153;
+        symbol [ perp %perp.18 90 24 28 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_22_90_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_12_90_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_90_12_90_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 93 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop" ]
+        %wx.19 = local;
+        symbol [ wx %wx.19 93 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 94 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_stmt:
+        %tmp.154 = lgetv %sd.16;
+        symbol [ sd %tmp.154 94 16 18 ];
+        %tmp.155 = 0;
+        %tmp.156 = eq %tmp.154 %tmp.155;
+        bf %tmp.156 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_25_94_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 94 27 ]
+        %tmp.157 = lgetv %py;
+        symbol [ py %tmp.157 94 32 34 ];
+        %tmp.158 = lgetv %perp.18;
+        symbol [ perp %tmp.158 94 37 41 ];
+        %tmp.159 = lgetv %rdy.6;
+        symbol [ rdy %tmp.159 94 44 47 ];
+        %tmp.160 = mul %tmp.158 %tmp.159;
+        %tmp.161 = add %tmp.157 %tmp.160;
+        lputv %wx.19 %tmp.161;
+        symbol [ wx %wx.19 94 27 29 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_25_94_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_95_25_95_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 95 27 ]
+        %tmp.162 = lgetv %px;
+        symbol [ px %tmp.162 95 32 34 ];
+        %tmp.163 = lgetv %perp.18;
+        symbol [ perp %tmp.163 95 37 41 ];
+        %tmp.164 = lgetv %rdx.5;
+        symbol [ rdx %tmp.164 95 44 47 ];
+        %tmp.165 = mul %tmp.163 %tmp.164;
+        %tmp.166 = add %tmp.162 %tmp.165;
+        lputv %wx.19 %tmp.166;
+        symbol [ wx %wx.19 95 27 29 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_95_25_95_49_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_94_12_95_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 96 12 ]
+        %tmp.167 = lgetv %wx.19;
+        symbol [ wx %tmp.167 96 17 19 ];
+        %tmp.168 = lgetv %wx.19;
+        symbol [ wx %tmp.168 96 22 24 ];
+        symbol [ toNumber %tmp.169 96 25 33 ];
+        %tmp.169 = getv function %tmp.168 :toNumber;
+        %tmp.170 = invoke %tmp.168 %tmp.169();
+        %tmp.171 = sub %tmp.167 %tmp.170;
+        lputv %wx.19 %tmp.171;
+        symbol [ wx %wx.19 96 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 97 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_12_97_39_if_stmt:
+        %tmp.172 = lgetv %wx.19;
+        symbol [ wx %tmp.172 97 16 18 ];
+        %tmp.173 = 0.0;
+        %tmp.174 = lt %tmp.172 %tmp.173;
+        bf %tmp.174 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_12_97_39_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_12_97_39_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_26_97_39_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 97 28 ]
+        %tmp.175 = lgetv %wx.19;
+        symbol [ wx %tmp.175 97 28 30 ];
+        %tmp.176 = 1.0;
+        %tmp.177 = add %tmp.175 %tmp.176;
+        lputv %wx.19 %tmp.177;
+        symbol [ wx %wx.19 97 28 30 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_26_97_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_12_97_39_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_97_12_97_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 99 12 ]
+        symbol [ dist %tmp.178 99 12 16 ];
+        %tmp.178 = getv self :dist;
+        %tmp.179 = lgetv %perp.18;
+        symbol [ perp %tmp.179 99 22 26 ];
+        %tmp.180 = lgetv %c.3;
+        symbol [ c %tmp.180 99 17 18 ];
+        aputv %tmp.178 %tmp.180 %tmp.179;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 100 12 ]
+        symbol [ side %tmp.181 100 12 16 ];
+        %tmp.181 = getv self :side;
+        %tmp.182 = lgetv %sd.16;
+        symbol [ sd %tmp.182 100 22 24 ];
+        %tmp.183 = lgetv %c.3;
+        symbol [ c %tmp.183 100 17 18 ];
+        aputv %tmp.181 %tmp.183 %tmp.182;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 101 12 ]
+        symbol [ texX %tmp.184 101 12 16 ];
+        %tmp.184 = getv self :texX;
+        %tmp.185 = lgetv %wx.19;
+        symbol [ wx %tmp.185 101 22 24 ];
+        %tmp.186 = lgetv %c.3;
+        symbol [ c %tmp.186 101 17 18 ];
+        aputv %tmp.184 %tmp.186 %tmp.185;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 102 12 ]
+        symbol [ cx %tmp.187 102 12 14 ];
+        %tmp.187 = getv self :cx;
+        %tmp.188 = lgetv %mx.7;
+        symbol [ mx %tmp.188 102 20 22 ];
+        %tmp.189 = lgetv %c.3;
+        symbol [ c %tmp.189 102 15 16 ];
+        aputv %tmp.187 %tmp.189 %tmp.188;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 103 12 ]
+        symbol [ cy %tmp.190 103 12 14 ];
+        %tmp.190 = getv self :cy;
+        %tmp.191 = lgetv %my.8;
+        symbol [ my %tmp.191 103 20 22 ];
+        %tmp.192 = lgetv %c.3;
+        symbol [ c %tmp.192 103 15 16 ];
+        aputv %tmp.190 %tmp.192 %tmp.191;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 104 12 ]
+        symbol [ dark %tmp.193 104 12 16 ];
+        %tmp.193 = getv self :dark;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_begin:
+        %tmp.194 = lgetv %map;
+        symbol [ map %tmp.194 104 22 25 ];
+        symbol [ isDark %tmp.195 104 26 32 ];
+        %tmp.195 = getv function %tmp.194 :isDark;
+        %tmp.196 = lgetv %mx.7;
+        symbol [ mx %tmp.196 104 33 35 ];
+        %tmp.197 = lgetv %my.8;
+        symbol [ my %tmp.197 104 37 39 ];
+        %tmp.198 = invoke %tmp.194 %tmp.195(%tmp.196, %tmp.197);
+        bf %tmp.198 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_true:
+        %tmp.199 = 1;
+        push %tmp.199;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_else_false:
+        %tmp.200 = 0;
+        push %tmp.200;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_end:
+        %tmp.201 = phi [%tmp.198 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_begin] [%tmp.199 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_true] [%tmp.200 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_else_false] [%tmp.201 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_104_22_104_47_end];
+        %tmp.202 = lgetv %c.3;
+        symbol [ c %tmp.202 104 17 18 ];
+        aputv %tmp.193 %tmp.202 %tmp.201;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_36_105_8_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 55 ]
+        %tmp.205 = lgetv %c.3;
+        symbol [ c %tmp.205 55 31 32 ];
+        %tmp.206 = add %tmp.205 1;
+        lputv %c.3 %tmp.206;
+        symbol [ c %c.3 55 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_test;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_55_8_105_8_for_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_50_67_106_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 110; @symbol_functiondef = [centerDist,110,13,23]; ]
+    function centerDist() {
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_110_26_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 111 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_12_111_36_begin:
+        symbol [ dist %tmp.2 111 12 16 ];
+        %tmp.2 = getv ? :dist;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bt %tmp.4 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_true;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_28_111_36_false:
+        symbol [ cols %tmp.6 111 28 32 ];
+        %tmp.6 = getv ? :cols;
+        %tmp.7 = 0;
+        %tmp.8 = lte %tmp.6 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_28_111_36_end:
+        %tmp.9 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_12_111_36_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_28_111_36_false] [%tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_28_111_36_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_39_111_54_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 111 41 ]
+        %tmp.10 = 99.0;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_39_111_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_111_8_111_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc" 112 8 ]
+        symbol [ dist %tmp.12 112 15 19 ];
+        %tmp.12 = getv ? :dist;
+        symbol [ cols %tmp.14 112 20 24 ];
+        %tmp.14 = getv ? :cols;
+        %tmp.15 = 2;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        %tmp.17 = agetv %tmp.12 %tmp.16;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_backrooms_source_Raycaster_mc_110_26_113_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/Raycaster.mc"; @line = 16; ]
+<init> {
+}

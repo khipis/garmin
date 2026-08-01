@@ -1,0 +1,979 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 19; @symbol_usingdef<0> = [Toybox,19,6,12]; @symbol_usingdef<1> = [Lang,19,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 23; @position = 6; @symbol_constdef = [DS_CH_SPRINT,23,6,18]; ]
+const DS_CH_SPRINT = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 24; @position = 6; @symbol_constdef = [DS_CH_PERFECT,24,6,19]; ]
+const DS_CH_PERFECT = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 25; @position = 6; @symbol_constdef = [DS_CH_STREAK,25,6,18]; ]
+const DS_CH_STREAK = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 26; @position = 6; @symbol_constdef = [DS_CH_TARGET,26,6,18]; ]
+const DS_CH_TARGET = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 29; @symbol_classdef = [DsChallenge,29,6,17]; ]
+class DsChallenge {
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 29; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 29; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 30; @position = 8; @symbol_vardef = [day,30,8,11]; ]
+    var day;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 31; @position = 8; @symbol_vardef = [dayKey,31,8,14]; ]
+    var dayKey;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 32; @position = 8; @symbol_vardef = [type,32,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 33; @position = 8; @symbol_vardef = [sportId,33,8,15]; ]
+    var sportId;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 34; @position = 8; @symbol_vardef = [timeMs,34,8,14]; ]
+    var timeMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 35; @position = 8; @symbol_vardef = [target,35,8,14]; ]
+    var target;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 36; @position = 8; @symbol_vardef = [dist,36,8,12]; ]
+    var dist;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 37; @position = 8; @symbol_vardef = [height,37,8,14]; ]
+    var height;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 38; @position = 8; @symbol_vardef = [sway,38,8,12]; ]
+    var sway;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 40; @symbol_functiondef = [initialize,40,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_40_26_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 41 8 ]
+        %tmp.1 = 0;
+        symbol [ day ? 41 8 11 ];
+        putv self :day %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 41 17 ]
+        %tmp.2 = "";
+        symbol [ dayKey ? 41 17 23 ];
+        putv self :dayKey %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 41 30 ]
+        symbol [ DS_CH_SPRINT %tmp.4 41 37 49 ];
+        %tmp.4 = getv ? :DS_CH_SPRINT;
+        symbol [ type ? 41 30 34 ];
+        putv self :type %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 41 51 ]
+        %tmp.5 = "basketball";
+        symbol [ sportId ? 41 51 58 ];
+        putv self :sportId %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 42 8 ]
+        %tmp.6 = 45000;
+        symbol [ timeMs ? 42 8 14 ];
+        putv self :timeMs %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 42 24 ]
+        %tmp.7 = 6;
+        symbol [ target ? 42 24 30 ];
+        putv self :target %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 43 8 ]
+        %tmp.8 = 0.73;
+        symbol [ dist ? 43 8 12 ];
+        putv self :dist %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 43 21 ]
+        %tmp.9 = 0.34;
+        symbol [ height ? 43 21 27 ];
+        putv self :height %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 43 36 ]
+        %tmp.10 = 0.0;
+        symbol [ sway ? 43 36 40 ];
+        putv self :sway %tmp.10;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_40_26_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 46; @symbol_functiondef = [objectiveName,46,13,26]; @symbol_return<0> = [Lang,46,32,36]; @symbol_return<1> = [String,46,37,43]; ]
+    function objectiveName() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_46_44_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_8_47_55_if_stmt:
+        symbol [ type %tmp.2 47 12 16 ];
+        %tmp.2 = getv ? :type;
+        symbol [ DS_CH_PERFECT %tmp.4 47 20 33 ];
+        %tmp.4 = getv ? :DS_CH_PERFECT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_8_47_55_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_8_47_55_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_35_47_55_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 47 37 ]
+        %tmp.6 = "PERFECT";
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_35_47_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_8_47_55_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_47_8_47_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 48 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_8_48_54_if_stmt:
+        symbol [ type %tmp.8 48 12 16 ];
+        %tmp.8 = getv ? :type;
+        symbol [ DS_CH_STREAK %tmp.10 48 20 32 ];
+        %tmp.10 = getv ? :DS_CH_STREAK;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_8_48_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_8_48_54_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_35_48_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 48 37 ]
+        %tmp.12 = "STREAK";
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_35_48_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_8_48_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_48_8_48_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_8_49_54_if_stmt:
+        symbol [ type %tmp.14 49 12 16 ];
+        %tmp.14 = getv ? :type;
+        symbol [ DS_CH_TARGET %tmp.16 49 20 32 ];
+        %tmp.16 = getv ? :DS_CH_TARGET;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_8_49_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_8_49_54_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_35_49_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 49 37 ]
+        %tmp.18 = "TARGET";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_35_49_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_8_49_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_49_8_49_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 50 8 ]
+        %tmp.19 = "SPRINT";
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_46_44_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 53; @symbol_functiondef = [sportName,53,13,22]; @symbol_return<0> = [Lang,53,28,32]; @symbol_return<1> = [String,53,33,39]; ]
+    function sportName() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_53_40_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 54 8 ]
+        symbol [ DsSports %tmp.2 54 15 23 ];
+        %tmp.2 = getv ? :DsSports;
+        symbol [ nouns %tmp.3 54 24 29 ];
+        %tmp.3 = getv function %tmp.2 :nouns;
+        symbol [ sportId %tmp.5 54 30 37 ];
+        %tmp.5 = getv ? :sportId;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        %tmp.7 = "name";
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_53_40_55_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 59; @symbol_functiondef = [shortName,59,13,22]; @symbol_return<0> = [Lang,59,28,32]; @symbol_return<1> = [String,59,33,39]; ]
+    function shortName() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_59_40_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 60 8 ]
+        %tmp.1 = self;
+        symbol [ sportName %tmp.2 60 15 24 ];
+        %tmp.2 = getv function %tmp.1 :sportName;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = " ";
+        %tmp.5 = add %tmp.3 %tmp.4;
+        %tmp.6 = self;
+        symbol [ objectiveName %tmp.7 60 35 48 ];
+        %tmp.7 = getv function %tmp.6 :objectiveName;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = add %tmp.5 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_59_40_61_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 66; @symbol_functiondef = [variant,66,13,20]; @symbol_return<0> = [Lang,66,26,30]; @symbol_return<1> = [String,66,31,37]; ]
+    function variant() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_66_38_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 67 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_66_38_72_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_66_38_72_4_stop" ]
+        %obj.1 = local;
+        symbol [ obj %obj.1 67 12 15 ];
+        %tmp.1 = "sprint";
+        lputv %obj.1 %tmp.1;
+        symbol [ obj %obj.1 67 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 68 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_8_68_54_if_stmt:
+        symbol [ type %tmp.3 68 12 16 ];
+        %tmp.3 = getv ? :type;
+        symbol [ DS_CH_PERFECT %tmp.5 68 20 33 ];
+        %tmp.5 = getv ? :DS_CH_PERFECT;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_8_68_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_8_68_54_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_35_68_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 68 37 ]
+        %tmp.7 = "perfect";
+        lputv %obj.1 %tmp.7;
+        symbol [ obj %obj.1 68 37 40 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_35_68_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_8_68_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_68_8_68_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_8_69_53_if_stmt:
+        symbol [ type %tmp.9 69 12 16 ];
+        %tmp.9 = getv ? :type;
+        symbol [ DS_CH_STREAK %tmp.11 69 20 32 ];
+        %tmp.11 = getv ? :DS_CH_STREAK;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_8_69_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_8_69_53_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_35_69_53_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 69 37 ]
+        %tmp.13 = "streak";
+        lputv %obj.1 %tmp.13;
+        symbol [ obj %obj.1 69 37 40 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_35_69_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_8_69_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_69_8_69_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_8_70_53_if_stmt:
+        symbol [ type %tmp.15 70 12 16 ];
+        %tmp.15 = getv ? :type;
+        symbol [ DS_CH_TARGET %tmp.17 70 20 32 ];
+        %tmp.17 = getv ? :DS_CH_TARGET;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_8_70_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_8_70_53_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_35_70_53_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 70 37 ]
+        %tmp.19 = "target";
+        lputv %obj.1 %tmp.19;
+        symbol [ obj %obj.1 70 37 40 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_35_70_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_8_70_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_70_8_70_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 71 8 ]
+        symbol [ sportId %tmp.21 71 15 22 ];
+        %tmp.21 = getv ? :sportId;
+        %tmp.22 = "-";
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %obj.1;
+        symbol [ obj %tmp.24 71 31 34 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_66_38_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 74; @symbol_functiondef = [unit,74,13,17]; @symbol_return<0> = [Lang,74,23,27]; @symbol_return<1> = [String,74,28,34]; ]
+    function unit() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_74_35_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_74_35_80_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_74_35_80_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 75 12 13 ];
+        symbol [ DsSports %tmp.2 75 16 24 ];
+        %tmp.2 = getv ? :DsSports;
+        symbol [ nouns %tmp.3 75 25 30 ];
+        %tmp.3 = getv function %tmp.2 :nouns;
+        symbol [ sportId %tmp.5 75 31 38 ];
+        %tmp.5 = getv ? :sportId;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %n.1 %tmp.6;
+        symbol [ n %n.1 75 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_8_76_58_if_stmt:
+        symbol [ type %tmp.8 76 12 16 ];
+        %tmp.8 = getv ? :type;
+        symbol [ DS_CH_PERFECT %tmp.10 76 20 33 ];
+        %tmp.10 = getv ? :DS_CH_PERFECT;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_8_76_58_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_8_76_58_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_35_76_58_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 76 37 ]
+        %tmp.12 = lgetv %n.1;
+        symbol [ n %tmp.12 76 44 45 ];
+        %tmp.13 = "perfect";
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_35_76_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_8_76_58_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_76_8_76_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_8_77_56_if_stmt:
+        symbol [ type %tmp.16 77 12 16 ];
+        %tmp.16 = getv ? :type;
+        symbol [ DS_CH_STREAK %tmp.18 77 20 32 ];
+        %tmp.18 = getv ? :DS_CH_STREAK;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_8_77_56_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_8_77_56_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_35_77_56_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 77 37 ]
+        %tmp.20 = "in a row";
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_35_77_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_8_77_56_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_77_8_77_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_8_78_54_if_stmt:
+        symbol [ type %tmp.22 78 12 16 ];
+        %tmp.22 = getv ? :type;
+        symbol [ DS_CH_TARGET %tmp.24 78 20 32 ];
+        %tmp.24 = getv ? :DS_CH_TARGET;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_8_78_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_8_78_54_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_35_78_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 78 37 ]
+        %tmp.26 = "points";
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_35_78_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_8_78_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_78_8_78_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 79 8 ]
+        %tmp.27 = lgetv %n.1;
+        symbol [ n %tmp.27 79 15 16 ];
+        %tmp.28 = "scored";
+        %tmp.29 = agetv %tmp.27 %tmp.28;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_74_35_80_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 83; @symbol_functiondef = [label,83,13,18]; @symbol_return<0> = [Lang,83,24,28]; @symbol_return<1> = [String,83,29,35]; ]
+    function label() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 84 12 16 ];
+        symbol [ timeMs %tmp.2 84 20 26 ];
+        %tmp.2 = getv ? :timeMs;
+        %tmp.3 = 1000;
+        %tmp.4 = div %tmp.2 %tmp.3;
+        symbol [ toString %tmp.5 84 35 43 ];
+        %tmp.5 = getv function %tmp.4 :toString;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %secs.1 %tmp.6;
+        symbol [ secs %secs.1 84 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 85 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_stop" ]
+        %n.2 = local;
+        symbol [ n %n.2 85 12 13 ];
+        symbol [ DsSports %tmp.8 85 19 27 ];
+        %tmp.8 = getv ? :DsSports;
+        symbol [ nouns %tmp.9 85 28 33 ];
+        %tmp.9 = getv function %tmp.8 :nouns;
+        symbol [ sportId %tmp.11 85 34 41 ];
+        %tmp.11 = getv ? :sportId;
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        lputv %n.2 %tmp.12;
+        symbol [ n %n.2 85 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_8_89_8_if_stmt:
+        symbol [ type %tmp.14 86 12 16 ];
+        %tmp.14 = getv ? :type;
+        symbol [ DS_CH_PERFECT %tmp.16 86 20 33 ];
+        %tmp.16 = getv ? :DS_CH_PERFECT;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_8_89_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_8_89_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_35_89_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 87 12 ]
+        %tmp.18 = "Only ";
+        %tmp.19 = lgetv %n.2;
+        symbol [ n %tmp.19 87 29 30 ];
+        %tmp.20 = "perfect";
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.18 %tmp.21;
+        %tmp.23 = " count. As many as you can in ";
+        %tmp.24 = add %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %secs.1;
+        symbol [ secs %tmp.25 88 19 23 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = "s. Target ";
+        %tmp.28 = add %tmp.26 %tmp.27;
+        symbol [ target %tmp.30 88 41 47 ];
+        %tmp.30 = getv ? :target;
+        symbol [ toString %tmp.31 88 48 56 ];
+        %tmp.31 = getv function %tmp.30 :toString;
+        %tmp.32 = invoke %tmp.30 %tmp.31();
+        %tmp.33 = add %tmp.28 %tmp.32;
+        %tmp.34 = ".";
+        %tmp.35 = add %tmp.33 %tmp.34;
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_35_89_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_8_89_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_86_8_89_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 90 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_8_93_8_if_stmt:
+        symbol [ type %tmp.37 90 12 16 ];
+        %tmp.37 = getv ? :type;
+        symbol [ DS_CH_STREAK %tmp.39 90 20 32 ];
+        %tmp.39 = getv ? :DS_CH_STREAK;
+        %tmp.40 = eq %tmp.37 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_8_93_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_34_93_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 91 12 ]
+        %tmp.41 = "Longest run of ";
+        %tmp.42 = lgetv %n.2;
+        symbol [ n %tmp.42 91 39 40 ];
+        %tmp.43 = "scored";
+        %tmp.44 = agetv %tmp.42 %tmp.43;
+        %tmp.45 = add %tmp.41 %tmp.44;
+        %tmp.46 = " without a miss in ";
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = lgetv %secs.1;
+        symbol [ secs %tmp.48 92 19 23 ];
+        %tmp.49 = add %tmp.47 %tmp.48;
+        %tmp.50 = "s. Target ";
+        %tmp.51 = add %tmp.49 %tmp.50;
+        symbol [ target %tmp.53 92 41 47 ];
+        %tmp.53 = getv ? :target;
+        symbol [ toString %tmp.54 92 48 56 ];
+        %tmp.54 = getv function %tmp.53 :toString;
+        %tmp.55 = invoke %tmp.53 %tmp.54();
+        %tmp.56 = add %tmp.51 %tmp.55;
+        %tmp.57 = " in a row.";
+        %tmp.58 = add %tmp.56 %tmp.57;
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_34_93_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_90_8_93_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_8_97_8_if_stmt:
+        symbol [ type %tmp.60 94 12 16 ];
+        %tmp.60 = getv ? :type;
+        symbol [ DS_CH_TARGET %tmp.62 94 20 32 ];
+        %tmp.62 = getv ? :DS_CH_TARGET;
+        %tmp.63 = eq %tmp.60 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_8_97_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_8_97_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_34_97_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 95 12 ]
+        %tmp.64 = "Tight target. Beat ";
+        symbol [ target %tmp.66 95 43 49 ];
+        %tmp.66 = getv ? :target;
+        symbol [ toString %tmp.67 95 50 58 ];
+        %tmp.67 = getv function %tmp.66 :toString;
+        %tmp.68 = invoke %tmp.66 %tmp.67();
+        %tmp.69 = add %tmp.64 %tmp.68;
+        %tmp.70 = " points in ";
+        %tmp.71 = add %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %secs.1;
+        symbol [ secs %tmp.72 96 19 23 ];
+        %tmp.73 = add %tmp.71 %tmp.72;
+        %tmp.74 = "s. Perfect 3, anything else 2.";
+        %tmp.75 = add %tmp.73 %tmp.74;
+        ret %tmp.75;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_34_97_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_8_97_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_94_8_97_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 98 8 ]
+        %tmp.76 = lgetv %n.2;
+        symbol [ n %tmp.76 98 15 16 ];
+        %tmp.77 = "verb";
+        %tmp.78 = agetv %tmp.76 %tmp.77;
+        %tmp.79 = " as many ";
+        %tmp.80 = add %tmp.78 %tmp.79;
+        %tmp.81 = lgetv %n.2;
+        symbol [ n %tmp.81 98 41 42 ];
+        %tmp.82 = "scored";
+        %tmp.83 = agetv %tmp.81 %tmp.82;
+        %tmp.84 = add %tmp.80 %tmp.83;
+        %tmp.85 = " as you can in ";
+        %tmp.86 = add %tmp.84 %tmp.85;
+        %tmp.87 = lgetv %secs.1;
+        symbol [ secs %tmp.87 99 15 19 ];
+        %tmp.88 = add %tmp.86 %tmp.87;
+        %tmp.89 = "s. Target ";
+        %tmp.90 = add %tmp.88 %tmp.89;
+        symbol [ target %tmp.92 99 37 43 ];
+        %tmp.92 = getv ? :target;
+        symbol [ toString %tmp.93 99 44 52 ];
+        %tmp.93 = getv function %tmp.92 :toString;
+        %tmp.94 = invoke %tmp.92 %tmp.93();
+        %tmp.95 = add %tmp.90 %tmp.94;
+        %tmp.96 = ".";
+        %tmp.97 = add %tmp.95 %tmp.96;
+        ret %tmp.97;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_83_36_100_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 103; @symbol_moduledef = [ChallengeManager,103,7,23]; ]
+module ChallengeManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 103; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 105; @position = 8; @symbol_vardef = [_cache,105,8,14]; ]
+    var _cache = null;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 106; @position = 8; @symbol_vardef = [_cacheDay,106,8,17]; ]
+    var _cacheDay = -1;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 109; @symbol_functiondef = [today,109,13,18]; @symbol_return<0> = [DsChallenge,109,24,35]; ]
+    function today() as DsChallenge {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_109_36_116_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 110 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_109_36_116_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_109_36_116_4_stop" ]
+        %dn.1 = local;
+        symbol [ dn %dn.1 110 12 14 ];
+        symbol [ DsUtil %tmp.2 110 17 23 ];
+        %tmp.2 = getv ? :DsUtil;
+        symbol [ dayNumber %tmp.3 110 24 33 ];
+        %tmp.3 = getv function %tmp.2 :dayNumber;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        lputv %dn.1 %tmp.4;
+        symbol [ dn %dn.1 110 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 111 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_12_111_43_begin:
+        symbol [ _cache %tmp.6 111 12 18 ];
+        %tmp.6 = getv ? :_cache;
+        %tmp.7 = null;
+        %tmp.8 = ne %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_30_111_43_true:
+        symbol [ _cacheDay %tmp.10 111 30 39 ];
+        %tmp.10 = getv ? :_cacheDay;
+        %tmp.11 = lgetv %dn.1;
+        symbol [ dn %tmp.11 111 43 45 ];
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_30_111_43_end:
+        %tmp.13 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_12_111_43_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_30_111_43_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_30_111_43_end];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_47_111_64_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 111 49 ]
+        symbol [ _cache %tmp.15 111 56 62 ];
+        %tmp.15 = getv ? :_cache;
+        %tmp.16 = as %tmp.15 { (!Null) };
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_47_111_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_111_8_111_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 112 8 ]
+        %tmp.17 = self;
+        symbol [ at %tmp.18 112 17 19 ];
+        %tmp.18 = getv function %tmp.17 :at;
+        %tmp.19 = lgetv %dn.1;
+        symbol [ dn %tmp.19 112 20 22 ];
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        symbol [ _cache ? 112 8 14 ];
+        putv self :_cache %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 113 8 ]
+        symbol [ _cache %tmp.21 113 8 14 ];
+        %tmp.21 = getv self :_cache;
+        symbol [ DsUtil %tmp.23 113 24 30 ];
+        %tmp.23 = getv ? :DsUtil;
+        symbol [ todayKey %tmp.24 113 31 39 ];
+        %tmp.24 = getv function %tmp.23 :todayKey;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        symbol [ dayKey ? 113 15 21 ];
+        putv %tmp.21 :dayKey %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 114 8 ]
+        %tmp.26 = lgetv %dn.1;
+        symbol [ dn %tmp.26 114 20 22 ];
+        symbol [ _cacheDay ? 114 8 17 ];
+        putv self :_cacheDay %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 115 8 ]
+        symbol [ _cache %tmp.28 115 15 21 ];
+        %tmp.28 = getv ? :_cache;
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_109_36_116_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 119; @symbol_functiondef = [at,119,13,15]; @symbol_param<0> = [dn,119,16,18]; @symbol_param<0>_type<0> = [Lang,119,22,26]; @symbol_param<0>_type<1> = [Number,119,27,33]; @symbol_return<0> = [DsChallenge,119,38,49]; ]
+    function at(dn as Lang.Number) as DsChallenge {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_119_50_145_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 120 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_119_50_145_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_119_50_145_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 120 12 13 ];
+        symbol [ DsChallenge %tmp.4 120 20 31 ];
+        %tmp.4 = getv ? :DsChallenge;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %c.1 %tmp.1;
+        symbol [ c %c.1 120 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 121 8 ]
+        %tmp.5 = lgetv %c.1;
+        symbol [ c %tmp.5 121 8 9 ];
+        %tmp.6 = lgetv %dn;
+        symbol [ dn %tmp.6 121 20 22 ];
+        symbol [ day ? 121 10 13 ];
+        putv %tmp.5 :day %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 122 8 ]
+        %tmp.7 = lgetv %c.1;
+        symbol [ c %tmp.7 122 8 9 ];
+        symbol [ DsUtil %tmp.9 122 20 26 ];
+        %tmp.9 = getv ? :DsUtil;
+        symbol [ hash %tmp.10 122 27 31 ];
+        %tmp.10 = getv function %tmp.9 :hash;
+        %tmp.11 = lgetv %dn;
+        symbol [ dn %tmp.11 122 32 34 ];
+        %tmp.12 = 11;
+        %tmp.13 = invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12);
+        %tmp.14 = 4;
+        %tmp.15 = mod %tmp.13 %tmp.14;
+        symbol [ type ? 122 10 14 ];
+        putv %tmp.7 :type %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 123 8 ]
+        %tmp.16 = lgetv %c.1;
+        symbol [ c %tmp.16 123 8 9 ];
+        symbol [ DsSports %tmp.18 123 20 28 ];
+        %tmp.18 = getv ? :DsSports;
+        symbol [ idForDay %tmp.19 123 29 37 ];
+        %tmp.19 = getv function %tmp.18 :idForDay;
+        %tmp.20 = lgetv %dn;
+        symbol [ dn %tmp.20 123 38 40 ];
+        %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+        symbol [ sportId ? 123 10 17 ];
+        putv %tmp.16 :sportId %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 127 8 ]
+        %tmp.22 = lgetv %c.1;
+        symbol [ c %tmp.22 127 8 9 ];
+        %tmp.23 = 0.68;
+        symbol [ DsUtil %tmp.25 127 27 33 ];
+        %tmp.25 = getv ? :DsUtil;
+        symbol [ hash %tmp.26 127 34 38 ];
+        %tmp.26 = getv function %tmp.25 :hash;
+        %tmp.27 = lgetv %dn;
+        symbol [ dn %tmp.27 127 39 41 ];
+        %tmp.28 = 23;
+        %tmp.29 = invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28);
+        %tmp.30 = 7;
+        %tmp.31 = mod %tmp.29 %tmp.30;
+        %tmp.32 = 0.02;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = add %tmp.23 %tmp.33;
+        symbol [ dist ? 127 10 14 ];
+        putv %tmp.22 :dist %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 128 8 ]
+        %tmp.35 = lgetv %c.1;
+        symbol [ c %tmp.35 128 8 9 ];
+        %tmp.36 = 0.32;
+        symbol [ DsUtil %tmp.38 128 27 33 ];
+        %tmp.38 = getv ? :DsUtil;
+        symbol [ hash %tmp.39 128 34 38 ];
+        %tmp.39 = getv function %tmp.38 :hash;
+        %tmp.40 = lgetv %dn;
+        symbol [ dn %tmp.40 128 39 41 ];
+        %tmp.41 = 37;
+        %tmp.42 = invoke %tmp.38 %tmp.39(%tmp.40, %tmp.41);
+        %tmp.43 = 5;
+        %tmp.44 = mod %tmp.42 %tmp.43;
+        %tmp.45 = 0.015;
+        %tmp.46 = mul %tmp.44 %tmp.45;
+        %tmp.47 = add %tmp.36 %tmp.46;
+        symbol [ height ? 128 10 16 ];
+        putv %tmp.35 :height %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 130 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_stmt:
+        %tmp.48 = lgetv %c.1;
+        symbol [ c %tmp.48 130 12 13 ];
+        symbol [ type %tmp.49 130 14 18 ];
+        %tmp.49 = getv %tmp.48 :type;
+        symbol [ DS_CH_PERFECT %tmp.51 130 22 35 ];
+        %tmp.51 = getv ? :DS_CH_PERFECT;
+        %tmp.52 = eq %tmp.49 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_37_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 131 12 ]
+        %tmp.53 = lgetv %c.1;
+        symbol [ c %tmp.53 131 12 13 ];
+        %tmp.54 = 60000;
+        symbol [ timeMs ? 131 14 20 ];
+        putv %tmp.53 :timeMs %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 132 12 ]
+        %tmp.55 = lgetv %c.1;
+        symbol [ c %tmp.55 132 12 13 ];
+        %tmp.56 = 3;
+        symbol [ DsUtil %tmp.58 132 27 33 ];
+        %tmp.58 = getv ? :DsUtil;
+        symbol [ hash %tmp.59 132 34 38 ];
+        %tmp.59 = getv function %tmp.58 :hash;
+        %tmp.60 = lgetv %dn;
+        symbol [ dn %tmp.60 132 39 41 ];
+        %tmp.61 = 53;
+        %tmp.62 = invoke %tmp.58 %tmp.59(%tmp.60, %tmp.61);
+        %tmp.63 = 3;
+        %tmp.64 = mod %tmp.62 %tmp.63;
+        %tmp.65 = add %tmp.56 %tmp.64;
+        symbol [ target ? 132 14 20 ];
+        putv %tmp.55 :target %tmp.65;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_37_133_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 133 15 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_stmt:
+        %tmp.66 = lgetv %c.1;
+        symbol [ c %tmp.66 133 19 20 ];
+        symbol [ type %tmp.67 133 21 25 ];
+        %tmp.67 = getv %tmp.66 :type;
+        symbol [ DS_CH_STREAK %tmp.69 133 29 41 ];
+        %tmp.69 = getv ? :DS_CH_STREAK;
+        %tmp.70 = eq %tmp.67 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_43_136_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 134 12 ]
+        %tmp.71 = lgetv %c.1;
+        symbol [ c %tmp.71 134 12 13 ];
+        %tmp.72 = 60000;
+        symbol [ timeMs ? 134 14 20 ];
+        putv %tmp.71 :timeMs %tmp.72;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 135 12 ]
+        %tmp.73 = lgetv %c.1;
+        symbol [ c %tmp.73 135 12 13 ];
+        %tmp.74 = 3;
+        symbol [ DsUtil %tmp.76 135 27 33 ];
+        %tmp.76 = getv ? :DsUtil;
+        symbol [ hash %tmp.77 135 34 38 ];
+        %tmp.77 = getv function %tmp.76 :hash;
+        %tmp.78 = lgetv %dn;
+        symbol [ dn %tmp.78 135 39 41 ];
+        %tmp.79 = 59;
+        %tmp.80 = invoke %tmp.76 %tmp.77(%tmp.78, %tmp.79);
+        %tmp.81 = 3;
+        %tmp.82 = mod %tmp.80 %tmp.81;
+        %tmp.83 = add %tmp.74 %tmp.82;
+        symbol [ target ? 135 14 20 ];
+        putv %tmp.73 :target %tmp.83;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_43_136_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 136 15 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_stmt:
+        %tmp.84 = lgetv %c.1;
+        symbol [ c %tmp.84 136 19 20 ];
+        symbol [ type %tmp.85 136 21 25 ];
+        %tmp.85 = getv %tmp.84 :type;
+        symbol [ DS_CH_TARGET %tmp.87 136 29 41 ];
+        %tmp.87 = getv ? :DS_CH_TARGET;
+        %tmp.88 = eq %tmp.85 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_43_140_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 137 12 ]
+        %tmp.89 = lgetv %c.1;
+        symbol [ c %tmp.89 137 12 13 ];
+        %tmp.90 = 45000;
+        symbol [ timeMs ? 137 14 20 ];
+        putv %tmp.89 :timeMs %tmp.90;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 138 12 ]
+        %tmp.91 = lgetv %c.1;
+        symbol [ c %tmp.91 138 12 13 ];
+        %tmp.92 = 14;
+        symbol [ DsUtil %tmp.94 138 29 35 ];
+        %tmp.94 = getv ? :DsUtil;
+        symbol [ hash %tmp.95 138 36 40 ];
+        %tmp.95 = getv function %tmp.94 :hash;
+        %tmp.96 = lgetv %dn;
+        symbol [ dn %tmp.96 138 41 43 ];
+        %tmp.97 = 61;
+        %tmp.98 = invoke %tmp.94 %tmp.95(%tmp.96, %tmp.97);
+        %tmp.99 = 5;
+        %tmp.100 = mod %tmp.98 %tmp.99;
+        %tmp.101 = 2;
+        %tmp.102 = mul %tmp.100 %tmp.101;
+        %tmp.103 = add %tmp.92 %tmp.102;
+        symbol [ target ? 138 14 20 ];
+        putv %tmp.91 :target %tmp.103;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 139 12 ]
+        %tmp.104 = lgetv %c.1;
+        symbol [ c %tmp.104 139 12 13 ];
+        %tmp.105 = 0.045;
+        symbol [ DsUtil %tmp.107 139 32 38 ];
+        %tmp.107 = getv ? :DsUtil;
+        symbol [ hash %tmp.108 139 39 43 ];
+        %tmp.108 = getv function %tmp.107 :hash;
+        %tmp.109 = lgetv %dn;
+        symbol [ dn %tmp.109 139 44 46 ];
+        %tmp.110 = 67;
+        %tmp.111 = invoke %tmp.107 %tmp.108(%tmp.109, %tmp.110);
+        %tmp.112 = 3;
+        %tmp.113 = mod %tmp.111 %tmp.112;
+        %tmp.114 = 0.015;
+        %tmp.115 = mul %tmp.113 %tmp.114;
+        %tmp.116 = add %tmp.105 %tmp.115;
+        symbol [ sway ? 139 14 18 ];
+        putv %tmp.104 :sway %tmp.116;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_43_140_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_140_15_143_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 141 12 ]
+        %tmp.117 = lgetv %c.1;
+        symbol [ c %tmp.117 141 12 13 ];
+        %tmp.118 = 45000;
+        symbol [ timeMs ? 141 14 20 ];
+        putv %tmp.117 :timeMs %tmp.118;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 142 12 ]
+        %tmp.119 = lgetv %c.1;
+        symbol [ c %tmp.119 142 12 13 ];
+        %tmp.120 = 6;
+        symbol [ DsUtil %tmp.122 142 27 33 ];
+        %tmp.122 = getv ? :DsUtil;
+        symbol [ hash %tmp.123 142 34 38 ];
+        %tmp.123 = getv function %tmp.122 :hash;
+        %tmp.124 = lgetv %dn;
+        symbol [ dn %tmp.124 142 39 41 ];
+        %tmp.125 = 71;
+        %tmp.126 = invoke %tmp.122 %tmp.123(%tmp.124, %tmp.125);
+        %tmp.127 = 4;
+        %tmp.128 = mod %tmp.126 %tmp.127;
+        %tmp.129 = add %tmp.120 %tmp.128;
+        symbol [ target ? 142 14 20 ];
+        putv %tmp.119 :target %tmp.129;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_140_15_143_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_136_15_143_8_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_133_15_143_8_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_130_8_143_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 144 8 ]
+        %tmp.130 = lgetv %c.1;
+        symbol [ c %tmp.130 144 15 16 ];
+        ret %tmp.130;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_119_50_145_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 149; @symbol_functiondef = [tomorrowName,149,13,25]; @symbol_return<0> = [Lang,149,31,35]; @symbol_return<1> = [String,149,36,42]; ]
+    function tomorrowName() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_149_43_151_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 150 8 ]
+        symbol [ DsSports %tmp.2 150 15 23 ];
+        %tmp.2 = getv ? :DsSports;
+        symbol [ nameForDay %tmp.3 150 24 34 ];
+        %tmp.3 = getv function %tmp.2 :nameForDay;
+        symbol [ DsUtil %tmp.5 150 35 41 ];
+        %tmp.5 = getv ? :DsUtil;
+        symbol [ dayNumber %tmp.6 150 42 51 ];
+        %tmp.6 = getv function %tmp.5 :dayNumber;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = invoke %tmp.2 %tmp.3(%tmp.9);
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_149_43_151_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 155; @symbol_functiondef = [pointsFor,155,13,22]; @symbol_param<0> = [c,155,23,24]; @symbol_param<0>_type<0> = [DsChallenge,155,28,39]; @symbol_param<1> = [outcome,155,41,48]; @symbol_param<1>_type<0> = [Lang,155,52,56]; @symbol_param<1>_type<1> = [Number,155,57,63]; @symbol_return<0> = [Lang,155,68,72]; @symbol_return<1> = [Number,155,73,79]; ]
+    function pointsFor(c as DsChallenge, outcome as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_155_80_170_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_8_158_8_if_stmt:
+        %tmp.1 = lgetv %c;
+        symbol [ c %tmp.1 156 12 13 ];
+        symbol [ type %tmp.2 156 14 18 ];
+        %tmp.2 = getv %tmp.1 :type;
+        symbol [ DS_CH_PERFECT %tmp.4 156 22 35 ];
+        %tmp.4 = getv ? :DS_CH_PERFECT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_8_158_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_8_158_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_37_158_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 157 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_begin:
+        %tmp.6 = lgetv %outcome;
+        symbol [ outcome %tmp.6 157 20 27 ];
+        symbol [ DS_OUT_SWISH %tmp.8 157 31 43 ];
+        %tmp.8 = getv ? :DS_OUT_SWISH;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_true:
+        %tmp.10 = 1;
+        push %tmp.10;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_else_false:
+        %tmp.11 = 0;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_end:
+        %tmp.12 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_true] [%tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_else_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_157_19_157_51_end];
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_37_158_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_8_158_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_156_8_158_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 159 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_8_164_8_if_stmt:
+        %tmp.13 = lgetv %c;
+        symbol [ c %tmp.13 159 12 13 ];
+        symbol [ type %tmp.14 159 14 18 ];
+        %tmp.14 = getv %tmp.13 :type;
+        symbol [ DS_CH_TARGET %tmp.16 159 22 34 ];
+        %tmp.16 = getv ? :DS_CH_TARGET;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_8_164_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_8_164_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_36_164_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 160 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_12_160_53_if_stmt:
+        %tmp.18 = lgetv %outcome;
+        symbol [ outcome %tmp.18 160 16 23 ];
+        symbol [ DS_OUT_SWISH %tmp.20 160 27 39 ];
+        %tmp.20 = getv ? :DS_OUT_SWISH;
+        %tmp.21 = eq %tmp.18 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_12_160_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_12_160_53_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_41_160_53_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 160 43 ]
+        %tmp.22 = 3;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_41_160_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_12_160_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_160_12_160_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 161 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_12_161_53_if_stmt:
+        %tmp.23 = lgetv %outcome;
+        symbol [ outcome %tmp.23 161 16 23 ];
+        symbol [ DS_OUT_BANK %tmp.25 161 27 38 ];
+        %tmp.25 = getv ? :DS_OUT_BANK;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_12_161_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_12_161_53_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_41_161_53_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 161 43 ]
+        %tmp.27 = 2;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_41_161_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_12_161_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_161_12_161_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_12_162_53_if_stmt:
+        %tmp.28 = lgetv %outcome;
+        symbol [ outcome %tmp.28 162 16 23 ];
+        symbol [ DS_OUT_RIM %tmp.30 162 27 37 ];
+        %tmp.30 = getv ? :DS_OUT_RIM;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_12_162_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_12_162_53_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_41_162_53_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 162 43 ]
+        %tmp.32 = 2;
+        ret %tmp.32;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_41_162_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_12_162_53_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_162_12_162_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 163 12 ]
+        %tmp.33 = 0;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_36_164_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_8_164_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_159_8_164_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 167 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_12_168_23_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_12_167_50_begin:
+        %tmp.34 = lgetv %outcome;
+        symbol [ outcome %tmp.34 167 12 19 ];
+        symbol [ DS_OUT_SWISH %tmp.36 167 23 35 ];
+        %tmp.36 = getv ? :DS_OUT_SWISH;
+        %tmp.37 = eq %tmp.34 %tmp.36;
+        bt %tmp.37 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_true;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_39_167_50_false:
+        %tmp.38 = lgetv %outcome;
+        symbol [ outcome %tmp.38 167 39 46 ];
+        symbol [ DS_OUT_RIM %tmp.40 167 50 60 ];
+        %tmp.40 = getv ? :DS_OUT_RIM;
+        %tmp.41 = eq %tmp.38 %tmp.40;
+        push %tmp.41;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_39_167_50_end:
+        %tmp.42 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_12_167_50_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_39_167_50_false] [%tmp.42 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_39_167_50_end];
+        bt %tmp.42 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_true;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_12_168_23_false:
+        %tmp.43 = lgetv %outcome;
+        symbol [ outcome %tmp.43 168 12 19 ];
+        symbol [ DS_OUT_BANK %tmp.45 168 23 34 ];
+        %tmp.45 = getv ? :DS_OUT_BANK;
+        %tmp.46 = eq %tmp.43 %tmp.45;
+        push %tmp.46;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_12_168_23_end:
+        %tmp.47 = phi [%tmp.42 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_12_168_23_begin] [%tmp.46 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_12_168_23_false] [%tmp.47 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_12_168_23_end];
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_36_168_48_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 168 38 ]
+        %tmp.48 = 1;
+        ret %tmp.48;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_168_36_168_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_167_8_168_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc" 169 8 ]
+        %tmp.49 = 0;
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_dailysport_source_ChallengeManager_mc_155_80_170_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/ChallengeManager.mc"; @line = 19; ]
+<init> {
+}

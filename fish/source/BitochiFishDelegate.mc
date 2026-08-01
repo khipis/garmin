@@ -1,28 +1,11 @@
 using Toybox.WatchUi;
-using Toybox.Sensor;
 
 class BitochiFishDelegate extends WatchUi.BehaviorDelegate {
     hidden var _view;
-    hidden var _sensorOn;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
         _view = view;
-        _sensorOn = false;
-        if (Toybox has :Sensor && Sensor has :enableSensorEvents) {
-            try {
-                Sensor.enableSensorEvents(method(:onSensor));
-                _sensorOn = true;
-            } catch (e) {}
-        }
-    }
-
-    function onSensor(info as Sensor.Info) as Void {
-        if (info == null) { return; }
-        var a = info.accel;
-        if (a == null) { return; }
-        _view.accelX = a[0];
-        _view.accelY = a[1];
     }
 
     function onSelect() {
@@ -64,10 +47,59 @@ class BitochiFishDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        // Exiting mid-run still counts: record score + progress before we pop
-        // back to the menu (no need to "lose" to appear on the boards).
-        _view.submitProgress();
-        if (_sensorOn) { Sensor.enableSensorEvents(null); }
-        return false;
+        // Fish-local exit prompt (not shared confirmExit): we must submit LB
+        // progress only on a real quit, never when the save menu merely covers
+        // the view (shared confirmExit + onHide submit locked the session to
+        // the first BACK forever).
+        var data = null;
+        try { data = _view.exportSave(); } catch (e) { data = null; }
+        if (data == null) {
+            try { _view.confirmExitQuit(); } catch (e) {}
+            try { WatchUi.popView(WatchUi.SLIDE_RIGHT); } catch (e) {}
+            return true;
+        }
+        try {
+            var m = new WatchUi.Menu2({ :title => "SAVE PROGRESS?" });
+            m.addItem(new WatchUi.MenuItem("Cancel", "keep fishing", :cancel, null));
+            m.addItem(new WatchUi.MenuItem("Yes, save", "resume later", :yes, null));
+            m.addItem(new WatchUi.MenuItem("No, quit", "discard run", :no, null));
+            WatchUi.pushView(m, new FishExitConfirmDelegate(_view, data), WatchUi.SLIDE_UP);
+        } catch (e) {
+            try { _view.confirmExitQuit(); } catch (e2) {}
+            try { WatchUi.popView(WatchUi.SLIDE_RIGHT); } catch (e2) {}
+        }
+        return true;
+    }
+}
+
+// Yes → save + submit + pop; No → clear + submit + pop; Cancel → stay.
+class FishExitConfirmDelegate extends WatchUi.Menu2InputDelegate {
+    hidden var _view;
+    hidden var _data;
+
+    function initialize(view, data) {
+        Menu2InputDelegate.initialize();
+        _view = view;
+        _data = data;
+    }
+
+    function onSelect(item) {
+        var id = item.getId();
+        if (id == :cancel) {
+            WatchUi.popView(WatchUi.SLIDE_DOWN);
+            return;
+        }
+        if (id == :yes) {
+            try { SaveResume.save("fish", _data); } catch (e) {}
+        } else if (id == :no) {
+            try { SaveResume.clear("fish"); } catch (e) {}
+        }
+        try { _view.confirmExitQuit(); } catch (e) {}
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
+        try { WatchUi.popView(WatchUi.SLIDE_RIGHT); } catch (e) {}
+    }
+
+    function onBack() as Void {
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
     }
 }

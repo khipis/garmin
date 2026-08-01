@@ -36,6 +36,7 @@ class MainView extends WatchUi.View {
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
+        try { Leaderboard.cancelPostGame(); } catch (e) {}
     }
 
     function onTick() {

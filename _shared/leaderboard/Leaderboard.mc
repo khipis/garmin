@@ -7,6 +7,7 @@
 // Backend: Cloudflare Worker + D1 (see /leaderboard).  Endpoints used:
 //   POST /score          { game, user, score, variant? }
 //   GET  /leaderboard?game=X[&variant=Y]   -> { top:[ {r,u,s}, ... ] }
+//   POST /event + GET /inbox  — raid/fight notices (see _shared/raidmail)
 //
 // Username:
 //   Stored per-app in Application.Storage under USER_KEY.  Garmin has no
@@ -108,15 +109,17 @@ module Leaderboard {
     // makeWebRequest callback must be a bound method() and module functions
     // have no instance to bind to. We hold the sender in a module var so it
     // survives until the async response arrives.
-    var _sender = null;
-    var _batch  = null;
+    var _sender = null;   // legacy; kept so older jungle refs still compile
+    var _batch  = null;   // legacy LbScoreBatch path — unused once queue owns submits
+    var _scoreQ = null;   // shared FIFO — see LbScoreQueue in LbViews.mc
 
     // ── Single-flight advisory ────────────────────────────────────────────────
     // Garmin allows only ONE in-flight makeWebRequest; a second issued while one
     // is pending fails (best case) or terminates the app (worse, on several
     // firmwares). The fire-and-forget senders below mark this flag around their
-    // request so a *serial* caller (LbScoreBatch) can wait its turn instead of
-    // colliding. Auto-expires so a dropped callback can never wedge it forever.
+    // request so a *serial* caller (LbScoreQueue / LbScoreBatch) can wait its
+    // turn instead of colliding. Auto-expires so a dropped callback can never
+    // wedge it forever.
     var _busy   = false;
     var _busyAt = 0;
     function markBusy()  as Void { _busy = true;  _busyAt = System.getTimer(); }
@@ -128,11 +131,17 @@ module Leaderboard {
         return true;
     }
 
-    // Serial multi-board submit — see LbScoreBatch (LbViews.mc). `entries` is an
-    // array of { :score, :variant, :meta } dictionaries; they are POSTed one at
-    // a time, never concurrently. Use this instead of several back-to-back
-    // submitScore/submitScoreAux calls whenever a game publishes many boards at
-    // once (the idle builders), so it never trips the one-request limit.
+    function scoreQueueIdle() as Lang.Boolean {
+        return _scoreQ == null || _scoreQ.isIdle();
+    }
+
+    function _ensureScoreQ() as Void {
+        if (_scoreQ == null) { _scoreQ = new LbScoreQueue(); }
+    }
+
+    // Serial multi-board submit. `entries` is an array of
+    // { :score, :variant, :meta } dictionaries; they share the global score
+    // FIFO with submitScore* so concurrent game-over POSTs never collide.
     function submitScoreBatch(game as Lang.String, entries as Lang.Array) as Void {
         if (!isSupported())                    { return; }
         if (!isPhoneConnected())               { return; }
@@ -140,8 +149,8 @@ module Leaderboard {
         var user = loadUser();
         if (user == null) { user = "anon"; }
         try {
-            _batch = new LbScoreBatch();
-            _batch.start(game, user, entries);
+            _ensureScoreQ();
+            _scoreQ.enqueueMany(game, user, entries);
         } catch (e) {}
         // Preserve the daily-challenge hook that submitScoreWithMeta used to fire
         // for the primary (first) score. Its own POST is timer-delayed, so it
@@ -158,8 +167,10 @@ module Leaderboard {
         if (!isPhoneConnected()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
-        _sender = new LbSubmitter();
-        _sender.send(game, user, score, variant, null);
+        try {
+            _ensureScoreQ();
+            _scoreQ.enqueue(game, user, score, variant, null);
+        } catch (e) {}
         // Daily challenge completion check — fully guarded, never throws.
         try { DailyChallenge.onScoreSubmit(game, score, variant); } catch (e) {}
     }
@@ -174,8 +185,10 @@ module Leaderboard {
         if (!isPhoneConnected()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
-        _sender = new LbSubmitter();
-        _sender.send(game, user, score, variant, null);
+        try {
+            _ensureScoreQ();
+            _scoreQ.enqueue(game, user, score, variant, null);
+        } catch (e) {}
     }
 
     // Same as submitScore(), but attaches a small JSON-serialisable dictionary
@@ -190,8 +203,10 @@ module Leaderboard {
         if (!isPhoneConnected()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
-        _sender = new LbSubmitter();
-        _sender.send(game, user, score, variant, meta);
+        try {
+            _ensureScoreQ();
+            _scoreQ.enqueue(game, user, score, variant, meta);
+        } catch (e) {}
         // Daily challenge completion check — fully guarded, never throws.
         try { DailyChallenge.onScoreSubmit(game, score, variant); } catch (e) {}
     }
@@ -468,7 +483,7 @@ module Leaderboard {
         cancelPostGame();
         _pgLast = now;
         _pg = new LbPostGame(game, variant, title);
-        _pg.arm(1600);
+        _pg.arm(3200);
     }
 
     // ── Build a clean username from a wheel-index array ───────────────────────

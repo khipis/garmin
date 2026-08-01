@@ -17,7 +17,16 @@ using Toybox.Lang;
 class TwentyHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("twentyfortyeight"); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load("twentyfortyeight"));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("twentyfortyeight");
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

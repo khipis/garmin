@@ -143,6 +143,54 @@ class GameController {
         state = GS_PLAY;
     }
 
+    function exportSave() {
+        if (state != GS_PLAY) { return null; }
+        if (grid.floodPending) { return null; }
+        // Pre-first-click: no mines yet — still worth saving empty board.
+        tick();
+        var g = grid.exportArrays();
+        return {
+            "diff" => difficulty,
+            "dens" => bombDensity,
+            "n"    => grid.n,
+            "board"=> g,
+            "cr"   => curR,
+            "cc"   => curC,
+            "ems"  => elapsedMs
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var d = data["diff"];
+            var dens = data["dens"];
+            var n = data["n"];
+            if (!(n instanceof Number) || n < 8) { return false; }
+            difficulty  = (d instanceof Number) ? d : 3;
+            bombDensity = (dens instanceof Number) ? dens : 1;
+            var board = data["board"];
+            if (board == null) { return false; }
+            var mc = board["mc"];
+            var mines_ = (mc instanceof Number && mc > 0) ? mc : 1;
+            grid.configure(n, mines_);
+            if (!grid.importArrays(board)) { return false; }
+            var cr = data["cr"];
+            var cc = data["cc"];
+            curR = (cr instanceof Number) ? cr : n / 2;
+            curC = (cc instanceof Number) ? cc : n / 2;
+            if (curR < 0 || curR >= n) { curR = 0; }
+            if (curC < 0 || curC >= n) { curC = 0; }
+            var em = data["ems"];
+            elapsedMs = (em instanceof Number && em > 0) ? em : 0;
+            startMs = (elapsedMs > 0) ? (System.getTimer() - elapsedMs) : 0;
+            _fxOn = _loadFx();
+            state = GS_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     function gotoMenu() { state = GS_MENU; }
 
     // ── Cursor — ONLY movement, never reveal ──────────────────────
@@ -238,12 +286,14 @@ class GameController {
 
     hidden function _lose() {
         state = GS_LOSE;
+        try { SaveResume.clear("minesweeper"); } catch (e) {}
         grid.revealAllMines();
         _tone(2);
         _vibe(100, 300);
     }
     hidden function _win() {
         state = GS_WIN;
+        try { SaveResume.clear("minesweeper"); } catch (e) {}
         _tone(1);
         _vibe(100, 250);
         if (bestMs[difficulty] <= 0 || elapsedMs < bestMs[difficulty]) {

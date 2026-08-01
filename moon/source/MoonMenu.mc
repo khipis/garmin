@@ -9,7 +9,16 @@ using Toybox.Lang;
 class MoonHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("moon"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiMoonView();
+        v.loadResume(SaveResume.load("moon"));
+        WatchUi.pushView(v, new BitochiMoonDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("moon");
         var v = new BitochiMoonView();
         WatchUi.pushView(v, new BitochiMoonDelegate(v), WatchUi.SLIDE_LEFT);
     }

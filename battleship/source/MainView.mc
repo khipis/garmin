@@ -33,6 +33,16 @@ class MainView extends WatchUi.View {
         _animTimerActive  = false;
     }
 
+    // ── SaveResume passthrough (see GameController.exportSave/applySave) ──
+    // Called before pushView() so ctrl.state is already GS_SETUP/GS_AIM
+    // (not GS_MENU) by the time onUpdate()'s auto-begin check below runs.
+    function loadResume(data) as Void {
+        ctrl.applySave(data);
+    }
+    function exportSave() {
+        return ctrl.exportSave();
+    }
+
     function onShow() {
         // Surface today's login-streak bonus once as a lightweight toast
         // (queued by the App's checkIn on the day's first launch).

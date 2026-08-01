@@ -1880,6 +1880,11 @@ const DAILY_META: Record<string, DailyMeta> = {
   pixelinvaders:    { name: "Pixel Invaders", noun: "pts",   roundsNoun: "runs"     },
   blocks:           { name: "Blocks",         noun: "pts",   roundsNoun: "games"    },
   manpac:           { name: "Manpac",         noun: "pts",   roundsNoun: "runs"     },
+  dailysport:       { name: "Daily Sport",    noun: "pts",   roundsNoun: "challenges" },
+  zombiesurvival:   { name: "Zombie Survival", noun: "night", roundsNoun: "nights" },
+  backrooms:        { name: "Backrooms Run",  noun: "lvl",   roundsNoun: "escapes" },
+  dungeonmaster:    { name: "Dungeon Master", noun: "floor", roundsNoun: "descents" },
+  towerdefense:     { name: "Tower Defense",  noun: "wave",  roundsNoun: "runs" },
   // ── ASC (lower is better) ──
   sudoku:           { name: "Sudoku",         noun: "s",     roundsNoun: "puzzles"  },
   minesweeper:      { name: "Minesweeper",    noun: "s",     roundsNoun: "boards"   },
@@ -2202,6 +2207,131 @@ async function handleGetDailyBoard(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// ── Raid / fight inbox (async PvP flavour) ─────────────────────────────────────
+// Attacker posts after a local fight against a named rival; victim pulls on the
+// next launch. Username-keyed (same trust model as scores) — caps keep spam down.
+const EVENT_KINDS = new Set(["raid", "fight"]);
+const EVENT_MAX_PER_FROM_DAY = 12;   // total posts one player may send / game / day
+const EVENT_MAX_PER_PAIR_DAY = 2;    // same from→to pair / game / day
+const EVENT_INBOX_LIMIT = 8;
+const EVENT_TTL_S = 14 * 24 * 3600;
+
+/**
+ * POST /event  { game, from, to, kind, won }
+ * Requires X-LB-Key. Fire-and-forget from the watch after a raid/fight.
+ */
+async function handlePostEvent(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let body: unknown;
+  try { body = await req.json(); } catch { return err("invalid JSON"); }
+  const b = body as Record<string, unknown>;
+
+  const gameRaw = typeof b.game === "string" ? b.game.trim() : "";
+  const fromRaw = typeof b.from === "string" ? b.from.trim() : "";
+  const toRaw   = typeof b.to   === "string" ? b.to.trim()   : "";
+  const kindRaw = typeof b.kind === "string" ? b.kind.trim().toLowerCase() : "";
+  const won     = b.won === true || b.won === 1 || b.won === "1" ? 1 : 0;
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game) return err("invalid game name");
+  if (!EVENT_KINDS.has(kindRaw)) return err("invalid kind");
+
+  const from = sanitizeUser(fromRaw);
+  const to   = sanitizeUser(toRaw);
+  if (!from || from === "anon" || from.startsWith("anon-")) return err("invalid from");
+  if (!to   || to === "anon"   || to.startsWith("anon-"))   return err("invalid to");
+  if (from.toLowerCase() === to.toLowerCase()) return err("self");
+
+  const ts = Math.floor(Date.now() / 1000);
+  const dayStart = ts - (ts % 86400);
+
+  const fromCount = await env.DB
+    .prepare(
+      "SELECT COUNT(*) AS c FROM events WHERE game=? AND from_user=? AND ts>=?"
+    )
+    .bind(game, from, dayStart)
+    .first<{ c: number }>();
+  if ((fromCount?.c ?? 0) >= EVENT_MAX_PER_FROM_DAY) {
+    return err("rate limited", 429);
+  }
+
+  const pairCount = await env.DB
+    .prepare(
+      "SELECT COUNT(*) AS c FROM events WHERE game=? AND from_user=? AND to_user=? AND ts>=?"
+    )
+    .bind(game, from, to, dayStart)
+    .first<{ c: number }>();
+  if ((pairCount?.c ?? 0) >= EVENT_MAX_PER_PAIR_DAY) {
+    return err("pair rate limited", 429);
+  }
+
+  try {
+    await env.DB
+      .prepare(
+        "INSERT INTO events (game, from_user, to_user, kind, won, ts) VALUES (?, ?, ?, ?, ?, ?)"
+      )
+      .bind(game, from, to, kindRaw, won, ts)
+      .run();
+  } catch (e) {
+    console.error("event insert error:", e);
+    return err("db error", 500);
+  }
+
+  return json({ ok: true });
+}
+
+/**
+ * GET /inbox?game=&user=&since=
+ * Returns events for `user` with id > since (client watermark). No CDN cache.
+ */
+async function handleGetInbox(url: URL, env: Env): Promise<Response> {
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const userRaw = (url.searchParams.get("user") ?? "").trim();
+  const sinceRaw = (url.searchParams.get("since") ?? "0").trim();
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game) return err("invalid game name");
+  if (!userRaw) return err("missing: user");
+  const user = sanitizeUser(userRaw);
+  if (!user || user === "anon" || user.startsWith("anon-")) {
+    return json(
+      { events: [] },
+      200,
+      { "Cache-Control": "private, no-store" }
+    );
+  }
+
+  let since = parseInt(sinceRaw, 10);
+  if (!Number.isFinite(since) || since < 0) since = 0;
+
+  const rows = await env.DB
+    .prepare(
+      "SELECT id, from_user AS f, kind AS k, won AS w, ts AS t " +
+      "FROM events WHERE game=? AND to_user=? AND id>? " +
+      "ORDER BY id ASC LIMIT ?"
+    )
+    .bind(game, user, since, EVENT_INBOX_LIMIT)
+    .all<{ id: number; f: string; k: string; w: number; t: number }>();
+
+  const events = (rows.results ?? []).map((r) => ({
+    id: r.id,
+    from: r.f,
+    kind: r.k,
+    won: r.w ? 1 : 0,
+    ts: r.t,
+  }));
+
+  return json(
+    { events },
+    200,
+    { "Cache-Control": "private, no-store" }
+  );
+}
+
 // ── Anonymous hit counter (no personal data) ──────────────────────────────────
 
 async function handleHit(env: Env): Promise<Response> {
@@ -2290,6 +2420,10 @@ export default {
         .bind(Math.floor(Date.now() / 1000)).run();
     } catch (e) { console.warn("agg_cache prune failed:", e); }
     try {
+      const cut = Math.floor(Date.now() / 1000) - EVENT_TTL_S;
+      await env.DB.prepare("DELETE FROM events WHERE ts < ?").bind(cut).run();
+    } catch (e) { console.warn("events prune failed:", e); }
+    try {
       await env.DB.prepare("ANALYZE").run();
     } catch (e) { console.warn("ANALYZE failed:", e); }
   },
@@ -2299,6 +2433,8 @@ async function route(req: Request, env: Env, url: URL, method: string): Promise<
     const path = url.pathname;
 
     if (method === "POST"   && path === "/score")       return handlePostScore(req, env);
+    if (method === "POST"   && path === "/event")       return handlePostEvent(req, env);
+    if (method === "GET"    && path === "/inbox")       return handleGetInbox(url, env);
     if (method === "POST"   && path === "/launch")      return handleLaunch(req, env);
     if (method === "POST"   && path === "/snapshot")    return handleSnapshot(req, env);
     if (method === "POST"   && path === "/reset")       return handleReset(req, env);

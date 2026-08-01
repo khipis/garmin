@@ -16,6 +16,7 @@ class MainView extends WatchUi.View {
     hidden var _by;
     hidden var _flagMode;
     hidden var _started;   // auto-start the board on first layout
+    hidden var _skipStart;
 
     function initialize() {
         View.initialize();
@@ -24,6 +25,18 @@ class MainView extends WatchUi.View {
         _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0;
         _flagMode = false;
         _started = false;
+        _skipStart = false;
+    }
+
+    function loadResume(data) as Void {
+        if (data != null && _ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return _ctrl.exportSave();
     }
 
     function onShow() {
@@ -45,7 +58,7 @@ class MainView extends WatchUi.View {
         // Menu lives in the shared root view — drop straight into a board and
         // never render an in-game menu here.
         if (!_started || _ctrl.state == GS_MENU) {
-            _ctrl.startGame();
+            if (!_skipStart) { _ctrl.startGame(); }
             _started = true;
         }
 

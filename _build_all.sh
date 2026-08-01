@@ -102,6 +102,11 @@ APPS=(
   island
   mines
   farm
+  towerdefense
+  zombiesurvival
+  backrooms
+  dungeonmaster
+  dailysport
 )
 
 FILTER=""

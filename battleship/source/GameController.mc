@@ -223,6 +223,68 @@ class GameController {
         try { Application.Storage.setValue(key, v); } catch (e) {}
     }
 
+    // ── SaveResume (see _shared/menu/SaveResume.mc) ──────────────────
+    // Settled points only: GS_SETUP (placing ships) and GS_AIM (waiting
+    // for the player's shot) — never mid fire-animation or GS_INFO.
+    function exportSave() {
+        if (state != GS_SETUP && state != GS_AIM) { return null; }
+        return {
+            "st"     => state,
+            "diff"   => difficulty,
+            "spt"    => shotsPerTurn,
+            "psl"    => playerShotsLeft,
+            "asl"    => aiShotsLeft,
+            "cur"    => cursor,
+            "sIdx"   => setupIdx,
+            "sHoriz" => setupHoriz ? 1 : 0,
+            "shots"  => shotCount,
+            "pg"     => playerGrid.exportData(),
+            "eg"     => enemyGrid.exportData(),
+            "ps"     => playerShips.exportData(),
+            "es"     => enemyShips.exportData(),
+            "ai"     => ai.exportData()
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var st = data["st"];
+            if (!(st instanceof Number) || (st != GS_SETUP && st != GS_AIM)) { return false; }
+            if (!playerGrid.importData(data["pg"]))   { return false; }
+            if (!enemyGrid.importData(data["eg"]))    { return false; }
+            if (!playerShips.importData(data["ps"]))  { return false; }
+            if (!enemyShips.importData(data["es"]))   { return false; }
+
+            var diff = data["diff"];
+            difficulty = (diff instanceof Number && diff >= 0 && diff <= 2) ? diff : AI_MEDIUM;
+            ai.setDifficulty(difficulty);   // resets AI memory; re-populated right after
+            ai.importData(data["ai"]);
+
+            var spt = data["spt"];
+            shotsPerTurn = (spt instanceof Number && spt == SHOTS_BURST) ? SHOTS_BURST : SHOTS_SINGLE;
+            var psl = data["psl"]; playerShotsLeft = (psl instanceof Number) ? psl : shotsPerTurn;
+            var asl = data["asl"]; aiShotsLeft = (asl instanceof Number) ? asl : 0;
+
+            var cur = data["cur"];
+            cursor = (cur instanceof Array && cur.size() == 2) ? cur : [0, 0];
+
+            var sIdx = data["sIdx"];
+            setupIdx = (sIdx instanceof Number) ? sIdx : NUM_SHIPS;
+            var sHoriz = data["sHoriz"];
+            setupHoriz = (sHoriz instanceof Number) ? (sHoriz != 0) : true;
+
+            var shots = data["shots"]; shotCount = (shots instanceof Number) ? shots : 0;
+
+            lastPlayerShot = null; lastAIShot = null; lastSinkText = "";
+            overlayTick = 0;
+            _fxOn = _loadFx();
+            state = st;
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     // ── Menu actions ────────────────────────────────────────────────
     function menuPrev() {
         menuCursor = (menuCursor + MI_ITEMS - 1) % MI_ITEMS;
@@ -499,6 +561,7 @@ class GameController {
             //   3. Burst spent → seed AI burst counter to (shots-1),
             //      resolve its first shot, kick off GS_FIRE_AI anim.
             if (enemyShips.allSunk()) {
+                try { SaveResume.clear("battleship"); } catch (e) {}
                 winsTotal = winsTotal + 1;
                 _saveInt("winsTotal", winsTotal);
                 // Player WIN — submit raw positive move count. Backend
@@ -529,6 +592,7 @@ class GameController {
 
         // GS_FIRE_AI just finished animating on the player board.
         if (playerShips.allSunk()) {
+            try { SaveResume.clear("battleship"); } catch (e) {}
             playerShotsLeft = shotsPerTurn;       // for next game
             _awardProgress(false);
             // Fleet lost — harsh failure tone + long, heavy rumble.

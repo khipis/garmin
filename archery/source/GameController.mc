@@ -338,6 +338,63 @@ class GameController {
     // Public entry used by the auto-start view (settings come from Storage).
     function beginGame() { _startTournament(); }
 
+    // ── Mid-tournament save / resume ──────────────────────────
+    // Exportable during PLAY or the between-rounds INTERMISSION —
+    // covers a back-press at any point while a tournament is live.
+    // Resume regenerates the current round fresh via _beginRound()
+    // (which lands back in AR_INTERMISSION); exact enemy/arrow state
+    // within the round is lost but score/round/shield progress and
+    // combo bests are preserved.
+    function exportSave() {
+        if (state != AR_PLAY && state != AR_INTERMISSION) { return null; }
+        return {
+            "roundIdx"   => roundIdx,
+            "score"      => score,
+            "shields"    => shields,
+            "maxShields" => maxShields,
+            "combo"      => combo,
+            "maxCombo"   => maxCombo,
+            "diff"       => diff,
+            "sens"       => sens
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var ri = data["roundIdx"];
+            if (!(ri instanceof Number) || ri < 0 || ri >= AR_NUM_ROUNDS) { return false; }
+
+            _fxOn = _loadFx();
+            roundIdx = ri;
+            var d  = data["diff"]; diff = (d instanceof Number && d >= 0 && d <= 2) ? d : diff;
+            var s  = data["sens"]; sens = (s instanceof Number && s >= 0 && s <= 2) ? s : sens;
+
+            var msh = data["maxShields"];
+            if (msh instanceof Number && msh > 0) { maxShields = msh; }
+            else if (diff == AR_DIFF_EASY)         { maxShields = 4; }
+            else if (diff == AR_DIFF_HARD)         { maxShields = 1; }
+            else                                     { maxShields = 3; }
+            var sh_ = data["shields"];
+            shields = (sh_ instanceof Number) ? sh_ : maxShields;
+            if (shields > maxShields) { shields = maxShields; }
+            if (shields < 1)          { shields = 1; }
+
+            var sc  = data["score"];    score    = (sc  instanceof Number) ? sc  : 0;
+            var cb  = data["combo"];    combo    = (cb  instanceof Number) ? cb  : 0;
+            var mcb = data["maxCombo"]; maxCombo = (mcb instanceof Number) ? mcb : combo;
+
+            gyro.setSensitivity(sens);
+            bow.reset();
+            gyro.recalibrate();
+            hitFocusT = 0;
+            dirty = true;
+            _beginRound();
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     hidden function _startTournament() {
         _fxOn    = _loadFx();
         score    = 0;
@@ -533,6 +590,7 @@ class GameController {
             if (score > bestScore) { bestScore = score; }
             if (roundIdx + 1 > bestRound) { bestRound = roundIdx + 1; }
             savePrefs();
+            try { SaveResume.clear(LB_GAME_ID); } catch (e) {}
             Leaderboard.submitScore(LB_GAME_ID, score, diffName());
             Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
             // Tournament victory fanfare.
@@ -554,6 +612,7 @@ class GameController {
     hidden function _gameOver() {
         if (score > bestScore) { bestScore = score; }
         savePrefs();
+        try { SaveResume.clear(LB_GAME_ID); } catch (e) {}
         Leaderboard.submitScore(LB_GAME_ID, score, diffName());
         Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
         // Defeat sting.

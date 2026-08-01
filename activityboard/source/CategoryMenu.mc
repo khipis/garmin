@@ -12,18 +12,13 @@
 // so this menu now works identically on every device the manifest lists.
 //
 // Two submission modes:
-//   Flex Score  → submits ALL variants in a sequential queue (one request per
-//                 1400 ms so Garmin's single-in-flight limit is never hit), then
-//                 shows the post-game standing for the flex board.
+//   Flex Score  → submitScoreBatch (all variants, one serial FIFO) then
+//                 showPostGame for the flex board.
 //   Any stat    → submits just that one variant, shows its standing.
 //
 // Garmin's Communications.makeWebRequest only allows one pending request at a
-// time. Rapid-fire calls throw InvalidValueException (silently swallowed by
-// LbSubmitter). The FlexBatchSender queues submissions 1400 ms apart and only
-// opens the standing after the final request, avoiding overlapping fetches.
-//
-// _batchSender lives at module scope so the timer chain survives popView
-// (otherwise the FlexMenuDelegate is GC'd before the queue finishes).
+// time — Leaderboard.submitScore* / submitScoreBatch share LbScoreQueue so we
+// never collide. Do NOT add a second timer-based batcher on top of that.
 // ═══════════════════════════════════════════════════════════════════════════
 using Toybox.WatchUi;
 using Toybox.Graphics;
@@ -35,56 +30,31 @@ const FLEX_BOARD_ID  = "__board";
 const FLEX_RENAME_ID = "__rename";
 const FLEX_FX_ID     = "__fx";
 
-// Module-level ref so the batch-timer chain isn't GC'd after popView.
-var _batchSender = null;
-
-// ── Sequential score submitter ────────────────────────────────────────────────
-// Submits an array of [score, variant] pairs one at a time, 650 ms apart.
-class FlexBatchSender {
-    hidden var _items;   // Array of [score, variant] pairs
-    hidden var _idx;
-    hidden var _timer;
-
-    function initialize(items as Lang.Array) {
-        _items = items;
-        _idx   = 0;
-        _timer = null;
-    }
-
-    function start() as Void { _submit(); }
-
-    function _submit() as Void {
-        if (_idx >= _items.size()) { _finish(); return; }
-        var item = _items[_idx];
-        _idx++;
-        if (_idx == 1) {
-            // The headline flex score is the one Daily Challenge attempt for
-            // this real-world snapshot.
-            Leaderboard.submitScore(LB_GAME_ID, item[0], item[1]);
-        } else {
-            // Remaining category boards belong to the same play/session.
-            Leaderboard.submitScoreAux(LB_GAME_ID, item[0], item[1]);
+// ── Flex submit — one serial batch (no extra Timer) ───────────────────────────
+// LbScoreQueue already serialises every POST. The old FlexBatchSender ran its
+// OWN timer chain on top of that and, together with post-game busy-waits that
+// allocated a fresh Timer every 500 ms, exhausted Garmin's timer pool → crash
+// instead of the leaderboard. One submitScoreBatch + showPostGame is enough.
+function abFlexSubmit(snap as Lang.Dictionary) as Void {
+    try {
+        var entries = [] as Lang.Array;
+        entries.add({
+            :score => Metrics.flexScore(snap),
+            :variant => Metrics.V_FLEX,
+            :meta => null
+        });
+        var cat = Metrics.catalog();
+        for (var i = 0; i < cat.size(); i++) {
+            var v = cat[i][0];
+            entries.add({
+                :score => Metrics.valueFor(v, snap),
+                :variant => v,
+                :meta => null
+            });
         }
-        // Schedule the next item only if there are more to send.
-        if (_idx < _items.size()) {
-            if (_timer == null) { _timer = new Timer.Timer(); }
-            // The first (flex) item may also complete today's challenge and
-            // trigger its small completion POST. Give that path extra room.
-            var delay = (_idx == 1) ? 2800 : 1400;
-            _timer.start(method(:_submit), delay, false);
-        } else {
-            _finish();
-        }
-    }
-
-    hidden function _finish() as Void {
-        if (_timer != null) { try { _timer.stop(); } catch (e) {} _timer = null; }
-        _items = [];
-        // The shared post-game helper waits another 1.6 s before fetching,
-        // leaving the final score request exclusive use of Communications.
+        Leaderboard.submitScoreBatch(LB_GAME_ID, entries);
         Leaderboard.showPostGame(LB_GAME_ID, Metrics.V_FLEX, "ACTIVITY BOARD");
-        _batchSender = null;
-    }
+    } catch (e) {}
 }
 
 // ── Custom scrollable rows menu (Menu2-free — see header note) ──────────────
@@ -207,8 +177,11 @@ class FlexMenuView extends WatchUi.View {
     // Hit-test a screen point against the (scrolled) row list. Returns -1 if
     // the point misses every row (e.g. it landed on the fixed title bar).
     function rowAt(x as Lang.Number, y as Lang.Number) as Lang.Number {
-        if (_rowH <= 0 || y < _titleH) { return -1; }
-        var idx = (y - _titleH + _scrollY) / _rowH;
+        if (_rowH <= 0) { return -1; }
+        var oy = (_h * 15) / 200;
+        var titleH = _titleH + oy;
+        if (y < titleH || y > _h - oy) { return -1; }
+        var idx = (y - titleH + _scrollY) / _rowH;
         if (idx < 0 || idx >= _rows.size()) { return -1; }
         return idx;
     }
@@ -227,7 +200,13 @@ class FlexMenuView extends WatchUi.View {
         dc.setColor(LB_BG, LB_BG);
         dc.clear();
 
-        _maxScroll = _rows.size() * _rowH - (_h - _titleH);
+        // Same 15% inset as the main dashboard so the chooser matches.
+        var boxW = (_w * 85) / 100;
+        var ox   = (_w - boxW) / 2;
+        var oy   = (_h * 15) / 200;   // half of the 15% shrink, top & bottom
+        var titleH = _titleH + oy;
+
+        _maxScroll = _rows.size() * _rowH - (_h - titleH - oy);
         if (_maxScroll < 0) { _maxScroll = 0; }
         if (_scrollY > _maxScroll) { _scrollY = _maxScroll; }
         if (_scrollY < 0) { _scrollY = 0; }
@@ -238,40 +217,41 @@ class FlexMenuView extends WatchUi.View {
 
         // Fixed title bar (never scrolls).
         dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _titleH / 2, Graphics.FONT_XTINY, "FLEX ON WORLD", VC);
+        dc.drawText(_w / 2, oy + _titleH / 2, Graphics.FONT_XTINY, "FLEX ON WORLD", VC);
         dc.setColor(0x1A2630, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, _titleH, _w, _titleH);
+        dc.drawLine(ox, titleH, ox + boxW, titleH);
 
-        var lPad = (_w * 4) / 100; if (lPad < 8) { lPad = 8; }
+        var lPad = ox + (boxW * 4) / 100; if (lPad < ox + 8) { lPad = ox + 8; }
+        var rPad = ox + boxW - (lPad - ox);
         var n = _rows.size();
         for (var i = 0; i < n; i++) {
-            var ry = _titleH + i * _rowH - _scrollY;
-            if (ry + _rowH < _titleH || ry > _h) { continue; }
+            var ry = titleH + i * _rowH - _scrollY;
+            if (ry + _rowH < titleH || ry > _h - oy) { continue; }
             var cy  = ry + _rowH / 2;
             var sel = (i == _sel);
             if (sel) {
                 dc.setColor(0x10303C, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(0, ry, _w, _rowH);
+                dc.fillRectangle(ox, ry, boxW, _rowH);
             }
             dc.setColor(sel ? LB_ACCENT : LB_TEXT, Graphics.COLOR_TRANSPARENT);
             dc.drawText(lPad, cy, Graphics.FONT_XTINY, _rows[i][0], VL);
             if (_rows[i][1] != null) {
                 dc.setColor(sel ? LB_GOLD : LB_MUTED, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w - lPad, cy, Graphics.FONT_XTINY, _rows[i][1], VR);
+                dc.drawText(rPad, cy, Graphics.FONT_XTINY, _rows[i][1], VR);
             }
         }
 
-        _drawScrollbar(dc);
+        _drawScrollbar(dc, titleH);
     }
 
-    hidden function _drawScrollbar(dc) as Void {
+    hidden function _drawScrollbar(dc, titleH) as Void {
         if (_maxScroll <= 0) { return; }
         var contentH = _rows.size() * _rowH;
-        var trackH   = _h - _titleH - 4;
-        var trackY   = _titleH + 2;
+        var trackH   = _h - titleH - 4;
+        var trackY   = titleH + 2;
         var trackX   = _w - 4;
 
-        var thumbH = (trackH * (_h - _titleH)) / contentH;
+        var thumbH = (trackH * (_h - titleH)) / contentH;
         if (thumbH < 10) { thumbH = 10; }
         if (thumbH > trackH) { thumbH = trackH; }
         var thumbY = trackY + ((trackH - thumbH) * _scrollY) / _maxScroll;
@@ -362,23 +342,11 @@ class FlexMenuDelegate extends WatchUi.BehaviorDelegate {
             return;
         }
 
-        // ── Flex Score: submit ALL variants sequentially ─────────────────────
-        // Build the queue: flex first (so the standing query matches the
-        // post-game card), then every individual metric.
+        // ── Flex Score: one serial batch for every board ──────────────────────
         if (id.equals(Metrics.V_FLEX)) {
-            var items = new [0] as Lang.Array;
-            items.add([Metrics.flexScore(_snap), Metrics.V_FLEX]);
-            var cat = Metrics.catalog();
-            for (var i = 0; i < cat.size(); i++) {
-                var v   = cat[i][0];
-                var val = Metrics.valueFor(v, _snap);
-                items.add([val, v]);
-            }
-            // Subtle confirm as the whole board is flexed to the world.
             AbFx.tone(0);
             AbFx.vibe(20, 25);
-            _batchSender = new FlexBatchSender(items);
-            _batchSender.start();
+            abFlexSubmit(_snap);
             return;
         }
 
@@ -386,9 +354,11 @@ class FlexMenuDelegate extends WatchUi.BehaviorDelegate {
         // Subtle confirm tick on submission.
         AbFx.tone(0);
         AbFx.vibe(20, 25);
-        var val = Metrics.valueFor(id, _snap);
-        Leaderboard.submitScore(LB_GAME_ID, val, id);
-        Leaderboard.showPostGame(LB_GAME_ID, id, "ACTIVITY BOARD");
+        try {
+            var val = Metrics.valueFor(id, _snap);
+            Leaderboard.submitScore(LB_GAME_ID, val, id);
+            Leaderboard.showPostGame(LB_GAME_ID, id, "ACTIVITY BOARD");
+        } catch (e) {}
     }
 
     hidden function _openBoard(variant as Lang.String) as Void {

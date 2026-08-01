@@ -52,10 +52,10 @@ class BitochiBlocksDelegate extends WatchUi.InputDelegate {
             return false;
         }
         if (key == WatchUi.KEY_ESC) {
-            // Back always returns to the shared root menu (framework pops us).
-            // Release the accelerometer subscription on the way out.
+            // Release the accelerometer subscription on the way out, then
+            // offer to save mid-run progress before returning to the menu.
             if (_sensorEnabled) { Sensor.enableSensorEvents(null); _sensorEnabled = false; }
-            return false;
+            return SaveResume.confirmExit("blocks", _view.method(:exportSave));
         }
         return false;
     }

@@ -56,6 +56,10 @@ class BitochiBlackjackView extends WatchUi.View {
     // Sound + haptics master switch (OPTIONS: bj_fx). 0/unset = ON, 1 = OFF.
     hidden var _fxOn;
 
+    // true once a SaveResume blob has been applied — skips the auto-start
+    // that would otherwise begin a fresh session on first show/update.
+    hidden var _skipStart;
+
     // Layout
     hidden var _cw; hidden var _ch; hidden var _gap;
     hidden var _pY; hidden var _dY;
@@ -83,6 +87,7 @@ class BitochiBlackjackView extends WatchUi.View {
         _fxOn = _loadFx();
         _w = 240; _h = 240;
         _timer = null;
+        _skipStart = false;
     }
 
     function onLayout(dc) {
@@ -97,7 +102,10 @@ class BitochiBlackjackView extends WatchUi.View {
         }
         // Root menu is the shared view; drop straight into a session. Only
         // auto-start from a fresh launch (returning from a pushed card keeps play).
-        if (_gs == BJ_MENU) { startGame(); }
+        // A resumed session (_skipStart) already has _gs != BJ_MENU; clear the
+        // one-shot flag once consumed so a later fresh session still auto-starts.
+        if (_gs == BJ_MENU && !_skipStart) { startGame(); }
+        _skipStart = false;
         // Surface today's login-streak bonus as a one-shot table toast (queued
         // by the App's checkIn on the day's first launch).
         try {
@@ -175,17 +183,96 @@ class BitochiBlackjackView extends WatchUi.View {
         doHit();
     }
 
+    // BACK: submit the peak bankroll once (matches prior on-exit behaviour),
+    // then offer to save progress (SaveResume) before leaving. exportSave()
+    // only allows saving at BJ_PLAY (never mid dealer animation) — elsewhere
+    // the prompt is skipped and confirmExit just pops the view.
     function doBack() {
-        // Quitting to the shared menu ends the session: submit the peak
-        // bankroll, then let the framework pop us back to the root menu.
         if (_sessionActive) {
             Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
             _sessionActive = false;
         }
-        return false;
+        return SaveResume.confirmExit("blackjack", method(:exportSave));
     }
 
     function isMenu() { return _gs == BJ_MENU; }
+
+    // ─── Mid-run save / resume (shared SaveResume) ─────────────────────────────
+
+    // Apply a SaveResume blob before the first paint (called from resumeGame).
+    function loadResume(data) as Void {
+        if (data != null && _applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    // Only safe checkpoint: player's own turn. Never mid dealer animation.
+    function exportSave() {
+        if (_gs != BJ_PLAY) { return null; }
+
+        var deck = [];
+        for (var i = 0; i < _shoeSize; i++) { deck.add(_deck[i]); }
+        var pCards = [];
+        for (var i = 0; i < _pCount; i++) { pCards.add(_pCards[i]); }
+        var dCards = [];
+        for (var i = 0; i < _dCount; i++) { dCards.add(_dCards[i]); }
+
+        return {
+            "deck"     => deck,
+            "top"      => _deckTop,
+            "pCards"   => pCards,
+            "dCards"   => dCards,
+            "chips"    => _chips,
+            "peak"     => _peakChips,
+            "decksIdx" => _decksIdx,
+            "sessAct"  => _sessionActive ? 1 : 0
+        };
+    }
+
+    hidden function _applySave(data) {
+        try {
+            var deck   = data["deck"];
+            var pCards = data["pCards"];
+            var dCards = data["dCards"];
+            if (!(deck instanceof Array) || !(pCards instanceof Array) || !(dCards instanceof Array)) {
+                return false;
+            }
+            var di = data["decksIdx"];
+            var decksIdx = (di instanceof Number && di >= 0 && di <= 2) ? di : _decksIdx;
+            var numDecks = [1, 2, 6][decksIdx];
+            var shoeSize = numDecks * 52;
+            if (deck.size() < shoeSize) { return false; }
+            if (pCards.size() < 1 || pCards.size() > 12 || dCards.size() < 1 || dCards.size() > 12) {
+                return false;
+            }
+
+            _decksIdx = decksIdx; _numDecks = numDecks; _shoeSize = shoeSize;
+            _deck = new [_shoeSize];
+            for (var i = 0; i < _shoeSize; i++) { _deck[i] = deck[i]; }
+            var top = data["top"];
+            _deckTop = (top instanceof Number) ? top : _shoeSize;
+
+            _pCount = pCards.size();
+            for (var i = 0; i < _pCount; i++) { _pCards[i] = pCards[i]; }
+            _dCount = dCards.size();
+            for (var i = 0; i < _dCount; i++) { _dCards[i] = dCards[i]; }
+
+            var ch = data["chips"];
+            _chips = (ch instanceof Number) ? ch : BJ_START_CHIPS;
+            var pk = data["peak"];
+            _peakChips = (pk instanceof Number) ? pk : _chips;
+            var sa = data["sessAct"];
+            _sessionActive = (sa instanceof Number && sa != 0);
+
+            _resultMsg = "";
+            _pgUnlockMsg = null;
+            _fxOn = _loadFx();
+            if (_cw == 0 && _w > 0) { setupLayout(); }
+            _gs = BJ_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
+    }
 
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "BLACKJACK");
@@ -206,6 +293,7 @@ class BitochiBlackjackView extends WatchUi.View {
 
     // Submit the session's peak bankroll once, then close the session.
     hidden function endSession() {
+        try { SaveResume.clear("blackjack"); } catch (e) {}
         if (_sessionActive) {
             Leaderboard.submitScore(LB_GAME_ID, _peakChips, _lbVariant());
             Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BLACKJACK");

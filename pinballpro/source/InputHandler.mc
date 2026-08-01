@@ -212,8 +212,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             WatchUi.requestUpdate();
             return true;
         }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return SaveResume.confirmExit("pinballpro", _v.method(:exportSave));
     }
 
     // Called by MainView once per frame to enforce the safety

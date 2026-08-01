@@ -111,9 +111,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()       { return _handleKeyCode(WatchUi.KEY_ENTER); }
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        // Pop back to the shared unified menu.
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return SaveResume.confirmExit("twentyfortyeight", view.method(:exportSave));
     }
     // onNextPage / onPreviousPage are produced by SWIPE gestures (and
     // dedicated page buttons) — physical UP/DOWN keys are consumed by

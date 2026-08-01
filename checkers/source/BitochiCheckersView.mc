@@ -52,6 +52,7 @@ class BitochiCheckersView extends WatchUi.View {
     hidden var _resultHandled;
     hidden var _isTouch;   // device has a touchscreen — tailor control hints
     hidden var _fxOn;      // sound + haptics master switch (OPTIONS: checkers_fx)
+    hidden var _skipStart; // true when a SaveResume blob was applied
 
     // ── Engagement leaderboard: pieces taken ─────────────────────────────────
     // Counts how many opponent pieces the player has captured this game.
@@ -103,6 +104,7 @@ class BitochiCheckersView extends WatchUi.View {
         _menuRow = 0;
         _resultHandled = false;
         _fxOn = _loadFx();
+        _skipStart = false;
 
         _dirsKing  = [[-1,-1],[-1,1],[1,-1],[1,1]];
         _dirsWhite = [[1,-1],[1,1]];
@@ -128,7 +130,7 @@ class BitochiCheckersView extends WatchUi.View {
     // auto-start from the initial GS_MENU — returning from a pushed post-game
     // card leaves us in a WIN/LOSE/DRAW state, so the run is never restarted.
     function onShow() {
-        if (_gs == GS_MENU) { startGame(); }
+        if (_gs == GS_MENU && !_skipStart) { startGame(); }
     }
 
     hidden function setupGeo() {
@@ -197,6 +199,7 @@ class BitochiCheckersView extends WatchUi.View {
     // Called once per finished game (single-player vs AI only).
     hidden function _handleGameResult() {
         _resultHandled = true;
+        try { SaveResume.clear("checkers"); } catch (e) {}
 
         // End-of-game feedback for every mode.
         if (_gs == GS_WIN)       { _tone(3); _vibe(100, 250); }
@@ -358,8 +361,9 @@ class BitochiCheckersView extends WatchUi.View {
         if (_gs == GS_PLAY || _gs == GS_AI_THINK || _gs == GS_AI_EVAL) {
             submitCaptures();
         }
-        // Otherwise let the framework pop back to the shared unified menu.
-        return false;
+        // Otherwise offer to save progress (or pop straight out if there's
+        // nothing worth resuming — see exportSave).
+        return SaveResume.confirmExit("checkers", method(:exportSave));
     }
 
     function doTap(tx, ty) {
@@ -503,6 +507,90 @@ class BitochiCheckersView extends WatchUi.View {
             _whiteTurn = true;
             _curRow = 2; _curCol = 1;
         }
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────────
+    // Only a settled, player-controlled turn (GS_PLAY) is ever worth saving —
+    // that naturally excludes GS_AI_THINK/EVAL, the in-view menu and any
+    // finished-game screen, and AI-vs-AI runs (which never sit in GS_PLAY at
+    // all). A mandatory multi-jump in progress (_mustRow/_mustCol) is still
+    // GS_PLAY, so it's captured too.
+    function exportSave() {
+        if (_gs != GS_PLAY) { return null; }
+        var b = new [64];
+        for (var i = 0; i < 64; i++) { b[i] = _board[i]; }
+        return {
+            "board" => b,
+            "wt"    => _whiteTurn ? 1 : 0,
+            "mustR" => _mustRow,
+            "mustC" => _mustCol,
+            "diff"  => _difficulty,
+            "pw"    => _playerIsWhite ? 1 : 0,
+            "pvp"   => _pvp ? 1 : 0,
+            "avai"  => _aiVsAi ? 1 : 0,
+            "cap"   => _capturedByPlayer
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from CheckersHooks).
+    function loadResume(data) as Void {
+        if (data != null && applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    hidden function applySave(data) as Lang.Boolean {
+        if (data == null) { return false; }
+        try {
+            var b = data["board"];
+            if (!(b instanceof Lang.Array) || b.size() < 64) { return false; }
+            for (var i = 0; i < 64; i++) {
+                var e = b[i];
+                _board[i] = (e instanceof Lang.Number) ? e : CK_EMPTY;
+            }
+            var wt = data["wt"];
+            _whiteTurn = (wt instanceof Lang.Number) ? (wt != 0) : true;
+            var mr = data["mustR"];
+            var mc = data["mustC"];
+            _mustRow = (mr instanceof Lang.Number) ? mr : -1;
+            _mustCol = (mc instanceof Lang.Number) ? mc : -1;
+            var diff = data["diff"];
+            _difficulty = (diff instanceof Lang.Number && diff >= 0 && diff <= 2) ? diff : _difficulty;
+            var pw = data["pw"];
+            _playerIsWhite = (pw instanceof Lang.Number) ? (pw != 0) : _playerIsWhite;
+            var pvp = data["pvp"];
+            _pvp = (pvp instanceof Lang.Number) ? (pvp != 0) : false;
+            var avai = data["avai"];
+            _aiVsAi = (avai instanceof Lang.Number) ? (avai != 0) : false;
+            var cap = data["cap"];
+            _capturedByPlayer = (cap instanceof Lang.Number) ? cap : 0;
+            _capturesSubmitted = false;
+
+            _selRow = -1; _selCol = -1; _validDsts = new [0];
+            if (_mustRow >= 0 && _mustCol >= 0) {
+                var piece = _board[_mustRow * 8 + _mustCol];
+                var moves = getCapturesFor(_mustRow, _mustCol, piece);
+                if (moves.size() > 0) {
+                    _selRow = _mustRow; _selCol = _mustCol;
+                    _validDsts = moves;
+                    _curRow = moves[0][0]; _curCol = moves[0][1];
+                } else {
+                    _mustRow = -1; _mustCol = -1;
+                }
+            }
+            if (_mustRow < 0) {
+                _curRow = _playerIsWhite ? 2 : 5;
+                _curCol = 1;
+                snapCursorToValidPiece();
+            }
+
+            _menuRow = 0;
+            _resultHandled = false;
+            _fxOn = _loadFx();
+            _gs = GS_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
     }
 
     // After each AI turn, snap cursor to a valid player piece so it's never stuck
@@ -1410,7 +1498,7 @@ class BitochiCheckersView extends WatchUi.View {
 
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeo(); }
-        if (_gs == GS_MENU) { startGame(); }   // never render an in-game menu
+        if (_gs == GS_MENU && !_skipStart) { startGame(); }   // never render an in-game menu
         drawBoard(dc);
         drawPieces(dc);
         drawHUD(dc);

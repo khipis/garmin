@@ -24,9 +24,10 @@ const CV_HOME  = 0;
 const CV_ACT   = 1;
 const CV_EVO   = 2;
 const CV_ARENA = 3;
-const CV_DAY   = 4;
-const CV_COL   = 5;
-const CV_PAGES = 6;
+const CV_RIVAL = 4;
+const CV_DAY   = 5;
+const CV_COL   = 6;
+const CV_PAGES = 7;
 
 // View ticks per replayed strike, and how many of them the hit flash lasts.
 const CV_STRIKE_TICKS = 7;
@@ -36,6 +37,11 @@ const CV_FLASH_TICKS  = 3;
 const CV_ARENA_ROWS = 6;
 // Equipment rows visible at once in the gear card.
 const CV_GEAR_FIT = 4;
+// Rival rows visible at once on the RIVALS page. The list always carries one
+// extra row after the players — the manual refresh.
+const CV_RIVAL_FIT = 3;
+// INDEX rows visible at once (section headers included).
+const CV_COL_FIT = 5;
 
 class CreaturesView extends WatchUi.View {
     hidden var _m;
@@ -49,6 +55,7 @@ class CreaturesView extends WatchUi.View {
     hidden var _welcome;         // showing idle-summary overlay
     hidden var _hatchFlash;      // showing the just-hatched celebration
     hidden var _intro;           // first-run "stats are the currency" explainer
+    hidden var _raidMail;        // async "you were fought" inbox overlay
     hidden var _actCursor;       // 0=FEED 1=TRAIN 2=QUEST (or dest when questing)
     hidden var _questPick;       // ACTIONS sub-mode: pick expedition destination
     hidden var _pathPick;        // overlay: choose evolution path
@@ -66,6 +73,11 @@ class CreaturesView extends WatchUi.View {
     hidden var _gearIds;         // unlocked equipment ids, rebuilt on open/equip
 
     hidden var _roster;          // once-a-day rival fetch (fire and forget)
+    hidden var _inbox;           // async raid-mail pull (never blocks play)
+    hidden var _rivals;          // [rosterIndex, ArenaFoe] per rival, rebuilt on change
+    hidden var _rivN;            // roster size _rivals was built from
+    hidden var _rivCur;          // cursor on the RIVALS list (last row = refresh)
+    hidden var _rivScroll;
 
     hidden var _demo;            // DEMO fast-track active
     hidden var _demoCtr;         // sub-tick counter for demo pacing
@@ -83,11 +95,11 @@ class CreaturesView extends WatchUi.View {
         _page = CV_HOME;
         _w = 0; _h = 0; _t = 0; _timer = null;
         _popup = null; _popupT = 0;
-        _welcome = false; _hatchFlash = false; _intro = false;
+        _welcome = false; _hatchFlash = false; _intro = false; _raidMail = false;
         _actCursor = 0; _questPick = false; _pathPick = false; _pathCursor = 0; _colScroll = 0;
         _battle = false; _battleData = null; _battleStep = 0; _battleT = 0;
         _gearOpen = false; _gearCur = 0; _gearScroll = 0; _gearIds = null;
-        _roster = null;
+        _roster = null; _inbox = null; _rivals = null; _rivN = -1; _rivCur = 0; _rivScroll = 0;
         _demo = false; _demoCtr = 0;
         _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null; _rBtnE = null;
         _rBtnF = null;
@@ -109,6 +121,7 @@ class CreaturesView extends WatchUi.View {
         // Rivals are a bonus, never a dependency: this arms a delayed, guarded,
         // once-a-day GET and nothing downstream waits on it.
         try { _roster = new ArenaRoster(_m); _roster.arm(); } catch (e) {}
+        try { _inbox = new LbRaidInbox(Cr.GAME_ID, _m); _inbox.arm(); } catch (e) {}
 
         // One-time explainer: Garmin stats are the currency here.
         try {
@@ -152,6 +165,7 @@ class CreaturesView extends WatchUi.View {
     function onHide() {
         if (_timer != null) { _timer.stop(); }
         try { if (_roster != null) { _roster.stop(); } } catch (e) {}
+        try { if (_inbox != null) { _inbox.stop(); } } catch (e) {}
         try { _m.save(); } catch (e) {}
     }
 
@@ -159,6 +173,8 @@ class CreaturesView extends WatchUi.View {
         _t = (_t + 1) % 1000000;
         if (_popupT > 0) { _popupT -= 1; if (_popupT == 0) { _popup = null; } }
         try { if (_roster != null) { _roster.poll(); } } catch (e) {}
+        try { if (_inbox != null) { _inbox.poll(); } } catch (e) {}
+        try { _checkRaidMail(); } catch (e) {}
 
         // Battle replay: the fight is already fully resolved, so the timer only
         // walks a cursor along it. CV_STRIKE_TICKS is short enough that eight
@@ -231,6 +247,9 @@ class CreaturesView extends WatchUi.View {
         if (_dismissOverlay()) { return; }
         _page = ((_page + d) % CV_PAGES + CV_PAGES) % CV_PAGES;
         _actCursor = 0; _colScroll = 0;
+        // The roster can be replaced by a fetch that finished while the page was
+        // off screen, so entering RIVALS always rebuilds the rows from it.
+        if (_page == CV_RIVAL) { _rivN = -1; }
         _tone(0); _vibe(15, 20);
         WatchUi.requestUpdate();
     }
@@ -239,6 +258,7 @@ class CreaturesView extends WatchUi.View {
         if (_dismissOverlay()) { return; }
         _page = ((p % CV_PAGES) + CV_PAGES) % CV_PAGES;
         _actCursor = 0; _colScroll = 0;
+        if (_page == CV_RIVAL) { _rivN = -1; }
         _tone(0); _vibe(12, 16);
         WatchUi.requestUpdate();
     }
@@ -254,6 +274,7 @@ class CreaturesView extends WatchUi.View {
             WatchUi.requestUpdate();
             return true;
         }
+        if (_raidMail) { _raidMail = false; WatchUi.requestUpdate(); return true; }
         if (_welcome) { _welcome = false; WatchUi.requestUpdate(); return true; }
         if (_hatchFlash) { _hatchFlash = false; WatchUi.requestUpdate(); return true; }
         if (_intro) {
@@ -281,9 +302,12 @@ class CreaturesView extends WatchUi.View {
         return v;
     }
 
+    // Scroll ceiling for the INDEX list. Read off the same builder the page
+    // draws from, so section headers and a growing journal can never leave rows
+    // that the cursor cannot reach.
     hidden function _colMaxScroll() {
-        // species + relics + a few journal lines
-        var n = Cr.SPECIES_N + Cr.RELIC_N + 6 - 5;
+        var n = 0;
+        try { n = _colRows().size() - CV_COL_FIT; } catch (e) {}
         return (n < 0) ? 0 : n;
     }
 
@@ -329,6 +353,17 @@ class CreaturesView extends WatchUi.View {
             _actCursor = na; _tone(0); WatchUi.requestUpdate();
             return;
         }
+        if (_page == CV_RIVAL) {
+            _rivalsEnsure();
+            var nr = _rivCur + d;
+            if (nr < 0) { pageMove(-1); return; }
+            if (nr > _rivals.size() - 1) { pageMove(1); return; }
+            _rivCur = nr;
+            if (_rivCur < _rivScroll) { _rivScroll = _rivCur; }
+            if (_rivCur >= _rivScroll + CV_RIVAL_FIT) { _rivScroll = _rivCur - CV_RIVAL_FIT + 1; }
+            _tone(0); WatchUi.requestUpdate();
+            return;
+        }
         pageMove(d);
     }
 
@@ -352,6 +387,7 @@ class CreaturesView extends WatchUi.View {
             doFight(_actCursor == 4 ? 0 : 1);
             return;
         }
+        if (_page == CV_RIVAL) { doFightRival(_rivCur); return; }
         if (_page == CV_DAY) {
             // Prefer bond claim when daily already claimed / incomplete.
             try {
@@ -442,7 +478,6 @@ class CreaturesView extends WatchUi.View {
             _tone(1); _vibe(35, 45); _act(r, e);
         } catch (ex) {}
     }
-    function doExplore() { doQuest(Cr.DEST_FOREST); }
     function doQuest(dest) {
         try {
             var e = _m.evo; var r = _m.quest(dest);
@@ -517,13 +552,33 @@ class CreaturesView extends WatchUi.View {
             WatchUi.requestUpdate();
         } catch (e) {}
     }
+    // Challenge the player on row `row` of the RIVALS list. The reward band is
+    // the power gap, so picking the giant at the top of the board pays like
+    // RISK without the player having to say so.
+    function doFightRival(row) {
+        try {
+            _rivalsEnsure();
+            if (row < 0 || row >= _rivals.size()) { return; }
+            var res = _m.fightRival(_rivals[row][0]);
+            if (res == null) {
+                _popup = "That rival left the board"; _popupT = 26; _tone(2);
+                _rivals = null; _rivN = -1;
+                WatchUi.requestUpdate();
+                return;
+            }
+            _battleData = res;
+            _battleStep = 0; _battleT = 0;
+            _battle = true;
+            _tone(0); _vibe(25, 35);
+            WatchUi.requestUpdate();
+        } catch (e) {}
+    }
 
     // ── Equipment picker ──────────────────────────────────────────────────────
     // Row 0 is AUTO (the old equipBest behaviour, kept as a one-tap shortcut);
     // every row after it is an unlocked item that SELECT equips into its slot,
     // or takes off if it is already worn. The id list is built when the card
     // opens rather than per draw.
-    function gearOpen() { return _gearOpen; }
     function openGear() {
         _buildGearIds();
         _gearOpen = true; _gearCur = 0; _gearScroll = 0;
@@ -666,6 +721,24 @@ class CreaturesView extends WatchUi.View {
             if (_inRect(x, y, _rBtnE)) { _actCursor = 4; doFight(0); return true; }
             if (_inRect(x, y, _rBtnF)) { _actCursor = 5; doFight(1); return true; }
         }
+        if (_page == CV_RIVAL) {
+            _rivalsEnsure();
+            for (var g = 0; g < CV_RIVAL_FIT; g++) {
+                var rr = (g == 0) ? _rBtnA : ((g == 1) ? _rBtnB : _rBtnC);
+                if (!_inRect(x, y, rr)) { continue; }
+                var row = _rivScroll + g;
+                if (row >= _rivals.size()) { return true; }
+                // First tap focuses the row, second commits: a fight moves the
+                // ladder points, so it never fires from a stray tap.
+                if (_rivCur != row) {
+                    _rivCur = row; _tone(0); _vibe(12, 16);
+                    WatchUi.requestUpdate();
+                    return true;
+                }
+                doFightRival(row);
+                return true;
+            }
+        }
         if (_page == CV_DAY) {
             if (_inRect(x, y, _rBtnA)) {
                 try {
@@ -720,6 +793,7 @@ class CreaturesView extends WatchUi.View {
             if (_page == CV_ACT) { _drawActions(dc); }
             else if (_page == CV_EVO) { _drawEvolution(dc); }
             else if (_page == CV_ARENA) { _drawArena(dc); }
+            else if (_page == CV_RIVAL) { _drawRivals(dc); }
             else if (_page == CV_DAY) { _drawDaily(dc); }
             else { _drawCollection(dc); }
             _drawChevrons(dc);
@@ -729,11 +803,12 @@ class CreaturesView extends WatchUi.View {
 
         if (_popup != null) { _drawPopup(dc); }
         if (_welcome) { _drawWelcome(dc); }
+        if (_raidMail && !_welcome) { _drawRaidMail(dc); }
         if (_hatchFlash) { _drawHatch(dc); }
-        if (_intro && _m.hatched && !_welcome && !_hatchFlash) { _drawIntro(dc); }
-        if (_pathPick && _m.hatched && !_welcome && !_hatchFlash && !_intro) { _drawPathPick(dc); }
-        if (_battle && _m.hatched && !_welcome && !_hatchFlash && !_intro && !_pathPick) { _drawBattle(dc); }
-        if (_gearOpen && _m.hatched && !_battle && !_welcome && !_hatchFlash && !_intro && !_pathPick) { _drawGear(dc); }
+        if (_intro && _m.hatched && !_welcome && !_hatchFlash && !_raidMail) { _drawIntro(dc); }
+        if (_pathPick && _m.hatched && !_welcome && !_hatchFlash && !_intro && !_raidMail) { _drawPathPick(dc); }
+        if (_battle && _m.hatched && !_welcome && !_hatchFlash && !_intro && !_pathPick && !_raidMail) { _drawBattle(dc); }
+        if (_gearOpen && _m.hatched && !_battle && !_welcome && !_hatchFlash && !_intro && !_pathPick && !_raidMail) { _drawGear(dc); }
     }
 
     // ── Round-screen safety ───────────────────────────────────────────────────
@@ -789,6 +864,7 @@ class CreaturesView extends WatchUi.View {
         if (p == CV_ACT)   { return "ACTIONS"; }
         if (p == CV_EVO)   { return "EVOLVE"; }
         if (p == CV_ARENA) { return "ARENA"; }
+        if (p == CV_RIVAL) { return "RIVALS"; }
         if (p == CV_DAY)   { return "DAILY"; }
         return "INDEX";
     }
@@ -796,6 +872,7 @@ class CreaturesView extends WatchUi.View {
         if (p == CV_ACT)   { return Cr.ACCENT; }
         if (p == CV_EVO)   { return 0xB46CFF; }
         if (p == CV_ARENA) { return 0xFF5A5A; }
+        if (p == CV_RIVAL) { return 0xFF9A3A; }
         if (p == CV_DAY)   { return Cr.GOLD; }
         if (p == CV_COL)   { return 0x4CA8FF; }
         return Cr.TEXT;
@@ -1159,9 +1236,11 @@ class CreaturesView extends WatchUi.View {
         _button(dc, _rBtnE, "FAIR", _actCursor == 4);
         _button(dc, _rBtnF, "RISK", _actCursor == 5);
         var rivals = 0;
-        try { rivals = _m.roster().size(); } catch (e) {}
-        var bandHint = (rivals > 0) ? (rivals + " live rivals on the board")
-                                    : "FAIR even  RISK stronger +pts";
+        try { rivals = _m.rivalCount(); } catch (e) {}
+        // FAIR/RISK are the QUICK fight: the game picks the opponent. Naming the
+        // RIVALS tab here is what tells a player the hand-picked route exists.
+        var bandHint = (rivals > 0) ? ("quick fight  ·  " + rivals + " named on RIVALS")
+                                    : "quick fight  ·  FAIR even, RISK stronger";
         _pxFit(dc, bandHint, cx, by0 + bh + _h * 3 / 100, sc, (rivals > 0) ? Cr.GOLD : Cr.MUTED, 6);
 
         // War log, then the most recent raid the player defended against. Three
@@ -1183,6 +1262,127 @@ class CreaturesView extends WatchUi.View {
         var def = null;
         try { def = _m.defShort(0); } catch (e) {}
         if (def != null) { _pxFit(dc, def, cx, line, sc, 0xAAAAAA, 6); }
+    }
+
+    // ── RIVALS — challenge a NAMED player off the Arena leaderboard ───────────
+    // The same roster the quick FAIR/RISK match draws from, except here the
+    // player picks the face: every row carries the rival's own creature, their
+    // level, species and the power gap, so a challenge is a decision instead of
+    // a dice roll. Nothing on this page touches the network — the roster refills
+    // itself once a calendar day through ArenaRoster.
+    //
+    // The roster index is carried alongside the foe rather than assumed to be
+    // the row number: an unparseable entry is dropped from the list, and the
+    // challenge has to hit the player the row actually shows.
+    hidden function _rivalsEnsure() {
+        var n = 0;
+        try { n = _m.rivalCount(); } catch (e) {}
+        if (_rivals != null && _rivN == n) { return; }
+        _rivN = n;
+        var out = [];
+        for (var i = 0; i < n; i++) {
+            var f = null;
+            try { f = _m.rivalAt(i); } catch (e) {}
+            if (f != null) { out.add([i, f]); }
+        }
+        _rivals = out;
+        if (_rivCur >= out.size()) { _rivCur = out.size() - 1; }
+        if (_rivCur < 0) { _rivCur = 0; }
+        var max = out.size() - CV_RIVAL_FIT;
+        if (max < 0) { max = 0; }
+        if (_rivScroll > max) { _rivScroll = max; }
+        if (_rivScroll < 0) { _rivScroll = 0; }
+    }
+
+    hidden function _drawRivals(dc) {
+        var cx = _w / 2;
+        var sc = _h / 220; if (sc < 2) { sc = 2; }
+        _rivalsEnsure();
+        var n = _rivals.size();
+
+        var myPw = 0; var rkc = Cr.TEXT;
+        try { myPw = _m.power(); } catch (e) {}
+        try { rkc = Cr.rankColor(_m.rank()); } catch (e) {}
+        _pxFit(dc, "YOU  LV " + _m.level + "  POWER " + myPw, cx, _h * 21 / 100, sc, rkc, 6);
+
+        // Empty roster: say why, and what still works without one.
+        if (n == 0) {
+            _pxFit(dc, "NO LIVE RIVALS YET", cx, _h * 34 / 100, sc, 0xFF9A3A, 6);
+            _wrapN(dc, cx, _h * 44 / 100, _chordHalf(_h * 56 / 100) * 2 - 14,
+                   Graphics.FONT_XTINY, Cr.TEXT,
+                   "Board players load once a day with your phone in range.", 3);
+            _pxFit(dc, "FAIR / RISK on ARENA works offline", cx, _h * 72 / 100, sc, Cr.MUTED, 6);
+            return;
+        }
+
+        var rw = _w * 74 / 100; var rx = cx - rw / 2;
+        var rh = _h * 17 / 100;
+        var gap = _h * 15 / 1000;
+        var y0 = _h * 27 / 100;
+        for (var g = 0; g < CV_RIVAL_FIT; g++) {
+            var row = _rivScroll + g;
+            if (row >= n) { break; }
+            var r = [rx, y0 + g * (rh + gap), rw, rh];
+            if (g == 0) { _rBtnA = r; }
+            else if (g == 1) { _rBtnB = r; }
+            else { _rBtnC = r; }
+            _rivalRow(dc, r, row, sc);
+        }
+        _pxFit(dc, (_rivCur + 1) + "/" + n + "   SELECT = FIGHT",
+               cx, _h * 85 / 100, sc, Cr.MUTED, 6);
+    }
+
+    hidden function _rivalRow(dc, r, row, sc) {
+        var f = _rivals[row][1];
+        var hot = (_rivCur == row);
+        dc.setColor(hot ? 0x2A1608 : Cr.PANEL, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+        dc.setColor(hot ? 0xFF9A3A : 0x2A3A4A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+
+        var pad = r[2] / 22; if (pad < 4) { pad = 4; }
+        var px = r[3] / 12; if (px < 3) { px = 3; }
+        var spriteW = 8 * px;
+        // The rival's OWN creature, drawn from the species/stage they published.
+        try {
+            CreatureArt.drawFoe(dc, f.species, f.evo, r[0] + pad + spriteW / 2,
+                                r[1] + r[3] - pad, px, _t, false);
+        } catch (e) {}
+
+        // Right column: how the fight is likely to go, then their raw power.
+        var band = 0;
+        try { band = _m.bandFor(f.power); } catch (e) {}
+        var vt = (band > 0) ? "HARD" : ((band < 0) ? "EASY" : "EVEN");
+        var vc = (band > 0) ? 0xFF5A5A : ((band < 0) ? Cr.ACCENT : Cr.GOLD);
+        var pwStr = "PWR " + f.power;
+        var topY = r[1] + r[3] * 22 / 100;
+        var botY = r[1] + r[3] * 58 / 100;
+        var colX = r[0] + r[2] - pad - Px.gtxtW(pwStr, sc);
+        Px.gtxt(dc, vt, r[0] + r[2] - pad - Px.gtxtW(vt, sc), topY, sc, vc);
+        Px.gtxt(dc, pwStr, colX, botY, sc, Cr.MUTED);
+
+        // Left column: who they are. The name gets the readable system font —
+        // it is the one thing on the row a player is actually choosing between.
+        var tx = r[0] + pad * 2 + spriteW;
+        var tw = colX - tx - pad;
+        if (tw < 8) { return; }
+        _txt(dc, tx, r[1] + r[3] * 12 / 100, Graphics.FONT_XTINY,
+             hot ? 0xFFD9B0 : Cr.TEXT, _clip(dc, f.name, Graphics.FONT_XTINY, tw),
+             Graphics.TEXT_JUSTIFY_LEFT);
+        var sub = "LV " + f.level + " " + Cr.speciesElement(f.species);
+        while (sub.length() > 3 && Px.gtxtW(sub, sc) > tw) {
+            sub = sub.substring(0, sub.length() - 1);
+        }
+        Px.gtxt(dc, sub, tx, botY, sc, Cr.speciesColor(f.species));
+    }
+
+    hidden function _clip(dc, s, font, maxw) {
+        if (s == null) { return ""; }
+        var str = s;
+        while (str.length() > 2 && dc.getTextWidthInPixels(str, font) > maxw) {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 
     // ── GEAR card — pick a weapon / armour / artifact per slot ────────────────
@@ -1401,58 +1601,102 @@ class CreaturesView extends WatchUi.View {
         _button(dc, _rBtnB, bDone ? "BOND OK" : "BOND", bCan);
     }
 
-    hidden function _streakMile() {
-        if (_m.streak >= 30) { return " D30"; }
-        if (_m.streak >= 7)  { return " D7"; }
-        return "";
-    }
-
-    // ── INDEX — species + relics + journal ─────────────────────────────────────
-    hidden function _drawCollection(dc) {
-        var cx = _w / 2;
-        var sc = _h / 220; if (sc < 2) { sc = 2; }
-        var gh = 5 * sc;
-        // Header: your creature identity.
-        Px.gtxtC(dc, _m.givenName(), cx, _h * 18 / 100, sc, Cr.GOLD);
-        Px.gtxtC(dc, _m.displayName(), cx, _h * 24 / 100, sc, Cr.TEXT);
-        Px.gtxtC(dc, Cr.rarityName(_m.rarityTier()) + " · relics " + _m.relicCount() + "/" + Cr.RELIC_N,
-                 cx, _h * 30 / 100, sc, Cr.rarityColor(_m.rarityTier()));
-
-        var y = _h * 36 / 100;
-        var rowH = _h * 8 / 100;
-        var bx = _w * 12 / 100;
-        var start = _colScroll;
-        if (start < 0) { start = 0; }
-        // Scrollable mix: 5 species then relics then journal lines.
+    // ── INDEX — what you have collected, in three labelled sections ───────────
+    // One scrollable list, but every entry says what it is: a titled SPECIES /
+    // RELICS / JOURNAL band with its own count, a marker per row for found vs
+    // still missing, and the system font instead of the 10-pixel one — the old
+    // page was a wall of tiny unlabelled words and read as noise.
+    // Row kinds. Numbers rather than tag strings: this list is rebuilt on every
+    // frame the page is up, and a string compare per row per frame is not worth
+    // the readability on a watch.
+    hidden function _colRows() {
         var rows = [];
+        var seen = 0; var rel = 0;
+        try { seen = _m.seenCount(); } catch (e) {}
+        try { rel = _m.relicCount(); } catch (e) {}
+
+        rows.add([0, "SPECIES " + seen + "/" + Cr.SPECIES_N, 0x4CA8FF]);
         for (var si = 0; si < Cr.SPECIES_N; si++) {
-            var sn = _m.isSeen(si) ? Cr.speciesName(si) : "???";
-            rows.add(["SP", sn, _m.isSeen(si)]);
+            var ok = false;
+            try { ok = _m.isSeen(si); } catch (e) {}
+            rows.add([ok ? 1 : 2, ok ? Cr.speciesName(si) : "not met yet",
+                      ok ? Cr.speciesColor(si) : Cr.MUTED]);
         }
+
+        rows.add([0, "RELICS " + rel + "/" + Cr.RELIC_N, Cr.GOLD]);
         for (var ri = 0; ri < Cr.RELIC_N; ri++) {
-            var rn = _m.hasRelic(ri) ? Cr.relicName(ri) : "····";
-            rows.add(["RL", rn, _m.hasRelic(ri)]);
+            var owned = false;
+            try { owned = _m.hasRelic(ri); } catch (e) {}
+            rows.add([owned ? 1 : 2, owned ? Cr.relicName(ri) : "undiscovered",
+                      owned ? Cr.GOLD : Cr.MUTED]);
         }
+
+        rows.add([0, "JOURNAL", Cr.ACCENT]);
         try {
             var jr = _m.journal();
-            for (var ji = 0; ji < jr.size() && ji < 6; ji++) {
-                var jrow = jr[ji];
-                rows.add(["JN", jrow[0] + ": " + jrow[1], true]);
+            for (var ji = 0; ji < jr.size() && ji < 8; ji++) {
+                rows.add([3, jr[ji][0] + " - " + jr[ji][1], 0x9FB2C4]);
             }
         } catch (e) {}
+        return rows;
+    }
 
-        var shown = 0;
-        for (var i = start; i < rows.size() && shown < 5; i++) {
-            var ry = y + shown * rowH;
-            var row = rows[i];
-            var col = row[2] ? Cr.TEXT : Cr.MUTED;
-            if (row[0].equals("RL") && row[2]) { col = Cr.GOLD; }
-            if (row[0].equals("JN")) { col = 0x9FB2C4; }
-            Px.gtxt(dc, row[1], bx, ry, sc, col);
-            shown += 1;
+    hidden function _drawCollection(dc) {
+        var cx = _w / 2;
+        var tier = 0;
+        try { tier = _m.rarityTier(); } catch (e) {}
+
+        // Identity block: the creature this index belongs to.
+        _txtFit(dc, cx, _h * 19 / 100, Graphics.FONT_TINY, Cr.GOLD, _m.givenName(),
+                _chordHalf(_h * 26 / 100) * 2 - 12);
+        _txtFit(dc, cx, _h * 27 / 100, Graphics.FONT_XTINY, Cr.rarityColor(tier),
+                _m.displayName() + " · " + Cr.rarityName(tier),
+                _chordHalf(_h * 33 / 100) * 2 - 12);
+
+        var rows = _colRows();
+        var max = rows.size() - CV_COL_FIT; if (max < 0) { max = 0; }
+        var start = _colScroll;
+        if (start > max) { start = max; }
+        if (start < 0) { start = 0; }
+        _colScroll = start;
+
+        var y0 = _h * 35 / 100;
+        var rowH = _h * 98 / 1000;
+        // Left edge is measured against the NARROWEST row of the block so no
+        // entry runs under the bezel on the lower chord of a round screen.
+        var left = cx - _w * 33 / 100;
+        var wMax = _w * 66 / 100;
+        var just = Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER;
+
+        for (var i = 0; i < CV_COL_FIT; i++) {
+            var idx = start + i;
+            if (idx >= rows.size()) { break; }
+            var row = rows[idx];
+            var kind = row[0];
+            var my = y0 + i * rowH + rowH / 2;
+            var tx = left;
+            dc.setColor(row[2], Graphics.COLOR_TRANSPARENT);
+            if (kind != 0) {
+                // Found entries get a filled dot, missing ones a hollow one, and
+                // a journal line just an indent — so a glance says how much of
+                // the section is still open.
+                tx = left + 16;
+                if (kind == 1)      { dc.fillCircle(left + 5, my, 4); }
+                else if (kind == 2) { dc.drawCircle(left + 5, my, 4); }
+            }
+            _txt(dc, tx, my, Graphics.FONT_XTINY, row[2],
+                 _clip(dc, row[1], Graphics.FONT_XTINY, wMax - (tx - left)), just);
         }
-        if (start + 5 < rows.size()) {
-            Px.gtxtC(dc, "▼ more", cx, _h * 88 / 100, sc, Cr.MUTED);
+
+        // Scroll thumb: this list is 20+ rows on a five-row page.
+        if (max > 0) {
+            var h = rowH * CV_COL_FIT;
+            var th = h * CV_COL_FIT / rows.size(); if (th < 8) { th = 8; }
+            var sx = cx + _w * 34 / 100;
+            dc.setColor(0x22303C, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(sx, y0, 3, h);
+            dc.setColor(0x4CA8FF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(sx, y0 + (h - th) * start / max, 3, th);
         }
     }
 
@@ -1497,16 +1741,6 @@ class CreaturesView extends WatchUi.View {
         dc.drawText(r[0] + r[2] / 2, r[1] + r[3] / 2, Graphics.FONT_XTINY, label,
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
-    hidden function _rarityBadge(dc, cx, cy, tier) {
-        var c = Cr.rarityColor(tier);
-        var s = Cr.rarityName(tier);
-        var pw = _w * 40 / 100; var px = cx - pw / 2; var ph = _h * 7 / 100;
-        dc.setColor(c, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(px, cy - ph / 2, pw, ph, ph / 2);
-        dc.drawText(cx, cy, Graphics.FONT_XTINY, s,
-                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-    }
-
     hidden function _drawPopup(dc) {
         var cx = _w / 2;
         var pw = _w * 82 / 100; var px = cx - pw / 2;
@@ -1517,6 +1751,43 @@ class CreaturesView extends WatchUi.View {
         dc.drawRoundedRectangle(px, py, pw, ph, 8);
         _wrapText(dc, cx, py + ph / 2 - _h * 3 / 100, pw - 12,
                   Graphics.FONT_XTINY, Cr.TEXT, _popup);
+    }
+
+    // Inbox arrives ~12 s after open. If WELCOME BACK is still up the raid
+    // lines update on the next frame; otherwise surface a short RAID ALERT.
+    hidden function _checkRaidMail() {
+        if (!_m.mailAlert) { return; }
+        _m.mailAlert = false;
+        if (_welcome || _battle || _raidMail || _hatchFlash || _pathPick) { return; }
+        _raidMail = true;
+        try { _tone(2); _vibe(40, 80); } catch (e) {}
+    }
+
+    hidden function _drawRaidMail(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x14060A, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(0x241014, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        _txt(dc, cx, _h * 16 / 100, Graphics.FONT_SMALL, 0xFF6A6A,
+             "RAID ALERT", Graphics.TEXT_JUSTIFY_CENTER);
+        var raids = null; var who = null;
+        try { raids = _m.defSummary(); who = _m.defLine(0); } catch (e) {}
+        var y = _h * 32 / 100;
+        if (raids != null) {
+            var wrapW = _chordHalf(y + _h * 5 / 100) * 2 - 12;
+            y = _wrapN(dc, cx, y, wrapW, Graphics.FONT_TINY, 0xFFAA00, raids, 2);
+            if (who != null) {
+                _wrapN(dc, cx, y, wrapW, Graphics.FONT_XTINY, Cr.TEXT, who, 2);
+            }
+        }
+        _txt(dc, cx, _h * 70 / 100, Graphics.FONT_XTINY, Cr.GOLD,
+             "Arena " + _m.arenaPts + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 80 / 100, Graphics.FONT_XTINY, Cr.MUTED,
+             "check ARENA for the log", Graphics.TEXT_JUSTIFY_CENTER);
+        _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Cr.MUTED,
+             "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _drawWelcome(dc) {

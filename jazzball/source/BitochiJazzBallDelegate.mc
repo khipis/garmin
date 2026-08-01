@@ -13,8 +13,18 @@ class BitochiJazzBallDelegate extends WatchUi.InputDelegate {
         if (key == WatchUi.KEY_UP)   { _view.doUp();     WatchUi.requestUpdate(); return true; }
         if (key == WatchUi.KEY_DOWN) { _view.doDown();   WatchUi.requestUpdate(); return true; }
         if (key == WatchUi.KEY_ENTER){ _view.doSelect(); WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_ESC)  { var h = _view.doBack(); WatchUi.requestUpdate(); return h; }
+        if (key == WatchUi.KEY_ESC)  {
+            var h = SaveResume.confirmExit("jazzball", _view.method(:exportSave));
+            WatchUi.requestUpdate();
+            return h;
+        }
         return false;
+    }
+
+    function onBack() {
+        var h = SaveResume.confirmExit("jazzball", _view.method(:exportSave));
+        WatchUi.requestUpdate();
+        return h;
     }
 
     function onSwipe(evt) {

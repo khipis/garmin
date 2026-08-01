@@ -427,6 +427,88 @@ class BilliardGame {
         return "9-ball";
     }
 
+    // Mid-run save / resume (shared SaveResume). Only worth saving when
+    // settled at the aim line - rolling/power/AI-wait/game-over are all
+    // transient and resuming mid-shot would be unplayable/unfair.
+    function exportSave() {
+        if (gs != BS_AIM) { return null; }
+        var n = numBalls;
+        var bxA = new [n]; var byA = new [n]; var aliveA = new [n];
+        for (var i = 0; i < n; i++) {
+            bxA[i]    = bx[i].toNumber();
+            byA[i]    = by[i].toNumber();
+            aliveA[i] = bAlive[i] ? 1 : 0;
+        }
+        return {
+            "gt"    => gameType,
+            "diff"  => diff,
+            "pvp"   => pvpMode ? 1 : 0,
+            "n"     => n,
+            "bx"    => bxA,
+            "by"    => byA,
+            "alive" => aliveA,
+            "turn"  => turn,
+            "ps"    => playerScore,
+            "as"    => aiScore,
+            "pg0"   => playerGroup[0],
+            "pg1"   => playerGroup[1],
+            "at"    => arcadeTicks,
+            "aim"   => aimAngle.toNumber()
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var gt = data["gt"];
+            if (!(gt instanceof Lang.Number) || gt < 0 || gt >= GT_COUNT) { return false; }
+            gameType = gt;
+            var d = data["diff"];
+            diff = (d instanceof Lang.Number) ? d : DIFF_MED;
+            var pv = data["pvp"];
+            pvpMode = (pv instanceof Lang.Number && pv != 0);
+            _applyGameType();   // sync numBalls/bCol for the restored gameType
+
+            var n = data["n"];
+            if (!(n instanceof Lang.Number) || n != numBalls) { return false; }
+            var bxA = data["bx"]; var byA = data["by"]; var aliveA = data["alive"];
+            if (!(bxA instanceof Lang.Array) || bxA.size() < n) { return false; }
+            if (!(byA instanceof Lang.Array) || byA.size() < n) { return false; }
+            if (!(aliveA instanceof Lang.Array) || aliveA.size() < n) { return false; }
+
+            for (var i = 0; i < MAX_BALLS; i++) {
+                bx[i] = 0.0; by[i] = 0.0; bvx[i] = 0.0; bvy[i] = 0.0; bAlive[i] = false;
+            }
+            for (var i = 0; i < n; i++) {
+                var xv = bxA[i]; var yv = byA[i]; var av = aliveA[i];
+                bx[i]     = (xv instanceof Lang.Number) ? xv.toFloat() : 0.0;
+                by[i]     = (yv instanceof Lang.Number) ? yv.toFloat() : 0.0;
+                bAlive[i] = (av instanceof Lang.Number && av != 0);
+            }
+
+            var t = data["turn"];
+            turn = (t instanceof Lang.Number) ? t : TURN_PLAYER;
+            var ps = data["ps"]; playerScore = (ps instanceof Lang.Number) ? ps : 0;
+            var asv = data["as"]; aiScore = (asv instanceof Lang.Number) ? asv : 0;
+            var pg0 = data["pg0"]; playerGroup[0] = (pg0 instanceof Lang.Number) ? pg0 : 0;
+            var pg1 = data["pg1"]; playerGroup[1] = (pg1 instanceof Lang.Number) ? pg1 : 0;
+            var at = data["at"]; arcadeTicks = (at instanceof Lang.Number) ? at : 0;
+            var am = data["aim"]; aimAngle = (am instanceof Lang.Number) ? am.toFloat() : 0.0;
+
+            pocketedThisTurn = false;
+            firstHit = -1; cueScratched = false; pottedCnt = 0;
+            winReason = 0; msg = ""; msgT = 0; pgUnlockMsg = null;
+            _lbHandled = false;
+            power = 50; powerDir = 1;
+            _fxOn = _loadFx();
+            gs = BS_AIM;
+            _computeAimIntersect();
+            return true;
+        } catch (e) {
+        }
+        return false;
+    }
+
     hidden function _loadStreak() {
         var v = Application.Storage.getValue(LB_STREAK_KEY);
         if (v instanceof Lang.Number) { return v; }
@@ -443,6 +525,7 @@ class BilliardGame {
     function reportResult() {
         if (_lbHandled) { return; }
         _lbHandled = true;
+        try { SaveResume.clear("billiards"); } catch (e) {}
         // Game-over feedback (win fanfare / loss sting), independent of the
         // leaderboard rules below. winReason: 1=player win, 2=AI win,
         // 3=player lost, 4=AI lost (→player wins), 5=time up, 6=cleared.

@@ -188,6 +188,81 @@ class GameController {
         dirty = true;
     }
 
+    // Mid-run save / resume (shared SaveResume).
+    function exportSave() {
+        if (state != GS_PLAY && state != GS_PAUSED) { return null; }
+        tickTimer();
+        var n = grid.n;
+        var total = n * n;
+        var cells = new [total];
+        var sol   = new [total];
+        var fix   = new [total];
+        for (var i = 0; i < total; i++) {
+            cells[i] = grid.cells[i];
+            sol[i]   = grid.solution[i];
+            fix[i]   = grid.fixed[i] ? 1 : 0;
+        }
+        return {
+            "mode" => mode,
+            "diff" => diff,
+            "val"  => valMode,
+            "n"    => n,
+            "cells"=> cells,
+            "sol"  => sol,
+            "fix"  => fix,
+            "cr"   => curR,
+            "cc"   => curC,
+            "ems"  => elapsedMs
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var n = data["n"];
+            if (!(n instanceof Number) || (n != SZ_4 && n != SZ_9)) { return false; }
+            var cells = data["cells"];
+            var sol   = data["sol"];
+            var fix   = data["fix"];
+            if (!(cells instanceof Array) || cells.size() < n * n) { return false; }
+            if (!(sol instanceof Array) || sol.size() < n * n) { return false; }
+            if (!(fix instanceof Array) || fix.size() < n * n) { return false; }
+            var m = data["mode"];
+            mode = (m instanceof Number) ? m : MODE_CLASSIC;
+            var d = data["diff"];
+            diff = (d instanceof Number) ? d : DIFF_EASY;
+            var vm = data["val"];
+            valMode = (vm instanceof Number) ? vm : VAL_RELAXED;
+            grid.setSize(n);
+            var total = n * n;
+            for (var i = 0; i < total; i++) {
+                var cv = cells[i];
+                var sv = sol[i];
+                var fv = fix[i];
+                grid.cells[i]    = (cv instanceof Number) ? cv : 0;
+                grid.solution[i] = (sv instanceof Number) ? sv : 0;
+                grid.fixed[i]    = (fv instanceof Number && fv != 0);
+                grid.errors[i]   = false;
+            }
+            var cr = data["cr"];
+            var cc = data["cc"];
+            curR = (cr instanceof Number) ? cr : 0;
+            curC = (cc instanceof Number) ? cc : 0;
+            if (curR < 0 || curR >= n) { curR = 0; }
+            if (curC < 0 || curC >= n) { curC = 0; }
+            var em = data["ems"];
+            elapsedMs = (em instanceof Number && em > 0) ? em : 0;
+            _lastResume = System.getTimer();
+            if (valMode == VAL_RELAXED) { grid.recomputeErrors(); }
+            loadBest();
+            _fxOn = _loadFx();
+            state = GS_PLAY;
+            dirty = true;
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     // Call from a periodic timer (or on demand) — updates `elapsedMs`
     // while the puzzle is being played.
     function tickTimer() {
@@ -272,12 +347,15 @@ class GameController {
         setCellTo(next);
     }
 
-    // In relaxed mode, if the player completes the puzzle perfectly,
-    // transition to COMPLETE automatically. Strict mode requires submit.
+    // In relaxed mode, auto-complete when perfect. In strict mode, auto-submit
+    // when the board is completely filled (BACK is save/exit now).
     hidden function _checkAutoComplete() {
-        if (valMode != VAL_RELAXED) { return; }
         if (grid.emptyCount() != 0) { return; }
-        if (grid.isComplete())      { _finishWin(); }
+        if (valMode == VAL_RELAXED) {
+            if (grid.isComplete()) { _finishWin(); }
+            return;
+        }
+        submit();
     }
 
     // Player explicitly submits the board (Strict mode).
@@ -297,6 +375,7 @@ class GameController {
         tickTimer();
         lastTimeMs = elapsedMs;
         saveBestIfBetter(lastTimeMs);
+        try { SaveResume.clear("sudoku"); } catch (e) {}
 
         // Submit solve time (whole seconds, LOWER is better — the backend
         // sorts this game ASCENDING, so submit the raw positive value).

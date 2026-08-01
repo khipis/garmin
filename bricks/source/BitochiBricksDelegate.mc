@@ -45,9 +45,10 @@ class BitochiBricksDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
     function onBack() {
-        var h = _view.doBack();
-        if (!h && _sensorEnabled) { Sensor.enableSensorEvents(null); }
-        WatchUi.requestUpdate();
-        return h;
+        if (_sensorEnabled) {
+            Sensor.enableSensorEvents(null);
+            _sensorEnabled = false;
+        }
+        return SaveResume.confirmExit("bricks", _view.method(:exportSave));
     }
 }

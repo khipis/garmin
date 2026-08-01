@@ -1,0 +1,1591 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Graphics,1,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Math,4,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 11; @position = 6; @symbol_constdef = [BAL_TICK_CAP,11,6,18]; ]
+const BAL_TICK_CAP = 300;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 13; @symbol_classdef = [BalanceGameView,13,6,21]; @symbol_extends<0> = [WatchUi,13,30,37]; @symbol_extends<1> = [View,13,38,42]; ]
+class BalanceGameView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 13; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 13; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 15; @position = 15; @symbol_vardef = [_pet,15,15,19]; ]
+    protected
+    var _pet;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 16; @position = 15; @symbol_vardef = [_timer,16,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 17; @position = 15; @symbol_vardef = [_state,17,15,21]; ]
+    protected
+    var _state;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 18; @position = 15; @symbol_vardef = [_tilt,18,15,20]; ]
+    protected
+    var _tilt;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 19; @position = 15; @symbol_vardef = [_vel,19,15,19]; ]
+    protected
+    var _vel;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 20; @position = 15; @symbol_vardef = [_ticks,20,15,21]; ]
+    protected
+    var _ticks;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 21; @position = 15; @symbol_vardef = [_doneTicks,21,15,25]; ]
+    protected
+    var _doneTicks;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 22; @position = 15; @symbol_vardef = [_wobbleAcc,22,15,25]; ]
+    protected
+    var _wobbleAcc;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 23; @position = 15; @symbol_vardef = [_lean,23,15,20]; ]
+    protected
+    var _lean;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 24; @position = 15; @symbol_vardef = [_leanTtl,24,15,23]; ]
+    protected
+    var _leanTtl;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 26; @symbol_functiondef = [initialize,26,13,23]; @symbol_param<0> = [pet,26,24,27]; ]
+    function initialize(pet) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_26_29_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 27 8 ]
+        symbol [ View %tmp.2 27 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 27 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 28 8 ]
+        %tmp.4 = lgetv %pet;
+        symbol [ pet %tmp.4 28 15 18 ];
+        symbol [ _pet ? 28 8 12 ];
+        putv self :_pet %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 29 8 ]
+        %tmp.5 = 0;
+        symbol [ _state ? 29 8 14 ];
+        putv self :_state %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 30 8 ]
+        %tmp.6 = 0;
+        symbol [ _tilt ? 30 8 13 ];
+        putv self :_tilt %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 31 8 ]
+        %tmp.7 = 0;
+        symbol [ _vel ? 31 8 12 ];
+        putv self :_vel %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 32 8 ]
+        %tmp.8 = 0;
+        symbol [ _ticks ? 32 8 14 ];
+        putv self :_ticks %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 33 8 ]
+        %tmp.9 = 0;
+        symbol [ _doneTicks ? 33 8 18 ];
+        putv self :_doneTicks %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 34 8 ]
+        %tmp.10 = 0;
+        symbol [ _wobbleAcc ? 34 8 18 ];
+        putv self :_wobbleAcc %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 35 8 ]
+        %tmp.11 = 0;
+        symbol [ _lean ? 35 8 13 ];
+        putv self :_lean %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 36 8 ]
+        %tmp.12 = 0;
+        symbol [ _leanTtl ? 36 8 16 ];
+        putv self :_leanTtl %tmp.12;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_26_29_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 39; @symbol_functiondef = [onShow,39,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_39_22_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 40 8 ]
+        symbol [ Timer %tmp.3 40 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 40 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 40 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 41 8 ]
+        symbol [ _timer %tmp.6 41 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 41 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 41 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onGameTimer;
+        symbol [ onGameTimer %tmp.11 41 29 40 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 80;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_39_22_42_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 44; @symbol_functiondef = [onHide,44,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_44_22_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_8_45_60_if_stmt:
+        symbol [ _timer %tmp.2 45 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_8_45_60_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_8_45_60_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_28_45_60_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 45 30 ]
+        symbol [ _timer %tmp.6 45 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 45 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 45 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 45 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_28_45_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_8_45_60_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_45_8_45_60_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_44_22_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 48; @symbol_functiondef = [scoreToPlayResult,48,20,37]; ]
+    protected
+    function scoreToPlayResult() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_48_40_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_8_49_38_if_stmt:
+        symbol [ _ticks %tmp.2 49 12 18 ];
+        %tmp.2 = getv ? :_ticks;
+        %tmp.3 = 40;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_8_49_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_8_49_38_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_26_49_38_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 49 28 ]
+        %tmp.5 = 0;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_26_49_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_8_49_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_49_8_49_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_8_50_38_if_stmt:
+        symbol [ _ticks %tmp.7 50 12 18 ];
+        %tmp.7 = getv ? :_ticks;
+        %tmp.8 = 90;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_8_50_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_8_50_38_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_26_50_38_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 50 28 ]
+        %tmp.10 = 1;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_26_50_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_8_50_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_50_8_50_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 51 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_8_51_38_if_stmt:
+        symbol [ _ticks %tmp.12 51 12 18 ];
+        %tmp.12 = getv ? :_ticks;
+        %tmp.13 = 160;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_8_51_38_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_26_51_38_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 51 28 ]
+        %tmp.15 = 2;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_26_51_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_51_8_51_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 52 8 ]
+        %tmp.16 = 3;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_48_40_53_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 55; @symbol_functiondef = [nudge,55,13,18]; @symbol_param<0> = [dir,55,19,22]; ]
+    function nudge(dir) {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_55_24_62_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_8_56_35_if_stmt:
+        symbol [ _state %tmp.2 56 12 18 ];
+        %tmp.2 = getv ? :_state;
+        %tmp.3 = 0;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_8_56_35_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_8_56_35_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_25_56_35_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 56 27 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_25_56_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_8_56_35_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_56_8_56_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 57 8 ]
+        symbol [ _vel %tmp.5 57 8 12 ];
+        %tmp.5 = getv self :_vel;
+        %tmp.6 = lgetv %dir;
+        symbol [ dir %tmp.6 57 16 19 ];
+        %tmp.7 = 4;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        %tmp.9 = add %tmp.5 %tmp.8;
+        symbol [ _vel ? 57 8 12 ];
+        putv self :_vel dup %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_8_58_37_if_stmt:
+        symbol [ _vel %tmp.11 58 12 16 ];
+        %tmp.11 = getv ? :_vel;
+        %tmp.12 = 10;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_8_58_37_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_8_58_37_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_24_58_37_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 58 26 ]
+        %tmp.14 = 10;
+        symbol [ _vel ? 58 26 30 ];
+        putv self :_vel %tmp.14;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_24_58_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_8_58_37_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_58_8_58_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_8_59_38_if_stmt:
+        symbol [ _vel %tmp.16 59 12 16 ];
+        %tmp.16 = getv ? :_vel;
+        %tmp.17 = -10;
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_8_59_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_8_59_38_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_24_59_38_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 59 26 ]
+        %tmp.19 = -10;
+        symbol [ _vel ? 59 26 30 ];
+        putv self :_vel %tmp.19;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_24_59_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_8_59_38_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_59_8_59_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 60 8 ]
+        %tmp.20 = lgetv %dir;
+        symbol [ dir %tmp.20 60 16 19 ];
+        symbol [ _lean ? 60 8 13 ];
+        putv self :_lean %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 61 8 ]
+        %tmp.21 = 3;
+        symbol [ _leanTtl ? 61 8 16 ];
+        putv self :_leanTtl %tmp.21;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_55_24_62_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 64; @symbol_functiondef = [leanLeft,64,13,21]; ]
+    function leanLeft() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_64_25_64_38_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 64 27 ]
+        %tmp.1 = self;
+        symbol [ nudge %tmp.2 64 27 32 ];
+        %tmp.2 = getv function %tmp.1 :nudge;
+        %tmp.3 = -1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_64_25_64_38_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 65; @symbol_functiondef = [leanRight,65,13,22]; ]
+    function leanRight() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_65_25_65_37_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 65 27 ]
+        %tmp.1 = self;
+        symbol [ nudge %tmp.2 65 27 32 ];
+        %tmp.2 = getv function %tmp.1 :nudge;
+        %tmp.3 = 1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_65_25_65_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 67; @symbol_functiondef = [endRun,67,20,26]; ]
+    protected
+    function endRun() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_67_29_74_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 68 8 ]
+        %tmp.1 = 1;
+        symbol [ _state ? 68 8 14 ];
+        putv self :_state %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 69 8 ]
+        %tmp.2 = 0;
+        symbol [ _doneTicks ? 69 8 18 ];
+        putv self :_doneTicks %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 70 8 ]
+        symbol [ _pet %tmp.4 70 8 12 ];
+        %tmp.4 = getv ? :_pet;
+        symbol [ playResult %tmp.5 70 13 23 ];
+        %tmp.5 = getv function %tmp.4 :playResult;
+        %tmp.6 = self;
+        symbol [ scoreToPlayResult %tmp.7 70 24 41 ];
+        %tmp.7 = getv function %tmp.6 :scoreToPlayResult;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        invoke %tmp.4 %tmp.5(%tmp.8);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_8_73_8_if_stmt:
+        symbol [ Toybox %tmp.10 71 12 18 ];
+        %tmp.10 = getv ? :Toybox;
+        symbol [ Attention %tmp.11 71 19 28 ];
+        %tmp.11 = getv %tmp.10 :Attention;
+        %tmp.13 = const :vibrate;
+        symbol [ vibrate %tmp.13 71 34 41 const ];
+        %tmp.14 = canhazplz %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_8_73_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_43_73_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 72 12 ]
+        symbol [ Toybox %tmp.16 72 12 18 ];
+        %tmp.16 = getv ? :Toybox;
+        symbol [ Attention %tmp.17 72 19 28 ];
+        %tmp.17 = getv %tmp.16 :Attention;
+        symbol [ vibrate %tmp.18 72 29 36 ];
+        %tmp.18 = getv function %tmp.17 :vibrate;
+        %tmp.19 = newa 1;
+        symbol [ Toybox %tmp.23 72 42 48 ];
+        %tmp.23 = getv ? :Toybox;
+        symbol [ Attention %tmp.24 72 49 58 ];
+        %tmp.24 = getv %tmp.23 :Attention;
+        symbol [ VibeProfile %tmp.25 72 59 70 ];
+        %tmp.25 = getv %tmp.24 :VibeProfile;
+        %tmp.26 = 50;
+        %tmp.27 = 200;
+        %tmp.20 = newc %tmp.25 (%tmp.26, %tmp.27);
+        %tmp.28 = dup %tmp.19;
+        %tmp.29 = aputv %tmp.28 0 %tmp.20;
+        invoke %tmp.17 %tmp.18(%tmp.29);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_43_73_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_71_8_73_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_67_29_74_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 76; @symbol_functiondef = [onGameTimer,76,13,24]; ]
+    function onGameTimer() as Void {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_76_35_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_stmt:
+        symbol [ _state %tmp.2 77 12 18 ];
+        %tmp.2 = getv ? :_state;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 78 12 ]
+        symbol [ _ticks %tmp.7 78 12 18 ];
+        %tmp.7 = getv ? :_ticks;
+        %tmp.8 = add %tmp.7 1;
+        symbol [ _ticks ? 78 12 18 ];
+        putv self :_ticks dup %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 79 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_12_79_78_if_stmt:
+        symbol [ _leanTtl %tmp.10 79 16 24 ];
+        %tmp.10 = getv ? :_leanTtl;
+        %tmp.11 = 0;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_12_79_78_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_12_79_78_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_30_79_78_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 79 32 ]
+        symbol [ _leanTtl %tmp.15 79 32 40 ];
+        %tmp.15 = getv ? :_leanTtl;
+        %tmp.16 = sub %tmp.15 1;
+        symbol [ _leanTtl ? 79 32 40 ];
+        putv self :_leanTtl dup %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 79 44 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_44_79_76_if_stmt:
+        symbol [ _leanTtl %tmp.18 79 48 56 ];
+        %tmp.18 = getv ? :_leanTtl;
+        %tmp.19 = 0;
+        %tmp.20 = eq %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_44_79_76_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_44_79_76_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_63_79_76_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 79 65 ]
+        %tmp.21 = 0;
+        symbol [ _lean ? 79 65 70 ];
+        putv self :_lean %tmp.21;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_63_79_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_44_79_76_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_44_79_76_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_30_79_78_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_12_79_78_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_79_12_79_78_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 82 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_stop" ]
+        %g.1 = local;
+        symbol [ g %g.1 82 16 17 ];
+        symbol [ _tilt %tmp.23 82 20 25 ];
+        %tmp.23 = getv ? :_tilt;
+        %tmp.24 = 12;
+        %tmp.25 = div %tmp.23 %tmp.24;
+        lputv %g.1 %tmp.25;
+        symbol [ g %g.1 82 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 83 12 ]
+        symbol [ _vel %tmp.26 83 12 16 ];
+        %tmp.26 = getv self :_vel;
+        %tmp.27 = lgetv %g.1;
+        symbol [ g %tmp.27 83 20 21 ];
+        %tmp.28 = add %tmp.26 %tmp.27;
+        symbol [ _vel ? 83 12 16 ];
+        putv self :_vel dup %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 86 12 ]
+        symbol [ _wobbleAcc %tmp.31 86 12 22 ];
+        %tmp.31 = getv ? :_wobbleAcc;
+        %tmp.32 = add %tmp.31 1;
+        symbol [ _wobbleAcc ? 86 12 22 ];
+        putv self :_wobbleAcc dup %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 87 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_stop" ]
+        %every.2 = local;
+        symbol [ every %every.2 87 16 21 ];
+        %tmp.33 = 6;
+        symbol [ _ticks %tmp.35 87 28 34 ];
+        %tmp.35 = getv ? :_ticks;
+        %tmp.36 = 80;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = sub %tmp.33 %tmp.37;
+        lputv %every.2 %tmp.38;
+        symbol [ every %every.2 87 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 88 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_12_88_40_if_stmt:
+        %tmp.39 = lgetv %every.2;
+        symbol [ every %tmp.39 88 16 21 ];
+        %tmp.40 = 2;
+        %tmp.41 = lt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_12_88_40_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_12_88_40_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_27_88_40_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 88 29 ]
+        %tmp.42 = 2;
+        lputv %every.2 %tmp.42;
+        symbol [ every %every.2 88 29 34 ];
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_27_88_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_12_88_40_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_88_12_88_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 89 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_12_92_12_if_stmt:
+        symbol [ _wobbleAcc %tmp.44 89 16 26 ];
+        %tmp.44 = getv ? :_wobbleAcc;
+        %tmp.45 = lgetv %every.2;
+        symbol [ every %tmp.45 89 30 35 ];
+        %tmp.46 = gte %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_12_92_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_12_92_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_37_92_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 90 16 ]
+        %tmp.47 = 0;
+        symbol [ _wobbleAcc ? 90 16 26 ];
+        putv self :_wobbleAcc %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 91 16 ]
+        symbol [ _vel %tmp.48 91 16 20 ];
+        %tmp.48 = getv self :_vel;
+        symbol [ Math %tmp.49 91 25 29 ];
+        %tmp.49 = getm $.Toybox.Math;
+        symbol [ rand %tmp.50 91 30 34 ];
+        %tmp.50 = getv function %tmp.49 :rand;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        symbol [ abs %tmp.52 91 37 40 ];
+        %tmp.52 = getv function %tmp.51 :abs;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        %tmp.54 = 3;
+        %tmp.55 = mod %tmp.53 %tmp.54;
+        %tmp.56 = 1;
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        %tmp.58 = add %tmp.48 %tmp.57;
+        symbol [ _vel ? 91 16 20 ];
+        putv self :_vel dup %tmp.58;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_37_92_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_12_92_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_89_12_92_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 94 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_12_94_41_if_stmt:
+        symbol [ _vel %tmp.60 94 16 20 ];
+        %tmp.60 = getv ? :_vel;
+        %tmp.61 = 10;
+        %tmp.62 = gt %tmp.60 %tmp.61;
+        bf %tmp.62 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_12_94_41_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_12_94_41_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_28_94_41_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 94 30 ]
+        %tmp.63 = 10;
+        symbol [ _vel ? 94 30 34 ];
+        putv self :_vel %tmp.63;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_28_94_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_12_94_41_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_94_12_94_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 95 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_12_95_42_if_stmt:
+        symbol [ _vel %tmp.65 95 16 20 ];
+        %tmp.65 = getv ? :_vel;
+        %tmp.66 = -10;
+        %tmp.67 = lt %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_12_95_42_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_12_95_42_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_28_95_42_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 95 30 ]
+        %tmp.68 = -10;
+        symbol [ _vel ? 95 30 34 ];
+        putv self :_vel %tmp.68;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_28_95_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_12_95_42_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_95_12_95_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 96 12 ]
+        symbol [ _tilt %tmp.69 96 12 17 ];
+        %tmp.69 = getv self :_tilt;
+        symbol [ _vel %tmp.71 96 21 25 ];
+        %tmp.71 = getv ? :_vel;
+        %tmp.72 = add %tmp.69 %tmp.71;
+        symbol [ _tilt ? 96 12 17 ];
+        putv self :_tilt dup %tmp.72;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 98 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_stmt:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_16_98_42_begin:
+        symbol [ _tilt %tmp.74 98 16 21 ];
+        %tmp.74 = getv ? :_tilt;
+        %tmp.75 = 100;
+        %tmp.76 = gte %tmp.74 %tmp.75;
+        bt %tmp.76 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_true;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_32_98_42_false:
+        symbol [ _tilt %tmp.78 98 32 37 ];
+        %tmp.78 = getv ? :_tilt;
+        %tmp.79 = -100;
+        %tmp.80 = lte %tmp.78 %tmp.79;
+        push %tmp.80;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_32_98_42_end:
+        %tmp.81 = phi [%tmp.76 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_16_98_42_begin] [%tmp.80 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_32_98_42_false] [%tmp.81 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_32_98_42_end];
+        bf %tmp.81 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_47_102_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 99 16 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_16_99_48_if_stmt:
+        symbol [ _tilt %tmp.83 99 20 25 ];
+        %tmp.83 = getv ? :_tilt;
+        %tmp.84 = 100;
+        %tmp.85 = gt %tmp.83 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_16_99_48_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_16_99_48_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_33_99_48_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 99 35 ]
+        %tmp.86 = 100;
+        symbol [ _tilt ? 99 35 40 ];
+        putv self :_tilt %tmp.86;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_33_99_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_16_99_48_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_99_16_99_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 100 16 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_16_100_50_if_stmt:
+        symbol [ _tilt %tmp.88 100 20 25 ];
+        %tmp.88 = getv ? :_tilt;
+        %tmp.89 = -100;
+        %tmp.90 = lt %tmp.88 %tmp.89;
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_16_100_50_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_16_100_50_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_34_100_50_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 100 36 ]
+        %tmp.91 = -100;
+        symbol [ _tilt ? 100 36 41 ];
+        putv self :_tilt %tmp.91;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_34_100_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_16_100_50_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_100_16_100_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 101 16 ]
+        %tmp.92 = self;
+        symbol [ endRun %tmp.93 101 16 22 ];
+        %tmp.93 = getv function %tmp.92 :endRun;
+        invoke %tmp.92 %tmp.93();
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_47_102_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 102 19 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_19_104_12_if_stmt:
+        symbol [ _ticks %tmp.95 102 23 29 ];
+        %tmp.95 = getv ? :_ticks;
+        symbol [ BAL_TICK_CAP %tmp.97 102 33 45 ];
+        %tmp.97 = getv ? :BAL_TICK_CAP;
+        %tmp.98 = gte %tmp.95 %tmp.97;
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_19_104_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_19_104_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_47_104_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 103 16 ]
+        %tmp.99 = self;
+        symbol [ endRun %tmp.100 103 16 22 ];
+        %tmp.100 = getv function %tmp.99 :endRun;
+        invoke %tmp.99 %tmp.100();
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_47_104_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_19_104_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_102_19_104_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_98_12_104_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_25_105_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_105_15_111_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 106 12 ]
+        symbol [ _doneTicks %tmp.103 106 12 22 ];
+        %tmp.103 = getv ? :_doneTicks;
+        %tmp.104 = add %tmp.103 1;
+        symbol [ _doneTicks ? 106 12 22 ];
+        putv self :_doneTicks dup %tmp.104;
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 107 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_12_110_12_if_stmt:
+        symbol [ _doneTicks %tmp.106 107 16 26 ];
+        %tmp.106 = getv ? :_doneTicks;
+        %tmp.107 = 28;
+        %tmp.108 = gte %tmp.106 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_12_110_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_12_110_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_34_110_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 108 16 ]
+        symbol [ WatchUi %tmp.109 108 16 23 ];
+        %tmp.109 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.110 108 24 31 ];
+        %tmp.110 = getv function %tmp.109 :popView;
+        symbol [ WatchUi %tmp.111 108 32 39 ];
+        %tmp.111 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.112 108 40 50 ];
+        %tmp.112 = getv %tmp.111 :SLIDE_DOWN;
+        invoke %tmp.109 %tmp.110(%tmp.112);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 109 16 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_34_110_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_12_110_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_107_12_110_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_105_15_111_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_77_8_111_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 112 8 ]
+        symbol [ WatchUi %tmp.113 112 8 15 ];
+        %tmp.113 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.114 112 16 29 ];
+        %tmp.114 = getv function %tmp.113 :requestUpdate;
+        invoke %tmp.113 %tmp.114();
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_76_35_113_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 115; @symbol_functiondef = [onUpdate,115,13,21]; @symbol_param<0> = [dc,115,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 116 12 13 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 116 16 18 ];
+        symbol [ getWidth %tmp.2 116 19 27 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %w.1 %tmp.3;
+        symbol [ w %w.1 116 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 117 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 117 12 13 ];
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 117 16 18 ];
+        symbol [ getHeight %tmp.5 117 19 28 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %h.2 %tmp.6;
+        symbol [ h %h.2 117 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 118 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %cx.3 = local;
+        symbol [ cx %cx.3 118 12 14 ];
+        %tmp.7 = lgetv %w.1;
+        symbol [ w %tmp.7 118 17 18 ];
+        %tmp.8 = 2;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        lputv %cx.3 %tmp.9;
+        symbol [ cx %cx.3 118 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 120 8 ]
+        %tmp.10 = lgetv %dc;
+        symbol [ dc %tmp.10 120 8 10 ];
+        symbol [ setColor %tmp.11 120 11 19 ];
+        %tmp.11 = getv function %tmp.10 :setColor;
+        %tmp.12 = 0x0B1420;
+        %tmp.13 = 0x0B1420;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 121 8 ]
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 121 8 10 ];
+        symbol [ clear %tmp.15 121 11 16 ];
+        %tmp.15 = getv function %tmp.14 :clear;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 124 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 124 8 10 ];
+        symbol [ setColor %tmp.17 124 11 19 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0x66FFCC;
+        symbol [ Graphics %tmp.19 124 30 38 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 124 39 56 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 125 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 125 8 10 ];
+        symbol [ drawText %tmp.22 125 11 19 ];
+        %tmp.22 = getv function %tmp.21 :drawText;
+        %tmp.23 = lgetv %cx.3;
+        symbol [ cx %tmp.23 125 20 22 ];
+        %tmp.24 = lgetv %h.2;
+        symbol [ h %tmp.24 125 24 25 ];
+        %tmp.25 = 6;
+        %tmp.26 = mul %tmp.24 %tmp.25;
+        %tmp.27 = 100;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        symbol [ Graphics %tmp.29 125 37 45 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.30 125 46 56 ];
+        %tmp.30 = getv %tmp.29 :FONT_SMALL;
+        %tmp.31 = "Balance!";
+        symbol [ Graphics %tmp.32 125 70 78 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.33 125 79 98 ];
+        %tmp.33 = getv %tmp.32 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.28, %tmp.30, %tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 126 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 126 8 10 ];
+        symbol [ setColor %tmp.35 126 11 19 ];
+        %tmp.35 = getv function %tmp.34 :setColor;
+        %tmp.36 = 0x88AACC;
+        symbol [ Graphics %tmp.37 126 30 38 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.38 126 39 56 ];
+        %tmp.38 = getv %tmp.37 :COLOR_TRANSPARENT;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 127 8 ]
+        %tmp.39 = lgetv %dc;
+        symbol [ dc %tmp.39 127 8 10 ];
+        symbol [ drawText %tmp.40 127 11 19 ];
+        %tmp.40 = getv function %tmp.39 :drawText;
+        %tmp.41 = lgetv %cx.3;
+        symbol [ cx %tmp.41 127 20 22 ];
+        %tmp.42 = lgetv %h.2;
+        symbol [ h %tmp.42 127 24 25 ];
+        %tmp.43 = 16;
+        %tmp.44 = mul %tmp.42 %tmp.43;
+        %tmp.45 = 100;
+        %tmp.46 = div %tmp.44 %tmp.45;
+        symbol [ Graphics %tmp.47 127 38 46 ];
+        %tmp.47 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.48 127 47 57 ];
+        %tmp.48 = getv %tmp.47 :FONT_XTINY;
+        symbol [ _ticks %tmp.50 128 21 27 ];
+        %tmp.50 = getv ? :_ticks;
+        %tmp.51 = 12;
+        %tmp.52 = div %tmp.50 %tmp.51;
+        symbol [ toString %tmp.53 128 34 42 ];
+        %tmp.53 = getv function %tmp.52 :toString;
+        %tmp.54 = invoke %tmp.52 %tmp.53();
+        %tmp.55 = "s";
+        %tmp.56 = add %tmp.54 %tmp.55;
+        symbol [ Graphics %tmp.57 128 52 60 ];
+        %tmp.57 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.58 128 61 80 ];
+        %tmp.58 = getv %tmp.57 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.46, %tmp.48, %tmp.56, %tmp.58);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 131 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %beamY.4 = local;
+        symbol [ beamY %beamY.4 131 12 17 ];
+        %tmp.59 = lgetv %h.2;
+        symbol [ h %tmp.59 131 20 21 ];
+        %tmp.60 = 60;
+        %tmp.61 = mul %tmp.59 %tmp.60;
+        %tmp.62 = 100;
+        %tmp.63 = div %tmp.61 %tmp.62;
+        lputv %beamY.4 %tmp.63;
+        symbol [ beamY %beamY.4 131 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 132 8 ]
+        %tmp.64 = lgetv %dc;
+        symbol [ dc %tmp.64 132 8 10 ];
+        symbol [ setColor %tmp.65 132 11 19 ];
+        %tmp.65 = getv function %tmp.64 :setColor;
+        %tmp.66 = 0x6D4C41;
+        %tmp.67 = 0x6D4C41;
+        invoke %tmp.64 %tmp.65(%tmp.66, %tmp.67);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 133 8 ]
+        %tmp.68 = lgetv %dc;
+        symbol [ dc %tmp.68 133 8 10 ];
+        symbol [ fillRectangle %tmp.69 133 11 24 ];
+        %tmp.69 = getv function %tmp.68 :fillRectangle;
+        %tmp.70 = lgetv %w.1;
+        symbol [ w %tmp.70 133 25 26 ];
+        %tmp.71 = 8;
+        %tmp.72 = mul %tmp.70 %tmp.71;
+        %tmp.73 = 100;
+        %tmp.74 = div %tmp.72 %tmp.73;
+        %tmp.75 = lgetv %beamY.4;
+        symbol [ beamY %tmp.75 133 38 43 ];
+        %tmp.76 = lgetv %w.1;
+        symbol [ w %tmp.76 133 45 46 ];
+        %tmp.77 = 84;
+        %tmp.78 = mul %tmp.76 %tmp.77;
+        %tmp.79 = 100;
+        %tmp.80 = div %tmp.78 %tmp.79;
+        %tmp.81 = 3;
+        invoke %tmp.68 %tmp.69(%tmp.74, %tmp.75, %tmp.80, %tmp.81);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 135 8 ]
+        %tmp.82 = lgetv %dc;
+        symbol [ dc %tmp.82 135 8 10 ];
+        symbol [ setColor %tmp.83 135 11 19 ];
+        %tmp.83 = getv function %tmp.82 :setColor;
+        %tmp.84 = 0x4E342E;
+        %tmp.85 = 0x4E342E;
+        invoke %tmp.82 %tmp.83(%tmp.84, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 136 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 136 8 10 ];
+        symbol [ fillRectangle %tmp.87 136 11 24 ];
+        %tmp.87 = getv function %tmp.86 :fillRectangle;
+        %tmp.88 = lgetv %cx.3;
+        symbol [ cx %tmp.88 136 25 27 ];
+        %tmp.89 = 2;
+        %tmp.90 = sub %tmp.88 %tmp.89;
+        %tmp.91 = lgetv %beamY.4;
+        symbol [ beamY %tmp.91 136 33 38 ];
+        %tmp.92 = 4;
+        %tmp.93 = lgetv %h.2;
+        symbol [ h %tmp.93 136 43 44 ];
+        %tmp.94 = 22;
+        %tmp.95 = mul %tmp.93 %tmp.94;
+        %tmp.96 = 100;
+        %tmp.97 = div %tmp.95 %tmp.96;
+        invoke %tmp.86 %tmp.87(%tmp.90, %tmp.91, %tmp.92, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 139 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %ps.5 = local;
+        symbol [ ps %ps.5 139 12 14 ];
+        %tmp.98 = lgetv %w.1;
+        symbol [ w %tmp.98 139 17 18 ];
+        %tmp.99 = 26;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        lputv %ps.5 %tmp.100;
+        symbol [ ps %ps.5 139 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 140 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_8_140_30_if_stmt:
+        %tmp.101 = lgetv %ps.5;
+        symbol [ ps %tmp.101 140 12 14 ];
+        %tmp.102 = 3;
+        %tmp.103 = lt %tmp.101 %tmp.102;
+        bf %tmp.103 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_8_140_30_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_8_140_30_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_20_140_30_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 140 22 ]
+        %tmp.104 = 3;
+        lputv %ps.5 %tmp.104;
+        symbol [ ps %ps.5 140 22 24 ];
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_20_140_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_8_140_30_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_140_8_140_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 141 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %shift.6 = local;
+        symbol [ shift %shift.6 141 12 17 ];
+        symbol [ _tilt %tmp.106 141 20 25 ];
+        %tmp.106 = getv ? :_tilt;
+        %tmp.107 = lgetv %w.1;
+        symbol [ w %tmp.107 141 29 30 ];
+        %tmp.108 = 34;
+        %tmp.109 = mul %tmp.107 %tmp.108;
+        %tmp.110 = 100;
+        %tmp.111 = div %tmp.109 %tmp.110;
+        %tmp.112 = mul %tmp.106 %tmp.111;
+        %tmp.113 = 100;
+        %tmp.114 = div %tmp.112 %tmp.113;
+        lputv %shift.6 %tmp.114;
+        symbol [ shift %shift.6 141 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 142 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %dip.7 = local;
+        symbol [ dip %dip.7 142 12 15 ];
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_begin:
+        symbol [ _tilt %tmp.116 142 19 24 ];
+        %tmp.116 = getv ? :_tilt;
+        %tmp.117 = 0;
+        %tmp.118 = lt %tmp.116 %tmp.117;
+        bf %tmp.118 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_true:
+        symbol [ _tilt %tmp.120 142 32 37 ];
+        %tmp.120 = getv ? :_tilt;
+        %tmp.121 = sub 0 %tmp.120;
+        push %tmp.121;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_else_false:
+        symbol [ _tilt %tmp.123 142 40 45 ];
+        %tmp.123 = getv ? :_tilt;
+        push %tmp.123;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_end:
+        %tmp.124 = phi [%tmp.118 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_begin] [%tmp.121 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_true] [%tmp.123 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_else_false] [%tmp.124 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_142_19_142_40_end];
+        %tmp.125 = lgetv %h.2;
+        symbol [ h %tmp.125 142 50 51 ];
+        %tmp.126 = 6;
+        %tmp.127 = mul %tmp.125 %tmp.126;
+        %tmp.128 = 100;
+        %tmp.129 = div %tmp.127 %tmp.128;
+        %tmp.130 = mul %tmp.124 %tmp.129;
+        %tmp.131 = 100;
+        %tmp.132 = div %tmp.130 %tmp.131;
+        lputv %dip.7 %tmp.132;
+        symbol [ dip %dip.7 142 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 143 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %pcx.8 = local;
+        symbol [ pcx %pcx.8 143 12 15 ];
+        %tmp.133 = lgetv %cx.3;
+        symbol [ cx %tmp.133 143 18 20 ];
+        %tmp.134 = lgetv %shift.6;
+        symbol [ shift %tmp.134 143 23 28 ];
+        %tmp.135 = add %tmp.133 %tmp.134;
+        lputv %pcx.8 %tmp.135;
+        symbol [ pcx %pcx.8 143 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 144 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %pcy.9 = local;
+        symbol [ pcy %pcy.9 144 12 15 ];
+        %tmp.136 = lgetv %beamY.4;
+        symbol [ beamY %tmp.136 144 18 23 ];
+        %tmp.137 = 6;
+        %tmp.138 = lgetv %ps.5;
+        symbol [ ps %tmp.138 144 30 32 ];
+        %tmp.139 = mul %tmp.137 %tmp.138;
+        %tmp.140 = sub %tmp.136 %tmp.139;
+        %tmp.141 = lgetv %dip.7;
+        symbol [ dip %tmp.141 144 35 38 ];
+        %tmp.142 = add %tmp.140 %tmp.141;
+        lputv %pcy.9 %tmp.142;
+        symbol [ pcy %pcy.9 144 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 145 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_stmt:
+        symbol [ _state %tmp.144 145 12 18 ];
+        %tmp.144 = getv ? :_state;
+        %tmp.145 = 0;
+        %tmp.146 = eq %tmp.144 %tmp.145;
+        bf %tmp.146 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_25_147_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 146 12 ]
+        symbol [ _pet %tmp.148 146 12 16 ];
+        %tmp.148 = getv ? :_pet;
+        symbol [ drawPreview %tmp.149 146 17 28 ];
+        %tmp.149 = getv function %tmp.148 :drawPreview;
+        %tmp.150 = lgetv %dc;
+        symbol [ dc %tmp.150 146 29 31 ];
+        %tmp.151 = lgetv %pcx.8;
+        symbol [ pcx %tmp.151 146 33 36 ];
+        %tmp.152 = lgetv %pcy.9;
+        symbol [ pcy %tmp.152 146 38 41 ];
+        %tmp.153 = lgetv %ps.5;
+        symbol [ ps %tmp.153 146 43 45 ];
+        symbol [ _pet %tmp.155 146 47 51 ];
+        %tmp.155 = getv ? :_pet;
+        symbol [ petType %tmp.156 146 52 59 ];
+        %tmp.156 = getv %tmp.155 :petType;
+        invoke %tmp.148 %tmp.149(%tmp.150, %tmp.151, %tmp.152, %tmp.153, %tmp.156);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_25_147_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_147_15_150_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 149 12 ]
+        symbol [ _pet %tmp.158 149 12 16 ];
+        %tmp.158 = getv ? :_pet;
+        symbol [ draw %tmp.159 149 17 21 ];
+        %tmp.159 = getv function %tmp.158 :draw;
+        %tmp.160 = lgetv %dc;
+        symbol [ dc %tmp.160 149 22 24 ];
+        %tmp.161 = lgetv %pcx.8;
+        symbol [ pcx %tmp.161 149 26 29 ];
+        %tmp.162 = lgetv %beamY.4;
+        symbol [ beamY %tmp.162 149 31 36 ];
+        %tmp.163 = 6;
+        %tmp.164 = lgetv %ps.5;
+        symbol [ ps %tmp.164 149 43 45 ];
+        %tmp.165 = mul %tmp.163 %tmp.164;
+        %tmp.166 = add %tmp.162 %tmp.165;
+        %tmp.167 = lgetv %ps.5;
+        symbol [ ps %tmp.167 149 47 49 ];
+        invoke %tmp.158 %tmp.159(%tmp.160, %tmp.161, %tmp.166, %tmp.167);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_147_15_150_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_145_8_150_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 153 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %mY.10 = local;
+        symbol [ mY %mY.10 153 12 14 ];
+        %tmp.168 = lgetv %h.2;
+        symbol [ h %tmp.168 153 17 18 ];
+        %tmp.169 = 88;
+        %tmp.170 = mul %tmp.168 %tmp.169;
+        %tmp.171 = 100;
+        %tmp.172 = div %tmp.170 %tmp.171;
+        lputv %mY.10 %tmp.172;
+        symbol [ mY %mY.10 153 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 154 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %mX.11 = local;
+        symbol [ mX %mX.11 154 12 14 ];
+        %tmp.173 = lgetv %w.1;
+        symbol [ w %tmp.173 154 17 18 ];
+        %tmp.174 = 12;
+        %tmp.175 = mul %tmp.173 %tmp.174;
+        %tmp.176 = 100;
+        %tmp.177 = div %tmp.175 %tmp.176;
+        lputv %mX.11 %tmp.177;
+        symbol [ mX %mX.11 154 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 155 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %mW.12 = local;
+        symbol [ mW %mW.12 155 12 14 ];
+        %tmp.178 = lgetv %w.1;
+        symbol [ w %tmp.178 155 17 18 ];
+        %tmp.179 = 76;
+        %tmp.180 = mul %tmp.178 %tmp.179;
+        %tmp.181 = 100;
+        %tmp.182 = div %tmp.180 %tmp.181;
+        lputv %mW.12 %tmp.182;
+        symbol [ mW %mW.12 155 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 156 8 ]
+        %tmp.183 = lgetv %dc;
+        symbol [ dc %tmp.183 156 8 10 ];
+        symbol [ setColor %tmp.184 156 11 19 ];
+        %tmp.184 = getv function %tmp.183 :setColor;
+        %tmp.185 = 0x1A2A3A;
+        %tmp.186 = 0x1A2A3A;
+        invoke %tmp.183 %tmp.184(%tmp.185, %tmp.186);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 157 8 ]
+        %tmp.187 = lgetv %dc;
+        symbol [ dc %tmp.187 157 8 10 ];
+        symbol [ fillRectangle %tmp.188 157 11 24 ];
+        %tmp.188 = getv function %tmp.187 :fillRectangle;
+        %tmp.189 = lgetv %mX.11;
+        symbol [ mX %tmp.189 157 25 27 ];
+        %tmp.190 = lgetv %mY.10;
+        symbol [ mY %tmp.190 157 29 31 ];
+        %tmp.191 = lgetv %mW.12;
+        symbol [ mW %tmp.191 157 33 35 ];
+        %tmp.192 = 6;
+        invoke %tmp.187 %tmp.188(%tmp.189, %tmp.190, %tmp.191, %tmp.192);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 159 8 ]
+        %tmp.193 = lgetv %dc;
+        symbol [ dc %tmp.193 159 8 10 ];
+        symbol [ setColor %tmp.194 159 11 19 ];
+        %tmp.194 = getv function %tmp.193 :setColor;
+        %tmp.195 = 0x663333;
+        %tmp.196 = 0x663333;
+        invoke %tmp.193 %tmp.194(%tmp.195, %tmp.196);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 160 8 ]
+        %tmp.197 = lgetv %dc;
+        symbol [ dc %tmp.197 160 8 10 ];
+        symbol [ fillRectangle %tmp.198 160 11 24 ];
+        %tmp.198 = getv function %tmp.197 :fillRectangle;
+        %tmp.199 = lgetv %mX.11;
+        symbol [ mX %tmp.199 160 25 27 ];
+        %tmp.200 = lgetv %mY.10;
+        symbol [ mY %tmp.200 160 29 31 ];
+        %tmp.201 = lgetv %mW.12;
+        symbol [ mW %tmp.201 160 33 35 ];
+        %tmp.202 = 12;
+        %tmp.203 = mul %tmp.201 %tmp.202;
+        %tmp.204 = 100;
+        %tmp.205 = div %tmp.203 %tmp.204;
+        %tmp.206 = 6;
+        invoke %tmp.197 %tmp.198(%tmp.199, %tmp.200, %tmp.205, %tmp.206);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 161 8 ]
+        %tmp.207 = lgetv %dc;
+        symbol [ dc %tmp.207 161 8 10 ];
+        symbol [ fillRectangle %tmp.208 161 11 24 ];
+        %tmp.208 = getv function %tmp.207 :fillRectangle;
+        %tmp.209 = lgetv %mX.11;
+        symbol [ mX %tmp.209 161 25 27 ];
+        %tmp.210 = lgetv %mW.12;
+        symbol [ mW %tmp.210 161 30 32 ];
+        %tmp.211 = 88;
+        %tmp.212 = mul %tmp.210 %tmp.211;
+        %tmp.213 = 100;
+        %tmp.214 = div %tmp.212 %tmp.213;
+        %tmp.215 = add %tmp.209 %tmp.214;
+        %tmp.216 = lgetv %mY.10;
+        symbol [ mY %tmp.216 161 45 47 ];
+        %tmp.217 = lgetv %mW.12;
+        symbol [ mW %tmp.217 161 49 51 ];
+        %tmp.218 = 12;
+        %tmp.219 = mul %tmp.217 %tmp.218;
+        %tmp.220 = 100;
+        %tmp.221 = div %tmp.219 %tmp.220;
+        %tmp.222 = 6;
+        invoke %tmp.207 %tmp.208(%tmp.215, %tmp.216, %tmp.221, %tmp.222);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 163 8 ]
+        %tmp.223 = lgetv %dc;
+        symbol [ dc %tmp.223 163 8 10 ];
+        symbol [ setColor %tmp.224 163 11 19 ];
+        %tmp.224 = getv function %tmp.223 :setColor;
+        %tmp.225 = 0x44AA66;
+        %tmp.226 = 0x44AA66;
+        invoke %tmp.223 %tmp.224(%tmp.225, %tmp.226);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 164 8 ]
+        %tmp.227 = lgetv %dc;
+        symbol [ dc %tmp.227 164 8 10 ];
+        symbol [ fillRectangle %tmp.228 164 11 24 ];
+        %tmp.228 = getv function %tmp.227 :fillRectangle;
+        %tmp.229 = lgetv %mX.11;
+        symbol [ mX %tmp.229 164 25 27 ];
+        %tmp.230 = lgetv %mW.12;
+        symbol [ mW %tmp.230 164 30 32 ];
+        %tmp.231 = 2;
+        %tmp.232 = div %tmp.230 %tmp.231;
+        %tmp.233 = add %tmp.229 %tmp.232;
+        %tmp.234 = 1;
+        %tmp.235 = sub %tmp.233 %tmp.234;
+        %tmp.236 = lgetv %mY.10;
+        symbol [ mY %tmp.236 164 42 44 ];
+        %tmp.237 = 2;
+        %tmp.238 = sub %tmp.236 %tmp.237;
+        %tmp.239 = 2;
+        %tmp.240 = 10;
+        invoke %tmp.227 %tmp.228(%tmp.235, %tmp.238, %tmp.239, %tmp.240);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %mp.13 = local;
+        symbol [ mp %mp.13 166 12 14 ];
+        %tmp.241 = lgetv %mX.11;
+        symbol [ mX %tmp.241 166 17 19 ];
+        %tmp.242 = lgetv %mW.12;
+        symbol [ mW %tmp.242 166 22 24 ];
+        %tmp.243 = 2;
+        %tmp.244 = div %tmp.242 %tmp.243;
+        %tmp.245 = add %tmp.241 %tmp.244;
+        symbol [ _tilt %tmp.247 166 31 36 ];
+        %tmp.247 = getv ? :_tilt;
+        %tmp.248 = lgetv %mW.12;
+        symbol [ mW %tmp.248 166 40 42 ];
+        %tmp.249 = 2;
+        %tmp.250 = div %tmp.248 %tmp.249;
+        %tmp.251 = mul %tmp.247 %tmp.250;
+        %tmp.252 = 100;
+        %tmp.253 = div %tmp.251 %tmp.252;
+        %tmp.254 = add %tmp.245 %tmp.253;
+        lputv %mp.13 %tmp.254;
+        symbol [ mp %mp.13 166 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop" ]
+        %mc.14 = local;
+        symbol [ mc %mc.14 167 12 14 ];
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_begin:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_begin:
+        symbol [ _tilt %tmp.256 167 19 24 ];
+        %tmp.256 = getv ? :_tilt;
+        %tmp.257 = 0;
+        %tmp.258 = lt %tmp.256 %tmp.257;
+        bf %tmp.258 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_true:
+        symbol [ _tilt %tmp.260 167 32 37 ];
+        %tmp.260 = getv ? :_tilt;
+        %tmp.261 = sub 0 %tmp.260;
+        push %tmp.261;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_else_false:
+        symbol [ _tilt %tmp.263 167 40 45 ];
+        %tmp.263 = getv ? :_tilt;
+        push %tmp.263;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_end:
+        %tmp.264 = phi [%tmp.258 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_begin] [%tmp.261 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_true] [%tmp.263 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_else_false] [%tmp.264 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_19_167_40_end];
+        %tmp.265 = 75;
+        %tmp.266 = gt %tmp.264 %tmp.265;
+        bf %tmp.266 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_true:
+        %tmp.267 = 0xFF4444;
+        push %tmp.267;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_else_false:
+        %tmp.268 = 0xFFDD55;
+        push %tmp.268;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_end:
+        %tmp.269 = phi [%tmp.266 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_begin] [%tmp.267 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_true] [%tmp.268 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_else_false] [%tmp.269 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_167_17_167_66_end];
+        lputv %mc.14 %tmp.269;
+        symbol [ mc %mc.14 167 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 168 8 ]
+        %tmp.270 = lgetv %dc;
+        symbol [ dc %tmp.270 168 8 10 ];
+        symbol [ setColor %tmp.271 168 11 19 ];
+        %tmp.271 = getv function %tmp.270 :setColor;
+        %tmp.272 = lgetv %mc.14;
+        symbol [ mc %tmp.272 168 20 22 ];
+        %tmp.273 = lgetv %mc.14;
+        symbol [ mc %tmp.273 168 24 26 ];
+        invoke %tmp.270 %tmp.271(%tmp.272, %tmp.273);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 169 8 ]
+        %tmp.274 = lgetv %dc;
+        symbol [ dc %tmp.274 169 8 10 ];
+        symbol [ fillRectangle %tmp.275 169 11 24 ];
+        %tmp.275 = getv function %tmp.274 :fillRectangle;
+        %tmp.276 = lgetv %mp.13;
+        symbol [ mp %tmp.276 169 25 27 ];
+        %tmp.277 = 2;
+        %tmp.278 = sub %tmp.276 %tmp.277;
+        %tmp.279 = lgetv %mY.10;
+        symbol [ mY %tmp.279 169 33 35 ];
+        %tmp.280 = 3;
+        %tmp.281 = sub %tmp.279 %tmp.280;
+        %tmp.282 = 4;
+        %tmp.283 = 12;
+        invoke %tmp.274 %tmp.275(%tmp.278, %tmp.281, %tmp.282, %tmp.283);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 171 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_stmt:
+        symbol [ _state %tmp.285 171 12 18 ];
+        %tmp.285 = getv ? :_state;
+        %tmp.286 = 1;
+        %tmp.287 = eq %tmp.285 %tmp.286;
+        bf %tmp.287 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_25_179_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 172 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_25_179_8_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_25_179_8_stop" ]
+        %won.15 = local;
+        symbol [ won %won.15 172 16 19 ];
+        symbol [ _ticks %tmp.289 172 23 29 ];
+        %tmp.289 = getv ? :_ticks;
+        symbol [ BAL_TICK_CAP %tmp.291 172 33 45 ];
+        %tmp.291 = getv ? :BAL_TICK_CAP;
+        %tmp.292 = gte %tmp.289 %tmp.291;
+        lputv %won.15 %tmp.292;
+        symbol [ won %won.15 172 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 173 12 ]
+        %tmp.293 = lgetv %dc;
+        symbol [ dc %tmp.293 173 12 14 ];
+        symbol [ setColor %tmp.294 173 15 23 ];
+        %tmp.294 = getv function %tmp.293 :setColor;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_begin:
+        %tmp.295 = lgetv %won.15;
+        symbol [ won %tmp.295 173 24 27 ];
+        bf %tmp.295 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_true:
+        %tmp.296 = 0x66FFAA;
+        push %tmp.296;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_else_false:
+        %tmp.297 = 0xFF6666;
+        push %tmp.297;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_end:
+        %tmp.298 = phi [%tmp.295 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_begin] [%tmp.296 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_true] [%tmp.297 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_else_false] [%tmp.298 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_173_24_173_41_end];
+        symbol [ Graphics %tmp.299 173 51 59 ];
+        %tmp.299 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.300 173 60 77 ];
+        %tmp.300 = getv %tmp.299 :COLOR_TRANSPARENT;
+        invoke %tmp.293 %tmp.294(%tmp.298, %tmp.300);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 174 12 ]
+        %tmp.301 = lgetv %dc;
+        symbol [ dc %tmp.301 174 12 14 ];
+        symbol [ drawText %tmp.302 174 15 23 ];
+        %tmp.302 = getv function %tmp.301 :drawText;
+        %tmp.303 = lgetv %cx.3;
+        symbol [ cx %tmp.303 174 24 26 ];
+        %tmp.304 = lgetv %h.2;
+        symbol [ h %tmp.304 174 28 29 ];
+        %tmp.305 = 40;
+        %tmp.306 = mul %tmp.304 %tmp.305;
+        %tmp.307 = 100;
+        %tmp.308 = div %tmp.306 %tmp.307;
+        symbol [ Graphics %tmp.309 174 42 50 ];
+        %tmp.309 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.310 174 51 62 ];
+        %tmp.310 = getv %tmp.309 :FONT_MEDIUM;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_begin:
+        %tmp.311 = lgetv %won.15;
+        symbol [ won %tmp.311 175 24 27 ];
+        bf %tmp.311 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_true:
+        %tmp.312 = "PERFECT!";
+        push %tmp.312;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_else_false:
+        %tmp.313 = "WOBBLE!";
+        push %tmp.313;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_end:
+        %tmp.314 = phi [%tmp.311 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_begin] [%tmp.312 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_true] [%tmp.313 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_else_false] [%tmp.314 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_175_24_175_43_end];
+        symbol [ Graphics %tmp.315 175 54 62 ];
+        %tmp.315 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.316 175 63 82 ];
+        %tmp.316 = getv %tmp.315 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.301 %tmp.302(%tmp.303, %tmp.308, %tmp.310, %tmp.314, %tmp.316);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 176 12 ]
+        %tmp.317 = lgetv %dc;
+        symbol [ dc %tmp.317 176 12 14 ];
+        symbol [ setColor %tmp.318 176 15 23 ];
+        %tmp.318 = getv function %tmp.317 :setColor;
+        %tmp.319 = 0xCCCCCC;
+        symbol [ Graphics %tmp.320 176 34 42 ];
+        %tmp.320 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.321 176 43 60 ];
+        %tmp.321 = getv %tmp.320 :COLOR_TRANSPARENT;
+        invoke %tmp.317 %tmp.318(%tmp.319, %tmp.321);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 177 12 ]
+        %tmp.322 = lgetv %dc;
+        symbol [ dc %tmp.322 177 12 14 ];
+        symbol [ drawText %tmp.323 177 15 23 ];
+        %tmp.323 = getv function %tmp.322 :drawText;
+        %tmp.324 = lgetv %cx.3;
+        symbol [ cx %tmp.324 177 24 26 ];
+        %tmp.325 = lgetv %h.2;
+        symbol [ h %tmp.325 177 28 29 ];
+        %tmp.326 = 50;
+        %tmp.327 = mul %tmp.325 %tmp.326;
+        %tmp.328 = 100;
+        %tmp.329 = div %tmp.327 %tmp.328;
+        symbol [ Graphics %tmp.330 177 42 50 ];
+        %tmp.330 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.331 177 51 60 ];
+        %tmp.331 = getv %tmp.330 :FONT_TINY;
+        %tmp.332 = "Held ";
+        symbol [ _ticks %tmp.334 178 35 41 ];
+        %tmp.334 = getv ? :_ticks;
+        %tmp.335 = 12;
+        %tmp.336 = div %tmp.334 %tmp.335;
+        symbol [ toString %tmp.337 178 48 56 ];
+        %tmp.337 = getv function %tmp.336 :toString;
+        %tmp.338 = invoke %tmp.336 %tmp.337();
+        %tmp.339 = add %tmp.332 %tmp.338;
+        %tmp.340 = "s";
+        %tmp.341 = add %tmp.339 %tmp.340;
+        symbol [ Graphics %tmp.342 178 66 74 ];
+        %tmp.342 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.343 178 75 94 ];
+        %tmp.343 = getv %tmp.342 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.322 %tmp.323(%tmp.324, %tmp.329, %tmp.331, %tmp.341, %tmp.343);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_25_179_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_179_15_183_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 180 12 ]
+        %tmp.344 = lgetv %dc;
+        symbol [ dc %tmp.344 180 12 14 ];
+        symbol [ setColor %tmp.345 180 15 23 ];
+        %tmp.345 = getv function %tmp.344 :setColor;
+        %tmp.346 = 0x556677;
+        symbol [ Graphics %tmp.347 180 34 42 ];
+        %tmp.347 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.348 180 43 60 ];
+        %tmp.348 = getv %tmp.347 :COLOR_TRANSPARENT;
+        invoke %tmp.344 %tmp.345(%tmp.346, %tmp.348);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 181 12 ]
+        %tmp.349 = lgetv %dc;
+        symbol [ dc %tmp.349 181 12 14 ];
+        symbol [ drawText %tmp.350 181 15 23 ];
+        %tmp.350 = getv function %tmp.349 :drawText;
+        %tmp.351 = lgetv %cx.3;
+        symbol [ cx %tmp.351 181 24 26 ];
+        %tmp.352 = lgetv %h.2;
+        symbol [ h %tmp.352 181 28 29 ];
+        %tmp.353 = 74;
+        %tmp.354 = mul %tmp.352 %tmp.353;
+        %tmp.355 = 100;
+        %tmp.356 = div %tmp.354 %tmp.355;
+        symbol [ Graphics %tmp.357 181 42 50 ];
+        %tmp.357 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.358 181 51 61 ];
+        %tmp.358 = getv %tmp.357 :FONT_XTINY;
+        %tmp.359 = "< lean   lean >";
+        symbol [ Graphics %tmp.360 182 43 51 ];
+        %tmp.360 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.361 182 52 71 ];
+        %tmp.361 = getv %tmp.360 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.349 %tmp.350(%tmp.351, %tmp.356, %tmp.358, %tmp.359, %tmp.361);
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_179_15_183_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_171_8_183_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_115_26_184_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 187; @symbol_classdef = [BalanceGameDelegate,187,6,25]; @symbol_extends<0> = [WatchUi,187,34,41]; @symbol_extends<1> = [BehaviorDelegate,187,42,58]; ]
+class BalanceGameDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 187; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 187; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 188; @position = 15; @symbol_vardef = [_view,188,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 190; @symbol_functiondef = [initialize,190,13,23]; @symbol_param<0> = [view,190,24,28]; ]
+    function initialize(view) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_190_30_193_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 191 8 ]
+        symbol [ BehaviorDelegate %tmp.2 191 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 191 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 192 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 192 16 20 ];
+        symbol [ _view ? 192 8 13 ];
+        putv self :_view %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_190_30_193_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 195; @symbol_functiondef = [onPreviousPage,195,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_195_30_195_64_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 195 32 ]
+        symbol [ _view %tmp.2 195 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ leanLeft %tmp.3 195 38 46 ];
+        %tmp.3 = getv function %tmp.2 :leanLeft;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 195 51 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_195_30_195_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 196; @symbol_functiondef = [onNextPage,196,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_196_30_196_64_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 196 32 ]
+        symbol [ _view %tmp.2 196 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ leanRight %tmp.3 196 38 47 ];
+        %tmp.3 = getv function %tmp.2 :leanRight;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 196 51 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_196_30_196_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 198; @symbol_functiondef = [onKey,198,13,18]; @symbol_param<0> = [evt,198,19,22]; ]
+    function onKey(evt) {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_198_24_204_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 199 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_198_24_204_4_start" "_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_198_24_204_4_stop" ]
+        %k.1 = local;
+        symbol [ k %k.1 199 12 13 ];
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 199 16 19 ];
+        symbol [ getKey %tmp.2 199 20 26 ];
+        %tmp.2 = getv function %tmp.1 :getKey;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %k.1 %tmp.3;
+        symbol [ k %k.1 199 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 200 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_stmt:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_12_200_48_begin:
+        %tmp.4 = lgetv %k.1;
+        symbol [ k %tmp.4 200 12 13 ];
+        symbol [ WatchUi %tmp.5 200 17 24 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.6 200 25 31 ];
+        %tmp.6 = getv %tmp.5 :KEY_UP;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bt %tmp.7 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_true;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_35_200_48_false:
+        %tmp.8 = lgetv %k.1;
+        symbol [ k %tmp.8 200 35 36 ];
+        symbol [ WatchUi %tmp.9 200 40 47 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ KEY_LEFT %tmp.10 200 48 56 ];
+        %tmp.10 = getv %tmp.9 :KEY_LEFT;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_35_200_48_end:
+        %tmp.12 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_12_200_48_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_35_200_48_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_35_200_48_end];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_60_200_94_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 200 62 ]
+        symbol [ _view %tmp.14 200 62 67 ];
+        %tmp.14 = getv ? :_view;
+        symbol [ leanLeft %tmp.15 200 68 76 ];
+        %tmp.15 = getv function %tmp.14 :leanLeft;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 200 81 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_60_200_94_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_200_8_200_94_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 201 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_stmt:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_12_201_50_begin:
+        %tmp.17 = lgetv %k.1;
+        symbol [ k %tmp.17 201 12 13 ];
+        symbol [ WatchUi %tmp.18 201 17 24 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.19 201 25 33 ];
+        %tmp.19 = getv %tmp.18 :KEY_DOWN;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bt %tmp.20 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_true;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_37_201_50_false:
+        %tmp.21 = lgetv %k.1;
+        symbol [ k %tmp.21 201 37 38 ];
+        symbol [ WatchUi %tmp.22 201 42 49 ];
+        %tmp.22 = getm $.Toybox.WatchUi;
+        symbol [ KEY_RIGHT %tmp.23 201 50 59 ];
+        %tmp.23 = getv %tmp.22 :KEY_RIGHT;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_37_201_50_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_12_201_50_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_37_201_50_false] [%tmp.25 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_37_201_50_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_61_201_95_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 201 63 ]
+        symbol [ _view %tmp.27 201 63 68 ];
+        %tmp.27 = getv ? :_view;
+        symbol [ leanRight %tmp.28 201 69 78 ];
+        %tmp.28 = getv function %tmp.27 :leanRight;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 201 82 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_61_201_95_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_201_8_201_95_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 202 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_8_202_86_if_stmt:
+        %tmp.30 = lgetv %k.1;
+        symbol [ k %tmp.30 202 12 13 ];
+        symbol [ WatchUi %tmp.31 202 17 24 ];
+        %tmp.31 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.32 202 25 32 ];
+        %tmp.32 = getv %tmp.31 :KEY_ESC;
+        %tmp.33 = eq %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_8_202_86_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_8_202_86_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_34_202_86_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 202 36 ]
+        symbol [ WatchUi %tmp.34 202 36 43 ];
+        %tmp.34 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.35 202 44 51 ];
+        %tmp.35 = getv function %tmp.34 :popView;
+        symbol [ WatchUi %tmp.36 202 52 59 ];
+        %tmp.36 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.37 202 60 70 ];
+        %tmp.37 = getv %tmp.36 :SLIDE_DOWN;
+        invoke %tmp.34 %tmp.35(%tmp.37);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 202 73 ]
+        %tmp.38 = true;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_34_202_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_8_202_86_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_202_8_202_86_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 203 8 ]
+        %tmp.39 = false;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_198_24_204_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 206; @symbol_functiondef = [onBack,206,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_206_22_209_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 207 8 ]
+        symbol [ WatchUi %tmp.1 207 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 207 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 207 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.4 207 32 42 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc" 208 8 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_BalanceGameView_mc_206_22_209_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/BalanceGameView.mc"; @line = 1; ]
+<init> {
+}

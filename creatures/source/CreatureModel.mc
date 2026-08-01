@@ -73,6 +73,9 @@ class CreatureModel {
 
     // ── Last defence summary (for WELCOME BACK) ──────────────────────────────
     var defHits; var defHeld; var defPts;
+    var mailAlert;             // real inbox fights arrived this session (UI flag)
+    hidden var _mailPending;   // waiting on /inbox (phone was up at collect)
+    hidden var _mailElapsed;   // elapsed secs for offline RNG if inbox fails
 
     // ── Last idle summary (for WELCOME BACK) ─────────────────────────────────
     var gXp; var gFood; var gMut; var gSecs;
@@ -208,6 +211,7 @@ class CreatureModel {
 
         gXp = 0; gFood = 0; gMut = 0; gSecs = 0; newDay = false; justEvolved = false;
         defHits = 0; defHeld = 0; defPts = 0;
+        mailAlert = false; _mailPending = false; _mailElapsed = 0;
     }
 
     function save() {
@@ -482,7 +486,15 @@ class CreatureModel {
         if (elapsed > 8 * 3600 && energy < 30) { mood -= 8; }
         mood = Cr._clamp(mood, 0, Cr.MOOD_MAX);
 
-        _rollDefences(elapsed);
+        // Real rival fights arrive via /inbox when the phone is up; offline we
+        // still roll the local defence RNG so a disconnected watch feels alive.
+        if (Leaderboard.isPhoneConnected() && Leaderboard.loadUser() != null) {
+            _mailPending = true;
+            _mailElapsed = elapsed;
+            defHits = 0; defHeld = 0; defPts = 0;
+        } else {
+            _rollDefences(elapsed);
+        }
 
         lastSec = now;
         checkEvolution();
@@ -490,10 +502,59 @@ class CreatureModel {
     }
 
     // ── Being attacked ────────────────────────────────────────────────────────
-    // There is no server-side PvP, so the raids that happened while the player
-    // was away are rolled here, on return — which is the only moment they can
-    // actually experience them. Resolved on the DEFENSIVE side only, and capped
-    // hard: a fortnight away costs no more than a long weekend.
+    // Real fights arrive via RaidMail (/inbox) when the phone is connected.
+    // Offline (or when the fetch fails) we still roll a local defence RNG.
+    // Resolved on the DEFENSIVE side only, and capped hard: a fortnight away
+    // costs no more than a long weekend. Creature HP/equipment are never hurt.
+
+    // PUBLIC — LbRaidInbox callback. won=1 means the attacker beat us.
+    function onRaidInbox(ok, events) {
+        if (!ok) {
+            if (_mailPending) {
+                _rollDefences(_mailElapsed);
+                _mailPending = false;
+                if (defHits > 0) { mailAlert = true; }
+                save();
+            }
+            return;
+        }
+        _mailPending = false;
+        var maxId = 0;
+        var n = 0;
+        if (events instanceof Lang.Array) {
+            for (var i = 0; i < events.size(); i++) {
+                var e = events[i];
+                if (!(e instanceof Lang.Dictionary)) { continue; }
+                var from = e["from"];
+                if (!(from instanceof Lang.String) || from.length() == 0) { continue; }
+                var awon = (e["won"] == 1 || e["won"] == true);
+                _applyMailFight(from, awon);
+                n += 1;
+                var id = e["id"];
+                if (id instanceof Lang.Number && id > maxId) { maxId = id; }
+            }
+        }
+        if (maxId > 0) { RaidMail.saveAck(maxId); }
+        if (n > 0) { mailAlert = true; save(); }
+    }
+
+    hidden function _applyMailFight(from, attackerWon) {
+        var td = today();
+        defHits += 1;
+        if (!attackerWon) {
+            defHeld += 1;
+            arenaPts += Cr.DEF_HOLD_PTS;
+            defPts += Cr.DEF_HOLD_PTS;
+            _defAdd(td, true, from);
+            return;
+        }
+        var loss = Cr.DEF_LOSS_PTS;
+        if (loss > arenaPts) { loss = arenaPts; }
+        arenaPts -= loss;
+        defPts -= loss;
+        _defAdd(td, false, from);
+    }
+
     hidden function _rollDefences(elapsed) {
         defHits = 0; defHeld = 0; defPts = 0;
         if (arenaWins + arenaLosses < 1) { return; }   // never before a first fight
@@ -816,10 +877,6 @@ class CreatureModel {
     }
 
     // Kept for Options focus → soft suggestion only (no longer force-locks).
-    hidden function _lockPath() {
-        path = suggestedPath();
-    }
-
     // The next stage the creature is working toward, or -1 at the final stage.
     function nextStage() { return (evo >= Cr.EV_MAX) ? -1 : evo + 1; }
     // Progress toward the NEXT stage, read from the same gate tables so the bar
@@ -880,14 +937,6 @@ class CreatureModel {
         return (d < 0) ? 0 : d;
     }
     function ageDayLabel() { return "Day " + (daysAlive() + 1); }
-
-    function dominantTrait() {
-        var bi = 0; var bv = -1;
-        for (var i = 0; i < Cr.TR_N; i++) {
-            if (traits[i] > bv) { bv = traits[i]; bi = i; }
-        }
-        return bi;
-    }
 
     function rarityScore() {
         var sum = 0;
@@ -1007,9 +1056,6 @@ class CreatureModel {
     }
 
     function rank() { return Cr.rankOf(arenaPts); }
-    function rankLabel() { return Cr.rankName(rank()); }
-    function lastFight() { return _lastFight; }
-
     // Live hash (nowSec + salt mixed with the DNA seed) so two fights fought a
     // second apart roll differently, but the SAME instant always resolves the
     // same way (deterministic, per the design brief).
@@ -1123,6 +1169,31 @@ class CreatureModel {
         return _proceduralFoe(band);
     }
 
+    // A single rival off the live roster, built the same way a matched one is.
+    // The RIVALS page draws straight from these, so the caller is expected to
+    // build them ONCE per roster change rather than per frame.
+    function rivalAt(i) {
+        var list = roster();
+        if (list == null || i < 0 || i >= list.size()) { return null; }
+        var f = null;
+        try { f = _rivalFoe(list[i]); } catch (e) {}
+        return f;
+    }
+    function rivalCount() {
+        var list = roster();
+        return (list == null) ? 0 : list.size();
+    }
+
+    // Which reward band a given opponent counts as. Picking a rival by hand
+    // skips the FAIR/RISK choice, so the band — and with it the points at stake
+    // — is read off the power gap instead of being chosen.
+    function bandFor(foePower) {
+        var mine = power(); if (mine < 1) { mine = 1; }
+        if (foePower > mine * 105 / 100) { return 1; }
+        if (foePower < mine * 90 / 100)  { return -1; }
+        return 0;
+    }
+
     hidden function _proceduralFoe(band) {
         var nowS = nowSec();
         var h = _fhash(nowS, 777 + band * 31);
@@ -1160,7 +1231,20 @@ class CreatureModel {
     // Returns a Dictionary the view renders straight into the battle overlay.
     function fight(band) {
         band = Cr._clamp(band, -1, 1);
-        var foe = makeAiOpponent(band);
+        return _resolveFight(makeAiOpponent(band), band);
+    }
+
+    // Challenge one NAMED player off the Arena board. Everything after the
+    // opponent is picked is the quick-fight path, so a hand-picked rival and a
+    // matched one score, log and evolve identically.
+    function fightRival(i) {
+        var foe = rivalAt(i);
+        if (foe == null) { return null; }
+        return _resolveFight(foe, bandFor(foe.power));
+    }
+
+    hidden function _resolveFight(foe, band) {
+        band = Cr._clamp(band, -1, 1);
         var nowS = nowSec();
 
         var myAtk = atk(); var myDef = def();
@@ -1243,6 +1327,12 @@ class CreatureModel {
         dArena += 1;
         _bump(true);
         checkEvolution();
+        // Tell the named rival they were fought — async inbox, never blocks play.
+        try {
+            if (foe.real) {
+                RaidMail.notify(Cr.GAME_ID, foe.name, "fight", won);
+            }
+        } catch (e) {}
         save();
 
         _lastFight = {

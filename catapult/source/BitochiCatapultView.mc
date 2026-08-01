@@ -210,6 +210,10 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _scoreSubmitted;
     hidden var _autoStarted;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from forcing GS_SELECT over the resumed campaign.
+    hidden var _skipStart;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -292,6 +296,7 @@ class BitochiCatapultView extends WatchUi.View {
         _readySel = 0;
         _scoreSubmitted = false;
         _autoStarted = false;
+        _skipStart = false;
 
         // Difficulty from the shared OPTIONS screen (cat_diff: 0/1/2).
         _diff = 1;
@@ -593,7 +598,8 @@ class BitochiCatapultView extends WatchUi.View {
         // Root view is the shared unified menu; drop straight into the fight on
         // the very first show. Guarded so returning from a pushed leaderboard /
         // post-game card (or later rounds' scout screen) is left untouched.
-        if (gameState == GS_READY && !_autoStarted) {
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && gameState == GS_READY && !_autoStarted) {
             _autoStarted = true;
             _pickSel = _catType;
             gameState = GS_SELECT;
@@ -602,6 +608,45 @@ class BitochiCatapultView extends WatchUi.View {
 
     function onHide() {
         if (_timer != null) { _timer.stop(); _timer = null; }
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export from the shop screen (GS_SHOP) — between rounds, never
+    // mid-flight or mid-shot.
+    function exportSave() {
+        if (gameState != GS_SHOP) { return null; }
+        var pq = new [_powQueueLen];
+        for (var i = 0; i < _powQueueLen; i++) { pq[i] = _powQueue[i]; }
+        return {
+            "round" => _round, "score" => _score, "gold" => _gold,
+            "catType" => _catType, "powQueue" => pq, "powQueueLen" => _powQueueLen,
+            "activePow" => _activePow, "matchDamage" => _matchDamage,
+            "matchShotsFired" => _matchShotsFired, "combo" => _combo,
+            "beatGame" => _beatGame
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from CatapultHooks).
+    // Restores the campaign meta-state and drops straight back into the shop
+    // screen (skipping the catapult picker that a fresh launch would show).
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _round = data["round"]; _score = data["score"]; _gold = data["gold"];
+            _catType = data["catType"]; applyCatType();
+            _powQueueLen = data["powQueueLen"];
+            var pq = data["powQueue"];
+            for (var i = 0; i < _powQueueLen; i++) { _powQueue[i] = pq[i]; }
+            for (var i = _powQueueLen; i < 6; i++) { _powQueue[i] = PW_NONE; }
+            _activePow = data["activePow"];
+            _matchDamage = data["matchDamage"]; _matchShotsFired = data["matchShotsFired"];
+            _combo = data["combo"]; _beatGame = data["beatGame"];
+            _shopSel = _shopNames.size();
+            _resultTick = 0;
+            gameState = GS_SHOP;
+            _autoStarted = true;
+            _skipStart = true;
+        } catch (e) {}
     }
 
     function onTick() as Void {
@@ -1161,6 +1206,7 @@ class BitochiCatapultView extends WatchUi.View {
     // more than just "how far did you get" — a marathon of shots or a
     // brutal damage haul both earn their own bragging rights.
     hidden function toGameOver() {
+        try { SaveResume.clear("catapult"); } catch (e) {}
         if (!_scoreSubmitted) {
             Leaderboard.submitScore("catapult", _score, _lbVariant());
             if (_matchDamage > 0) { Leaderboard.submitScore("catapult", _matchDamage, "damage"); }

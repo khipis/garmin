@@ -1,0 +1,874 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Graphics,1,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 14; @symbol_classdef = [StyleView,14,6,15]; @symbol_extends<0> = [WatchUi,14,24,31]; @symbol_extends<1> = [View,14,32,36]; ]
+class StyleView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 14; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 14; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 15; @position = 15; @symbol_vardef = [_pet,15,15,19]; ]
+    protected
+    var _pet;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 16; @position = 15; @symbol_vardef = [_timer,16,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 17; @position = 15; @symbol_vardef = [_row,17,15,19]; ]
+    protected
+    var _row;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 18; @position = 15; @symbol_vardef = [_frame,18,15,21]; ]
+    protected
+    var _frame;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 20; @symbol_functiondef = [initialize,20,13,23]; @symbol_param<0> = [pet,20,24,27]; ]
+    function initialize(pet) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_20_29_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 21 8 ]
+        symbol [ View %tmp.2 21 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 21 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 22 8 ]
+        %tmp.4 = lgetv %pet;
+        symbol [ pet %tmp.4 22 17 20 ];
+        symbol [ _pet ? 22 8 12 ];
+        putv self :_pet %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 23 8 ]
+        %tmp.5 = 0;
+        symbol [ _row ? 23 8 12 ];
+        putv self :_row %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 24 8 ]
+        %tmp.6 = 0;
+        symbol [ _frame ? 24 8 14 ];
+        putv self :_frame %tmp.6;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_20_29_25_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 27; @symbol_functiondef = [onShow,27,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_27_22_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 28 8 ]
+        symbol [ Timer %tmp.3 28 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 28 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 28 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 29 8 ]
+        symbol [ _timer %tmp.6 29 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 29 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 29 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onTimer;
+        symbol [ onTimer %tmp.11 29 29 36 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 200;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_27_22_30_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 32; @symbol_functiondef = [onHide,32,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_32_22_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 33 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_8_33_60_if_stmt:
+        symbol [ _timer %tmp.2 33 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_8_33_60_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_8_33_60_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_28_33_60_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 33 30 ]
+        symbol [ _timer %tmp.6 33 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 33 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 33 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 33 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_28_33_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_8_33_60_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_33_8_33_60_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_32_22_34_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 36; @symbol_functiondef = [onTimer,36,13,20]; ]
+    function onTimer() as Void {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_36_31_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 37 8 ]
+        symbol [ _frame %tmp.2 37 18 24 ];
+        %tmp.2 = getv ? :_frame;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        %tmp.5 = 1000;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        symbol [ _frame ? 37 8 14 ];
+        putv self :_frame %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 38 8 ]
+        symbol [ WatchUi %tmp.7 38 8 15 ];
+        %tmp.7 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.8 38 16 29 ];
+        %tmp.8 = getv function %tmp.7 :requestUpdate;
+        invoke %tmp.7 %tmp.8();
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_36_31_39_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 42; @symbol_functiondef = [changeValue,42,13,24]; @symbol_param<0> = [dir,42,25,28]; ]
+    function changeValue(dir) {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_42_30_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_stmt:
+        symbol [ _row %tmp.2 43 12 16 ];
+        %tmp.2 = getv ? :_row;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_23_43_49_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 43 25 ]
+        symbol [ _pet %tmp.6 43 25 29 ];
+        %tmp.6 = getv ? :_pet;
+        symbol [ cyclePalette %tmp.7 43 30 42 ];
+        %tmp.7 = getv function %tmp.6 :cyclePalette;
+        %tmp.8 = lgetv %dir;
+        symbol [ dir %tmp.8 43 43 46 ];
+        invoke %tmp.6 %tmp.7(%tmp.8);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_23_43_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_44_23_44_51_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 44 25 ]
+        symbol [ _pet %tmp.10 44 25 29 ];
+        %tmp.10 = getv ? :_pet;
+        symbol [ cycleAccessory %tmp.11 44 30 44 ];
+        %tmp.11 = getv function %tmp.10 :cycleAccessory;
+        %tmp.12 = lgetv %dir;
+        symbol [ dir %tmp.12 44 45 48 ];
+        invoke %tmp.10 %tmp.11(%tmp.12);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_44_23_44_51_stop:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_43_8_44_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 45 8 ]
+        symbol [ WatchUi %tmp.13 45 8 15 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.14 45 16 29 ];
+        %tmp.14 = getv function %tmp.13 :requestUpdate;
+        invoke %tmp.13 %tmp.14();
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_42_30_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 48; @symbol_functiondef = [switchRow,48,13,22]; ]
+    function switchRow() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_48_25_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 49 8 ]
+        symbol [ _row %tmp.2 49 16 20 ];
+        %tmp.2 = getv ? :_row;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        %tmp.5 = 2;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        symbol [ _row ? 49 8 12 ];
+        putv self :_row %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 50 8 ]
+        symbol [ WatchUi %tmp.7 50 8 15 ];
+        %tmp.7 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.8 50 16 29 ];
+        %tmp.8 = getv function %tmp.7 :requestUpdate;
+        invoke %tmp.7 %tmp.8();
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_48_25_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 53; @symbol_functiondef = [onUpdate,53,13,21]; @symbol_param<0> = [dc,53,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 54 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 54 12 13 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 54 16 18 ];
+        symbol [ getWidth %tmp.2 54 19 27 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %w.1 %tmp.3;
+        symbol [ w %w.1 54 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 55 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 55 12 13 ];
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 55 16 18 ];
+        symbol [ getHeight %tmp.5 55 19 28 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %h.2 %tmp.6;
+        symbol [ h %h.2 55 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %cx.3 = local;
+        symbol [ cx %cx.3 56 12 14 ];
+        %tmp.7 = lgetv %w.1;
+        symbol [ w %tmp.7 56 17 18 ];
+        %tmp.8 = 2;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        lputv %cx.3 %tmp.9;
+        symbol [ cx %cx.3 56 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 58 8 ]
+        %tmp.10 = lgetv %dc;
+        symbol [ dc %tmp.10 58 8 10 ];
+        symbol [ setColor %tmp.11 58 11 19 ];
+        %tmp.11 = getv function %tmp.10 :setColor;
+        %tmp.12 = 0x0F0F23;
+        %tmp.13 = 0x0F0F23;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 59 8 ]
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 59 8 10 ];
+        symbol [ clear %tmp.15 59 11 16 ];
+        %tmp.15 = getv function %tmp.14 :clear;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 62 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 62 8 10 ];
+        symbol [ setColor %tmp.17 62 11 19 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0x66CCFF;
+        symbol [ Graphics %tmp.19 62 30 38 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 62 39 56 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 63 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 63 8 10 ];
+        symbol [ drawText %tmp.22 63 11 19 ];
+        %tmp.22 = getv function %tmp.21 :drawText;
+        %tmp.23 = lgetv %cx.3;
+        symbol [ cx %tmp.23 63 20 22 ];
+        %tmp.24 = lgetv %h.2;
+        symbol [ h %tmp.24 63 24 25 ];
+        %tmp.25 = 8;
+        %tmp.26 = mul %tmp.24 %tmp.25;
+        %tmp.27 = 100;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        symbol [ Graphics %tmp.29 63 37 45 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.30 63 46 56 ];
+        %tmp.30 = getv %tmp.29 :FONT_SMALL;
+        %tmp.31 = "STYLE";
+        symbol [ Graphics %tmp.32 63 67 75 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.33 63 76 95 ];
+        %tmp.33 = getv %tmp.32 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.28, %tmp.30, %tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 66 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %ps.4 = local;
+        symbol [ ps %ps.4 66 12 14 ];
+        %tmp.34 = lgetv %w.1;
+        symbol [ w %tmp.34 66 17 18 ];
+        %tmp.35 = 22;
+        %tmp.36 = div %tmp.34 %tmp.35;
+        lputv %ps.4 %tmp.36;
+        symbol [ ps %ps.4 66 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_8_67_30_if_stmt:
+        %tmp.37 = lgetv %ps.4;
+        symbol [ ps %tmp.37 67 12 14 ];
+        %tmp.38 = 3;
+        %tmp.39 = lt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_8_67_30_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_8_67_30_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_20_67_30_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 67 22 ]
+        %tmp.40 = 3;
+        lputv %ps.4 %tmp.40;
+        symbol [ ps %ps.4 67 22 24 ];
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_20_67_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_8_67_30_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_67_8_67_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 68 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %bob.5 = local;
+        symbol [ bob %bob.5 68 12 15 ];
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_begin:
+        symbol [ _frame %tmp.42 68 20 26 ];
+        %tmp.42 = getv ? :_frame;
+        %tmp.43 = 8;
+        %tmp.44 = mod %tmp.42 %tmp.43;
+        %tmp.45 = 4;
+        %tmp.46 = lt %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_true:
+        %tmp.47 = 0;
+        push %tmp.47;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_else_false:
+        %tmp.48 = lgetv %ps.4;
+        symbol [ ps %tmp.48 68 43 45 ];
+        %tmp.49 = 3;
+        %tmp.50 = div %tmp.48 %tmp.49;
+        push %tmp.50;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_end:
+        %tmp.51 = phi [%tmp.46 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_begin] [%tmp.47 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_else_false] [%tmp.51 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_68_18_68_48_end];
+        lputv %bob.5 %tmp.51;
+        symbol [ bob %bob.5 68 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 69 8 ]
+        symbol [ _pet %tmp.53 69 8 12 ];
+        %tmp.53 = getv ? :_pet;
+        symbol [ drawStylePreview %tmp.54 69 13 29 ];
+        %tmp.54 = getv function %tmp.53 :drawStylePreview;
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 69 30 32 ];
+        %tmp.56 = lgetv %cx.3;
+        symbol [ cx %tmp.56 69 34 36 ];
+        %tmp.57 = lgetv %h.2;
+        symbol [ h %tmp.57 69 38 39 ];
+        %tmp.58 = 40;
+        %tmp.59 = mul %tmp.57 %tmp.58;
+        %tmp.60 = 100;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %bob.5;
+        symbol [ bob %tmp.62 69 53 56 ];
+        %tmp.63 = add %tmp.61 %tmp.62;
+        %tmp.64 = lgetv %ps.4;
+        symbol [ ps %tmp.64 69 58 60 ];
+        invoke %tmp.53 %tmp.54(%tmp.55, %tmp.56, %tmp.63, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %palName.6 = local;
+        symbol [ palName %palName.6 72 12 19 ];
+        symbol [ _pet %tmp.66 72 22 26 ];
+        %tmp.66 = getv ? :_pet;
+        symbol [ getPaletteName %tmp.67 72 27 41 ];
+        %tmp.67 = getv function %tmp.66 :getPaletteName;
+        symbol [ _pet %tmp.69 72 42 46 ];
+        %tmp.69 = getv ? :_pet;
+        symbol [ getPaletteIdx %tmp.70 72 47 60 ];
+        %tmp.70 = getv function %tmp.69 :getPaletteIdx;
+        %tmp.71 = invoke %tmp.69 %tmp.70();
+        %tmp.72 = invoke %tmp.66 %tmp.67(%tmp.71);
+        lputv %palName.6 %tmp.72;
+        symbol [ palName %palName.6 72 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 73 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop" ]
+        %accName.7 = local;
+        symbol [ accName %accName.7 73 12 19 ];
+        symbol [ _pet %tmp.74 73 22 26 ];
+        %tmp.74 = getv ? :_pet;
+        symbol [ getAccessoryName %tmp.75 73 27 43 ];
+        %tmp.75 = getv function %tmp.74 :getAccessoryName;
+        symbol [ _pet %tmp.77 73 44 48 ];
+        %tmp.77 = getv ? :_pet;
+        symbol [ getAccessory %tmp.78 73 49 61 ];
+        %tmp.78 = getv function %tmp.77 :getAccessory;
+        %tmp.79 = invoke %tmp.77 %tmp.78();
+        %tmp.80 = invoke %tmp.74 %tmp.75(%tmp.79);
+        lputv %accName.7 %tmp.80;
+        symbol [ accName %accName.7 73 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 74 8 ]
+        %tmp.81 = self;
+        symbol [ _drawRow %tmp.82 74 8 16 ];
+        %tmp.82 = getv function %tmp.81 :_drawRow;
+        %tmp.83 = lgetv %dc;
+        symbol [ dc %tmp.83 74 17 19 ];
+        %tmp.84 = lgetv %w.1;
+        symbol [ w %tmp.84 74 21 22 ];
+        %tmp.85 = lgetv %h.2;
+        symbol [ h %tmp.85 74 24 25 ];
+        %tmp.86 = 70;
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = 100;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        %tmp.90 = "Palette";
+        %tmp.91 = lgetv %palName.6;
+        symbol [ palName %tmp.91 74 51 58 ];
+        symbol [ _row %tmp.93 74 60 64 ];
+        %tmp.93 = getv ? :_row;
+        %tmp.94 = 0;
+        %tmp.95 = eq %tmp.93 %tmp.94;
+        invoke %tmp.81 %tmp.82(%tmp.83, %tmp.84, %tmp.89, %tmp.90, %tmp.91, %tmp.95);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 75 8 ]
+        %tmp.96 = self;
+        symbol [ _drawRow %tmp.97 75 8 16 ];
+        %tmp.97 = getv function %tmp.96 :_drawRow;
+        %tmp.98 = lgetv %dc;
+        symbol [ dc %tmp.98 75 17 19 ];
+        %tmp.99 = lgetv %w.1;
+        symbol [ w %tmp.99 75 21 22 ];
+        %tmp.100 = lgetv %h.2;
+        symbol [ h %tmp.100 75 24 25 ];
+        %tmp.101 = 82;
+        %tmp.102 = mul %tmp.100 %tmp.101;
+        %tmp.103 = 100;
+        %tmp.104 = div %tmp.102 %tmp.103;
+        %tmp.105 = "Accessory";
+        %tmp.106 = lgetv %accName.7;
+        symbol [ accName %tmp.106 75 51 58 ];
+        symbol [ _row %tmp.108 75 60 64 ];
+        %tmp.108 = getv ? :_row;
+        %tmp.109 = 1;
+        %tmp.110 = eq %tmp.108 %tmp.109;
+        invoke %tmp.96 %tmp.97(%tmp.98, %tmp.99, %tmp.104, %tmp.105, %tmp.106, %tmp.110);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 78 8 ]
+        %tmp.111 = lgetv %dc;
+        symbol [ dc %tmp.111 78 8 10 ];
+        symbol [ setColor %tmp.112 78 11 19 ];
+        %tmp.112 = getv function %tmp.111 :setColor;
+        %tmp.113 = 0x556677;
+        symbol [ Graphics %tmp.114 78 30 38 ];
+        %tmp.114 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.115 78 39 56 ];
+        %tmp.115 = getv %tmp.114 :COLOR_TRANSPARENT;
+        invoke %tmp.111 %tmp.112(%tmp.113, %tmp.115);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 79 8 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 79 8 10 ];
+        symbol [ drawText %tmp.117 79 11 19 ];
+        %tmp.117 = getv function %tmp.116 :drawText;
+        %tmp.118 = lgetv %cx.3;
+        symbol [ cx %tmp.118 79 20 22 ];
+        %tmp.119 = lgetv %h.2;
+        symbol [ h %tmp.119 79 24 25 ];
+        %tmp.120 = 93;
+        %tmp.121 = mul %tmp.119 %tmp.120;
+        %tmp.122 = 100;
+        %tmp.123 = div %tmp.121 %tmp.122;
+        symbol [ Graphics %tmp.124 79 38 46 ];
+        %tmp.124 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.125 79 47 57 ];
+        %tmp.125 = getv %tmp.124 :FONT_XTINY;
+        %tmp.126 = "UP/DN change · SEL switch";
+        symbol [ Graphics %tmp.127 80 49 57 ];
+        %tmp.127 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.128 80 58 77 ];
+        %tmp.128 = getv %tmp.127 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.116 %tmp.117(%tmp.118, %tmp.123, %tmp.125, %tmp.126, %tmp.128);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_53_26_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 83; @symbol_functiondef = [_drawRow,83,20,28]; @symbol_param<0> = [dc,83,29,31]; @symbol_param<1> = [w,83,33,34]; @symbol_param<2> = [y,83,36,37]; @symbol_param<3> = [label,83,39,44]; @symbol_param<4> = [value,83,46,51]; @symbol_param<5> = [selected,83,53,61]; ]
+    protected
+    function _drawRow(dc, w, y, label, value, selected) {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_83_63_97_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_83_63_97_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_83_63_97_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 84 12 14 ];
+        %tmp.1 = lgetv %w;
+        symbol [ w %tmp.1 84 17 18 ];
+        %tmp.2 = 2;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 84 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_8_94_8_if_stmt:
+        %tmp.4 = lgetv %selected;
+        symbol [ selected %tmp.4 85 12 20 ];
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_8_94_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_8_94_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 87 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_stop" ]
+        %bw.2 = local;
+        symbol [ bw %bw.2 87 16 18 ];
+        %tmp.5 = lgetv %w;
+        symbol [ w %tmp.5 87 21 22 ];
+        %tmp.6 = 72;
+        %tmp.7 = mul %tmp.5 %tmp.6;
+        %tmp.8 = 100;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        lputv %bw.2 %tmp.9;
+        symbol [ bw %bw.2 87 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 88 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_stop" ]
+        %bx.3 = local;
+        symbol [ bx %bx.3 88 16 18 ];
+        %tmp.10 = lgetv %w;
+        symbol [ w %tmp.10 88 22 23 ];
+        %tmp.11 = lgetv %bw.2;
+        symbol [ bw %tmp.11 88 26 28 ];
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        %tmp.13 = 2;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        lputv %bx.3 %tmp.14;
+        symbol [ bx %bx.3 88 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 89 12 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 89 12 14 ];
+        symbol [ setColor %tmp.16 89 15 23 ];
+        %tmp.16 = getv function %tmp.15 :setColor;
+        %tmp.17 = 0x1A2A4A;
+        %tmp.18 = 0x1A2A4A;
+        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 90 12 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 90 12 14 ];
+        symbol [ fillRectangle %tmp.20 90 15 28 ];
+        %tmp.20 = getv function %tmp.19 :fillRectangle;
+        %tmp.21 = lgetv %bx.3;
+        symbol [ bx %tmp.21 90 29 31 ];
+        %tmp.22 = lgetv %y;
+        symbol [ y %tmp.22 90 33 34 ];
+        %tmp.23 = 1;
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %bw.2;
+        symbol [ bw %tmp.25 90 40 42 ];
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 90 44 46 ];
+        symbol [ getFontHeight %tmp.27 90 47 60 ];
+        %tmp.27 = getv function %tmp.26 :getFontHeight;
+        symbol [ Graphics %tmp.28 90 61 69 ];
+        %tmp.28 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.29 90 70 79 ];
+        %tmp.29 = getv %tmp.28 :FONT_TINY;
+        %tmp.30 = invoke %tmp.26 %tmp.27(%tmp.29);
+        %tmp.31 = 2;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.24, %tmp.25, %tmp.32);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 91 12 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 91 12 14 ];
+        symbol [ setColor %tmp.34 91 15 23 ];
+        %tmp.34 = getv function %tmp.33 :setColor;
+        %tmp.35 = 0x66CCFF;
+        symbol [ Graphics %tmp.36 91 34 42 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.37 91 43 60 ];
+        %tmp.37 = getv %tmp.36 :COLOR_TRANSPARENT;
+        invoke %tmp.33 %tmp.34(%tmp.35, %tmp.37);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 92 12 ]
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 92 12 14 ];
+        symbol [ drawText %tmp.39 92 15 23 ];
+        %tmp.39 = getv function %tmp.38 :drawText;
+        %tmp.40 = lgetv %bx.3;
+        symbol [ bx %tmp.40 92 24 26 ];
+        %tmp.41 = 8;
+        %tmp.42 = add %tmp.40 %tmp.41;
+        %tmp.43 = lgetv %y;
+        symbol [ y %tmp.43 92 32 33 ];
+        symbol [ Graphics %tmp.44 92 35 43 ];
+        %tmp.44 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.45 92 44 53 ];
+        %tmp.45 = getv %tmp.44 :FONT_TINY;
+        %tmp.46 = "<";
+        symbol [ Graphics %tmp.47 92 60 68 ];
+        %tmp.47 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.48 92 69 86 ];
+        %tmp.48 = getv %tmp.47 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.38 %tmp.39(%tmp.42, %tmp.43, %tmp.45, %tmp.46, %tmp.48);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 93 12 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 93 12 14 ];
+        symbol [ drawText %tmp.50 93 15 23 ];
+        %tmp.50 = getv function %tmp.49 :drawText;
+        %tmp.51 = lgetv %bx.3;
+        symbol [ bx %tmp.51 93 24 26 ];
+        %tmp.52 = lgetv %bw.2;
+        symbol [ bw %tmp.52 93 29 31 ];
+        %tmp.53 = add %tmp.51 %tmp.52;
+        %tmp.54 = 8;
+        %tmp.55 = sub %tmp.53 %tmp.54;
+        %tmp.56 = lgetv %y;
+        symbol [ y %tmp.56 93 37 38 ];
+        symbol [ Graphics %tmp.57 93 40 48 ];
+        %tmp.57 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.58 93 49 58 ];
+        %tmp.58 = getv %tmp.57 :FONT_TINY;
+        %tmp.59 = ">";
+        symbol [ Graphics %tmp.60 93 65 73 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.61 93 74 92 ];
+        %tmp.61 = getv %tmp.60 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.49 %tmp.50(%tmp.55, %tmp.56, %tmp.58, %tmp.59, %tmp.61);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_22_94_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_8_94_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_85_8_94_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 95 8 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 95 8 10 ];
+        symbol [ setColor %tmp.63 95 11 19 ];
+        %tmp.63 = getv function %tmp.62 :setColor;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_begin:
+        %tmp.64 = lgetv %selected;
+        symbol [ selected %tmp.64 95 20 28 ];
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_true:
+        %tmp.65 = 0xFFFFFF;
+        push %tmp.65;
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_else_false:
+        %tmp.66 = 0x8899AA;
+        push %tmp.66;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_end:
+        %tmp.67 = phi [%tmp.64 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_begin] [%tmp.65 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_true] [%tmp.66 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_else_false] [%tmp.67 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_95_20_95_42_end];
+        symbol [ Graphics %tmp.68 95 52 60 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.69 95 61 78 ];
+        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
+        invoke %tmp.62 %tmp.63(%tmp.67, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 96 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 96 8 10 ];
+        symbol [ drawText %tmp.71 96 11 19 ];
+        %tmp.71 = getv function %tmp.70 :drawText;
+        %tmp.72 = lgetv %cx.1;
+        symbol [ cx %tmp.72 96 20 22 ];
+        %tmp.73 = lgetv %y;
+        symbol [ y %tmp.73 96 24 25 ];
+        symbol [ Graphics %tmp.74 96 27 35 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.75 96 36 45 ];
+        %tmp.75 = getv %tmp.74 :FONT_TINY;
+        %tmp.76 = lgetv %label;
+        symbol [ label %tmp.76 96 47 52 ];
+        %tmp.77 = ": ";
+        %tmp.78 = add %tmp.76 %tmp.77;
+        %tmp.79 = lgetv %value;
+        symbol [ value %tmp.79 96 62 67 ];
+        %tmp.80 = add %tmp.78 %tmp.79;
+        symbol [ Graphics %tmp.81 96 69 77 ];
+        %tmp.81 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.82 96 78 97 ];
+        %tmp.82 = getv %tmp.81 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.70 %tmp.71(%tmp.72, %tmp.73, %tmp.75, %tmp.80, %tmp.82);
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_83_63_97_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 100; @symbol_classdef = [StyleDelegate,100,6,19]; @symbol_extends<0> = [WatchUi,100,28,35]; @symbol_extends<1> = [BehaviorDelegate,100,36,52]; ]
+class StyleDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 100; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 100; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 101; @position = 15; @symbol_vardef = [_view,101,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 103; @symbol_functiondef = [initialize,103,13,23]; @symbol_param<0> = [view,103,24,28]; ]
+    function initialize(view) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_103_30_106_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 104 8 ]
+        symbol [ BehaviorDelegate %tmp.2 104 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 104 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 105 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 105 16 20 ];
+        symbol [ _view ? 105 8 13 ];
+        putv self :_view %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_103_30_106_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 108; @symbol_functiondef = [onPreviousPage,108,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_108_30_108_68_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 108 32 ]
+        symbol [ _view %tmp.2 108 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ changeValue %tmp.3 108 38 49 ];
+        %tmp.3 = getv function %tmp.2 :changeValue;
+        %tmp.4 = -1;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 108 55 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_108_30_108_68_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 109; @symbol_functiondef = [onNextPage,109,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_109_30_109_68_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 109 32 ]
+        symbol [ _view %tmp.2 109 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ changeValue %tmp.3 109 38 49 ];
+        %tmp.3 = getv function %tmp.2 :changeValue;
+        %tmp.4 = 1;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 109 55 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_109_30_109_68_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 110; @symbol_functiondef = [onSelect,110,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_110_30_110_68_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 110 32 ]
+        symbol [ _view %tmp.2 110 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ switchRow %tmp.3 110 38 47 ];
+        %tmp.3 = getv function %tmp.2 :switchRow;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 110 55 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_110_30_110_68_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 111; @symbol_functiondef = [onMenu,111,13,19]; ]
+    function onMenu() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_111_30_111_68_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 111 32 ]
+        symbol [ _view %tmp.2 111 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ switchRow %tmp.3 111 38 47 ];
+        %tmp.3 = getv function %tmp.2 :switchRow;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 111 55 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_111_30_111_68_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 113; @symbol_functiondef = [onKey,113,13,18]; @symbol_param<0> = [evt,113,19,22]; ]
+    function onKey(evt) {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_113_24_120_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 114 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_113_24_120_4_start" "_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_113_24_120_4_stop" ]
+        %k.1 = local;
+        symbol [ k %k.1 114 12 13 ];
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 114 16 19 ];
+        symbol [ getKey %tmp.2 114 20 26 ];
+        %tmp.2 = getv function %tmp.1 :getKey;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %k.1 %tmp.3;
+        symbol [ k %k.1 114 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 115 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_8_115_74_if_stmt:
+        %tmp.4 = lgetv %k.1;
+        symbol [ k %tmp.4 115 12 13 ];
+        symbol [ WatchUi %tmp.5 115 17 24 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.6 115 25 31 ];
+        %tmp.6 = getv %tmp.5 :KEY_UP;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_8_115_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_8_115_74_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_36_115_74_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 115 38 ]
+        symbol [ _view %tmp.9 115 38 43 ];
+        %tmp.9 = getv ? :_view;
+        symbol [ changeValue %tmp.10 115 44 55 ];
+        %tmp.10 = getv function %tmp.9 :changeValue;
+        %tmp.11 = -1;
+        invoke %tmp.9 %tmp.10(%tmp.11);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 115 61 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_36_115_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_8_115_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_115_8_115_74_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 116 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_8_116_74_if_stmt:
+        %tmp.13 = lgetv %k.1;
+        symbol [ k %tmp.13 116 12 13 ];
+        symbol [ WatchUi %tmp.14 116 17 24 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.15 116 25 33 ];
+        %tmp.15 = getv %tmp.14 :KEY_DOWN;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_8_116_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_8_116_74_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_36_116_74_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 116 38 ]
+        symbol [ _view %tmp.18 116 38 43 ];
+        %tmp.18 = getv ? :_view;
+        symbol [ changeValue %tmp.19 116 44 55 ];
+        %tmp.19 = getv function %tmp.18 :changeValue;
+        %tmp.20 = 1;
+        invoke %tmp.18 %tmp.19(%tmp.20);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 116 61 ]
+        %tmp.21 = true;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_36_116_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_8_116_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_116_8_116_74_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_8_117_74_if_stmt:
+        %tmp.22 = lgetv %k.1;
+        symbol [ k %tmp.22 117 12 13 ];
+        symbol [ WatchUi %tmp.23 117 17 24 ];
+        %tmp.23 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ENTER %tmp.24 117 25 34 ];
+        %tmp.24 = getv %tmp.23 :KEY_ENTER;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_8_117_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_8_117_74_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_36_117_74_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 117 38 ]
+        symbol [ _view %tmp.27 117 38 43 ];
+        %tmp.27 = getv ? :_view;
+        symbol [ switchRow %tmp.28 117 44 53 ];
+        %tmp.28 = getv function %tmp.27 :switchRow;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 117 61 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_36_117_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_8_117_74_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_117_8_117_74_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_8_118_88_if_stmt:
+        %tmp.30 = lgetv %k.1;
+        symbol [ k %tmp.30 118 12 13 ];
+        symbol [ WatchUi %tmp.31 118 17 24 ];
+        %tmp.31 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.32 118 25 32 ];
+        %tmp.32 = getv %tmp.31 :KEY_ESC;
+        %tmp.33 = eq %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_8_118_88_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_8_118_88_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_36_118_88_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 118 38 ]
+        symbol [ WatchUi %tmp.34 118 38 45 ];
+        %tmp.34 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.35 118 46 53 ];
+        %tmp.35 = getv function %tmp.34 :popView;
+        symbol [ WatchUi %tmp.36 118 54 61 ];
+        %tmp.36 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.37 118 62 72 ];
+        %tmp.37 = getv %tmp.36 :SLIDE_DOWN;
+        invoke %tmp.34 %tmp.35(%tmp.37);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 118 75 ]
+        %tmp.38 = true;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_36_118_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_8_118_88_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_118_8_118_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 119 8 ]
+        %tmp.39 = false;
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_113_24_120_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 122; @symbol_functiondef = [onBack,122,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_122_22_125_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 123 8 ]
+        symbol [ WatchUi %tmp.1 123 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 123 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 123 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.4 123 32 42 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc" 124 8 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_StyleView_mc_122_22_125_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/StyleView.mc"; @line = 1; ]
+<init> {
+}

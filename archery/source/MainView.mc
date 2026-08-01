@@ -19,11 +19,26 @@ class MainView extends WatchUi.View {
 
     var ctrl;
     hidden var _timer;
+    hidden var _started;   // auto-start a tournament on first frame
+    hidden var _skipStart; // resume in progress — don't clobber it with a fresh tournament
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
+        _started = false;
+        _skipStart = false;
+    }
+
+    function loadResume(data) as Void {
+        if (data != null && ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return ctrl.exportSave();
     }
 
     function onShow() {
@@ -55,7 +70,10 @@ class MainView extends WatchUi.View {
         ctrl.syncDims(dc.getWidth(), dc.getHeight());
         // Menu lives in the shared root view — drop straight into a tournament
         // and never render an in-game menu here.
-        if (ctrl.state == AR_MENU) { ctrl.beginGame(); }
+        if (!_started || ctrl.state == AR_MENU) {
+            if (!_skipStart) { ctrl.beginGame(); }
+            _started = true;
+        }
         UIManager.draw(dc, ctrl);
     }
 

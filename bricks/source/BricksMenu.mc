@@ -9,7 +9,16 @@ using Toybox.Lang;
 class BricksHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("bricks"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiBricksView();
+        v.loadResume(SaveResume.load("bricks"));
+        WatchUi.pushView(v, new BitochiBricksDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("bricks");
         var v = new BitochiBricksView();
         WatchUi.pushView(v, new BitochiBricksDelegate(v), WatchUi.SLIDE_LEFT);
     }

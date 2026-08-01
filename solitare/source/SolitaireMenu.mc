@@ -9,7 +9,16 @@ using Toybox.Lang;
 class SolitaireHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("solitaire"); }
+
+    function resumeGame() as Void {
+        var v = new SolitaireView();
+        v.loadResume(SaveResume.load("solitaire"));
+        WatchUi.pushView(v, new SolitaireDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("solitaire");
         var v = new SolitaireView();
         WatchUi.pushView(v, new SolitaireDelegate(v), WatchUi.SLIDE_LEFT);
     }

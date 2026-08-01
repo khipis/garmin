@@ -90,7 +90,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);   // back to the shared menu
-        return true;
+        if (_v.navBack()) { WatchUi.requestUpdate(); return true; }
+        return SaveResume.confirmExit("pongpro", _v.method(:exportSave));
     }
 }

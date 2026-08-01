@@ -13,8 +13,17 @@ using Toybox.Lang;
 class ManpacHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("manpac"); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load("manpac"));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     // START → drop straight into a run.
     function startGame() as Void {
+        SaveResume.clear("manpac");
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

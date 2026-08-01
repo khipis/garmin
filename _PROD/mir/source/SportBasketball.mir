@@ -1,0 +1,1994 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Graphics,14,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Lang,15,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Math,16,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 18; @symbol_classdef = [SportBasketball,18,6,21]; @symbol_extends<0> = [DsSport,18,30,37]; ]
+class SportBasketball extends DsSport {
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 18; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 18; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 20; @position = 8; @symbol_vardef = [phys,20,8,12]; ]
+    var phys;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 21; @position = 8; @symbol_vardef = [ball,21,8,12]; ]
+    var ball;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 22; @position = 8; @symbol_vardef = [hoop,22,8,12]; ]
+    var hoop;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 23; @position = 8; @symbol_vardef = [fx,23,8,10]; ]
+    var fx;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 24; @position = 8; @symbol_vardef = [lx,24,8,10]; ]
+    var lx;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 25; @position = 8; @symbol_vardef = [ly,25,8,10]; ]
+    var ly;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 26; @position = 8; @symbol_vardef = [floorY,26,8,14]; ]
+    var floorY;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 27; @position = 8; @symbol_vardef = [refSpd,27,8,14]; ]
+    var refSpd;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 28; @position = 8; @symbol_vardef = [court,28,8,13]; ]
+    var court;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 29; @position = 8; @symbol_vardef = [skin,29,8,12]; ]
+    var skin;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 30; @position = 8; @symbol_vardef = [sw,30,8,10]; ]
+    var sw;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 31; @position = 8; @symbol_vardef = [sh,31,8,10]; ]
+    var sh;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 32; @position = 8; @symbol_vardef = [trail,32,8,13]; ]
+    var trail;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 33; @position = 8; @symbol_vardef = [frame,33,8,13]; ]
+    var frame;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 34; @position = 8; @symbol_vardef = [wasRim,34,8,14]; ]
+    var wasRim;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 35; @position = 8; @symbol_vardef = [settling,35,8,16]; ]
+    var settling;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 37; @symbol_functiondef = [initialize,37,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_37_26_47_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 38 8 ]
+        symbol [ DsSport %tmp.2 38 8 15 ];
+        %tmp.2 = getv ? :DsSport;
+        symbol [ initialize %tmp.3 38 16 26 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 39 8 ]
+        symbol [ PhysicsEngine %tmp.7 39 19 32 ];
+        %tmp.7 = getv ? :PhysicsEngine;
+        %tmp.4 = newc %tmp.7 ();
+        symbol [ phys ? 39 8 12 ];
+        putv self :phys %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 40 8 ]
+        symbol [ DsBall %tmp.11 40 19 25 ];
+        %tmp.11 = getv ? :DsBall;
+        %tmp.8 = newc %tmp.11 ();
+        symbol [ ball ? 40 8 12 ];
+        putv self :ball %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 41 8 ]
+        symbol [ DsHoop %tmp.15 41 19 25 ];
+        %tmp.15 = getv ? :DsHoop;
+        %tmp.12 = newc %tmp.15 ();
+        symbol [ hoop ? 41 8 12 ];
+        putv self :hoop %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 42 8 ]
+        symbol [ DsFxSys %tmp.19 42 19 26 ];
+        %tmp.19 = getv ? :DsFxSys;
+        %tmp.16 = newc %tmp.19 ();
+        symbol [ fx ? 42 8 10 ];
+        putv self :fx %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 43 8 ]
+        %tmp.20 = 0.0;
+        symbol [ lx ? 43 8 10 ];
+        putv self :lx %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 43 18 ]
+        %tmp.21 = 0.0;
+        symbol [ ly ? 43 18 20 ];
+        putv self :ly %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 43 28 ]
+        %tmp.22 = 0.0;
+        symbol [ floorY ? 43 28 34 ];
+        putv self :floorY %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 43 42 ]
+        %tmp.23 = 400.0;
+        symbol [ refSpd ? 43 42 48 ];
+        putv self :refSpd %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 44 8 ]
+        %tmp.24 = 0;
+        symbol [ court ? 44 8 13 ];
+        putv self :court %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 44 19 ]
+        %tmp.25 = 0;
+        symbol [ skin ? 44 19 23 ];
+        putv self :skin %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 44 29 ]
+        %tmp.26 = 240;
+        symbol [ sw ? 44 29 31 ];
+        putv self :sw %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 44 39 ]
+        %tmp.27 = 240;
+        symbol [ sh ? 44 39 41 ];
+        putv self :sh %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 45 8 ]
+        %tmp.28 = newa 0;
+        symbol [ trail ? 45 8 13 ];
+        putv self :trail %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 46 8 ]
+        %tmp.29 = 0;
+        symbol [ frame ? 46 8 13 ];
+        putv self :frame %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 46 19 ]
+        %tmp.30 = false;
+        symbol [ wasRim ? 46 19 25 ];
+        putv self :wasRim %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 46 35 ]
+        %tmp.31 = false;
+        symbol [ settling ? 46 35 43 ];
+        putv self :settling %tmp.31;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_37_26_47_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 49; @symbol_functiondef = [id,49,13,15]; @symbol_return<0> = [Lang,49,29,33]; @symbol_return<1> = [String,49,34,40]; ]
+    function id() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_49_41_49_64_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 49 43 ]
+        %tmp.1 = "basketball";
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_49_41_49_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 50; @symbol_functiondef = [name,50,13,17]; @symbol_return<0> = [Lang,50,29,33]; @symbol_return<1> = [String,50,34,40]; ]
+    function name() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_50_41_50_64_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 50 43 ]
+        %tmp.1 = "BASKETBALL";
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_50_41_50_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 51; @symbol_functiondef = [actionWord,51,13,23]; @symbol_return<0> = [Lang,51,29,33]; @symbol_return<1> = [String,51,34,40]; ]
+    function actionWord() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_51_41_51_59_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 51 43 ]
+        %tmp.1 = "SHOOT";
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_51_41_51_59_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 53; @symbol_functiondef = [outcomeText,53,13,24]; @symbol_param<0> = [outcome,53,25,32]; @symbol_param<0>_type<0> = [Lang,53,36,40]; @symbol_param<0>_type<1> = [Number,53,41,47]; @symbol_return<0> = [Lang,53,52,56]; @symbol_return<1> = [String,53,57,63]; ]
+    function outcomeText(outcome as Lang.Number) as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_53_64_58_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_8_54_56_if_stmt:
+        %tmp.1 = lgetv %outcome;
+        symbol [ outcome %tmp.1 54 12 19 ];
+        symbol [ DS_OUT_SWISH %tmp.3 54 23 35 ];
+        %tmp.3 = getv ? :DS_OUT_SWISH;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_8_54_56_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_37_54_56_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 54 39 ]
+        %tmp.5 = "SWISH!";
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_37_54_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_54_8_54_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_8_55_63_if_stmt:
+        %tmp.6 = lgetv %outcome;
+        symbol [ outcome %tmp.6 55 12 19 ];
+        symbol [ DS_OUT_BANK %tmp.8 55 23 34 ];
+        %tmp.8 = getv ? :DS_OUT_BANK;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_8_55_63_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_8_55_63_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_37_55_63_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 55 39 ]
+        %tmp.10 = "OFF THE GLASS";
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_37_55_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_8_55_63_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_55_8_55_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_8_56_64_if_stmt:
+        %tmp.11 = lgetv %outcome;
+        symbol [ outcome %tmp.11 56 12 19 ];
+        symbol [ DS_OUT_RIM %tmp.13 56 23 33 ];
+        %tmp.13 = getv ? :DS_OUT_RIM;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_8_56_64_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_8_56_64_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_37_56_64_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 56 39 ]
+        %tmp.15 = "IN OFF THE RIM";
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_37_56_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_8_56_64_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_56_8_56_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 57 8 ]
+        %tmp.16 = "MISS";
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_53_64_58_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 60; @symbol_functiondef = [bgColor,60,13,20]; @symbol_return<0> = [Lang,60,26,30]; @symbol_return<1> = [Number,60,31,37]; ]
+    function bgColor() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_60_38_60_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 60 40 ]
+        symbol [ DS_BG %tmp.2 60 47 52 ];
+        %tmp.2 = getv ? :DS_BG;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_60_38_60_54_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 63; @symbol_functiondef = [layout,63,13,19]; @symbol_param<0> = [eng,63,20,23]; @symbol_param<1> = [w,63,25,26]; @symbol_param<1>_type<0> = [Lang,63,30,34]; @symbol_param<1>_type<1> = [Number,63,35,41]; @symbol_param<2> = [h,63,43,44]; @symbol_param<2>_type<0> = [Lang,63,48,52]; @symbol_param<2>_type<1> = [Number,63,53,59]; ]
+    function layout(eng, w as Lang.Number, h as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_63_69_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 64 8 ]
+        %tmp.1 = lgetv %w;
+        symbol [ w %tmp.1 64 13 14 ];
+        symbol [ sw ? 64 8 10 ];
+        putv self :sw %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 64 16 ]
+        %tmp.2 = lgetv %h;
+        symbol [ h %tmp.2 64 21 22 ];
+        symbol [ sh ? 64 16 18 ];
+        putv self :sh %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 65 8 ]
+        symbol [ ProgressionManager %tmp.4 65 16 34 ];
+        %tmp.4 = getv ? :ProgressionManager;
+        symbol [ courtIndex %tmp.5 65 35 45 ];
+        %tmp.5 = getv function %tmp.4 :courtIndex;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ court ? 65 8 13 ];
+        putv self :court %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 66 8 ]
+        symbol [ ProgressionManager %tmp.8 66 16 34 ];
+        %tmp.8 = getv ? :ProgressionManager;
+        symbol [ ballIndex %tmp.9 66 35 44 ];
+        %tmp.9 = getv function %tmp.8 :ballIndex;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        symbol [ skin ? 66 8 12 ];
+        putv self :skin %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 68 8 ]
+        %tmp.11 = lgetv %h;
+        symbol [ h %tmp.11 68 17 18 ];
+        %tmp.12 = 0.855;
+        %tmp.13 = mul %tmp.11 %tmp.12;
+        symbol [ floorY ? 68 8 14 ];
+        putv self :floorY %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 69 8 ]
+        %tmp.14 = lgetv %w;
+        symbol [ w %tmp.14 69 17 18 ];
+        %tmp.15 = 0.20;
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        symbol [ lx ? 69 8 10 ];
+        putv self :lx %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 70 8 ]
+        symbol [ floorY %tmp.18 70 17 23 ];
+        %tmp.18 = getv ? :floorY;
+        %tmp.19 = lgetv %h;
+        symbol [ h %tmp.19 70 26 27 ];
+        %tmp.20 = 0.30;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = sub %tmp.18 %tmp.21;
+        symbol [ ly ? 70 8 10 ];
+        putv self :ly %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_63_69_84_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_63_69_84_4_stop" ]
+        %ch.1 = local;
+        symbol [ ch %ch.1 72 12 14 ];
+        %tmp.23 = lgetv %eng;
+        symbol [ eng %tmp.23 72 17 20 ];
+        symbol [ ch %tmp.24 72 21 23 ];
+        %tmp.24 = getv %tmp.23 :ch;
+        lputv %ch.1 %tmp.24;
+        symbol [ ch %ch.1 72 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 73 8 ]
+        symbol [ hoop %tmp.25 73 8 12 ];
+        %tmp.25 = getv self :hoop;
+        %tmp.26 = lgetv %w;
+        symbol [ w %tmp.26 73 22 23 ];
+        %tmp.27 = lgetv %ch.1;
+        symbol [ ch %tmp.27 73 26 28 ];
+        symbol [ dist %tmp.28 73 29 33 ];
+        %tmp.28 = getv %tmp.27 :dist;
+        %tmp.29 = mul %tmp.26 %tmp.28;
+        symbol [ baseX ? 73 13 18 ];
+        putv %tmp.25 :baseX %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 74 8 ]
+        symbol [ hoop %tmp.30 74 8 12 ];
+        %tmp.30 = getv self :hoop;
+        symbol [ hoop %tmp.32 74 22 26 ];
+        %tmp.32 = getv ? :hoop;
+        symbol [ baseX %tmp.33 74 27 32 ];
+        %tmp.33 = getv %tmp.32 :baseX;
+        symbol [ x ? 74 13 14 ];
+        putv %tmp.30 :x %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 75 8 ]
+        symbol [ hoop %tmp.34 75 8 12 ];
+        %tmp.34 = getv self :hoop;
+        symbol [ floorY %tmp.36 75 22 28 ];
+        %tmp.36 = getv ? :floorY;
+        %tmp.37 = lgetv %h;
+        symbol [ h %tmp.37 75 31 32 ];
+        %tmp.38 = lgetv %ch.1;
+        symbol [ ch %tmp.38 75 35 37 ];
+        symbol [ height %tmp.39 75 38 44 ];
+        %tmp.39 = getv %tmp.38 :height;
+        %tmp.40 = mul %tmp.37 %tmp.39;
+        %tmp.41 = sub %tmp.36 %tmp.40;
+        symbol [ y ? 75 13 14 ];
+        putv %tmp.34 :y %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 76 8 ]
+        symbol [ hoop %tmp.42 76 8 12 ];
+        %tmp.42 = getv self :hoop;
+        %tmp.43 = lgetv %w;
+        symbol [ w %tmp.43 76 22 23 ];
+        %tmp.44 = 0.155;
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        symbol [ w ? 76 13 14 ];
+        putv %tmp.42 :w %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 77 8 ]
+        symbol [ hoop %tmp.46 77 8 12 ];
+        %tmp.46 = getv self :hoop;
+        %tmp.47 = lgetv %w;
+        symbol [ w %tmp.47 77 22 23 ];
+        %tmp.48 = lgetv %ch.1;
+        symbol [ ch %tmp.48 77 26 28 ];
+        symbol [ sway %tmp.49 77 29 33 ];
+        %tmp.49 = getv %tmp.48 :sway;
+        %tmp.50 = mul %tmp.47 %tmp.49;
+        symbol [ sway ? 77 13 17 ];
+        putv %tmp.46 :sway %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 78 8 ]
+        symbol [ hoop %tmp.51 78 8 12 ];
+        %tmp.51 = getv self :hoop;
+        %tmp.52 = false;
+        symbol [ frozen ? 78 13 19 ];
+        putv %tmp.51 :frozen %tmp.52;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 80 8 ]
+        symbol [ phys %tmp.54 80 8 12 ];
+        %tmp.54 = getv ? :phys;
+        symbol [ configure %tmp.55 80 13 22 ];
+        %tmp.55 = getv function %tmp.54 :configure;
+        %tmp.56 = lgetv %w;
+        symbol [ w %tmp.56 80 23 24 ];
+        %tmp.57 = lgetv %h;
+        symbol [ h %tmp.57 80 26 27 ];
+        symbol [ floorY %tmp.59 80 29 35 ];
+        %tmp.59 = getv ? :floorY;
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57, %tmp.59);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 81 8 ]
+        symbol [ phys %tmp.61 81 17 21 ];
+        %tmp.61 = getv ? :phys;
+        symbol [ refSpeed %tmp.62 81 22 30 ];
+        %tmp.62 = getv function %tmp.61 :refSpeed;
+        symbol [ lx %tmp.64 81 31 33 ];
+        %tmp.64 = getv ? :lx;
+        symbol [ ly %tmp.66 81 35 37 ];
+        %tmp.66 = getv ? :ly;
+        symbol [ hoop %tmp.68 81 39 43 ];
+        %tmp.68 = getv ? :hoop;
+        symbol [ baseX %tmp.69 81 44 49 ];
+        %tmp.69 = getv %tmp.68 :baseX;
+        symbol [ hoop %tmp.71 81 51 55 ];
+        %tmp.71 = getv ? :hoop;
+        symbol [ y %tmp.72 81 56 57 ];
+        %tmp.72 = getv %tmp.71 :y;
+        symbol [ DS_AIM_REF %tmp.74 81 59 69 ];
+        %tmp.74 = getv ? :DS_AIM_REF;
+        %tmp.75 = invoke %tmp.61 %tmp.62(%tmp.64, %tmp.66, %tmp.69, %tmp.72, %tmp.74);
+        symbol [ refSpd ? 81 8 14 ];
+        putv self :refSpd %tmp.75;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 82 8 ]
+        %tmp.76 = newa 0;
+        symbol [ trail ? 82 8 13 ];
+        putv self :trail %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 83 8 ]
+        symbol [ fx %tmp.78 83 8 10 ];
+        %tmp.78 = getv ? :fx;
+        symbol [ reset %tmp.79 83 11 16 ];
+        %tmp.79 = getv function %tmp.78 :reset;
+        invoke %tmp.78 %tmp.79();
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_63_69_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 86; @symbol_functiondef = [beginShot,86,13,22]; @symbol_param<0> = [eng,86,23,26]; ]
+    function beginShot(eng) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_86_36_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 87 8 ]
+        symbol [ ball %tmp.1 87 8 12 ];
+        %tmp.1 = getv self :ball;
+        %tmp.2 = false;
+        symbol [ flying ? 87 13 19 ];
+        putv %tmp.1 :flying %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 88 8 ]
+        symbol [ hoop %tmp.3 88 8 12 ];
+        %tmp.3 = getv self :hoop;
+        %tmp.4 = false;
+        symbol [ frozen ? 88 13 19 ];
+        putv %tmp.3 :frozen %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 89 8 ]
+        %tmp.5 = false;
+        symbol [ wasRim ? 89 8 14 ];
+        putv self :wasRim %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 90 8 ]
+        %tmp.6 = false;
+        symbol [ settling ? 90 8 16 ];
+        putv self :settling %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 91 8 ]
+        %tmp.7 = newa 0;
+        symbol [ trail ? 91 8 13 ];
+        putv self :trail %tmp.7;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_86_36_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 94; @symbol_functiondef = [updateField,94,13,24]; @symbol_param<0> = [runMs,94,25,30]; @symbol_param<0>_type<0> = [Lang,94,34,38]; @symbol_param<0>_type<1> = [Number,94,39,45]; ]
+    function updateField(runMs as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_94_55_115_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 95 8 ]
+        symbol [ frame %tmp.2 95 17 22 ];
+        %tmp.2 = getv ? :frame;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        %tmp.5 = 100000;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        symbol [ frame ? 95 8 13 ];
+        putv self :frame %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 96 8 ]
+        symbol [ hoop %tmp.8 96 8 12 ];
+        %tmp.8 = getv ? :hoop;
+        symbol [ update %tmp.9 96 13 19 ];
+        %tmp.9 = getv function %tmp.8 :update;
+        %tmp.10 = lgetv %runMs;
+        symbol [ runMs %tmp.10 96 20 25 ];
+        invoke %tmp.8 %tmp.9(%tmp.10);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 97 8 ]
+        symbol [ fx %tmp.12 97 8 10 ];
+        %tmp.12 = getv ? :fx;
+        symbol [ tick %tmp.13 97 11 15 ];
+        %tmp.13 = getv function %tmp.12 :tick;
+        symbol [ DS_TICK_MS %tmp.15 97 16 26 ];
+        %tmp.15 = getv ? :DS_TICK_MS;
+        %tmp.16 = 1000.0;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        symbol [ phys %tmp.19 97 37 41 ];
+        %tmp.19 = getv ? :phys;
+        symbol [ g %tmp.20 97 42 43 ];
+        %tmp.20 = getv %tmp.19 :g;
+        invoke %tmp.12 %tmp.13(%tmp.17, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 102 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_8_114_8_if_stmt:
+        symbol [ settling %tmp.22 102 12 20 ];
+        %tmp.22 = getv ? :settling;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_8_114_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_8_114_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_22_114_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 103 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_22_114_8_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_22_114_8_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 103 16 18 ];
+        symbol [ DS_TICK_MS %tmp.24 103 21 31 ];
+        %tmp.24 = getv ? :DS_TICK_MS;
+        %tmp.25 = 1000.0;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        lputv %dt.1 %tmp.26;
+        symbol [ dt %dt.1 103 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 104 12 ]
+        symbol [ ball %tmp.27 104 12 16 ];
+        %tmp.27 = getv self :ball;
+        symbol [ ball %tmp.29 104 22 26 ];
+        %tmp.29 = getv ? :ball;
+        symbol [ vy %tmp.30 104 27 29 ];
+        %tmp.30 = getv %tmp.29 :vy;
+        symbol [ phys %tmp.32 104 32 36 ];
+        %tmp.32 = getv ? :phys;
+        symbol [ g %tmp.33 104 37 38 ];
+        %tmp.33 = getv %tmp.32 :g;
+        %tmp.34 = lgetv %dt.1;
+        symbol [ dt %tmp.34 104 41 43 ];
+        %tmp.35 = mul %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.30 %tmp.35;
+        symbol [ vy ? 104 17 19 ];
+        putv %tmp.27 :vy %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 105 12 ]
+        symbol [ ball %tmp.37 105 12 16 ];
+        %tmp.37 = getv self :ball;
+        symbol [ ball %tmp.39 105 22 26 ];
+        %tmp.39 = getv ? :ball;
+        symbol [ x %tmp.40 105 27 28 ];
+        %tmp.40 = getv %tmp.39 :x;
+        symbol [ ball %tmp.42 105 31 35 ];
+        %tmp.42 = getv ? :ball;
+        symbol [ vx %tmp.43 105 36 38 ];
+        %tmp.43 = getv %tmp.42 :vx;
+        %tmp.44 = lgetv %dt.1;
+        symbol [ dt %tmp.44 105 41 43 ];
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        %tmp.46 = add %tmp.40 %tmp.45;
+        symbol [ x ? 105 17 18 ];
+        putv %tmp.37 :x %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 106 12 ]
+        symbol [ ball %tmp.47 106 12 16 ];
+        %tmp.47 = getv self :ball;
+        symbol [ ball %tmp.49 106 22 26 ];
+        %tmp.49 = getv ? :ball;
+        symbol [ y %tmp.50 106 27 28 ];
+        %tmp.50 = getv %tmp.49 :y;
+        symbol [ ball %tmp.52 106 31 35 ];
+        %tmp.52 = getv ? :ball;
+        symbol [ vy %tmp.53 106 36 38 ];
+        %tmp.53 = getv %tmp.52 :vy;
+        %tmp.54 = lgetv %dt.1;
+        symbol [ dt %tmp.54 106 41 43 ];
+        %tmp.55 = mul %tmp.53 %tmp.54;
+        %tmp.56 = add %tmp.50 %tmp.55;
+        symbol [ y ? 106 17 18 ];
+        putv %tmp.47 :y %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 107 12 ]
+        symbol [ ball %tmp.57 107 12 16 ];
+        %tmp.57 = getv self :ball;
+        symbol [ ball %tmp.59 107 24 28 ];
+        %tmp.59 = getv ? :ball;
+        symbol [ spin %tmp.60 107 29 33 ];
+        %tmp.60 = getv %tmp.59 :spin;
+        symbol [ ball %tmp.62 107 36 40 ];
+        %tmp.62 = getv ? :ball;
+        symbol [ vx %tmp.63 107 41 43 ];
+        %tmp.63 = getv %tmp.62 :vx;
+        %tmp.64 = lgetv %dt.1;
+        symbol [ dt %tmp.64 107 46 48 ];
+        %tmp.65 = mul %tmp.63 %tmp.64;
+        %tmp.66 = 0.05;
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.60 %tmp.67;
+        symbol [ spin ? 107 17 21 ];
+        putv %tmp.57 :spin %tmp.68;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 108 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_12_113_12_if_stmt:
+        symbol [ ball %tmp.70 108 16 20 ];
+        %tmp.70 = getv ? :ball;
+        symbol [ y %tmp.71 108 21 22 ];
+        %tmp.71 = getv %tmp.70 :y;
+        symbol [ floorY %tmp.73 108 25 31 ];
+        %tmp.73 = getv ? :floorY;
+        symbol [ phys %tmp.75 108 34 38 ];
+        %tmp.75 = getv ? :phys;
+        symbol [ r %tmp.76 108 39 40 ];
+        %tmp.76 = getv %tmp.75 :r;
+        %tmp.77 = sub %tmp.73 %tmp.76;
+        %tmp.78 = gt %tmp.71 %tmp.77;
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_12_113_12_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_42_113_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 109 16 ]
+        symbol [ ball %tmp.79 109 16 20 ];
+        %tmp.79 = getv self :ball;
+        symbol [ floorY %tmp.81 109 26 32 ];
+        %tmp.81 = getv ? :floorY;
+        symbol [ phys %tmp.83 109 35 39 ];
+        %tmp.83 = getv ? :phys;
+        symbol [ r %tmp.84 109 40 41 ];
+        %tmp.84 = getv %tmp.83 :r;
+        %tmp.85 = sub %tmp.81 %tmp.84;
+        symbol [ y ? 109 21 22 ];
+        putv %tmp.79 :y %tmp.85;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 110 16 ]
+        symbol [ ball %tmp.86 110 16 20 ];
+        %tmp.86 = getv self :ball;
+        symbol [ ball %tmp.88 110 27 31 ];
+        %tmp.88 = getv ? :ball;
+        symbol [ vy %tmp.89 110 32 34 ];
+        %tmp.89 = getv %tmp.88 :vy;
+        %tmp.90 = sub 0 %tmp.89;
+        %tmp.91 = 0.35;
+        %tmp.92 = mul %tmp.90 %tmp.91;
+        symbol [ vy ? 110 21 23 ];
+        putv %tmp.86 :vy %tmp.92;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 111 16 ]
+        symbol [ ball %tmp.93 111 16 20 ];
+        %tmp.93 = getv self :ball;
+        symbol [ ball %tmp.95 111 26 30 ];
+        %tmp.95 = getv ? :ball;
+        symbol [ vx %tmp.96 111 31 33 ];
+        %tmp.96 = getv %tmp.95 :vx;
+        %tmp.97 = 0.7;
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        symbol [ vx ? 111 21 23 ];
+        putv %tmp.93 :vx %tmp.98;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 112 16 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_16_112_57_if_stmt:
+        symbol [ ball %tmp.100 112 20 24 ];
+        %tmp.100 = getv ? :ball;
+        symbol [ vy %tmp.101 112 25 27 ];
+        %tmp.101 = getv %tmp.100 :vy;
+        %tmp.102 = -20.0;
+        %tmp.103 = gt %tmp.101 %tmp.102;
+        bf %tmp.103 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_16_112_57_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_16_112_57_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_37_112_57_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 112 39 ]
+        %tmp.104 = false;
+        symbol [ settling ? 112 39 47 ];
+        putv self :settling %tmp.104;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_37_112_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_16_112_57_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_112_16_112_57_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_42_113_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_108_12_113_12_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_22_114_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_8_114_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_102_8_114_8_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_94_55_115_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 117; @symbol_functiondef = [powerToSpeed,117,13,25]; @symbol_param<0> = [meter,117,26,31]; @symbol_param<0>_type<0> = [Lang,117,35,39]; @symbol_param<0>_type<1> = [Float,117,40,45]; @symbol_return<0> = [Lang,117,50,54]; @symbol_return<1> = [Float,117,55,60]; ]
+    function powerToSpeed(meter as Lang.Float) as Lang.Float {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_117_61_119_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 118 8 ]
+        symbol [ refSpd %tmp.2 118 15 21 ];
+        %tmp.2 = getv ? :refSpd;
+        symbol [ DS_PWR_LO %tmp.4 118 25 34 ];
+        %tmp.4 = getv ? :DS_PWR_LO;
+        %tmp.5 = lgetv %meter;
+        symbol [ meter %tmp.5 118 37 42 ];
+        symbol [ DS_PWR_HI %tmp.7 118 46 55 ];
+        %tmp.7 = getv ? :DS_PWR_HI;
+        symbol [ DS_PWR_LO %tmp.9 118 58 67 ];
+        %tmp.9 = getv ? :DS_PWR_LO;
+        %tmp.10 = sub %tmp.7 %tmp.9;
+        %tmp.11 = mul %tmp.5 %tmp.10;
+        %tmp.12 = add %tmp.4 %tmp.11;
+        %tmp.13 = mul %tmp.2 %tmp.12;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_117_61_119_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 121; @symbol_functiondef = [fire,121,13,17]; @symbol_param<0> = [eng,121,18,21]; @symbol_param<1> = [angle,121,23,28]; @symbol_param<1>_type<0> = [Lang,121,32,36]; @symbol_param<1>_type<1> = [Float,121,37,42]; @symbol_param<2> = [meter,121,44,49]; @symbol_param<2>_type<0> = [Lang,121,53,57]; @symbol_param<2>_type<1> = [Float,121,58,63]; ]
+    function fire(eng, angle as Lang.Float, meter as Lang.Float) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_121_73_126_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 122 8 ]
+        symbol [ hoop %tmp.1 122 8 12 ];
+        %tmp.1 = getv self :hoop;
+        %tmp.2 = true;
+        symbol [ frozen ? 122 13 19 ];
+        putv %tmp.1 :frozen %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 123 8 ]
+        %tmp.3 = newa 0;
+        symbol [ trail ? 123 8 13 ];
+        putv self :trail %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 124 8 ]
+        %tmp.4 = false;
+        symbol [ wasRim ? 124 8 14 ];
+        putv self :wasRim %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 125 8 ]
+        symbol [ phys %tmp.6 125 8 12 ];
+        %tmp.6 = getv ? :phys;
+        symbol [ launch %tmp.7 125 13 19 ];
+        %tmp.7 = getv function %tmp.6 :launch;
+        symbol [ ball %tmp.9 125 20 24 ];
+        %tmp.9 = getv ? :ball;
+        symbol [ lx %tmp.11 125 26 28 ];
+        %tmp.11 = getv ? :lx;
+        symbol [ ly %tmp.13 125 30 32 ];
+        %tmp.13 = getv ? :ly;
+        %tmp.14 = lgetv %angle;
+        symbol [ angle %tmp.14 125 34 39 ];
+        %tmp.15 = self;
+        symbol [ powerToSpeed %tmp.16 125 41 53 ];
+        %tmp.16 = getv function %tmp.15 :powerToSpeed;
+        %tmp.17 = lgetv %meter;
+        symbol [ meter %tmp.17 125 54 59 ];
+        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
+        invoke %tmp.6 %tmp.7(%tmp.9, %tmp.11, %tmp.13, %tmp.14, %tmp.18);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_121_73_126_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 128; @symbol_functiondef = [stepFlight,128,13,23]; @symbol_param<0> = [eng,128,24,27]; @symbol_param<1> = [dt,128,29,31]; @symbol_param<1>_type<0> = [Lang,128,35,39]; @symbol_param<1>_type<1> = [Float,128,40,45]; @symbol_return<0> = [Lang,128,50,54]; @symbol_return<1> = [Number,128,55,61]; ]
+    function stepFlight(eng, dt as Lang.Float) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_128_62_139_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_128_62_139_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_128_62_139_4_stop" ]
+        %out.1 = local;
+        symbol [ out %out.1 129 12 15 ];
+        symbol [ phys %tmp.2 129 18 22 ];
+        %tmp.2 = getv ? :phys;
+        symbol [ step %tmp.3 129 23 27 ];
+        %tmp.3 = getv function %tmp.2 :step;
+        symbol [ ball %tmp.5 129 28 32 ];
+        %tmp.5 = getv ? :ball;
+        %tmp.6 = lgetv %dt;
+        symbol [ dt %tmp.6 129 34 36 ];
+        symbol [ hoop %tmp.8 129 38 42 ];
+        %tmp.8 = getv ? :hoop;
+        %tmp.9 = invoke %tmp.2 %tmp.3(%tmp.5, %tmp.6, %tmp.8);
+        lputv %out.1 %tmp.9;
+        symbol [ out %out.1 129 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 130 8 ]
+        symbol [ trail %tmp.11 130 8 13 ];
+        %tmp.11 = getv ? :trail;
+        symbol [ add %tmp.12 130 14 17 ];
+        %tmp.12 = getv function %tmp.11 :add;
+        %tmp.13 = newa 2;
+        symbol [ ball %tmp.15 130 19 23 ];
+        %tmp.15 = getv ? :ball;
+        symbol [ x %tmp.16 130 24 25 ];
+        %tmp.16 = getv %tmp.15 :x;
+        symbol [ toNumber %tmp.17 130 26 34 ];
+        %tmp.17 = getv function %tmp.16 :toNumber;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = dup %tmp.13;
+        %tmp.20 = aputv %tmp.19 0 %tmp.18;
+        symbol [ ball %tmp.22 130 38 42 ];
+        %tmp.22 = getv ? :ball;
+        symbol [ y %tmp.23 130 43 44 ];
+        %tmp.23 = getv %tmp.22 :y;
+        symbol [ toNumber %tmp.24 130 45 53 ];
+        %tmp.24 = getv function %tmp.23 :toNumber;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        %tmp.26 = dup %tmp.20;
+        %tmp.27 = aputv %tmp.26 1 %tmp.25;
+        invoke %tmp.11 %tmp.12(%tmp.27);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 131 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_8_131_62_if_stmt:
+        symbol [ trail %tmp.29 131 12 17 ];
+        %tmp.29 = getv ? :trail;
+        symbol [ size %tmp.30 131 18 22 ];
+        %tmp.30 = getv function %tmp.29 :size;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = 8;
+        %tmp.33 = gt %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_8_131_62_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_8_131_62_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_30_131_62_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 131 32 ]
+        symbol [ trail %tmp.35 131 40 45 ];
+        %tmp.35 = getv ? :trail;
+        symbol [ slice %tmp.36 131 46 51 ];
+        %tmp.36 = getv function %tmp.35 :slice;
+        %tmp.37 = 1;
+        %tmp.38 = null;
+        %tmp.39 = invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38);
+        symbol [ trail ? 131 32 37 ];
+        putv self :trail %tmp.39;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_30_131_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_8_131_62_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_131_8_131_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 133 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_12_133_28_begin:
+        symbol [ ball %tmp.41 133 12 16 ];
+        %tmp.41 = getv ? :ball;
+        symbol [ hitRim %tmp.42 133 17 23 ];
+        %tmp.42 = getv %tmp.41 :hitRim;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_27_133_28_true:
+        symbol [ wasRim %tmp.44 133 28 34 ];
+        %tmp.44 = getv ? :wasRim;
+        %tmp.45 = not %tmp.44;
+        push %tmp.45;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_27_133_28_end:
+        %tmp.46 = phi [%tmp.42 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_12_133_28_begin] [%tmp.45 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_27_133_28_true] [%tmp.46 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_27_133_28_end];
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_36_137_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 134 12 ]
+        %tmp.47 = true;
+        symbol [ wasRim ? 134 12 18 ];
+        putv self :wasRim %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 135 12 ]
+        symbol [ fx %tmp.49 135 12 14 ];
+        %tmp.49 = getv ? :fx;
+        symbol [ onRimContact %tmp.50 135 15 27 ];
+        %tmp.50 = getv function %tmp.49 :onRimContact;
+        invoke %tmp.49 %tmp.50();
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 136 12 ]
+        symbol [ fx %tmp.52 136 12 14 ];
+        %tmp.52 = getv ? :fx;
+        symbol [ burst %tmp.53 136 15 20 ];
+        %tmp.53 = getv function %tmp.52 :burst;
+        symbol [ ball %tmp.55 136 21 25 ];
+        %tmp.55 = getv ? :ball;
+        symbol [ x %tmp.56 136 26 27 ];
+        %tmp.56 = getv %tmp.55 :x;
+        symbol [ toNumber %tmp.57 136 28 36 ];
+        %tmp.57 = getv function %tmp.56 :toNumber;
+        %tmp.58 = invoke %tmp.56 %tmp.57();
+        symbol [ ball %tmp.60 136 40 44 ];
+        %tmp.60 = getv ? :ball;
+        symbol [ y %tmp.61 136 45 46 ];
+        %tmp.61 = getv %tmp.60 :y;
+        symbol [ toNumber %tmp.62 136 47 55 ];
+        %tmp.62 = getv function %tmp.61 :toNumber;
+        %tmp.63 = invoke %tmp.61 %tmp.62();
+        %tmp.64 = 4;
+        symbol [ DS_P_SPARK %tmp.66 136 62 72 ];
+        %tmp.66 = getv ? :DS_P_SPARK;
+        %tmp.67 = self;
+        symbol [ _sc %tmp.68 136 74 77 ];
+        %tmp.68 = getv function %tmp.67 :_sc;
+        %tmp.69 = invoke %tmp.67 %tmp.68();
+        invoke %tmp.52 %tmp.53(%tmp.58, %tmp.63, %tmp.64, %tmp.66, %tmp.69);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_36_137_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_133_8_137_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 138 8 ]
+        %tmp.70 = lgetv %out.1;
+        symbol [ out %tmp.70 138 15 18 ];
+        ret %tmp.70;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_128_62_139_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 143; @symbol_functiondef = [onResolved,143,13,23]; @symbol_param<0> = [eng,143,24,27]; @symbol_param<1> = [outcome,143,29,36]; @symbol_param<1>_type<0> = [Lang,143,40,44]; @symbol_param<1>_type<1> = [Number,143,45,51]; @symbol_param<2> = [gained,143,53,59]; @symbol_param<2>_type<0> = [Lang,143,63,67]; @symbol_param<2>_type<1> = [Number,143,68,74]; ]
+    function onResolved(eng, outcome as Lang.Number, gained as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 144 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_stop" ]
+        %x.1 = local;
+        symbol [ x %x.1 144 12 13 ];
+        symbol [ ball %tmp.2 144 16 20 ];
+        %tmp.2 = getv ? :ball;
+        symbol [ x %tmp.3 144 21 22 ];
+        %tmp.3 = getv %tmp.2 :x;
+        symbol [ toNumber %tmp.4 144 23 31 ];
+        %tmp.4 = getv function %tmp.3 :toNumber;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %x.1 %tmp.5;
+        symbol [ x %x.1 144 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 145 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_stop" ]
+        %y.2 = local;
+        symbol [ y %y.2 145 12 13 ];
+        symbol [ ball %tmp.7 145 16 20 ];
+        %tmp.7 = getv ? :ball;
+        symbol [ y %tmp.8 145 21 22 ];
+        %tmp.8 = getv %tmp.7 :y;
+        symbol [ toNumber %tmp.9 145 23 31 ];
+        %tmp.9 = getv function %tmp.8 :toNumber;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        lputv %y.2 %tmp.10;
+        symbol [ y %y.2 145 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 146 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_8_149_8_if_stmt:
+        %tmp.11 = lgetv %outcome;
+        symbol [ outcome %tmp.11 146 12 19 ];
+        symbol [ DS_OUT_MISS %tmp.13 146 23 34 ];
+        %tmp.13 = getv ? :DS_OUT_MISS;
+        %tmp.14 = ne %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_8_149_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_8_149_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_36_149_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 147 12 ]
+        symbol [ hoop %tmp.16 147 16 20 ];
+        %tmp.16 = getv ? :hoop;
+        symbol [ x %tmp.17 147 21 22 ];
+        %tmp.17 = getv %tmp.16 :x;
+        symbol [ toNumber %tmp.18 147 23 31 ];
+        %tmp.18 = getv function %tmp.17 :toNumber;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        lputv %x.1 %tmp.19;
+        symbol [ x %x.1 147 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 148 12 ]
+        symbol [ hoop %tmp.21 148 16 20 ];
+        %tmp.21 = getv ? :hoop;
+        symbol [ y %tmp.22 148 21 22 ];
+        %tmp.22 = getv %tmp.21 :y;
+        symbol [ toNumber %tmp.23 148 23 31 ];
+        %tmp.23 = getv function %tmp.22 :toNumber;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        lputv %y.2 %tmp.24;
+        symbol [ y %y.2 148 12 13 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_36_149_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_8_149_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_146_8_149_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 150 8 ]
+        symbol [ fx %tmp.26 150 8 10 ];
+        %tmp.26 = getv ? :fx;
+        symbol [ onOutcome %tmp.27 150 11 20 ];
+        %tmp.27 = getv function %tmp.26 :onOutcome;
+        %tmp.28 = lgetv %outcome;
+        symbol [ outcome %tmp.28 150 21 28 ];
+        %tmp.29 = lgetv %x.1;
+        symbol [ x %tmp.29 150 30 31 ];
+        %tmp.30 = lgetv %y.2;
+        symbol [ y %tmp.30 150 33 34 ];
+        %tmp.31 = lgetv %gained;
+        symbol [ gained %tmp.31 150 36 42 ];
+        %tmp.32 = self;
+        symbol [ _sc %tmp.33 150 44 47 ];
+        %tmp.33 = getv function %tmp.32 :_sc;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.29, %tmp.30, %tmp.31, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 151 8 ]
+        %tmp.35 = true;
+        symbol [ settling ? 151 8 16 ];
+        putv self :settling %tmp.35;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_143_84_152_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 155; @symbol_functiondef = [_sc,155,20,23]; @symbol_return<0> = [Lang,155,29,33]; @symbol_return<1> = [Float,155,34,39]; ]
+    protected
+    function _sc() as Lang.Float {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_155_40_155_64_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 155 42 ]
+        symbol [ sh %tmp.2 155 49 51 ];
+        %tmp.2 = getv ? :sh;
+        symbol [ DS_REF_H %tmp.4 155 54 62 ];
+        %tmp.4 = getv ? :DS_REF_H;
+        %tmp.5 = div %tmp.2 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_155_40_155_64_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 158; @symbol_functiondef = [drawField,158,13,22]; @symbol_param<0> = [dc,158,23,25]; @symbol_param<1> = [eng,158,27,30]; ]
+    function drawField(dc, eng) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_158_40_164_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 159 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_158_40_164_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_158_40_164_4_stop" ]
+        %fy.1 = local;
+        symbol [ fy %fy.1 159 12 14 ];
+        symbol [ floorY %tmp.2 159 17 23 ];
+        %tmp.2 = getv ? :floorY;
+        symbol [ toNumber %tmp.3 159 24 32 ];
+        %tmp.3 = getv function %tmp.2 :toNumber;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        lputv %fy.1 %tmp.4;
+        symbol [ fy %fy.1 159 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 160 8 ]
+        symbol [ DsArt %tmp.6 160 8 13 ];
+        %tmp.6 = getv ? :DsArt;
+        symbol [ scene %tmp.7 160 14 19 ];
+        %tmp.7 = getv function %tmp.6 :scene;
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 160 20 22 ];
+        symbol [ court %tmp.10 160 24 29 ];
+        %tmp.10 = getv ? :court;
+        symbol [ sw %tmp.12 160 31 33 ];
+        %tmp.12 = getv ? :sw;
+        symbol [ sh %tmp.14 160 35 37 ];
+        %tmp.14 = getv ? :sh;
+        %tmp.15 = lgetv %fy.1;
+        symbol [ fy %tmp.15 160 39 41 ];
+        symbol [ frame %tmp.17 160 43 48 ];
+        %tmp.17 = getv ? :frame;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.10, %tmp.12, %tmp.14, %tmp.15, %tmp.17);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 161 8 ]
+        symbol [ DsArt %tmp.19 161 8 13 ];
+        %tmp.19 = getv ? :DsArt;
+        symbol [ hoopArt %tmp.20 161 14 21 ];
+        %tmp.20 = getv function %tmp.19 :hoopArt;
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 161 22 24 ];
+        symbol [ court %tmp.23 161 26 31 ];
+        %tmp.23 = getv ? :court;
+        symbol [ hoop %tmp.25 161 33 37 ];
+        %tmp.25 = getv ? :hoop;
+        symbol [ sw %tmp.27 161 39 41 ];
+        %tmp.27 = getv ? :sw;
+        symbol [ sh %tmp.29 161 43 45 ];
+        %tmp.29 = getv ? :sh;
+        %tmp.30 = lgetv %fy.1;
+        symbol [ fy %tmp.30 161 47 49 ];
+        symbol [ fx %tmp.32 161 51 53 ];
+        %tmp.32 = getv ? :fx;
+        symbol [ netWave %tmp.33 161 54 61 ];
+        %tmp.33 = getv %tmp.32 :netWave;
+        symbol [ fx %tmp.35 161 63 65 ];
+        %tmp.35 = getv ? :fx;
+        symbol [ rimFlash %tmp.36 161 66 74 ];
+        %tmp.36 = getv %tmp.35 :rimFlash;
+        %tmp.37 = 0;
+        %tmp.38 = gt %tmp.36 %tmp.37;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23, %tmp.25, %tmp.27, %tmp.29, %tmp.30, %tmp.33, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 162 8 ]
+        %tmp.39 = self;
+        symbol [ _drawShooter %tmp.40 162 8 20 ];
+        %tmp.40 = getv function %tmp.39 :_drawShooter;
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 162 21 23 ];
+        %tmp.42 = lgetv %eng;
+        symbol [ eng %tmp.42 162 25 28 ];
+        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 163 8 ]
+        %tmp.43 = self;
+        symbol [ _drawBall %tmp.44 163 8 17 ];
+        %tmp.44 = getv function %tmp.43 :_drawBall;
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 163 18 20 ];
+        %tmp.46 = lgetv %eng;
+        symbol [ eng %tmp.46 163 22 25 ];
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_158_40_164_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 167; @symbol_functiondef = [drawOverlay,167,13,24]; @symbol_param<0> = [dc,167,25,27]; @symbol_param<1> = [w,167,29,30]; @symbol_param<1>_type<0> = [Lang,167,34,38]; @symbol_param<1>_type<1> = [Number,167,39,45]; @symbol_param<2> = [h,167,47,48]; @symbol_param<2>_type<0> = [Lang,167,52,56]; @symbol_param<2>_type<1> = [Number,167,57,63]; ]
+    function drawOverlay(dc, w as Lang.Number, h as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_167_73_169_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 168 8 ]
+        symbol [ fx %tmp.2 168 8 10 ];
+        %tmp.2 = getv ? :fx;
+        symbol [ draw %tmp.3 168 11 15 ];
+        %tmp.3 = getv function %tmp.2 :draw;
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 168 16 18 ];
+        %tmp.5 = lgetv %w;
+        symbol [ w %tmp.5 168 20 21 ];
+        %tmp.6 = lgetv %h;
+        symbol [ h %tmp.6 168 23 24 ];
+        symbol [ phys %tmp.8 168 26 30 ];
+        %tmp.8 = getv ? :phys;
+        symbol [ r %tmp.9 168 31 32 ];
+        %tmp.9 = getv %tmp.8 :r;
+        symbol [ toNumber %tmp.10 168 33 41 ];
+        %tmp.10 = getv function %tmp.9 :toNumber;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5, %tmp.6, %tmp.11);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_167_73_169_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 174; @symbol_functiondef = [_drawShooter,174,20,32]; @symbol_param<0> = [dc,174,33,35]; @symbol_param<1> = [eng,174,37,40]; ]
+    protected
+    function _drawShooter(dc, eng) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 175 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_stop" ]
+        %br.1 = local;
+        symbol [ br %br.1 175 12 14 ];
+        symbol [ phys %tmp.2 175 17 21 ];
+        %tmp.2 = getv ? :phys;
+        symbol [ r %tmp.3 175 22 23 ];
+        %tmp.3 = getv %tmp.2 :r;
+        symbol [ toNumber %tmp.4 175 24 32 ];
+        %tmp.4 = getv function %tmp.3 :toNumber;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %br.1 %tmp.5;
+        symbol [ br %br.1 175 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 176 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_stop" ]
+        %hr.2 = local;
+        symbol [ hr %hr.2 176 12 14 ];
+        symbol [ sh %tmp.7 176 18 20 ];
+        %tmp.7 = getv ? :sh;
+        %tmp.8 = 0.028;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        symbol [ toNumber %tmp.10 176 30 38 ];
+        %tmp.10 = getv function %tmp.9 :toNumber;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %hr.2 %tmp.11;
+        symbol [ hr %hr.2 176 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 177 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_8_177_30_if_stmt:
+        %tmp.12 = lgetv %hr.2;
+        symbol [ hr %tmp.12 177 12 14 ];
+        %tmp.13 = 3;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_8_177_30_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_8_177_30_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_20_177_30_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 177 22 ]
+        %tmp.15 = 3;
+        lputv %hr.2 %tmp.15;
+        symbol [ hr %hr.2 177 22 24 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_20_177_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_8_177_30_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_177_8_177_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 179 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_stop" ]
+        %crouch.3 = local;
+        symbol [ crouch %crouch.3 179 12 18 ];
+        %tmp.16 = 0.0;
+        lputv %crouch.3 %tmp.16;
+        symbol [ crouch %crouch.3 179 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 180 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_stop" ]
+        %arm.4 = local;
+        symbol [ arm %arm.4 180 12 15 ];
+        %tmp.17 = 0.0;
+        lputv %arm.4 %tmp.17;
+        symbol [ arm %arm.4 180 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 181 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_stmt:
+        %tmp.18 = lgetv %eng;
+        symbol [ eng %tmp.18 181 12 15 ];
+        symbol [ state %tmp.19 181 16 21 ];
+        %tmp.19 = getv %tmp.18 :state;
+        symbol [ DS_ST_AIM %tmp.21 181 25 34 ];
+        %tmp.21 = getv ? :DS_ST_AIM;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_36_184_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 183 12 ]
+        %tmp.23 = 0.18;
+        %tmp.24 = 0.10;
+        symbol [ Math %tmp.25 183 35 39 ];
+        %tmp.25 = getm $.Toybox.Math;
+        symbol [ sin %tmp.26 183 40 43 ];
+        %tmp.26 = getv function %tmp.25 :sin;
+        symbol [ frame %tmp.28 183 44 49 ];
+        %tmp.28 = getv ? :frame;
+        %tmp.29 = 0.22;
+        %tmp.30 = mul %tmp.28 %tmp.29;
+        %tmp.31 = invoke %tmp.25 %tmp.26(%tmp.30);
+        %tmp.32 = mul %tmp.24 %tmp.31;
+        %tmp.33 = add %tmp.23 %tmp.32;
+        lputv %crouch.3 %tmp.33;
+        symbol [ crouch %crouch.3 183 12 18 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_36_184_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 184 15 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_stmt:
+        %tmp.34 = lgetv %eng;
+        symbol [ eng %tmp.34 184 19 22 ];
+        symbol [ state %tmp.35 184 23 28 ];
+        %tmp.35 = getv %tmp.34 :state;
+        symbol [ DS_ST_POWER %tmp.37 184 32 43 ];
+        %tmp.37 = getv ? :DS_ST_POWER;
+        %tmp.38 = eq %tmp.35 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_45_186_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 185 12 ]
+        %tmp.39 = 0.35;
+        %tmp.40 = 0.55;
+        %tmp.41 = lgetv %eng;
+        symbol [ eng %tmp.41 185 35 38 ];
+        symbol [ power %tmp.42 185 39 44 ];
+        %tmp.42 = getv %tmp.41 :power;
+        %tmp.43 = mul %tmp.40 %tmp.42;
+        %tmp.44 = add %tmp.39 %tmp.43;
+        lputv %crouch.3 %tmp.44;
+        symbol [ crouch %crouch.3 185 12 18 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_45_186_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 186 15 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_stmt:
+        %tmp.45 = lgetv %eng;
+        symbol [ eng %tmp.45 186 19 22 ];
+        symbol [ state %tmp.46 186 23 28 ];
+        %tmp.46 = getv %tmp.45 :state;
+        symbol [ DS_ST_RELEASE %tmp.48 186 32 45 ];
+        %tmp.48 = getv ? :DS_ST_RELEASE;
+        %tmp.49 = eq %tmp.46 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_47_189_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 187 12 ]
+        %tmp.50 = 0.9;
+        %tmp.51 = 0.9;
+        %tmp.52 = lgetv %eng;
+        symbol [ eng %tmp.52 187 33 36 ];
+        symbol [ relT %tmp.53 187 37 41 ];
+        %tmp.53 = getv %tmp.52 :relT;
+        %tmp.54 = mul %tmp.51 %tmp.53;
+        %tmp.55 = sub %tmp.50 %tmp.54;
+        lputv %crouch.3 %tmp.55;
+        symbol [ crouch %crouch.3 187 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 188 12 ]
+        %tmp.56 = lgetv %eng;
+        symbol [ eng %tmp.56 188 21 24 ];
+        symbol [ relT %tmp.57 188 25 29 ];
+        %tmp.57 = getv %tmp.56 :relT;
+        lputv %arm.4 %tmp.57;
+        symbol [ arm %arm.4 188 12 15 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_47_189_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_189_15_191_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 190 12 ]
+        %tmp.58 = 1.0;
+        lputv %arm.4 %tmp.58;
+        symbol [ arm %arm.4 190 12 15 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_189_15_191_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_186_15_191_8_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_184_15_191_8_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_181_8_191_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 193 8 ]
+        symbol [ DsArt %tmp.60 193 8 13 ];
+        %tmp.60 = getv ? :DsArt;
+        symbol [ shooterArt %tmp.61 193 14 24 ];
+        %tmp.61 = getv function %tmp.60 :shooterArt;
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 193 25 27 ];
+        symbol [ court %tmp.64 193 29 34 ];
+        %tmp.64 = getv ? :court;
+        symbol [ lx %tmp.66 193 36 38 ];
+        %tmp.66 = getv ? :lx;
+        symbol [ toNumber %tmp.67 193 39 47 ];
+        %tmp.67 = getv function %tmp.66 :toNumber;
+        %tmp.68 = invoke %tmp.66 %tmp.67();
+        symbol [ ly %tmp.70 193 51 53 ];
+        %tmp.70 = getv ? :ly;
+        symbol [ toNumber %tmp.71 193 54 62 ];
+        %tmp.71 = getv function %tmp.70 :toNumber;
+        %tmp.72 = invoke %tmp.70 %tmp.71();
+        symbol [ floorY %tmp.74 194 25 31 ];
+        %tmp.74 = getv ? :floorY;
+        symbol [ toNumber %tmp.75 194 32 40 ];
+        %tmp.75 = getv function %tmp.74 :toNumber;
+        %tmp.76 = invoke %tmp.74 %tmp.75();
+        %tmp.77 = lgetv %br.1;
+        symbol [ br %tmp.77 194 44 46 ];
+        %tmp.78 = lgetv %hr.2;
+        symbol [ hr %tmp.78 194 48 50 ];
+        %tmp.79 = lgetv %crouch.3;
+        symbol [ crouch %tmp.79 194 52 58 ];
+        %tmp.80 = lgetv %arm.4;
+        symbol [ arm %tmp.80 194 60 63 ];
+        symbol [ frame %tmp.82 194 65 70 ];
+        %tmp.82 = getv ? :frame;
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.64, %tmp.68, %tmp.72, %tmp.76, %tmp.77, %tmp.78, %tmp.79, %tmp.80, %tmp.82);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_174_50_195_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 197; @symbol_functiondef = [_drawBall,197,20,29]; @symbol_param<0> = [dc,197,30,32]; @symbol_param<1> = [eng,197,34,37]; ]
+    protected
+    function _drawBall(dc, eng) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_197_47_208_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 198 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_197_47_208_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_197_47_208_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 198 12 13 ];
+        symbol [ phys %tmp.2 198 16 20 ];
+        %tmp.2 = getv ? :phys;
+        symbol [ r %tmp.3 198 21 22 ];
+        %tmp.3 = getv %tmp.2 :r;
+        symbol [ toNumber %tmp.4 198 23 31 ];
+        %tmp.4 = getv function %tmp.3 :toNumber;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %r.1 %tmp.5;
+        symbol [ r %r.1 198 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 199 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_8_199_28_if_stmt:
+        %tmp.6 = lgetv %r.1;
+        symbol [ r %tmp.6 199 12 13 ];
+        %tmp.7 = 3;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_8_199_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_8_199_28_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_19_199_28_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 199 21 ]
+        %tmp.9 = 3;
+        lputv %r.1 %tmp.9;
+        symbol [ r %r.1 199 21 22 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_19_199_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_8_199_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_199_8_199_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 200 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_12_200_27_begin:
+        symbol [ ball %tmp.11 200 12 16 ];
+        %tmp.11 = getv ? :ball;
+        symbol [ flying %tmp.12 200 17 23 ];
+        %tmp.12 = getv %tmp.11 :flying;
+        bt %tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_true;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_27_200_27_false:
+        symbol [ settling %tmp.14 200 27 35 ];
+        %tmp.14 = getv ? :settling;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_27_200_27_end:
+        %tmp.15 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_12_200_27_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_27_200_27_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_27_200_27_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_37_205_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 201 12 ]
+        symbol [ DsArt %tmp.17 201 12 17 ];
+        %tmp.17 = getv ? :DsArt;
+        symbol [ trailArt %tmp.18 201 18 26 ];
+        %tmp.18 = getv function %tmp.17 :trailArt;
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 201 27 29 ];
+        symbol [ skin %tmp.21 201 31 35 ];
+        %tmp.21 = getv ? :skin;
+        symbol [ trail %tmp.23 201 37 42 ];
+        %tmp.23 = getv ? :trail;
+        %tmp.24 = lgetv %r.1;
+        symbol [ r %tmp.24 201 44 45 ];
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.21, %tmp.23, %tmp.24);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 202 12 ]
+        symbol [ DsArt %tmp.26 202 12 17 ];
+        %tmp.26 = getv ? :DsArt;
+        symbol [ ballArt %tmp.27 202 18 25 ];
+        %tmp.27 = getv function %tmp.26 :ballArt;
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 202 26 28 ];
+        symbol [ skin %tmp.30 202 30 34 ];
+        %tmp.30 = getv ? :skin;
+        symbol [ ball %tmp.32 202 36 40 ];
+        %tmp.32 = getv ? :ball;
+        symbol [ x %tmp.33 202 41 42 ];
+        %tmp.33 = getv %tmp.32 :x;
+        symbol [ toNumber %tmp.34 202 43 51 ];
+        %tmp.34 = getv function %tmp.33 :toNumber;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        symbol [ ball %tmp.37 202 55 59 ];
+        %tmp.37 = getv ? :ball;
+        symbol [ y %tmp.38 202 60 61 ];
+        %tmp.38 = getv %tmp.37 :y;
+        symbol [ toNumber %tmp.39 202 62 70 ];
+        %tmp.39 = getv function %tmp.38 :toNumber;
+        %tmp.40 = invoke %tmp.38 %tmp.39();
+        %tmp.41 = lgetv %r.1;
+        symbol [ r %tmp.41 203 26 27 ];
+        symbol [ ball %tmp.43 203 29 33 ];
+        %tmp.43 = getv ? :ball;
+        symbol [ spin %tmp.44 203 34 38 ];
+        %tmp.44 = getv %tmp.43 :spin;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30, %tmp.35, %tmp.40, %tmp.41, %tmp.44);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 204 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_37_205_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_200_8_205_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 207 8 ]
+        symbol [ DsArt %tmp.46 207 8 13 ];
+        %tmp.46 = getv ? :DsArt;
+        symbol [ ballArt %tmp.47 207 14 21 ];
+        %tmp.47 = getv function %tmp.46 :ballArt;
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 207 22 24 ];
+        symbol [ skin %tmp.50 207 26 30 ];
+        %tmp.50 = getv ? :skin;
+        symbol [ lx %tmp.52 207 32 34 ];
+        %tmp.52 = getv ? :lx;
+        symbol [ toNumber %tmp.53 207 35 43 ];
+        %tmp.53 = getv function %tmp.52 :toNumber;
+        %tmp.54 = invoke %tmp.52 %tmp.53();
+        symbol [ ly %tmp.56 207 47 49 ];
+        %tmp.56 = getv ? :ly;
+        symbol [ toNumber %tmp.57 207 50 58 ];
+        %tmp.57 = getv function %tmp.56 :toNumber;
+        %tmp.58 = invoke %tmp.56 %tmp.57();
+        %tmp.59 = lgetv %r.1;
+        symbol [ r %tmp.59 207 62 63 ];
+        symbol [ frame %tmp.61 207 65 70 ];
+        %tmp.61 = getv ? :frame;
+        %tmp.62 = 0.04;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.50, %tmp.54, %tmp.58, %tmp.59, %tmp.63);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_197_47_208_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 213; @symbol_functiondef = [drawGuide,213,13,22]; @symbol_param<0> = [dc,213,23,25]; @symbol_param<1> = [eng,213,27,30]; @symbol_param<2> = [angle,213,32,37]; @symbol_param<2>_type<0> = [Lang,213,41,45]; @symbol_param<2>_type<1> = [Float,213,46,51]; @symbol_param<3> = [meter,213,53,58]; @symbol_param<3>_type<0> = [Lang,213,62,66]; @symbol_param<3>_type<1> = [Float,213,67,72]; ]
+    function drawGuide(dc, eng, angle as Lang.Float, meter as Lang.Float) as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 214 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %mode.1 = local;
+        symbol [ mode %mode.1 214 12 16 ];
+        symbol [ DsUtil %tmp.2 214 19 25 ];
+        %tmp.2 = getv ? :DsUtil;
+        symbol [ optIndex %tmp.3 214 26 34 ];
+        %tmp.3 = getv function %tmp.2 :optIndex;
+        symbol [ DS_K_GUIDE %tmp.5 214 35 45 ];
+        %tmp.5 = getv ? :DS_K_GUIDE;
+        %tmp.6 = 0;
+        %tmp.7 = 3;
+        %tmp.8 = invoke %tmp.2 %tmp.3(%tmp.5, %tmp.6, %tmp.7);
+        lputv %mode.1 %tmp.8;
+        symbol [ mode %mode.1 214 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 215 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_8_215_33_if_stmt:
+        %tmp.9 = lgetv %mode.1;
+        symbol [ mode %tmp.9 215 12 16 ];
+        %tmp.10 = 2;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_8_215_33_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_8_215_33_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_23_215_33_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 215 25 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_23_215_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_8_215_33_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_215_8_215_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 216 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %frac.2 = local;
+        symbol [ frac %frac.2 216 12 16 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_begin:
+        %tmp.12 = lgetv %mode.1;
+        symbol [ mode %tmp.12 216 20 24 ];
+        %tmp.13 = 1;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_true:
+        %tmp.15 = 1.0;
+        push %tmp.15;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_else_false:
+        %tmp.16 = 0.45;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_end:
+        %tmp.17 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_216_19_216_39_end];
+        lputv %frac.2 %tmp.17;
+        symbol [ frac %frac.2 216 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 218 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %pts.3 = local;
+        symbol [ pts %pts.3 218 12 15 ];
+        symbol [ phys %tmp.19 218 18 22 ];
+        %tmp.19 = getv ? :phys;
+        symbol [ predict %tmp.20 218 23 30 ];
+        %tmp.20 = getv function %tmp.19 :predict;
+        symbol [ lx %tmp.22 218 31 33 ];
+        %tmp.22 = getv ? :lx;
+        symbol [ ly %tmp.24 218 35 37 ];
+        %tmp.24 = getv ? :ly;
+        %tmp.25 = lgetv %angle;
+        symbol [ angle %tmp.25 218 39 44 ];
+        %tmp.26 = self;
+        symbol [ powerToSpeed %tmp.27 218 46 58 ];
+        %tmp.27 = getv function %tmp.26 :powerToSpeed;
+        %tmp.28 = lgetv %meter;
+        symbol [ meter %tmp.28 218 59 64 ];
+        %tmp.29 = invoke %tmp.26 %tmp.27(%tmp.28);
+        %tmp.30 = lgetv %frac.2;
+        symbol [ frac %tmp.30 218 67 71 ];
+        %tmp.31 = invoke %tmp.19 %tmp.20(%tmp.22, %tmp.24, %tmp.25, %tmp.29, %tmp.30);
+        lputv %pts.3 %tmp.31;
+        symbol [ pts %pts.3 218 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 219 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %n.4 = local;
+        symbol [ n %n.4 219 12 13 ];
+        %tmp.32 = lgetv %pts.3;
+        symbol [ pts %tmp.32 219 18 21 ];
+        symbol [ size %tmp.33 219 22 26 ];
+        %tmp.33 = getv function %tmp.32 :size;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        lputv %n.4 %tmp.34;
+        symbol [ n %n.4 219 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 220 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %dot.5 = local;
+        symbol [ dot %dot.5 220 12 15 ];
+        symbol [ sw %tmp.36 220 18 20 ];
+        %tmp.36 = getv ? :sw;
+        %tmp.37 = 10;
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        %tmp.39 = 1000;
+        %tmp.40 = div %tmp.38 %tmp.39;
+        lputv %dot.5 %tmp.40;
+        symbol [ dot %dot.5 220 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 220 34 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_34_220_58_if_stmt:
+        %tmp.41 = lgetv %dot.5;
+        symbol [ dot %tmp.41 220 38 41 ];
+        %tmp.42 = 2;
+        %tmp.43 = lt %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_34_220_58_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_34_220_58_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_47_220_58_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 220 49 ]
+        %tmp.44 = 2;
+        lputv %dot.5 %tmp.44;
+        symbol [ dot %dot.5 220 49 52 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_47_220_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_34_220_58_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_220_34_220_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 224 8 ]
+        for @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_test @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_incr @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_begin" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 224 17 18 ];
+        %tmp.45 = 0;
+        lputv %i.6 %tmp.45;
+        symbol [ i %i.6 224 17 18 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_test:
+        %tmp.46 = lgetv %i.6;
+        symbol [ i %tmp.46 224 24 25 ];
+        %tmp.47 = lgetv %n.4;
+        symbol [ n %tmp.47 224 28 29 ];
+        %tmp.48 = lt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 225 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_stop" ]
+        %f.7 = local;
+        symbol [ f %f.7 225 16 17 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_begin:
+        %tmp.49 = lgetv %n.4;
+        symbol [ n %tmp.49 225 21 22 ];
+        %tmp.50 = 1;
+        %tmp.51 = gt %tmp.49 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_true:
+        %tmp.52 = lgetv %i.6;
+        symbol [ i %tmp.52 225 31 32 ];
+        symbol [ toFloat %tmp.53 225 33 40 ];
+        %tmp.53 = getv function %tmp.52 :toFloat;
+        %tmp.54 = invoke %tmp.52 %tmp.53();
+        %tmp.55 = lgetv %n.4;
+        symbol [ n %tmp.55 225 46 47 ];
+        %tmp.56 = 1;
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        %tmp.58 = div %tmp.54 %tmp.57;
+        push %tmp.58;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_else_false:
+        %tmp.59 = 0.0;
+        push %tmp.59;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_end:
+        %tmp.60 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_else_false] [%tmp.60 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_225_20_225_56_end];
+        lputv %f.7 %tmp.60;
+        symbol [ f %f.7 225 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 229 12 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 229 12 14 ];
+        symbol [ setColor %tmp.62 229 15 23 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_begin:
+        %tmp.63 = lgetv %f.7;
+        symbol [ f %tmp.63 229 24 25 ];
+        %tmp.64 = 0.4;
+        %tmp.65 = lt %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_true:
+        %tmp.66 = 0xFFFFFF;
+        push %tmp.66;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_else_false:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_begin:
+        %tmp.67 = lgetv %f.7;
+        symbol [ f %tmp.67 229 46 47 ];
+        %tmp.68 = 0.75;
+        %tmp.69 = lt %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_true:
+        symbol [ DS_GUIDE %tmp.71 229 57 65 ];
+        %tmp.71 = getv ? :DS_GUIDE;
+        push %tmp.71;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_else_false:
+        %tmp.72 = 0x00AAAA;
+        push %tmp.72;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_end:
+        %tmp.73 = phi [%tmp.69 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_begin] [%tmp.71 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_true] [%tmp.72 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_else_false] [%tmp.73 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_46_229_68_end];
+        push %tmp.73;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_end:
+        %tmp.74 = phi [%tmp.65 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_true] [%tmp.73 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_else_false] [%tmp.74 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_229_24_229_76_end];
+        symbol [ Graphics %tmp.75 230 24 32 ];
+        %tmp.75 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.76 230 33 50 ];
+        %tmp.76 = getv %tmp.75 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.74, %tmp.76);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 231 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_stop" ]
+        %rr.8 = local;
+        symbol [ rr %rr.8 231 16 18 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_begin:
+        %tmp.77 = lgetv %f.7;
+        symbol [ f %tmp.77 231 22 23 ];
+        %tmp.78 = 0.6;
+        %tmp.79 = lt %tmp.77 %tmp.78;
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_true:
+        %tmp.80 = lgetv %dot.5;
+        symbol [ dot %tmp.80 231 33 36 ];
+        push %tmp.80;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_else_false:
+        %tmp.81 = lgetv %dot.5;
+        symbol [ dot %tmp.81 231 39 42 ];
+        %tmp.82 = 1;
+        %tmp.83 = sub %tmp.81 %tmp.82;
+        push %tmp.83;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_end:
+        %tmp.84 = phi [%tmp.79 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_begin] [%tmp.80 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_true] [%tmp.83 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_else_false] [%tmp.84 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_21_231_45_end];
+        lputv %rr.8 %tmp.84;
+        symbol [ rr %rr.8 231 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 231 48 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_48_231_70_if_stmt:
+        %tmp.85 = lgetv %rr.8;
+        symbol [ rr %tmp.85 231 52 54 ];
+        %tmp.86 = 1;
+        %tmp.87 = lt %tmp.85 %tmp.86;
+        bf %tmp.87 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_48_231_70_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_48_231_70_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_60_231_70_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 231 62 ]
+        %tmp.88 = 1;
+        lputv %rr.8 %tmp.88;
+        symbol [ rr %rr.8 231 62 64 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_60_231_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_48_231_70_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_231_48_231_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 232 12 ]
+        %tmp.89 = lgetv %dc;
+        symbol [ dc %tmp.89 232 12 14 ];
+        symbol [ fillCircle %tmp.90 232 15 25 ];
+        %tmp.90 = getv function %tmp.89 :fillCircle;
+        %tmp.91 = lgetv %pts.3;
+        symbol [ pts %tmp.91 232 26 29 ];
+        %tmp.92 = lgetv %i.6;
+        symbol [ i %tmp.92 232 30 31 ];
+        %tmp.93 = agetv %tmp.91 %tmp.92;
+        %tmp.94 = 0;
+        %tmp.95 = agetv %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %pts.3;
+        symbol [ pts %tmp.96 232 37 40 ];
+        %tmp.97 = lgetv %i.6;
+        symbol [ i %tmp.97 232 41 42 ];
+        %tmp.98 = agetv %tmp.96 %tmp.97;
+        %tmp.99 = 1;
+        %tmp.100 = agetv %tmp.98 %tmp.99;
+        %tmp.101 = lgetv %rr.8;
+        symbol [ rr %tmp.101 232 48 50 ];
+        invoke %tmp.89 %tmp.90(%tmp.95, %tmp.100, %tmp.101);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_36_233_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 224 ]
+        %tmp.104 = lgetv %i.6;
+        symbol [ i %tmp.104 224 31 32 ];
+        %tmp.105 = add %tmp.104 1;
+        lputv %i.6 %tmp.105;
+        symbol [ i %i.6 224 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_test;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_224_8_233_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 236 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_8_243_8_if_stmt:
+        %tmp.106 = lgetv %n.4;
+        symbol [ n %tmp.106 236 12 13 ];
+        %tmp.107 = 2;
+        %tmp.108 = gt %tmp.106 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_8_243_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_8_243_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_19_243_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 237 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_19_243_8_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_19_243_8_stop" ]
+        %ai.9 = local;
+        symbol [ ai %ai.9 237 16 18 ];
+        %tmp.109 = 0;
+        lputv %ai.9 %tmp.109;
+        symbol [ ai %ai.9 237 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 238 12 ]
+        for @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_test @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_incr @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_begin" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_end" ]
+        %i.10 = local;
+        symbol [ i %i.10 238 21 22 ];
+        %tmp.110 = 1;
+        lputv %i.10 %tmp.110;
+        symbol [ i %i.10 238 21 22 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_test:
+        %tmp.111 = lgetv %i.10;
+        symbol [ i %tmp.111 238 28 29 ];
+        %tmp.112 = lgetv %n.4;
+        symbol [ n %tmp.112 238 32 33 ];
+        %tmp.113 = lt %tmp.111 %tmp.112;
+        bf %tmp.113 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_40_240_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 239 16 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_16_239_54_if_stmt:
+        %tmp.114 = lgetv %pts.3;
+        symbol [ pts %tmp.114 239 20 23 ];
+        %tmp.115 = lgetv %i.10;
+        symbol [ i %tmp.115 239 24 25 ];
+        %tmp.116 = agetv %tmp.114 %tmp.115;
+        %tmp.117 = 1;
+        %tmp.118 = agetv %tmp.116 %tmp.117;
+        %tmp.119 = lgetv %pts.3;
+        symbol [ pts %tmp.119 239 32 35 ];
+        %tmp.120 = lgetv %ai.9;
+        symbol [ ai %tmp.120 239 36 38 ];
+        %tmp.121 = agetv %tmp.119 %tmp.120;
+        %tmp.122 = 1;
+        %tmp.123 = agetv %tmp.121 %tmp.122;
+        %tmp.124 = lt %tmp.118 %tmp.123;
+        bf %tmp.124 @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_16_239_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_16_239_54_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_44_239_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 239 46 ]
+        %tmp.125 = lgetv %i.10;
+        symbol [ i %tmp.125 239 51 52 ];
+        lputv %ai.9 %tmp.125;
+        symbol [ ai %ai.9 239 46 48 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_44_239_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_16_239_54_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_239_16_239_54_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_40_240_12_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 238 ]
+        %tmp.128 = lgetv %i.10;
+        symbol [ i %tmp.128 238 35 36 ];
+        %tmp.129 = add %tmp.128 1;
+        lputv %i.10 %tmp.129;
+        symbol [ i %i.10 238 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_test;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_238_12_240_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 241 12 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 241 12 14 ];
+        symbol [ setColor %tmp.131 241 15 23 ];
+        %tmp.131 = getv function %tmp.130 :setColor;
+        symbol [ DS_GUIDE %tmp.133 241 24 32 ];
+        %tmp.133 = getv ? :DS_GUIDE;
+        symbol [ Graphics %tmp.134 241 34 42 ];
+        %tmp.134 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.135 241 43 60 ];
+        %tmp.135 = getv %tmp.134 :COLOR_TRANSPARENT;
+        invoke %tmp.130 %tmp.131(%tmp.133, %tmp.135);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 242 12 ]
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 242 12 14 ];
+        symbol [ drawCircle %tmp.137 242 15 25 ];
+        %tmp.137 = getv function %tmp.136 :drawCircle;
+        %tmp.138 = lgetv %pts.3;
+        symbol [ pts %tmp.138 242 26 29 ];
+        %tmp.139 = lgetv %ai.9;
+        symbol [ ai %tmp.139 242 30 32 ];
+        %tmp.140 = agetv %tmp.138 %tmp.139;
+        %tmp.141 = 0;
+        %tmp.142 = agetv %tmp.140 %tmp.141;
+        %tmp.143 = lgetv %pts.3;
+        symbol [ pts %tmp.143 242 38 41 ];
+        %tmp.144 = lgetv %ai.9;
+        symbol [ ai %tmp.144 242 42 44 ];
+        %tmp.145 = agetv %tmp.143 %tmp.144;
+        %tmp.146 = 1;
+        %tmp.147 = agetv %tmp.145 %tmp.146;
+        %tmp.148 = lgetv %dot.5;
+        symbol [ dot %tmp.148 242 50 53 ];
+        %tmp.149 = 3;
+        %tmp.150 = add %tmp.148 %tmp.149;
+        invoke %tmp.136 %tmp.137(%tmp.142, %tmp.147, %tmp.150);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_19_243_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_8_243_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_236_8_243_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 247 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %a.11 = local;
+        symbol [ a %a.11 247 12 13 ];
+        %tmp.151 = lgetv %angle;
+        symbol [ angle %tmp.151 247 17 22 ];
+        %tmp.152 = 0.0174532925;
+        %tmp.153 = mul %tmp.151 %tmp.152;
+        lputv %a.11 %tmp.153;
+        symbol [ a %a.11 247 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 248 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %ca.12 = local;
+        symbol [ ca %ca.12 248 12 14 ];
+        symbol [ Math %tmp.154 248 17 21 ];
+        %tmp.154 = getm $.Toybox.Math;
+        symbol [ cos %tmp.155 248 22 25 ];
+        %tmp.155 = getv function %tmp.154 :cos;
+        %tmp.156 = lgetv %a.11;
+        symbol [ a %tmp.156 248 26 27 ];
+        %tmp.157 = invoke %tmp.154 %tmp.155(%tmp.156);
+        lputv %ca.12 %tmp.157;
+        symbol [ ca %ca.12 248 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 249 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %sa.13 = local;
+        symbol [ sa %sa.13 249 12 14 ];
+        symbol [ Math %tmp.158 249 17 21 ];
+        %tmp.158 = getm $.Toybox.Math;
+        symbol [ sin %tmp.159 249 22 25 ];
+        %tmp.159 = getv function %tmp.158 :sin;
+        %tmp.160 = lgetv %a.11;
+        symbol [ a %tmp.160 249 26 27 ];
+        %tmp.161 = invoke %tmp.158 %tmp.159(%tmp.160);
+        lputv %sa.13 %tmp.161;
+        symbol [ sa %sa.13 249 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 250 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %r0.14 = local;
+        symbol [ r0 %r0.14 250 12 14 ];
+        symbol [ phys %tmp.163 250 17 21 ];
+        %tmp.163 = getv ? :phys;
+        symbol [ r %tmp.164 250 22 23 ];
+        %tmp.164 = getv %tmp.163 :r;
+        %tmp.165 = 5.0;
+        %tmp.166 = add %tmp.164 %tmp.165;
+        lputv %r0.14 %tmp.166;
+        symbol [ r0 %r0.14 250 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 251 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %r1.15 = local;
+        symbol [ r1 %r1.15 251 12 14 ];
+        %tmp.167 = lgetv %r0.14;
+        symbol [ r0 %tmp.167 251 17 19 ];
+        symbol [ sh %tmp.169 251 22 24 ];
+        %tmp.169 = getv ? :sh;
+        %tmp.170 = 0.075;
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        %tmp.172 = add %tmp.167 %tmp.171;
+        lputv %r1.15 %tmp.172;
+        symbol [ r1 %r1.15 251 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 252 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %x0.16 = local;
+        symbol [ x0 %x0.16 252 12 14 ];
+        symbol [ lx %tmp.174 252 18 20 ];
+        %tmp.174 = getv ? :lx;
+        %tmp.175 = lgetv %ca.12;
+        symbol [ ca %tmp.175 252 23 25 ];
+        %tmp.176 = lgetv %r0.14;
+        symbol [ r0 %tmp.176 252 28 30 ];
+        %tmp.177 = mul %tmp.175 %tmp.176;
+        %tmp.178 = add %tmp.174 %tmp.177;
+        symbol [ toNumber %tmp.179 252 32 40 ];
+        %tmp.179 = getv function %tmp.178 :toNumber;
+        %tmp.180 = invoke %tmp.178 %tmp.179();
+        lputv %x0.16 %tmp.180;
+        symbol [ x0 %x0.16 252 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 253 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %y0.17 = local;
+        symbol [ y0 %y0.17 253 12 14 ];
+        symbol [ ly %tmp.182 253 18 20 ];
+        %tmp.182 = getv ? :ly;
+        %tmp.183 = lgetv %sa.13;
+        symbol [ sa %tmp.183 253 23 25 ];
+        %tmp.184 = lgetv %r0.14;
+        symbol [ r0 %tmp.184 253 28 30 ];
+        %tmp.185 = mul %tmp.183 %tmp.184;
+        %tmp.186 = sub %tmp.182 %tmp.185;
+        symbol [ toNumber %tmp.187 253 32 40 ];
+        %tmp.187 = getv function %tmp.186 :toNumber;
+        %tmp.188 = invoke %tmp.186 %tmp.187();
+        lputv %y0.17 %tmp.188;
+        symbol [ y0 %y0.17 253 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 254 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %x1.18 = local;
+        symbol [ x1 %x1.18 254 12 14 ];
+        symbol [ lx %tmp.190 254 18 20 ];
+        %tmp.190 = getv ? :lx;
+        %tmp.191 = lgetv %ca.12;
+        symbol [ ca %tmp.191 254 23 25 ];
+        %tmp.192 = lgetv %r1.15;
+        symbol [ r1 %tmp.192 254 28 30 ];
+        %tmp.193 = mul %tmp.191 %tmp.192;
+        %tmp.194 = add %tmp.190 %tmp.193;
+        symbol [ toNumber %tmp.195 254 32 40 ];
+        %tmp.195 = getv function %tmp.194 :toNumber;
+        %tmp.196 = invoke %tmp.194 %tmp.195();
+        lputv %x1.18 %tmp.196;
+        symbol [ x1 %x1.18 254 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 255 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop" ]
+        %y1.19 = local;
+        symbol [ y1 %y1.19 255 12 14 ];
+        symbol [ ly %tmp.198 255 18 20 ];
+        %tmp.198 = getv ? :ly;
+        %tmp.199 = lgetv %sa.13;
+        symbol [ sa %tmp.199 255 23 25 ];
+        %tmp.200 = lgetv %r1.15;
+        symbol [ r1 %tmp.200 255 28 30 ];
+        %tmp.201 = mul %tmp.199 %tmp.200;
+        %tmp.202 = sub %tmp.198 %tmp.201;
+        symbol [ toNumber %tmp.203 255 32 40 ];
+        %tmp.203 = getv function %tmp.202 :toNumber;
+        %tmp.204 = invoke %tmp.202 %tmp.203();
+        lputv %y1.19 %tmp.204;
+        symbol [ y1 %y1.19 255 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 256 8 ]
+        %tmp.205 = lgetv %dc;
+        symbol [ dc %tmp.205 256 8 10 ];
+        symbol [ setColor %tmp.206 256 11 19 ];
+        %tmp.206 = getv function %tmp.205 :setColor;
+        %tmp.207 = 0xFFFF55;
+        symbol [ Graphics %tmp.208 256 30 38 ];
+        %tmp.208 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.209 256 39 56 ];
+        %tmp.209 = getv %tmp.208 :COLOR_TRANSPARENT;
+        invoke %tmp.205 %tmp.206(%tmp.207, %tmp.209);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 257 8 ]
+        %tmp.210 = lgetv %dc;
+        symbol [ dc %tmp.210 257 8 10 ];
+        symbol [ setPenWidth %tmp.211 257 11 22 ];
+        %tmp.211 = getv function %tmp.210 :setPenWidth;
+        %tmp.212 = 2;
+        invoke %tmp.210 %tmp.211(%tmp.212);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 258 8 ]
+        %tmp.213 = lgetv %dc;
+        symbol [ dc %tmp.213 258 8 10 ];
+        symbol [ drawLine %tmp.214 258 11 19 ];
+        %tmp.214 = getv function %tmp.213 :drawLine;
+        %tmp.215 = lgetv %x0.16;
+        symbol [ x0 %tmp.215 258 20 22 ];
+        %tmp.216 = lgetv %y0.17;
+        symbol [ y0 %tmp.216 258 24 26 ];
+        %tmp.217 = lgetv %x1.18;
+        symbol [ x1 %tmp.217 258 28 30 ];
+        %tmp.218 = lgetv %y1.19;
+        symbol [ y1 %tmp.218 258 32 34 ];
+        invoke %tmp.213 %tmp.214(%tmp.215, %tmp.216, %tmp.217, %tmp.218);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 259 8 ]
+        %tmp.219 = lgetv %dc;
+        symbol [ dc %tmp.219 259 8 10 ];
+        symbol [ setPenWidth %tmp.220 259 11 22 ];
+        %tmp.220 = getv function %tmp.219 :setPenWidth;
+        %tmp.221 = 1;
+        invoke %tmp.219 %tmp.220(%tmp.221);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc" 260 8 ]
+        %tmp.222 = lgetv %dc;
+        symbol [ dc %tmp.222 260 8 10 ];
+        symbol [ fillPolygon %tmp.223 260 11 22 ];
+        %tmp.223 = getv function %tmp.222 :fillPolygon;
+        %tmp.224 = newa 3;
+        %tmp.225 = newa 2;
+        %tmp.226 = lgetv %x1.18;
+        symbol [ x1 %tmp.226 260 25 27 ];
+        %tmp.227 = dup %tmp.225;
+        %tmp.228 = aputv %tmp.227 0 %tmp.226;
+        %tmp.229 = lgetv %y1.19;
+        symbol [ y1 %tmp.229 260 29 31 ];
+        %tmp.230 = dup %tmp.228;
+        %tmp.231 = aputv %tmp.230 1 %tmp.229;
+        %tmp.232 = dup %tmp.224;
+        %tmp.233 = aputv %tmp.232 0 %tmp.231;
+        %tmp.234 = newa 2;
+        %tmp.235 = lgetv %x1.18;
+        symbol [ x1 %tmp.235 261 26 28 ];
+        %tmp.236 = lgetv %ca.12;
+        symbol [ ca %tmp.236 261 31 33 ];
+        %tmp.237 = 7;
+        %tmp.238 = mul %tmp.236 %tmp.237;
+        %tmp.239 = sub %tmp.235 %tmp.238;
+        %tmp.240 = lgetv %sa.13;
+        symbol [ sa %tmp.240 261 40 42 ];
+        %tmp.241 = 4;
+        %tmp.242 = mul %tmp.240 %tmp.241;
+        %tmp.243 = sub %tmp.239 %tmp.242;
+        symbol [ toNumber %tmp.244 261 48 56 ];
+        %tmp.244 = getv function %tmp.243 :toNumber;
+        %tmp.245 = invoke %tmp.243 %tmp.244();
+        %tmp.246 = dup %tmp.234;
+        %tmp.247 = aputv %tmp.246 0 %tmp.245;
+        %tmp.248 = lgetv %y1.19;
+        symbol [ y1 %tmp.248 262 26 28 ];
+        %tmp.249 = lgetv %sa.13;
+        symbol [ sa %tmp.249 262 31 33 ];
+        %tmp.250 = 7;
+        %tmp.251 = mul %tmp.249 %tmp.250;
+        %tmp.252 = add %tmp.248 %tmp.251;
+        %tmp.253 = lgetv %ca.12;
+        symbol [ ca %tmp.253 262 40 42 ];
+        %tmp.254 = 4;
+        %tmp.255 = mul %tmp.253 %tmp.254;
+        %tmp.256 = sub %tmp.252 %tmp.255;
+        symbol [ toNumber %tmp.257 262 48 56 ];
+        %tmp.257 = getv function %tmp.256 :toNumber;
+        %tmp.258 = invoke %tmp.256 %tmp.257();
+        %tmp.259 = dup %tmp.247;
+        %tmp.260 = aputv %tmp.259 1 %tmp.258;
+        %tmp.261 = dup %tmp.233;
+        %tmp.262 = aputv %tmp.261 1 %tmp.260;
+        %tmp.263 = newa 2;
+        %tmp.264 = lgetv %x1.18;
+        symbol [ x1 %tmp.264 263 26 28 ];
+        %tmp.265 = lgetv %ca.12;
+        symbol [ ca %tmp.265 263 31 33 ];
+        %tmp.266 = 7;
+        %tmp.267 = mul %tmp.265 %tmp.266;
+        %tmp.268 = sub %tmp.264 %tmp.267;
+        %tmp.269 = lgetv %sa.13;
+        symbol [ sa %tmp.269 263 40 42 ];
+        %tmp.270 = 4;
+        %tmp.271 = mul %tmp.269 %tmp.270;
+        %tmp.272 = add %tmp.268 %tmp.271;
+        symbol [ toNumber %tmp.273 263 48 56 ];
+        %tmp.273 = getv function %tmp.272 :toNumber;
+        %tmp.274 = invoke %tmp.272 %tmp.273();
+        %tmp.275 = dup %tmp.263;
+        %tmp.276 = aputv %tmp.275 0 %tmp.274;
+        %tmp.277 = lgetv %y1.19;
+        symbol [ y1 %tmp.277 264 26 28 ];
+        %tmp.278 = lgetv %sa.13;
+        symbol [ sa %tmp.278 264 31 33 ];
+        %tmp.279 = 7;
+        %tmp.280 = mul %tmp.278 %tmp.279;
+        %tmp.281 = add %tmp.277 %tmp.280;
+        %tmp.282 = lgetv %ca.12;
+        symbol [ ca %tmp.282 264 40 42 ];
+        %tmp.283 = 4;
+        %tmp.284 = mul %tmp.282 %tmp.283;
+        %tmp.285 = add %tmp.281 %tmp.284;
+        symbol [ toNumber %tmp.286 264 48 56 ];
+        %tmp.286 = getv function %tmp.285 :toNumber;
+        %tmp.287 = invoke %tmp.285 %tmp.286();
+        %tmp.288 = dup %tmp.276;
+        %tmp.289 = aputv %tmp.288 1 %tmp.287;
+        %tmp.290 = dup %tmp.262;
+        %tmp.291 = aputv %tmp.290 2 %tmp.289;
+        invoke %tmp.222 %tmp.223(%tmp.291);
+_Users_kkorolczuk_work_garmin_dailysport_source_SportBasketball_mc_213_82_265_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/SportBasketball.mc"; @line = 14; ]
+<init> {
+}

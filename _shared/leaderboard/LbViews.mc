@@ -30,6 +30,167 @@ const LB_TEXT     = 0xD6E4F0;
 const LB_LINK     = 0x00D4FF;
 const LB_GREEN    = 0x34D399;
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Score queue — SERIALISES every submitScore / submitScoreAux /
+// submitScoreWithMeta / submitScoreBatch call onto Garmin's single
+// makeWebRequest channel. Games that fire several POSTs at game-over
+// (Sniper Scope, Fish, Bomb, Blobs, …) used to collide with each other and
+// with the launch pipeline; the board then showed "No connection". One
+// shared FIFO drains them one-at-a-time and waits out the busy flag.
+// ═══════════════════════════════════════════════════════════════════════════
+class LbScoreQueue {
+    hidden var _q;        // Array of { :game, :user, :score, :variant, :meta }
+    hidden var _timer;
+    hidden var _active;   // true while a request is in flight for the head item
+    hidden var _attempt;
+    hidden var _cur;
+    hidden var _waitBusy;
+
+    function initialize() {
+        _q = []; _timer = null; _active = false; _attempt = 0; _cur = null; _waitBusy = 0;
+    }
+
+    function isIdle() as Lang.Boolean {
+        return !_active && (_q == null || _q.size() == 0);
+    }
+
+    function enqueue(game, user, score, variant, meta) as Void {
+        if (_q == null) { _q = []; }
+        var sc = score;
+        if (sc instanceof Lang.Float) { sc = sc.toNumber(); }
+        else if (sc instanceof Lang.Long) { sc = sc.toNumber(); }
+        else if (!(sc instanceof Lang.Number)) { sc = 0; }
+        var va = variant;
+        if (va != null && !(va instanceof Lang.String)) { va = null; }
+        _q.add({
+            :game => game, :user => user, :score => sc,
+            :variant => va, :meta => meta
+        });
+        if (!_active) { _schedule(50); }
+    }
+
+    // Append many entries (submitScoreBatch) without restarting mid-flight.
+    function enqueueMany(game, user, entries) as Void {
+        if (entries == null) { return; }
+        if (_q == null) { _q = []; }
+        for (var i = 0; i < entries.size(); i++) {
+            var e = entries[i];
+            var sc = e[:score];
+            if (sc instanceof Lang.Float) { sc = sc.toNumber(); }
+            else if (sc instanceof Lang.Long) { sc = sc.toNumber(); }
+            else if (!(sc instanceof Lang.Number)) { sc = 0; }
+            var va = e[:variant];
+            if (va != null && !(va instanceof Lang.String)) { va = null; }
+            _q.add({
+                :game => game, :user => user, :score => sc,
+                :variant => va, :meta => e[:meta]
+            });
+        }
+        if (!_active) { _schedule(300); }
+    }
+
+    hidden function _schedule(delay) as Void {
+        if (_timer == null) {
+            try { _timer = new Timer.Timer(); } catch (e) { _timer = null; }
+        }
+        if (_timer == null) { return; }
+        // delay 0 is undefined on some firmware — always give the event loop a tick.
+        var d = delay;
+        if (d < 50) { d = 50; }
+        try { _timer.start(method(:_pump), d, false); } catch (e) {}
+    }
+
+    // PUBLIC — Timer callback.
+    function _pump() as Void {
+        if (_active) { return; }
+        if (_q == null || _q.size() == 0) { return; }
+        if (Leaderboard.isBusy()) {
+            // Busy auto-expires at 15 s; keep polling past that so a dropped
+            // callback can never leave the FIFO wedged forever.
+            if (_waitBusy < 60) { _waitBusy = _waitBusy + 1; }
+            else { _waitBusy = 0; }
+            _schedule(500);
+            return;
+        }
+        _waitBusy = 0;
+        _cur = _q[0];
+        var rest = [];
+        for (var i = 1; i < _q.size(); i++) { rest.add(_q[i]); }
+        _q = rest;
+        _active = true;
+        _attempt = 0;
+        _sendCur();
+    }
+
+    hidden function _sendCur() as Void {
+        if (_cur == null) { _active = false; _schedule(200); return; }
+        var body = {
+            "game"  => _cur[:game],
+            "user"  => _cur[:user],
+            "score" => _cur[:score]
+        };
+        var variant = _cur[:variant];
+        if (variant instanceof Lang.String && variant.length() > 0) {
+            body["variant"] = variant;
+        }
+        if (_cur[:meta] != null) { body["meta"] = _cur[:meta]; }
+        var opts = {
+            :method       => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers      => {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
+                "X-LB-Key"     => Leaderboard.SUBMIT_KEY
+            },
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+        try {
+            Leaderboard.markBusy();
+            Communications.makeWebRequest(Leaderboard.API_BASE + "/score",
+                                          body, opts, method(:_onDone));
+        } catch (e) {
+            Leaderboard.clearBusy();
+            _retryOrNext();
+        }
+    }
+
+    // PUBLIC — makeWebRequest callback.
+    function _onDone(responseCode as Lang.Number,
+                     data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        Leaderboard.clearBusy();
+        if (responseCode == 200 || responseCode == 201) { _next(); return; }
+        if (responseCode >= 400 && responseCode < 500) { _next(); return; }
+        _retryOrNext();
+    }
+
+    hidden function _retryOrNext() as Void {
+        if (_attempt < 2) {
+            _attempt = _attempt + 1;
+            var delay = (_attempt == 1) ? 2000 : 5000;
+            if (_timer == null) { _timer = new Timer.Timer(); }
+            try { _timer.start(method(:_resend), delay, false); } catch (e) { _next(); }
+            return;
+        }
+        _next();
+    }
+
+    // PUBLIC — Timer trampoline to resend current item.
+    function _resend() as Void {
+        if (Leaderboard.isBusy()) {
+            if (_timer == null) { _timer = new Timer.Timer(); }
+            try { _timer.start(method(:_resend), 500, false); } catch (e) {}
+            return;
+        }
+        _sendCur();
+    }
+
+    hidden function _next() as Void {
+        _active = false;
+        _cur = null;
+        _attempt = 0;
+        _schedule(400);
+    }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Score submitter — POST /score with exponential backoff (max 3 retries).
 // Retries on network errors (responseCode < 0) and 5xx server errors.
@@ -45,20 +206,33 @@ class LbSubmitter {
     hidden var _meta;
     hidden var _attempt;
     hidden var _timer;
+    hidden var _waitTries;   // busy-channel deferrals before the first real attempt
 
-    function initialize() { _attempt = 0; _timer = null; }
+    function initialize() { _attempt = 0; _timer = null; _waitTries = 0; }
 
     // meta is an optional Lang.Dictionary of small extra fields (e.g. species,
     // rarity) stored alongside the score as a JSON blob — used by games that
     // want a richer "trophy" leaderboard entry. Pass null when not needed.
     function send(game, user, score, variant, meta) {
         _game = game; _user = user; _score = score; _variant = variant; _meta = meta;
-        _attempt = 0;
+        _attempt = 0; _waitTries = 0;
         _doSend();
     }
 
-    // Called directly on first attempt and via Timer on retries.
-    function _doSend() {
+    // Called directly on first attempt and via Timer on retries / busy waits.
+    // Must stay public — used as a Timer callback (method(:_doSend)).
+    function _doSend() as Void {
+        // Garmin allows only one pending makeWebRequest. If the launch
+        // pipeline (or another sender) still owns the channel, wait it out
+        // instead of colliding — a collision surfaces as "No connection" on
+        // the board and can terminate the app on some firmware.
+        if (Leaderboard.isBusy()) {
+            if (_waitTries >= 40) { return; }   // ~20 s — past the 15s busy auto-expire
+            _waitTries = _waitTries + 1;
+            if (_timer == null) { _timer = new Timer.Timer(); }
+            try { _timer.start(method(:_doSend), 500, false); } catch (e) {}
+            return;
+        }
         var body = {
             "game"  => _game,
             "user"  => _user,
@@ -271,29 +445,41 @@ class LbPinger {
 // ═══════════════════════════════════════════════════════════════════════════
 class LbFetch {
     hidden var _listener;
+    hidden var _params;
+    hidden var _timer;
+    hidden var _attempt;
 
-    function initialize() { _listener = null; }
+    function initialize() { _listener = null; _params = null; _timer = null; _attempt = 0; }
 
     function fetch(game, variant, user, period, listener, nocache) {
         _listener = listener;
-        var params = {
+        _attempt = 0;
+        _params = {
             "game"   => game,
             "period" => (period != null) ? period : "all"
         };
-        if (variant != null && variant.length() > 0) { params["variant"] = variant; }
-        if (user != null && user.length() > 0)       { params["user"]    = user;    }
+        if (variant != null && variant.length() > 0) { _params["variant"] = variant; }
+        if (user != null && user.length() > 0)       { _params["user"]    = user;    }
         // Cache-bust right after submitting so the player's fresh score/rank
         // is reflected instead of a stale CDN copy.
-        if (nocache) { params["_"] = System.getTimer(); }
+        if (nocache) { _params["_"] = System.getTimer(); }
+        _doFetch();
+    }
+
+    // PUBLIC — Timer callback for retries. UI GETs do NOT take the busy lock:
+    // waiting on the launch pipeline used to freeze the board on "Loading..."
+    // for ~12s and then show "No connection". Instead we fire immediately and
+    // briefly retry if the single-flight channel was busy at the firmware level.
+    function _doFetch() as Void {
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_GET,
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
             Communications.makeWebRequest(Leaderboard.API_BASE + "/leaderboard",
-                                          params, opts, method(:_onResp));
+                                          _params, opts, method(:_onResp));
         } catch (e) {
-            _notify(false, null);
+            _retryOrFail();
         }
     }
 
@@ -302,7 +488,17 @@ class LbFetch {
         if (responseCode == 200 && data instanceof Lang.Dictionary) {
             _notify(true, data); return;
         }
-        _notify(false, null);
+        // Network / collision / 5xx → short retry. 4xx is final.
+        if (responseCode >= 400 && responseCode < 500) { _notify(false, null); return; }
+        _retryOrFail();
+    }
+
+    hidden function _retryOrFail() as Void {
+        if (_attempt >= 3) { _notify(false, null); return; }
+        var delay = [600, 1200, 2000][_attempt];
+        _attempt = _attempt + 1;
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        try { _timer.start(method(:_doFetch), delay, false); } catch (e) { _notify(false, null); }
     }
 
     hidden function _notify(ok, data) {
@@ -906,19 +1102,46 @@ class LbPostGame {
         _title   = (title != null) ? title : "LEADERBOARD";
         _t       = null;
         _armed   = false;
+        _waitIdle = 0;
     }
+    hidden var _waitIdle;   // how many times we deferred for the score queue
     function arm(delayMs) {
         _armed = true;
-        _t = new Timer.Timer();
-        _t.start(method(:_fire), delayMs, false);
+        _waitIdle = 0;
+        // Reuse one Timer for the whole post-game lifetime. Creating a fresh
+        // Timer on every busy-wait tick exhausts Garmin's tiny timer pool and
+        // crashes the app (exactly the Activity Board / Jump Tower reports).
+        if (_t == null) {
+            try { _t = new Timer.Timer(); } catch (e) { _t = null; }
+        }
+        if (_t == null) { return; }
+        var d = delayMs;
+        if (d < 50) { d = 50; }
+        try { _t.start(method(:_fire), d, false); } catch (e) {}
     }
     function disarm() as Void {
         _armed = false;
-        if (_t != null) { try { _t.stop(); } catch (e) {} _t = null; }
+        if (_t != null) { try { _t.stop(); } catch (e) {} }
+        // Keep the instance — do not null it. Reused by the next arm().
     }
     function _fire() as Void {
-        if (_t != null) { _t.stop(); _t = null; }
         if (!_armed) { return; }
+        // Wait until every score POST from this game-over has finished (or the
+        // shared channel is free). Opening the board while submits still own
+        // makeWebRequest is what produced "No connection" / endless Loading.
+        // CRITICAL: reschedule on the SAME Timer — never `new Timer.Timer()` here.
+        if (!Leaderboard.scoreQueueIdle() || Leaderboard.isBusy()) {
+            if (_waitIdle < 50) {   // ~25 s max
+                _waitIdle = _waitIdle + 1;
+                if (_t == null) {
+                    try { _t = new Timer.Timer(); } catch (e) { _t = null; }
+                }
+                if (_t != null) {
+                    try { _t.start(method(:_fire), 500, false); } catch (e) {}
+                }
+                return;
+            }
+        }
         // Engagement card FIRST (only once the player has a name, so we have a
         // real rank to show): "you're #12 / 340, +85 to the Hall of Fame, ..."
         // Dismissing it chains to the (occasional) support message, then the

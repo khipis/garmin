@@ -48,7 +48,7 @@ class PetsHooks extends GameHooks {
         var pet = gPet;
         if (pet == null) { return null; }
         try {
-            if (pet.newDropActive()) { return "NEW PETS+GAME"; }
+            if (pet.newDropActive()) { return "NEW DROP!"; }
         } catch (e) {}
         if (pet.isCreated && pet.petName != null) {
             return pet.petName;

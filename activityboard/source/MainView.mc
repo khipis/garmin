@@ -57,6 +57,7 @@ class MainView extends WatchUi.View {
 
     function onHide() {
         if (_anim != null) { _anim.stop(); _anim = null; }
+        try { Leaderboard.cancelPostGame(); } catch (e) {}
     }
 
     // Fresh snapshot on demand (used by the delegate when opening the menu).
@@ -98,7 +99,6 @@ class MainView extends WatchUi.View {
     function onUpdate(dc) {
         _w = dc.getWidth();
         _h = dc.getHeight();
-        var cx = _w / 2;
         var VC = Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER;
         var fh = dc.getFontHeight(Graphics.FONT_XTINY);
         var big = Graphics.FONT_NUMBER_MEDIUM;
@@ -108,14 +108,21 @@ class MainView extends WatchUi.View {
         dc.setColor(LB_BG, LB_BG);
         dc.clear();
 
-        var pad = (_h * 6) / 100;
+        // Content box ~15% smaller than the full screen so the dashboard
+        // breathes inside the bezel on round watches.
+        var boxW = (_w * 85) / 100;
+        var boxH = (_h * 85) / 100;
+        var ox   = (_w - boxW) / 2;
+        var oy   = (_h - boxH) / 2;
+        var cx   = ox + boxW / 2;
+
+        var pad = (boxH * 6) / 100;
         if (pad < 6) { pad = 6; }
 
         // Everything is laid out in "content space" (y grows downward from 0)
         // and drawn shifted up by _scrollY. Off-screen text is harmlessly
         // clipped by the device context.
-        var y = pad;
-        var sy;   // reused screen-space y
+        var y = oy + pad;
 
         // Title.
         dc.setColor(LB_ACCENT, Graphics.COLOR_TRANSPARENT);
@@ -134,8 +141,8 @@ class MainView extends WatchUi.View {
         var cat = Metrics.catalog();
         var n = cat.size();
         var rowH = fh + (fh * 3) / 4;
-        var lcol = (_w * 16) / 100;
-        var rcol = (_w * 84) / 100;
+        var lcol = ox + (boxW * 16) / 100;
+        var rcol = ox + (boxW * 84) / 100;
 
         for (var i = 0; i < n; i++) {
             var variant = cat[i][0];
@@ -148,10 +155,10 @@ class MainView extends WatchUi.View {
             if (goal > 0) {
                 var pct = (val * 100) / goal;
                 if (pct > 100) { pct = 100; }
-                var barW = (_w * 72 / 100) * pct / 100;
+                var barW = (boxW * 72 / 100) * pct / 100;
                 if (barW > 0) {
                     dc.setColor(0x0E2A33, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle((_w * 14) / 100, rowCY - rowH / 2 + 1, barW, rowH - 2);
+                    dc.fillRectangle(ox + (boxW * 14) / 100, rowCY - rowH / 2 + 1, barW, rowH - 2);
                 }
             }
 
@@ -173,9 +180,9 @@ class MainView extends WatchUi.View {
         y += fh + gapS;
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (y + fh / 2) - _scrollY, Graphics.FONT_XTINY, "bitochi.com", VC);
-        y += fh + pad;
+        y += fh + pad + oy;
 
-        // Finalise scroll metrics.
+        // Finalise scroll metrics against the inset viewport height.
         _contentH  = y;
         _maxScroll = _contentH - _h;
         if (_maxScroll < 0) { _maxScroll = 0; }

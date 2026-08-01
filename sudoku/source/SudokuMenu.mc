@@ -14,7 +14,16 @@ using Toybox.Lang;
 class SudokuHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("sudoku"); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load("sudoku"));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("sudoku");
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

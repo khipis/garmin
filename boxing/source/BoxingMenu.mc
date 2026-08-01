@@ -9,7 +9,16 @@ using Toybox.Lang;
 class BoxingHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("boxing"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiBoxingView();
+        v.loadResume(SaveResume.load("boxing"));
+        WatchUi.pushView(v, new BitochiBoxingDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("boxing");
         var v = new BitochiBoxingView();
         WatchUi.pushView(v, new BitochiBoxingDelegate(v), WatchUi.SLIDE_LEFT);
     }

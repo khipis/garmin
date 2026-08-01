@@ -26,35 +26,50 @@ using Toybox.Timer;
 // ── Fetcher: GET /standing?game&variant&user → listener.onStanding(ok,data) ──
 class LbStandingFetch {
     hidden var _listener;
-    hidden var _game;
-    hidden var _variant;
-    hidden var _user;
+    hidden var _params;
+    hidden var _timer;
+    hidden var _attempt;
 
-    function initialize() { _listener = null; }
+    function initialize() { _listener = null; _params = null; _timer = null; _attempt = 0; }
 
     function fetch(game, variant, user, listener) {
         _listener = listener;
-        _game = game; _variant = variant; _user = user;
-        var params = { "game" => game };
-        if (variant != null && variant.length() > 0) { params["variant"] = variant; }
-        if (user != null && user.length() > 0)       { params["user"]    = user;    }
-        params["_"] = System.getTimer();   // cache-bust: reflect the fresh score
+        _attempt = 0;
+        _params = { "game" => game };
+        if (variant != null && variant.length() > 0) { _params["variant"] = variant; }
+        if (user != null && user.length() > 0)       { _params["user"]    = user;    }
+        _params["_"] = System.getTimer();   // cache-bust: reflect the fresh score
+        _doFetch();
+    }
+
+    // PUBLIC — Timer callback for retries. Same policy as LbFetch: do not wait
+    // on the advisory busy lock (that froze the UI); fire and retry briefly.
+    function _doFetch() as Void {
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_GET,
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
             Communications.makeWebRequest(Leaderboard.API_BASE + "/standing",
-                                          params, opts, method(:_onResp));
+                                          _params, opts, method(:_onResp));
         } catch (e) {
-            _notify(false, null);
+            _retryOrFail();
         }
     }
 
     function _onResp(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
         if (responseCode == 200 && data instanceof Lang.Dictionary) { _notify(true, data); return; }
-        _notify(false, null);
+        if (responseCode >= 400 && responseCode < 500) { _notify(false, null); return; }
+        _retryOrFail();
+    }
+
+    hidden function _retryOrFail() as Void {
+        if (_attempt >= 3) { _notify(false, null); return; }
+        var delay = [600, 1200, 2000][_attempt];
+        _attempt = _attempt + 1;
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        try { _timer.start(method(:_doFetch), delay, false); } catch (e) { _notify(false, null); }
     }
 
     hidden function _notify(ok, data) {

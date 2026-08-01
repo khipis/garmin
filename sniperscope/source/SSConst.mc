@@ -79,7 +79,7 @@ const SS_TARGET_PITCH_LIM = 0.52;
 // ground / floats when you swing the scope down.
 //
 // Kept BELOW the whole target pitch band (targets spawn in roughly
-// [-0.24 .. +0.30]) so every hostile renders below the horizon and
+// [-0.22 .. +0.28]) so every hostile renders below the horizon and
 // stays grounded, while the band still straddles the resting gaze —
 // some targets sit near/above centre (easy) and some require a natural
 // downward tilt (the "lower" ones). An all-positive band made EVERY

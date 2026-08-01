@@ -14,7 +14,16 @@ class SkiJumpHooks extends GameHooks {
         _venueNames = ["Zakopane", "Innsbruck", "Oberstdorf", "Vikersund"];
     }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("skijump"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiJumpView();
+        v.loadResume(SaveResume.load("skijump"));
+        WatchUi.pushView(v, new BitochiJumpDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("skijump");
         var v = new BitochiJumpView();
         WatchUi.pushView(v, new BitochiJumpDelegate(v), WatchUi.SLIDE_LEFT);
     }

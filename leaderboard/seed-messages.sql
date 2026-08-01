@@ -34,14 +34,42 @@ SELECT 'global', NULL, 'postgame',
        0, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='postgame' AND title='Worth a coffee?');
 
--- 2) GLOBAL · LAUNCH · "Discover the new idle games"
+-- 2) GLOBAL · LAUNCH · combined discovery (new titles + idle worlds)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'global', NULL, 'launch',
-       'New idle games!',
-       'Four new idle worlds just landed: Space Colony, Island, Mines and Creatures. Build, dig and evolve while you''re away, then climb the boards. On your phone:',
+       'New Bitochi games!',
+       'Daily Sport, Zombie Survival, Backrooms, Dungeon Master, Tower Defense + idle Farm, Space Colony, Mines, Creatures, Island. On your phone:',
        'https://bitochi.com', 'bitochi.com',
        0, 86400, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='launch' AND title='New idle games!');
+WHERE NOT EXISTS (
+  SELECT 1 FROM messages
+  WHERE scope='global' AND game IS NULL AND placement='launch'
+    AND title IN ('New Bitochi games!', 'New idle games!')
+);
+
+-- spacecolony · LAUNCH · SPACE WAR / raid rivals
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'spacecolony', 'launch',
+       'SPACE WAR is LIVE',
+       'Rival colonies are on the board. Train marines, raise turrets, then RAID real players. They can hit YOU while you''re away — open WAR and strike first.',
+       'https://bitochi.com/?game=spacecolony', 'bitochi.com',
+       15, 86400, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (
+  SELECT 1 FROM messages
+  WHERE scope='game' AND game='spacecolony' AND placement='launch' AND title='SPACE WAR is LIVE'
+);
+
+-- creatures · LAUNCH · Arena PvP fights
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'creatures', 'launch',
+       'ARENA FIGHTS are LIVE',
+       'Your creatures can now ATTACK real rivals from the global board. Pick a target, fight for rank — and see who came for YOUR roster while you slept.',
+       'https://bitochi.com/?game=creatures', 'bitochi.com',
+       15, 86400, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (
+  SELECT 1 FROM messages
+  WHERE scope='game' AND game='creatures' AND placement='launch' AND title='ARENA FIGHTS are LIVE'
+);
 
 -- 3) GLOBAL · RESET · "New season" (shown once after a leaderboard wipe)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
@@ -89,11 +117,21 @@ SELECT 'game', 'activityboard', 'postgame',
        10, 21600, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='activityboard' AND placement='postgame' AND title='See your world rank');
 
--- 4) breathtrainingtool · LAUNCH · invite to the paid "System" version
+-- 4) breathtrainingtool · LAUNCH · hard invite to the paid "System" version
+-- (short gap on purpose — free lite should nag toward System)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'game', 'breathtrainingtool', 'launch',
-       'Go deeper with PRO',
-       'Loving the breath tool? Breath Training System adds a coach, adaptive plans and progression. Try it on the Connect IQ Store.',
-       'https://apps.garmin.com/apps/bitochi', 'Get the System',
-       10, 172800, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='breathtrainingtool' AND placement='launch' AND title='Go deeper with PRO');
+       'You''re on the free lite',
+       'Breath Training System is the real one — distraction-free, fully featured, with a coach, adaptive plans, readiness and way more. Open on your phone:',
+       'https://bitochi.com/pro', 'Get Breath Training System',
+       20, 1800, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='breathtrainingtool' AND placement='launch' AND title='You''re on the free lite');
+
+-- 4b) breathtrainingtool · POSTGAME · nag again after every finished session
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'breathtrainingtool', 'postgame',
+       'You''re on the free lite',
+       'Breath Training System is the real one — distraction-free, fully featured, with a coach, adaptive plans, readiness and way more. Open on your phone:',
+       'https://bitochi.com/pro', 'Get Breath Training System',
+       20, 0, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='breathtrainingtool' AND placement='postgame' AND title='You''re on the free lite');

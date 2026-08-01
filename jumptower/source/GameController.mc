@@ -193,7 +193,8 @@ class GameController {
     // cosmetic skins the first time their milestone (height OR level) is met.
     // Idempotent unlock calls make the "UNLOCKED" banner fire exactly once.
     hidden function _awardProgress() {
-        var m = heightMetres();
+        var m = score / 6;   // integer metres — keep Progress math on Numbers
+        if (m < 0) { m = 0; }
         var coinsGain = 5 + m / 20;
         var xpGain    = 10 + m / 5;
         Progress.addCoins(coinsGain);
@@ -591,16 +592,18 @@ class GameController {
         // Shared meta-progression: award coins + XP and unlock height skins.
         _awardProgress();
         state = GS_OVER;
-        // Submit the run's height (the metres value shown to the player)
-        // to the global leaderboard. No variant for Jump Tower.
-        Leaderboard.submitScore(LB_GAME_ID, heightMetres().toNumber(), diffVariant());
-        Leaderboard.showPostGame(LB_GAME_ID, diffVariant(), "JUMP TOWER");
-        // Secondary variant — best coin haul in a single run. Only
-        // submitted on a new personal best, matching the pattern used
-        // for the other games' bonus leaderboard categories.
-        if (_newCoinsFlag) {
-            Leaderboard.submitScore(LB_GAME_ID, bestCoinsRun, "coins");
-        }
+        // Serial batch — never fire concurrent POSTs at game-over. Height is an
+        // integer number of "metres"; avoid Float.toNumber() pitfalls.
+        try {
+            var hm = score / 6;
+            if (hm < 0) { hm = 0; }
+            var entries = [{ :score => hm, :variant => diffVariant(), :meta => null }];
+            if (_newCoinsFlag) {
+                entries.add({ :score => bestCoinsRun, :variant => "coins", :meta => null });
+            }
+            Leaderboard.submitScoreBatch(LB_GAME_ID, entries);
+            Leaderboard.showPostGame(LB_GAME_ID, diffVariant(), "JUMP TOWER");
+        } catch (e) {}
     }
 
     function hasNewCoinsRecord() { return _newCoinsFlag; }

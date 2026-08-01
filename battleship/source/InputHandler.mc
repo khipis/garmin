@@ -176,9 +176,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()       { return _handleKeyCode(WatchUi.KEY_ENTER); }
     function onBack() {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
-        // BACK always returns to the shared menu (pop the gameplay view).
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
-        return true;
+        return SaveResume.confirmExit("battleship", view.method(:exportSave));
     }
     function onNextPage()     { return _handleKeyCode(WatchUi.KEY_DOWN);  }
     function onPreviousPage() { return _handleKeyCode(WatchUi.KEY_UP);    }

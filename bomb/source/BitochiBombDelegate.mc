@@ -76,9 +76,8 @@ class BitochiBombDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        if (_sensorEnabled) {
-            Sensor.enableSensorEvents(null);
-        }
-        return false;
+        // Keep accel alive through the save prompt (Cancel would otherwise
+        // leave the plane without input). Sensor drops when the app exits.
+        return SaveResume.confirmExit("bomb", _view.method(:exportSave));
     }
 }

@@ -615,7 +615,7 @@
           <div class="signal-list" id="conversion-high"><div class="muted">Waiting for launch data…</div></div>
         </article>
         <article class="command-card">
-          <div class="command-label">Idle games (new)</div>
+          <div class="command-label">New + idle watchlist</div>
           <div class="signal-list" id="idle-watch"><div class="muted">Waiting for data…</div></div>
         </article>
       </div>
@@ -907,7 +907,10 @@ let lastLaunchByGame24h  = [];
 let lastLaunchByGame7d   = [];
 let lastHotEntries       = [];
 let lastDailyChallenges  = [];
-const IDLE_GAMES = ['creatures', 'island', 'mines', 'spacecolony', 'farm'];
+// Featured watchlist: recent idle worlds + brand-new titles.
+const IDLE_GAMES = ['creatures', 'island', 'mines', 'spacecolony', 'farm', 'zombiesurvival'];
+const NEW_GAMES  = ['dailysport', 'backrooms', 'dungeonmaster', 'towerdefense'];
+const WATCH_GAMES = IDLE_GAMES.concat(NEW_GAMES);
 
 // ── Overview ──────────────────────────────────────────────────────────────────
 function showOverview() {
@@ -1436,7 +1439,7 @@ function renderConversionInsights() {
   const totalScores = (statsData?.totals?.scores) || rows.reduce((s, r) => s + r.scores, 0);
   const portfolioSpo = totalOpens > 0 ? (totalScores / totalOpens) : 0;
   const trackedDaily = DAILY_TRACKED_GAMES.length;
-  const idleWithOpens = IDLE_GAMES.filter(g => rows.find(r => r.game === g && r.opens > 0)).length;
+  const watchWithOpens = WATCH_GAMES.filter(g => rows.find(r => r.game === g && r.opens > 0)).length;
 
   cardsEl.innerHTML = `
     <div class="card"><div class="num">${opens24.toLocaleString()}</div><div class="lbl">Opens last 24h</div>
@@ -1446,7 +1449,7 @@ function renderConversionInsights() {
     <div class="card"><div class="num">${portfolioSpo.toFixed(2)}</div><div class="lbl">Scores / open</div>
       <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">portfolio lifetime</div></div>
     <div class="card"><div class="num">${trackedDaily}</div><div class="lbl">Daily tracked</div>
-      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">${idleWithOpens}/5 idle games opened</div></div>`;
+      <div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">${watchWithOpens}/${WATCH_GAMES.length} watchlist opened</div></div>`;
 
   // Low converters: enough opens, weak score yield (skip brand-new with &lt;8 opens).
   const low = [...rows]
@@ -1469,10 +1472,10 @@ function renderConversionInsights() {
       <span class="signal-detail">${r.opens} opens · ${r.scores} scores · ${(r.scorePerOpen*100).toFixed(0)}%</span>
     </div>`).join('') : '<div class="muted">No strong converters yet.</div>';
 
-  // Idle games watchlist — always show all 5 with opens (7d preferred) + scores.
+  // New + idle watchlist — always show every tracked title with opens (7d) + scores.
   const launch7 = new Map(lastLaunchByGame7d.map(x => [x.game, x]));
   const launchAll = new Map(rows.map(x => [x.game, x]));
-  idleEl.innerHTML = IDLE_GAMES.map(g => {
+  idleEl.innerHTML = WATCH_GAMES.map(g => {
     const L7 = launch7.get(g);
     const L  = launchAll.get(g);
     const S  = scoreByGame.get(g) || { scores: 0, players: 0 };
@@ -2171,7 +2174,8 @@ const DAILY_TRACKED_GAMES = [
   'blocks','blobs','cellwars','diceroyale','gobblet_mini','gyromaze','hangman',
   'makao_lite','morris_classic','territory_clash','twentyfortyeight','serpent',
   'activityboard','breathtrainingtool',
-  'creatures','island','mines','spacecolony','farm'
+  'creatures','island','mines','spacecolony','farm',
+  'dailysport','zombiesurvival','backrooms','dungeonmaster','towerdefense'
 ];
 
 async function loadDailyStats() {

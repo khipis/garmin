@@ -113,6 +113,23 @@ class GridManager {
         }
     }
 
+    // ── SaveResume (see _shared/menu/SaveResume.mc) ──────────────────
+    function exportData() {
+        return { "c" => cells, "s" => shipId };
+    }
+
+    function importData(d) {
+        if (d == null) { return false; }
+        var c = d["c"]; var s = d["s"];
+        if (!(c instanceof Array) || c.size() != NUM_CELLS) { return false; }
+        if (!(s instanceof Array) || s.size() != NUM_CELLS) { return false; }
+        for (var i = 0; i < NUM_CELLS; i++) {
+            var cv = c[i]; cells[i]  = (cv instanceof Number) ? cv : 0;
+            var sv = s[i]; shipId[i] = (sv instanceof Number) ? sv : -1;
+        }
+        return true;
+    }
+
     // Returns array of [r, c] pairs occupied by ship `id`. Useful
     // when revealing sunk ships or feeding the AI's TARGET pruning.
     function cellsForShip(id) {

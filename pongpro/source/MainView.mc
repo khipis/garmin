@@ -17,6 +17,8 @@ class MainView extends WatchUi.View {
     hidden var _timer;
     hidden var _laidOut;
     hidden var _started;    // auto-start the match on first layout
+    hidden var _skipStart;  // true when a SaveResume blob was applied (or is pending)
+    hidden var _pendingResume; // SaveResume blob queued until setScreen() runs
 
     function initialize() {
         View.initialize();
@@ -24,6 +26,22 @@ class MainView extends WatchUi.View {
         _timer   = null;
         _laidOut = false;
         _started = false;
+        _skipStart = false;
+        _pendingResume = null;
+    }
+
+    // Queue a SaveResume blob to apply once the screen is laid out (the
+    // play field geometry needs real screen dims, which aren't known yet).
+    function loadResume(data) as Void {
+        if (data != null) {
+            _pendingResume = data;
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return _ctrl.exportSave();
     }
 
     function onShow() {
@@ -43,13 +61,24 @@ class MainView extends WatchUi.View {
         if (!_laidOut) {
             _ctrl.setScreen(dc.getWidth(), dc.getHeight());
             _laidOut = true;
+            // Play-field geometry needs real screen dims, so a queued
+            // SaveResume blob can only be applied now — right after setScreen().
+            if (_pendingResume != null) {
+                var data = _pendingResume;
+                _pendingResume = null;
+                if (!_ctrl.applySave(data)) { _skipStart = false; _started = false; }
+            }
         }
         // Menu lives in the shared root view — drop straight into a match and
-        // never render an in-game menu here.
-        if (!_started || _ctrl.state == GS_MENU) {
+        // never render an in-game menu here. _skipStart guards a just-applied
+        // SaveResume blob from being wiped by the auto-start. One-shot: a
+        // resumed match is already GS_SERVE, so this never blocks a later
+        // GS_OVER → gotoMenu() → GS_MENU restart.
+        if (!_skipStart && (!_started || _ctrl.state == GS_MENU)) {
             _ctrl.startMatch();
             _started = true;
         }
+        _skipStart = false;
         // Pure black background — classic Pong feel.
         dc.setColor(0x000000, 0x000000); dc.clear();
 
@@ -180,6 +209,11 @@ class MainView extends WatchUi.View {
 
     // Rematch after a game-over (SELECT / tap / swipe).
     function restart() { _ctrl.startMatch(); }
+
+    function navBack() {
+        // Let InputHandler pop back to the shared menu (via SaveResume.confirmExit).
+        return false;
+    }
 
     function handleTap(x, y) {
         if (_ctrl.state == GS_OVER) { _ctrl.startMatch(); return; }

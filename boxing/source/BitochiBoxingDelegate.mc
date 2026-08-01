@@ -54,7 +54,7 @@ class BitochiBoxingDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        if (_sensorOn) { Sensor.enableSensorEvents(null); }
-        return false;
+        if (_sensorOn) { Sensor.enableSensorEvents(null); _sensorOn = false; }
+        return SaveResume.confirmExit("boxing", _view.method(:exportSave));
     }
 }

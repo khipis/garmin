@@ -132,6 +132,10 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _treeXz; hidden var _treeYz;
     hidden var _crowdXz; hidden var _crowdYz;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed tournament back to a fresh JS_MENU.
+    hidden var _skipStart;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -195,6 +199,7 @@ class BitochiJumpView extends WatchUi.View {
         if (sjj != null && sjj >= 0 && sjj < NUM_JUMPERS) { _jumperIdx = sjj; }
         _shakeX = 0; _shakeY = 0; _shakeTick = 0; _crowdCheer = 0;
         _menuRow = 0;
+        _skipStart = false;
         gameState = JS_MENU;
     }
 
@@ -323,9 +328,93 @@ class BitochiJumpView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a competition.
         // Only auto-start from a fresh launch (JS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the meet.
-        if (gameState == JS_MENU) { startCompetition(); }
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && gameState == JS_MENU) { startCompetition(); }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+
+    // Mid-run save: between jumps (result/standings) OR on the inrun.
+    // Mid-flight / landing abandons the current jump and saves as INRUN.
+    function exportSave() {
+        var st = gameState;
+        if (st == JS_FLIGHT || st == JS_LANDING) { st = JS_INRUN; }
+        if (st != JS_RESULT && st != JS_STANDINGS && st != JS_INRUN) { return null; }
+        // Copy arrays so Storage gets plain Number arrays.
+        var scores = new [NUM_JUMPERS];
+        var dists = new [NUM_JUMPERS];
+        var cumScores = new [NUM_JUMPERS];
+        var cumDists = new [NUM_JUMPERS];
+        for (var i = 0; i < NUM_JUMPERS; i++) {
+            scores[i] = _scores[i];
+            dists[i] = _dists[i];
+            cumScores[i] = _cumScores[i];
+            cumDists[i] = _cumDists[i];
+        }
+        return {
+            "state" => st,
+            "venue" => _venue, "currentRound" => _currentRound, "jumpSlot" => _jumpSlot,
+            "startJumper" => _startJumper, "jumperIdx" => _jumperIdx, "jumpNum" => _jumpNum,
+            "diff" => _diff,
+            "scores" => scores, "dists" => dists,
+            "cumScores" => cumScores, "cumDists" => cumDists,
+            "tourBestDist" => _tourBestDist, "tourBestVenue" => _tourBestVenue,
+            "lastDist" => _lastDist, "lastScore" => _lastScore,
+            "landCrash" => _landCrash ? 1 : 0, "landGood" => _landGood ? 1 : 0,
+            "takeoffQuality" => _takeoffQuality, "newHillRecord" => _newHillRecord ? 1 : 0
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from SkiJumpHooks).
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            var vn = data["venue"];
+            _venue = (vn instanceof Number) ? vn : 0;
+            buildHill();
+            var cr = data["currentRound"];
+            var js = data["jumpSlot"];
+            var sj = data["startJumper"];
+            var ji = data["jumperIdx"];
+            var jn = data["jumpNum"];
+            var df = data["diff"];
+            _currentRound = (cr instanceof Number) ? cr : 1;
+            _jumpSlot = (js instanceof Number) ? js : 0;
+            _startJumper = (sj instanceof Number) ? sj : 0;
+            _jumperIdx = (ji instanceof Number) ? ji : 0;
+            _jumpNum = (jn instanceof Number) ? jn : 0;
+            _diff = (df instanceof Number) ? df : 1;
+            var sc = data["scores"]; var ds = data["dists"];
+            var csc = data["cumScores"]; var cds = data["cumDists"];
+            for (var i = 0; i < NUM_JUMPERS; i++) {
+                _scores[i] = (sc instanceof Array && sc[i] instanceof Number) ? sc[i] : 0.0;
+                _dists[i] = (ds instanceof Array && ds[i] instanceof Number) ? ds[i] : 0.0;
+                _cumScores[i] = (csc instanceof Array && csc[i] instanceof Number) ? csc[i] : 0.0;
+                _cumDists[i] = (cds instanceof Array && cds[i] instanceof Number) ? cds[i] : 0.0;
+            }
+            var tbd = data["tourBestDist"]; var tbv = data["tourBestVenue"];
+            _tourBestDist = (tbd instanceof Number) ? tbd.toFloat() : 0.0;
+            _tourBestVenue = (tbv instanceof Number) ? tbv : 0;
+            var ld = data["lastDist"]; var ls = data["lastScore"];
+            _lastDist = (ld instanceof Number) ? ld.toFloat() : 0.0;
+            _lastScore = (ls instanceof Number) ? ls.toFloat() : 0.0;
+            var lc = data["landCrash"]; var lg = data["landGood"];
+            _landCrash = (lc instanceof Number && lc != 0);
+            _landGood = (lg instanceof Number && lg != 0);
+            var tq = data["takeoffQuality"];
+            _takeoffQuality = (tq instanceof Number) ? tq.toFloat() : 0.0;
+            var nhr = data["newHillRecord"];
+            _newHillRecord = (nhr instanceof Number && nhr != 0);
+            var st = data["state"];
+            if (!(st instanceof Number)) { st = JS_INRUN; }
+            if (st == JS_INRUN) {
+                initJumpVars();
+                gameState = JS_INRUN;
+            } else {
+                gameState = st;
+            }
+            _skipStart = true;
+        } catch (e) {}
+    }
 
     function onTick() as Void {
         _tick++;
@@ -763,6 +852,7 @@ class BitochiJumpView extends WatchUi.View {
                 // shot at a record). Falls back to the flagship Vikersund hill.
                 var pgVenue = (_tourBestDist > 0.0) ? _tourBestVenue : 3;
                 Leaderboard.showPostGame(LB_GAME_ID, _venueNames[pgVenue], _venueNames[pgVenue] + " HILL");
+                try { SaveResume.clear("skijump"); } catch (e) {}
                 gameState = JS_FINAL;
             }
             return;

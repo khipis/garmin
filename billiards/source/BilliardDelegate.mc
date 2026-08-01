@@ -20,7 +20,7 @@ class BilliardDelegate extends WatchUi.BehaviorDelegate {
         if      (k == WatchUi.KEY_UP)   { _v.doUp();   }
         else if (k == WatchUi.KEY_MENU) { _v.doUp();   }
         else if (k == WatchUi.KEY_DOWN) { _v.doDown(); }
-        else if (k == WatchUi.KEY_ESC)  { var h = _v.doBack(); WatchUi.requestUpdate(); return h; }
+        else if (k == WatchUi.KEY_ESC)  { var h = onBack(); WatchUi.requestUpdate(); return h; }
         else                            { _v.doSelect(); }
         WatchUi.requestUpdate();
         return true;
@@ -29,7 +29,7 @@ class BilliardDelegate extends WatchUi.BehaviorDelegate {
     function onSelect()       { _v.doSelect(); WatchUi.requestUpdate(); return true; }
     function onPreviousPage() { _v.doUp();     WatchUi.requestUpdate(); return true; }
     function onNextPage()     { _v.doDown();   WatchUi.requestUpdate(); return true; }
-    function onBack()         { var h = _v.doBack(); WatchUi.requestUpdate(); return h; }
+    function onBack()         { return SaveResume.confirmExit("billiards", _v.method(:exportSave)); }
 
     function onTap(evt) {
         var xy = evt.getCoordinates();

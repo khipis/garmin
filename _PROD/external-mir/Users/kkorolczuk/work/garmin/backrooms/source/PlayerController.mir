@@ -1,0 +1,1236 @@
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [Math,8,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Lang,9,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 11; @symbol_classdef = [PlayerController,11,6,22]; ]
+class PlayerController {
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 11; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 11; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 12; @position = 8; @symbol_vardef = [x,12,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 12; @position = 15; @symbol_vardef = [y,12,15,16]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 12; @position = 22; @symbol_vardef = [ang,12,22,25]; ]
+    var ang;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 13; @position = 8; @symbol_vardef = [dirX,13,8,12]; ]
+    var dirX;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 13; @position = 18; @symbol_vardef = [dirY,13,18,22]; ]
+    var dirY;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 13; @position = 28; @symbol_vardef = [planeX,13,28,34]; ]
+    var planeX;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 13; @position = 40; @symbol_vardef = [planeY,13,40,46]; ]
+    var planeY;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 14; @position = 8; @symbol_vardef = [vel,14,8,11]; ]
+    var vel;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 14; @position = 17; @symbol_vardef = [avel,14,17,21]; ]
+    var avel;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 15; @position = 8; @symbol_vardef = [throttle,15,8,16]; ]
+    var throttle;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 16; @position = 8; @symbol_vardef = [turnDir,16,8,15]; ]
+    var turnDir;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 17; @position = 8; @symbol_vardef = [turnFrames,17,8,18]; ]
+    var turnFrames;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 18; @position = 8; @symbol_vardef = [sprint,18,8,14]; ]
+    var sprint;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 19; @position = 8; @symbol_vardef = [bob,19,8,11]; ]
+    var bob;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 20; @position = 8; @symbol_vardef = [bobY,20,8,12]; ]
+    var bobY;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 21; @position = 8; @symbol_vardef = [hasKey,21,8,14]; ]
+    var hasKey;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 22; @position = 8; @symbol_vardef = [moved,22,8,13]; ]
+    var moved;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 24; @symbol_functiondef = [initialize,24,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_24_26_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 25 8 ]
+        %tmp.1 = 1.5;
+        symbol [ x ? 25 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 25 17 ]
+        %tmp.2 = 1.5;
+        symbol [ y ? 25 17 18 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 25 26 ]
+        %tmp.3 = 0.0;
+        symbol [ ang ? 25 26 29 ];
+        putv self :ang %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 26 8 ]
+        %tmp.4 = 0.0;
+        symbol [ vel ? 26 8 11 ];
+        putv self :vel %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 26 19 ]
+        %tmp.5 = 0.0;
+        symbol [ avel ? 26 19 23 ];
+        putv self :avel %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 27 8 ]
+        %tmp.6 = 0;
+        symbol [ throttle ? 27 8 16 ];
+        putv self :throttle %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 27 22 ]
+        %tmp.7 = 0;
+        symbol [ turnDir ? 27 22 29 ];
+        putv self :turnDir %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 27 35 ]
+        %tmp.8 = 0;
+        symbol [ turnFrames ? 27 35 45 ];
+        putv self :turnFrames %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 27 51 ]
+        %tmp.9 = 0;
+        symbol [ sprint ? 27 51 57 ];
+        putv self :sprint %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 28 8 ]
+        %tmp.10 = 0.0;
+        symbol [ bob ? 28 8 11 ];
+        putv self :bob %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 28 19 ]
+        %tmp.11 = 0;
+        symbol [ bobY ? 28 19 23 ];
+        putv self :bobY %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 28 29 ]
+        %tmp.12 = false;
+        symbol [ hasKey ? 28 29 35 ];
+        putv self :hasKey %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 28 45 ]
+        %tmp.13 = 0.0;
+        symbol [ moved ? 28 45 50 ];
+        putv self :moved %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 29 8 ]
+        %tmp.14 = self;
+        symbol [ _updateVectors %tmp.15 29 8 22 ];
+        %tmp.15 = getv function %tmp.14 :_updateVectors;
+        invoke %tmp.14 %tmp.15();
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_24_26_30_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 32; @symbol_functiondef = [placeAt,32,13,20]; @symbol_param<0> = [cxx,32,21,24]; @symbol_param<1> = [cyy,32,26,29]; @symbol_param<2> = [a,32,31,32]; ]
+    function placeAt(cxx, cyy, a) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_32_34_36_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 33 8 ]
+        %tmp.1 = lgetv %cxx;
+        symbol [ cxx %tmp.1 33 12 15 ];
+        %tmp.2 = 0.5;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        symbol [ x ? 33 8 9 ];
+        putv self :x %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 33 23 ]
+        %tmp.4 = lgetv %cyy;
+        symbol [ cyy %tmp.4 33 27 30 ];
+        %tmp.5 = 0.5;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        symbol [ y ? 33 23 24 ];
+        putv self :y %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 33 38 ]
+        %tmp.7 = lgetv %a;
+        symbol [ a %tmp.7 33 44 45 ];
+        symbol [ ang ? 33 38 41 ];
+        putv self :ang %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 34 8 ]
+        %tmp.8 = 0.0;
+        symbol [ vel ? 34 8 11 ];
+        putv self :vel %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 34 19 ]
+        %tmp.9 = 0.0;
+        symbol [ avel ? 34 19 23 ];
+        putv self :avel %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 34 31 ]
+        %tmp.10 = 0;
+        symbol [ throttle ? 34 31 39 ];
+        putv self :throttle %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 34 45 ]
+        %tmp.11 = 0;
+        symbol [ turnFrames ? 34 45 55 ];
+        putv self :turnFrames %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 35 8 ]
+        %tmp.12 = self;
+        symbol [ _updateVectors %tmp.13 35 8 22 ];
+        %tmp.13 = getv function %tmp.12 :_updateVectors;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_32_34_36_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 38; @symbol_functiondef = [_updateVectors,38,13,27]; ]
+    function _updateVectors() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_38_30_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 39 8 ]
+        symbol [ Math %tmp.1 39 15 19 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ cos %tmp.2 39 20 23 ];
+        %tmp.2 = getv function %tmp.1 :cos;
+        symbol [ ang %tmp.4 39 24 27 ];
+        %tmp.4 = getv ? :ang;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        symbol [ dirX ? 39 8 12 ];
+        putv self :dirX %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 40 8 ]
+        symbol [ Math %tmp.6 40 15 19 ];
+        %tmp.6 = getm $.Toybox.Math;
+        symbol [ sin %tmp.7 40 20 23 ];
+        %tmp.7 = getv function %tmp.6 :sin;
+        symbol [ ang %tmp.9 40 24 27 ];
+        %tmp.9 = getv ? :ang;
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.9);
+        symbol [ dirY ? 40 8 12 ];
+        putv self :dirY %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 42 8 ]
+        symbol [ dirY %tmp.12 42 18 22 ];
+        %tmp.12 = getv ? :dirY;
+        %tmp.13 = sub 0 %tmp.12;
+        symbol [ Br %tmp.15 42 25 27 ];
+        %tmp.15 = getv ? :Br;
+        symbol [ FOV_PLANE %tmp.16 42 28 37 ];
+        %tmp.16 = getv %tmp.15 :FOV_PLANE;
+        %tmp.17 = mul %tmp.13 %tmp.16;
+        symbol [ planeX ? 42 8 14 ];
+        putv self :planeX %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 43 8 ]
+        symbol [ dirX %tmp.19 43 18 22 ];
+        %tmp.19 = getv ? :dirX;
+        symbol [ Br %tmp.21 43 25 27 ];
+        %tmp.21 = getv ? :Br;
+        symbol [ FOV_PLANE %tmp.22 43 28 37 ];
+        %tmp.22 = getv %tmp.21 :FOV_PLANE;
+        %tmp.23 = mul %tmp.19 %tmp.22;
+        symbol [ planeY ? 43 8 14 ];
+        putv self :planeY %tmp.23;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_38_30_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 47; @symbol_functiondef = [pushForward,47,13,24]; ]
+    function pushForward() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_47_27_47_55_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 47 29 ]
+        symbol [ Br %tmp.2 47 40 42 ];
+        %tmp.2 = getv ? :Br;
+        symbol [ THROTTLE_F %tmp.3 47 43 53 ];
+        %tmp.3 = getv %tmp.2 :THROTTLE_F;
+        symbol [ throttle ? 47 29 37 ];
+        putv self :throttle %tmp.3;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_47_27_47_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 48; @symbol_functiondef = [pushTurn,48,13,21]; @symbol_param<0> = [d,48,22,23]; ]
+    function pushTurn(d) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_48_25_48_56_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 48 27 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 48 37 38 ];
+        symbol [ turnDir ? 48 27 34 ];
+        putv self :turnDir %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 48 40 ]
+        %tmp.2 = 7;
+        symbol [ turnFrames ? 48 40 50 ];
+        putv self :turnFrames %tmp.2;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_48_25_48_56_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 49; @symbol_functiondef = [pushSprint,49,13,23]; ]
+    function pushSprint() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_49_26_49_74_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 49 28 ]
+        symbol [ Br %tmp.2 49 37 39 ];
+        %tmp.2 = getv ? :Br;
+        symbol [ SPRINT_F %tmp.3 49 40 48 ];
+        %tmp.3 = getv %tmp.2 :SPRINT_F;
+        symbol [ sprint ? 49 28 34 ];
+        putv self :sprint %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 49 50 ]
+        symbol [ Br %tmp.5 49 61 63 ];
+        %tmp.5 = getv ? :Br;
+        symbol [ SPRINT_F %tmp.6 49 64 72 ];
+        %tmp.6 = getv %tmp.5 :SPRINT_F;
+        symbol [ throttle ? 49 50 58 ];
+        putv self :throttle %tmp.6;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_49_26_49_74_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 52; @symbol_functiondef = [update,52,13,19]; @symbol_param<0> = [map,52,20,23]; ]
+    function update(map) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 54 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_stop" ]
+        %tTarget.1 = local;
+        symbol [ tTarget %tTarget.1 54 12 19 ];
+        %tmp.1 = 0.0;
+        lputv %tTarget.1 %tmp.1;
+        symbol [ tTarget %tTarget.1 54 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_8_58_8_if_stmt:
+        symbol [ turnFrames %tmp.3 55 12 22 ];
+        %tmp.3 = getv ? :turnFrames;
+        %tmp.4 = 0;
+        %tmp.5 = gt %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_8_58_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_8_58_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_28_58_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 56 12 ]
+        symbol [ turnFrames %tmp.6 56 12 22 ];
+        %tmp.6 = getv self :turnFrames;
+        %tmp.7 = 1;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        symbol [ turnFrames ? 56 12 22 ];
+        putv self :turnFrames dup %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 57 12 ]
+        symbol [ turnDir %tmp.10 57 22 29 ];
+        %tmp.10 = getv ? :turnDir;
+        symbol [ Br %tmp.12 57 32 34 ];
+        %tmp.12 = getv ? :Br;
+        symbol [ TURN_MAX %tmp.13 57 35 43 ];
+        %tmp.13 = getv %tmp.12 :TURN_MAX;
+        %tmp.14 = mul %tmp.10 %tmp.13;
+        lputv %tTarget.1 %tmp.14;
+        symbol [ tTarget %tTarget.1 57 12 19 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_28_58_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_8_58_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_55_8_58_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_stmt:
+        symbol [ avel %tmp.16 59 12 16 ];
+        %tmp.16 = getv ? :avel;
+        %tmp.17 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.17 59 19 26 ];
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_28_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 60 12 ]
+        symbol [ avel %tmp.19 60 12 16 ];
+        %tmp.19 = getv self :avel;
+        symbol [ Br %tmp.21 60 20 22 ];
+        %tmp.21 = getv ? :Br;
+        symbol [ TURN_ACCEL %tmp.22 60 23 33 ];
+        %tmp.22 = getv %tmp.21 :TURN_ACCEL;
+        %tmp.23 = add %tmp.19 %tmp.22;
+        symbol [ avel ? 60 12 16 ];
+        putv self :avel dup %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 61 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_12_61_50_if_stmt:
+        symbol [ avel %tmp.25 61 16 20 ];
+        %tmp.25 = getv ? :avel;
+        %tmp.26 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.26 61 23 30 ];
+        %tmp.27 = gt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_12_61_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_12_61_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_32_61_50_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 61 34 ]
+        %tmp.28 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.28 61 41 48 ];
+        symbol [ avel ? 61 34 38 ];
+        putv self :avel %tmp.28;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_32_61_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_12_61_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_61_12_61_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_28_62_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 62 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_15_65_8_if_stmt:
+        symbol [ avel %tmp.30 62 19 23 ];
+        %tmp.30 = getv ? :avel;
+        %tmp.31 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.31 62 26 33 ];
+        %tmp.32 = gt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_15_65_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_15_65_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_35_65_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 63 12 ]
+        symbol [ avel %tmp.33 63 12 16 ];
+        %tmp.33 = getv self :avel;
+        symbol [ Br %tmp.35 63 20 22 ];
+        %tmp.35 = getv ? :Br;
+        symbol [ TURN_DECEL %tmp.36 63 23 33 ];
+        %tmp.36 = getv %tmp.35 :TURN_DECEL;
+        %tmp.37 = sub %tmp.33 %tmp.36;
+        symbol [ avel ? 63 12 16 ];
+        putv self :avel dup %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_12_64_50_if_stmt:
+        symbol [ avel %tmp.39 64 16 20 ];
+        %tmp.39 = getv ? :avel;
+        %tmp.40 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.40 64 23 30 ];
+        %tmp.41 = lt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_12_64_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_12_64_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_32_64_50_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 64 34 ]
+        %tmp.42 = lgetv %tTarget.1;
+        symbol [ tTarget %tmp.42 64 41 48 ];
+        symbol [ avel ? 64 34 38 ];
+        putv self :avel %tmp.42;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_32_64_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_12_64_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_64_12_64_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_35_65_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_15_65_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_62_15_65_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_59_8_65_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 66 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_8_71_8_if_stmt:
+        symbol [ avel %tmp.44 66 12 16 ];
+        %tmp.44 = getv ? :avel;
+        %tmp.45 = 0.0;
+        %tmp.46 = ne %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_8_71_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_8_71_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_25_71_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 67 12 ]
+        symbol [ ang %tmp.47 67 12 15 ];
+        %tmp.47 = getv self :ang;
+        symbol [ avel %tmp.49 67 19 23 ];
+        %tmp.49 = getv ? :avel;
+        %tmp.50 = add %tmp.47 %tmp.49;
+        symbol [ ang ? 67 12 15 ];
+        putv self :ang dup %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 68 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_12_68_47_if_stmt:
+        symbol [ ang %tmp.52 68 16 19 ];
+        %tmp.52 = getv ? :ang;
+        %tmp.53 = 6.2832;
+        %tmp.54 = gt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_12_68_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_12_68_47_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_30_68_47_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 68 32 ]
+        symbol [ ang %tmp.55 68 32 35 ];
+        %tmp.55 = getv self :ang;
+        %tmp.56 = 6.2832;
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        symbol [ ang ? 68 32 35 ];
+        putv self :ang dup %tmp.57;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_30_68_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_12_68_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_68_12_68_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 69 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_12_69_44_if_stmt:
+        symbol [ ang %tmp.59 69 16 19 ];
+        %tmp.59 = getv ? :ang;
+        %tmp.60 = 0.0;
+        %tmp.61 = lt %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_12_69_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_12_69_44_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_27_69_44_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 69 29 ]
+        symbol [ ang %tmp.62 69 29 32 ];
+        %tmp.62 = getv self :ang;
+        %tmp.63 = 6.2832;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        symbol [ ang ? 69 29 32 ];
+        putv self :ang dup %tmp.64;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_27_69_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_12_69_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_69_12_69_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 70 12 ]
+        %tmp.65 = self;
+        symbol [ _updateVectors %tmp.66 70 12 26 ];
+        %tmp.66 = getv function %tmp.65 :_updateVectors;
+        invoke %tmp.65 %tmp.66();
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_25_71_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_8_71_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_66_8_71_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_stop" ]
+        %vTarget.2 = local;
+        symbol [ vTarget %vTarget.2 74 12 19 ];
+        %tmp.67 = 0.0;
+        lputv %vTarget.2 %tmp.67;
+        symbol [ vTarget %vTarget.2 74 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_8_82_8_if_stmt:
+        symbol [ throttle %tmp.69 75 12 20 ];
+        %tmp.69 = getv ? :throttle;
+        %tmp.70 = 0;
+        %tmp.71 = gt %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_8_82_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_26_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 76 12 ]
+        symbol [ throttle %tmp.72 76 12 20 ];
+        %tmp.72 = getv self :throttle;
+        %tmp.73 = 1;
+        %tmp.74 = sub %tmp.72 %tmp.73;
+        symbol [ throttle ? 76 12 20 ];
+        putv self :throttle dup %tmp.74;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 77 12 ]
+        symbol [ Br %tmp.76 77 22 24 ];
+        %tmp.76 = getv ? :Br;
+        symbol [ MOVE_MAX %tmp.77 77 25 33 ];
+        %tmp.77 = getv %tmp.76 :MOVE_MAX;
+        lputv %vTarget.2 %tmp.77;
+        symbol [ vTarget %vTarget.2 77 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 78 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_12_81_12_if_stmt:
+        symbol [ sprint %tmp.79 78 16 22 ];
+        %tmp.79 = getv ? :sprint;
+        %tmp.80 = 0;
+        %tmp.81 = gt %tmp.79 %tmp.80;
+        bf %tmp.81 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_12_81_12_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_28_81_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 79 16 ]
+        symbol [ sprint %tmp.82 79 16 22 ];
+        %tmp.82 = getv self :sprint;
+        %tmp.83 = 1;
+        %tmp.84 = sub %tmp.82 %tmp.83;
+        symbol [ sprint ? 79 16 22 ];
+        putv self :sprint dup %tmp.84;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 80 16 ]
+        symbol [ Br %tmp.86 80 26 28 ];
+        %tmp.86 = getv ? :Br;
+        symbol [ MOVE_MAX %tmp.87 80 29 37 ];
+        %tmp.87 = getv %tmp.86 :MOVE_MAX;
+        symbol [ Br %tmp.89 80 40 42 ];
+        %tmp.89 = getv ? :Br;
+        symbol [ SPRINT_MULT %tmp.90 80 43 54 ];
+        %tmp.90 = getv %tmp.89 :SPRINT_MULT;
+        %tmp.91 = mul %tmp.87 %tmp.90;
+        %tmp.92 = 100.0;
+        %tmp.93 = div %tmp.91 %tmp.92;
+        lputv %vTarget.2 %tmp.93;
+        symbol [ vTarget %vTarget.2 80 16 23 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_28_81_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_78_12_81_12_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_26_82_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_75_8_82_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_stmt:
+        symbol [ vel %tmp.95 83 12 15 ];
+        %tmp.95 = getv ? :vel;
+        %tmp.96 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.96 83 18 25 ];
+        %tmp.97 = lt %tmp.95 %tmp.96;
+        bf %tmp.97 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_27_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 84 12 ]
+        symbol [ vel %tmp.98 84 12 15 ];
+        %tmp.98 = getv self :vel;
+        symbol [ Br %tmp.100 84 19 21 ];
+        %tmp.100 = getv ? :Br;
+        symbol [ MOVE_ACCEL %tmp.101 84 22 32 ];
+        %tmp.101 = getv %tmp.100 :MOVE_ACCEL;
+        %tmp.102 = add %tmp.98 %tmp.101;
+        symbol [ vel ? 84 12 15 ];
+        putv self :vel dup %tmp.102;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 85 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_12_85_48_if_stmt:
+        symbol [ vel %tmp.104 85 16 19 ];
+        %tmp.104 = getv ? :vel;
+        %tmp.105 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.105 85 22 29 ];
+        %tmp.106 = gt %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_12_85_48_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_12_85_48_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_31_85_48_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 85 33 ]
+        %tmp.107 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.107 85 39 46 ];
+        symbol [ vel ? 85 33 36 ];
+        putv self :vel %tmp.107;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_31_85_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_12_85_48_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_85_12_85_48_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_27_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 86 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_15_89_8_if_stmt:
+        symbol [ vel %tmp.109 86 19 22 ];
+        %tmp.109 = getv ? :vel;
+        %tmp.110 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.110 86 25 32 ];
+        %tmp.111 = gt %tmp.109 %tmp.110;
+        bf %tmp.111 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_15_89_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_15_89_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_34_89_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 87 12 ]
+        symbol [ vel %tmp.112 87 12 15 ];
+        %tmp.112 = getv self :vel;
+        symbol [ Br %tmp.114 87 19 21 ];
+        %tmp.114 = getv ? :Br;
+        symbol [ MOVE_DECEL %tmp.115 87 22 32 ];
+        %tmp.115 = getv %tmp.114 :MOVE_DECEL;
+        %tmp.116 = sub %tmp.112 %tmp.115;
+        symbol [ vel ? 87 12 15 ];
+        putv self :vel dup %tmp.116;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 88 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_12_88_48_if_stmt:
+        symbol [ vel %tmp.118 88 16 19 ];
+        %tmp.118 = getv ? :vel;
+        %tmp.119 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.119 88 22 29 ];
+        %tmp.120 = lt %tmp.118 %tmp.119;
+        bf %tmp.120 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_12_88_48_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_12_88_48_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_31_88_48_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 88 33 ]
+        %tmp.121 = lgetv %vTarget.2;
+        symbol [ vTarget %tmp.121 88 39 46 ];
+        symbol [ vel ? 88 33 36 ];
+        putv self :vel %tmp.121;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_31_88_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_12_88_48_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_88_12_88_48_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_34_89_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_15_89_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_86_15_89_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_83_8_89_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_stmt:
+        symbol [ vel %tmp.123 91 12 15 ];
+        %tmp.123 = getv ? :vel;
+        %tmp.124 = 0.0005;
+        %tmp.125 = gt %tmp.123 %tmp.124;
+        bf %tmp.125 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 92 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_stop" ]
+        %nx.3 = local;
+        symbol [ nx %nx.3 92 16 18 ];
+        symbol [ x %tmp.127 92 21 22 ];
+        %tmp.127 = getv ? :x;
+        symbol [ dirX %tmp.129 92 25 29 ];
+        %tmp.129 = getv ? :dirX;
+        symbol [ vel %tmp.131 92 32 35 ];
+        %tmp.131 = getv ? :vel;
+        %tmp.132 = mul %tmp.129 %tmp.131;
+        %tmp.133 = add %tmp.127 %tmp.132;
+        lputv %nx.3 %tmp.133;
+        symbol [ nx %nx.3 92 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 93 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_stop" ]
+        %ny.4 = local;
+        symbol [ ny %ny.4 93 16 18 ];
+        symbol [ y %tmp.135 93 21 22 ];
+        %tmp.135 = getv ? :y;
+        symbol [ dirY %tmp.137 93 25 29 ];
+        %tmp.137 = getv ? :dirY;
+        symbol [ vel %tmp.139 93 32 35 ];
+        %tmp.139 = getv ? :vel;
+        %tmp.140 = mul %tmp.137 %tmp.139;
+        %tmp.141 = add %tmp.135 %tmp.140;
+        lputv %ny.4 %tmp.141;
+        symbol [ ny %ny.4 93 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 95 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_stop" ]
+        %okX.5 = local;
+        symbol [ okX %okX.5 95 16 19 ];
+        %tmp.142 = self;
+        symbol [ _free %tmp.143 95 22 27 ];
+        %tmp.143 = getv function %tmp.142 :_free;
+        %tmp.144 = lgetv %map;
+        symbol [ map %tmp.144 95 28 31 ];
+        %tmp.145 = lgetv %nx.3;
+        symbol [ nx %tmp.145 95 33 35 ];
+        symbol [ y %tmp.147 95 37 38 ];
+        %tmp.147 = getv ? :y;
+        %tmp.148 = invoke %tmp.142 %tmp.143(%tmp.144, %tmp.145, %tmp.147);
+        lputv %okX.5 %tmp.148;
+        symbol [ okX %okX.5 95 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 96 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_stop" ]
+        %okY.6 = local;
+        symbol [ okY %okY.6 96 16 19 ];
+        %tmp.149 = self;
+        symbol [ _free %tmp.150 96 22 27 ];
+        %tmp.150 = getv function %tmp.149 :_free;
+        %tmp.151 = lgetv %map;
+        symbol [ map %tmp.151 96 28 31 ];
+        symbol [ x %tmp.153 96 33 34 ];
+        %tmp.153 = getv ? :x;
+        %tmp.154 = lgetv %ny.4;
+        symbol [ ny %tmp.154 96 36 38 ];
+        %tmp.155 = invoke %tmp.149 %tmp.150(%tmp.151, %tmp.153, %tmp.154);
+        lputv %okY.6 %tmp.155;
+        symbol [ okY %okY.6 96 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 97 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_12_97_72_if_stmt:
+        %tmp.156 = lgetv %okX.5;
+        symbol [ okX %tmp.156 97 16 19 ];
+        bf %tmp.156 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_12_97_72_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_12_97_72_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_21_97_72_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 97 23 ]
+        symbol [ moved %tmp.157 97 23 28 ];
+        %tmp.157 = getv self :moved;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_begin:
+        %tmp.158 = lgetv %nx.3;
+        symbol [ nx %tmp.158 97 33 35 ];
+        symbol [ x %tmp.160 97 38 39 ];
+        %tmp.160 = getv ? :x;
+        %tmp.161 = gt %tmp.158 %tmp.160;
+        bf %tmp.161 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_true:
+        %tmp.162 = lgetv %nx.3;
+        symbol [ nx %tmp.162 97 44 46 ];
+        symbol [ x %tmp.164 97 49 50 ];
+        %tmp.164 = getv ? :x;
+        %tmp.165 = sub %tmp.162 %tmp.164;
+        push %tmp.165;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_else_false:
+        symbol [ x %tmp.167 97 55 56 ];
+        %tmp.167 = getv ? :x;
+        %tmp.168 = lgetv %nx.3;
+        symbol [ nx %tmp.168 97 59 61 ];
+        %tmp.169 = sub %tmp.167 %tmp.168;
+        push %tmp.169;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_end:
+        %tmp.170 = phi [%tmp.161 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_begin] [%tmp.165 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_true] [%tmp.169 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_else_false] [%tmp.170 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_32_97_61_end];
+        %tmp.171 = add %tmp.157 %tmp.170;
+        symbol [ moved ? 97 23 28 ];
+        putv self :moved dup %tmp.171;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 97 64 ]
+        %tmp.172 = lgetv %nx.3;
+        symbol [ nx %tmp.172 97 68 70 ];
+        symbol [ x ? 97 64 65 ];
+        putv self :x %tmp.172;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_21_97_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_12_97_72_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_97_12_97_72_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 98 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_12_98_72_if_stmt:
+        %tmp.173 = lgetv %okY.6;
+        symbol [ okY %tmp.173 98 16 19 ];
+        bf %tmp.173 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_12_98_72_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_12_98_72_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_21_98_72_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 98 23 ]
+        symbol [ moved %tmp.174 98 23 28 ];
+        %tmp.174 = getv self :moved;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_begin:
+        %tmp.175 = lgetv %ny.4;
+        symbol [ ny %tmp.175 98 33 35 ];
+        symbol [ y %tmp.177 98 38 39 ];
+        %tmp.177 = getv ? :y;
+        %tmp.178 = gt %tmp.175 %tmp.177;
+        bf %tmp.178 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_true:
+        %tmp.179 = lgetv %ny.4;
+        symbol [ ny %tmp.179 98 44 46 ];
+        symbol [ y %tmp.181 98 49 50 ];
+        %tmp.181 = getv ? :y;
+        %tmp.182 = sub %tmp.179 %tmp.181;
+        push %tmp.182;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_else_false:
+        symbol [ y %tmp.184 98 55 56 ];
+        %tmp.184 = getv ? :y;
+        %tmp.185 = lgetv %ny.4;
+        symbol [ ny %tmp.185 98 59 61 ];
+        %tmp.186 = sub %tmp.184 %tmp.185;
+        push %tmp.186;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_end:
+        %tmp.187 = phi [%tmp.178 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_begin] [%tmp.182 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_true] [%tmp.186 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_else_false] [%tmp.187 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_32_98_61_end];
+        %tmp.188 = add %tmp.174 %tmp.187;
+        symbol [ moved ? 98 23 28 ];
+        putv self :moved dup %tmp.188;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 98 64 ]
+        %tmp.189 = lgetv %ny.4;
+        symbol [ ny %tmp.189 98 68 70 ];
+        symbol [ y ? 98 64 65 ];
+        putv self :y %tmp.189;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_21_98_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_12_98_72_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_98_12_98_72_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 99 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_16_99_25_begin:
+        %tmp.190 = lgetv %okX.5;
+        symbol [ okX %tmp.190 99 17 20 ];
+        %tmp.191 = not %tmp.190;
+        bf %tmp.191 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_24_99_25_true:
+        %tmp.192 = lgetv %okY.6;
+        symbol [ okY %tmp.192 99 25 28 ];
+        %tmp.193 = not %tmp.192;
+        push %tmp.193;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_24_99_25_end:
+        %tmp.194 = phi [%tmp.191 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_16_99_25_begin] [%tmp.193 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_24_99_25_true] [%tmp.194 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_24_99_25_end];
+        bf %tmp.194 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_30_102_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 101 16 ]
+        %tmp.195 = 0;
+        symbol [ throttle ? 101 16 24 ];
+        putv self :throttle %tmp.195;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 101 30 ]
+        %tmp.196 = 0.0;
+        symbol [ vel ? 101 30 33 ];
+        putv self :vel %tmp.196;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 101 41 ]
+        %tmp.197 = 0;
+        symbol [ sprint ? 101 41 47 ];
+        putv self :sprint %tmp.197;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_30_102_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_99_12_102_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 103 12 ]
+        symbol [ bob %tmp.198 103 12 15 ];
+        %tmp.198 = getv self :bob;
+        symbol [ vel %tmp.200 103 19 22 ];
+        %tmp.200 = getv ? :vel;
+        %tmp.201 = 9.0;
+        %tmp.202 = mul %tmp.200 %tmp.201;
+        %tmp.203 = add %tmp.198 %tmp.202;
+        symbol [ bob ? 103 12 15 ];
+        putv self :bob dup %tmp.203;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 104 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_12_104_47_if_stmt:
+        symbol [ bob %tmp.205 104 16 19 ];
+        %tmp.205 = getv ? :bob;
+        %tmp.206 = 6.2832;
+        %tmp.207 = gt %tmp.205 %tmp.206;
+        bf %tmp.207 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_12_104_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_12_104_47_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_30_104_47_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 104 32 ]
+        symbol [ bob %tmp.208 104 32 35 ];
+        %tmp.208 = getv self :bob;
+        %tmp.209 = 6.2832;
+        %tmp.210 = sub %tmp.208 %tmp.209;
+        symbol [ bob ? 104 32 35 ];
+        putv self :bob dup %tmp.210;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_30_104_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_12_104_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_104_12_104_47_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_26_105_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_105_15_109_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 107 12 ]
+        symbol [ bob %tmp.211 107 12 15 ];
+        %tmp.211 = getv self :bob;
+        %tmp.212 = 0.06;
+        %tmp.213 = add %tmp.211 %tmp.212;
+        symbol [ bob ? 107 12 15 ];
+        putv self :bob dup %tmp.213;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 108 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_12_108_47_if_stmt:
+        symbol [ bob %tmp.215 108 16 19 ];
+        %tmp.215 = getv ? :bob;
+        %tmp.216 = 6.2832;
+        %tmp.217 = gt %tmp.215 %tmp.216;
+        bf %tmp.217 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_12_108_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_12_108_47_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_30_108_47_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 108 32 ]
+        symbol [ bob %tmp.218 108 32 35 ];
+        %tmp.218 = getv self :bob;
+        %tmp.219 = 6.2832;
+        %tmp.220 = sub %tmp.218 %tmp.219;
+        symbol [ bob ? 108 32 35 ];
+        putv self :bob dup %tmp.220;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_30_108_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_12_108_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_108_12_108_47_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_105_15_109_8_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_91_8_109_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 111 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_stop" ]
+        %amp.7 = local;
+        symbol [ amp %amp.7 111 12 15 ];
+        %tmp.221 = 2.0;
+        symbol [ vel %tmp.223 111 24 27 ];
+        %tmp.223 = getv ? :vel;
+        %tmp.224 = 22.0;
+        %tmp.225 = mul %tmp.223 %tmp.224;
+        %tmp.226 = add %tmp.221 %tmp.225;
+        lputv %amp.7 %tmp.226;
+        symbol [ amp %amp.7 111 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 112 8 ]
+        symbol [ Math %tmp.227 112 16 20 ];
+        %tmp.227 = getm $.Toybox.Math;
+        symbol [ sin %tmp.228 112 21 24 ];
+        %tmp.228 = getv function %tmp.227 :sin;
+        symbol [ bob %tmp.230 112 25 28 ];
+        %tmp.230 = getv ? :bob;
+        %tmp.231 = invoke %tmp.227 %tmp.228(%tmp.230);
+        %tmp.232 = lgetv %amp.7;
+        symbol [ amp %tmp.232 112 32 35 ];
+        %tmp.233 = mul %tmp.231 %tmp.232;
+        symbol [ toNumber %tmp.234 112 37 45 ];
+        %tmp.234 = getv function %tmp.233 :toNumber;
+        %tmp.235 = invoke %tmp.233 %tmp.234();
+        symbol [ bobY ? 112 8 12 ];
+        putv self :bobY %tmp.235;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_52_25_113_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 115; @symbol_functiondef = [_free,115,20,25]; @symbol_param<0> = [map,115,26,29]; @symbol_param<1> = [fx,115,31,33]; @symbol_param<2> = [fy,115,35,37]; ]
+    protected
+    function _free(map, fx, fy) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_115_39_122_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_115_39_122_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_115_39_122_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 116 12 13 ];
+        symbol [ Br %tmp.2 116 16 18 ];
+        %tmp.2 = getv ? :Br;
+        symbol [ RADIUS %tmp.3 116 19 25 ];
+        %tmp.3 = getv %tmp.2 :RADIUS;
+        %tmp.4 = 100.0;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        lputv %r.1 %tmp.5;
+        symbol [ r %r.1 116 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_8_117_76_if_stmt:
+        %tmp.6 = lgetv %map;
+        symbol [ map %tmp.6 117 12 15 ];
+        symbol [ isWall %tmp.7 117 16 22 ];
+        %tmp.7 = getv function %tmp.6 :isWall;
+        %tmp.8 = lgetv %fx;
+        symbol [ fx %tmp.8 117 24 26 ];
+        %tmp.9 = lgetv %r.1;
+        symbol [ r %tmp.9 117 29 30 ];
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        symbol [ toNumber %tmp.11 117 32 40 ];
+        %tmp.11 = getv function %tmp.10 :toNumber;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = lgetv %fy;
+        symbol [ fy %tmp.13 117 44 46 ];
+        symbol [ toNumber %tmp.14 117 47 55 ];
+        %tmp.14 = getv function %tmp.13 :toNumber;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = invoke %tmp.6 %tmp.7(%tmp.12, %tmp.15);
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_8_117_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_8_117_76_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_60_117_76_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 117 62 ]
+        %tmp.17 = false;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_60_117_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_8_117_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_117_8_117_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_8_118_76_if_stmt:
+        %tmp.18 = lgetv %map;
+        symbol [ map %tmp.18 118 12 15 ];
+        symbol [ isWall %tmp.19 118 16 22 ];
+        %tmp.19 = getv function %tmp.18 :isWall;
+        %tmp.20 = lgetv %fx;
+        symbol [ fx %tmp.20 118 24 26 ];
+        %tmp.21 = lgetv %r.1;
+        symbol [ r %tmp.21 118 29 30 ];
+        %tmp.22 = add %tmp.20 %tmp.21;
+        symbol [ toNumber %tmp.23 118 32 40 ];
+        %tmp.23 = getv function %tmp.22 :toNumber;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        %tmp.25 = lgetv %fy;
+        symbol [ fy %tmp.25 118 44 46 ];
+        symbol [ toNumber %tmp.26 118 47 55 ];
+        %tmp.26 = getv function %tmp.25 :toNumber;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        %tmp.28 = invoke %tmp.18 %tmp.19(%tmp.24, %tmp.27);
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_8_118_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_8_118_76_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_60_118_76_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 118 62 ]
+        %tmp.29 = false;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_60_118_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_8_118_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_118_8_118_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 119 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_8_119_76_if_stmt:
+        %tmp.30 = lgetv %map;
+        symbol [ map %tmp.30 119 12 15 ];
+        symbol [ isWall %tmp.31 119 16 22 ];
+        %tmp.31 = getv function %tmp.30 :isWall;
+        %tmp.32 = lgetv %fx;
+        symbol [ fx %tmp.32 119 23 25 ];
+        symbol [ toNumber %tmp.33 119 26 34 ];
+        %tmp.33 = getv function %tmp.32 :toNumber;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = lgetv %fy;
+        symbol [ fy %tmp.35 119 39 41 ];
+        %tmp.36 = lgetv %r.1;
+        symbol [ r %tmp.36 119 44 45 ];
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        symbol [ toNumber %tmp.38 119 47 55 ];
+        %tmp.38 = getv function %tmp.37 :toNumber;
+        %tmp.39 = invoke %tmp.37 %tmp.38();
+        %tmp.40 = invoke %tmp.30 %tmp.31(%tmp.34, %tmp.39);
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_8_119_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_8_119_76_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_60_119_76_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 119 62 ]
+        %tmp.41 = false;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_60_119_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_8_119_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_119_8_119_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 120 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_8_120_76_if_stmt:
+        %tmp.42 = lgetv %map;
+        symbol [ map %tmp.42 120 12 15 ];
+        symbol [ isWall %tmp.43 120 16 22 ];
+        %tmp.43 = getv function %tmp.42 :isWall;
+        %tmp.44 = lgetv %fx;
+        symbol [ fx %tmp.44 120 23 25 ];
+        symbol [ toNumber %tmp.45 120 26 34 ];
+        %tmp.45 = getv function %tmp.44 :toNumber;
+        %tmp.46 = invoke %tmp.44 %tmp.45();
+        %tmp.47 = lgetv %fy;
+        symbol [ fy %tmp.47 120 39 41 ];
+        %tmp.48 = lgetv %r.1;
+        symbol [ r %tmp.48 120 44 45 ];
+        %tmp.49 = add %tmp.47 %tmp.48;
+        symbol [ toNumber %tmp.50 120 47 55 ];
+        %tmp.50 = getv function %tmp.49 :toNumber;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        %tmp.52 = invoke %tmp.42 %tmp.43(%tmp.46, %tmp.51);
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_8_120_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_8_120_76_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_60_120_76_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 120 62 ]
+        %tmp.53 = false;
+        ret %tmp.53;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_60_120_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_8_120_76_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_120_8_120_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 121 8 ]
+        %tmp.54 = true;
+        ret %tmp.54;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_115_39_122_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 124; @symbol_functiondef = [cellX,124,13,18]; ]
+    function cellX() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_124_21_124_44_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 124 23 ]
+        symbol [ x %tmp.2 124 30 31 ];
+        %tmp.2 = getv ? :x;
+        symbol [ toNumber %tmp.3 124 32 40 ];
+        %tmp.3 = getv function %tmp.2 :toNumber;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_124_21_124_44_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 125; @symbol_functiondef = [cellY,125,13,18]; ]
+    function cellY() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_125_21_125_44_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 125 23 ]
+        symbol [ y %tmp.2 125 30 31 ];
+        %tmp.2 = getv ? :y;
+        symbol [ toNumber %tmp.3 125 32 40 ];
+        %tmp.3 = getv function %tmp.2 :toNumber;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_125_21_125_44_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 128; @symbol_functiondef = [dist2To,128,13,20]; @symbol_param<0> = [gx,128,21,23]; @symbol_param<1> = [gy,128,25,27]; ]
+    function dist2To(gx, gy) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 129 12 14 ];
+        %tmp.1 = lgetv %gx;
+        symbol [ gx %tmp.1 129 18 20 ];
+        %tmp.2 = 0.5;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        symbol [ x %tmp.5 129 30 31 ];
+        %tmp.5 = getv ? :x;
+        %tmp.6 = sub %tmp.3 %tmp.5;
+        lputv %dx.1 %tmp.6;
+        symbol [ dx %dx.1 129 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 130 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 130 12 14 ];
+        %tmp.7 = lgetv %gy;
+        symbol [ gy %tmp.7 130 18 20 ];
+        %tmp.8 = 0.5;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        symbol [ y %tmp.11 130 30 31 ];
+        %tmp.11 = getv ? :y;
+        %tmp.12 = sub %tmp.9 %tmp.11;
+        lputv %dy.2 %tmp.12;
+        symbol [ dy %dy.2 130 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 131 8 ]
+        %tmp.13 = lgetv %dx.1;
+        symbol [ dx %tmp.13 131 15 17 ];
+        %tmp.14 = lgetv %dx.1;
+        symbol [ dx %tmp.14 131 20 22 ];
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = lgetv %dy.2;
+        symbol [ dy %tmp.16 131 25 27 ];
+        %tmp.17 = lgetv %dy.2;
+        symbol [ dy %tmp.17 131 30 32 ];
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = add %tmp.15 %tmp.18;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_128_29_132_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 135; @symbol_functiondef = [looksAt,135,13,20]; @symbol_param<0> = [gx,135,21,23]; @symbol_param<1> = [gy,135,25,27]; @symbol_param<2> = [cosLimit,135,29,37]; ]
+    function looksAt(gx, gy, cosLimit) {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 136 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 136 12 14 ];
+        %tmp.1 = lgetv %gx;
+        symbol [ gx %tmp.1 136 18 20 ];
+        %tmp.2 = 0.5;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        symbol [ x %tmp.5 136 30 31 ];
+        %tmp.5 = getv ? :x;
+        %tmp.6 = sub %tmp.3 %tmp.5;
+        lputv %dx.1 %tmp.6;
+        symbol [ dx %dx.1 136 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 137 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 137 12 14 ];
+        %tmp.7 = lgetv %gy;
+        symbol [ gy %tmp.7 137 18 20 ];
+        %tmp.8 = 0.5;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        symbol [ y %tmp.11 137 30 31 ];
+        %tmp.11 = getv ? :y;
+        %tmp.12 = sub %tmp.9 %tmp.11;
+        lputv %dy.2 %tmp.12;
+        symbol [ dy %dy.2 137 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 138 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_stop" ]
+        %len.3 = local;
+        symbol [ len %len.3 138 12 15 ];
+        symbol [ Math %tmp.13 138 18 22 ];
+        %tmp.13 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.14 138 23 27 ];
+        %tmp.14 = getv function %tmp.13 :sqrt;
+        %tmp.15 = lgetv %dx.1;
+        symbol [ dx %tmp.15 138 28 30 ];
+        %tmp.16 = lgetv %dx.1;
+        symbol [ dx %tmp.16 138 33 35 ];
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %dy.2;
+        symbol [ dy %tmp.18 138 38 40 ];
+        %tmp.19 = lgetv %dy.2;
+        symbol [ dy %tmp.19 138 43 45 ];
+        %tmp.20 = mul %tmp.18 %tmp.19;
+        %tmp.21 = add %tmp.17 %tmp.20;
+        %tmp.22 = invoke %tmp.13 %tmp.14(%tmp.21);
+        lputv %len.3 %tmp.22;
+        symbol [ len %len.3 138 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 139 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_8_139_40_if_stmt:
+        %tmp.23 = lgetv %len.3;
+        symbol [ len %tmp.23 139 12 15 ];
+        %tmp.24 = 0.001;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_8_139_40_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_8_139_40_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_25_139_40_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 139 27 ]
+        %tmp.26 = true;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_25_139_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_8_139_40_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_139_8_139_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 140 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_stop" ]
+        %d.4 = local;
+        symbol [ d %d.4 140 12 13 ];
+        %tmp.27 = lgetv %dx.1;
+        symbol [ dx %tmp.27 140 17 19 ];
+        symbol [ dirX %tmp.29 140 22 26 ];
+        %tmp.29 = getv ? :dirX;
+        %tmp.30 = mul %tmp.27 %tmp.29;
+        %tmp.31 = lgetv %dy.2;
+        symbol [ dy %tmp.31 140 29 31 ];
+        symbol [ dirY %tmp.33 140 34 38 ];
+        %tmp.33 = getv ? :dirY;
+        %tmp.34 = mul %tmp.31 %tmp.33;
+        %tmp.35 = add %tmp.30 %tmp.34;
+        %tmp.36 = lgetv %len.3;
+        symbol [ len %tmp.36 140 42 45 ];
+        %tmp.37 = div %tmp.35 %tmp.36;
+        lputv %d.4 %tmp.37;
+        symbol [ d %d.4 140 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 141 8 ]
+        %tmp.38 = lgetv %d.4;
+        symbol [ d %tmp.38 141 15 16 ];
+        %tmp.39 = lgetv %cosLimit;
+        symbol [ cosLimit %tmp.39 141 20 28 ];
+        %tmp.40 = gte %tmp.38 %tmp.39;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_135_39_142_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 145; @symbol_functiondef = [facing,145,13,19]; ]
+    function facing() {
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_145_22_151_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 146 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_145_22_151_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_145_22_151_4_stop" ]
+        %a.1 = local;
+        symbol [ a %a.1 146 12 13 ];
+        symbol [ ang %tmp.2 146 16 19 ];
+        %tmp.2 = getv ? :ang;
+        lputv %a.1 %tmp.2;
+        symbol [ a %a.1 146 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 147 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_12_147_31_begin:
+        %tmp.3 = lgetv %a.1;
+        symbol [ a %tmp.3 147 12 13 ];
+        %tmp.4 = 0.7854;
+        %tmp.5 = lt %tmp.3 %tmp.4;
+        bt %tmp.5 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_true;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_26_147_31_false:
+        %tmp.6 = lgetv %a.1;
+        symbol [ a %tmp.6 147 26 27 ];
+        %tmp.7 = 5.4978;
+        %tmp.8 = gte %tmp.6 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_26_147_31_end:
+        %tmp.9 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_12_147_31_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_26_147_31_false] [%tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_26_147_31_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_39_147_53_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 147 41 ]
+        %tmp.10 = "E";
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_39_147_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_147_8_147_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 148 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_8_148_38_if_stmt:
+        %tmp.11 = lgetv %a.1;
+        symbol [ a %tmp.11 148 12 13 ];
+        %tmp.12 = 2.3562;
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_8_148_38_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_8_148_38_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_24_148_38_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 148 26 ]
+        %tmp.14 = "S";
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_24_148_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_8_148_38_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_148_8_148_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 149 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_8_149_38_if_stmt:
+        %tmp.15 = lgetv %a.1;
+        symbol [ a %tmp.15 149 12 13 ];
+        %tmp.16 = 3.9270;
+        %tmp.17 = lt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_8_149_38_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_8_149_38_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_24_149_38_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 149 26 ]
+        %tmp.18 = "W";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_24_149_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_8_149_38_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_149_8_149_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc" 150 8 ]
+        %tmp.19 = "N";
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_backrooms_source_PlayerController_mc_145_22_151_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/PlayerController.mc"; @line = 8; ]
+<init> {
+}

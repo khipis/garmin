@@ -17,7 +17,16 @@ class SerpentHooks extends GameHooks {
         _pal = [0x44FF88, 0x33EE77, 0x22CC66, 0x1AAA55, 0x118844, 0x0A6633];
     }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("serpent"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiSerpentView();
+        v.loadResume(SaveResume.load("serpent"));
+        WatchUi.pushView(v, new BitochiSerpentDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("serpent");
         var v = new BitochiSerpentView();
         WatchUi.pushView(v, new BitochiSerpentDelegate(v), WatchUi.SLIDE_LEFT);
     }

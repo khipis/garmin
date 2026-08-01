@@ -5,19 +5,15 @@
 // MainView.onTick) and produces a smoothed target gaze that the
 // AimSystem then low-pass-filters into the actual scope position.
 //
-// Calibration: on first read, the accel sample is captured as
-// the resting baseline so the player can level the watch in
-// their natural shooting stance.  `recalibrate()` re-arms this.
+// Calibration: NEVER use a single first sample (that captures the
+// tap / menu-hold pose and makes some hostiles unreachable). Wait
+// for a short low-motion window, average several samples into the
+// resting baseline, then unlock aiming. `recalibrate()` re-arms.
 //
 // Symmetric ease-out aiming: near the calibrated horizon the
 // response is 1:1 for fine control, then past a small linear
-// zone the travel is amplified equally in BOTH directions.  This
-// is what lets the wrist swing the scope all the way DOWN (and
-// up) with a small, comfortable tilt — and crucially it does not
-// depend on the sign of the accelerometer axis, so "aim down"
-// works on every device.  Earlier revisions boosted only one
-// pitch half and clamped the other tighter, which (depending on
-// axis polarity) made aiming down impossible.
+// zone the travel is amplified equally in BOTH directions so
+// "aim down" works on every device.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Math;
@@ -33,6 +29,20 @@ class GyroInput {
     hidden var _cal;
     hidden var _sens;     // SS_SENS_*
 
+    // Settle-window state for stable baseline capture.
+    hidden var _settleN;      // consecutive low-jitter samples so far
+    hidden var _settleTries;  // total samples while waiting (timeout)
+    hidden var _sumX;
+    hidden var _sumY;
+    hidden var _lastAx;
+    hidden var _lastAy;
+    hidden var _justCal;      // one-shot flag for AimSystem reset
+
+    // ~12 * 60 ms ≈ 0.7 s of stillness; force-calibrate by ~2.4 s.
+    const SETTLE_NEED   = 12;
+    const SETTLE_MAX    = 40;
+    const SETTLE_JITTER = 35;   // milli-g — restart settle if exceeded
+
     function initialize() {
         tYaw   = 0.0;
         tPitch = 0.0;
@@ -40,53 +50,65 @@ class GyroInput {
         _calY  = 0;
         _cal   = false;
         _sens  = SS_SENS_NORMAL;
+        _settleN = 0; _settleTries = 0;
+        _sumX = 0; _sumY = 0;
+        _lastAx = 0; _lastAy = 0;
+        _justCal = false;
     }
 
     function setSensitivity(s) { _sens = s; }
     function isCalibrated()    { return _cal; }
-    function recalibrate()     { _cal = false; }
+    // True exactly once after a successful (re)calibration settles.
+    function consumeJustCalibrated() {
+        if (!_justCal) { return false; }
+        _justCal = false;
+        return true;
+    }
+
+    function recalibrate() {
+        _cal = false;
+        _settleN = 0; _settleTries = 0;
+        _sumX = 0; _sumY = 0;
+        _justCal = false;
+        tYaw = 0.0; tPitch = 0.0;
+    }
 
     // ax, ay : raw milli-g from Sensor.getInfo().accel.
     function feed(ax, ay) {
         if (!_cal) {
-            _calX = ax; _calY = ay; _cal = true;
+            _feedSettle(ax, ay);
+            tYaw = 0.0;
+            tPitch = 0.0;
+            return;
         }
         var sc;
-        if      (_sens == SS_SENS_LOW)  { sc = 0.0026; }
+        if      (_sens == SS_SENS_LOW)  { sc = 0.0028; }
         else if (_sens == SS_SENS_HIGH) { sc = 0.0060; }
-        else                             { sc = 0.0042; }
+        else                             { sc = 0.0044; }
         var dx = ax - _calX;
         var dy = ay - _calY;
         // Small dead zone with a SMOOTH edge (subtract the zone instead of
         // snapping to zero) so the scope eases in with no jump — key to the
-        // fluid tracking feel. ~18 mg is enough to reject resting jitter.
-        var DZ = 18;
+        // fluid tracking feel. ~16 mg is enough to reject resting jitter.
+        var DZ = 16;
         if (dx > -DZ && dx < DZ) { dx = 0; } else { dx = (dx > 0) ? dx - DZ : dx + DZ; }
         if (dy > -DZ && dy < DZ) { dy = 0; } else { dy = (dy > 0) ? dy - DZ : dy + DZ; }
         var ty =  dx.toFloat() * sc;
         // Pitch gets a higher gain than yaw: the comfortable vertical wrist
-        // range is smaller, so a natural tilt must be enough to swing the
-        // scope all the way down onto ground-level hostiles.
+        // range is smaller, so a natural tilt must swing the scope onto
+        // ground-level hostiles without wrist contortion.
         //
-        // SIGN: this is the WORLD-MOVES / reticle-centred model, where a low
-        // hostile (pitch > 0, sitting below centre) is brought up to the fixed
-        // reticle by a POSITIVE gazePitch. Archery is the opposite model (the
-        // reticle itself moves, needing a negative aimPitch to go down), so it
-        // uses -dy. Here we must use +dy: tilting the wrist DOWN then raises
-        // gazePitch and the low targets rise to the crosshair — i.e. "aim down"
-        // finally works. The previous -dy inverted this and made down aiming
-        // impossible no matter how the target band was tuned.
-        var tp = dy.toFloat() * sc * 1.6;
+        // SIGN: WORLD-MOVES / reticle-centred — a low hostile (pitch > 0)
+        // is brought up to the fixed reticle by a POSITIVE gazePitch.
+        // Tilting the wrist DOWN raises gazePitch → "aim down" works.
+        var tp = dy.toFloat() * sc * 1.85;
 
         // Symmetric ease-out amplification: precise near the horizon,
-        // easy to swing to the extremes in EITHER direction. Applied
-        // identically to up/down (and left/right) so no direction is
-        // privileged and aiming down is always reachable.
+        // easy to swing to the extremes in EITHER direction.
         ty = _amplify(ty);
         tp = _amplify(tp);
 
-        // Symmetric, generous clamp — both directions reach comfortably
-        // past the target band so no hostile is ever out of reach.
+        // Symmetric clamp — both directions past the target band.
         var limP = SS_WORLD_PITCH * 1.15;
         var limY = SS_WORLD_YAW   * 1.05;
         if (ty >  limY) { ty =  limY; }
@@ -98,13 +120,36 @@ class GyroInput {
         tPitch = tp;
     }
 
-    // Ease-out response curve, symmetric about the calibrated centre:
-    // a small linear zone for fine aim, then the excess travel past it
-    // is scaled up so the scope reaches the field edges without the
-    // wrist having to contort. Sign-agnostic → up and down feel equal.
+    hidden function _feedSettle(ax, ay) {
+        _settleTries++;
+        if (_settleN > 0) {
+            var jx = ax - _lastAx; if (jx < 0) { jx = -jx; }
+            var jy = ay - _lastAy; if (jy < 0) { jy = -jy; }
+            if (jx > SETTLE_JITTER || jy > SETTLE_JITTER) {
+                // Still moving — restart the stillness window, keep trying.
+                _settleN = 0;
+                _sumX = 0; _sumY = 0;
+            }
+        }
+        _lastAx = ax; _lastAy = ay;
+        _sumX = _sumX + ax;
+        _sumY = _sumY + ay;
+        _settleN++;
+
+        if (_settleN >= SETTLE_NEED || _settleTries >= SETTLE_MAX) {
+            var n = _settleN;
+            if (n < 1) { n = 1; }
+            _calX = _sumX / n;
+            _calY = _sumY / n;
+            _cal = true;
+            _justCal = true;
+        }
+    }
+
+    // Ease-out response curve, symmetric about the calibrated centre.
     hidden function _amplify(v) {
-        var lin = 0.15;   // 1:1 fine-control zone (radians)
-        var k   = 2.0;    // amplification of travel beyond the linear zone
+        var lin = 0.12;   // 1:1 fine-control zone (radians)
+        var k   = 2.2;    // amplification beyond the linear zone
         if (v >  lin) { return  lin + (v - lin) * k; }
         if (v < -lin) { return -lin + (v + lin) * k; }
         return v;

@@ -113,43 +113,40 @@ class TargetManager {
         live[i]    = 1;
         primary[i] = isPrimary ? 1 : 0;
         z[i]       = distance;
-        // Spawn anywhere in the scannable yaw arc except the very
-        // centre (so the player has to look around to find them).
-        var ny = (_randf() * 1.8) - 0.9;          // [-0.9 .. +0.9]
-        // Bias the primary a little further out as rounds progress, but keep it
-        // inside a comfortable horizontal sweep so the hostile is always
-        // findable with a natural wrist turn (the old ±1.3 pushed some targets
-        // past the easy scan range → "sometimes can't find the enemy").
-        if (isPrimary) {
-            var bias = (round > 2) ? 0.40 : 0.28;
+        // Comfortable reachable band — NOT the full mathematical gyro clamp.
+        // A wider band + primary bias used to put hostiles past what a natural
+        // wrist tilt can reach after mission-start calibration (especially when
+        // the watch opened already tilted) → "sometimes can't aim at them".
+        var yawSpan;
+        if (round <= 0 && isPrimary) {
+            yawSpan = 0.55;                         // first shot near centre
+        } else {
+            yawSpan = 0.75;                         // [-0.75 .. +0.75]
+        }
+        var ny = (_randf() * (yawSpan * 2.0)) - yawSpan;
+        // Soft outward bias only after round 0 — never force the opening
+        // hostile outside the easy dead-ahead cone.
+        if (isPrimary && round > 0) {
+            var bias = (round > 2) ? 0.28 : 0.18;
             if (ny > -bias && ny < bias) {
                 ny = (ny >= 0) ? ny + bias : ny - bias;
             }
-            if (ny >  SS_TARGET_YAW_LIM - 0.12) { ny =  SS_TARGET_YAW_LIM - 0.12; }
-            if (ny < -SS_TARGET_YAW_LIM + 0.12) { ny = -SS_TARGET_YAW_LIM + 0.12; }
+            if (ny >  0.85) { ny =  0.85; }
+            if (ny < -0.85) { ny = -0.85; }
         }
         yaw[i]   = ny;
-        // Pitch band straddles the resting gaze so the field reads naturally:
-        // some hostiles sit near/just-above centre (a quick, comfortable shot)
-        // and some are lower and need a genuine downward tilt. The band still
-        // stays ABOVE SS_GROUND_PITCH (which is more negative), so every target
-        // renders below the horizon and stays planted — it never floats.
-        // Deeper (more positive) pitch = closer to the shooter / lower on
-        // screen. The broader symmetric band now exercises the full moving
-        // reticle, while remaining inside its guaranteed reachable envelope.
-        // Range: [-0.40 .. +0.48].
-        pitch[i] = (_randf() * 0.88) - 0.40;
+        // Pitch straddles resting gaze: some near centre, some a bit lower.
+        // Tight comfort band [-0.22 .. +0.28] — always inside easy wrist range
+        // with margin for breath sway. (Wider [-0.40..+0.48] was the bug.)
+        pitch[i] = (_randf() * 0.50) - 0.22;
 
-        // Axis limits alone are insufficient for a circular lens: a target at
-        // both far-right AND low could still land outside the diagonal edge.
-        // Clamp the combined normalized vector to 80% of the lens envelope,
-        // leaving room for the silhouette and guaranteeing every hostile is
-        // visible and reachable in every direction.
+        // Circular lens clamp at 65% of the declared target envelope so
+        // diagonal (far + low) spawns stay well inside reachable aim.
         var nx = yaw[i]   / SS_TARGET_YAW_LIM;
         var np = pitch[i] / SS_TARGET_PITCH_LIM;
         var nd2 = nx * nx + np * np;
-        if (nd2 > 0.64) {
-            var factor = 0.8 / Math.sqrt(nd2);
+        if (nd2 > 0.4225) {                         // 0.65²
+            var factor = 0.65 / Math.sqrt(nd2);
             yaw[i]   = yaw[i]   * factor;
             pitch[i] = pitch[i] * factor;
         }
@@ -182,11 +179,10 @@ class TargetManager {
             if (live[i] == 0) { continue; }
             yaw[i]   = yaw[i]   + dy[i];
             pitch[i] = pitch[i] + dp[i];
-            // Bounce at the CIRCULAR scene edge. The allowable horizontal
-            // travel narrows for high/low targets, preventing movement from
-            // carrying a once-valid diagonal spawn outside the lens.
+            // Bounce at the same 65% circular envelope used at spawn so a
+            // walking hostile never drifts outside reachable aim.
             var pn = pitch[i] / SS_TARGET_PITCH_LIM;
-            var rem = 0.6724 - pn * pn; // 0.82² envelope
+            var rem = 0.4225 - pn * pn; // 0.65²
             if (rem < 0.04) { rem = 0.04; }
             var edge = SS_TARGET_YAW_LIM * Math.sqrt(rem);
             if (yaw[i] >  edge) { yaw[i] =  edge; dy[i] = -dy[i]; }

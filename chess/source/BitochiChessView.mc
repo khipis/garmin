@@ -68,6 +68,7 @@ class BitochiChessView extends WatchUi.View {
     hidden var _menuRow;
     hidden var _gameResultDone;
     hidden var _fxOn;   // sound + haptics master switch (OPTIONS: chess_fx)
+    hidden var _skipStart; // true when a SaveResume blob was applied
 
     // ── Engagement leaderboard: material captured ─────────────────────────────
     // Tracks the sum of opponent piece values captured by the player this game
@@ -113,6 +114,7 @@ class BitochiChessView extends WatchUi.View {
         _menuRow = 0;
         _gameResultDone = false;
         _fxOn = _loadFx();
+        _skipStart = false;
         _selSq = -1; _curSq = 36;
         _legalMoves = new [0];
         _promSq = -1; _promPick = 0;
@@ -157,7 +159,7 @@ class BitochiChessView extends WatchUi.View {
     // auto-start from the initial CS_MENU — returning from a pushed post-game
     // card leaves us in a CHECKMATE/STALEMATE state, so the run is never reset.
     function onShow() {
-        if (_gs == CS_MENU) { startGame(); }
+        if (_gs == CS_MENU && !_skipStart) { startGame(); }
     }
 
     hidden function setupGeometry() {
@@ -317,8 +319,9 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_PLAY || _gs == CS_AI_THINK || _gs == CS_AI_EVAL || _gs == CS_AI_FINISH) {
             submitCaptures();
         }
-        // Otherwise let the framework pop back to the shared unified menu.
-        return false;
+        // Otherwise offer to save progress (or pop straight out if there's
+        // nothing worth resuming — see exportSave).
+        return SaveResume.confirmExit("chess", method(:exportSave));
     }
 
     function doTap(tx, ty) {
@@ -487,6 +490,82 @@ class BitochiChessView extends WatchUi.View {
         }
     }
 
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────────
+    // Only a settled, player-controlled turn (CS_PLAY) is ever worth saving —
+    // that naturally excludes CS_AI_THINK/EVAL/FINISH, CS_PROMOTE, the in-view
+    // menu and any finished-game screen, and AI-vs-AI runs (which never sit in
+    // CS_PLAY at all).
+    function exportSave() {
+        if (_gs != CS_PLAY) { return null; }
+        var b = new [64];
+        for (var i = 0; i < 64; i++) { b[i] = _board[i]; }
+        return {
+            "board" => b,
+            "wtm"   => _whiteToMove ? 1 : 0,
+            "cr"    => _castleRights,
+            "ep"    => _enPassant,
+            "hm"    => _halfMove,
+            "mc"    => _moveCount,
+            "diff"  => _difficulty,
+            "pw"    => _playerIsWhite ? 1 : 0,
+            "pvp"   => _pvp ? 1 : 0,
+            "avai"  => _aiVsAi ? 1 : 0,
+            "cap"   => _capturedMat
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from ChessHooks).
+    function loadResume(data) as Void {
+        if (data != null && applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    hidden function applySave(data) as Lang.Boolean {
+        if (data == null) { return false; }
+        try {
+            var b = data["board"];
+            if (!(b instanceof Lang.Array) || b.size() < 64) { return false; }
+            for (var i = 0; i < 64; i++) {
+                var e = b[i];
+                _board[i] = (e instanceof Lang.Number) ? e : PC_EMPTY;
+            }
+            var wtm = data["wtm"];
+            _whiteToMove = (wtm instanceof Lang.Number) ? (wtm != 0) : true;
+            var cr = data["cr"];
+            _castleRights = (cr instanceof Lang.Number) ? cr : 0;
+            var ep = data["ep"];
+            _enPassant = (ep instanceof Lang.Number) ? ep : -1;
+            var hm = data["hm"];
+            _halfMove = (hm instanceof Lang.Number && hm >= 0) ? hm : 0;
+            var mc = data["mc"];
+            _moveCount = (mc instanceof Lang.Number && mc >= 1) ? mc : 1;
+            var diff = data["diff"];
+            _difficulty = (diff instanceof Lang.Number && diff >= 0 && diff <= 2) ? diff : _difficulty;
+            var pw = data["pw"];
+            _playerIsWhite = (pw instanceof Lang.Number) ? (pw != 0) : _playerIsWhite;
+            var pvp = data["pvp"];
+            _pvp = (pvp instanceof Lang.Number) ? (pvp != 0) : false;
+            var avai = data["avai"];
+            _aiVsAi = (avai instanceof Lang.Number) ? (avai != 0) : false;
+            var cap = data["cap"];
+            _capturedMat = (cap instanceof Lang.Number) ? cap : 0;
+            _capturesSubmitted = false;
+
+            _selSq = -1; _legalMoves = new [0];
+            _promSq = -1; _promPick = 0;
+            _menuRow = 0;
+            _gameResultDone = false;
+            _fxOn = _loadFx();
+            _gs = CS_PLAY;
+            _inCheck = isInCheck(_whiteToMove);
+            _curSq = _playerIsWhite ? 4 : 60;
+            _snapCursorToAnyValid();
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     // ── Shared menu geometry (used by drawMenu + doTap so taps line up) ─────────
     // Rows: 0 Color, 1 Diff, 2 Mode, 3 START, 4 LEADERBOARD.
     // Sized ~18% smaller than the original 4-row menu so the extra row fits
@@ -538,6 +617,7 @@ class BitochiChessView extends WatchUi.View {
         if (_gameResultDone) { return; }
         if (_gs != CS_CHECKMATE && _gs != CS_STALEMATE) { return; }
         _gameResultDone = true;
+        try { SaveResume.clear("chess"); } catch (e) {}
 
         // End-of-game feedback for every mode. In P-vs-AI a win is when it's
         // the AI's turn to move with no reply (player delivered mate).
@@ -1468,7 +1548,7 @@ class BitochiChessView extends WatchUi.View {
 
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeometry(); }
-        if (_gs == CS_MENU) { startGame(); }   // never render an in-game menu
+        if (_gs == CS_MENU && !_skipStart) { startGame(); }   // never render an in-game menu
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { _processGameResult(); }
         drawGame(dc);
         if (_gs == CS_PROMOTE)   { drawPromoOverlay(dc); }

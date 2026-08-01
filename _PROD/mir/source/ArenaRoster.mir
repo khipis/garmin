@@ -1,0 +1,1099 @@
+[ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 26; @symbol_usingdef<0> = [Toybox,26,6,12]; @symbol_usingdef<1> = [Lang,26,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 27; @symbol_classdef = [ArenaRoster,27,6,17]; ]
+class ArenaRoster {
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 27; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 27; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 28; @position = 15; @symbol_vardef = [_m,28,15,17]; ]
+    protected
+    var _m;
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 29; @position = 15; @symbol_vardef = [_fetch,29,15,21]; ]
+    protected
+    var _fetch;
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 30; @position = 15; @symbol_vardef = [_waits,30,15,21]; ]
+    protected
+    var _waits;
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 31; @position = 15; @symbol_vardef = [_ticks,31,15,21]; ]
+    protected
+    var _ticks;
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 33; @symbol_functiondef = [initialize,33,13,23]; @symbol_param<0> = [m,33,24,25]; ]
+    function initialize(m) as Void {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_33_27_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 34 8 ]
+        %tmp.1 = lgetv %m;
+        symbol [ m %tmp.1 34 13 14 ];
+        symbol [ _m ? 34 8 10 ];
+        putv self :_m %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 34 16 ]
+        %tmp.2 = null;
+        symbol [ _fetch ? 34 16 22 ];
+        putv self :_fetch %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 34 31 ]
+        %tmp.3 = 0;
+        symbol [ _waits ? 34 31 37 ];
+        putv self :_waits %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 34 43 ]
+        %tmp.4 = -1;
+        symbol [ _ticks ? 34 43 49 ];
+        putv self :_ticks %tmp.4;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_33_27_35_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 40; @symbol_functiondef = [arm,40,13,16]; ]
+    function arm() {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_40_19_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 41 8 ]
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_beginTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_endTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_beginTry:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_12_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 42 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_stmt:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_16_42_34_begin:
+        symbol [ _m %tmp.2 42 16 18 ];
+        %tmp.2 = getv ? :_m;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bt %tmp.4 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_true;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_30_42_34_false:
+        symbol [ _m %tmp.6 42 31 33 ];
+        %tmp.6 = getv ? :_m;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ hatched %tmp.8 42 34 41 ];
+        %tmp.8 = getv %tmp.7 :hatched;
+        %tmp.9 = not %tmp.8;
+        push %tmp.9;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_30_42_34_end:
+        %tmp.10 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_16_42_34_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_30_42_34_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_30_42_34_end];
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_43_42_53_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 42 45 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_43_42_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_42_12_42_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_12_43_45_if_stmt:
+        symbol [ _m %tmp.12 43 17 19 ];
+        %tmp.12 = getv ? :_m;
+        symbol [ rosterStale %tmp.13 43 20 31 ];
+        %tmp.13 = getv function %tmp.12 :rosterStale;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_12_43_45_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_12_43_45_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_35_43_45_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 43 37 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_35_43_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_12_43_45_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_43_12_43_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 44 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_12_44_54_if_stmt:
+        symbol [ Leaderboard %tmp.17 44 17 28 ];
+        %tmp.17 = getv ? :Leaderboard;
+        symbol [ isSupported %tmp.18 44 29 40 ];
+        %tmp.18 = getv function %tmp.17 :isSupported;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = not %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_12_44_54_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_12_44_54_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_44_44_54_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 44 46 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_44_44_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_12_44_54_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_44_12_44_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 45 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_12_45_59_if_stmt:
+        symbol [ Leaderboard %tmp.22 45 17 28 ];
+        %tmp.22 = getv ? :Leaderboard;
+        symbol [ isPhoneConnected %tmp.23 45 29 45 ];
+        %tmp.23 = getv function %tmp.22 :isPhoneConnected;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        %tmp.25 = not %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_12_45_59_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_12_45_59_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_49_45_59_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 45 51 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_49_45_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_12_45_59_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_45_12_45_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 46 12 ]
+        symbol [ Cr %tmp.27 46 21 23 ];
+        %tmp.27 = getv ? :Cr;
+        symbol [ ROSTER_DELAY_TICKS %tmp.28 46 24 42 ];
+        %tmp.28 = getv %tmp.27 :ROSTER_DELAY_TICKS;
+        symbol [ _ticks ? 46 12 18 ];
+        putv self :_ticks %tmp.28;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_12_47_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_catch:
+        %tmp.29 = exception;
+        push %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 47 10 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_catch" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_47_10_47_21_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 47 17 18 ];
+        %tmp.30 = dup %tmp.29;
+        lputv %e.1 %tmp.30;
+        symbol [ e %e.1 47 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_47_10_47_21_end:
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_47_10_47_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_47_10_47_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally;
+        throw %tmp.29;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_41_8_47_21_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_40_19_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 50; @symbol_functiondef = [stop,50,13,17]; ]
+    function stop() {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_50_20_50_35_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 50 22 ]
+        %tmp.1 = -1;
+        symbol [ _ticks ? 50 22 28 ];
+        putv self :_ticks %tmp.1;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_50_20_50_35_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 55; @symbol_functiondef = [poll,55,13,17]; ]
+    function poll() {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_55_20_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_8_56_34_if_stmt:
+        symbol [ _ticks %tmp.2 56 12 18 ];
+        %tmp.2 = getv ? :_ticks;
+        %tmp.3 = 0;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_8_56_34_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_8_56_34_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_24_56_34_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 56 26 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_24_56_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_8_56_34_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_56_8_56_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 57 8 ]
+        symbol [ _ticks %tmp.5 57 8 14 ];
+        %tmp.5 = getv self :_ticks;
+        %tmp.6 = 1;
+        %tmp.7 = sub %tmp.5 %tmp.6;
+        symbol [ _ticks ? 57 8 14 ];
+        putv self :_ticks dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_8_58_34_if_stmt:
+        symbol [ _ticks %tmp.9 58 12 18 ];
+        %tmp.9 = getv ? :_ticks;
+        %tmp.10 = 0;
+        %tmp.11 = gt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_8_58_34_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_24_58_34_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 58 26 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_24_58_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_58_8_58_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 59 8 ]
+        %tmp.12 = -1;
+        symbol [ _ticks ? 59 8 14 ];
+        putv self :_ticks %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 60 8 ]
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_beginTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_endTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_beginTry:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_12_74_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 61 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_stmt:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_16_61_68_begin:
+        symbol [ Leaderboard %tmp.14 61 16 27 ];
+        %tmp.14 = getv ? :Leaderboard;
+        symbol [ isBusy %tmp.15 61 28 34 ];
+        %tmp.15 = getv function %tmp.14 :isBusy;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        bt %tmp.16 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_true;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_40_61_68_false:
+        symbol [ Leaderboard %tmp.18 61 41 52 ];
+        %tmp.18 = getv ? :Leaderboard;
+        symbol [ scoreQueueIdle %tmp.19 61 53 67 ];
+        %tmp.19 = getv function %tmp.18 :scoreQueueIdle;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = not %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_40_61_68_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_16_61_68_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_40_61_68_false] [%tmp.22 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_40_61_68_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_71_69_12_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 65 16 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_16_65_60_if_stmt:
+        symbol [ _waits %tmp.24 65 20 26 ];
+        %tmp.24 = getv ? :_waits;
+        symbol [ Cr %tmp.26 65 30 32 ];
+        %tmp.26 = getv ? :Cr;
+        symbol [ ROSTER_WAIT_MAX %tmp.27 65 33 48 ];
+        %tmp.27 = getv %tmp.26 :ROSTER_WAIT_MAX;
+        %tmp.28 = gte %tmp.24 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_16_65_60_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_16_65_60_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_50_65_60_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 65 52 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_50_65_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_16_65_60_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_65_16_65_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 66 16 ]
+        symbol [ _waits %tmp.29 66 16 22 ];
+        %tmp.29 = getv self :_waits;
+        %tmp.30 = 1;
+        %tmp.31 = add %tmp.29 %tmp.30;
+        symbol [ _waits ? 66 16 22 ];
+        putv self :_waits dup %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 67 16 ]
+        symbol [ Cr %tmp.33 67 25 27 ];
+        %tmp.33 = getv ? :Cr;
+        symbol [ ROSTER_WAIT_TICKS %tmp.34 67 28 45 ];
+        %tmp.34 = getv %tmp.33 :ROSTER_WAIT_TICKS;
+        symbol [ _ticks ? 67 16 22 ];
+        putv self :_ticks %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 68 16 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_71_69_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_61_12_69_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 70 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_12_70_59_if_stmt:
+        symbol [ Leaderboard %tmp.36 70 17 28 ];
+        %tmp.36 = getv ? :Leaderboard;
+        symbol [ isPhoneConnected %tmp.37 70 29 45 ];
+        %tmp.37 = getv function %tmp.36 :isPhoneConnected;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = not %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_12_70_59_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_12_70_59_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_49_70_59_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 70 51 ]
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_49_70_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_12_70_59_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_70_12_70_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 71 12 ]
+        symbol [ _m %tmp.41 71 12 14 ];
+        %tmp.41 = getv ? :_m;
+        symbol [ markRosterTried %tmp.42 71 15 30 ];
+        %tmp.42 = getv function %tmp.41 :markRosterTried;
+        invoke %tmp.41 %tmp.42();
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 72 12 ]
+        symbol [ LbFetch %tmp.46 72 25 32 ];
+        %tmp.46 = getv ? :LbFetch;
+        %tmp.43 = newc %tmp.46 ();
+        symbol [ _fetch ? 72 12 18 ];
+        putv self :_fetch %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 73 12 ]
+        symbol [ _fetch %tmp.48 73 12 18 ];
+        %tmp.48 = getv ? :_fetch;
+        symbol [ fetch %tmp.49 73 19 24 ];
+        %tmp.49 = getv function %tmp.48 :fetch;
+        symbol [ Cr %tmp.51 73 25 27 ];
+        %tmp.51 = getv ? :Cr;
+        symbol [ GAME_ID %tmp.52 73 28 35 ];
+        %tmp.52 = getv %tmp.51 :GAME_ID;
+        symbol [ Cr %tmp.54 73 37 39 ];
+        %tmp.54 = getv ? :Cr;
+        symbol [ LB_ARENA %tmp.55 73 40 48 ];
+        %tmp.55 = getv %tmp.54 :LB_ARENA;
+        symbol [ Leaderboard %tmp.57 73 50 61 ];
+        %tmp.57 = getv ? :Leaderboard;
+        symbol [ loadUser %tmp.58 73 62 70 ];
+        %tmp.58 = getv function %tmp.57 :loadUser;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        %tmp.60 = "all";
+        %tmp.61 = self;
+        symbol [ self %tmp.61 73 81 85 ];
+        %tmp.62 = false;
+        invoke %tmp.48 %tmp.49(%tmp.52, %tmp.55, %tmp.59, %tmp.60, %tmp.61, %tmp.62);
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_12_74_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_catch:
+        %tmp.63 = exception;
+        push %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 74 10 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_catch" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_74_10_74_21_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 74 17 18 ];
+        %tmp.64 = dup %tmp.63;
+        lputv %e.1 %tmp.64;
+        symbol [ e %e.1 74 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_74_10_74_21_end:
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_74_10_74_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_74_10_74_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally;
+        throw %tmp.63;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_60_8_74_21_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_55_20_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 78; @symbol_functiondef = [onLeaderboard,78,13,26]; @symbol_param<0> = [ok,78,27,29]; @symbol_param<1> = [data,78,31,35]; ]
+    function onLeaderboard(ok, data) as Void {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_78_45_85_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 79 8 ]
+        %tmp.1 = null;
+        symbol [ _fetch ? 79 8 14 ];
+        putv self :_fetch %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_8_80_27_if_stmt:
+        %tmp.2 = lgetv %ok;
+        symbol [ ok %tmp.2 80 13 15 ];
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_8_80_27_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_8_80_27_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_17_80_27_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 80 19 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_17_80_27_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_8_80_27_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_80_8_80_27_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 81 8 ]
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_beginTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_endTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_beginTry:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_12_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 82 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_12_84_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_12_84_8_stop" ]
+        %list.1 = local;
+        symbol [ list %list.1 82 16 20 ];
+        %tmp.4 = self;
+        symbol [ _parse %tmp.5 82 23 29 ];
+        %tmp.5 = getv function %tmp.4 :_parse;
+        %tmp.6 = lgetv %data;
+        symbol [ data %tmp.6 82 30 34 ];
+        %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+        lputv %list.1 %tmp.7;
+        symbol [ list %list.1 82 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 83 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_12_83_55_if_stmt:
+        %tmp.8 = lgetv %list.1;
+        symbol [ list %tmp.8 83 16 20 ];
+        symbol [ size %tmp.9 83 21 25 ];
+        %tmp.9 = getv function %tmp.8 :size;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 0;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_12_83_55_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_12_83_55_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_33_83_55_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 83 35 ]
+        symbol [ _m %tmp.14 83 35 37 ];
+        %tmp.14 = getv ? :_m;
+        symbol [ setRoster %tmp.15 83 38 47 ];
+        %tmp.15 = getv function %tmp.14 :setRoster;
+        %tmp.16 = lgetv %list.1;
+        symbol [ list %tmp.16 83 48 52 ];
+        invoke %tmp.14 %tmp.15(%tmp.16);
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_33_83_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_12_83_55_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_83_12_83_55_if_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_12_84_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_catch:
+        %tmp.17 = exception;
+        push %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 84 10 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_catch" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_84_10_84_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 84 17 18 ];
+        %tmp.18 = dup %tmp.17;
+        lputv %e.2 %tmp.18;
+        symbol [ e %e.2 84 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_84_10_84_21_end:
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_84_10_84_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_84_10_84_21_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally;
+        throw %tmp.17;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_81_8_84_21_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_78_45_85_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 93; @symbol_functiondef = [_parse,93,20,26]; @symbol_param<0> = [data,93,27,31]; ]
+    protected
+    function _parse(data) {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_stop" ]
+        %out.1 = local;
+        symbol [ out %out.1 94 12 15 ];
+        %tmp.1 = newa 0;
+        lputv %out.1 %tmp.1;
+        symbol [ out %out.1 94 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_8_95_62_if_stmt:
+        %tmp.2 = lgetv %data;
+        symbol [ data %tmp.2 95 14 18 ];
+        symbol [ Lang %tmp.3 95 30 34 ];
+        %tmp.3 = getm $.Toybox.Lang;
+        symbol [ Dictionary %tmp.4 95 35 45 ];
+        %tmp.4 = getv %tmp.3 :Dictionary;
+        %tmp.5 = isa %tmp.2 %tmp.4;
+        %tmp.6 = not %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_8_95_62_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_8_95_62_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_48_95_62_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 95 50 ]
+        %tmp.7 = lgetv %out.1;
+        symbol [ out %tmp.7 95 57 60 ];
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_48_95_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_8_95_62_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_95_8_95_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_stop" ]
+        %mine.2 = local;
+        symbol [ mine %mine.2 96 12 16 ];
+        symbol [ Leaderboard %tmp.9 96 19 30 ];
+        %tmp.9 = getv ? :Leaderboard;
+        symbol [ loadUser %tmp.10 96 31 39 ];
+        %tmp.10 = getv function %tmp.9 :loadUser;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %mine.2 %tmp.11;
+        symbol [ mine %mine.2 96 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 97 8 ]
+        %tmp.12 = self;
+        symbol [ _collect %tmp.13 97 8 16 ];
+        %tmp.13 = getv function %tmp.12 :_collect;
+        %tmp.14 = lgetv %out.1;
+        symbol [ out %tmp.14 97 17 20 ];
+        %tmp.15 = lgetv %data;
+        symbol [ data %tmp.15 97 22 26 ];
+        %tmp.16 = "top";
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %mine.2;
+        symbol [ mine %tmp.18 97 35 39 ];
+        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.17, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 98 8 ]
+        %tmp.19 = self;
+        symbol [ _collect %tmp.20 98 8 16 ];
+        %tmp.20 = getv function %tmp.19 :_collect;
+        %tmp.21 = lgetv %out.1;
+        symbol [ out %tmp.21 98 17 20 ];
+        %tmp.22 = lgetv %data;
+        symbol [ data %tmp.22 98 22 26 ];
+        %tmp.23 = "near";
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %mine.2;
+        symbol [ mine %tmp.25 98 36 40 ];
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.24, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 99 8 ]
+        %tmp.26 = lgetv %out.1;
+        symbol [ out %tmp.26 99 15 18 ];
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_93_33_100_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 102; @symbol_functiondef = [_collect,102,20,28]; @symbol_param<0> = [out,102,29,32]; @symbol_param<1> = [rows,102,34,38]; @symbol_param<2> = [mine,102,40,44]; ]
+    protected
+    function _collect(out, rows, mine) {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_102_46_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 103 8 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_8_103_53_if_stmt:
+        %tmp.1 = lgetv %rows;
+        symbol [ rows %tmp.1 103 14 18 ];
+        symbol [ Lang %tmp.2 103 30 34 ];
+        %tmp.2 = getm $.Toybox.Lang;
+        symbol [ Array %tmp.3 103 35 40 ];
+        %tmp.3 = getv %tmp.2 :Array;
+        %tmp.4 = isa %tmp.1 %tmp.3;
+        %tmp.5 = not %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_8_103_53_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_8_103_53_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_43_103_53_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 103 45 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_43_103_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_8_103_53_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_103_8_103_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 104 8 ]
+        for @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_test @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_begin" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 104 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.1 %tmp.6;
+        symbol [ i %i.1 104 17 18 ];
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_test:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_24_104_59_begin:
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 104 24 25 ];
+        %tmp.8 = lgetv %rows;
+        symbol [ rows %tmp.8 104 28 32 ];
+        symbol [ size %tmp.9 104 33 37 ];
+        %tmp.9 = getv function %tmp.8 :size;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = lt %tmp.7 %tmp.10;
+        %tmp.12 = dup %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_43_104_59_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_43_104_59_true:
+        %tmp.13 = lgetv %out;
+        symbol [ out %tmp.13 104 43 46 ];
+        symbol [ size %tmp.14 104 47 51 ];
+        %tmp.14 = getv function %tmp.13 :size;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        symbol [ Cr %tmp.17 104 56 58 ];
+        %tmp.17 = getv ? :Cr;
+        symbol [ ROSTER_MAX %tmp.18 104 59 69 ];
+        %tmp.18 = getv %tmp.17 :ROSTER_MAX;
+        %tmp.19 = lt %tmp.15 %tmp.18;
+        %tmp.20 = and %tmp.11 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_43_104_59_end:
+        %tmp.21 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_24_104_59_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_43_104_59_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_43_104_59_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_begin:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 105 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_stop" ]
+        %row.2 = local;
+        symbol [ row %row.2 105 16 19 ];
+        %tmp.22 = lgetv %rows;
+        symbol [ rows %tmp.22 105 22 26 ];
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 105 27 28 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %row.2 %tmp.24;
+        symbol [ row %row.2 105 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 106 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_12_106_63_if_stmt:
+        %tmp.25 = lgetv %row.2;
+        symbol [ row %tmp.25 106 18 21 ];
+        symbol [ Lang %tmp.26 106 33 37 ];
+        %tmp.26 = getm $.Toybox.Lang;
+        symbol [ Dictionary %tmp.27 106 38 48 ];
+        %tmp.27 = getv %tmp.26 :Dictionary;
+        %tmp.28 = isa %tmp.25 %tmp.27;
+        %tmp.29 = not %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_12_106_63_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_12_106_63_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_51_106_63_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 106 53 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_51_106_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_12_106_63_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_106_12_106_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 107 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_stop" ]
+        %u.3 = local;
+        symbol [ u %u.3 107 16 17 ];
+        %tmp.30 = lgetv %row.2;
+        symbol [ row %tmp.30 107 20 23 ];
+        %tmp.31 = "u";
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        lputv %u.3 %tmp.32;
+        symbol [ u %u.3 107 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 108 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_stmt:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_16_108_61_begin:
+        %tmp.33 = lgetv %u.3;
+        symbol [ u %tmp.33 108 18 19 ];
+        symbol [ Lang %tmp.34 108 31 35 ];
+        %tmp.34 = getm $.Toybox.Lang;
+        symbol [ String %tmp.35 108 36 42 ];
+        %tmp.35 = getv %tmp.34 :String;
+        %tmp.36 = isa %tmp.33 %tmp.35;
+        %tmp.37 = not %tmp.36;
+        bt %tmp.37 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_true;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_47_108_61_false:
+        %tmp.38 = lgetv %u.3;
+        symbol [ u %tmp.38 108 47 48 ];
+        %tmp.39 = as %tmp.38 { (Lang.String) };
+        symbol [ length %tmp.40 108 49 55 ];
+        %tmp.40 = getv function %tmp.39 :length;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        %tmp.42 = 0;
+        %tmp.43 = eq %tmp.41 %tmp.42;
+        push %tmp.43;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_47_108_61_end:
+        %tmp.44 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_16_108_61_begin] [%tmp.43 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_47_108_61_false] [%tmp.44 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_47_108_61_end];
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_64_108_76_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 108 66 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_64_108_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_108_12_108_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 109 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_stmt:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_16_109_45_begin:
+        %tmp.45 = lgetv %mine;
+        symbol [ mine %tmp.45 109 16 20 ];
+        %tmp.46 = null;
+        %tmp.47 = ne %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_32_109_45_true:
+        %tmp.48 = lgetv %u.3;
+        symbol [ u %tmp.48 109 32 33 ];
+        symbol [ equals %tmp.49 109 34 40 ];
+        %tmp.49 = getv function %tmp.48 :equals;
+        %tmp.50 = lgetv %mine;
+        symbol [ mine %tmp.50 109 41 45 ];
+        %tmp.51 = as %tmp.50 { (!Null) };
+        %tmp.52 = invoke %tmp.48 %tmp.49(%tmp.51);
+        push %tmp.52;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_32_109_45_end:
+        %tmp.53 = phi [%tmp.47 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_16_109_45_begin] [%tmp.52 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_32_109_45_true] [%tmp.53 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_32_109_45_end];
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_48_109_60_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 109 50 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_48_109_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_109_12_109_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 111 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_12_111_42_if_stmt:
+        %tmp.54 = self;
+        symbol [ _has %tmp.55 111 16 20 ];
+        %tmp.55 = getv function %tmp.54 :_has;
+        %tmp.56 = lgetv %out;
+        symbol [ out %tmp.56 111 21 24 ];
+        %tmp.57 = lgetv %u.3;
+        symbol [ u %tmp.57 111 26 27 ];
+        %tmp.58 = invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57);
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_12_111_42_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_12_111_42_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_30_111_42_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 111 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_30_111_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_12_111_42_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_111_12_111_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 112 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_stop" ]
+        %blob.4 = local;
+        symbol [ blob %blob.4 112 16 20 ];
+        %tmp.59 = lgetv %row.2;
+        symbol [ row %tmp.59 112 23 26 ];
+        %tmp.60 = "m";
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        lputv %blob.4 %tmp.61;
+        symbol [ blob %blob.4 112 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 115 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_stmt:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_16_115_67_begin:
+        %tmp.62 = lgetv %blob.4;
+        symbol [ blob %tmp.62 115 18 22 ];
+        symbol [ Lang %tmp.63 115 34 38 ];
+        %tmp.63 = getm $.Toybox.Lang;
+        symbol [ String %tmp.64 115 39 45 ];
+        %tmp.64 = getv %tmp.63 :String;
+        %tmp.65 = isa %tmp.62 %tmp.64;
+        %tmp.66 = not %tmp.65;
+        bt %tmp.66 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_true;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_50_115_67_false:
+        %tmp.67 = lgetv %blob.4;
+        symbol [ blob %tmp.67 115 50 54 ];
+        %tmp.68 = as %tmp.67 { (Lang.String) };
+        symbol [ length %tmp.69 115 55 61 ];
+        %tmp.69 = getv function %tmp.68 :length;
+        %tmp.70 = invoke %tmp.68 %tmp.69();
+        %tmp.71 = 0;
+        %tmp.72 = eq %tmp.70 %tmp.71;
+        push %tmp.72;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_50_115_67_end:
+        %tmp.73 = phi [%tmp.66 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_16_115_67_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_50_115_67_false] [%tmp.73 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_50_115_67_end];
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_70_115_82_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 115 72 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_70_115_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_115_12_115_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 116 12 ]
+        %tmp.74 = lgetv %out;
+        symbol [ out %tmp.74 116 12 15 ];
+        symbol [ add %tmp.75 116 16 19 ];
+        %tmp.75 = getv function %tmp.74 :add;
+        %tmp.76 = newa 7;
+        %tmp.77 = lgetv %u.3;
+        symbol [ u %tmp.77 116 21 22 ];
+        %tmp.78 = dup %tmp.76;
+        %tmp.79 = aputv %tmp.78 0 %tmp.77;
+        %tmp.80 = self;
+        symbol [ _num %tmp.81 117 21 25 ];
+        %tmp.81 = getv function %tmp.80 :_num;
+        %tmp.82 = lgetv %blob.4;
+        symbol [ blob %tmp.82 117 26 30 ];
+        %tmp.83 = "\"level\":";
+        %tmp.84 = 1;
+        %tmp.85 = invoke %tmp.80 %tmp.81(%tmp.82, %tmp.83, %tmp.84);
+        %tmp.86 = dup %tmp.79;
+        %tmp.87 = aputv %tmp.86 1 %tmp.85;
+        %tmp.88 = self;
+        symbol [ _num %tmp.89 118 21 25 ];
+        %tmp.89 = getv function %tmp.88 :_num;
+        %tmp.90 = lgetv %blob.4;
+        symbol [ blob %tmp.90 118 26 30 ];
+        %tmp.91 = "\"sp\":";
+        %tmp.92 = 0;
+        %tmp.93 = invoke %tmp.88 %tmp.89(%tmp.90, %tmp.91, %tmp.92);
+        %tmp.94 = dup %tmp.87;
+        %tmp.95 = aputv %tmp.94 2 %tmp.93;
+        %tmp.96 = self;
+        symbol [ _num %tmp.97 119 21 25 ];
+        %tmp.97 = getv function %tmp.96 :_num;
+        %tmp.98 = lgetv %blob.4;
+        symbol [ blob %tmp.98 119 26 30 ];
+        %tmp.99 = "\"ev\":";
+        symbol [ Cr %tmp.101 119 43 45 ];
+        %tmp.101 = getv ? :Cr;
+        symbol [ EV_HATCH %tmp.102 119 46 54 ];
+        %tmp.102 = getv %tmp.101 :EV_HATCH;
+        %tmp.103 = invoke %tmp.96 %tmp.97(%tmp.98, %tmp.99, %tmp.102);
+        %tmp.104 = dup %tmp.95;
+        %tmp.105 = aputv %tmp.104 3 %tmp.103;
+        %tmp.106 = self;
+        symbol [ _num %tmp.107 120 21 25 ];
+        %tmp.107 = getv function %tmp.106 :_num;
+        %tmp.108 = lgetv %blob.4;
+        symbol [ blob %tmp.108 120 26 30 ];
+        %tmp.109 = "\"rt\":";
+        %tmp.110 = 0;
+        %tmp.111 = invoke %tmp.106 %tmp.107(%tmp.108, %tmp.109, %tmp.110);
+        %tmp.112 = dup %tmp.105;
+        %tmp.113 = aputv %tmp.112 4 %tmp.111;
+        %tmp.114 = self;
+        symbol [ _num %tmp.115 121 21 25 ];
+        %tmp.115 = getv function %tmp.114 :_num;
+        %tmp.116 = lgetv %blob.4;
+        symbol [ blob %tmp.116 121 26 30 ];
+        %tmp.117 = "\"pa\":";
+        symbol [ Cr %tmp.119 121 43 45 ];
+        %tmp.119 = getv ? :Cr;
+        symbol [ PATH_NONE %tmp.120 121 46 55 ];
+        %tmp.120 = getv %tmp.119 :PATH_NONE;
+        %tmp.121 = invoke %tmp.114 %tmp.115(%tmp.116, %tmp.117, %tmp.120);
+        %tmp.122 = dup %tmp.113;
+        %tmp.123 = aputv %tmp.122 5 %tmp.121;
+        %tmp.124 = self;
+        symbol [ _num %tmp.125 122 21 25 ];
+        %tmp.125 = getv function %tmp.124 :_num;
+        %tmp.126 = lgetv %blob.4;
+        symbol [ blob %tmp.126 122 26 30 ];
+        %tmp.127 = "\"sd\":";
+        %tmp.128 = 12345;
+        %tmp.129 = invoke %tmp.124 %tmp.125(%tmp.126, %tmp.127, %tmp.128);
+        %tmp.130 = dup %tmp.123;
+        %tmp.131 = aputv %tmp.130 6 %tmp.129;
+        invoke %tmp.74 %tmp.75(%tmp.131);
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_76_123_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 104 ]
+        %tmp.134 = lgetv %i.1;
+        symbol [ i %tmp.134 104 71 72 ];
+        %tmp.135 = add %tmp.134 1;
+        lputv %i.1 %tmp.135;
+        symbol [ i %i.1 104 71 72 ];
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_test;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_104_8_123_8_for_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_102_46_124_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 126; @symbol_functiondef = [_has,126,20,24]; @symbol_param<0> = [out,126,25,28]; @symbol_param<1> = [u,126,30,31]; ]
+    protected
+    function _has(out, u) {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_126_33_131_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 127 8 ]
+        for @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_test @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_incr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_begin" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 127 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 127 17 18 ];
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 127 24 25 ];
+        %tmp.3 = lgetv %out;
+        symbol [ out %tmp.3 127 28 31 ];
+        symbol [ size %tmp.4 127 32 36 ];
+        %tmp.4 = getv function %tmp.3 :size;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = lt %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_begin:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_45_129_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 128 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_12_128_52_if_stmt:
+        %tmp.7 = lgetv %u;
+        symbol [ u %tmp.7 128 16 17 ];
+        symbol [ equals %tmp.8 128 18 24 ];
+        %tmp.8 = getv function %tmp.7 :equals;
+        %tmp.9 = lgetv %out;
+        symbol [ out %tmp.9 128 25 28 ];
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 128 29 30 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = 0;
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = invoke %tmp.7 %tmp.8(%tmp.13);
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_12_128_52_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_12_128_52_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_37_128_52_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 128 39 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_37_128_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_12_128_52_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_128_12_128_52_if_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_45_129_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 127 ]
+        %tmp.18 = lgetv %i.1;
+        symbol [ i %tmp.18 127 40 41 ];
+        %tmp.19 = add %tmp.18 1;
+        lputv %i.1 %tmp.19;
+        symbol [ i %i.1 127 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_test;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_127_8_129_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 130 8 ]
+        %tmp.20 = false;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_126_33_131_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 133; @symbol_functiondef = [_num,133,20,24]; @symbol_param<0> = [s,133,25,26]; @symbol_param<1> = [key,133,28,31]; @symbol_param<2> = [def,133,33,36]; ]
+    protected
+    function _num(s, key, def) {
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_133_38_151_4_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 134 8 ]
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_beginTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_endTry @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_beginTry:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 135 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 135 16 17 ];
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 135 20 21 ];
+        symbol [ find %tmp.2 135 22 26 ];
+        %tmp.2 = getv function %tmp.1 :find;
+        %tmp.3 = lgetv %key;
+        symbol [ key %tmp.3 135 27 30 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %i.1 %tmp.4;
+        symbol [ i %i.1 135 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 136 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_12_136_41_if_stmt:
+        %tmp.5 = lgetv %i.1;
+        symbol [ i %tmp.5 136 16 17 ];
+        %tmp.6 = null;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_12_136_41_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_12_136_41_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_27_136_41_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 136 29 ]
+        %tmp.8 = lgetv %def;
+        symbol [ def %tmp.8 136 36 39 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_27_136_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_12_136_41_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_136_12_136_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 137 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_stop" ]
+        %j.2 = local;
+        symbol [ j %j.2 137 16 17 ];
+        %tmp.9 = lgetv %i.1;
+        symbol [ i %tmp.9 137 20 21 ];
+        %tmp.10 = lgetv %key;
+        symbol [ key %tmp.10 137 24 27 ];
+        symbol [ length %tmp.11 137 28 34 ];
+        %tmp.11 = getv function %tmp.10 :length;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = add %tmp.9 %tmp.12;
+        lputv %j.2 %tmp.13;
+        symbol [ j %j.2 137 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 138 12 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_stop" ]
+        %n.3 = local;
+        symbol [ n %n.3 138 16 17 ];
+        %tmp.14 = 0;
+        lputv %n.3 %tmp.14;
+        symbol [ n %n.3 138 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 138 23 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_stop" ]
+        %got.4 = local;
+        symbol [ got %got.4 138 27 30 ];
+        %tmp.15 = false;
+        lputv %got.4 %tmp.15;
+        symbol [ got %got.4 138 27 30 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 139 12 ]
+        while @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_test @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_test:
+        %tmp.16 = lgetv %j.2;
+        symbol [ j %tmp.16 139 19 20 ];
+        %tmp.17 = lgetv %s;
+        symbol [ s %tmp.17 139 23 24 ];
+        symbol [ length %tmp.18 139 25 31 ];
+        %tmp.18 = getv function %tmp.17 :length;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = lt %tmp.16 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_begin:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_35_147_12_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 140 16 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_35_147_12_start" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_35_147_12_stop" ]
+        %d.5 = local;
+        symbol [ d %d.5 140 20 21 ];
+        %tmp.21 = "0123456789";
+        symbol [ find %tmp.22 140 37 41 ];
+        %tmp.22 = getv function %tmp.21 :find;
+        %tmp.23 = lgetv %s;
+        symbol [ s %tmp.23 140 42 43 ];
+        symbol [ substring %tmp.24 140 44 53 ];
+        %tmp.24 = getv function %tmp.23 :substring;
+        %tmp.25 = lgetv %j.2;
+        symbol [ j %tmp.25 140 54 55 ];
+        %tmp.26 = lgetv %j.2;
+        symbol [ j %tmp.26 140 57 58 ];
+        %tmp.27 = 1;
+        %tmp.28 = add %tmp.26 %tmp.27;
+        %tmp.29 = invoke %tmp.23 %tmp.24(%tmp.25, %tmp.28);
+        %tmp.30 = invoke %tmp.21 %tmp.22(%tmp.29);
+        lputv %d.5 %tmp.30;
+        symbol [ d %d.5 140 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 141 16 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_16_141_40_if_stmt:
+        %tmp.31 = lgetv %d.5;
+        symbol [ d %tmp.31 141 20 21 ];
+        %tmp.32 = null;
+        %tmp.33 = eq %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_16_141_40_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_16_141_40_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_31_141_40_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 141 33 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_31_141_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_16_141_40_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_141_16_141_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 144 16 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_16_144_44_if_stmt:
+        %tmp.34 = lgetv %n.3;
+        symbol [ n %tmp.34 144 20 21 ];
+        %tmp.35 = 214748363;
+        %tmp.36 = gt %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_16_144_44_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_16_144_44_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_35_144_44_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 144 37 ]
+        goto break @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_35_144_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_16_144_44_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_144_16_144_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 145 16 ]
+        %tmp.37 = lgetv %n.3;
+        symbol [ n %tmp.37 145 20 21 ];
+        %tmp.38 = 10;
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %d.5;
+        symbol [ d %tmp.40 145 29 30 ];
+        %tmp.41 = add %tmp.39 %tmp.40;
+        lputv %n.3 %tmp.41;
+        symbol [ n %n.3 145 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 146 16 ]
+        %tmp.42 = lgetv %j.2;
+        symbol [ j %tmp.42 146 16 17 ];
+        %tmp.43 = 1;
+        %tmp.44 = add %tmp.42 %tmp.43;
+        lputv %j.2 %tmp.44;
+        symbol [ j %j.2 146 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 146 24 ]
+        %tmp.45 = true;
+        lputv %got.4 %tmp.45;
+        symbol [ got %got.4 146 24 27 ];
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_35_147_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_test;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_139_12_147_12_while_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 148 12 ]
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_12_148_36_if_stmt:
+        %tmp.46 = lgetv %got.4;
+        symbol [ got %tmp.46 148 17 20 ];
+        %tmp.47 = not %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_12_148_36_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_12_148_36_if_true:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_22_148_36_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 148 24 ]
+        %tmp.48 = lgetv %def;
+        symbol [ def %tmp.48 148 31 34 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        ret %tmp.48;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_22_148_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_12_148_36_if_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_148_12_148_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 149 12 ]
+        %tmp.49 = lgetv %n.3;
+        symbol [ n %tmp.49 149 19 20 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_12_150_8_stop:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_catch:
+        %tmp.50 = exception;
+        push %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 150 10 ]
+        [ "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_catch" "_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_10_150_34_end" ]
+        %e.6 = local;
+        symbol [ e %e.6 150 17 18 ];
+        %tmp.51 = dup %tmp.50;
+        lputv %e.6 %tmp.51;
+        symbol [ e %e.6 150 17 18 ];
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_20_150_34_start:
+[ "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc" 150 22 ]
+        pop;
+        %tmp.52 = lgetv %def;
+        symbol [ def %tmp.52 150 29 32 ];
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        ret %tmp.52;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_20_150_34_stop:
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_end;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_10_150_34_end:
+        try @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_catch @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_10_150_34_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_150_10_150_34_end @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        jsr @_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally;
+        throw %tmp.50;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_134_8_150_34_end:
+_Users_kkorolczuk_work_garmin_creatures_source_ArenaRoster_mc_133_38_151_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/creatures/source/ArenaRoster.mc"; @line = 26; ]
+<init> {
+}

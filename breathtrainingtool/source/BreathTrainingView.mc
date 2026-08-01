@@ -148,20 +148,31 @@ class BreathTrainingView extends WatchUi.View {
 
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); _timer.start(method(:onTick), 100, true); }
-        // Once per session, when the home screen is up: show the configured
-        // launch message (fallback = invite to the paid Breath Training System).
-        // Uses the previous session's cached bundle; owner can retune/disable it
-        // from stats.html. Throttled server-side via min_gap_s.
+        // Once per session on HOME: push the PRO invite hard. Fallback wins
+        // offline / first run; server bundle from stats.html overrides when cached.
+        // min_gap_s is short on purpose — free lite should nag toward System.
         if (!_announced && _gs == FT_HOME) {
             _announced = true;
-            Leaderboard.announce("breathtrainingtool", {
-                "title"     => "Go deeper with PRO",
-                "body"      => "Love this tool? Breath Training System adds a coach & adaptive plans on Connect IQ.",
-                "url"       => "https://bitochi.com/pro",
-                "url_label" => "Get the System",
-                "min_gap_s" => 172800
-            });
+            Leaderboard.announce("breathtrainingtool", _proMsg(1800));
         }
+    }
+
+    // Pushy invite to the paid Breath Training System (distraction-free, full).
+    hidden function _proMsg(gapS) {
+        return {
+            "title"     => "You're on the free lite",
+            "body"      => "Breath Training System is the real one — distraction-free, fully featured, with a coach, adaptive plans, readiness and way more. Open on your phone:",
+            "url"       => "https://bitochi.com/pro",
+            "url_label" => "Get Breath Training System",
+            "min_gap_s" => gapS
+        };
+    }
+
+    // After a finished session: nag again (separate throttle from launch).
+    hidden function _nagProPost() {
+        try {
+            Leaderboard.showMessage("breathtrainingtool", Leaderboard.MSG_POSTGAME, _proMsg(0));
+        } catch (e) {}
     }
 
     function onHide() {}
@@ -374,7 +385,10 @@ class BreathTrainingView extends WatchUi.View {
             else { _gs = FT_PAU; }
         } else if (_gs == FT_PAU) {
             _gs = FT_ACT;
-        } else if (_gs == FT_DONE || _gs == FT_STAT) {
+        } else if (_gs == FT_DONE) {
+            _hSel = 0; _gs = FT_HOME;
+            _nagProPost();
+        } else if (_gs == FT_STAT) {
             _hSel = 0; _gs = FT_HOME;
         } else if (_gs == FT_CUST) {
             _actCustRow();
@@ -451,7 +465,8 @@ class BreathTrainingView extends WatchUi.View {
             _actDiscard();
             _hSel = 0; _gs = FT_HOME; return true;
         }
-        if (_gs == FT_DONE || _gs == FT_STAT) { _hSel = 0; _gs = FT_HOME; return true; }
+        if (_gs == FT_DONE) { _hSel = 0; _gs = FT_HOME; _nagProPost(); return true; }
+        if (_gs == FT_STAT) { _hSel = 0; _gs = FT_HOME; return true; }
         if (_gs == FT_RST) { _mSel = 6; _gs = FT_MORE; return true; }
         if (_gs == FT_PRO) { _mSel = 5; _gs = FT_MORE; return true; }
         if (_gs == FT_CUST) { _gs = FT_HOME; return true; }
@@ -830,19 +845,18 @@ class BreathTrainingView extends WatchUi.View {
 
         // Headline — PRO badge (gold)
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 22 / 100, Graphics.FONT_SMALL, "PRO", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 18 / 100, Graphics.FONT_SMALL, "PRO", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Slogan — single line, white
+        // Slogan — this lite is the tease; System is the real product
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 32 / 100, Graphics.FONT_XTINY, "Train smarter. Dive deeper.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 28 / 100, Graphics.FONT_XTINY, "The real System. Not lite.", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // 3 short bullets, centered (was 4 — last one overlapped CTA)
-        var by = _h * 42 / 100;
+        var by = _h * 38 / 100;
         var dy = fntX;
         var bullets = [
-            "Coach + adaptive plans",
-            "Session recommendations",
-            "Readiness + progression"
+            "Distraction-free focus",
+            "Full coach + adaptive plans",
+            "Readiness + way more tools"
         ];
         for (var i = 0; i < 3; i++) {
             var ry = by + i * dy;
@@ -850,8 +864,8 @@ class BreathTrainingView extends WatchUi.View {
             dc.drawText(cx, ry, Graphics.FONT_XTINY, bullets[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // CTA — pulsing gold pill (smaller and lower)
-        var ctaY = _h * 67 / 100;
+        // CTA — pulsing gold pill
+        var ctaY = _h * 64 / 100;
         var pulseOn = (_tick % 14 < 7);
         var ctaC = pulseOn ? 0xFFCC44 : 0xCC9933;
         var ctaW = _w * 52 / 100; var ctaH = fntX + 4;
@@ -862,9 +876,10 @@ class BreathTrainingView extends WatchUi.View {
         dc.drawRoundedRectangle(ctaX, ctaY, ctaW, ctaH, 5);
         dc.drawText(cx, ctaY + 1, Graphics.FONT_XTINY, "Connect IQ Store", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Subhead under CTA — app name highlighted in gold to mark it as a product name
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 76 / 100, Graphics.FONT_XTINY, "Breath Training System", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 74 / 100, Graphics.FONT_XTINY, "Breath Training System", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 82 / 100, Graphics.FONT_XTINY, "bitochi.com/pro", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _drHome(dc) {
@@ -918,7 +933,7 @@ class BreathTrainingView extends WatchUi.View {
 
     hidden function _drMore(dc) {
         var cx = _w / 2;
-        var labels = ["Breathe", "CO2 Table", "O2 Table", "Stats", "Customize", "Upgrade to Pro", "Reset"];
+        var labels = ["Breathe", "CO2 Table", "O2 Table", "Stats", "Customize", "Get the System", "Reset"];
         var fntH = dc.getFontHeight(Graphics.FONT_XTINY);
         var itemH = fntH + 4;
         var totalH = itemH * 7;
@@ -1435,6 +1450,11 @@ class BreathTrainingView extends WatchUi.View {
 
         dc.setColor(0xAACCBB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _h * 63 / 100, Graphics.FONT_XTINY, _fbMsg(), Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Persistent PRO tease on every completed session
+        var proC = (_tick % 10 < 5) ? 0xFFCC44 : 0xAA8833;
+        dc.setColor(proC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 73 / 100, Graphics.FONT_XTINY, "Want the real System?", Graphics.TEXT_JUSTIFY_CENTER);
 
         var hC = (_tick % 12 < 6) ? 0x00BBEE : 0x333333;
         dc.setColor(hC, Graphics.COLOR_TRANSPARENT);

@@ -65,6 +65,10 @@ class BitochiBlocksView extends WatchUi.View {
     hidden var _accelCd;
     hidden var _wobble;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh TBS_MENU start.
+    hidden var _skipStart;
+
     public var accelX;
     hidden var _useAccel;
     hidden var _tiltArm;
@@ -88,6 +92,7 @@ class BitochiBlocksView extends WatchUi.View {
         _panelX = 0;
         _wobble = 0.0;
         _accelCd = 0;
+        _skipStart = false;
 
         _best = Application.Storage.getValue("blocks_best");
         if (_best == null) { _best = 0; }
@@ -181,11 +186,51 @@ class BitochiBlocksView extends WatchUi.View {
         _timer.start(method(:onTick), 70, true);
         // Root menu is the shared view; drop straight into play. Only auto-start
         // from a fresh launch (returning from the post-game card keeps the state).
-        if (_gs == TBS_MENU) { startGame(); }
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && _gs == TBS_MENU) { startGame(); }
     }
 
     function onHide() {
         if (_timer != null) { _timer.stop(); }
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export while actively playing with no line-clear animation
+    // running — a settled checkpoint between piece locks.
+    function exportSave() {
+        if (_gs != TBS_PLAY || _clearAnim != 0) { return null; }
+        var boardCopy = new [TB_ROWS * TB_COLS];
+        for (var i = 0; i < TB_ROWS * TB_COLS; i++) { boardCopy[i] = _board[i]; }
+        return {
+            "board" => boardCopy, "score" => _score, "level" => _level,
+            "linesCleared" => _linesCleared, "combo" => _combo,
+            "pieceType" => _pieceType, "pieceRot" => _pieceRot,
+            "pieceX" => _pieceX, "pieceY" => _pieceY,
+            "isPowerup" => _isPowerup ? 1 : 0,
+            "nextType" => _nextType, "nextIsPu" => _nextIsPu ? 1 : 0,
+            "fallInterval" => _fallInterval, "fallCount" => _fallCount,
+            "freezeTicks" => _freezeTicks
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from BlocksHooks).
+    // setupBoard() runs automatically on the first onUpdate once _w is known.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            var b = data["board"];
+            for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = b[i]; }
+            _score = data["score"]; _level = data["level"];
+            _linesCleared = data["linesCleared"]; _combo = data["combo"];
+            _pieceType = data["pieceType"]; _pieceRot = data["pieceRot"];
+            _pieceX = data["pieceX"]; _pieceY = data["pieceY"];
+            _isPowerup = (data["isPowerup"] == 1);
+            _nextType = data["nextType"]; _nextIsPu = (data["nextIsPu"] == 1);
+            _fallInterval = data["fallInterval"]; _fallCount = data["fallCount"];
+            _freezeTicks = data["freezeTicks"];
+            _gs = TBS_PLAY;
+            _skipStart = true;
+        } catch (e) {}
     }
 
     hidden function setupBoard() {
@@ -565,6 +610,7 @@ class BitochiBlocksView extends WatchUi.View {
             _best = _score;
             Application.Storage.setValue("blocks_best", _best);
         }
+        try { SaveResume.clear("blocks"); } catch (e) {}
         Leaderboard.submitScore(LB_GAME_ID, _score, "");
         Leaderboard.showPostGame(LB_GAME_ID, "", "BLOCKS");
         doVibe(2);

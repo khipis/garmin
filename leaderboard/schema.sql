@@ -294,3 +294,22 @@ CREATE TABLE IF NOT EXISTS agg_cache (
   v   TEXT NOT NULL,        -- JSON payload
   exp INTEGER NOT NULL      -- unix seconds after which the entry is stale
 );
+
+-- ── Raid / fight inbox (async PvP flavour) ────────────────────────────────────
+-- Attacker posts after a local raid/fight against a named rival; victim pulls
+-- on the next launch and sees "X attacked you" in the defence log.
+-- Migration (run once on existing DB):
+--   wrangler d1 execute garmin-leaderboard --file=schema.sql --remote
+CREATE TABLE IF NOT EXISTS events (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  game      TEXT    NOT NULL,
+  from_user TEXT    NOT NULL,
+  to_user   TEXT    NOT NULL,
+  kind      TEXT    NOT NULL,          -- 'raid' | 'fight'
+  won       INTEGER NOT NULL DEFAULT 0, -- 1 = attacker won
+  ts        INTEGER NOT NULL           -- unix seconds
+);
+CREATE INDEX IF NOT EXISTS idx_events_inbox
+  ON events (game, to_user, id);
+CREATE INDEX IF NOT EXISTS idx_events_from_day
+  ON events (game, from_user, ts);

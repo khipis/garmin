@@ -60,6 +60,20 @@ class AIController {
         _lastDir = -1;
     }
 
+    // ── SaveResume (see _shared/menu/SaveResume.mc). Call AFTER
+    // setDifficulty(), which resets this memory as a side effect. ──
+    function exportData() {
+        return { "hits" => _hits, "dir" => _lastDir };
+    }
+
+    function importData(d) {
+        if (d == null) { return; }
+        var h = d["hits"];
+        _hits = (h instanceof Array) ? h : [];
+        var dir = d["dir"];
+        _lastDir = (dir instanceof Number) ? dir : -1;
+    }
+
     // ── Public entry: choose where to fire ──────────────────────────
     function pickShot(grid) {
         if (difficulty == AI_EASY) { return _randomShot(grid); }

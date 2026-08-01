@@ -1,0 +1,2519 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [Lang,8,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 10; @symbol_classdef = [Character,10,6,15]; ]
+class Character {
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 10; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 10; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 12; @position = 8; @symbol_vardef = [cls,12,8,11]; ]
+    var cls;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 13; @position = 8; @symbol_vardef = [level,13,8,13]; ]
+    var level;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 14; @position = 8; @symbol_vardef = [xp,14,8,10]; ]
+    var xp;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 15; @position = 8; @symbol_vardef = [hp,15,8,10]; ]
+    var hp;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 16; @position = 8; @symbol_vardef = [maxHp,16,8,13]; ]
+    var maxHp;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 17; @position = 8; @symbol_vardef = [mana,17,8,12]; ]
+    var mana;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 18; @position = 8; @symbol_vardef = [maxMana,18,8,15]; ]
+    var maxMana;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 19; @position = 8; @symbol_vardef = [str,19,8,11]; ]
+    var str;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 20; @position = 8; @symbol_vardef = [def,20,8,11]; ]
+    var def;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 21; @position = 8; @symbol_vardef = [mag,21,8,11]; ]
+    var mag;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 22; @position = 8; @symbol_vardef = [luck,22,8,12]; ]
+    var luck;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 23; @position = 8; @symbol_vardef = [gold,23,8,12]; ]
+    var gold;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 25; @position = 8; @symbol_vardef = [weapon,25,8,14]; ]
+    var weapon;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 26; @position = 8; @symbol_vardef = [armor,26,8,13]; ]
+    var armor;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 27; @position = 8; @symbol_vardef = [ring,27,8,12]; ]
+    var ring;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 28; @position = 8; @symbol_vardef = [amulet,28,8,14]; ]
+    var amulet;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 30; @position = 8; @symbol_vardef = [potions,30,8,15]; ]
+    var potions;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 31; @position = 8; @symbol_vardef = [ethers,31,8,14]; ]
+    var ethers;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 32; @position = 8; @symbol_vardef = [scrolls,32,8,15]; ]
+    var scrolls;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 33; @position = 8; @symbol_vardef = [keys,33,8,12]; ]
+    var keys;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 34; @position = 8; @symbol_vardef = [bombs,34,8,13]; ]
+    var bombs;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 36; @position = 8; @symbol_vardef = [poison,36,8,14]; ]
+    var poison;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 37; @position = 8; @symbol_vardef = [ward,37,8,12]; ]
+    var ward;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 38; @position = 8; @symbol_vardef = [stun,38,8,12]; ]
+    var stun;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 40; @symbol_functiondef = [initialize,40,13,23]; @symbol_param<0> = [c,40,24,25]; @symbol_param<0>_type<0> = [Lang,40,29,33]; @symbol_param<0>_type<1> = [Number,40,34,40]; ]
+    function initialize(c as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_40_42_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 41 8 ]
+        %tmp.1 = lgetv %c;
+        symbol [ c %tmp.1 41 14 15 ];
+        symbol [ cls ? 41 8 11 ];
+        putv self :cls %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 42 8 ]
+        %tmp.2 = 1;
+        symbol [ level ? 42 8 13 ];
+        putv self :level %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 43 8 ]
+        %tmp.3 = 0;
+        symbol [ xp ? 43 8 10 ];
+        putv self :xp %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 44 8 ]
+        %tmp.4 = 0;
+        symbol [ gold ? 44 8 12 ];
+        putv self :gold %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 45 8 ]
+        %tmp.5 = 0;
+        symbol [ weapon ? 45 8 14 ];
+        putv self :weapon %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 46 8 ]
+        %tmp.6 = 0;
+        symbol [ armor ? 46 8 13 ];
+        putv self :armor %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 47 8 ]
+        %tmp.7 = 0;
+        symbol [ ring ? 47 8 12 ];
+        putv self :ring %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 48 8 ]
+        %tmp.8 = 0;
+        symbol [ amulet ? 48 8 14 ];
+        putv self :amulet %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 49 8 ]
+        %tmp.9 = 2;
+        symbol [ potions ? 49 8 15 ];
+        putv self :potions %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 50 8 ]
+        %tmp.10 = 0;
+        symbol [ ethers ? 50 8 14 ];
+        putv self :ethers %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 51 8 ]
+        %tmp.11 = 1;
+        symbol [ scrolls ? 51 8 15 ];
+        putv self :scrolls %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 52 8 ]
+        %tmp.12 = 0;
+        symbol [ keys ? 52 8 12 ];
+        putv self :keys %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 53 8 ]
+        %tmp.13 = 0;
+        symbol [ bombs ? 53 8 13 ];
+        putv self :bombs %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 54 8 ]
+        %tmp.14 = 0;
+        symbol [ poison ? 54 8 14 ];
+        putv self :poison %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 55 8 ]
+        %tmp.15 = 0;
+        symbol [ ward ? 55 8 12 ];
+        putv self :ward %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 56 8 ]
+        %tmp.16 = 0;
+        symbol [ stun ? 56 8 12 ];
+        putv self :stun %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_stmt:
+        %tmp.17 = lgetv %c;
+        symbol [ c %tmp.17 58 12 13 ];
+        symbol [ CLS_ROGUE %tmp.19 58 17 26 ];
+        %tmp.19 = getv ? :CLS_ROGUE;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_28_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 12 ]
+        %tmp.21 = 34;
+        symbol [ maxHp ? 59 12 17 ];
+        putv self :maxHp %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 24 ]
+        %tmp.22 = 6;
+        symbol [ str ? 59 24 27 ];
+        putv self :str %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 33 ]
+        %tmp.23 = 2;
+        symbol [ def ? 59 33 36 ];
+        putv self :def %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 42 ]
+        %tmp.24 = 2;
+        symbol [ mag ? 59 42 45 ];
+        putv self :mag %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 51 ]
+        %tmp.25 = 6;
+        symbol [ luck ? 59 51 55 ];
+        putv self :luck %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 59 61 ]
+        %tmp.26 = 14;
+        symbol [ maxMana ? 59 61 68 ];
+        putv self :maxMana %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 60 12 ]
+        %tmp.27 = 1;
+        symbol [ bombs ? 60 12 17 ];
+        putv self :bombs %tmp.27;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_28_61_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 61 15 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_stmt:
+        %tmp.28 = lgetv %c;
+        symbol [ c %tmp.28 61 19 20 ];
+        symbol [ CLS_MAGE %tmp.30 61 24 32 ];
+        %tmp.30 = getv ? :CLS_MAGE;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_34_64_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 12 ]
+        %tmp.32 = 28;
+        symbol [ maxHp ? 62 12 17 ];
+        putv self :maxHp %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 24 ]
+        %tmp.33 = 3;
+        symbol [ str ? 62 24 27 ];
+        putv self :str %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 33 ]
+        %tmp.34 = 2;
+        symbol [ def ? 62 33 36 ];
+        putv self :def %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 42 ]
+        %tmp.35 = 7;
+        symbol [ mag ? 62 42 45 ];
+        putv self :mag %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 51 ]
+        %tmp.36 = 3;
+        symbol [ luck ? 62 51 55 ];
+        putv self :luck %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 62 61 ]
+        %tmp.37 = 30;
+        symbol [ maxMana ? 62 61 68 ];
+        putv self :maxMana %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 63 12 ]
+        %tmp.38 = 1;
+        symbol [ potions ? 63 12 19 ];
+        putv self :potions %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 63 25 ]
+        %tmp.39 = 2;
+        symbol [ ethers ? 63 25 31 ];
+        putv self :ethers %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 63 37 ]
+        %tmp.40 = 2;
+        symbol [ scrolls ? 63 37 44 ];
+        putv self :scrolls %tmp.40;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_34_64_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 64 15 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_stmt:
+        %tmp.41 = lgetv %c;
+        symbol [ c %tmp.41 64 19 20 ];
+        symbol [ CLS_PALADIN %tmp.43 64 24 35 ];
+        %tmp.43 = getv ? :CLS_PALADIN;
+        %tmp.44 = eq %tmp.41 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_37_66_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 12 ]
+        %tmp.45 = 42;
+        symbol [ maxHp ? 65 12 17 ];
+        putv self :maxHp %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 24 ]
+        %tmp.46 = 5;
+        symbol [ str ? 65 24 27 ];
+        putv self :str %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 33 ]
+        %tmp.47 = 5;
+        symbol [ def ? 65 33 36 ];
+        putv self :def %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 42 ]
+        %tmp.48 = 4;
+        symbol [ mag ? 65 42 45 ];
+        putv self :mag %tmp.48;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 51 ]
+        %tmp.49 = 2;
+        symbol [ luck ? 65 51 55 ];
+        putv self :luck %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 65 61 ]
+        %tmp.50 = 20;
+        symbol [ maxMana ? 65 61 68 ];
+        putv self :maxMana %tmp.50;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_37_66_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_66_15_68_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 12 ]
+        %tmp.51 = 46;
+        symbol [ maxHp ? 67 12 17 ];
+        putv self :maxHp %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 24 ]
+        %tmp.52 = 7;
+        symbol [ str ? 67 24 27 ];
+        putv self :str %tmp.52;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 33 ]
+        %tmp.53 = 4;
+        symbol [ def ? 67 33 36 ];
+        putv self :def %tmp.53;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 42 ]
+        %tmp.54 = 0;
+        symbol [ mag ? 67 42 45 ];
+        putv self :mag %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 51 ]
+        %tmp.55 = 2;
+        symbol [ luck ? 67 51 55 ];
+        putv self :luck %tmp.55;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 67 61 ]
+        %tmp.56 = 8;
+        symbol [ maxMana ? 67 61 68 ];
+        putv self :maxMana %tmp.56;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_66_15_68_8_stop:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_64_15_68_8_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_61_15_68_8_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_58_8_68_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 69 8 ]
+        %tmp.57 = self;
+        symbol [ maxHpTotal %tmp.58 69 13 23 ];
+        %tmp.58 = getv function %tmp.57 :maxHpTotal;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        symbol [ hp ? 69 8 10 ];
+        putv self :hp %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 70 8 ]
+        %tmp.60 = self;
+        symbol [ maxManaTotal %tmp.61 70 15 27 ];
+        %tmp.61 = getv function %tmp.60 :maxManaTotal;
+        %tmp.62 = invoke %tmp.60 %tmp.61();
+        symbol [ mana ? 70 8 12 ];
+        putv self :mana %tmp.62;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_40_42_71_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 74; @symbol_functiondef = [maxHpTotal,74,13,23]; @symbol_return<0> = [Lang,74,29,33]; @symbol_return<1> = [Number,74,34,40]; ]
+    function maxHpTotal() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_74_41_78_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_74_41_78_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_74_41_78_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 75 12 13 ];
+        symbol [ maxHp %tmp.2 75 16 21 ];
+        %tmp.2 = getv ? :maxHp;
+        lputv %v.1 %tmp.2;
+        symbol [ v %v.1 75 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_8_76_36_if_stmt:
+        symbol [ amulet %tmp.4 76 12 18 ];
+        %tmp.4 = getv ? :amulet;
+        %tmp.5 = 1;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_8_76_36_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_8_76_36_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_25_76_36_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 76 27 ]
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 76 27 28 ];
+        %tmp.8 = 25;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 76 27 28 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_25_76_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_8_76_36_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_76_8_76_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 77 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 77 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_74_41_78_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 80; @symbol_functiondef = [maxManaTotal,80,13,25]; @symbol_return<0> = [Lang,80,31,35]; @symbol_return<1> = [Number,80,36,42]; ]
+    function maxManaTotal() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_80_43_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_80_43_84_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_80_43_84_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 81 12 13 ];
+        symbol [ maxMana %tmp.2 81 16 23 ];
+        %tmp.2 = getv ? :maxMana;
+        lputv %v.1 %tmp.2;
+        symbol [ v %v.1 81 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 82 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_8_82_34_if_stmt:
+        symbol [ ring %tmp.4 82 12 16 ];
+        %tmp.4 = getv ? :ring;
+        %tmp.5 = 3;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_8_82_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_8_82_34_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_23_82_34_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 82 25 ]
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 82 25 26 ];
+        %tmp.8 = 12;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 82 25 26 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_23_82_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_8_82_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_82_8_82_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 83 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 83 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_80_43_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 86; @symbol_functiondef = [totalStr,86,13,21]; @symbol_return<0> = [Lang,86,27,31]; @symbol_return<1> = [Number,86,32,38]; ]
+    function totalStr() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_86_39_90_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 87 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_86_39_90_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_86_39_90_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 87 12 13 ];
+        symbol [ str %tmp.2 87 16 19 ];
+        %tmp.2 = getv ? :str;
+        lputv %v.1 %tmp.2;
+        symbol [ v %v.1 87 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_8_88_33_if_stmt:
+        symbol [ ring %tmp.4 88 12 16 ];
+        %tmp.4 = getv ? :ring;
+        %tmp.5 = 1;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_8_88_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_8_88_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_23_88_33_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 88 25 ]
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 88 25 26 ];
+        %tmp.8 = 4;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 88 25 26 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_23_88_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_8_88_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_88_8_88_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 89 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 89 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_86_39_90_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 92; @symbol_functiondef = [totalDefense,92,13,25]; @symbol_return<0> = [Lang,92,31,35]; @symbol_return<1> = [Number,92,36,42]; ]
+    function totalDefense() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_92_43_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_92_43_96_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_92_43_96_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 93 12 13 ];
+        symbol [ def %tmp.2 93 16 19 ];
+        %tmp.2 = getv ? :def;
+        symbol [ DmConst %tmp.4 93 22 29 ];
+        %tmp.4 = getv ? :DmConst;
+        symbol [ armorDef %tmp.5 93 30 38 ];
+        %tmp.5 = getv function %tmp.4 :armorDef;
+        symbol [ armor %tmp.7 93 39 44 ];
+        %tmp.7 = getv ? :armor;
+        %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.7);
+        %tmp.9 = add %tmp.2 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 93 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_8_94_33_if_stmt:
+        symbol [ ring %tmp.11 94 12 16 ];
+        %tmp.11 = getv ? :ring;
+        %tmp.12 = 2;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_8_94_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_8_94_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_23_94_33_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 94 25 ]
+        %tmp.14 = lgetv %v.1;
+        symbol [ v %tmp.14 94 25 26 ];
+        %tmp.15 = 3;
+        %tmp.16 = add %tmp.14 %tmp.15;
+        lputv %v.1 %tmp.16;
+        symbol [ v %v.1 94 25 26 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_23_94_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_8_94_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_94_8_94_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 95 8 ]
+        %tmp.17 = lgetv %v.1;
+        symbol [ v %tmp.17 95 15 16 ];
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_92_43_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 98; @symbol_functiondef = [totalMagic,98,13,23]; @symbol_return<0> = [Lang,98,29,33]; @symbol_return<1> = [Number,98,34,40]; ]
+    function totalMagic() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_98_41_102_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_98_41_102_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_98_41_102_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 99 12 13 ];
+        symbol [ mag %tmp.2 99 16 19 ];
+        %tmp.2 = getv ? :mag;
+        lputv %v.1 %tmp.2;
+        symbol [ v %v.1 99 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_8_100_35_if_stmt:
+        symbol [ amulet %tmp.4 100 12 18 ];
+        %tmp.4 = getv ? :amulet;
+        %tmp.5 = 3;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_8_100_35_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_8_100_35_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_25_100_35_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 100 27 ]
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 100 27 28 ];
+        %tmp.8 = 3;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 100 27 28 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_25_100_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_8_100_35_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_100_8_100_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 101 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 101 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_98_41_102_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 104; @symbol_functiondef = [totalLuck,104,13,22]; @symbol_return<0> = [Lang,104,28,32]; @symbol_return<1> = [Number,104,33,39]; ]
+    function totalLuck() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_104_40_108_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_104_40_108_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_104_40_108_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 105 12 13 ];
+        symbol [ luck %tmp.2 105 16 20 ];
+        %tmp.2 = getv ? :luck;
+        lputv %v.1 %tmp.2;
+        symbol [ v %v.1 105 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 106 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_8_106_33_if_stmt:
+        symbol [ ring %tmp.4 106 12 16 ];
+        %tmp.4 = getv ? :ring;
+        %tmp.5 = 4;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_8_106_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_8_106_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_23_106_33_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 106 25 ]
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 106 25 26 ];
+        %tmp.8 = 4;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 106 25 26 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_23_106_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_8_106_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_106_8_106_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 107 8 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 107 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_104_40_108_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 110; @symbol_functiondef = [attackPower,110,13,24]; @symbol_return<0> = [Lang,110,30,34]; @symbol_return<1> = [Number,110,35,41]; ]
+    function attackPower() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_110_42_112_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 111 8 ]
+        symbol [ DmConst %tmp.2 111 15 22 ];
+        %tmp.2 = getv ? :DmConst;
+        symbol [ weaponDmg %tmp.3 111 23 32 ];
+        %tmp.3 = getv function %tmp.2 :weaponDmg;
+        symbol [ weapon %tmp.5 111 33 39 ];
+        %tmp.5 = getv ? :weapon;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        %tmp.7 = self;
+        symbol [ totalStr %tmp.8 111 43 51 ];
+        %tmp.8 = getv function %tmp.7 :totalStr;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = add %tmp.6 %tmp.9;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_110_42_112_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 115; @symbol_functiondef = [spellCost,115,13,22]; @symbol_param<0> = [s,115,23,24]; @symbol_param<0>_type<0> = [Lang,115,28,32]; @symbol_param<0>_type<1> = [Number,115,33,39]; @symbol_return<0> = [Lang,115,44,48]; @symbol_return<1> = [Number,115,49,55]; ]
+    function spellCost(s as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_115_56_121_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_115_56_121_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_115_56_121_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 116 12 13 ];
+        symbol [ DmConst %tmp.2 116 16 23 ];
+        %tmp.2 = getv ? :DmConst;
+        symbol [ spellBaseCost %tmp.3 116 24 37 ];
+        %tmp.3 = getv function %tmp.2 :spellBaseCost;
+        %tmp.4 = lgetv %s;
+        symbol [ s %tmp.4 116 38 39 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %c.1 %tmp.5;
+        symbol [ c %c.1 116 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_8_117_35_if_stmt:
+        symbol [ amulet %tmp.7 117 12 18 ];
+        %tmp.7 = getv ? :amulet;
+        %tmp.8 = 2;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_8_117_35_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_8_117_35_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_25_117_35_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 117 27 ]
+        %tmp.10 = lgetv %c.1;
+        symbol [ c %tmp.10 117 27 28 ];
+        %tmp.11 = 2;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        lputv %c.1 %tmp.12;
+        symbol [ c %c.1 117 27 28 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_25_117_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_8_117_35_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_117_8_117_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_8_118_39_if_stmt:
+        symbol [ cls %tmp.14 118 12 15 ];
+        %tmp.14 = getv ? :cls;
+        symbol [ CLS_MAGE %tmp.16 118 19 27 ];
+        %tmp.16 = getv ? :CLS_MAGE;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_8_118_39_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_8_118_39_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_29_118_39_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 118 31 ]
+        %tmp.18 = lgetv %c.1;
+        symbol [ c %tmp.18 118 31 32 ];
+        %tmp.19 = 1;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        lputv %c.1 %tmp.20;
+        symbol [ c %c.1 118 31 32 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_29_118_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_8_118_39_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_118_8_118_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 119 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_8_119_28_if_stmt:
+        %tmp.21 = lgetv %c.1;
+        symbol [ c %tmp.21 119 12 13 ];
+        %tmp.22 = 2;
+        %tmp.23 = lt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_8_119_28_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_8_119_28_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_19_119_28_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 119 21 ]
+        %tmp.24 = 2;
+        lputv %c.1 %tmp.24;
+        symbol [ c %c.1 119 21 22 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_19_119_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_8_119_28_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_119_8_119_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 120 8 ]
+        %tmp.25 = lgetv %c.1;
+        symbol [ c %tmp.25 120 15 16 ];
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_115_56_121_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 123; @symbol_functiondef = [canCast,123,13,20]; @symbol_param<0> = [s,123,21,22]; @symbol_param<0>_type<0> = [Lang,123,26,30]; @symbol_param<0>_type<1> = [Number,123,31,37]; @symbol_return<0> = [Lang,123,42,46]; @symbol_return<1> = [Boolean,123,47,54]; ]
+    function canCast(s as Lang.Number) as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_123_55_125_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 124 8 ]
+        symbol [ mana %tmp.2 124 15 19 ];
+        %tmp.2 = getv ? :mana;
+        %tmp.3 = self;
+        symbol [ spellCost %tmp.4 124 23 32 ];
+        %tmp.4 = getv function %tmp.3 :spellCost;
+        %tmp.5 = lgetv %s;
+        symbol [ s %tmp.5 124 33 34 ];
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        %tmp.7 = gte %tmp.2 %tmp.6;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_123_55_125_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 127; @symbol_functiondef = [isAlive,127,13,20]; @symbol_return<0> = [Lang,127,26,30]; @symbol_return<1> = [Boolean,127,31,38]; ]
+    function isAlive() as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_127_39_127_56_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 127 41 ]
+        symbol [ hp %tmp.2 127 48 50 ];
+        %tmp.2 = getv ? :hp;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_127_39_127_56_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 129; @symbol_functiondef = [heal,129,13,17]; @symbol_param<0> = [n,129,18,19]; @symbol_param<0>_type<0> = [Lang,129,23,27]; @symbol_param<0>_type<1> = [Number,129,28,34]; @symbol_return<0> = [Lang,129,39,43]; @symbol_return<1> = [Number,129,44,50]; ]
+    function heal(n as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 130 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_stop" ]
+        %cap.1 = local;
+        symbol [ cap %cap.1 130 12 15 ];
+        %tmp.1 = self;
+        symbol [ maxHpTotal %tmp.2 130 18 28 ];
+        %tmp.2 = getv function %tmp.1 :maxHpTotal;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %cap.1 %tmp.3;
+        symbol [ cap %cap.1 130 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 131 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_stop" ]
+        %before.2 = local;
+        symbol [ before %before.2 131 12 18 ];
+        symbol [ hp %tmp.5 131 21 23 ];
+        %tmp.5 = getv ? :hp;
+        lputv %before.2 %tmp.5;
+        symbol [ before %before.2 131 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 132 8 ]
+        symbol [ hp %tmp.6 132 8 10 ];
+        %tmp.6 = getv self :hp;
+        %tmp.7 = lgetv %n;
+        symbol [ n %tmp.7 132 14 15 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ hp ? 132 8 10 ];
+        putv self :hp dup %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 133 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_8_133_34_if_stmt:
+        symbol [ hp %tmp.10 133 12 14 ];
+        %tmp.10 = getv ? :hp;
+        %tmp.11 = lgetv %cap.1;
+        symbol [ cap %tmp.11 133 17 20 ];
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_8_133_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_8_133_34_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_22_133_34_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 133 24 ]
+        %tmp.13 = lgetv %cap.1;
+        symbol [ cap %tmp.13 133 29 32 ];
+        symbol [ hp ? 133 24 26 ];
+        putv self :hp %tmp.13;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_22_133_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_8_133_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_133_8_133_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 134 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_8_134_30_if_stmt:
+        symbol [ hp %tmp.15 134 12 14 ];
+        %tmp.15 = getv ? :hp;
+        %tmp.16 = 0;
+        %tmp.17 = lt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_8_134_30_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_8_134_30_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_20_134_30_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 134 22 ]
+        %tmp.18 = 0;
+        symbol [ hp ? 134 22 24 ];
+        putv self :hp %tmp.18;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_20_134_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_8_134_30_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_134_8_134_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 135 8 ]
+        symbol [ hp %tmp.20 135 15 17 ];
+        %tmp.20 = getv ? :hp;
+        %tmp.21 = lgetv %before.2;
+        symbol [ before %tmp.21 135 20 26 ];
+        %tmp.22 = sub %tmp.20 %tmp.21;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_129_51_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 138; @symbol_functiondef = [hurt,138,13,17]; @symbol_param<0> = [n,138,18,19]; @symbol_param<0>_type<0> = [Lang,138,23,27]; @symbol_param<0>_type<1> = [Number,138,28,34]; @symbol_return<0> = [Lang,138,39,43]; @symbol_return<1> = [Number,138,44,50]; ]
+    function hurt(n as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_138_51_150_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 139 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_8_139_28_if_stmt:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 139 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_8_139_28_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_8_139_28_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_19_139_28_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 139 21 ]
+        %tmp.4 = 0;
+        lputv %n %tmp.4;
+        symbol [ n %n 139 21 22 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_19_139_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_8_139_28_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_139_8_139_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 141 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_12_141_28_begin:
+        symbol [ ward %tmp.6 141 12 16 ];
+        %tmp.6 = getv ? :ward;
+        %tmp.7 = 0;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_24_141_28_true:
+        %tmp.9 = lgetv %n;
+        symbol [ n %tmp.9 141 24 25 ];
+        %tmp.10 = 0;
+        %tmp.11 = gt %tmp.9 %tmp.10;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_24_141_28_end:
+        %tmp.12 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_12_141_28_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_24_141_28_true] [%tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_24_141_28_end];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_31_146_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 142 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_31_146_8_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_31_146_8_stop" ]
+        %soak.1 = local;
+        symbol [ soak %soak.1 142 16 20 ];
+        %tmp.13 = 3;
+        %tmp.14 = self;
+        symbol [ totalMagic %tmp.15 142 27 37 ];
+        %tmp.15 = getv function %tmp.14 :totalMagic;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        %tmp.17 = add %tmp.13 %tmp.16;
+        lputv %soak.1 %tmp.17;
+        symbol [ soak %soak.1 142 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 143 12 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_12_143_38_if_stmt:
+        %tmp.18 = lgetv %soak.1;
+        symbol [ soak %tmp.18 143 16 20 ];
+        %tmp.19 = lgetv %n;
+        symbol [ n %tmp.19 143 23 24 ];
+        %tmp.20 = gt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_12_143_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_12_143_38_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_26_143_38_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 143 28 ]
+        %tmp.21 = lgetv %n;
+        symbol [ n %tmp.21 143 35 36 ];
+        lputv %soak.1 %tmp.21;
+        symbol [ soak %soak.1 143 28 32 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_26_143_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_12_143_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_143_12_143_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 144 12 ]
+        %tmp.22 = lgetv %n;
+        symbol [ n %tmp.22 144 12 13 ];
+        %tmp.23 = lgetv %soak.1;
+        symbol [ soak %tmp.23 144 17 21 ];
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        lputv %n %tmp.24;
+        symbol [ n %n 144 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 145 12 ]
+        symbol [ ward %tmp.27 145 12 16 ];
+        %tmp.27 = getv ? :ward;
+        %tmp.28 = sub %tmp.27 1;
+        symbol [ ward ? 145 12 16 ];
+        putv self :ward dup %tmp.28;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_31_146_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_141_8_146_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 147 8 ]
+        symbol [ hp %tmp.29 147 8 10 ];
+        %tmp.29 = getv self :hp;
+        %tmp.30 = lgetv %n;
+        symbol [ n %tmp.30 147 14 15 ];
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        symbol [ hp ? 147 8 10 ];
+        putv self :hp dup %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 148 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_8_148_30_if_stmt:
+        symbol [ hp %tmp.33 148 12 14 ];
+        %tmp.33 = getv ? :hp;
+        %tmp.34 = 0;
+        %tmp.35 = lt %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_8_148_30_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_8_148_30_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_20_148_30_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 148 22 ]
+        %tmp.36 = 0;
+        symbol [ hp ? 148 22 24 ];
+        putv self :hp %tmp.36;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_20_148_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_8_148_30_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_148_8_148_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 149 8 ]
+        %tmp.37 = lgetv %n;
+        symbol [ n %tmp.37 149 15 16 ];
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_138_51_150_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 152; @symbol_functiondef = [restoreMana,152,13,24]; @symbol_param<0> = [n,152,25,26]; @symbol_param<0>_type<0> = [Lang,152,30,34]; @symbol_param<0>_type<1> = [Number,152,35,41]; @symbol_return<0> = [Lang,152,46,50]; @symbol_return<1> = [Number,152,51,57]; ]
+    function restoreMana(n as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 153 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_stop" ]
+        %cap.1 = local;
+        symbol [ cap %cap.1 153 12 15 ];
+        %tmp.1 = self;
+        symbol [ maxManaTotal %tmp.2 153 18 30 ];
+        %tmp.2 = getv function %tmp.1 :maxManaTotal;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %cap.1 %tmp.3;
+        symbol [ cap %cap.1 153 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 154 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_stop" ]
+        %before.2 = local;
+        symbol [ before %before.2 154 12 18 ];
+        symbol [ mana %tmp.5 154 21 25 ];
+        %tmp.5 = getv ? :mana;
+        lputv %before.2 %tmp.5;
+        symbol [ before %before.2 154 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 155 8 ]
+        symbol [ mana %tmp.6 155 8 12 ];
+        %tmp.6 = getv self :mana;
+        %tmp.7 = lgetv %n;
+        symbol [ n %tmp.7 155 16 17 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ mana ? 155 8 12 ];
+        putv self :mana dup %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_8_156_38_if_stmt:
+        symbol [ mana %tmp.10 156 12 16 ];
+        %tmp.10 = getv ? :mana;
+        %tmp.11 = lgetv %cap.1;
+        symbol [ cap %tmp.11 156 19 22 ];
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_8_156_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_8_156_38_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_24_156_38_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 156 26 ]
+        %tmp.13 = lgetv %cap.1;
+        symbol [ cap %tmp.13 156 33 36 ];
+        symbol [ mana ? 156 26 30 ];
+        putv self :mana %tmp.13;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_24_156_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_8_156_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_156_8_156_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 157 8 ]
+        symbol [ mana %tmp.15 157 15 19 ];
+        %tmp.15 = getv ? :mana;
+        %tmp.16 = lgetv %before.2;
+        symbol [ before %tmp.16 157 22 28 ];
+        %tmp.17 = sub %tmp.15 %tmp.16;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_152_58_158_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 160; @symbol_functiondef = [spendMana,160,13,22]; @symbol_param<0> = [n,160,23,24]; @symbol_param<0>_type<0> = [Lang,160,28,32]; @symbol_param<0>_type<1> = [Number,160,33,39]; ]
+    function spendMana(n as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_160_49_163_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 161 8 ]
+        symbol [ mana %tmp.1 161 8 12 ];
+        %tmp.1 = getv self :mana;
+        %tmp.2 = lgetv %n;
+        symbol [ n %tmp.2 161 16 17 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        symbol [ mana ? 161 8 12 ];
+        putv self :mana dup %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 162 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_8_162_34_if_stmt:
+        symbol [ mana %tmp.5 162 12 16 ];
+        %tmp.5 = getv ? :mana;
+        %tmp.6 = 0;
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_8_162_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_8_162_34_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_22_162_34_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 162 24 ]
+        %tmp.8 = 0;
+        symbol [ mana ? 162 24 28 ];
+        putv self :mana %tmp.8;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_22_162_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_8_162_34_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_162_8_162_34_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_160_49_163_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 166; @symbol_functiondef = [stepRegen,166,13,22]; @symbol_param<0> = [steps,166,23,28]; @symbol_param<0>_type<0> = [Lang,166,32,36]; @symbol_param<0>_type<1> = [Number,166,37,43]; ]
+    function stepRegen(steps as Lang.Number) as Void {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_166_53_168_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 167 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_8_167_46_if_stmt:
+        %tmp.1 = lgetv %steps;
+        symbol [ steps %tmp.1 167 12 17 ];
+        %tmp.2 = 2;
+        %tmp.3 = mod %tmp.1 %tmp.2;
+        %tmp.4 = 0;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_8_167_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_8_167_46_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_28_167_46_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 167 30 ]
+        %tmp.6 = self;
+        symbol [ restoreMana %tmp.7 167 30 41 ];
+        %tmp.7 = getv function %tmp.6 :restoreMana;
+        %tmp.8 = 1;
+        invoke %tmp.6 %tmp.7(%tmp.8);
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_28_167_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_8_167_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_167_8_167_46_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_166_53_168_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 171; @symbol_functiondef = [addXp,171,13,18]; @symbol_param<0> = [n,171,19,20]; @symbol_param<0>_type<0> = [Lang,171,24,28]; @symbol_param<0>_type<1> = [Number,171,29,35]; @symbol_return<0> = [Lang,171,40,44]; @symbol_return<1> = [Boolean,171,45,52]; ]
+    function addXp(n as Lang.Number) as Lang.Boolean {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_171_53_180_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 172 8 ]
+        symbol [ xp %tmp.1 172 8 10 ];
+        %tmp.1 = getv self :xp;
+        %tmp.2 = lgetv %n;
+        symbol [ n %tmp.2 172 14 15 ];
+        %tmp.3 = add %tmp.1 %tmp.2;
+        symbol [ xp ? 172 8 10 ];
+        putv self :xp dup %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 173 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_171_53_180_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_171_53_180_4_stop" ]
+        %leveled.1 = local;
+        symbol [ leveled %leveled.1 173 12 19 ];
+        %tmp.4 = false;
+        lputv %leveled.1 %tmp.4;
+        symbol [ leveled %leveled.1 173 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 174 8 ]
+        while @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_test @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_test:
+        symbol [ xp %tmp.6 174 15 17 ];
+        %tmp.6 = getv ? :xp;
+        symbol [ DmConst %tmp.8 174 21 28 ];
+        %tmp.8 = getv ? :DmConst;
+        symbol [ xpForLevel %tmp.9 174 29 39 ];
+        %tmp.9 = getv function %tmp.8 :xpForLevel;
+        symbol [ level %tmp.11 174 40 45 ];
+        %tmp.11 = getv ? :level;
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = gte %tmp.6 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_begin:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_48_178_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 175 12 ]
+        symbol [ xp %tmp.14 175 12 14 ];
+        %tmp.14 = getv self :xp;
+        symbol [ DmConst %tmp.16 175 18 25 ];
+        %tmp.16 = getv ? :DmConst;
+        symbol [ xpForLevel %tmp.17 175 26 36 ];
+        %tmp.17 = getv function %tmp.16 :xpForLevel;
+        symbol [ level %tmp.19 175 37 42 ];
+        %tmp.19 = getv ? :level;
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        %tmp.21 = sub %tmp.14 %tmp.20;
+        symbol [ xp ? 175 12 14 ];
+        putv self :xp dup %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 176 12 ]
+        symbol [ level %tmp.24 176 12 17 ];
+        %tmp.24 = getv ? :level;
+        %tmp.25 = add %tmp.24 1;
+        symbol [ level ? 176 12 17 ];
+        putv self :level dup %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 177 12 ]
+        %tmp.26 = true;
+        lputv %leveled.1 %tmp.26;
+        symbol [ leveled %leveled.1 177 12 19 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_48_178_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_test;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_174_8_178_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 179 8 ]
+        %tmp.27 = lgetv %leveled.1;
+        symbol [ leveled %tmp.27 179 15 22 ];
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_171_53_180_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 182; @symbol_functiondef = [applyUpgrade,182,13,25]; @symbol_param<0> = [choice,182,26,32]; @symbol_param<0>_type<0> = [Lang,182,36,40]; @symbol_param<0>_type<1> = [Number,182,41,47]; @symbol_return<0> = [Lang,182,52,56]; @symbol_return<1> = [String,182,57,63]; ]
+    function applyUpgrade(choice as Lang.Number) as Lang.String {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_182_64_204_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 183 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_8_186_8_if_stmt:
+        %tmp.1 = lgetv %choice;
+        symbol [ choice %tmp.1 183 12 18 ];
+        symbol [ UP_STR %tmp.3 183 22 28 ];
+        %tmp.3 = getv ? :UP_STR;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_8_186_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_8_186_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_30_186_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 184 12 ]
+        symbol [ str %tmp.5 184 12 15 ];
+        %tmp.5 = getv self :str;
+        %tmp.6 = 2;
+        %tmp.7 = add %tmp.5 %tmp.6;
+        symbol [ str ? 184 12 15 ];
+        putv self :str dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 185 12 ]
+        %tmp.8 = "+2 STRENGTH";
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_30_186_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_8_186_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_183_8_186_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 187 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_8_190_8_if_stmt:
+        %tmp.9 = lgetv %choice;
+        symbol [ choice %tmp.9 187 12 18 ];
+        symbol [ UP_DEF %tmp.11 187 22 28 ];
+        %tmp.11 = getv ? :UP_DEF;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_8_190_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_8_190_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_30_190_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 188 12 ]
+        symbol [ def %tmp.13 188 12 15 ];
+        %tmp.13 = getv self :def;
+        %tmp.14 = 2;
+        %tmp.15 = add %tmp.13 %tmp.14;
+        symbol [ def ? 188 12 15 ];
+        putv self :def dup %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 189 12 ]
+        %tmp.16 = "+2 DEFENSE";
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_30_190_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_8_190_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_187_8_190_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 191 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_8_196_8_if_stmt:
+        %tmp.17 = lgetv %choice;
+        symbol [ choice %tmp.17 191 12 18 ];
+        symbol [ UP_MAGIC %tmp.19 191 22 30 ];
+        %tmp.19 = getv ? :UP_MAGIC;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_8_196_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_8_196_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_32_196_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 192 12 ]
+        symbol [ mag %tmp.21 192 12 15 ];
+        %tmp.21 = getv self :mag;
+        %tmp.22 = 2;
+        %tmp.23 = add %tmp.21 %tmp.22;
+        symbol [ mag ? 192 12 15 ];
+        putv self :mag dup %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 193 12 ]
+        symbol [ maxMana %tmp.24 193 12 19 ];
+        %tmp.24 = getv self :maxMana;
+        %tmp.25 = 8;
+        %tmp.26 = add %tmp.24 %tmp.25;
+        symbol [ maxMana ? 193 12 19 ];
+        putv self :maxMana dup %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 194 12 ]
+        %tmp.27 = self;
+        symbol [ restoreMana %tmp.28 194 12 23 ];
+        %tmp.28 = getv function %tmp.27 :restoreMana;
+        %tmp.29 = 8;
+        invoke %tmp.27 %tmp.28(%tmp.29);
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 195 12 ]
+        %tmp.30 = "+2 MAGIC  +8 MANA";
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_32_196_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_8_196_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_191_8_196_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 197 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_8_200_8_if_stmt:
+        %tmp.31 = lgetv %choice;
+        symbol [ choice %tmp.31 197 12 18 ];
+        symbol [ UP_LUCK %tmp.33 197 22 29 ];
+        %tmp.33 = getv ? :UP_LUCK;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_8_200_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_8_200_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_31_200_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 198 12 ]
+        symbol [ luck %tmp.35 198 12 16 ];
+        %tmp.35 = getv self :luck;
+        %tmp.36 = 2;
+        %tmp.37 = add %tmp.35 %tmp.36;
+        symbol [ luck ? 198 12 16 ];
+        putv self :luck dup %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 199 12 ]
+        %tmp.38 = "+2 LUCK";
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_31_200_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_8_200_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_197_8_200_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 201 8 ]
+        symbol [ maxHp %tmp.39 201 8 13 ];
+        %tmp.39 = getv self :maxHp;
+        %tmp.40 = 12;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        symbol [ maxHp ? 201 8 13 ];
+        putv self :maxHp dup %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 202 8 ]
+        %tmp.42 = self;
+        symbol [ heal %tmp.43 202 8 12 ];
+        %tmp.43 = getv function %tmp.42 :heal;
+        %tmp.44 = 12;
+        invoke %tmp.42 %tmp.43(%tmp.44);
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 203 8 ]
+        %tmp.45 = "+12 MAX HP";
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_182_64_204_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 206; @symbol_functiondef = [upgradeLabel,206,13,25]; @symbol_param<0> = [choice,206,26,32]; @symbol_param<0>_type<0> = [Lang,206,36,40]; @symbol_param<0>_type<1> = [Number,206,41,47]; @symbol_return<0> = [Lang,206,52,56]; @symbol_return<1> = [String,206,57,63]; ]
+    function upgradeLabel(choice as Lang.Number) as Lang.String {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_206_64_212_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 207 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_8_207_87_if_stmt:
+        %tmp.1 = lgetv %choice;
+        symbol [ choice %tmp.1 207 12 18 ];
+        symbol [ UP_STR %tmp.3 207 22 28 ];
+        %tmp.3 = getv ? :UP_STR;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_8_207_87_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_8_207_87_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_32_207_87_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 207 34 ]
+        %tmp.5 = "+2 STR   dmg ";
+        %tmp.6 = self;
+        symbol [ attackPower %tmp.7 207 59 70 ];
+        %tmp.7 = getv function %tmp.6 :attackPower;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        symbol [ format %tmp.9 207 73 79 ];
+        %tmp.9 = getv function %tmp.8 :format;
+        %tmp.10 = "%d";
+        %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
+        %tmp.12 = add %tmp.5 %tmp.11;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_32_207_87_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_8_207_87_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_207_8_207_87_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 208 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_8_208_88_if_stmt:
+        %tmp.13 = lgetv %choice;
+        symbol [ choice %tmp.13 208 12 18 ];
+        symbol [ UP_DEF %tmp.15 208 22 28 ];
+        %tmp.15 = getv ? :UP_DEF;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_8_208_88_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_8_208_88_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_32_208_88_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 208 34 ]
+        %tmp.17 = "+2 DEF   now ";
+        %tmp.18 = self;
+        symbol [ totalDefense %tmp.19 208 59 71 ];
+        %tmp.19 = getv function %tmp.18 :totalDefense;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        symbol [ format %tmp.21 208 74 80 ];
+        %tmp.21 = getv function %tmp.20 :format;
+        %tmp.22 = "%d";
+        %tmp.23 = invoke %tmp.20 %tmp.21(%tmp.22);
+        %tmp.24 = add %tmp.17 %tmp.23;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_32_208_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_8_208_88_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_208_8_208_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 209 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_8_209_59_if_stmt:
+        %tmp.25 = lgetv %choice;
+        symbol [ choice %tmp.25 209 12 18 ];
+        symbol [ UP_MAGIC %tmp.27 209 22 30 ];
+        %tmp.27 = getv ? :UP_MAGIC;
+        %tmp.28 = eq %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_8_209_59_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_8_209_59_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_32_209_59_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 209 34 ]
+        %tmp.29 = "+2 MAG +8 MANA";
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_32_209_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_8_209_59_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_209_8_209_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 210 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_8_210_64_if_stmt:
+        %tmp.30 = lgetv %choice;
+        symbol [ choice %tmp.30 210 12 18 ];
+        symbol [ UP_LUCK %tmp.32 210 22 29 ];
+        %tmp.32 = getv ? :UP_LUCK;
+        %tmp.33 = eq %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_8_210_64_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_8_210_64_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_32_210_64_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 210 34 ]
+        %tmp.34 = "+2 LUCK  more crits";
+        ret %tmp.34;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_32_210_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_8_210_64_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_210_8_210_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 211 8 ]
+        %tmp.35 = "+12 HP   max ";
+        %tmp.36 = self;
+        symbol [ maxHpTotal %tmp.37 211 33 43 ];
+        %tmp.37 = getv function %tmp.36 :maxHpTotal;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        symbol [ format %tmp.39 211 46 52 ];
+        %tmp.39 = getv function %tmp.38 :format;
+        %tmp.40 = "%d";
+        %tmp.41 = invoke %tmp.38 %tmp.39(%tmp.40);
+        %tmp.42 = add %tmp.35 %tmp.41;
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_206_64_212_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 216; @symbol_functiondef = [takeLoot,216,13,21]; @symbol_param<0> = [kind,216,22,26]; @symbol_param<0>_type<0> = [Lang,216,30,34]; @symbol_param<0>_type<1> = [Number,216,35,41]; @symbol_param<1> = [val,216,43,46]; @symbol_param<1>_type<0> = [Lang,216,50,54]; @symbol_param<1>_type<1> = [Number,216,55,61]; @symbol_return<0> = [Lang,216,66,70]; @symbol_return<1> = [String,216,71,77]; ]
+    function takeLoot(kind as Lang.Number, val as Lang.Number) as Lang.String {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_216_78_281_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 217 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_8_220_8_if_stmt:
+        %tmp.1 = lgetv %kind;
+        symbol [ kind %tmp.1 217 12 16 ];
+        symbol [ LOOT_GOLD %tmp.3 217 20 29 ];
+        %tmp.3 = getv ? :LOOT_GOLD;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_8_220_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_8_220_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_31_220_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 218 12 ]
+        symbol [ gold %tmp.5 218 12 16 ];
+        %tmp.5 = getv self :gold;
+        %tmp.6 = lgetv %val;
+        symbol [ val %tmp.6 218 20 23 ];
+        %tmp.7 = add %tmp.5 %tmp.6;
+        symbol [ gold ? 218 12 16 ];
+        putv self :gold dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 219 12 ]
+        %tmp.8 = "+";
+        %tmp.9 = lgetv %val;
+        symbol [ val %tmp.9 219 25 28 ];
+        symbol [ format %tmp.10 219 29 35 ];
+        %tmp.10 = getv function %tmp.9 :format;
+        %tmp.11 = "%d";
+        %tmp.12 = invoke %tmp.9 %tmp.10(%tmp.11);
+        %tmp.13 = add %tmp.8 %tmp.12;
+        %tmp.14 = " GOLD";
+        %tmp.15 = add %tmp.13 %tmp.14;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_31_220_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_8_220_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_217_8_220_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 221 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_8_224_8_if_stmt:
+        %tmp.16 = lgetv %kind;
+        symbol [ kind %tmp.16 221 12 16 ];
+        symbol [ LOOT_POTION %tmp.18 221 20 31 ];
+        %tmp.18 = getv ? :LOOT_POTION;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_8_224_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_8_224_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_33_224_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 222 12 ]
+        symbol [ potions %tmp.20 222 12 19 ];
+        %tmp.20 = getv self :potions;
+        %tmp.21 = 1;
+        %tmp.22 = add %tmp.20 %tmp.21;
+        symbol [ potions ? 222 12 19 ];
+        putv self :potions dup %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 223 12 ]
+        %tmp.23 = "POTIONS x";
+        symbol [ potions %tmp.25 223 33 40 ];
+        %tmp.25 = getv ? :potions;
+        symbol [ format %tmp.26 223 41 47 ];
+        %tmp.26 = getv function %tmp.25 :format;
+        %tmp.27 = "%d";
+        %tmp.28 = invoke %tmp.25 %tmp.26(%tmp.27);
+        %tmp.29 = add %tmp.23 %tmp.28;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_33_224_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_8_224_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_221_8_224_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 225 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_8_228_8_if_stmt:
+        %tmp.30 = lgetv %kind;
+        symbol [ kind %tmp.30 225 12 16 ];
+        symbol [ LOOT_ETHER %tmp.32 225 20 30 ];
+        %tmp.32 = getv ? :LOOT_ETHER;
+        %tmp.33 = eq %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_8_228_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_8_228_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_32_228_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 226 12 ]
+        symbol [ ethers %tmp.34 226 12 18 ];
+        %tmp.34 = getv self :ethers;
+        %tmp.35 = 1;
+        %tmp.36 = add %tmp.34 %tmp.35;
+        symbol [ ethers ? 226 12 18 ];
+        putv self :ethers dup %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 227 12 ]
+        %tmp.37 = "ETHER x";
+        symbol [ ethers %tmp.39 227 31 37 ];
+        %tmp.39 = getv ? :ethers;
+        symbol [ format %tmp.40 227 38 44 ];
+        %tmp.40 = getv function %tmp.39 :format;
+        %tmp.41 = "%d";
+        %tmp.42 = invoke %tmp.39 %tmp.40(%tmp.41);
+        %tmp.43 = add %tmp.37 %tmp.42;
+        ret %tmp.43;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_32_228_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_8_228_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_225_8_228_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 229 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_8_232_8_if_stmt:
+        %tmp.44 = lgetv %kind;
+        symbol [ kind %tmp.44 229 12 16 ];
+        symbol [ LOOT_SCROLL %tmp.46 229 20 31 ];
+        %tmp.46 = getv ? :LOOT_SCROLL;
+        %tmp.47 = eq %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_8_232_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_8_232_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_33_232_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 230 12 ]
+        symbol [ scrolls %tmp.48 230 12 19 ];
+        %tmp.48 = getv self :scrolls;
+        %tmp.49 = 1;
+        %tmp.50 = add %tmp.48 %tmp.49;
+        symbol [ scrolls ? 230 12 19 ];
+        putv self :scrolls dup %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 231 12 ]
+        %tmp.51 = "SCROLLS x";
+        symbol [ scrolls %tmp.53 231 33 40 ];
+        %tmp.53 = getv ? :scrolls;
+        symbol [ format %tmp.54 231 41 47 ];
+        %tmp.54 = getv function %tmp.53 :format;
+        %tmp.55 = "%d";
+        %tmp.56 = invoke %tmp.53 %tmp.54(%tmp.55);
+        %tmp.57 = add %tmp.51 %tmp.56;
+        ret %tmp.57;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_33_232_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_8_232_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_229_8_232_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 233 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_8_236_8_if_stmt:
+        %tmp.58 = lgetv %kind;
+        symbol [ kind %tmp.58 233 12 16 ];
+        symbol [ LOOT_KEY %tmp.60 233 20 28 ];
+        %tmp.60 = getv ? :LOOT_KEY;
+        %tmp.61 = eq %tmp.58 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_8_236_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_8_236_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_30_236_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 234 12 ]
+        symbol [ keys %tmp.62 234 12 16 ];
+        %tmp.62 = getv self :keys;
+        %tmp.63 = 1;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        symbol [ keys ? 234 12 16 ];
+        putv self :keys dup %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 235 12 ]
+        %tmp.65 = "KEYS x";
+        symbol [ keys %tmp.67 235 30 34 ];
+        %tmp.67 = getv ? :keys;
+        symbol [ format %tmp.68 235 35 41 ];
+        %tmp.68 = getv function %tmp.67 :format;
+        %tmp.69 = "%d";
+        %tmp.70 = invoke %tmp.67 %tmp.68(%tmp.69);
+        %tmp.71 = add %tmp.65 %tmp.70;
+        ret %tmp.71;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_30_236_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_8_236_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_233_8_236_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 237 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_8_240_8_if_stmt:
+        %tmp.72 = lgetv %kind;
+        symbol [ kind %tmp.72 237 12 16 ];
+        symbol [ LOOT_BOMB %tmp.74 237 20 29 ];
+        %tmp.74 = getv ? :LOOT_BOMB;
+        %tmp.75 = eq %tmp.72 %tmp.74;
+        bf %tmp.75 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_8_240_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_8_240_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_31_240_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 238 12 ]
+        symbol [ bombs %tmp.76 238 12 17 ];
+        %tmp.76 = getv self :bombs;
+        %tmp.77 = 1;
+        %tmp.78 = add %tmp.76 %tmp.77;
+        symbol [ bombs ? 238 12 17 ];
+        putv self :bombs dup %tmp.78;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 239 12 ]
+        %tmp.79 = "BOMBS x";
+        symbol [ bombs %tmp.81 239 31 36 ];
+        %tmp.81 = getv ? :bombs;
+        symbol [ format %tmp.82 239 37 43 ];
+        %tmp.82 = getv function %tmp.81 :format;
+        %tmp.83 = "%d";
+        %tmp.84 = invoke %tmp.81 %tmp.82(%tmp.83);
+        %tmp.85 = add %tmp.79 %tmp.84;
+        ret %tmp.85;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_31_240_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_8_240_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_237_8_240_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 241 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_8_248_8_if_stmt:
+        %tmp.86 = lgetv %kind;
+        symbol [ kind %tmp.86 241 12 16 ];
+        symbol [ LOOT_WEAPON %tmp.88 241 20 31 ];
+        %tmp.88 = getv ? :LOOT_WEAPON;
+        %tmp.89 = eq %tmp.86 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_8_248_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_8_248_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_33_248_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 242 12 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_12_245_12_if_stmt:
+        %tmp.90 = lgetv %val;
+        symbol [ val %tmp.90 242 16 19 ];
+        symbol [ weapon %tmp.92 242 22 28 ];
+        %tmp.92 = getv ? :weapon;
+        %tmp.93 = gt %tmp.90 %tmp.92;
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_12_245_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_12_245_12_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_30_245_12_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 243 16 ]
+        %tmp.94 = lgetv %val;
+        symbol [ val %tmp.94 243 25 28 ];
+        symbol [ weapon ? 243 16 22 ];
+        putv self :weapon %tmp.94;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 244 16 ]
+        symbol [ DmConst %tmp.96 244 23 30 ];
+        %tmp.96 = getv ? :DmConst;
+        symbol [ weaponName %tmp.97 244 31 41 ];
+        %tmp.97 = getv function %tmp.96 :weaponName;
+        symbol [ weapon %tmp.99 244 42 48 ];
+        %tmp.99 = getv ? :weapon;
+        %tmp.100 = invoke %tmp.96 %tmp.97(%tmp.99);
+        %tmp.101 = "  DMG ";
+        %tmp.102 = add %tmp.100 %tmp.101;
+        %tmp.103 = self;
+        symbol [ attackPower %tmp.104 244 63 74 ];
+        %tmp.104 = getv function %tmp.103 :attackPower;
+        %tmp.105 = invoke %tmp.103 %tmp.104();
+        symbol [ format %tmp.106 244 77 83 ];
+        %tmp.106 = getv function %tmp.105 :format;
+        %tmp.107 = "%d";
+        %tmp.108 = invoke %tmp.105 %tmp.106(%tmp.107);
+        %tmp.109 = add %tmp.102 %tmp.108;
+        ret %tmp.109;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_30_245_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_12_245_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_242_12_245_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 246 12 ]
+        symbol [ gold %tmp.110 246 12 16 ];
+        %tmp.110 = getv self :gold;
+        %tmp.111 = 20;
+        %tmp.112 = add %tmp.110 %tmp.111;
+        symbol [ gold ? 246 12 16 ];
+        putv self :gold dup %tmp.112;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 247 12 ]
+        %tmp.113 = "ALREADY BETTER  +20g";
+        ret %tmp.113;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_33_248_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_8_248_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_241_8_248_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 249 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_8_256_8_if_stmt:
+        %tmp.114 = lgetv %kind;
+        symbol [ kind %tmp.114 249 12 16 ];
+        symbol [ LOOT_ARMOR %tmp.116 249 20 30 ];
+        %tmp.116 = getv ? :LOOT_ARMOR;
+        %tmp.117 = eq %tmp.114 %tmp.116;
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_8_256_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_8_256_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_32_256_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 250 12 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_12_253_12_if_stmt:
+        %tmp.118 = lgetv %val;
+        symbol [ val %tmp.118 250 16 19 ];
+        symbol [ armor %tmp.120 250 22 27 ];
+        %tmp.120 = getv ? :armor;
+        %tmp.121 = gt %tmp.118 %tmp.120;
+        bf %tmp.121 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_12_253_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_12_253_12_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_29_253_12_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 251 16 ]
+        %tmp.122 = lgetv %val;
+        symbol [ val %tmp.122 251 24 27 ];
+        symbol [ armor ? 251 16 21 ];
+        putv self :armor %tmp.122;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 252 16 ]
+        symbol [ DmConst %tmp.124 252 23 30 ];
+        %tmp.124 = getv ? :DmConst;
+        symbol [ armorName %tmp.125 252 31 40 ];
+        %tmp.125 = getv function %tmp.124 :armorName;
+        symbol [ armor %tmp.127 252 41 46 ];
+        %tmp.127 = getv ? :armor;
+        %tmp.128 = invoke %tmp.124 %tmp.125(%tmp.127);
+        %tmp.129 = "  DEF ";
+        %tmp.130 = add %tmp.128 %tmp.129;
+        %tmp.131 = self;
+        symbol [ totalDefense %tmp.132 252 61 73 ];
+        %tmp.132 = getv function %tmp.131 :totalDefense;
+        %tmp.133 = invoke %tmp.131 %tmp.132();
+        symbol [ format %tmp.134 252 76 82 ];
+        %tmp.134 = getv function %tmp.133 :format;
+        %tmp.135 = "%d";
+        %tmp.136 = invoke %tmp.133 %tmp.134(%tmp.135);
+        %tmp.137 = add %tmp.130 %tmp.136;
+        ret %tmp.137;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_29_253_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_12_253_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_250_12_253_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 254 12 ]
+        symbol [ gold %tmp.138 254 12 16 ];
+        %tmp.138 = getv self :gold;
+        %tmp.139 = 20;
+        %tmp.140 = add %tmp.138 %tmp.139;
+        symbol [ gold ? 254 12 16 ];
+        putv self :gold dup %tmp.140;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 255 12 ]
+        %tmp.141 = "ALREADY BETTER  +20g";
+        ret %tmp.141;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_32_256_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_8_256_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_249_8_256_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 257 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_8_268_8_if_stmt:
+        %tmp.142 = lgetv %kind;
+        symbol [ kind %tmp.142 257 12 16 ];
+        symbol [ LOOT_RING %tmp.144 257 20 29 ];
+        %tmp.144 = getv ? :LOOT_RING;
+        %tmp.145 = eq %tmp.142 %tmp.144;
+        bf %tmp.145 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_8_268_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_8_268_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_31_268_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 258 12 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_16_258_36_begin:
+        symbol [ ring %tmp.147 258 16 20 ];
+        %tmp.147 = getv ? :ring;
+        %tmp.148 = 0;
+        %tmp.149 = eq %tmp.147 %tmp.148;
+        bt %tmp.149 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_true;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_29_258_36_false:
+        %tmp.150 = lgetv %val;
+        symbol [ val %tmp.150 258 29 32 ];
+        symbol [ ring %tmp.152 258 36 40 ];
+        %tmp.152 = getv ? :ring;
+        %tmp.153 = ne %tmp.150 %tmp.152;
+        push %tmp.153;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_29_258_36_end:
+        %tmp.154 = phi [%tmp.149 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_16_258_36_begin] [%tmp.153 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_29_258_36_false] [%tmp.154 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_29_258_36_end];
+        bf %tmp.154 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_42_265_12_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 259 16 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_42_265_12_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_42_265_12_stop" ]
+        %old.1 = local;
+        symbol [ old %old.1 259 20 23 ];
+        symbol [ ring %tmp.156 259 26 30 ];
+        %tmp.156 = getv ? :ring;
+        lputv %old.1 %tmp.156;
+        symbol [ old %old.1 259 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 260 16 ]
+        %tmp.157 = lgetv %val;
+        symbol [ val %tmp.157 260 23 26 ];
+        symbol [ ring ? 260 16 20 ];
+        putv self :ring %tmp.157;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 261 16 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_16_261_60_if_stmt:
+        symbol [ hp %tmp.159 261 20 22 ];
+        %tmp.159 = getv ? :hp;
+        %tmp.160 = self;
+        symbol [ maxHpTotal %tmp.161 261 25 35 ];
+        %tmp.161 = getv function %tmp.160 :maxHpTotal;
+        %tmp.162 = invoke %tmp.160 %tmp.161();
+        %tmp.163 = gt %tmp.159 %tmp.162;
+        bf %tmp.163 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_16_261_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_16_261_60_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_39_261_60_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 261 41 ]
+        %tmp.164 = self;
+        symbol [ maxHpTotal %tmp.165 261 46 56 ];
+        %tmp.165 = getv function %tmp.164 :maxHpTotal;
+        %tmp.166 = invoke %tmp.164 %tmp.165();
+        symbol [ hp ? 261 41 43 ];
+        putv self :hp %tmp.166;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_39_261_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_16_261_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_261_16_261_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 262 16 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_16_262_68_if_stmt:
+        symbol [ mana %tmp.168 262 20 24 ];
+        %tmp.168 = getv ? :mana;
+        %tmp.169 = self;
+        symbol [ maxManaTotal %tmp.170 262 27 39 ];
+        %tmp.170 = getv function %tmp.169 :maxManaTotal;
+        %tmp.171 = invoke %tmp.169 %tmp.170();
+        %tmp.172 = gt %tmp.168 %tmp.171;
+        bf %tmp.172 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_16_262_68_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_16_262_68_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_43_262_68_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 262 45 ]
+        %tmp.173 = self;
+        symbol [ maxManaTotal %tmp.174 262 52 64 ];
+        %tmp.174 = getv function %tmp.173 :maxManaTotal;
+        %tmp.175 = invoke %tmp.173 %tmp.174();
+        symbol [ mana ? 262 45 49 ];
+        putv self :mana %tmp.175;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_43_262_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_16_262_68_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_262_16_262_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 263 16 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_16_263_44_if_stmt:
+        %tmp.176 = lgetv %old.1;
+        symbol [ old %tmp.176 263 20 23 ];
+        %tmp.177 = 0;
+        %tmp.178 = ne %tmp.176 %tmp.177;
+        bf %tmp.178 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_16_263_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_16_263_44_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_30_263_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 263 32 ]
+        symbol [ gold %tmp.179 263 32 36 ];
+        %tmp.179 = getv self :gold;
+        %tmp.180 = 25;
+        %tmp.181 = add %tmp.179 %tmp.180;
+        symbol [ gold ? 263 32 36 ];
+        putv self :gold dup %tmp.181;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_30_263_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_16_263_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_263_16_263_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 264 16 ]
+        symbol [ DmConst %tmp.183 264 23 30 ];
+        %tmp.183 = getv ? :DmConst;
+        symbol [ ringName %tmp.184 264 31 39 ];
+        %tmp.184 = getv function %tmp.183 :ringName;
+        symbol [ ring %tmp.186 264 40 44 ];
+        %tmp.186 = getv ? :ring;
+        %tmp.187 = invoke %tmp.183 %tmp.184(%tmp.186);
+        %tmp.188 = "  ";
+        %tmp.189 = add %tmp.187 %tmp.188;
+        symbol [ DmConst %tmp.191 264 55 62 ];
+        %tmp.191 = getv ? :DmConst;
+        symbol [ ringEffect %tmp.192 264 63 73 ];
+        %tmp.192 = getv function %tmp.191 :ringEffect;
+        symbol [ ring %tmp.194 264 74 78 ];
+        %tmp.194 = getv ? :ring;
+        %tmp.195 = invoke %tmp.191 %tmp.192(%tmp.194);
+        %tmp.196 = add %tmp.189 %tmp.195;
+        ret %tmp.196;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_42_265_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_258_12_265_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 266 12 ]
+        symbol [ gold %tmp.197 266 12 16 ];
+        %tmp.197 = getv self :gold;
+        %tmp.198 = 25;
+        %tmp.199 = add %tmp.197 %tmp.198;
+        symbol [ gold ? 266 12 16 ];
+        putv self :gold dup %tmp.199;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 267 12 ]
+        %tmp.200 = "A TWIN RING  +25g";
+        ret %tmp.200;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_31_268_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_8_268_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_257_8_268_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 269 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_8_279_8_if_stmt:
+        %tmp.201 = lgetv %kind;
+        symbol [ kind %tmp.201 269 12 16 ];
+        symbol [ LOOT_AMULET %tmp.203 269 20 31 ];
+        %tmp.203 = getv ? :LOOT_AMULET;
+        %tmp.204 = eq %tmp.201 %tmp.203;
+        bf %tmp.204 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_8_279_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_8_279_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_33_279_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 270 12 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_16_270_38_begin:
+        symbol [ amulet %tmp.206 270 16 22 ];
+        %tmp.206 = getv ? :amulet;
+        %tmp.207 = 0;
+        %tmp.208 = eq %tmp.206 %tmp.207;
+        bt %tmp.208 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_true;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_31_270_38_false:
+        %tmp.209 = lgetv %val;
+        symbol [ val %tmp.209 270 31 34 ];
+        symbol [ amulet %tmp.211 270 38 44 ];
+        %tmp.211 = getv ? :amulet;
+        %tmp.212 = ne %tmp.209 %tmp.211;
+        push %tmp.212;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_31_270_38_end:
+        %tmp.213 = phi [%tmp.208 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_16_270_38_begin] [%tmp.212 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_31_270_38_false] [%tmp.213 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_31_270_38_end];
+        bf %tmp.213 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_46_276_12_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 271 16 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_46_276_12_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_46_276_12_stop" ]
+        %old2.2 = local;
+        symbol [ old2 %old2.2 271 20 24 ];
+        symbol [ amulet %tmp.215 271 27 33 ];
+        %tmp.215 = getv ? :amulet;
+        lputv %old2.2 %tmp.215;
+        symbol [ old2 %old2.2 271 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 272 16 ]
+        %tmp.216 = lgetv %val;
+        symbol [ val %tmp.216 272 25 28 ];
+        symbol [ amulet ? 272 16 22 ];
+        putv self :amulet %tmp.216;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 273 16 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_16_273_60_if_stmt:
+        symbol [ hp %tmp.218 273 20 22 ];
+        %tmp.218 = getv ? :hp;
+        %tmp.219 = self;
+        symbol [ maxHpTotal %tmp.220 273 25 35 ];
+        %tmp.220 = getv function %tmp.219 :maxHpTotal;
+        %tmp.221 = invoke %tmp.219 %tmp.220();
+        %tmp.222 = gt %tmp.218 %tmp.221;
+        bf %tmp.222 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_16_273_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_16_273_60_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_39_273_60_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 273 41 ]
+        %tmp.223 = self;
+        symbol [ maxHpTotal %tmp.224 273 46 56 ];
+        %tmp.224 = getv function %tmp.223 :maxHpTotal;
+        %tmp.225 = invoke %tmp.223 %tmp.224();
+        symbol [ hp ? 273 41 43 ];
+        putv self :hp %tmp.225;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_39_273_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_16_273_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_273_16_273_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 274 16 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_16_274_45_if_stmt:
+        %tmp.226 = lgetv %old2.2;
+        symbol [ old2 %tmp.226 274 20 24 ];
+        %tmp.227 = 0;
+        %tmp.228 = ne %tmp.226 %tmp.227;
+        bf %tmp.228 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_16_274_45_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_16_274_45_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_31_274_45_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 274 33 ]
+        symbol [ gold %tmp.229 274 33 37 ];
+        %tmp.229 = getv self :gold;
+        %tmp.230 = 25;
+        %tmp.231 = add %tmp.229 %tmp.230;
+        symbol [ gold ? 274 33 37 ];
+        putv self :gold dup %tmp.231;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_31_274_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_16_274_45_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_274_16_274_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 275 16 ]
+        symbol [ DmConst %tmp.233 275 23 30 ];
+        %tmp.233 = getv ? :DmConst;
+        symbol [ amuletName %tmp.234 275 31 41 ];
+        %tmp.234 = getv function %tmp.233 :amuletName;
+        symbol [ amulet %tmp.236 275 42 48 ];
+        %tmp.236 = getv ? :amulet;
+        %tmp.237 = invoke %tmp.233 %tmp.234(%tmp.236);
+        %tmp.238 = "  ";
+        %tmp.239 = add %tmp.237 %tmp.238;
+        symbol [ DmConst %tmp.241 275 59 66 ];
+        %tmp.241 = getv ? :DmConst;
+        symbol [ amuletEffect %tmp.242 275 67 79 ];
+        %tmp.242 = getv function %tmp.241 :amuletEffect;
+        symbol [ amulet %tmp.244 275 80 86 ];
+        %tmp.244 = getv ? :amulet;
+        %tmp.245 = invoke %tmp.241 %tmp.242(%tmp.244);
+        %tmp.246 = add %tmp.239 %tmp.245;
+        ret %tmp.246;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_46_276_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_270_12_276_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 277 12 ]
+        symbol [ gold %tmp.247 277 12 16 ];
+        %tmp.247 = getv self :gold;
+        %tmp.248 = 25;
+        %tmp.249 = add %tmp.247 %tmp.248;
+        symbol [ gold ? 277 12 16 ];
+        putv self :gold dup %tmp.249;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 278 12 ]
+        %tmp.250 = "A TWIN AMULET  +25g";
+        ret %tmp.250;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_33_279_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_8_279_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_269_8_279_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 280 8 ]
+        %tmp.251 = "NOTHING";
+        ret %tmp.251;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_216_78_281_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 286; @symbol_functiondef = [applyAdventureEnergy,286,13,33]; @symbol_param<0> = [steps,286,34,39]; @symbol_param<0>_type<0> = [Lang,286,43,47]; @symbol_param<0>_type<1> = [Number,286,48,54]; @symbol_param<1> = [activeMinutes,286,56,69]; @symbol_param<1>_type<0> = [Lang,286,73,77]; @symbol_param<1>_type<1> = [Number,286,78,84]; @symbol_return<0> = [Lang,286,89,93]; @symbol_return<1> = [String,286,94,100]; ]
+    function applyAdventureEnergy(steps as Lang.Number, activeMinutes as Lang.Number) as Lang.String or Null {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 287 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_12_287_43_begin:
+        %tmp.1 = lgetv %steps;
+        symbol [ steps %tmp.1 287 12 17 ];
+        %tmp.2 = 0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_26_287_43_true:
+        %tmp.4 = lgetv %activeMinutes;
+        symbol [ activeMinutes %tmp.4 287 26 39 ];
+        %tmp.5 = 0;
+        %tmp.6 = lte %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_26_287_43_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_12_287_43_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_26_287_43_true] [%tmp.7 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_26_287_43_end];
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_46_287_61_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 287 48 ]
+        %tmp.8 = null;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_46_287_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_287_8_287_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 288 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_stop" ]
+        %bonusPotions.1 = local;
+        symbol [ bonusPotions %bonusPotions.1 288 12 24 ];
+        %tmp.9 = lgetv %steps;
+        symbol [ steps %tmp.9 288 27 32 ];
+        %tmp.10 = 4000;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        lputv %bonusPotions.1 %tmp.11;
+        symbol [ bonusPotions %bonusPotions.1 288 12 24 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 289 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_8_289_50_if_stmt:
+        %tmp.12 = lgetv %bonusPotions.1;
+        symbol [ bonusPotions %tmp.12 289 12 24 ];
+        %tmp.13 = 2;
+        %tmp.14 = gt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_8_289_50_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_8_289_50_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_30_289_50_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 289 32 ]
+        %tmp.15 = 2;
+        lputv %bonusPotions.1 %tmp.15;
+        symbol [ bonusPotions %bonusPotions.1 289 32 44 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_30_289_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_8_289_50_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_289_8_289_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 290 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_stop" ]
+        %bonusGold.2 = local;
+        symbol [ bonusGold %bonusGold.2 290 12 21 ];
+        %tmp.16 = lgetv %steps;
+        symbol [ steps %tmp.16 290 24 29 ];
+        %tmp.17 = 200;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        lputv %bonusGold.2 %tmp.18;
+        symbol [ bonusGold %bonusGold.2 290 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 291 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_8_291_46_if_stmt:
+        %tmp.19 = lgetv %bonusGold.2;
+        symbol [ bonusGold %tmp.19 291 12 21 ];
+        %tmp.20 = 60;
+        %tmp.21 = gt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_8_291_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_8_291_46_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_28_291_46_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 291 30 ]
+        %tmp.22 = 60;
+        lputv %bonusGold.2 %tmp.22;
+        symbol [ bonusGold %bonusGold.2 291 30 39 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_28_291_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_8_291_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_291_8_291_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 292 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_stop" ]
+        %extraHp.3 = local;
+        symbol [ extraHp %extraHp.3 292 12 19 ];
+        %tmp.23 = lgetv %activeMinutes;
+        symbol [ activeMinutes %tmp.23 292 22 35 ];
+        %tmp.24 = 10;
+        %tmp.25 = div %tmp.23 %tmp.24;
+        lputv %extraHp.3 %tmp.25;
+        symbol [ extraHp %extraHp.3 292 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 293 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_8_293_42_if_stmt:
+        %tmp.26 = lgetv %extraHp.3;
+        symbol [ extraHp %tmp.26 293 12 19 ];
+        %tmp.27 = 10;
+        %tmp.28 = gt %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_8_293_42_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_8_293_42_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_26_293_42_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 293 28 ]
+        %tmp.29 = 10;
+        lputv %extraHp.3 %tmp.29;
+        symbol [ extraHp %extraHp.3 293 28 35 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_26_293_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_8_293_42_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_293_8_293_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 295 8 ]
+        symbol [ potions %tmp.30 295 8 15 ];
+        %tmp.30 = getv self :potions;
+        %tmp.31 = lgetv %bonusPotions.1;
+        symbol [ bonusPotions %tmp.31 295 19 31 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        symbol [ potions ? 295 8 15 ];
+        putv self :potions dup %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 296 8 ]
+        symbol [ gold %tmp.33 296 8 12 ];
+        %tmp.33 = getv self :gold;
+        %tmp.34 = lgetv %bonusGold.2;
+        symbol [ bonusGold %tmp.34 296 16 25 ];
+        %tmp.35 = add %tmp.33 %tmp.34;
+        symbol [ gold ? 296 8 12 ];
+        putv self :gold dup %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 297 8 ]
+        symbol [ maxHp %tmp.36 297 8 13 ];
+        %tmp.36 = getv self :maxHp;
+        %tmp.37 = lgetv %extraHp.3;
+        symbol [ extraHp %tmp.37 297 17 24 ];
+        %tmp.38 = add %tmp.36 %tmp.37;
+        symbol [ maxHp ? 297 8 13 ];
+        putv self :maxHp dup %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 298 8 ]
+        %tmp.39 = self;
+        symbol [ heal %tmp.40 298 8 12 ];
+        %tmp.40 = getv function %tmp.39 :heal;
+        %tmp.41 = lgetv %extraHp.3;
+        symbol [ extraHp %tmp.41 298 13 20 ];
+        invoke %tmp.39 %tmp.40(%tmp.41);
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 300 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_12_300_62_begin:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_12_300_46_begin:
+        %tmp.42 = lgetv %bonusPotions.1;
+        symbol [ bonusPotions %tmp.42 300 12 24 ];
+        %tmp.43 = 0;
+        %tmp.44 = lte %tmp.42 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_33_300_46_true:
+        %tmp.45 = lgetv %bonusGold.2;
+        symbol [ bonusGold %tmp.45 300 33 42 ];
+        %tmp.46 = 0;
+        %tmp.47 = lte %tmp.45 %tmp.46;
+        push %tmp.47;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_33_300_46_end:
+        %tmp.48 = phi [%tmp.44 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_12_300_46_begin] [%tmp.47 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_33_300_46_true] [%tmp.48 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_33_300_46_end];
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_51_300_62_true:
+        %tmp.49 = lgetv %extraHp.3;
+        symbol [ extraHp %tmp.49 300 51 58 ];
+        %tmp.50 = 0;
+        %tmp.51 = lte %tmp.49 %tmp.50;
+        push %tmp.51;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_51_300_62_end:
+        %tmp.52 = phi [%tmp.48 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_12_300_62_begin] [%tmp.51 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_51_300_62_true] [%tmp.52 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_51_300_62_end];
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_65_300_80_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 300 67 ]
+        %tmp.53 = null;
+        ret %tmp.53;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_65_300_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_300_8_300_80_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 301 8 ]
+        %tmp.54 = "ENERGY +";
+        %tmp.55 = lgetv %bonusGold.2;
+        symbol [ bonusGold %tmp.55 301 28 37 ];
+        symbol [ format %tmp.56 301 38 44 ];
+        %tmp.56 = getv function %tmp.55 :format;
+        %tmp.57 = "%d";
+        %tmp.58 = invoke %tmp.55 %tmp.56(%tmp.57);
+        %tmp.59 = add %tmp.54 %tmp.58;
+        %tmp.60 = "g +";
+        %tmp.61 = add %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %bonusPotions.1;
+        symbol [ bonusPotions %tmp.62 301 61 73 ];
+        symbol [ format %tmp.63 301 74 80 ];
+        %tmp.63 = getv function %tmp.62 :format;
+        %tmp.64 = "%d";
+        %tmp.65 = invoke %tmp.62 %tmp.63(%tmp.64);
+        %tmp.66 = add %tmp.61 %tmp.65;
+        %tmp.67 = "pot";
+        %tmp.68 = add %tmp.66 %tmp.67;
+        ret %tmp.68;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_286_109_302_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 305; @symbol_functiondef = [toDict,305,13,19]; @symbol_return<0> = [Lang,305,25,29]; @symbol_return<1> = [Dictionary,305,30,40]; ]
+    function toDict() as Lang.Dictionary {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_305_41_314_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 306 8 ]
+        %tmp.1 = newd 23;
+        %tmp.2 = "cl";
+        symbol [ cls %tmp.4 307 20 23 ];
+        %tmp.4 = getv ? :cls;
+        %tmp.5 = dup %tmp.1;
+        %tmp.6 = aputv %tmp.5 %tmp.2 %tmp.4;
+        %tmp.7 = "lv";
+        symbol [ level %tmp.9 307 33 38 ];
+        %tmp.9 = getv ? :level;
+        %tmp.10 = dup %tmp.6;
+        %tmp.11 = aputv %tmp.10 %tmp.7 %tmp.9;
+        %tmp.12 = "xp";
+        symbol [ xp %tmp.14 307 48 50 ];
+        %tmp.14 = getv ? :xp;
+        %tmp.15 = dup %tmp.11;
+        %tmp.16 = aputv %tmp.15 %tmp.12 %tmp.14;
+        %tmp.17 = "hp";
+        symbol [ hp %tmp.19 307 60 62 ];
+        %tmp.19 = getv ? :hp;
+        %tmp.20 = dup %tmp.16;
+        %tmp.21 = aputv %tmp.20 %tmp.17 %tmp.19;
+        %tmp.22 = "mhp";
+        symbol [ maxHp %tmp.24 307 73 78 ];
+        %tmp.24 = getv ? :maxHp;
+        %tmp.25 = dup %tmp.21;
+        %tmp.26 = aputv %tmp.25 %tmp.22 %tmp.24;
+        %tmp.27 = "mn";
+        symbol [ mana %tmp.29 308 20 24 ];
+        %tmp.29 = getv ? :mana;
+        %tmp.30 = dup %tmp.26;
+        %tmp.31 = aputv %tmp.30 %tmp.27 %tmp.29;
+        %tmp.32 = "mmn";
+        symbol [ maxMana %tmp.34 308 35 42 ];
+        %tmp.34 = getv ? :maxMana;
+        %tmp.35 = dup %tmp.31;
+        %tmp.36 = aputv %tmp.35 %tmp.32 %tmp.34;
+        %tmp.37 = "st";
+        symbol [ str %tmp.39 309 20 23 ];
+        %tmp.39 = getv ? :str;
+        %tmp.40 = dup %tmp.36;
+        %tmp.41 = aputv %tmp.40 %tmp.37 %tmp.39;
+        %tmp.42 = "df";
+        symbol [ def %tmp.44 309 33 36 ];
+        %tmp.44 = getv ? :def;
+        %tmp.45 = dup %tmp.41;
+        %tmp.46 = aputv %tmp.45 %tmp.42 %tmp.44;
+        %tmp.47 = "mg";
+        symbol [ mag %tmp.49 309 46 49 ];
+        %tmp.49 = getv ? :mag;
+        %tmp.50 = dup %tmp.46;
+        %tmp.51 = aputv %tmp.50 %tmp.47 %tmp.49;
+        %tmp.52 = "lk";
+        symbol [ luck %tmp.54 309 59 63 ];
+        %tmp.54 = getv ? :luck;
+        %tmp.55 = dup %tmp.51;
+        %tmp.56 = aputv %tmp.55 %tmp.52 %tmp.54;
+        %tmp.57 = "gd";
+        symbol [ gold %tmp.59 310 20 24 ];
+        %tmp.59 = getv ? :gold;
+        %tmp.60 = dup %tmp.56;
+        %tmp.61 = aputv %tmp.60 %tmp.57 %tmp.59;
+        %tmp.62 = "wp";
+        symbol [ weapon %tmp.64 310 34 40 ];
+        %tmp.64 = getv ? :weapon;
+        %tmp.65 = dup %tmp.61;
+        %tmp.66 = aputv %tmp.65 %tmp.62 %tmp.64;
+        %tmp.67 = "ar";
+        symbol [ armor %tmp.69 310 50 55 ];
+        %tmp.69 = getv ? :armor;
+        %tmp.70 = dup %tmp.66;
+        %tmp.71 = aputv %tmp.70 %tmp.67 %tmp.69;
+        %tmp.72 = "rg";
+        symbol [ ring %tmp.74 310 65 69 ];
+        %tmp.74 = getv ? :ring;
+        %tmp.75 = dup %tmp.71;
+        %tmp.76 = aputv %tmp.75 %tmp.72 %tmp.74;
+        %tmp.77 = "am";
+        symbol [ amulet %tmp.79 310 79 85 ];
+        %tmp.79 = getv ? :amulet;
+        %tmp.80 = dup %tmp.76;
+        %tmp.81 = aputv %tmp.80 %tmp.77 %tmp.79;
+        %tmp.82 = "po";
+        symbol [ potions %tmp.84 311 20 27 ];
+        %tmp.84 = getv ? :potions;
+        %tmp.85 = dup %tmp.81;
+        %tmp.86 = aputv %tmp.85 %tmp.82 %tmp.84;
+        %tmp.87 = "et";
+        symbol [ ethers %tmp.89 311 37 43 ];
+        %tmp.89 = getv ? :ethers;
+        %tmp.90 = dup %tmp.86;
+        %tmp.91 = aputv %tmp.90 %tmp.87 %tmp.89;
+        %tmp.92 = "sc";
+        symbol [ scrolls %tmp.94 311 53 60 ];
+        %tmp.94 = getv ? :scrolls;
+        %tmp.95 = dup %tmp.91;
+        %tmp.96 = aputv %tmp.95 %tmp.92 %tmp.94;
+        %tmp.97 = "ky";
+        symbol [ keys %tmp.99 311 70 74 ];
+        %tmp.99 = getv ? :keys;
+        %tmp.100 = dup %tmp.96;
+        %tmp.101 = aputv %tmp.100 %tmp.97 %tmp.99;
+        %tmp.102 = "bo";
+        symbol [ bombs %tmp.104 311 84 89 ];
+        %tmp.104 = getv ? :bombs;
+        %tmp.105 = dup %tmp.101;
+        %tmp.106 = aputv %tmp.105 %tmp.102 %tmp.104;
+        %tmp.107 = "ps";
+        symbol [ poison %tmp.109 312 20 26 ];
+        %tmp.109 = getv ? :poison;
+        %tmp.110 = dup %tmp.106;
+        %tmp.111 = aputv %tmp.110 %tmp.107 %tmp.109;
+        %tmp.112 = "wd";
+        symbol [ ward %tmp.114 312 36 40 ];
+        %tmp.114 = getv ? :ward;
+        %tmp.115 = dup %tmp.111;
+        %tmp.116 = aputv %tmp.115 %tmp.112 %tmp.114;
+        ret %tmp.116;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_305_41_314_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 316; @symbol_functiondef = [fromDict,316,13,21]; @symbol_param<0> = [d,316,22,23]; @symbol_param<0>_type<0> = [Lang,316,27,31]; @symbol_param<0>_type<1> = [Dictionary,316,32,42]; ]
+    function fromDict(d as Lang.Dictionary) as Void {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_316_52_344_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 317 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_8_317_33_if_stmt:
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 317 12 13 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_8_317_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_8_317_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_23_317_33_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 317 25 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_23_317_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_8_317_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_317_8_317_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 318 8 ]
+        %tmp.4 = self;
+        symbol [ _n %tmp.5 318 18 20 ];
+        %tmp.5 = getv function %tmp.4 :_n;
+        %tmp.6 = lgetv %d;
+        symbol [ d %tmp.6 318 21 22 ];
+        %tmp.7 = "cl";
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ cls %tmp.10 318 30 33 ];
+        %tmp.10 = getv ? :cls;
+        %tmp.11 = invoke %tmp.4 %tmp.5(%tmp.8, %tmp.10);
+        symbol [ cls ? 318 8 11 ];
+        putv self :cls %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 319 8 ]
+        %tmp.12 = self;
+        symbol [ _n %tmp.13 319 18 20 ];
+        %tmp.13 = getv function %tmp.12 :_n;
+        %tmp.14 = lgetv %d;
+        symbol [ d %tmp.14 319 21 22 ];
+        %tmp.15 = "lv";
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        symbol [ level %tmp.18 319 30 35 ];
+        %tmp.18 = getv ? :level;
+        %tmp.19 = invoke %tmp.12 %tmp.13(%tmp.16, %tmp.18);
+        symbol [ level ? 319 8 13 ];
+        putv self :level %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 320 8 ]
+        %tmp.20 = self;
+        symbol [ _n %tmp.21 320 18 20 ];
+        %tmp.21 = getv function %tmp.20 :_n;
+        %tmp.22 = lgetv %d;
+        symbol [ d %tmp.22 320 21 22 ];
+        %tmp.23 = "xp";
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        symbol [ xp %tmp.26 320 30 32 ];
+        %tmp.26 = getv ? :xp;
+        %tmp.27 = invoke %tmp.20 %tmp.21(%tmp.24, %tmp.26);
+        symbol [ xp ? 320 8 10 ];
+        putv self :xp %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 321 8 ]
+        %tmp.28 = self;
+        symbol [ _n %tmp.29 321 18 20 ];
+        %tmp.29 = getv function %tmp.28 :_n;
+        %tmp.30 = lgetv %d;
+        symbol [ d %tmp.30 321 21 22 ];
+        %tmp.31 = "mhp";
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ maxHp %tmp.34 321 31 36 ];
+        %tmp.34 = getv ? :maxHp;
+        %tmp.35 = invoke %tmp.28 %tmp.29(%tmp.32, %tmp.34);
+        symbol [ maxHp ? 321 8 13 ];
+        putv self :maxHp %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 322 8 ]
+        %tmp.36 = self;
+        symbol [ _n %tmp.37 322 18 20 ];
+        %tmp.37 = getv function %tmp.36 :_n;
+        %tmp.38 = lgetv %d;
+        symbol [ d %tmp.38 322 21 22 ];
+        %tmp.39 = "mmn";
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        symbol [ maxMana %tmp.42 322 31 38 ];
+        %tmp.42 = getv ? :maxMana;
+        %tmp.43 = invoke %tmp.36 %tmp.37(%tmp.40, %tmp.42);
+        symbol [ maxMana ? 322 8 15 ];
+        putv self :maxMana %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 323 8 ]
+        %tmp.44 = self;
+        symbol [ _n %tmp.45 323 18 20 ];
+        %tmp.45 = getv function %tmp.44 :_n;
+        %tmp.46 = lgetv %d;
+        symbol [ d %tmp.46 323 21 22 ];
+        %tmp.47 = "st";
+        %tmp.48 = agetv %tmp.46 %tmp.47;
+        symbol [ str %tmp.50 323 30 33 ];
+        %tmp.50 = getv ? :str;
+        %tmp.51 = invoke %tmp.44 %tmp.45(%tmp.48, %tmp.50);
+        symbol [ str ? 323 8 11 ];
+        putv self :str %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 324 8 ]
+        %tmp.52 = self;
+        symbol [ _n %tmp.53 324 18 20 ];
+        %tmp.53 = getv function %tmp.52 :_n;
+        %tmp.54 = lgetv %d;
+        symbol [ d %tmp.54 324 21 22 ];
+        %tmp.55 = "df";
+        %tmp.56 = agetv %tmp.54 %tmp.55;
+        symbol [ def %tmp.58 324 30 33 ];
+        %tmp.58 = getv ? :def;
+        %tmp.59 = invoke %tmp.52 %tmp.53(%tmp.56, %tmp.58);
+        symbol [ def ? 324 8 11 ];
+        putv self :def %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 325 8 ]
+        %tmp.60 = self;
+        symbol [ _n %tmp.61 325 18 20 ];
+        %tmp.61 = getv function %tmp.60 :_n;
+        %tmp.62 = lgetv %d;
+        symbol [ d %tmp.62 325 21 22 ];
+        %tmp.63 = "mg";
+        %tmp.64 = agetv %tmp.62 %tmp.63;
+        symbol [ mag %tmp.66 325 30 33 ];
+        %tmp.66 = getv ? :mag;
+        %tmp.67 = invoke %tmp.60 %tmp.61(%tmp.64, %tmp.66);
+        symbol [ mag ? 325 8 11 ];
+        putv self :mag %tmp.67;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 326 8 ]
+        %tmp.68 = self;
+        symbol [ _n %tmp.69 326 18 20 ];
+        %tmp.69 = getv function %tmp.68 :_n;
+        %tmp.70 = lgetv %d;
+        symbol [ d %tmp.70 326 21 22 ];
+        %tmp.71 = "lk";
+        %tmp.72 = agetv %tmp.70 %tmp.71;
+        symbol [ luck %tmp.74 326 30 34 ];
+        %tmp.74 = getv ? :luck;
+        %tmp.75 = invoke %tmp.68 %tmp.69(%tmp.72, %tmp.74);
+        symbol [ luck ? 326 8 12 ];
+        putv self :luck %tmp.75;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 327 8 ]
+        %tmp.76 = self;
+        symbol [ _n %tmp.77 327 18 20 ];
+        %tmp.77 = getv function %tmp.76 :_n;
+        %tmp.78 = lgetv %d;
+        symbol [ d %tmp.78 327 21 22 ];
+        %tmp.79 = "gd";
+        %tmp.80 = agetv %tmp.78 %tmp.79;
+        symbol [ gold %tmp.82 327 30 34 ];
+        %tmp.82 = getv ? :gold;
+        %tmp.83 = invoke %tmp.76 %tmp.77(%tmp.80, %tmp.82);
+        symbol [ gold ? 327 8 12 ];
+        putv self :gold %tmp.83;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 328 8 ]
+        %tmp.84 = self;
+        symbol [ _n %tmp.85 328 18 20 ];
+        %tmp.85 = getv function %tmp.84 :_n;
+        %tmp.86 = lgetv %d;
+        symbol [ d %tmp.86 328 21 22 ];
+        %tmp.87 = "wp";
+        %tmp.88 = agetv %tmp.86 %tmp.87;
+        symbol [ weapon %tmp.90 328 30 36 ];
+        %tmp.90 = getv ? :weapon;
+        %tmp.91 = invoke %tmp.84 %tmp.85(%tmp.88, %tmp.90);
+        symbol [ weapon ? 328 8 14 ];
+        putv self :weapon %tmp.91;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 329 8 ]
+        %tmp.92 = self;
+        symbol [ _n %tmp.93 329 18 20 ];
+        %tmp.93 = getv function %tmp.92 :_n;
+        %tmp.94 = lgetv %d;
+        symbol [ d %tmp.94 329 21 22 ];
+        %tmp.95 = "ar";
+        %tmp.96 = agetv %tmp.94 %tmp.95;
+        symbol [ armor %tmp.98 329 30 35 ];
+        %tmp.98 = getv ? :armor;
+        %tmp.99 = invoke %tmp.92 %tmp.93(%tmp.96, %tmp.98);
+        symbol [ armor ? 329 8 13 ];
+        putv self :armor %tmp.99;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 330 8 ]
+        %tmp.100 = self;
+        symbol [ _n %tmp.101 330 18 20 ];
+        %tmp.101 = getv function %tmp.100 :_n;
+        %tmp.102 = lgetv %d;
+        symbol [ d %tmp.102 330 21 22 ];
+        %tmp.103 = "rg";
+        %tmp.104 = agetv %tmp.102 %tmp.103;
+        %tmp.105 = 0;
+        %tmp.106 = invoke %tmp.100 %tmp.101(%tmp.104, %tmp.105);
+        symbol [ ring ? 330 8 12 ];
+        putv self :ring %tmp.106;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 331 8 ]
+        %tmp.107 = self;
+        symbol [ _n %tmp.108 331 18 20 ];
+        %tmp.108 = getv function %tmp.107 :_n;
+        %tmp.109 = lgetv %d;
+        symbol [ d %tmp.109 331 21 22 ];
+        %tmp.110 = "am";
+        %tmp.111 = agetv %tmp.109 %tmp.110;
+        %tmp.112 = 0;
+        %tmp.113 = invoke %tmp.107 %tmp.108(%tmp.111, %tmp.112);
+        symbol [ amulet ? 331 8 14 ];
+        putv self :amulet %tmp.113;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 332 8 ]
+        %tmp.114 = self;
+        symbol [ _n %tmp.115 332 18 20 ];
+        %tmp.115 = getv function %tmp.114 :_n;
+        %tmp.116 = lgetv %d;
+        symbol [ d %tmp.116 332 21 22 ];
+        %tmp.117 = "po";
+        %tmp.118 = agetv %tmp.116 %tmp.117;
+        symbol [ potions %tmp.120 332 30 37 ];
+        %tmp.120 = getv ? :potions;
+        %tmp.121 = invoke %tmp.114 %tmp.115(%tmp.118, %tmp.120);
+        symbol [ potions ? 332 8 15 ];
+        putv self :potions %tmp.121;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 333 8 ]
+        %tmp.122 = self;
+        symbol [ _n %tmp.123 333 18 20 ];
+        %tmp.123 = getv function %tmp.122 :_n;
+        %tmp.124 = lgetv %d;
+        symbol [ d %tmp.124 333 21 22 ];
+        %tmp.125 = "et";
+        %tmp.126 = agetv %tmp.124 %tmp.125;
+        %tmp.127 = 0;
+        %tmp.128 = invoke %tmp.122 %tmp.123(%tmp.126, %tmp.127);
+        symbol [ ethers ? 333 8 14 ];
+        putv self :ethers %tmp.128;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 334 8 ]
+        %tmp.129 = self;
+        symbol [ _n %tmp.130 334 18 20 ];
+        %tmp.130 = getv function %tmp.129 :_n;
+        %tmp.131 = lgetv %d;
+        symbol [ d %tmp.131 334 21 22 ];
+        %tmp.132 = "sc";
+        %tmp.133 = agetv %tmp.131 %tmp.132;
+        symbol [ scrolls %tmp.135 334 30 37 ];
+        %tmp.135 = getv ? :scrolls;
+        %tmp.136 = invoke %tmp.129 %tmp.130(%tmp.133, %tmp.135);
+        symbol [ scrolls ? 334 8 15 ];
+        putv self :scrolls %tmp.136;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 335 8 ]
+        %tmp.137 = self;
+        symbol [ _n %tmp.138 335 18 20 ];
+        %tmp.138 = getv function %tmp.137 :_n;
+        %tmp.139 = lgetv %d;
+        symbol [ d %tmp.139 335 21 22 ];
+        %tmp.140 = "ky";
+        %tmp.141 = agetv %tmp.139 %tmp.140;
+        symbol [ keys %tmp.143 335 30 34 ];
+        %tmp.143 = getv ? :keys;
+        %tmp.144 = invoke %tmp.137 %tmp.138(%tmp.141, %tmp.143);
+        symbol [ keys ? 335 8 12 ];
+        putv self :keys %tmp.144;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 336 8 ]
+        %tmp.145 = self;
+        symbol [ _n %tmp.146 336 18 20 ];
+        %tmp.146 = getv function %tmp.145 :_n;
+        %tmp.147 = lgetv %d;
+        symbol [ d %tmp.147 336 21 22 ];
+        %tmp.148 = "bo";
+        %tmp.149 = agetv %tmp.147 %tmp.148;
+        %tmp.150 = 0;
+        %tmp.151 = invoke %tmp.145 %tmp.146(%tmp.149, %tmp.150);
+        symbol [ bombs ? 336 8 13 ];
+        putv self :bombs %tmp.151;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 337 8 ]
+        %tmp.152 = self;
+        symbol [ _n %tmp.153 337 18 20 ];
+        %tmp.153 = getv function %tmp.152 :_n;
+        %tmp.154 = lgetv %d;
+        symbol [ d %tmp.154 337 21 22 ];
+        %tmp.155 = "ps";
+        %tmp.156 = agetv %tmp.154 %tmp.155;
+        %tmp.157 = 0;
+        %tmp.158 = invoke %tmp.152 %tmp.153(%tmp.156, %tmp.157);
+        symbol [ poison ? 337 8 14 ];
+        putv self :poison %tmp.158;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 338 8 ]
+        %tmp.159 = self;
+        symbol [ _n %tmp.160 338 18 20 ];
+        %tmp.160 = getv function %tmp.159 :_n;
+        %tmp.161 = lgetv %d;
+        symbol [ d %tmp.161 338 21 22 ];
+        %tmp.162 = "wd";
+        %tmp.163 = agetv %tmp.161 %tmp.162;
+        %tmp.164 = 0;
+        %tmp.165 = invoke %tmp.159 %tmp.160(%tmp.163, %tmp.164);
+        symbol [ ward ? 338 8 12 ];
+        putv self :ward %tmp.165;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 339 8 ]
+        %tmp.166 = 0;
+        symbol [ stun ? 339 8 12 ];
+        putv self :stun %tmp.166;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 340 8 ]
+        %tmp.167 = self;
+        symbol [ _n %tmp.168 340 18 20 ];
+        %tmp.168 = getv function %tmp.167 :_n;
+        %tmp.169 = lgetv %d;
+        symbol [ d %tmp.169 340 21 22 ];
+        %tmp.170 = "hp";
+        %tmp.171 = agetv %tmp.169 %tmp.170;
+        symbol [ hp %tmp.173 340 30 32 ];
+        %tmp.173 = getv ? :hp;
+        %tmp.174 = invoke %tmp.167 %tmp.168(%tmp.171, %tmp.173);
+        symbol [ hp ? 340 8 10 ];
+        putv self :hp %tmp.174;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 341 8 ]
+        %tmp.175 = self;
+        symbol [ _n %tmp.176 341 18 20 ];
+        %tmp.176 = getv function %tmp.175 :_n;
+        %tmp.177 = lgetv %d;
+        symbol [ d %tmp.177 341 21 22 ];
+        %tmp.178 = "mn";
+        %tmp.179 = agetv %tmp.177 %tmp.178;
+        symbol [ mana %tmp.181 341 30 34 ];
+        %tmp.181 = getv ? :mana;
+        %tmp.182 = invoke %tmp.175 %tmp.176(%tmp.179, %tmp.181);
+        symbol [ mana ? 341 8 12 ];
+        putv self :mana %tmp.182;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 342 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_8_342_52_if_stmt:
+        symbol [ hp %tmp.184 342 12 14 ];
+        %tmp.184 = getv ? :hp;
+        %tmp.185 = self;
+        symbol [ maxHpTotal %tmp.186 342 17 27 ];
+        %tmp.186 = getv function %tmp.185 :maxHpTotal;
+        %tmp.187 = invoke %tmp.185 %tmp.186();
+        %tmp.188 = gt %tmp.184 %tmp.187;
+        bf %tmp.188 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_8_342_52_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_8_342_52_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_31_342_52_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 342 33 ]
+        %tmp.189 = self;
+        symbol [ maxHpTotal %tmp.190 342 38 48 ];
+        %tmp.190 = getv function %tmp.189 :maxHpTotal;
+        %tmp.191 = invoke %tmp.189 %tmp.190();
+        symbol [ hp ? 342 33 35 ];
+        putv self :hp %tmp.191;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_31_342_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_8_342_52_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_342_8_342_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 343 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_8_343_60_if_stmt:
+        symbol [ mana %tmp.193 343 12 16 ];
+        %tmp.193 = getv ? :mana;
+        %tmp.194 = self;
+        symbol [ maxManaTotal %tmp.195 343 19 31 ];
+        %tmp.195 = getv function %tmp.194 :maxManaTotal;
+        %tmp.196 = invoke %tmp.194 %tmp.195();
+        %tmp.197 = gt %tmp.193 %tmp.196;
+        bf %tmp.197 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_8_343_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_8_343_60_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_35_343_60_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 343 37 ]
+        %tmp.198 = self;
+        symbol [ maxManaTotal %tmp.199 343 44 56 ];
+        %tmp.199 = getv function %tmp.198 :maxManaTotal;
+        %tmp.200 = invoke %tmp.198 %tmp.199();
+        symbol [ mana ? 343 37 41 ];
+        putv self :mana %tmp.200;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_35_343_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_8_343_60_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_343_8_343_60_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_316_52_344_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 346; @symbol_functiondef = [_n,346,20,22]; @symbol_param<0> = [v,346,23,24]; @symbol_param<1> = [def2,346,26,30]; @symbol_param<1>_type<0> = [Lang,346,34,38]; @symbol_param<1>_type<1> = [Number,346,39,45]; @symbol_return<0> = [Lang,346,50,54]; @symbol_return<1> = [Number,346,55,61]; ]
+    protected
+    function _n(v, def2 as Lang.Number) as Lang.Number {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_346_62_349_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 347 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_8_347_50_if_stmt:
+        %tmp.1 = lgetv %v;
+        symbol [ v %tmp.1 347 12 13 ];
+        symbol [ Lang %tmp.2 347 25 29 ];
+        %tmp.2 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.3 347 30 36 ];
+        %tmp.3 = getv %tmp.2 :Number;
+        %tmp.4 = isa %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_8_347_50_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_8_347_50_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_38_347_50_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 347 40 ]
+        %tmp.5 = lgetv %v;
+        symbol [ v %tmp.5 347 47 48 ];
+        %tmp.6 = as %tmp.5 { (Lang.Number) };
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_38_347_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_8_347_50_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_347_8_347_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc" 348 8 ]
+        %tmp.7 = lgetv %def2;
+        symbol [ def2 %tmp.7 348 15 19 ];
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_CharacterSystem_mc_346_62_349_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/CharacterSystem.mc"; @line = 8; ]
+<init> {
+}

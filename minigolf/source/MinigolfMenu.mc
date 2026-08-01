@@ -9,7 +9,16 @@ using Toybox.Lang;
 class MinigolfHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("minigolf"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiMinigolfView();
+        v.loadResume(SaveResume.load("minigolf"));
+        WatchUi.pushView(v, new BitochiMinigolfDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("minigolf");
         var v = new BitochiMinigolfView();
         WatchUi.pushView(v, new BitochiMinigolfDelegate(v), WatchUi.SLIDE_LEFT);
     }

@@ -9,7 +9,16 @@ using Toybox.Lang;
 class FishHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("fish"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiFishView();
+        v.loadResume(SaveResume.load("fish"));
+        WatchUi.pushView(v, new BitochiFishDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("fish");
         var v = new BitochiFishView();
         WatchUi.pushView(v, new BitochiFishDelegate(v), WatchUi.SLIDE_LEFT);
     }

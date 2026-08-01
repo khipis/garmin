@@ -26,12 +26,24 @@ class MainView extends WatchUi.View {
     hidden var _ox;
     hidden var _oy;
     hidden var _cell;
+    hidden var _skipStart; // true for the one frame right after a SaveResume apply
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _sw = 0; _sh = 0; _ox = 0; _oy = 0; _cell = 0;
+        _skipStart = false;
+    }
+
+    function loadResume(data) as Void {
+        if (data != null && ctrl.applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    function exportSave() {
+        return ctrl.exportSave();
     }
 
     function onShow() {
@@ -49,8 +61,12 @@ class MainView extends WatchUi.View {
         dc.setColor(0x081020, 0x081020); dc.clear();
 
         // Menu lives in the shared root view — drop straight into play and
-        // never render an in-game menu here.
-        if (ctrl.state == CS_MENU) { ctrl.beginGame(); }
+        // never render an in-game menu here. _skipStart guards a just-applied
+        // SaveResume blob from being wiped by the auto-start (one-shot: a
+        // resumed run is already CS_PLAY, so this never blocks a later
+        // WIN/OVER → MENU → PLAY restart).
+        if (!_skipStart && ctrl.state == CS_MENU) { ctrl.beginGame(); }
+        _skipStart = false;
         _layout();
         UIManager.drawHUD(dc, _sw, _sh, ctrl);
         UIManager.drawBoard(dc, _ox, _oy, _cell, ctrl.lanes);

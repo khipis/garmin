@@ -1,0 +1,2851 @@
+[ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Application,13,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Lang,14,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Time,15,13,17]; ]
+using Toybox.Time;
+[ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 17; @symbol_classdef = [ZombieModel,17,6,17]; ]
+class ZombieModel {
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 17; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 17; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 18; @position = 8; @symbol_vardef = [scrap,18,8,13]; ]
+    var scrap;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 19; @position = 8; @symbol_vardef = [dLevel,19,8,14]; ]
+    var dLevel;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 21; @position = 8; @symbol_vardef = [night,21,8,13]; ]
+    var night;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 22; @position = 8; @symbol_vardef = [lastWaveDay,22,8,19]; ]
+    var lastWaveDay;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 23; @position = 8; @symbol_vardef = [wallPct,23,8,15]; ]
+    var wallPct;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 26; @position = 8; @symbol_vardef = [pendingNight,26,8,20]; ]
+    var pendingNight;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 29; @position = 8; @symbol_vardef = [rState,29,8,14]; ]
+    var rState;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 8; @symbol_vardef = [rWin,30,8,12]; ]
+    var rWin;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 18; @symbol_vardef = [rNight,30,18,24]; ]
+    var rNight;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 30; @symbol_vardef = [rKills,30,30,36]; ]
+    var rKills;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 42; @symbol_vardef = [rTotal,30,42,48]; ]
+    var rTotal;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 54; @symbol_vardef = [rWallPct,30,54,62]; ]
+    var rWallPct;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 30; @position = 68; @symbol_vardef = [rScrap,30,68,74]; ]
+    var rScrap;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 33; @position = 8; @symbol_vardef = [bestNight,33,8,17]; ]
+    var bestNight;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 34; @position = 8; @symbol_vardef = [nightsHeld,34,8,18]; ]
+    var nightsHeld;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 35; @position = 8; @symbol_vardef = [losses,35,8,14]; ]
+    var losses;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 36; @position = 8; @symbol_vardef = [kills,36,8,13]; ]
+    var kills;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 39; @position = 8; @symbol_vardef = [stepBase,39,8,16]; ]
+    var stepBase;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 40; @position = 8; @symbol_vardef = [stepDay,40,8,15]; ]
+    var stepDay;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 41; @position = 8; @symbol_vardef = [actDay,41,8,14]; ]
+    var actDay;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 42; @position = 8; @symbol_vardef = [dayScrap,42,8,16]; ]
+    var dayScrap;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 43; @position = 8; @symbol_vardef = [seenIntro,43,8,17]; ]
+    var seenIntro;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 46; @position = 8; @symbol_vardef = [gScrap,46,8,14]; ]
+    var gScrap;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 46; @position = 20; @symbol_vardef = [gSteps,46,20,26]; ]
+    var gSteps;
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 48; @symbol_functiondef = [initialize,48,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_48_26_48_37_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 48 28 ]
+        %tmp.1 = self;
+        symbol [ _load %tmp.2 48 28 33 ];
+        %tmp.2 = getv function %tmp.1 :_load;
+        invoke %tmp.1 %tmp.2();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_48_26_48_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 50; @symbol_functiondef = [_get,50,20,24]; @symbol_param<0> = [k,50,25,26]; @symbol_param<1> = [def,50,28,31]; ]
+    protected
+    function _get(k, def) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_50_33_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 51 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_12_54_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 52 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_12_54_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_12_54_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 52 16 17 ];
+        symbol [ Application %tmp.1 52 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 52 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 52 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = lgetv %k;
+        symbol [ k %tmp.4 52 49 50 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 52 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 53 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_12_53_39_if_stmt:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 53 16 17 ];
+        %tmp.7 = null;
+        %tmp.8 = ne %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_12_53_39_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_12_53_39_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_27_53_39_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 53 29 ]
+        %tmp.9 = lgetv %v.1;
+        symbol [ v %tmp.9 53 36 37 ];
+        %tmp.10 = as %tmp.9 { (!Null) };
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_27_53_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_12_53_39_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_53_12_53_39_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_12_54_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_catch:
+        %tmp.11 = exception;
+        push %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 54 10 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_54_10_54_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 54 17 18 ];
+        %tmp.12 = dup %tmp.11;
+        lputv %e.2 %tmp.12;
+        symbol [ e %e.2 54 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_54_10_54_21_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_54_10_54_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_54_10_54_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally;
+        throw %tmp.11;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_51_8_54_21_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 55 8 ]
+        %tmp.13 = lgetv %def;
+        symbol [ def %tmp.13 55 15 18 ];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_50_33_56_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 57; @symbol_functiondef = [_set,57,20,24]; @symbol_param<0> = [k,57,25,26]; @symbol_param<1> = [v,57,28,29]; ]
+    protected
+    function _set(k, v) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_31_57_90_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 57 33 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_37_57_75_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 57 39 ]
+        symbol [ Application %tmp.1 57 39 50 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 57 51 58 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ setValue %tmp.3 57 59 67 ];
+        %tmp.3 = getv function %tmp.2 :setValue;
+        %tmp.4 = lgetv %k;
+        symbol [ k %tmp.4 57 68 69 ];
+        %tmp.5 = lgetv %v;
+        symbol [ v %tmp.5 57 71 72 ];
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_37_57_75_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_catch:
+        %tmp.6 = exception;
+        push %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 57 77 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_77_57_88_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 57 84 85 ];
+        %tmp.7 = dup %tmp.6;
+        lputv %e.1 %tmp.7;
+        symbol [ e %e.1 57 84 85 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_77_57_88_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_77_57_88_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_77_57_88_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally;
+        throw %tmp.6;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_33_57_88_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_57_31_57_90_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 58; @symbol_functiondef = [_del,58,20,24]; @symbol_param<0> = [k,58,25,26]; ]
+    protected
+    function _del(k) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_28_58_87_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 58 30 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_34_58_72_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 58 36 ]
+        symbol [ Application %tmp.1 58 36 47 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 58 48 55 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ deleteValue %tmp.3 58 56 67 ];
+        %tmp.3 = getv function %tmp.2 :deleteValue;
+        %tmp.4 = lgetv %k;
+        symbol [ k %tmp.4 58 68 69 ];
+        invoke %tmp.2 %tmp.3(%tmp.4);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_34_58_72_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_catch:
+        %tmp.5 = exception;
+        push %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 58 74 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_74_58_85_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 58 81 82 ];
+        %tmp.6 = dup %tmp.5;
+        lputv %e.1 %tmp.6;
+        symbol [ e %e.1 58 81 82 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_74_58_85_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_74_58_85_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_74_58_85_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally;
+        throw %tmp.5;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_30_58_85_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_58_28_58_87_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 59; @symbol_functiondef = [_num,59,20,24]; @symbol_param<0> = [k,59,25,26]; @symbol_param<1> = [def,59,28,31]; @symbol_param<2> = [lo,59,33,35]; @symbol_param<3> = [hi,59,37,39]; ]
+    protected
+    function _num(k, def, lo, hi) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_59_41_65_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_59_41_65_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_59_41_65_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 60 12 13 ];
+        %tmp.1 = self;
+        symbol [ _get %tmp.2 60 16 20 ];
+        %tmp.2 = getv function %tmp.1 :_get;
+        %tmp.3 = lgetv %k;
+        symbol [ k %tmp.3 60 21 22 ];
+        %tmp.4 = lgetv %def;
+        symbol [ def %tmp.4 60 24 27 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 60 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_8_61_55_if_stmt:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 61 14 15 ];
+        symbol [ Lang %tmp.7 61 27 31 ];
+        %tmp.7 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.8 61 32 38 ];
+        %tmp.8 = getv %tmp.7 :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        %tmp.10 = not %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_8_61_55_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_8_61_55_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_41_61_55_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 61 43 ]
+        %tmp.11 = lgetv %def;
+        symbol [ def %tmp.11 61 50 53 ];
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_41_61_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_8_61_55_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_61_8_61_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_8_62_33_if_stmt:
+        %tmp.12 = lgetv %v.1;
+        symbol [ v %tmp.12 62 12 13 ];
+        %tmp.13 = lgetv %lo;
+        symbol [ lo %tmp.13 62 16 18 ];
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_8_62_33_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_8_62_33_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_20_62_33_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 62 22 ]
+        %tmp.15 = lgetv %lo;
+        symbol [ lo %tmp.15 62 29 31 ];
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_20_62_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_8_62_33_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_62_8_62_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 63 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_8_63_33_if_stmt:
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 63 12 13 ];
+        %tmp.17 = lgetv %hi;
+        symbol [ hi %tmp.17 63 16 18 ];
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_8_63_33_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_8_63_33_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_20_63_33_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 63 22 ]
+        %tmp.19 = lgetv %hi;
+        symbol [ hi %tmp.19 63 29 31 ];
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_20_63_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_8_63_33_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_63_8_63_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 64 8 ]
+        %tmp.20 = lgetv %v.1;
+        symbol [ v %tmp.20 64 15 16 ];
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_59_41_65_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 67; @symbol_functiondef = [_load,67,20,25]; ]
+    protected
+    function _load() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_67_28_108_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 68 8 ]
+        %tmp.1 = self;
+        symbol [ _num %tmp.2 68 21 25 ];
+        %tmp.2 = getv function %tmp.1 :_num;
+        %tmp.3 = "zs_scrap";
+        %tmp.4 = 0;
+        %tmp.5 = 0;
+        %tmp.6 = 2000000000;
+        %tmp.7 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5, %tmp.6);
+        symbol [ scrap ? 68 8 13 ];
+        putv self :scrap %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 69 8 ]
+        %tmp.8 = self;
+        symbol [ _num %tmp.9 69 21 25 ];
+        %tmp.9 = getv function %tmp.8 :_num;
+        %tmp.10 = "zs_night";
+        %tmp.11 = 1;
+        %tmp.12 = 1;
+        %tmp.13 = 99999;
+        %tmp.14 = invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11, %tmp.12, %tmp.13);
+        symbol [ night ? 69 8 13 ];
+        putv self :night %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 70 8 ]
+        %tmp.15 = self;
+        symbol [ _num %tmp.16 70 21 25 ];
+        %tmp.16 = getv function %tmp.15 :_num;
+        %tmp.17 = "zs_wall";
+        %tmp.18 = 100;
+        %tmp.19 = 0;
+        %tmp.20 = 100;
+        %tmp.21 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18, %tmp.19, %tmp.20);
+        symbol [ wallPct ? 70 8 15 ];
+        putv self :wallPct %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 71 8 ]
+        %tmp.22 = self;
+        symbol [ _num %tmp.23 71 21 25 ];
+        %tmp.23 = getv function %tmp.22 :_num;
+        %tmp.24 = "zs_best";
+        %tmp.25 = 0;
+        %tmp.26 = 0;
+        %tmp.27 = 99999;
+        %tmp.28 = invoke %tmp.22 %tmp.23(%tmp.24, %tmp.25, %tmp.26, %tmp.27);
+        symbol [ bestNight ? 71 8 17 ];
+        putv self :bestNight %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 72 8 ]
+        %tmp.29 = self;
+        symbol [ _num %tmp.30 72 21 25 ];
+        %tmp.30 = getv function %tmp.29 :_num;
+        %tmp.31 = "zs_held";
+        %tmp.32 = 0;
+        %tmp.33 = 0;
+        %tmp.34 = 2000000000;
+        %tmp.35 = invoke %tmp.29 %tmp.30(%tmp.31, %tmp.32, %tmp.33, %tmp.34);
+        symbol [ nightsHeld ? 72 8 18 ];
+        putv self :nightsHeld %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 73 8 ]
+        %tmp.36 = self;
+        symbol [ _num %tmp.37 73 21 25 ];
+        %tmp.37 = getv function %tmp.36 :_num;
+        %tmp.38 = "zs_lost";
+        %tmp.39 = 0;
+        %tmp.40 = 0;
+        %tmp.41 = 2000000000;
+        %tmp.42 = invoke %tmp.36 %tmp.37(%tmp.38, %tmp.39, %tmp.40, %tmp.41);
+        symbol [ losses ? 73 8 14 ];
+        putv self :losses %tmp.42;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 74 8 ]
+        %tmp.43 = self;
+        symbol [ _num %tmp.44 74 21 25 ];
+        %tmp.44 = getv function %tmp.43 :_num;
+        %tmp.45 = "zs_kills";
+        %tmp.46 = 0;
+        %tmp.47 = 0;
+        %tmp.48 = 2000000000;
+        %tmp.49 = invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47, %tmp.48);
+        symbol [ kills ? 74 8 13 ];
+        putv self :kills %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 75 8 ]
+        %tmp.50 = self;
+        symbol [ _num %tmp.51 75 21 25 ];
+        %tmp.51 = getv function %tmp.50 :_num;
+        %tmp.52 = "zs_stepb";
+        %tmp.53 = 0;
+        %tmp.54 = 0;
+        %tmp.55 = 2000000000;
+        %tmp.56 = invoke %tmp.50 %tmp.51(%tmp.52, %tmp.53, %tmp.54, %tmp.55);
+        symbol [ stepBase ? 75 8 16 ];
+        putv self :stepBase %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 76 8 ]
+        %tmp.57 = self;
+        symbol [ _num %tmp.58 76 21 25 ];
+        %tmp.58 = getv function %tmp.57 :_num;
+        %tmp.59 = "zs_stepd";
+        %tmp.60 = 0;
+        %tmp.61 = 0;
+        %tmp.62 = 9999999;
+        %tmp.63 = invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61, %tmp.62);
+        symbol [ stepDay ? 76 8 15 ];
+        putv self :stepDay %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 77 8 ]
+        %tmp.64 = self;
+        symbol [ _num %tmp.65 77 21 25 ];
+        %tmp.65 = getv function %tmp.64 :_num;
+        %tmp.66 = "zs_actd";
+        %tmp.67 = 0;
+        %tmp.68 = 0;
+        %tmp.69 = 9999999;
+        %tmp.70 = invoke %tmp.64 %tmp.65(%tmp.66, %tmp.67, %tmp.68, %tmp.69);
+        symbol [ actDay ? 77 8 14 ];
+        putv self :actDay %tmp.70;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 78 8 ]
+        %tmp.71 = self;
+        symbol [ _num %tmp.72 78 21 25 ];
+        %tmp.72 = getv function %tmp.71 :_num;
+        %tmp.73 = "zs_dscrap";
+        %tmp.74 = 0;
+        %tmp.75 = 0;
+        %tmp.76 = 999999;
+        %tmp.77 = invoke %tmp.71 %tmp.72(%tmp.73, %tmp.74, %tmp.75, %tmp.76);
+        symbol [ dayScrap ? 78 8 16 ];
+        putv self :dayScrap %tmp.77;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 79 8 ]
+        %tmp.78 = self;
+        symbol [ _num %tmp.79 79 21 25 ];
+        %tmp.79 = getv function %tmp.78 :_num;
+        %tmp.80 = "zs_intro";
+        %tmp.81 = 0;
+        %tmp.82 = 0;
+        %tmp.83 = 1;
+        %tmp.84 = invoke %tmp.78 %tmp.79(%tmp.80, %tmp.81, %tmp.82, %tmp.83);
+        %tmp.85 = 1;
+        %tmp.86 = eq %tmp.84 %tmp.85;
+        symbol [ seenIntro ? 79 8 17 ];
+        putv self :seenIntro %tmp.86;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 80 8 ]
+        %tmp.87 = self;
+        symbol [ _num %tmp.88 80 23 27 ];
+        %tmp.88 = getv function %tmp.87 :_num;
+        %tmp.89 = "zs_pend";
+        %tmp.90 = 0;
+        %tmp.91 = 0;
+        %tmp.92 = 99999;
+        %tmp.93 = invoke %tmp.87 %tmp.88(%tmp.89, %tmp.90, %tmp.91, %tmp.92);
+        symbol [ pendingNight ? 80 8 20 ];
+        putv self :pendingNight %tmp.93;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 82 8 ]
+        %tmp.94 = self;
+        symbol [ _num %tmp.95 82 19 23 ];
+        %tmp.95 = getv function %tmp.94 :_num;
+        %tmp.96 = "zs_rst";
+        %tmp.97 = 0;
+        %tmp.98 = 0;
+        %tmp.99 = 2;
+        %tmp.100 = invoke %tmp.94 %tmp.95(%tmp.96, %tmp.97, %tmp.98, %tmp.99);
+        symbol [ rState ? 82 8 14 ];
+        putv self :rState %tmp.100;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 83 8 ]
+        %tmp.101 = self;
+        symbol [ _num %tmp.102 83 19 23 ];
+        %tmp.102 = getv function %tmp.101 :_num;
+        %tmp.103 = "zs_rwin";
+        %tmp.104 = 0;
+        %tmp.105 = 0;
+        %tmp.106 = 1;
+        %tmp.107 = invoke %tmp.101 %tmp.102(%tmp.103, %tmp.104, %tmp.105, %tmp.106);
+        %tmp.108 = 1;
+        %tmp.109 = eq %tmp.107 %tmp.108;
+        symbol [ rWin ? 83 8 12 ];
+        putv self :rWin %tmp.109;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 84 8 ]
+        %tmp.110 = self;
+        symbol [ _num %tmp.111 84 19 23 ];
+        %tmp.111 = getv function %tmp.110 :_num;
+        %tmp.112 = "zs_rn";
+        %tmp.113 = 0;
+        %tmp.114 = 0;
+        %tmp.115 = 99999;
+        %tmp.116 = invoke %tmp.110 %tmp.111(%tmp.112, %tmp.113, %tmp.114, %tmp.115);
+        symbol [ rNight ? 84 8 14 ];
+        putv self :rNight %tmp.116;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 85 8 ]
+        %tmp.117 = self;
+        symbol [ _num %tmp.118 85 19 23 ];
+        %tmp.118 = getv function %tmp.117 :_num;
+        %tmp.119 = "zs_rk";
+        %tmp.120 = 0;
+        %tmp.121 = 0;
+        %tmp.122 = 99999;
+        %tmp.123 = invoke %tmp.117 %tmp.118(%tmp.119, %tmp.120, %tmp.121, %tmp.122);
+        symbol [ rKills ? 85 8 14 ];
+        putv self :rKills %tmp.123;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 86 8 ]
+        %tmp.124 = self;
+        symbol [ _num %tmp.125 86 19 23 ];
+        %tmp.125 = getv function %tmp.124 :_num;
+        %tmp.126 = "zs_rt";
+        %tmp.127 = 0;
+        %tmp.128 = 0;
+        %tmp.129 = 99999;
+        %tmp.130 = invoke %tmp.124 %tmp.125(%tmp.126, %tmp.127, %tmp.128, %tmp.129);
+        symbol [ rTotal ? 86 8 14 ];
+        putv self :rTotal %tmp.130;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 87 8 ]
+        %tmp.131 = self;
+        symbol [ _num %tmp.132 87 19 23 ];
+        %tmp.132 = getv function %tmp.131 :_num;
+        %tmp.133 = "zs_rw";
+        %tmp.134 = 0;
+        %tmp.135 = 0;
+        %tmp.136 = 100;
+        %tmp.137 = invoke %tmp.131 %tmp.132(%tmp.133, %tmp.134, %tmp.135, %tmp.136);
+        symbol [ rWallPct ? 87 8 16 ];
+        putv self :rWallPct %tmp.137;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 88 8 ]
+        %tmp.138 = self;
+        symbol [ _num %tmp.139 88 19 23 ];
+        %tmp.139 = getv function %tmp.138 :_num;
+        %tmp.140 = "zs_rs";
+        %tmp.141 = 0;
+        %tmp.142 = 0;
+        %tmp.143 = 999999;
+        %tmp.144 = invoke %tmp.138 %tmp.139(%tmp.140, %tmp.141, %tmp.142, %tmp.143);
+        symbol [ rScrap ? 88 8 14 ];
+        putv self :rScrap %tmp.144;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 90 8 ]
+        symbol [ Zs %tmp.147 90 22 24 ];
+        %tmp.147 = getv ? :Zs;
+        symbol [ D_N %tmp.148 90 25 28 ];
+        %tmp.148 = getv %tmp.147 :D_N;
+        %tmp.145 = newa %tmp.148;
+        symbol [ dLevel ? 90 8 14 ];
+        putv self :dLevel %tmp.145;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 91 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 91 17 18 ];
+        %tmp.149 = 0;
+        lputv %i.1 %tmp.149;
+        symbol [ i %i.1 91 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_test:
+        %tmp.150 = lgetv %i.1;
+        symbol [ i %tmp.150 91 24 25 ];
+        symbol [ Zs %tmp.152 91 28 30 ];
+        %tmp.152 = getv ? :Zs;
+        symbol [ D_N %tmp.153 91 31 34 ];
+        %tmp.153 = getv %tmp.152 :D_N;
+        %tmp.154 = lt %tmp.150 %tmp.153;
+        bf %tmp.154 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_41_93_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 92 12 ]
+        symbol [ dLevel %tmp.155 92 12 18 ];
+        %tmp.155 = getv self :dLevel;
+        %tmp.156 = self;
+        symbol [ _num %tmp.157 92 24 28 ];
+        %tmp.157 = getv function %tmp.156 :_num;
+        %tmp.158 = "zs_d";
+        %tmp.159 = lgetv %i.1;
+        symbol [ i %tmp.159 92 38 39 ];
+        %tmp.160 = add %tmp.158 %tmp.159;
+        %tmp.161 = 0;
+        %tmp.162 = 0;
+        symbol [ Zs %tmp.164 92 47 49 ];
+        %tmp.164 = getv ? :Zs;
+        symbol [ D_LVL_MAX %tmp.165 92 50 59 ];
+        %tmp.165 = getv %tmp.164 :D_LVL_MAX;
+        %tmp.166 = invoke %tmp.156 %tmp.157(%tmp.160, %tmp.161, %tmp.162, %tmp.165);
+        %tmp.167 = lgetv %i.1;
+        symbol [ i %tmp.167 92 19 20 ];
+        aputv %tmp.155 %tmp.167 %tmp.166;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_41_93_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 91 ]
+        %tmp.170 = lgetv %i.1;
+        symbol [ i %tmp.170 91 36 37 ];
+        %tmp.171 = add %tmp.170 1;
+        lputv %i.1 %tmp.171;
+        symbol [ i %i.1 91 36 37 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_91_8_93_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_67_28_108_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_67_28_108_4_stop" ]
+        %stored.2 = local;
+        symbol [ stored %stored.2 99 12 18 ];
+        %tmp.172 = self;
+        symbol [ _get %tmp.173 99 21 25 ];
+        %tmp.173 = getv function %tmp.172 :_get;
+        %tmp.174 = "zs_wday";
+        %tmp.175 = null;
+        %tmp.176 = invoke %tmp.172 %tmp.173(%tmp.174, %tmp.175);
+        lputv %stored.2 %tmp.176;
+        symbol [ stored %stored.2 99 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_stmt:
+        %tmp.177 = lgetv %stored.2;
+        symbol [ stored %tmp.177 100 12 18 ];
+        symbol [ Lang %tmp.178 100 30 34 ];
+        %tmp.178 = getm $.Toybox.Lang;
+        symbol [ Number %tmp.179 100 35 41 ];
+        %tmp.179 = getv %tmp.178 :Number;
+        %tmp.180 = isa %tmp.177 %tmp.179;
+        bf %tmp.180 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_43_102_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 101 12 ]
+        %tmp.181 = lgetv %stored.2;
+        symbol [ stored %tmp.181 101 26 32 ];
+        %tmp.182 = as %tmp.181 { (Lang.Number) };
+        symbol [ lastWaveDay ? 101 12 23 ];
+        putv self :lastWaveDay %tmp.182;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_43_102_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_else_false:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_102_15_104_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 103 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_begin:
+        %tmp.183 = self;
+        symbol [ _pastWaveHour %tmp.184 103 26 39 ];
+        %tmp.184 = getv function %tmp.183 :_pastWaveHour;
+        %tmp.185 = invoke %tmp.183 %tmp.184();
+        bf %tmp.185 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_true:
+        %tmp.186 = self;
+        symbol [ dayIndex %tmp.187 103 44 52 ];
+        %tmp.187 = getv function %tmp.186 :dayIndex;
+        %tmp.188 = invoke %tmp.186 %tmp.187();
+        push %tmp.188;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_else_false:
+        %tmp.189 = self;
+        symbol [ dayIndex %tmp.190 103 57 65 ];
+        %tmp.190 = getv function %tmp.189 :dayIndex;
+        %tmp.191 = invoke %tmp.189 %tmp.190();
+        %tmp.192 = 1;
+        %tmp.193 = sub %tmp.191 %tmp.192;
+        push %tmp.193;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_end:
+        %tmp.194 = phi [%tmp.185 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_begin] [%tmp.188 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_true] [%tmp.193 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_else_false] [%tmp.194 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_103_26_103_70_end];
+        symbol [ lastWaveDay ? 103 12 23 ];
+        putv self :lastWaveDay %tmp.194;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_102_15_104_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_100_8_104_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 106 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_8_106_54_if_stmt:
+        %tmp.195 = self;
+        symbol [ _num %tmp.196 106 12 16 ];
+        %tmp.196 = getv function %tmp.195 :_num;
+        %tmp.197 = "zs_v";
+        %tmp.198 = 0;
+        %tmp.199 = 0;
+        %tmp.200 = 99;
+        %tmp.201 = invoke %tmp.195 %tmp.196(%tmp.197, %tmp.198, %tmp.199, %tmp.200);
+        %tmp.202 = 2;
+        %tmp.203 = lt %tmp.201 %tmp.202;
+        bf %tmp.203 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_8_106_54_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_8_106_54_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_40_106_54_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 106 42 ]
+        %tmp.204 = self;
+        symbol [ _migrate %tmp.205 106 42 50 ];
+        %tmp.205 = getv function %tmp.204 :_migrate;
+        invoke %tmp.204 %tmp.205();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_40_106_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_8_106_54_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_106_8_106_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 107 8 ]
+        %tmp.206 = 0;
+        symbol [ gScrap ? 107 8 14 ];
+        putv self :gScrap %tmp.206;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 107 20 ]
+        %tmp.207 = 0;
+        symbol [ gSteps ? 107 20 26 ];
+        putv self :gSteps %tmp.207;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_67_28_108_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 114; @symbol_functiondef = [_migrate,114,20,28]; ]
+    protected
+    function _migrate() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %old.1 = local;
+        symbol [ old %old.1 115 12 15 ];
+        %tmp.2 = 6;
+        %tmp.1 = newa %tmp.2;
+        lputv %old.1 %tmp.1;
+        symbol [ old %old.1 115 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %any.2 = local;
+        symbol [ any %any.2 116 12 15 ];
+        %tmp.3 = false;
+        lputv %any.2 %tmp.3;
+        symbol [ any %any.2 116 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 117 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 117 17 18 ];
+        %tmp.4 = 0;
+        lputv %i.3 %tmp.4;
+        symbol [ i %i.3 117 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_test:
+        %tmp.5 = lgetv %i.3;
+        symbol [ i %tmp.5 117 24 25 ];
+        %tmp.6 = 6;
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_36_120_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 118 12 ]
+        %tmp.8 = lgetv %old.1;
+        symbol [ old %tmp.8 118 12 15 ];
+        %tmp.9 = self;
+        symbol [ _num %tmp.10 118 21 25 ];
+        %tmp.10 = getv function %tmp.9 :_num;
+        %tmp.11 = "zs_m";
+        %tmp.12 = lgetv %i.3;
+        symbol [ i %tmp.12 118 35 36 ];
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = 0;
+        %tmp.15 = 0;
+        symbol [ Zs %tmp.17 118 44 46 ];
+        %tmp.17 = getv ? :Zs;
+        symbol [ D_LVL_MAX %tmp.18 118 47 56 ];
+        %tmp.18 = getv %tmp.17 :D_LVL_MAX;
+        %tmp.19 = invoke %tmp.9 %tmp.10(%tmp.13, %tmp.14, %tmp.15, %tmp.18);
+        %tmp.20 = lgetv %i.3;
+        symbol [ i %tmp.20 118 16 17 ];
+        aputv %tmp.8 %tmp.20 %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 119 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_12_119_42_if_stmt:
+        %tmp.21 = lgetv %old.1;
+        symbol [ old %tmp.21 119 16 19 ];
+        %tmp.22 = lgetv %i.3;
+        symbol [ i %tmp.22 119 20 21 ];
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        %tmp.24 = 0;
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_12_119_42_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_12_119_42_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_28_119_42_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 119 30 ]
+        %tmp.26 = true;
+        lputv %any.2 %tmp.26;
+        symbol [ any %any.2 119 30 33 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_28_119_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_12_119_42_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_119_12_119_42_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_36_120_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 117 ]
+        %tmp.29 = lgetv %i.3;
+        symbol [ i %tmp.29 117 31 32 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %i.3 %tmp.30;
+        symbol [ i %i.3 117 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_117_8_120_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 121 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_8_128_8_if_stmt:
+        %tmp.31 = lgetv %any.2;
+        symbol [ any %tmp.31 121 12 15 ];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_8_128_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_8_128_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_17_128_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 122 12 ]
+        %tmp.32 = self;
+        symbol [ _lift %tmp.33 122 12 17 ];
+        %tmp.33 = getv function %tmp.32 :_lift;
+        symbol [ Zs %tmp.35 122 18 20 ];
+        %tmp.35 = getv ? :Zs;
+        symbol [ D_MG %tmp.36 122 21 25 ];
+        %tmp.36 = getv %tmp.35 :D_MG;
+        %tmp.37 = lgetv %old.1;
+        symbol [ old %tmp.37 122 27 30 ];
+        %tmp.38 = 0;
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        invoke %tmp.32 %tmp.33(%tmp.36, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 123 12 ]
+        %tmp.40 = self;
+        symbol [ _lift %tmp.41 123 12 17 ];
+        %tmp.41 = getv function %tmp.40 :_lift;
+        symbol [ Zs %tmp.43 123 18 20 ];
+        %tmp.43 = getv ? :Zs;
+        symbol [ D_WALL %tmp.44 123 21 27 ];
+        %tmp.44 = getv %tmp.43 :D_WALL;
+        %tmp.45 = lgetv %old.1;
+        symbol [ old %tmp.45 123 29 32 ];
+        %tmp.46 = 1;
+        %tmp.47 = agetv %tmp.45 %tmp.46;
+        invoke %tmp.40 %tmp.41(%tmp.44, %tmp.47);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 124 12 ]
+        %tmp.48 = self;
+        symbol [ _lift %tmp.49 124 12 17 ];
+        %tmp.49 = getv function %tmp.48 :_lift;
+        symbol [ Zs %tmp.51 124 18 20 ];
+        %tmp.51 = getv ? :Zs;
+        symbol [ D_RIFLE %tmp.52 124 21 28 ];
+        %tmp.52 = getv %tmp.51 :D_RIFLE;
+        %tmp.53 = lgetv %old.1;
+        symbol [ old %tmp.53 124 30 33 ];
+        %tmp.54 = 2;
+        %tmp.55 = agetv %tmp.53 %tmp.54;
+        invoke %tmp.48 %tmp.49(%tmp.52, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 125 12 ]
+        %tmp.56 = self;
+        symbol [ _lift %tmp.57 125 12 17 ];
+        %tmp.57 = getv function %tmp.56 :_lift;
+        symbol [ Zs %tmp.59 125 18 20 ];
+        %tmp.59 = getv ? :Zs;
+        symbol [ D_RIFLE %tmp.60 125 21 28 ];
+        %tmp.60 = getv %tmp.59 :D_RIFLE;
+        %tmp.61 = lgetv %old.1;
+        symbol [ old %tmp.61 125 30 33 ];
+        %tmp.62 = 3;
+        %tmp.63 = agetv %tmp.61 %tmp.62;
+        invoke %tmp.56 %tmp.57(%tmp.60, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 126 12 ]
+        %tmp.64 = self;
+        symbol [ _lift %tmp.65 126 12 17 ];
+        %tmp.65 = getv function %tmp.64 :_lift;
+        symbol [ Zs %tmp.67 126 18 20 ];
+        %tmp.67 = getv ? :Zs;
+        symbol [ D_REPAIR %tmp.68 126 21 29 ];
+        %tmp.68 = getv %tmp.67 :D_REPAIR;
+        %tmp.69 = lgetv %old.1;
+        symbol [ old %tmp.69 126 31 34 ];
+        %tmp.70 = 4;
+        %tmp.71 = agetv %tmp.69 %tmp.70;
+        invoke %tmp.64 %tmp.65(%tmp.68, %tmp.71);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 127 12 ]
+        %tmp.72 = self;
+        symbol [ _lift %tmp.73 127 12 17 ];
+        %tmp.73 = getv function %tmp.72 :_lift;
+        symbol [ Zs %tmp.75 127 18 20 ];
+        %tmp.75 = getv ? :Zs;
+        symbol [ D_SALVAGE %tmp.76 127 21 30 ];
+        %tmp.76 = getv %tmp.75 :D_SALVAGE;
+        %tmp.77 = lgetv %old.1;
+        symbol [ old %tmp.77 127 32 35 ];
+        %tmp.78 = 5;
+        %tmp.79 = agetv %tmp.77 %tmp.78;
+        invoke %tmp.72 %tmp.73(%tmp.76, %tmp.79);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_17_128_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_8_128_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_121_8_128_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %wpns.4 = local;
+        symbol [ wpns %wpns.4 129 12 16 ];
+        %tmp.80 = self;
+        symbol [ _num %tmp.81 129 19 23 ];
+        %tmp.81 = getv function %tmp.80 :_num;
+        %tmp.82 = "zs_wpns";
+        %tmp.83 = 1;
+        %tmp.84 = 0;
+        %tmp.85 = 255;
+        %tmp.86 = invoke %tmp.80 %tmp.81(%tmp.82, %tmp.83, %tmp.84, %tmp.85);
+        lputv %wpns.4 %tmp.86;
+        symbol [ wpns %wpns.4 129 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 130 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %refund.5 = local;
+        symbol [ refund %refund.5 130 12 18 ];
+        %tmp.87 = newa 4;
+        %tmp.88 = 0;
+        %tmp.89 = dup %tmp.87;
+        %tmp.90 = aputv %tmp.89 0 %tmp.88;
+        %tmp.91 = 900;
+        %tmp.92 = dup %tmp.90;
+        %tmp.93 = aputv %tmp.92 1 %tmp.91;
+        %tmp.94 = 1600;
+        %tmp.95 = dup %tmp.93;
+        %tmp.96 = aputv %tmp.95 2 %tmp.94;
+        %tmp.97 = 2600;
+        %tmp.98 = dup %tmp.96;
+        %tmp.99 = aputv %tmp.98 3 %tmp.97;
+        lputv %refund.5 %tmp.99;
+        symbol [ refund %refund.5 130 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 131 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_end" ]
+        %b.6 = local;
+        symbol [ b %b.6 131 17 18 ];
+        %tmp.100 = 1;
+        lputv %b.6 %tmp.100;
+        symbol [ b %b.6 131 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_test:
+        %tmp.101 = lgetv %b.6;
+        symbol [ b %tmp.101 131 24 25 ];
+        %tmp.102 = 4;
+        %tmp.103 = lt %tmp.101 %tmp.102;
+        bf %tmp.103 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_36_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 132 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_12_132_62_if_stmt:
+        %tmp.104 = lgetv %wpns.4;
+        symbol [ wpns %tmp.104 132 17 21 ];
+        %tmp.105 = 1;
+        %tmp.106 = lgetv %b.6;
+        symbol [ b %tmp.106 132 30 31 ];
+        %tmp.107 = shl %tmp.105 %tmp.106;
+        %tmp.108 = bitand %tmp.104 %tmp.107;
+        %tmp.109 = 0;
+        %tmp.110 = ne %tmp.108 %tmp.109;
+        bf %tmp.110 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_12_132_62_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_12_132_62_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_40_132_62_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 132 42 ]
+        symbol [ scrap %tmp.111 132 42 47 ];
+        %tmp.111 = getv self :scrap;
+        %tmp.112 = lgetv %refund.5;
+        symbol [ refund %tmp.112 132 51 57 ];
+        %tmp.113 = lgetv %b.6;
+        symbol [ b %tmp.113 132 58 59 ];
+        %tmp.114 = agetv %tmp.112 %tmp.113;
+        %tmp.115 = add %tmp.111 %tmp.114;
+        symbol [ scrap ? 132 42 47 ];
+        putv self :scrap dup %tmp.115;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_40_132_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_12_132_62_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_132_12_132_62_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_36_133_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 131 ]
+        %tmp.118 = lgetv %b.6;
+        symbol [ b %tmp.118 131 31 32 ];
+        %tmp.119 = add %tmp.118 1;
+        lputv %b.6 %tmp.119;
+        symbol [ b %b.6 131 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_131_8_133_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 134 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %oldBest.7 = local;
+        symbol [ oldBest %oldBest.7 134 12 19 ];
+        %tmp.120 = self;
+        symbol [ _num %tmp.121 134 22 26 ];
+        %tmp.121 = getv function %tmp.120 :_num;
+        %tmp.122 = "zs_bestw";
+        %tmp.123 = 0;
+        %tmp.124 = 0;
+        %tmp.125 = 99999;
+        %tmp.126 = invoke %tmp.120 %tmp.121(%tmp.122, %tmp.123, %tmp.124, %tmp.125);
+        lputv %oldBest.7 %tmp.126;
+        symbol [ oldBest %oldBest.7 134 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 135 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_8_135_56_if_stmt:
+        %tmp.127 = lgetv %oldBest.7;
+        symbol [ oldBest %tmp.127 135 12 19 ];
+        symbol [ bestNight %tmp.129 135 22 31 ];
+        %tmp.129 = getv ? :bestNight;
+        %tmp.130 = gt %tmp.127 %tmp.129;
+        bf %tmp.130 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_8_135_56_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_8_135_56_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_33_135_56_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 135 35 ]
+        %tmp.131 = lgetv %oldBest.7;
+        symbol [ oldBest %tmp.131 135 47 54 ];
+        symbol [ bestNight ? 135 35 44 ];
+        putv self :bestNight %tmp.131;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_33_135_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_8_135_56_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_135_8_135_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 140 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_8_140_53_if_stmt:
+        %tmp.132 = self;
+        symbol [ fortScore %tmp.133 140 12 21 ];
+        %tmp.133 = getv function %tmp.132 :fortScore;
+        %tmp.134 = invoke %tmp.132 %tmp.133();
+        %tmp.135 = 0;
+        %tmp.136 = eq %tmp.134 %tmp.135;
+        bf %tmp.136 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_8_140_53_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_8_140_53_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_30_140_53_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 140 32 ]
+        symbol [ dLevel %tmp.137 140 32 38 ];
+        %tmp.137 = getv self :dLevel;
+        %tmp.138 = 1;
+        symbol [ Zs %tmp.140 140 39 41 ];
+        %tmp.140 = getv ? :Zs;
+        symbol [ D_MG %tmp.141 140 42 46 ];
+        %tmp.141 = getv %tmp.140 :D_MG;
+        aputv %tmp.137 %tmp.141 %tmp.138;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_30_140_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_8_140_53_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_140_8_140_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 142 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop" ]
+        %dead.8 = local;
+        symbol [ dead %dead.8 142 12 16 ];
+        %tmp.142 = newa 7;
+        %tmp.143 = "zs_wpns";
+        %tmp.144 = dup %tmp.142;
+        %tmp.145 = aputv %tmp.144 0 %tmp.143;
+        %tmp.146 = "zs_load";
+        %tmp.147 = dup %tmp.145;
+        %tmp.148 = aputv %tmp.147 1 %tmp.146;
+        %tmp.149 = "zs_combo";
+        %tmp.150 = dup %tmp.148;
+        %tmp.151 = aputv %tmp.150 2 %tmp.149;
+        %tmp.152 = "zs_runs";
+        %tmp.153 = dup %tmp.151;
+        %tmp.154 = aputv %tmp.153 3 %tmp.152;
+        %tmp.155 = "zs_waves";
+        %tmp.156 = dup %tmp.154;
+        %tmp.157 = aputv %tmp.156 4 %tmp.155;
+        %tmp.158 = "zs_bestw";
+        %tmp.159 = dup %tmp.157;
+        %tmp.160 = aputv %tmp.159 5 %tmp.158;
+        %tmp.161 = "zs_lbday";
+        %tmp.162 = dup %tmp.160;
+        %tmp.163 = aputv %tmp.162 6 %tmp.161;
+        lputv %dead.8 %tmp.163;
+        symbol [ dead %dead.8 142 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 144 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_end" ]
+        %k.9 = local;
+        symbol [ k %k.9 144 17 18 ];
+        %tmp.164 = 0;
+        lputv %k.9 %tmp.164;
+        symbol [ k %k.9 144 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_test:
+        %tmp.165 = lgetv %k.9;
+        symbol [ k %tmp.165 144 24 25 ];
+        %tmp.166 = lgetv %dead.8;
+        symbol [ dead %tmp.166 144 28 32 ];
+        symbol [ size %tmp.167 144 33 37 ];
+        %tmp.167 = getv function %tmp.166 :size;
+        %tmp.168 = invoke %tmp.166 %tmp.167();
+        %tmp.169 = lt %tmp.165 %tmp.168;
+        bf %tmp.169 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_46_144_63_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 144 48 ]
+        %tmp.170 = self;
+        symbol [ _del %tmp.171 144 48 52 ];
+        %tmp.171 = getv function %tmp.170 :_del;
+        %tmp.172 = lgetv %dead.8;
+        symbol [ dead %tmp.172 144 53 57 ];
+        %tmp.173 = lgetv %k.9;
+        symbol [ k %tmp.173 144 58 59 ];
+        %tmp.174 = agetv %tmp.172 %tmp.173;
+        invoke %tmp.170 %tmp.171(%tmp.174);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_46_144_63_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 144 ]
+        %tmp.177 = lgetv %k.9;
+        symbol [ k %tmp.177 144 41 42 ];
+        %tmp.178 = add %tmp.177 1;
+        lputv %k.9 %tmp.178;
+        symbol [ k %k.9 144 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_144_8_144_63_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 145 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_end" ]
+        %u.10 = local;
+        symbol [ u %u.10 145 17 18 ];
+        %tmp.179 = 0;
+        lputv %u.10 %tmp.179;
+        symbol [ u %u.10 145 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_test:
+        %tmp.180 = lgetv %u.10;
+        symbol [ u %tmp.180 145 24 25 ];
+        %tmp.181 = 6;
+        %tmp.182 = lt %tmp.180 %tmp.181;
+        bf %tmp.182 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_36_145_56_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 145 38 ]
+        %tmp.183 = self;
+        symbol [ _del %tmp.184 145 38 42 ];
+        %tmp.184 = getv function %tmp.183 :_del;
+        %tmp.185 = "zs_m";
+        %tmp.186 = lgetv %u.10;
+        symbol [ u %tmp.186 145 52 53 ];
+        %tmp.187 = add %tmp.185 %tmp.186;
+        invoke %tmp.183 %tmp.184(%tmp.187);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_36_145_56_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 145 ]
+        %tmp.190 = lgetv %u.10;
+        symbol [ u %tmp.190 145 31 32 ];
+        %tmp.191 = add %tmp.190 1;
+        lputv %u.10 %tmp.191;
+        symbol [ u %u.10 145 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_145_8_145_56_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 146 8 ]
+        %tmp.192 = self;
+        symbol [ _set %tmp.193 146 8 12 ];
+        %tmp.193 = getv function %tmp.192 :_set;
+        %tmp.194 = "zs_v";
+        %tmp.195 = 2;
+        invoke %tmp.192 %tmp.193(%tmp.194, %tmp.195);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 147 8 ]
+        %tmp.196 = self;
+        symbol [ save %tmp.197 147 8 12 ];
+        %tmp.197 = getv function %tmp.196 :save;
+        invoke %tmp.196 %tmp.197();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_114_31_148_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 150; @symbol_functiondef = [_lift,150,20,25]; @symbol_param<0> = [idx,150,26,29]; @symbol_param<1> = [lvl,150,31,34]; ]
+    protected
+    function _lift(idx, lvl) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_150_36_154_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 151 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_8_153_8_if_stmt:
+        %tmp.1 = lgetv %lvl;
+        symbol [ lvl %tmp.1 151 12 15 ];
+        symbol [ dLevel %tmp.3 151 18 24 ];
+        %tmp.3 = getv ? :dLevel;
+        %tmp.4 = lgetv %idx;
+        symbol [ idx %tmp.4 151 25 28 ];
+        %tmp.5 = agetv %tmp.3 %tmp.4;
+        %tmp.6 = gt %tmp.1 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_8_153_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_8_153_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_31_153_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 152 12 ]
+        symbol [ dLevel %tmp.7 152 12 18 ];
+        %tmp.7 = getv self :dLevel;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_begin:
+        %tmp.8 = lgetv %lvl;
+        symbol [ lvl %tmp.8 152 26 29 ];
+        symbol [ Zs %tmp.10 152 32 34 ];
+        %tmp.10 = getv ? :Zs;
+        symbol [ D_LVL_MAX %tmp.11 152 35 44 ];
+        %tmp.11 = getv %tmp.10 :D_LVL_MAX;
+        %tmp.12 = gt %tmp.8 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_true:
+        symbol [ Zs %tmp.14 152 47 49 ];
+        %tmp.14 = getv ? :Zs;
+        symbol [ D_LVL_MAX %tmp.15 152 50 59 ];
+        %tmp.15 = getv %tmp.14 :D_LVL_MAX;
+        push %tmp.15;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_else_false:
+        %tmp.16 = lgetv %lvl;
+        symbol [ lvl %tmp.16 152 62 65 ];
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_end:
+        %tmp.17 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_152_26_152_62_end];
+        %tmp.18 = lgetv %idx;
+        symbol [ idx %tmp.18 152 19 22 ];
+        aputv %tmp.7 %tmp.18 %tmp.17;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_31_153_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_8_153_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_151_8_153_8_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_150_36_154_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 156; @symbol_functiondef = [save,156,13,17]; ]
+    function save() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_156_20_179_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 157 8 ]
+        %tmp.1 = self;
+        symbol [ _set %tmp.2 157 8 12 ];
+        %tmp.2 = getv function %tmp.1 :_set;
+        %tmp.3 = "zs_scrap";
+        symbol [ scrap %tmp.5 157 25 30 ];
+        %tmp.5 = getv ? :scrap;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 158 8 ]
+        %tmp.6 = self;
+        symbol [ _set %tmp.7 158 8 12 ];
+        %tmp.7 = getv function %tmp.6 :_set;
+        %tmp.8 = "zs_night";
+        symbol [ night %tmp.10 158 25 30 ];
+        %tmp.10 = getv ? :night;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.10);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 159 8 ]
+        %tmp.11 = self;
+        symbol [ _set %tmp.12 159 8 12 ];
+        %tmp.12 = getv function %tmp.11 :_set;
+        %tmp.13 = "zs_wall";
+        symbol [ wallPct %tmp.15 159 24 31 ];
+        %tmp.15 = getv ? :wallPct;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 160 8 ]
+        %tmp.16 = self;
+        symbol [ _set %tmp.17 160 8 12 ];
+        %tmp.17 = getv function %tmp.16 :_set;
+        %tmp.18 = "zs_best";
+        symbol [ bestNight %tmp.20 160 24 33 ];
+        %tmp.20 = getv ? :bestNight;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 161 8 ]
+        %tmp.21 = self;
+        symbol [ _set %tmp.22 161 8 12 ];
+        %tmp.22 = getv function %tmp.21 :_set;
+        %tmp.23 = "zs_held";
+        symbol [ nightsHeld %tmp.25 161 24 34 ];
+        %tmp.25 = getv ? :nightsHeld;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 162 8 ]
+        %tmp.26 = self;
+        symbol [ _set %tmp.27 162 8 12 ];
+        %tmp.27 = getv function %tmp.26 :_set;
+        %tmp.28 = "zs_lost";
+        symbol [ losses %tmp.30 162 24 30 ];
+        %tmp.30 = getv ? :losses;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 163 8 ]
+        %tmp.31 = self;
+        symbol [ _set %tmp.32 163 8 12 ];
+        %tmp.32 = getv function %tmp.31 :_set;
+        %tmp.33 = "zs_kills";
+        symbol [ kills %tmp.35 163 25 30 ];
+        %tmp.35 = getv ? :kills;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 164 8 ]
+        %tmp.36 = self;
+        symbol [ _set %tmp.37 164 8 12 ];
+        %tmp.37 = getv function %tmp.36 :_set;
+        %tmp.38 = "zs_stepb";
+        symbol [ stepBase %tmp.40 164 25 33 ];
+        %tmp.40 = getv ? :stepBase;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 165 8 ]
+        %tmp.41 = self;
+        symbol [ _set %tmp.42 165 8 12 ];
+        %tmp.42 = getv function %tmp.41 :_set;
+        %tmp.43 = "zs_stepd";
+        symbol [ stepDay %tmp.45 165 25 32 ];
+        %tmp.45 = getv ? :stepDay;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 166 8 ]
+        %tmp.46 = self;
+        symbol [ _set %tmp.47 166 8 12 ];
+        %tmp.47 = getv function %tmp.46 :_set;
+        %tmp.48 = "zs_actd";
+        symbol [ actDay %tmp.50 166 24 30 ];
+        %tmp.50 = getv ? :actDay;
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 167 8 ]
+        %tmp.51 = self;
+        symbol [ _set %tmp.52 167 8 12 ];
+        %tmp.52 = getv function %tmp.51 :_set;
+        %tmp.53 = "zs_dscrap";
+        symbol [ dayScrap %tmp.55 167 26 34 ];
+        %tmp.55 = getv ? :dayScrap;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 168 8 ]
+        %tmp.56 = self;
+        symbol [ _set %tmp.57 168 8 12 ];
+        %tmp.57 = getv function %tmp.56 :_set;
+        %tmp.58 = "zs_intro";
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_begin:
+        symbol [ seenIntro %tmp.60 168 25 34 ];
+        %tmp.60 = getv ? :seenIntro;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_true:
+        %tmp.61 = 1;
+        push %tmp.61;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_else_false:
+        %tmp.62 = 0;
+        push %tmp.62;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_end:
+        %tmp.63 = phi [%tmp.60 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_begin] [%tmp.61 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_true] [%tmp.62 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_else_false] [%tmp.63 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_168_25_168_41_end];
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 169 8 ]
+        %tmp.64 = self;
+        symbol [ _set %tmp.65 169 8 12 ];
+        %tmp.65 = getv function %tmp.64 :_set;
+        %tmp.66 = "zs_wday";
+        symbol [ lastWaveDay %tmp.68 169 24 35 ];
+        %tmp.68 = getv ? :lastWaveDay;
+        invoke %tmp.64 %tmp.65(%tmp.66, %tmp.68);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 170 8 ]
+        %tmp.69 = self;
+        symbol [ _set %tmp.70 170 8 12 ];
+        %tmp.70 = getv function %tmp.69 :_set;
+        %tmp.71 = "zs_pend";
+        symbol [ pendingNight %tmp.73 170 24 36 ];
+        %tmp.73 = getv ? :pendingNight;
+        invoke %tmp.69 %tmp.70(%tmp.71, %tmp.73);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 171 8 ]
+        %tmp.74 = self;
+        symbol [ _set %tmp.75 171 8 12 ];
+        %tmp.75 = getv function %tmp.74 :_set;
+        %tmp.76 = "zs_rst";
+        symbol [ rState %tmp.78 171 23 29 ];
+        %tmp.78 = getv ? :rState;
+        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 172 8 ]
+        %tmp.79 = self;
+        symbol [ _set %tmp.80 172 8 12 ];
+        %tmp.80 = getv function %tmp.79 :_set;
+        %tmp.81 = "zs_rwin";
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_begin:
+        symbol [ rWin %tmp.83 172 24 28 ];
+        %tmp.83 = getv ? :rWin;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_true:
+        %tmp.84 = 1;
+        push %tmp.84;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_else_false:
+        %tmp.85 = 0;
+        push %tmp.85;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_end:
+        %tmp.86 = phi [%tmp.83 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_begin] [%tmp.84 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_true] [%tmp.85 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_else_false] [%tmp.86 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_172_24_172_35_end];
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.86);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 173 8 ]
+        %tmp.87 = self;
+        symbol [ _set %tmp.88 173 8 12 ];
+        %tmp.88 = getv function %tmp.87 :_set;
+        %tmp.89 = "zs_rn";
+        symbol [ rNight %tmp.91 173 22 28 ];
+        %tmp.91 = getv ? :rNight;
+        invoke %tmp.87 %tmp.88(%tmp.89, %tmp.91);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 174 8 ]
+        %tmp.92 = self;
+        symbol [ _set %tmp.93 174 8 12 ];
+        %tmp.93 = getv function %tmp.92 :_set;
+        %tmp.94 = "zs_rk";
+        symbol [ rKills %tmp.96 174 22 28 ];
+        %tmp.96 = getv ? :rKills;
+        invoke %tmp.92 %tmp.93(%tmp.94, %tmp.96);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 175 8 ]
+        %tmp.97 = self;
+        symbol [ _set %tmp.98 175 8 12 ];
+        %tmp.98 = getv function %tmp.97 :_set;
+        %tmp.99 = "zs_rt";
+        symbol [ rTotal %tmp.101 175 22 28 ];
+        %tmp.101 = getv ? :rTotal;
+        invoke %tmp.97 %tmp.98(%tmp.99, %tmp.101);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 176 8 ]
+        %tmp.102 = self;
+        symbol [ _set %tmp.103 176 8 12 ];
+        %tmp.103 = getv function %tmp.102 :_set;
+        %tmp.104 = "zs_rw";
+        symbol [ rWallPct %tmp.106 176 22 30 ];
+        %tmp.106 = getv ? :rWallPct;
+        invoke %tmp.102 %tmp.103(%tmp.104, %tmp.106);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 177 8 ]
+        %tmp.107 = self;
+        symbol [ _set %tmp.108 177 8 12 ];
+        %tmp.108 = getv function %tmp.107 :_set;
+        %tmp.109 = "zs_rs";
+        symbol [ rScrap %tmp.111 177 22 28 ];
+        %tmp.111 = getv ? :rScrap;
+        invoke %tmp.107 %tmp.108(%tmp.109, %tmp.111);
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 178 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 178 17 18 ];
+        %tmp.112 = 0;
+        lputv %i.1 %tmp.112;
+        symbol [ i %i.1 178 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_test:
+        %tmp.113 = lgetv %i.1;
+        symbol [ i %tmp.113 178 24 25 ];
+        symbol [ Zs %tmp.115 178 28 30 ];
+        %tmp.115 = getv ? :Zs;
+        symbol [ D_N %tmp.116 178 31 34 ];
+        %tmp.116 = getv %tmp.115 :D_N;
+        %tmp.117 = lt %tmp.113 %tmp.116;
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_41_178_72_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 178 43 ]
+        %tmp.118 = self;
+        symbol [ _set %tmp.119 178 43 47 ];
+        %tmp.119 = getv function %tmp.118 :_set;
+        %tmp.120 = "zs_d";
+        %tmp.121 = lgetv %i.1;
+        symbol [ i %tmp.121 178 57 58 ];
+        %tmp.122 = add %tmp.120 %tmp.121;
+        symbol [ dLevel %tmp.124 178 60 66 ];
+        %tmp.124 = getv ? :dLevel;
+        %tmp.125 = lgetv %i.1;
+        symbol [ i %tmp.125 178 67 68 ];
+        %tmp.126 = agetv %tmp.124 %tmp.125;
+        invoke %tmp.118 %tmp.119(%tmp.122, %tmp.126);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_41_178_72_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 178 ]
+        %tmp.129 = lgetv %i.1;
+        symbol [ i %tmp.129 178 36 37 ];
+        %tmp.130 = add %tmp.129 1;
+        lputv %i.1 %tmp.130;
+        symbol [ i %i.1 178 36 37 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_178_8_178_72_for_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_156_20_179_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 181; @symbol_functiondef = [resetAll,181,13,21]; ]
+    function resetAll() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_181_24_195_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 182 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_181_24_195_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_181_24_195_4_stop" ]
+        %keys.1 = local;
+        symbol [ keys %keys.1 182 12 16 ];
+        %tmp.1 = newa 29;
+        %tmp.2 = "zs_scrap";
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = "zs_night";
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = "zs_wall";
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        %tmp.11 = "zs_best";
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 3 %tmp.11;
+        %tmp.14 = "zs_held";
+        %tmp.15 = dup %tmp.13;
+        %tmp.16 = aputv %tmp.15 4 %tmp.14;
+        %tmp.17 = "zs_lost";
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 5 %tmp.17;
+        %tmp.20 = "zs_kills";
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 6 %tmp.20;
+        %tmp.23 = "zs_stepb";
+        %tmp.24 = dup %tmp.22;
+        %tmp.25 = aputv %tmp.24 7 %tmp.23;
+        %tmp.26 = "zs_stepd";
+        %tmp.27 = dup %tmp.25;
+        %tmp.28 = aputv %tmp.27 8 %tmp.26;
+        %tmp.29 = "zs_actd";
+        %tmp.30 = dup %tmp.28;
+        %tmp.31 = aputv %tmp.30 9 %tmp.29;
+        %tmp.32 = "zs_dscrap";
+        %tmp.33 = dup %tmp.31;
+        %tmp.34 = aputv %tmp.33 10 %tmp.32;
+        %tmp.35 = "zs_intro";
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 11 %tmp.35;
+        %tmp.38 = "zs_wday";
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 12 %tmp.38;
+        %tmp.41 = "zs_v";
+        %tmp.42 = dup %tmp.40;
+        %tmp.43 = aputv %tmp.42 13 %tmp.41;
+        %tmp.44 = "zs_pend";
+        %tmp.45 = dup %tmp.43;
+        %tmp.46 = aputv %tmp.45 14 %tmp.44;
+        %tmp.47 = "zs_rst";
+        %tmp.48 = dup %tmp.46;
+        %tmp.49 = aputv %tmp.48 15 %tmp.47;
+        %tmp.50 = "zs_rwin";
+        %tmp.51 = dup %tmp.49;
+        %tmp.52 = aputv %tmp.51 16 %tmp.50;
+        %tmp.53 = "zs_rn";
+        %tmp.54 = dup %tmp.52;
+        %tmp.55 = aputv %tmp.54 17 %tmp.53;
+        %tmp.56 = "zs_rk";
+        %tmp.57 = dup %tmp.55;
+        %tmp.58 = aputv %tmp.57 18 %tmp.56;
+        %tmp.59 = "zs_rt";
+        %tmp.60 = dup %tmp.58;
+        %tmp.61 = aputv %tmp.60 19 %tmp.59;
+        %tmp.62 = "zs_rw";
+        %tmp.63 = dup %tmp.61;
+        %tmp.64 = aputv %tmp.63 20 %tmp.62;
+        %tmp.65 = "zs_rs";
+        %tmp.66 = dup %tmp.64;
+        %tmp.67 = aputv %tmp.66 21 %tmp.65;
+        %tmp.68 = "zs_wpns";
+        %tmp.69 = dup %tmp.67;
+        %tmp.70 = aputv %tmp.69 22 %tmp.68;
+        %tmp.71 = "zs_load";
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 23 %tmp.71;
+        %tmp.74 = "zs_combo";
+        %tmp.75 = dup %tmp.73;
+        %tmp.76 = aputv %tmp.75 24 %tmp.74;
+        %tmp.77 = "zs_runs";
+        %tmp.78 = dup %tmp.76;
+        %tmp.79 = aputv %tmp.78 25 %tmp.77;
+        %tmp.80 = "zs_waves";
+        %tmp.81 = dup %tmp.79;
+        %tmp.82 = aputv %tmp.81 26 %tmp.80;
+        %tmp.83 = "zs_bestw";
+        %tmp.84 = dup %tmp.82;
+        %tmp.85 = aputv %tmp.84 27 %tmp.83;
+        %tmp.86 = "zs_lbday";
+        %tmp.87 = dup %tmp.85;
+        %tmp.88 = aputv %tmp.87 28 %tmp.86;
+        lputv %keys.1 %tmp.88;
+        symbol [ keys %keys.1 182 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 190 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 190 17 18 ];
+        %tmp.89 = 0;
+        lputv %i.2 %tmp.89;
+        symbol [ i %i.2 190 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_test:
+        %tmp.90 = lgetv %i.2;
+        symbol [ i %tmp.90 190 24 25 ];
+        %tmp.91 = lgetv %keys.1;
+        symbol [ keys %tmp.91 190 28 32 ];
+        symbol [ size %tmp.92 190 33 37 ];
+        %tmp.92 = getv function %tmp.91 :size;
+        %tmp.93 = invoke %tmp.91 %tmp.92();
+        %tmp.94 = lt %tmp.90 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_46_190_63_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 190 48 ]
+        %tmp.95 = self;
+        symbol [ _del %tmp.96 190 48 52 ];
+        %tmp.96 = getv function %tmp.95 :_del;
+        %tmp.97 = lgetv %keys.1;
+        symbol [ keys %tmp.97 190 53 57 ];
+        %tmp.98 = lgetv %i.2;
+        symbol [ i %tmp.98 190 58 59 ];
+        %tmp.99 = agetv %tmp.97 %tmp.98;
+        invoke %tmp.95 %tmp.96(%tmp.99);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_46_190_63_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 190 ]
+        %tmp.102 = lgetv %i.2;
+        symbol [ i %tmp.102 190 41 42 ];
+        %tmp.103 = add %tmp.102 1;
+        lputv %i.2 %tmp.103;
+        symbol [ i %i.2 190 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_190_8_190_63_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 191 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_end" ]
+        %d.3 = local;
+        symbol [ d %d.3 191 17 18 ];
+        %tmp.104 = 0;
+        lputv %d.3 %tmp.104;
+        symbol [ d %d.3 191 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_test:
+        %tmp.105 = lgetv %d.3;
+        symbol [ d %tmp.105 191 24 25 ];
+        symbol [ Zs %tmp.107 191 28 30 ];
+        %tmp.107 = getv ? :Zs;
+        symbol [ D_N %tmp.108 191 31 34 ];
+        %tmp.108 = getv %tmp.107 :D_N;
+        %tmp.109 = lt %tmp.105 %tmp.108;
+        bf %tmp.109 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_41_191_61_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 191 43 ]
+        %tmp.110 = self;
+        symbol [ _del %tmp.111 191 43 47 ];
+        %tmp.111 = getv function %tmp.110 :_del;
+        %tmp.112 = "zs_d";
+        %tmp.113 = lgetv %d.3;
+        symbol [ d %tmp.113 191 57 58 ];
+        %tmp.114 = add %tmp.112 %tmp.113;
+        invoke %tmp.110 %tmp.111(%tmp.114);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_41_191_61_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 191 ]
+        %tmp.117 = lgetv %d.3;
+        symbol [ d %tmp.117 191 36 37 ];
+        %tmp.118 = add %tmp.117 1;
+        lputv %d.3 %tmp.118;
+        symbol [ d %d.3 191 36 37 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_191_8_191_61_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 192 8 ]
+        for @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_test @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_incr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_begin" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_end" ]
+        %u.4 = local;
+        symbol [ u %u.4 192 17 18 ];
+        %tmp.119 = 0;
+        lputv %u.4 %tmp.119;
+        symbol [ u %u.4 192 17 18 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_test:
+        %tmp.120 = lgetv %u.4;
+        symbol [ u %tmp.120 192 24 25 ];
+        %tmp.121 = 8;
+        %tmp.122 = lt %tmp.120 %tmp.121;
+        bf %tmp.122 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_begin:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_36_192_56_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 192 38 ]
+        %tmp.123 = self;
+        symbol [ _del %tmp.124 192 38 42 ];
+        %tmp.124 = getv function %tmp.123 :_del;
+        %tmp.125 = "zs_m";
+        %tmp.126 = lgetv %u.4;
+        symbol [ u %tmp.126 192 52 53 ];
+        %tmp.127 = add %tmp.125 %tmp.126;
+        invoke %tmp.123 %tmp.124(%tmp.127);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_36_192_56_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 192 ]
+        %tmp.130 = lgetv %u.4;
+        symbol [ u %tmp.130 192 31 32 ];
+        %tmp.131 = add %tmp.130 1;
+        lputv %u.4 %tmp.131;
+        symbol [ u %u.4 192 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_test;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_192_8_192_56_for_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 193 8 ]
+        %tmp.132 = self;
+        symbol [ _load %tmp.133 193 8 13 ];
+        %tmp.133 = getv function %tmp.132 :_load;
+        invoke %tmp.132 %tmp.133();
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 194 8 ]
+        %tmp.134 = self;
+        symbol [ _set %tmp.135 194 8 12 ];
+        %tmp.135 = getv function %tmp.134 :_set;
+        %tmp.136 = "zs_v";
+        %tmp.137 = 2;
+        invoke %tmp.134 %tmp.135(%tmp.136, %tmp.137);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_181_24_195_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 200; @symbol_functiondef = [dayIndex,200,13,21]; ]
+    function dayIndex() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_200_24_203_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 201 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_12_201_51_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 201 14 ]
+        symbol [ Time %tmp.1 201 21 25 ];
+        %tmp.1 = getm $.Toybox.Time;
+        symbol [ today %tmp.2 201 26 31 ];
+        %tmp.2 = getv function %tmp.1 :today;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ value %tmp.4 201 34 39 ];
+        %tmp.4 = getv function %tmp.3 :value;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = 86400;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_12_201_51_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_catch:
+        %tmp.8 = exception;
+        push %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 201 53 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_53_201_64_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 201 60 61 ];
+        %tmp.9 = dup %tmp.8;
+        lputv %e.1 %tmp.9;
+        symbol [ e %e.1 201 60 61 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_53_201_64_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_53_201_64_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_53_201_64_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally;
+        throw %tmp.8;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_201_8_201_64_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 202 8 ]
+        %tmp.10 = 0;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_200_24_203_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 204; @symbol_functiondef = [_waveAt,204,20,27]; ]
+    protected
+    function _waveAt() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_204_30_207_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 205 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_12_205_65_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 205 14 ]
+        symbol [ Time %tmp.1 205 21 25 ];
+        %tmp.1 = getm $.Toybox.Time;
+        symbol [ today %tmp.2 205 26 31 ];
+        %tmp.2 = getv function %tmp.1 :today;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ value %tmp.4 205 34 39 ];
+        %tmp.4 = getv function %tmp.3 :value;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        symbol [ Zs %tmp.7 205 44 46 ];
+        %tmp.7 = getv ? :Zs;
+        symbol [ WAVE_HOUR %tmp.8 205 47 56 ];
+        %tmp.8 = getv %tmp.7 :WAVE_HOUR;
+        %tmp.9 = 3600;
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        %tmp.11 = add %tmp.5 %tmp.10;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_12_205_65_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_catch:
+        %tmp.12 = exception;
+        push %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 205 67 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_67_205_78_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 205 74 75 ];
+        %tmp.13 = dup %tmp.12;
+        lputv %e.1 %tmp.13;
+        symbol [ e %e.1 205 74 75 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_67_205_78_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_67_205_78_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_67_205_78_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally;
+        throw %tmp.12;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_205_8_205_78_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 206 8 ]
+        %tmp.14 = 0;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_204_30_207_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 208; @symbol_functiondef = [_pastWaveHour,208,20,33]; ]
+    protected
+    function _pastWaveHour() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_208_36_211_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 209 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_12_209_54_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 209 14 ]
+        symbol [ Time %tmp.1 209 21 25 ];
+        %tmp.1 = getm $.Toybox.Time;
+        symbol [ now %tmp.2 209 26 29 ];
+        %tmp.2 = getv function %tmp.1 :now;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ value %tmp.4 209 32 37 ];
+        %tmp.4 = getv function %tmp.3 :value;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = self;
+        symbol [ _waveAt %tmp.7 209 43 50 ];
+        %tmp.7 = getv function %tmp.6 :_waveAt;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = gte %tmp.5 %tmp.8;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_12_209_54_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_catch:
+        %tmp.10 = exception;
+        push %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 209 56 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_56_209_67_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 209 63 64 ];
+        %tmp.11 = dup %tmp.10;
+        lputv %e.1 %tmp.11;
+        symbol [ e %e.1 209 63 64 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_56_209_67_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_56_209_67_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_56_209_67_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally;
+        throw %tmp.10;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_209_8_209_67_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 210 8 ]
+        %tmp.12 = false;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_208_36_211_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 215; @symbol_functiondef = [secsToWave,215,13,23]; ]
+    function secsToWave() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_215_26_223_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 216 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 217 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_stop" ]
+        %now.1 = local;
+        symbol [ now %now.1 217 16 19 ];
+        symbol [ Time %tmp.1 217 22 26 ];
+        %tmp.1 = getm $.Toybox.Time;
+        symbol [ now %tmp.2 217 27 30 ];
+        %tmp.2 = getv function %tmp.1 :now;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ value %tmp.4 217 33 38 ];
+        %tmp.4 = getv function %tmp.3 :value;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %now.1 %tmp.5;
+        symbol [ now %now.1 217 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 218 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_stop" ]
+        %at.2 = local;
+        symbol [ at %at.2 218 16 18 ];
+        %tmp.6 = self;
+        symbol [ _waveAt %tmp.7 218 21 28 ];
+        %tmp.7 = getv function %tmp.6 :_waveAt;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %at.2 %tmp.8;
+        symbol [ at %at.2 218 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 219 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_12_219_45_if_stmt:
+        %tmp.9 = lgetv %now.1;
+        symbol [ now %tmp.9 219 16 19 ];
+        %tmp.10 = lgetv %at.2;
+        symbol [ at %tmp.10 219 22 24 ];
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_12_219_45_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_12_219_45_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_26_219_45_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 219 28 ]
+        %tmp.12 = lgetv %at.2;
+        symbol [ at %tmp.12 219 35 37 ];
+        %tmp.13 = lgetv %now.1;
+        symbol [ now %tmp.13 219 40 43 ];
+        %tmp.14 = sub %tmp.12 %tmp.13;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_26_219_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_12_219_45_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_219_12_219_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 220 12 ]
+        %tmp.15 = lgetv %at.2;
+        symbol [ at %tmp.15 220 19 21 ];
+        %tmp.16 = 86400;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %now.1;
+        symbol [ now %tmp.18 220 32 35 ];
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_12_221_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_catch:
+        %tmp.20 = exception;
+        push %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 221 10 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_221_10_221_21_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 221 17 18 ];
+        %tmp.21 = dup %tmp.20;
+        lputv %e.3 %tmp.21;
+        symbol [ e %e.3 221 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_221_10_221_21_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_221_10_221_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_221_10_221_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally;
+        throw %tmp.20;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_216_8_221_21_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 222 8 ]
+        %tmp.22 = 0;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_215_26_223_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 227; @symbol_functiondef = [waveDue,227,13,20]; ]
+    function waveDue() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_227_23_230_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 228 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_8_228_46_if_stmt:
+        %tmp.1 = self;
+        symbol [ _pastWaveHour %tmp.2 228 13 26 ];
+        %tmp.2 = getv function %tmp.1 :_pastWaveHour;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = not %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_8_228_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_8_228_46_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_30_228_46_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 228 32 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_30_228_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_8_228_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_228_8_228_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 229 8 ]
+        symbol [ lastWaveDay %tmp.7 229 15 26 ];
+        %tmp.7 = getv ? :lastWaveDay;
+        %tmp.8 = self;
+        symbol [ dayIndex %tmp.9 229 29 37 ];
+        %tmp.9 = getv function %tmp.8 :dayIndex;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = lt %tmp.7 %tmp.10;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_227_23_230_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 233; @symbol_functiondef = [upgradeCost,233,13,24]; @symbol_param<0> = [i,233,25,26]; ]
+    function upgradeCost(i) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_233_28_233_61_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 233 30 ]
+        symbol [ Zs %tmp.2 233 37 39 ];
+        %tmp.2 = getv ? :Zs;
+        symbol [ dCost %tmp.3 233 40 45 ];
+        %tmp.3 = getv function %tmp.2 :dCost;
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 233 46 47 ];
+        symbol [ dLevel %tmp.6 233 49 55 ];
+        %tmp.6 = getv ? :dLevel;
+        %tmp.7 = lgetv %i;
+        symbol [ i %tmp.7 233 56 57 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        %tmp.9 = invoke %tmp.2 %tmp.3(%tmp.4, %tmp.8);
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_233_28_233_61_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 234; @symbol_functiondef = [canUpgrade,234,13,23]; @symbol_param<0> = [i,234,24,25]; ]
+    function canUpgrade(i) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_234_27_238_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 235 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_stmt:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_12_235_29_begin:
+        %tmp.1 = lgetv %i;
+        symbol [ i %tmp.1 235 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_true;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_21_235_29_false:
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 235 21 22 ];
+        symbol [ Zs %tmp.6 235 26 28 ];
+        %tmp.6 = getv ? :Zs;
+        symbol [ D_N %tmp.7 235 29 32 ];
+        %tmp.7 = getv %tmp.6 :D_N;
+        %tmp.8 = gte %tmp.4 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_21_235_29_end:
+        %tmp.9 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_12_235_29_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_21_235_29_false] [%tmp.9 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_21_235_29_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_34_235_50_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 235 36 ]
+        %tmp.10 = false;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_34_235_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_235_8_235_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 236 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_8_236_55_if_stmt:
+        symbol [ dLevel %tmp.12 236 12 18 ];
+        %tmp.12 = getv ? :dLevel;
+        %tmp.13 = lgetv %i;
+        symbol [ i %tmp.13 236 19 20 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        symbol [ Zs %tmp.16 236 25 27 ];
+        %tmp.16 = getv ? :Zs;
+        symbol [ D_LVL_MAX %tmp.17 236 28 37 ];
+        %tmp.17 = getv %tmp.16 :D_LVL_MAX;
+        %tmp.18 = gte %tmp.14 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_8_236_55_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_8_236_55_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_39_236_55_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 236 41 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_39_236_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_8_236_55_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_236_8_236_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 237 8 ]
+        symbol [ scrap %tmp.21 237 15 20 ];
+        %tmp.21 = getv ? :scrap;
+        %tmp.22 = self;
+        symbol [ upgradeCost %tmp.23 237 24 35 ];
+        %tmp.23 = getv function %tmp.22 :upgradeCost;
+        %tmp.24 = lgetv %i;
+        symbol [ i %tmp.24 237 36 37 ];
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        %tmp.26 = gte %tmp.21 %tmp.25;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_234_27_238_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 239; @symbol_functiondef = [upgrade,239,13,20]; @symbol_param<0> = [i,239,21,22]; ]
+    function upgrade(i) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_239_24_245_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 240 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_8_240_44_if_stmt:
+        %tmp.1 = self;
+        symbol [ canUpgrade %tmp.2 240 13 23 ];
+        %tmp.2 = getv function %tmp.1 :canUpgrade;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 240 24 25 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        %tmp.5 = not %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_8_240_44_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_8_240_44_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_28_240_44_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 240 30 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_28_240_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_8_240_44_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_240_8_240_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 241 8 ]
+        symbol [ scrap %tmp.7 241 8 13 ];
+        %tmp.7 = getv self :scrap;
+        %tmp.8 = self;
+        symbol [ upgradeCost %tmp.9 241 17 28 ];
+        %tmp.9 = getv function %tmp.8 :upgradeCost;
+        %tmp.10 = lgetv %i;
+        symbol [ i %tmp.10 241 29 30 ];
+        %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
+        %tmp.12 = sub %tmp.7 %tmp.11;
+        symbol [ scrap ? 241 8 13 ];
+        putv self :scrap dup %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 242 8 ]
+        symbol [ dLevel %tmp.13 242 8 14 ];
+        %tmp.13 = getv self :dLevel;
+        symbol [ dLevel %tmp.14 242 8 14 ];
+        %tmp.14 = getv self :dLevel;
+        %tmp.15 = lgetv %i;
+        symbol [ i %tmp.15 242 15 16 ];
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        %tmp.17 = 1;
+        %tmp.18 = add %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %i;
+        symbol [ i %tmp.19 242 15 16 ];
+        aputv %tmp.13 %tmp.19 dup %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 243 8 ]
+        %tmp.20 = self;
+        symbol [ save %tmp.21 243 8 12 ];
+        %tmp.21 = getv function %tmp.20 :save;
+        invoke %tmp.20 %tmp.21();
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 244 8 ]
+        %tmp.22 = true;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_239_24_245_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 246; @symbol_functiondef = [fortScore,246,13,22]; ]
+    function fortScore() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_246_25_246_57_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 246 27 ]
+        symbol [ Zs %tmp.2 246 34 36 ];
+        %tmp.2 = getv ? :Zs;
+        symbol [ fortRating %tmp.3 246 37 47 ];
+        %tmp.3 = getv function %tmp.2 :fortRating;
+        symbol [ dLevel %tmp.5 246 48 54 ];
+        %tmp.5 = getv ? :dLevel;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_246_25_246_57_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 250; @symbol_functiondef = [collectOffline,250,13,27]; ]
+    function collectOffline() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 251 8 ]
+        %tmp.1 = 0;
+        symbol [ gScrap ? 251 8 14 ];
+        putv self :gScrap %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 251 20 ]
+        %tmp.2 = 0;
+        symbol [ gSteps ? 251 20 26 ];
+        putv self :gSteps %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 252 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_stop" ]
+        %td.1 = local;
+        symbol [ td %td.1 252 12 14 ];
+        %tmp.3 = self;
+        symbol [ dayIndex %tmp.4 252 17 25 ];
+        %tmp.4 = getv function %tmp.3 :dayIndex;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        lputv %td.1 %tmp.5;
+        symbol [ td %td.1 252 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 253 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_8_257_8_if_stmt:
+        symbol [ stepDay %tmp.7 253 12 19 ];
+        %tmp.7 = getv ? :stepDay;
+        %tmp.8 = lgetv %td.1;
+        symbol [ td %tmp.8 253 23 25 ];
+        %tmp.9 = ne %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_8_257_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_8_257_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_27_257_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 254 12 ]
+        %tmp.10 = lgetv %td.1;
+        symbol [ td %tmp.10 254 22 24 ];
+        symbol [ stepDay ? 254 12 19 ];
+        putv self :stepDay %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 255 12 ]
+        %tmp.11 = 0;
+        symbol [ stepBase ? 255 12 20 ];
+        putv self :stepBase %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 256 12 ]
+        %tmp.12 = 0;
+        symbol [ dayScrap ? 256 12 20 ];
+        putv self :dayScrap %tmp.12;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_27_257_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_8_257_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_253_8_257_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 258 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_stop" ]
+        %mul.2 = local;
+        symbol [ mul %mul.2 258 12 15 ];
+        symbol [ Zs %tmp.14 258 18 20 ];
+        %tmp.14 = getv ? :Zs;
+        symbol [ salvagePct %tmp.15 258 21 31 ];
+        %tmp.15 = getv function %tmp.14 :salvagePct;
+        symbol [ dLevel %tmp.17 258 32 38 ];
+        %tmp.17 = getv ? :dLevel;
+        symbol [ Zs %tmp.19 258 39 41 ];
+        %tmp.19 = getv ? :Zs;
+        symbol [ D_SALVAGE %tmp.20 258 42 51 ];
+        %tmp.20 = getv %tmp.19 :D_SALVAGE;
+        %tmp.21 = agetv %tmp.17 %tmp.20;
+        %tmp.22 = invoke %tmp.14 %tmp.15(%tmp.21);
+        lputv %mul.2 %tmp.22;
+        symbol [ mul %mul.2 258 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 259 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_stop" ]
+        %steps.3 = local;
+        symbol [ steps %steps.3 259 12 17 ];
+        symbol [ Sensors %tmp.24 259 20 27 ];
+        %tmp.24 = getv ? :Sensors;
+        symbol [ getStepsToday %tmp.25 259 28 41 ];
+        %tmp.25 = getv function %tmp.24 :getStepsToday;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        lputv %steps.3 %tmp.26;
+        symbol [ steps %steps.3 259 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 260 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_8_260_46_if_stmt:
+        %tmp.27 = lgetv %steps.3;
+        symbol [ steps %tmp.27 260 12 17 ];
+        symbol [ stepBase %tmp.29 260 20 28 ];
+        %tmp.29 = getv ? :stepBase;
+        %tmp.30 = lt %tmp.27 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_8_260_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_8_260_46_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_30_260_46_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 260 32 ]
+        %tmp.31 = 0;
+        symbol [ stepBase ? 260 32 40 ];
+        putv self :stepBase %tmp.31;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_30_260_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_8_260_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_260_8_260_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 261 8 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_stop" ]
+        %delta.4 = local;
+        symbol [ delta %delta.4 261 12 17 ];
+        %tmp.32 = lgetv %steps.3;
+        symbol [ steps %tmp.32 261 20 25 ];
+        symbol [ stepBase %tmp.34 261 28 36 ];
+        %tmp.34 = getv ? :stepBase;
+        %tmp.35 = sub %tmp.32 %tmp.34;
+        lputv %delta.4 %tmp.35;
+        symbol [ delta %delta.4 261 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 262 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_8_275_8_if_stmt:
+        %tmp.36 = lgetv %delta.4;
+        symbol [ delta %tmp.36 262 12 17 ];
+        %tmp.37 = 0;
+        %tmp.38 = gt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_8_275_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_8_275_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_23_275_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 263 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_23_275_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_23_275_8_stop" ]
+        %gained.5 = local;
+        symbol [ gained %gained.5 263 16 22 ];
+        %tmp.39 = lgetv %delta.4;
+        symbol [ delta %tmp.39 263 25 30 ];
+        symbol [ Zs %tmp.41 263 33 35 ];
+        %tmp.41 = getv ? :Zs;
+        symbol [ STEPS_PER_SCRAP %tmp.42 263 36 51 ];
+        %tmp.42 = getv %tmp.41 :STEPS_PER_SCRAP;
+        %tmp.43 = div %tmp.39 %tmp.42;
+        lputv %gained.5 %tmp.43;
+        symbol [ gained %gained.5 263 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 264 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_12_274_12_if_stmt:
+        %tmp.44 = lgetv %gained.5;
+        symbol [ gained %tmp.44 264 16 22 ];
+        %tmp.45 = 0;
+        %tmp.46 = gt %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_12_274_12_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_12_274_12_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_28_274_12_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 265 16 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_16_265_90_if_stmt:
+        symbol [ dayScrap %tmp.48 265 20 28 ];
+        %tmp.48 = getv ? :dayScrap;
+        %tmp.49 = lgetv %gained.5;
+        symbol [ gained %tmp.49 265 31 37 ];
+        %tmp.50 = add %tmp.48 %tmp.49;
+        symbol [ Zs %tmp.52 265 40 42 ];
+        %tmp.52 = getv ? :Zs;
+        symbol [ DAILY_CAP %tmp.53 265 43 52 ];
+        %tmp.53 = getv %tmp.52 :DAILY_CAP;
+        %tmp.54 = gt %tmp.50 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_16_265_90_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_16_265_90_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_54_265_90_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 265 56 ]
+        symbol [ Zs %tmp.56 265 65 67 ];
+        %tmp.56 = getv ? :Zs;
+        symbol [ DAILY_CAP %tmp.57 265 68 77 ];
+        %tmp.57 = getv %tmp.56 :DAILY_CAP;
+        symbol [ dayScrap %tmp.59 265 80 88 ];
+        %tmp.59 = getv ? :dayScrap;
+        %tmp.60 = sub %tmp.57 %tmp.59;
+        lputv %gained.5 %tmp.60;
+        symbol [ gained %gained.5 265 56 62 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_54_265_90_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_16_265_90_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_265_16_265_90_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 266 16 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_16_273_16_if_stmt:
+        %tmp.61 = lgetv %gained.5;
+        symbol [ gained %tmp.61 266 20 26 ];
+        %tmp.62 = 0;
+        %tmp.63 = gt %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_16_273_16_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_16_273_16_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_32_273_16_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 267 20 ]
+        symbol [ dayScrap %tmp.64 267 20 28 ];
+        %tmp.64 = getv self :dayScrap;
+        %tmp.65 = lgetv %gained.5;
+        symbol [ gained %tmp.65 267 32 38 ];
+        %tmp.66 = add %tmp.64 %tmp.65;
+        symbol [ dayScrap ? 267 20 28 ];
+        putv self :dayScrap dup %tmp.66;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 268 20 ]
+        symbol [ stepBase %tmp.67 268 20 28 ];
+        %tmp.67 = getv self :stepBase;
+        %tmp.68 = lgetv %gained.5;
+        symbol [ gained %tmp.68 268 32 38 ];
+        symbol [ Zs %tmp.70 268 41 43 ];
+        %tmp.70 = getv ? :Zs;
+        symbol [ STEPS_PER_SCRAP %tmp.71 268 44 59 ];
+        %tmp.71 = getv %tmp.70 :STEPS_PER_SCRAP;
+        %tmp.72 = mul %tmp.68 %tmp.71;
+        %tmp.73 = add %tmp.67 %tmp.72;
+        symbol [ stepBase ? 268 20 28 ];
+        putv self :stepBase dup %tmp.73;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 269 20 ]
+        symbol [ gSteps %tmp.74 269 20 26 ];
+        %tmp.74 = getv self :gSteps;
+        %tmp.75 = lgetv %gained.5;
+        symbol [ gained %tmp.75 269 30 36 ];
+        symbol [ Zs %tmp.77 269 39 41 ];
+        %tmp.77 = getv ? :Zs;
+        symbol [ STEPS_PER_SCRAP %tmp.78 269 42 57 ];
+        %tmp.78 = getv %tmp.77 :STEPS_PER_SCRAP;
+        %tmp.79 = mul %tmp.75 %tmp.78;
+        %tmp.80 = add %tmp.74 %tmp.79;
+        symbol [ gSteps ? 269 20 26 ];
+        putv self :gSteps dup %tmp.80;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 270 20 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_32_273_16_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_32_273_16_stop" ]
+        %paid.6 = local;
+        symbol [ paid %paid.6 270 24 28 ];
+        %tmp.81 = lgetv %gained.5;
+        symbol [ gained %tmp.81 270 31 37 ];
+        %tmp.82 = lgetv %mul.2;
+        symbol [ mul %tmp.82 270 40 43 ];
+        %tmp.83 = mul %tmp.81 %tmp.82;
+        %tmp.84 = 100;
+        %tmp.85 = div %tmp.83 %tmp.84;
+        lputv %paid.6 %tmp.85;
+        symbol [ paid %paid.6 270 24 28 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 271 20 ]
+        symbol [ scrap %tmp.86 271 20 25 ];
+        %tmp.86 = getv self :scrap;
+        %tmp.87 = lgetv %paid.6;
+        symbol [ paid %tmp.87 271 29 33 ];
+        %tmp.88 = add %tmp.86 %tmp.87;
+        symbol [ scrap ? 271 20 25 ];
+        putv self :scrap dup %tmp.88;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 272 20 ]
+        symbol [ gScrap %tmp.89 272 20 26 ];
+        %tmp.89 = getv self :gScrap;
+        %tmp.90 = lgetv %paid.6;
+        symbol [ paid %tmp.90 272 30 34 ];
+        %tmp.91 = add %tmp.89 %tmp.90;
+        symbol [ gScrap ? 272 20 26 ];
+        putv self :gScrap dup %tmp.91;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_32_273_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_16_273_16_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_266_16_273_16_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_28_274_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_12_274_12_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_264_12_274_12_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_23_275_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_8_275_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_262_8_275_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 276 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_8_286_8_if_stmt:
+        symbol [ actDay %tmp.93 276 12 18 ];
+        %tmp.93 = getv ? :actDay;
+        %tmp.94 = lgetv %td.1;
+        symbol [ td %tmp.94 276 22 24 ];
+        %tmp.95 = ne %tmp.93 %tmp.94;
+        bf %tmp.95 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_8_286_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_8_286_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_26_286_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 277 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_26_286_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_26_286_8_stop" ]
+        %mins.7 = local;
+        symbol [ mins %mins.7 277 16 20 ];
+        symbol [ Sensors %tmp.97 277 23 30 ];
+        %tmp.97 = getv ? :Sensors;
+        symbol [ getActivityMinutes %tmp.98 277 31 49 ];
+        %tmp.98 = getv function %tmp.97 :getActivityMinutes;
+        %tmp.99 = invoke %tmp.97 %tmp.98();
+        lputv %mins.7 %tmp.99;
+        symbol [ mins %mins.7 277 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 278 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_12_285_12_if_stmt:
+        %tmp.100 = lgetv %mins.7;
+        symbol [ mins %tmp.100 278 16 20 ];
+        %tmp.101 = 0;
+        %tmp.102 = gt %tmp.100 %tmp.101;
+        bf %tmp.102 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_12_285_12_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_12_285_12_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_26_285_12_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 279 16 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_26_285_12_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_26_285_12_stop" ]
+        %bonus.8 = local;
+        symbol [ bonus %bonus.8 279 20 25 ];
+        %tmp.103 = lgetv %mins.7;
+        symbol [ mins %tmp.103 279 28 32 ];
+        symbol [ Zs %tmp.105 279 35 37 ];
+        %tmp.105 = getv ? :Zs;
+        symbol [ ACT_MIN_BONUS %tmp.106 279 38 51 ];
+        %tmp.106 = getv %tmp.105 :ACT_MIN_BONUS;
+        %tmp.107 = mul %tmp.103 %tmp.106;
+        lputv %bonus.8 %tmp.107;
+        symbol [ bonus %bonus.8 279 20 25 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 280 16 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_16_280_48_if_stmt:
+        %tmp.108 = lgetv %bonus.8;
+        symbol [ bonus %tmp.108 280 20 25 ];
+        %tmp.109 = 200;
+        %tmp.110 = gt %tmp.108 %tmp.109;
+        bf %tmp.110 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_16_280_48_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_16_280_48_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_33_280_48_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 280 35 ]
+        %tmp.111 = 200;
+        lputv %bonus.8 %tmp.111;
+        symbol [ bonus %bonus.8 280 35 40 ];
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_33_280_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_16_280_48_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_280_16_280_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 281 16 ]
+        %tmp.112 = lgetv %bonus.8;
+        symbol [ bonus %tmp.112 281 24 29 ];
+        %tmp.113 = lgetv %mul.2;
+        symbol [ mul %tmp.113 281 32 35 ];
+        %tmp.114 = mul %tmp.112 %tmp.113;
+        %tmp.115 = 100;
+        %tmp.116 = div %tmp.114 %tmp.115;
+        lputv %bonus.8 %tmp.116;
+        symbol [ bonus %bonus.8 281 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 282 16 ]
+        symbol [ scrap %tmp.117 282 16 21 ];
+        %tmp.117 = getv self :scrap;
+        %tmp.118 = lgetv %bonus.8;
+        symbol [ bonus %tmp.118 282 25 30 ];
+        %tmp.119 = add %tmp.117 %tmp.118;
+        symbol [ scrap ? 282 16 21 ];
+        putv self :scrap dup %tmp.119;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 283 16 ]
+        symbol [ gScrap %tmp.120 283 16 22 ];
+        %tmp.120 = getv self :gScrap;
+        %tmp.121 = lgetv %bonus.8;
+        symbol [ bonus %tmp.121 283 26 31 ];
+        %tmp.122 = add %tmp.120 %tmp.121;
+        symbol [ gScrap ? 283 16 22 ];
+        putv self :gScrap dup %tmp.122;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 284 16 ]
+        %tmp.123 = lgetv %td.1;
+        symbol [ td %tmp.123 284 25 27 ];
+        symbol [ actDay ? 284 16 22 ];
+        putv self :actDay %tmp.123;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_26_285_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_12_285_12_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_278_12_285_12_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_26_286_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_8_286_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_276_8_286_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 287 8 ]
+        %tmp.124 = self;
+        symbol [ save %tmp.125 287 8 12 ];
+        %tmp.125 = getv function %tmp.124 :save;
+        invoke %tmp.124 %tmp.125();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_250_30_288_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 295; @symbol_functiondef = [beginWave,295,13,22]; ]
+    function beginWave() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_295_25_299_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 296 8 ]
+        %tmp.1 = self;
+        symbol [ dayIndex %tmp.2 296 22 30 ];
+        %tmp.2 = getv function %tmp.1 :dayIndex;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ lastWaveDay ? 296 8 19 ];
+        putv self :lastWaveDay %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 297 8 ]
+        symbol [ night %tmp.5 297 23 28 ];
+        %tmp.5 = getv ? :night;
+        symbol [ pendingNight ? 297 8 20 ];
+        putv self :pendingNight %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 298 8 ]
+        %tmp.6 = self;
+        symbol [ save %tmp.7 298 8 12 ];
+        %tmp.7 = getv function %tmp.6 :save;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_295_25_299_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 302; @symbol_functiondef = [recordWave,302,13,23]; @symbol_param<0> = [res,302,24,27]; ]
+    function recordWave(res) {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_302_29_338_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 303 8 ]
+        %tmp.1 = self;
+        symbol [ dayIndex %tmp.2 303 22 30 ];
+        %tmp.2 = getv function %tmp.1 :dayIndex;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ lastWaveDay ? 303 8 19 ];
+        putv self :lastWaveDay %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 304 8 ]
+        %tmp.4 = 0;
+        symbol [ pendingNight ? 304 8 20 ];
+        putv self :pendingNight %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 305 8 ]
+        %tmp.5 = 1;
+        symbol [ rState ? 305 8 14 ];
+        putv self :rState %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 306 8 ]
+        %tmp.6 = lgetv %res;
+        symbol [ res %tmp.6 306 19 22 ];
+        symbol [ win %tmp.7 306 23 26 ];
+        %tmp.7 = getv %tmp.6 :win;
+        symbol [ rWin ? 306 8 12 ];
+        putv self :rWin %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 307 8 ]
+        symbol [ night %tmp.9 307 19 24 ];
+        %tmp.9 = getv ? :night;
+        symbol [ rNight ? 307 8 14 ];
+        putv self :rNight %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 308 8 ]
+        %tmp.10 = lgetv %res;
+        symbol [ res %tmp.10 308 19 22 ];
+        symbol [ kills %tmp.11 308 23 28 ];
+        %tmp.11 = getv %tmp.10 :kills;
+        symbol [ rKills ? 308 8 14 ];
+        putv self :rKills %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 309 8 ]
+        %tmp.12 = lgetv %res;
+        symbol [ res %tmp.12 309 19 22 ];
+        symbol [ total %tmp.13 309 23 28 ];
+        %tmp.13 = getv %tmp.12 :total;
+        symbol [ rTotal ? 309 8 14 ];
+        putv self :rTotal %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 310 8 ]
+        %tmp.14 = lgetv %res;
+        symbol [ res %tmp.14 310 19 22 ];
+        symbol [ wallPct %tmp.15 310 23 30 ];
+        %tmp.15 = getv %tmp.14 :wallPct;
+        symbol [ rWallPct ? 310 8 16 ];
+        putv self :rWallPct %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 311 8 ]
+        %tmp.16 = lgetv %res;
+        symbol [ res %tmp.16 311 19 22 ];
+        symbol [ scrap %tmp.17 311 23 28 ];
+        %tmp.17 = getv %tmp.16 :scrap;
+        symbol [ rScrap ? 311 8 14 ];
+        putv self :rScrap %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 313 8 ]
+        symbol [ kills %tmp.18 313 8 13 ];
+        %tmp.18 = getv self :kills;
+        %tmp.19 = lgetv %res;
+        symbol [ res %tmp.19 313 17 20 ];
+        symbol [ kills %tmp.20 313 21 26 ];
+        %tmp.20 = getv %tmp.19 :kills;
+        %tmp.21 = add %tmp.18 %tmp.20;
+        symbol [ kills ? 313 8 13 ];
+        putv self :kills dup %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 314 8 ]
+        symbol [ scrap %tmp.22 314 8 13 ];
+        %tmp.22 = getv self :scrap;
+        %tmp.23 = lgetv %res;
+        symbol [ res %tmp.23 314 17 20 ];
+        symbol [ scrap %tmp.24 314 21 26 ];
+        %tmp.24 = getv %tmp.23 :scrap;
+        %tmp.25 = add %tmp.22 %tmp.24;
+        symbol [ scrap ? 314 8 13 ];
+        putv self :scrap dup %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 316 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_stmt:
+        %tmp.26 = lgetv %res;
+        symbol [ res %tmp.26 316 12 15 ];
+        symbol [ win %tmp.27 316 16 19 ];
+        %tmp.27 = getv %tmp.26 :win;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_else_false;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_21_326_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 317 12 ]
+        symbol [ nightsHeld %tmp.28 317 12 22 ];
+        %tmp.28 = getv self :nightsHeld;
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        symbol [ nightsHeld ? 317 12 22 ];
+        putv self :nightsHeld dup %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 318 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_12_318_56_if_stmt:
+        symbol [ night %tmp.32 318 16 21 ];
+        %tmp.32 = getv ? :night;
+        symbol [ bestNight %tmp.34 318 24 33 ];
+        %tmp.34 = getv ? :bestNight;
+        %tmp.35 = gt %tmp.32 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_12_318_56_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_12_318_56_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_35_318_56_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 318 37 ]
+        symbol [ night %tmp.37 318 49 54 ];
+        %tmp.37 = getv ? :night;
+        symbol [ bestNight ? 318 37 46 ];
+        putv self :bestNight %tmp.37;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_35_318_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_12_318_56_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_318_12_318_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 319 12 ]
+        symbol [ night %tmp.38 319 12 17 ];
+        %tmp.38 = getv self :night;
+        %tmp.39 = 1;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        symbol [ night ? 319 12 17 ];
+        putv self :night dup %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 322 12 ]
+        %tmp.41 = lgetv %res;
+        symbol [ res %tmp.41 322 22 25 ];
+        symbol [ wallPct %tmp.42 322 26 33 ];
+        %tmp.42 = getv %tmp.41 :wallPct;
+        %tmp.43 = 100;
+        %tmp.44 = lgetv %res;
+        symbol [ res %tmp.44 322 43 46 ];
+        symbol [ wallPct %tmp.45 322 47 54 ];
+        %tmp.45 = getv %tmp.44 :wallPct;
+        %tmp.46 = sub %tmp.43 %tmp.45;
+        symbol [ Zs %tmp.48 323 24 26 ];
+        %tmp.48 = getv ? :Zs;
+        symbol [ repairPct %tmp.49 323 27 36 ];
+        %tmp.49 = getv function %tmp.48 :repairPct;
+        symbol [ dLevel %tmp.51 323 37 43 ];
+        %tmp.51 = getv ? :dLevel;
+        symbol [ Zs %tmp.53 323 44 46 ];
+        %tmp.53 = getv ? :Zs;
+        symbol [ D_REPAIR %tmp.54 323 47 55 ];
+        %tmp.54 = getv %tmp.53 :D_REPAIR;
+        %tmp.55 = agetv %tmp.51 %tmp.54;
+        %tmp.56 = invoke %tmp.48 %tmp.49(%tmp.55);
+        %tmp.57 = mul %tmp.46 %tmp.56;
+        %tmp.58 = 100;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        %tmp.60 = add %tmp.42 %tmp.59;
+        symbol [ wallPct ? 322 12 19 ];
+        putv self :wallPct %tmp.60;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 324 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_12_324_48_if_stmt:
+        symbol [ wallPct %tmp.62 324 16 23 ];
+        %tmp.62 = getv ? :wallPct;
+        %tmp.63 = 100;
+        %tmp.64 = gt %tmp.62 %tmp.63;
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_12_324_48_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_12_324_48_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_31_324_48_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 324 33 ]
+        %tmp.65 = 100;
+        symbol [ wallPct ? 324 33 40 ];
+        putv self :wallPct %tmp.65;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_31_324_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_12_324_48_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_324_12_324_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 325 12 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_12_325_46_if_stmt:
+        symbol [ wallPct %tmp.67 325 16 23 ];
+        %tmp.67 = getv ? :wallPct;
+        %tmp.68 = 25;
+        %tmp.69 = lt %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_12_325_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_12_325_46_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_30_325_46_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 325 32 ]
+        %tmp.70 = 25;
+        symbol [ wallPct ? 325 32 39 ];
+        putv self :wallPct %tmp.70;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_30_325_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_12_325_46_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_325_12_325_46_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_21_326_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_else_false:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_326_15_335_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 327 12 ]
+        symbol [ losses %tmp.71 327 12 18 ];
+        %tmp.71 = getv self :losses;
+        %tmp.72 = 1;
+        %tmp.73 = add %tmp.71 %tmp.72;
+        symbol [ losses ? 327 12 18 ];
+        putv self :losses dup %tmp.73;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 334 12 ]
+        %tmp.74 = 100;
+        symbol [ wallPct ? 334 12 19 ];
+        putv self :wallPct %tmp.74;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_326_15_335_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_316_8_335_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 336 8 ]
+        %tmp.75 = self;
+        symbol [ save %tmp.76 336 8 12 ];
+        %tmp.76 = getv function %tmp.75 :save;
+        invoke %tmp.75 %tmp.76();
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 337 8 ]
+        %tmp.77 = self;
+        symbol [ submitScores %tmp.78 337 8 20 ];
+        %tmp.78 = getv function %tmp.77 :submitScores;
+        invoke %tmp.77 %tmp.78();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_302_29_338_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 341; @symbol_functiondef = [ackResult,341,13,22]; ]
+    function ackResult() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_341_25_343_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 342 8 ]
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_8_342_47_if_stmt:
+        symbol [ rState %tmp.2 342 12 18 ];
+        %tmp.2 = getv ? :rState;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_8_342_47_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_8_342_47_if_true:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_25_342_47_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 342 27 ]
+        %tmp.5 = 2;
+        symbol [ rState ? 342 27 33 ];
+        putv self :rState %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 342 39 ]
+        %tmp.6 = self;
+        symbol [ save %tmp.7 342 39 43 ];
+        %tmp.7 = getv function %tmp.6 :save;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_25_342_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_8_342_47_if_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_342_8_342_47_if_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_341_25_343_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 345; @symbol_functiondef = [submitScores,345,13,25]; ]
+    function submitScores() {
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_345_28_360_4_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 346 8 ]
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_beginTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_endTry @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_beginTry:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_12_359_8_start:
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 347 12 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_12_359_8_start" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_12_359_8_stop" ]
+        %meta.1 = local;
+        symbol [ meta %meta.1 347 16 20 ];
+        %tmp.1 = newd 4;
+        %tmp.2 = "night";
+        symbol [ bestNight %tmp.4 348 27 36 ];
+        %tmp.4 = getv ? :bestNight;
+        %tmp.5 = dup %tmp.1;
+        %tmp.6 = aputv %tmp.5 %tmp.2 %tmp.4;
+        %tmp.7 = "fort";
+        %tmp.8 = self;
+        symbol [ fortScore %tmp.9 349 27 36 ];
+        %tmp.9 = getv function %tmp.8 :fortScore;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = dup %tmp.6;
+        %tmp.12 = aputv %tmp.11 %tmp.7 %tmp.10;
+        %tmp.13 = "kills";
+        symbol [ kills %tmp.15 350 27 32 ];
+        %tmp.15 = getv ? :kills;
+        %tmp.16 = dup %tmp.12;
+        %tmp.17 = aputv %tmp.16 %tmp.13 %tmp.15;
+        %tmp.18 = "waves";
+        symbol [ nightsHeld %tmp.20 351 27 37 ];
+        %tmp.20 = getv ? :nightsHeld;
+        %tmp.21 = dup %tmp.17;
+        %tmp.22 = aputv %tmp.21 %tmp.18 %tmp.20;
+        lputv %meta.1 %tmp.22;
+        symbol [ meta %meta.1 347 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 353 12 ]
+        symbol [ Leaderboard %tmp.24 353 12 23 ];
+        %tmp.24 = getv ? :Leaderboard;
+        symbol [ submitScoreBatch %tmp.25 353 24 40 ];
+        %tmp.25 = getv function %tmp.24 :submitScoreBatch;
+        symbol [ Zs %tmp.27 353 41 43 ];
+        %tmp.27 = getv ? :Zs;
+        symbol [ GAME_ID %tmp.28 353 44 51 ];
+        %tmp.28 = getv %tmp.27 :GAME_ID;
+        %tmp.29 = newa 4;
+        %tmp.30 = newd 3;
+        %tmp.32 = const :score;
+        symbol [ score %tmp.32 354 19 24 const ];
+        symbol [ bestNight %tmp.34 354 28 37 ];
+        %tmp.34 = getv ? :bestNight;
+        %tmp.35 = dup %tmp.30;
+        %tmp.36 = aputv %tmp.35 %tmp.32 %tmp.34;
+        %tmp.38 = const :variant;
+        symbol [ variant %tmp.38 354 41 48 const ];
+        symbol [ Zs %tmp.40 354 52 54 ];
+        %tmp.40 = getv ? :Zs;
+        symbol [ LB_DAY %tmp.41 354 55 61 ];
+        %tmp.41 = getv %tmp.40 :LB_DAY;
+        %tmp.42 = dup %tmp.36;
+        %tmp.43 = aputv %tmp.42 %tmp.38 %tmp.41;
+        %tmp.45 = const :meta;
+        symbol [ meta %tmp.45 354 66 70 const ];
+        %tmp.46 = lgetv %meta.1;
+        symbol [ meta %tmp.46 354 74 78 ];
+        %tmp.47 = dup %tmp.43;
+        %tmp.48 = aputv %tmp.47 %tmp.45 %tmp.46;
+        %tmp.49 = dup %tmp.29;
+        %tmp.50 = aputv %tmp.49 0 %tmp.48;
+        %tmp.51 = newd 3;
+        %tmp.53 = const :score;
+        symbol [ score %tmp.53 355 19 24 const ];
+        %tmp.54 = self;
+        symbol [ fortScore %tmp.55 355 28 37 ];
+        %tmp.55 = getv function %tmp.54 :fortScore;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        %tmp.57 = dup %tmp.51;
+        %tmp.58 = aputv %tmp.57 %tmp.53 %tmp.56;
+        %tmp.60 = const :variant;
+        symbol [ variant %tmp.60 355 42 49 const ];
+        symbol [ Zs %tmp.62 355 53 55 ];
+        %tmp.62 = getv ? :Zs;
+        symbol [ LB_FORT %tmp.63 355 56 63 ];
+        %tmp.63 = getv %tmp.62 :LB_FORT;
+        %tmp.64 = dup %tmp.58;
+        %tmp.65 = aputv %tmp.64 %tmp.60 %tmp.63;
+        %tmp.67 = const :meta;
+        symbol [ meta %tmp.67 355 67 71 const ];
+        %tmp.68 = lgetv %meta.1;
+        symbol [ meta %tmp.68 355 75 79 ];
+        %tmp.69 = dup %tmp.65;
+        %tmp.70 = aputv %tmp.69 %tmp.67 %tmp.68;
+        %tmp.71 = dup %tmp.50;
+        %tmp.72 = aputv %tmp.71 1 %tmp.70;
+        %tmp.73 = newd 3;
+        %tmp.75 = const :score;
+        symbol [ score %tmp.75 356 19 24 const ];
+        symbol [ kills %tmp.77 356 28 33 ];
+        %tmp.77 = getv ? :kills;
+        %tmp.78 = dup %tmp.73;
+        %tmp.79 = aputv %tmp.78 %tmp.75 %tmp.77;
+        %tmp.81 = const :variant;
+        symbol [ variant %tmp.81 356 41 48 const ];
+        symbol [ Zs %tmp.83 356 52 54 ];
+        %tmp.83 = getv ? :Zs;
+        symbol [ LB_KILLS %tmp.84 356 55 63 ];
+        %tmp.84 = getv %tmp.83 :LB_KILLS;
+        %tmp.85 = dup %tmp.79;
+        %tmp.86 = aputv %tmp.85 %tmp.81 %tmp.84;
+        %tmp.88 = const :meta;
+        symbol [ meta %tmp.88 356 66 70 const ];
+        %tmp.89 = lgetv %meta.1;
+        symbol [ meta %tmp.89 356 74 78 ];
+        %tmp.90 = dup %tmp.86;
+        %tmp.91 = aputv %tmp.90 %tmp.88 %tmp.89;
+        %tmp.92 = dup %tmp.72;
+        %tmp.93 = aputv %tmp.92 2 %tmp.91;
+        %tmp.94 = newd 3;
+        %tmp.96 = const :score;
+        symbol [ score %tmp.96 357 19 24 const ];
+        symbol [ nightsHeld %tmp.98 357 28 38 ];
+        %tmp.98 = getv ? :nightsHeld;
+        %tmp.99 = dup %tmp.94;
+        %tmp.100 = aputv %tmp.99 %tmp.96 %tmp.98;
+        %tmp.102 = const :variant;
+        symbol [ variant %tmp.102 357 41 48 const ];
+        symbol [ Zs %tmp.104 357 52 54 ];
+        %tmp.104 = getv ? :Zs;
+        symbol [ LB_WAVES %tmp.105 357 55 63 ];
+        %tmp.105 = getv %tmp.104 :LB_WAVES;
+        %tmp.106 = dup %tmp.100;
+        %tmp.107 = aputv %tmp.106 %tmp.102 %tmp.105;
+        %tmp.109 = const :meta;
+        symbol [ meta %tmp.109 357 66 70 const ];
+        %tmp.110 = lgetv %meta.1;
+        symbol [ meta %tmp.110 357 74 78 ];
+        %tmp.111 = dup %tmp.107;
+        %tmp.112 = aputv %tmp.111 %tmp.109 %tmp.110;
+        %tmp.113 = dup %tmp.93;
+        %tmp.114 = aputv %tmp.113 3 %tmp.112;
+        invoke %tmp.24 %tmp.25(%tmp.28, %tmp.114);
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_12_359_8_stop:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_catch:
+        %tmp.115 = exception;
+        push %tmp.115;
+[ "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc" 359 10 ]
+        [ "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_catch" "_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_359_10_359_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 359 17 18 ];
+        %tmp.116 = dup %tmp.115;
+        lputv %e.2 %tmp.116;
+        symbol [ e %e.2 359 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_end;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_359_10_359_21_end:
+        try @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_catch @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_359_10_359_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_359_10_359_21_end @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally;
+        throw %tmp.115;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_346_8_359_21_end:
+_Users_kkorolczuk_work_garmin_zombiesurvival_source_ZombieModel_mc_345_28_360_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/zombiesurvival/source/ZombieModel.mc"; @line = 13; ]
+<init> {
+}

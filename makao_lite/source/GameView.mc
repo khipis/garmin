@@ -223,9 +223,101 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // BACK: menu → pop app, in-game → return to menu
-    // BACK: always return to the shared menu (pop this gameplay view).
+    // BACK: offer to save progress (SaveResume) before leaving. exportSave()
+    // only allows saving at MKS_PLAY (never mid suit-pick / AI turn / game
+    // over) — elsewhere the prompt is skipped and confirmExit just pops.
+    // confirmExit always returns true (it owns the pop/prompt itself), which
+    // tells GameDelegate.onBack() not to also pop the view.
     function doBack() {
+        return SaveResume.confirmExit("makao_lite", method(:exportSave));
+    }
+
+    // ─── Mid-run save / resume (shared SaveResume) ─────────────────────────────
+    // NOTE: initialize() always calls _startGame() (dealing a fresh hand)
+    // before a resumed view can be wired up. loadResume() is called by
+    // MakaoHooks.resumeGame() right after construction and overrides that
+    // fresh deal with the saved state via _applySave().
+    function loadResume(data) as Void {
+        if (data != null) { _applySave(data); }
+    }
+
+    // Only safe checkpoint: player's own turn, no pending suit-pick/AI/over.
+    function exportSave() {
+        if (_state != MKS_PLAY) { return null; }
+
+        var deck = [];
+        for (var i = 0; i < MK_DECK; i++) { deck.add(_deck[i]); }
+        var pHand = [];
+        for (var i = 0; i < _pCount; i++) { pHand.add(_pHand[i]); }
+        var aiHand = [];
+        for (var i = 0; i < _aiCount; i++) { aiHand.add(_aiHand[i]); }
+
+        return {
+            "deck"     => deck,
+            "top"      => _deckTop,
+            "pHand"    => pHand,
+            "aiHand"   => aiHand,
+            "topCard"  => _topCard,
+            "actSuit"  => _activeSuit,
+            "pendDraw" => _pendingDraw,
+            "skipNext" => _skipNext ? 1 : 0,
+            "cursor"   => _cursorPos,
+            "mode"     => _mode,
+            "diff"     => _diff,
+            "sP"       => _sP,
+            "sAI"      => _sAI,
+            "lbHand"   => _lbHandled ? 1 : 0
+        };
+    }
+
+    hidden function _applySave(data) as Lang.Boolean {
+        try {
+            var deck   = data["deck"];
+            var pHand  = data["pHand"];
+            var aiHand = data["aiHand"];
+            if (!(deck instanceof Array) || !(pHand instanceof Array) || !(aiHand instanceof Array)) {
+                return false;
+            }
+            if (deck.size() < MK_DECK || pHand.size() < 1 || aiHand.size() < 1) { return false; }
+
+            for (var i = 0; i < MK_DECK; i++) { _deck[i] = deck[i]; }
+            var top = data["top"];
+            _deckTop = (top instanceof Lang.Number) ? top : MK_DECK;
+
+            _pCount = pHand.size();
+            for (var i = 0; i < _pCount; i++) { _pHand[i] = pHand[i]; }
+            _aiCount = aiHand.size();
+            for (var i = 0; i < _aiCount; i++) { _aiHand[i] = aiHand[i]; }
+
+            var tc = data["topCard"];
+            _topCard = (tc instanceof Lang.Number) ? tc : 0;
+            var asuit = data["actSuit"];
+            _activeSuit = (asuit instanceof Lang.Number) ? asuit : (_topCard / MK_RANKS);
+            var pd = data["pendDraw"];
+            _pendingDraw = (pd instanceof Lang.Number) ? pd : 0;
+            var sn = data["skipNext"];
+            _skipNext = (sn instanceof Lang.Number && sn != 0);
+            var cur = data["cursor"];
+            _cursorPos = (cur instanceof Lang.Number) ? cur : 0;
+            if (_cursorPos > _pCount) { _cursorPos = _pCount; }
+            var md = data["mode"];
+            _mode = (md instanceof Lang.Number && md >= 0 && md <= 2) ? md : _mode;
+            var df = data["diff"];
+            _diff = (df instanceof Lang.Number && df >= 0 && df <= 2) ? df : _diff;
+            var sp = data["sP"];
+            _sP = (sp instanceof Lang.Number) ? sp : 0;
+            var sai = data["sAI"];
+            _sAI = (sai instanceof Lang.Number) ? sai : 0;
+            var lh = data["lbHand"];
+            _lbHandled = (lh instanceof Lang.Number && lh != 0);
+
+            _scrollOff = 0;
+            _suitPick  = 0;
+            _overWho   = 0;
+            _fxOn      = _loadFx();
+            _state     = MKS_PLAY;
+            return true;
+        } catch (e) {}
         return false;
     }
 
@@ -413,6 +505,7 @@ class GameView extends WatchUi.View {
         if (who == MKO_PWIN) { _sP = _sP + 1; _tone(1); _vibe(95, 240); }
         else                 { _sAI = _sAI + 1; _tone(2); _vibe(70, 180); }
         _state = MKS_OVER;
+        try { SaveResume.clear("makao_lite"); } catch (e) {}
         _reportLeaderboard(who);
     }
 

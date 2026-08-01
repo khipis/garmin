@@ -229,4 +229,54 @@ class GridManager {
             if (mines[i] == 1) { state[i] = state[i] | ST_REVEALED; }
         }
     }
+
+    // Serialize board for SaveResume (Number arrays — Storage-friendly).
+    function exportArrays() {
+        var m = new [total];
+        var s = new [total];
+        var num = new [total];
+        for (var i = 0; i < total; i++) {
+            m[i] = mines[i];
+            s[i] = state[i];
+            num[i] = numbers[i];
+        }
+        return {
+            "mines" => m,
+            "state" => s,
+            "nums"  => num,
+            "rev"   => revealedCount,
+            "flg"   => flagCount,
+            "mp"    => minesPlaced ? 1 : 0,
+            "mc"    => mineCount
+        };
+    }
+
+    function importArrays(data) {
+        if (data == null) { return false; }
+        try {
+            var m = data["mines"];
+            var s = data["state"];
+            var num = data["nums"];
+            if (!(m instanceof Array) || m.size() < total) { return false; }
+            if (!(s instanceof Array) || s.size() < total) { return false; }
+            if (!(num instanceof Array) || num.size() < total) { return false; }
+            for (var i = 0; i < total; i++) {
+                mines[i] = (m[i] instanceof Number) ? m[i] : 0;
+                state[i] = (s[i] instanceof Number) ? s[i] : 0;
+                numbers[i] = (num[i] instanceof Number) ? num[i] : 0;
+            }
+            var rv = data["rev"];
+            revealedCount = (rv instanceof Number) ? rv : 0;
+            var fg = data["flg"];
+            flagCount = (fg instanceof Number) ? fg : 0;
+            var mp = data["mp"];
+            minesPlaced = (mp instanceof Number && mp != 0);
+            var mc = data["mc"];
+            if (mc instanceof Number && mc > 0) { mineCount = mc; }
+            floodPending = false;
+            _qHead = 0; _qTail = 0;
+            return true;
+        } catch (e) {}
+        return false;
+    }
 }

@@ -18,12 +18,25 @@ class MainView extends WatchUi.View {
     var ctrl;
     hidden var _timer;
     hidden var _started;   // auto-start the mission on first frame
+    hidden var _skipStart; // resume in progress — don't clobber it with a fresh mission
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _started = false;
+        _skipStart = false;
+    }
+
+    function loadResume(data) as Void {
+        if (data != null && ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return ctrl.exportSave();
     }
 
     function onShow() {
@@ -60,7 +73,7 @@ class MainView extends WatchUi.View {
         // Menu lives in the shared root view — drop straight into a mission and
         // never render an in-game menu here.
         if (!_started || ctrl.state == SS_MENU) {
-            ctrl.startGame();
+            if (!_skipStart) { ctrl.startGame(); }
             _started = true;
         }
         UIManager.draw(dc, ctrl);

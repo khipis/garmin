@@ -72,12 +72,6 @@ module Cr {
         var a = ["Speed", "Strength", "Intelligence", "Energy", "Luck"];
         return a[_clamp(i, 0, TR_N - 1)];
     }
-    // Short flavour tag for a dominant trait (shown on the home card).
-    function traitTag(i) {
-        var a = ["Fast", "Mighty", "Clever", "Charged", "Lucky"];
-        return a[_clamp(i, 0, TR_N - 1)];
-    }
-
     // ── Rarity ───────────────────────────────────────────────────────────────
     const RA_N     = 5;
     const RA_COMMON = 0;
@@ -94,12 +88,6 @@ module Cr {
         var a = [0xAAB4C0, 0x4CA8FF, 0xB46CFF, 0xFFC24A, 0xFF4C7A];
         return a[_clamp(i, 0, RA_N - 1)];
     }
-    // Approx global ownership % per rarity (flavour for the collection index).
-    function rarityPct(i) {
-        var a = ["61%", "24%", "9%", "3%", "0.4%"];
-        return a[_clamp(i, 0, RA_N - 1)];
-    }
-
     // ── Evolution stages ─────────────────────────────────────────────────────
     // APPEND ONLY — these ids are persisted in saves and shipped to the web
     // avatar renderer as the numeric "ev" field. Never renumber.
@@ -388,9 +376,9 @@ module Cr {
     const ROSTER_WAIT_MAX = 30;      // deferrals before giving up for the session
 
     // ── Defence: rival challenges resolved on the way back in ────────────────
-    // There is no server-side PvP, so the raids that happened "while you were
-    // away" are rolled at collect time. Deliberately low stakes: the creature is
-    // never hurt, no equipment is ever lost, only ladder points move.
+    // Real fights arrive via RaidMail (/inbox); offline falls back to a local
+    // RNG at collect time. Deliberately low stakes: the creature is never hurt,
+    // no equipment is ever lost, only ladder points move.
     const DEF_MAX_PER_RETURN = 3;    // regardless of how long the absence was
     const DEF_HOURS_PER_TRY  = 6;
     const DEF_CHANCE_PCT     = 55;
@@ -403,15 +391,9 @@ module Cr {
     const CRIT_MULT_PCT = 150;
     const CRIT_CAP_PCT  = 35;
 
-    // ── Elements: short battle-flavour tag + the type-advantage wheel ────────
+    // ── Elements: the type-advantage wheel ───────────────────────────────────
     // Fire > Nature > Shadow > Electric > Water > Fire (each beats exactly one
-    // other for a clean +15% damage edge — see elementBeats()).
-    function elementHint(sp) {
-        var a = ["Fire burns Nature", "Water douses Fire",
-                 "Electric shocks Water", "Nature chokes Shadow",
-                 "Shadow drains Electric"];
-        return a[_clamp(sp, 0, SPECIES_N - 1)];
-    }
+    // other for a clean +15% damage edge).
     // Species index this species holds an elemental edge over.
     function elementBeats(sp) {
         var a = [3, 0, 1, 4, 2];

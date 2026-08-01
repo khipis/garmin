@@ -13,8 +13,16 @@ using Toybox.Lang;
 class MinesweeperHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
-    // START → drop straight into a board.
+    function hasResume() as Lang.Boolean { return SaveResume.exists("minesweeper"); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load("minesweeper"));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("minesweeper");
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

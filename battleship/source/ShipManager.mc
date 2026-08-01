@@ -82,4 +82,27 @@ class ShipManager {
         }
         return n;
     }
+
+    // ── SaveResume (see _shared/menu/SaveResume.mc) ──────────────────
+    function exportData() {
+        var out = new [NUM_SHIPS];
+        for (var i = 0; i < NUM_SHIPS; i++) {
+            out[i] = [ships[i].len, ships[i].hp, ships[i].sunk ? 1 : 0];
+        }
+        return out;
+    }
+
+    function importData(arr) {
+        if (!(arr instanceof Array) || arr.size() != NUM_SHIPS) { return false; }
+        for (var i = 0; i < NUM_SHIPS; i++) {
+            var s = arr[i];
+            if (!(s instanceof Array) || s.size() < 3) { return false; }
+            var l = s[0]; var hp = s[1]; var sk = s[2];
+            if (!(l instanceof Number) || !(hp instanceof Number)) { return false; }
+            ships[i].len  = l;
+            ships[i].hp   = hp;
+            ships[i].sunk = (sk instanceof Number && sk != 0);
+        }
+        return true;
+    }
 }

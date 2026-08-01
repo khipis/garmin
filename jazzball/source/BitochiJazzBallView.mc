@@ -115,6 +115,10 @@ class BitochiJazzBallView extends WatchUi.View {
     // Per-run colour theme (walls/background) cycles by level for variety.
     hidden var _wallCol; hidden var _wallCapCol; hidden var _bgCol;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh JB_MENU start.
+    hidden var _skipStart;
+
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -162,6 +166,8 @@ class BitochiJazzBallView extends WatchUi.View {
 
         _wallCol = 0x2A3D66; _wallCapCol = 0x3E5A96; _bgCol = 0x080C18;
 
+        _skipStart = false;
+
         _timer = null;
     }
 
@@ -180,15 +186,53 @@ class BitochiJazzBallView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a game.
         // Only auto-start from a fresh launch (JB_MENU) so returning from the
         // post-game leaderboard card doesn't restart the game.
-        if (_gs == JB_MENU) { startGame(); }
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && _gs == JB_MENU) { startGame(); }
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
     }
 
+    // Mid-run save: between levels, or mid-play when no wall is growing.
+    function exportSave() {
+        if (_gs == JB_LEVEL_WIN) {
+            return { "level" => _level, "lives" => _lives, "score" => _score, "win" => 1 };
+        }
+        if (_gs == JB_PLAY && _wall == null) {
+            return { "level" => _level, "lives" => _lives, "score" => _score, "win" => 0 };
+        }
+        return null;
+    }
+
+    // Apply a SaveResume blob before the first paint (called from JazzBallHooks).
+    // Level-win saves advance to the next level; mid-play saves reload the
+    // current level with the same lives/score.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            var lv = data["level"];
+            var li = data["lives"];
+            var sc = data["score"];
+            _level = (lv instanceof Number) ? lv : 1;
+            _lives = (li instanceof Number) ? li : 3;
+            _score = (sc instanceof Number) ? sc : 0;
+            var win = data["win"];
+            if (win instanceof Number && win != 0) {
+                nextLevel();
+            } else {
+                _targetPct = 75;
+                loadLevel();
+                _gs = JB_PLAY;
+            }
+            _skipStart = true;
+        } catch (e) {}
+    }
+
     hidden function setupGeo() {
-        // Safe inscribed square for a round watch — use 88% of screen
-        var safeW = _w * 88 / 100;
+        // Safe inscribed square for a round watch — ~79% of the shorter side
+        // (10% smaller than the previous 88% board so the playfield breathes
+        // and HUD / progress bar stay clear of the bezel on small screens).
+        var safeW = _w * 79 / 100;
         _cs = safeW / GCOLS;
         if (_cs < 2) { _cs = 2; }
         _ox = (_w  - _cs * GCOLS) / 2;
@@ -582,18 +626,22 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     // ── Game over: accumulate the partial fill of the failed level, then
-    // submit the final accumulated score to the global leaderboard (DESC, no
-    // variant) and show the game-over screen.
+    // submit the final accumulated score to the global leaderboard (DESC,
+    // split by difficulty) and show the game-over screen.
     hidden function gameOver() {
         var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
         _finalScore = _score + filledPct;
         _gs = JB_GAMEOVER;
+        try { SaveResume.clear("jazzball"); } catch (e) {}
         var prevBest = Application.Storage.getValue("jb_best");
         if (!(prevBest instanceof Number) || _finalScore > prevBest) {
             Application.Storage.setValue("jb_best", _finalScore);
         }
         doTone(Toybox.Attention.TONE_FAILURE);
         doVibe(100, 300);
+        // JazzBall auto-starts on open, so game-over often lands while the
+        // launch pipeline still owns the single makeWebRequest slot. Submit
+        // (and the post-game board) now wait that channel out in shared code.
         Leaderboard.submitScore(LB_GAME_ID, _finalScore, _diffVariant());
         Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "JAZZBALL");
     }

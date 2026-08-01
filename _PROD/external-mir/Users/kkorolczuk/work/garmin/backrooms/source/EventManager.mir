@@ -1,0 +1,1368 @@
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Lang,9,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 11; @symbol_classdef = [EventManager,11,6,18]; ]
+class EventManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 11; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 11; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 12; @position = 8; @symbol_vardef = [cur,12,8,11]; ]
+    var cur;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 12; @position = 17; @symbol_vardef = [left,12,17,21]; ]
+    var left;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 12; @position = 27; @symbol_vardef = [cd,12,27,29]; ]
+    var cd;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 13; @position = 8; @symbol_vardef = [seed,13,8,12]; ]
+    var seed;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 14; @position = 8; @symbol_vardef = [darkOn,14,8,14]; ]
+    var darkOn;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 15; @position = 8; @symbol_vardef = [glitch,15,8,14]; ]
+    var glitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 16; @position = 8; @symbol_vardef = [shake,16,8,13]; ]
+    var shake;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 17; @position = 8; @symbol_vardef = [stretch,17,8,15]; ]
+    var stretch;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 18; @position = 8; @symbol_vardef = [msg,18,8,11]; ]
+    var msg;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 18; @position = 17; @symbol_vardef = [msgLeft,18,17,24]; ]
+    var msgLeft;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 19; @position = 8; @symbol_vardef = [tone,19,8,12]; ]
+    var tone;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 20; @position = 8; @symbol_vardef = [fired,20,8,13]; ]
+    var fired;
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 22; @symbol_functiondef = [initialize,22,13,23]; @symbol_param<0> = [s,22,24,25]; ]
+    function initialize(s) as Void {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_22_27_27_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 23 8 ]
+        symbol [ Br %tmp.2 23 14 16 ];
+        %tmp.2 = getv ? :Br;
+        symbol [ EV_NONE %tmp.3 23 17 24 ];
+        %tmp.3 = getv %tmp.2 :EV_NONE;
+        symbol [ cur ? 23 8 11 ];
+        putv self :cur %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 23 26 ]
+        %tmp.4 = 0;
+        symbol [ left ? 23 26 30 ];
+        putv self :left %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 23 36 ]
+        %tmp.5 = 90;
+        symbol [ cd ? 23 36 38 ];
+        putv self :cd %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 24 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_begin:
+        %tmp.6 = lgetv %s;
+        symbol [ s %tmp.6 24 16 17 ];
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_true:
+        %tmp.9 = 777;
+        push %tmp.9;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_else_false:
+        %tmp.10 = lgetv %s;
+        symbol [ s %tmp.10 24 32 33 ];
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_end:
+        %tmp.11 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_true] [%tmp.10 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_else_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_24_15_24_32_end];
+        symbol [ seed ? 24 8 12 ];
+        putv self :seed %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 25 8 ]
+        %tmp.12 = false;
+        symbol [ darkOn ? 25 8 14 ];
+        putv self :darkOn %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 25 24 ]
+        %tmp.13 = 0;
+        symbol [ glitch ? 25 24 30 ];
+        putv self :glitch %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 25 36 ]
+        %tmp.14 = 0;
+        symbol [ shake ? 25 36 41 ];
+        putv self :shake %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 25 47 ]
+        %tmp.15 = 0;
+        symbol [ stretch ? 25 47 54 ];
+        putv self :stretch %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 26 8 ]
+        %tmp.16 = null;
+        symbol [ msg ? 26 8 11 ];
+        putv self :msg %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 26 20 ]
+        %tmp.17 = 0;
+        symbol [ msgLeft ? 26 20 27 ];
+        putv self :msgLeft %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 26 33 ]
+        %tmp.18 = 0;
+        symbol [ tone ? 26 33 37 ];
+        putv self :tone %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 26 43 ]
+        %tmp.19 = 0;
+        symbol [ fired ? 26 43 48 ];
+        putv self :fired %tmp.19;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_22_27_27_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 29; @symbol_functiondef = [_rand,29,13,18]; @symbol_param<0> = [n,29,19,20]; ]
+    function _rand(n) {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_29_22_33_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 30 8 ]
+        symbol [ MapGen %tmp.2 30 15 21 ];
+        %tmp.2 = getv ? :MapGen;
+        symbol [ nextRand %tmp.3 30 22 30 ];
+        %tmp.3 = getv function %tmp.2 :nextRand;
+        symbol [ seed %tmp.5 30 31 35 ];
+        %tmp.5 = getv ? :seed;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        symbol [ seed ? 30 8 12 ];
+        putv self :seed %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 31 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_8_31_32_if_stmt:
+        %tmp.7 = lgetv %n;
+        symbol [ n %tmp.7 31 12 13 ];
+        %tmp.8 = 1;
+        %tmp.9 = lte %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_8_31_32_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_8_31_32_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_20_31_32_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 31 22 ]
+        %tmp.10 = 0;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_20_31_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_8_31_32_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_31_8_31_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 32 8 ]
+        symbol [ seed %tmp.12 32 15 19 ];
+        %tmp.12 = getv ? :seed;
+        %tmp.13 = lgetv %n;
+        symbol [ n %tmp.13 32 22 23 ];
+        %tmp.14 = mod %tmp.12 %tmp.13;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_29_22_33_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 35; @symbol_functiondef = [takeTone,35,13,21]; ]
+    function takeTone() {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_35_24_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_35_24_39_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_35_24_39_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 36 12 13 ];
+        symbol [ tone %tmp.2 36 16 20 ];
+        %tmp.2 = getv ? :tone;
+        lputv %t.1 %tmp.2;
+        symbol [ t %t.1 36 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 37 8 ]
+        %tmp.3 = 0;
+        symbol [ tone ? 37 8 12 ];
+        putv self :tone %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 38 8 ]
+        %tmp.4 = lgetv %t.1;
+        symbol [ t %tmp.4 38 15 16 ];
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_35_24_39_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 41; @symbol_functiondef = [update,41,13,19]; @symbol_param<0> = [map,41,20,23]; @symbol_param<1> = [p,41,25,26]; @symbol_param<2> = [ents,41,28,32]; @symbol_param<3> = [level,41,34,39]; @symbol_param<4> = [freqPct,41,41,48]; ]
+    function update(map, p, ents, level, freqPct) {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_41_50_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_8_43_71_if_stmt:
+        symbol [ glitch %tmp.2 43 12 18 ];
+        %tmp.2 = getv ? :glitch;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_8_43_71_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_8_43_71_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_24_43_71_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 43 26 ]
+        symbol [ glitch %tmp.5 43 26 32 ];
+        %tmp.5 = getv self :glitch;
+        %tmp.6 = 4;
+        %tmp.7 = sub %tmp.5 %tmp.6;
+        symbol [ glitch ? 43 26 32 ];
+        putv self :glitch dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 43 39 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_39_43_69_if_stmt:
+        symbol [ glitch %tmp.9 43 43 49 ];
+        %tmp.9 = getv ? :glitch;
+        %tmp.10 = 0;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_39_43_69_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_39_43_69_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_55_43_69_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 43 57 ]
+        %tmp.12 = 0;
+        symbol [ glitch ? 43 57 63 ];
+        putv self :glitch %tmp.12;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_55_43_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_39_43_69_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_39_43_69_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_24_43_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_8_43_71_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_43_8_43_71_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_8_44_37_if_stmt:
+        symbol [ shake %tmp.14 44 12 17 ];
+        %tmp.14 = getv ? :shake;
+        %tmp.15 = 0;
+        %tmp.16 = gt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_8_44_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_8_44_37_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_23_44_37_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 44 25 ]
+        symbol [ shake %tmp.17 44 25 30 ];
+        %tmp.17 = getv self :shake;
+        %tmp.18 = 1;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        symbol [ shake ? 44 25 30 ];
+        putv self :shake dup %tmp.19;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_23_44_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_8_44_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_44_8_44_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_8_45_75_if_stmt:
+        symbol [ msgLeft %tmp.21 45 12 19 ];
+        %tmp.21 = getv ? :msgLeft;
+        %tmp.22 = 0;
+        %tmp.23 = gt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_8_45_75_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_8_45_75_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_25_45_75_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 45 27 ]
+        symbol [ msgLeft %tmp.24 45 27 34 ];
+        %tmp.24 = getv self :msgLeft;
+        %tmp.25 = 1;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        symbol [ msgLeft ? 45 27 34 ];
+        putv self :msgLeft dup %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 45 41 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_41_45_73_if_stmt:
+        symbol [ msgLeft %tmp.28 45 45 52 ];
+        %tmp.28 = getv ? :msgLeft;
+        %tmp.29 = 0;
+        %tmp.30 = eq %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_41_45_73_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_41_45_73_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_59_45_73_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 45 61 ]
+        %tmp.31 = null;
+        symbol [ msg ? 45 61 64 ];
+        putv self :msg %tmp.31;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_59_45_73_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_41_45_73_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_41_45_73_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_25_45_75_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_8_45_75_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_45_8_45_75_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_8_52_8_if_stmt:
+        symbol [ left %tmp.33 47 12 16 ];
+        %tmp.33 = getv ? :left;
+        %tmp.34 = 0;
+        %tmp.35 = gt %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_8_52_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_8_52_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_22_52_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 48 12 ]
+        symbol [ left %tmp.36 48 12 16 ];
+        %tmp.36 = getv self :left;
+        %tmp.37 = 1;
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        symbol [ left ? 48 12 16 ];
+        putv self :left dup %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 49 12 ]
+        %tmp.39 = self;
+        symbol [ _sustain %tmp.40 49 12 20 ];
+        %tmp.40 = getv function %tmp.39 :_sustain;
+        invoke %tmp.39 %tmp.40();
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 50 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_12_50_37_if_stmt:
+        symbol [ left %tmp.42 50 16 20 ];
+        %tmp.42 = getv ? :left;
+        %tmp.43 = 0;
+        %tmp.44 = eq %tmp.42 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_12_50_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_12_50_37_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_27_50_37_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 50 29 ]
+        %tmp.45 = self;
+        symbol [ _end %tmp.46 50 29 33 ];
+        %tmp.46 = getv function %tmp.45 :_end;
+        invoke %tmp.45 %tmp.46();
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_27_50_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_12_50_37_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_50_12_50_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 51 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_22_52_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_8_52_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_47_8_52_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_8_57_8_if_stmt:
+        symbol [ cd %tmp.48 54 12 14 ];
+        %tmp.48 = getv ? :cd;
+        %tmp.49 = 0;
+        %tmp.50 = gt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_8_57_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_20_57_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 55 12 ]
+        symbol [ cd %tmp.51 55 12 14 ];
+        %tmp.51 = getv self :cd;
+        %tmp.52 = 1;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        symbol [ cd ? 55 12 14 ];
+        putv self :cd dup %tmp.53;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 56 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_20_57_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_54_8_57_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 58 8 ]
+        %tmp.54 = self;
+        symbol [ _roll %tmp.55 58 8 13 ];
+        %tmp.55 = getv function %tmp.54 :_roll;
+        %tmp.56 = lgetv %map;
+        symbol [ map %tmp.56 58 14 17 ];
+        %tmp.57 = lgetv %p;
+        symbol [ p %tmp.57 58 19 20 ];
+        %tmp.58 = lgetv %ents;
+        symbol [ ents %tmp.58 58 22 26 ];
+        %tmp.59 = lgetv %level;
+        symbol [ level %tmp.59 58 28 33 ];
+        %tmp.60 = lgetv %freqPct;
+        symbol [ freqPct %tmp.60 58 35 42 ];
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57, %tmp.58, %tmp.59, %tmp.60);
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_41_50_59_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 61; @symbol_functiondef = [_sustain,61,20,28]; ]
+    protected
+    function _sustain() {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_61_31_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_stmt:
+        symbol [ cur %tmp.2 62 12 15 ];
+        %tmp.2 = getv ? :cur;
+        symbol [ Br %tmp.4 62 19 21 ];
+        %tmp.4 = getv ? :Br;
+        symbol [ EV_DISTORT %tmp.5 62 22 32 ];
+        %tmp.5 = getv %tmp.4 :EV_DISTORT;
+        %tmp.6 = eq %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_34_64_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 63 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_12_63_44_if_stmt:
+        symbol [ glitch %tmp.8 63 16 22 ];
+        %tmp.8 = getv ? :glitch;
+        %tmp.9 = 60;
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_12_63_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_12_63_44_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_29_63_44_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 63 31 ]
+        %tmp.11 = 60;
+        symbol [ glitch ? 63 31 37 ];
+        putv self :glitch %tmp.11;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_29_63_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_12_63_44_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_63_12_63_44_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_34_64_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 64 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_stmt:
+        symbol [ cur %tmp.13 64 19 22 ];
+        %tmp.13 = getv ? :cur;
+        symbol [ Br %tmp.15 64 26 28 ];
+        %tmp.15 = getv ? :Br;
+        symbol [ EV_LIGHTSOUT %tmp.16 64 29 41 ];
+        %tmp.16 = getv %tmp.15 :EV_LIGHTSOUT;
+        %tmp.17 = eq %tmp.13 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_43_67_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 65 12 ]
+        %tmp.18 = true;
+        symbol [ darkOn ? 65 12 18 ];
+        putv self :darkOn %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 66 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_12_66_47_if_stmt:
+        %tmp.19 = self;
+        symbol [ _rand %tmp.20 66 16 21 ];
+        %tmp.20 = getv function %tmp.19 :_rand;
+        %tmp.21 = 100;
+        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
+        %tmp.23 = 6;
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_12_66_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_12_66_47_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_32_66_47_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 66 34 ]
+        %tmp.25 = 40;
+        symbol [ glitch ? 66 34 40 ];
+        putv self :glitch %tmp.25;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_32_66_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_12_66_47_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_66_12_66_47_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_43_67_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 67 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_15_69_8_if_stmt:
+        symbol [ cur %tmp.27 67 19 22 ];
+        %tmp.27 = getv ? :cur;
+        symbol [ Br %tmp.29 67 26 28 ];
+        %tmp.29 = getv ? :Br;
+        symbol [ EV_FOLLOWED %tmp.30 67 29 40 ];
+        %tmp.30 = getv %tmp.29 :EV_FOLLOWED;
+        %tmp.31 = eq %tmp.27 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_15_69_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_15_69_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_42_69_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 68 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_12_68_45_if_stmt:
+        %tmp.32 = self;
+        symbol [ _rand %tmp.33 68 16 21 ];
+        %tmp.33 = getv function %tmp.32 :_rand;
+        %tmp.34 = 100;
+        %tmp.35 = invoke %tmp.32 %tmp.33(%tmp.34);
+        %tmp.36 = 8;
+        %tmp.37 = lt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_12_68_45_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_12_68_45_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_32_68_45_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 68 34 ]
+        %tmp.38 = 2;
+        symbol [ shake ? 68 34 39 ];
+        putv self :shake %tmp.38;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_32_68_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_12_68_45_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_68_12_68_45_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_42_69_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_15_69_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_67_15_69_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_64_15_69_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_62_8_69_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_61_31_70_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 72; @symbol_functiondef = [_end,72,20,24]; ]
+    protected
+    function _end() {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_72_27_82_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 73 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_stmt:
+        symbol [ cur %tmp.2 73 12 15 ];
+        %tmp.2 = getv ? :cur;
+        symbol [ Br %tmp.4 73 19 21 ];
+        %tmp.4 = getv ? :Br;
+        symbol [ EV_LIGHTSOUT %tmp.5 73 22 34 ];
+        %tmp.5 = getv %tmp.4 :EV_LIGHTSOUT;
+        %tmp.6 = eq %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_36_76_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 74 12 ]
+        %tmp.7 = false;
+        symbol [ darkOn ? 74 12 18 ];
+        putv self :darkOn %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 75 12 ]
+        %tmp.8 = 1;
+        symbol [ tone ? 75 12 16 ];
+        putv self :tone %tmp.8;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_36_76_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 76 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_15_78_8_if_stmt:
+        symbol [ cur %tmp.10 76 19 22 ];
+        %tmp.10 = getv ? :cur;
+        symbol [ Br %tmp.12 76 26 28 ];
+        %tmp.12 = getv ? :Br;
+        symbol [ EV_STRETCH %tmp.13 76 29 39 ];
+        %tmp.13 = getv %tmp.12 :EV_STRETCH;
+        %tmp.14 = eq %tmp.10 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_15_78_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_15_78_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_41_78_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 77 12 ]
+        %tmp.15 = 0;
+        symbol [ stretch ? 77 12 19 ];
+        putv self :stretch %tmp.15;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_41_78_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_15_78_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_76_15_78_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_73_8_78_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 79 8 ]
+        symbol [ Br %tmp.17 79 14 16 ];
+        %tmp.17 = getv ? :Br;
+        symbol [ EV_NONE %tmp.18 79 17 24 ];
+        %tmp.18 = getv %tmp.17 :EV_NONE;
+        symbol [ cur ? 79 8 11 ];
+        putv self :cur %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 81 8 ]
+        %tmp.19 = 70;
+        %tmp.20 = self;
+        symbol [ _rand %tmp.21 81 18 23 ];
+        %tmp.21 = getv function %tmp.20 :_rand;
+        %tmp.22 = 150;
+        %tmp.23 = invoke %tmp.20 %tmp.21(%tmp.22);
+        %tmp.24 = add %tmp.19 %tmp.23;
+        symbol [ cd ? 81 8 10 ];
+        putv self :cd %tmp.24;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_72_27_82_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 84; @symbol_functiondef = [_roll,84,20,25]; @symbol_param<0> = [map,84,26,29]; @symbol_param<1> = [p,84,31,32]; @symbol_param<2> = [ents,84,34,38]; @symbol_param<3> = [level,84,40,45]; @symbol_param<4> = [freqPct,84,47,54]; ]
+    protected
+    function _roll(map, p, ents, level, freqPct) {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 86 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_stop" ]
+        %chance.1 = local;
+        symbol [ chance %chance.1 86 12 18 ];
+        %tmp.1 = 45;
+        %tmp.2 = lgetv %freqPct;
+        symbol [ freqPct %tmp.2 86 26 33 ];
+        %tmp.3 = mul %tmp.1 %tmp.2;
+        %tmp.4 = 100;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        %tmp.6 = lgetv %level;
+        symbol [ level %tmp.6 86 42 47 ];
+        %tmp.7 = 4;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        %tmp.9 = add %tmp.5 %tmp.8;
+        lputv %chance.1 %tmp.9;
+        symbol [ chance %chance.1 86 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 87 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_8_87_40_if_stmt:
+        %tmp.10 = lgetv %chance.1;
+        symbol [ chance %tmp.10 87 12 18 ];
+        %tmp.11 = 88;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_8_87_40_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_8_87_40_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_25_87_40_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 87 27 ]
+        %tmp.13 = 88;
+        lputv %chance.1 %tmp.13;
+        symbol [ chance %chance.1 87 27 33 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_25_87_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_8_87_40_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_87_8_87_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_8_91_8_if_stmt:
+        %tmp.14 = self;
+        symbol [ _rand %tmp.15 88 12 17 ];
+        %tmp.15 = getv function %tmp.14 :_rand;
+        %tmp.16 = 100;
+        %tmp.17 = invoke %tmp.14 %tmp.15(%tmp.16);
+        %tmp.18 = lgetv %chance.1;
+        symbol [ chance %tmp.18 88 26 32 ];
+        %tmp.19 = gte %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_8_91_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_8_91_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_34_91_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 89 12 ]
+        %tmp.20 = 45;
+        %tmp.21 = self;
+        symbol [ _rand %tmp.22 89 22 27 ];
+        %tmp.22 = getv function %tmp.21 :_rand;
+        %tmp.23 = 90;
+        %tmp.24 = invoke %tmp.21 %tmp.22(%tmp.23);
+        %tmp.25 = add %tmp.20 %tmp.24;
+        symbol [ cd ? 89 12 14 ];
+        putv self :cd %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 90 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_34_91_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_8_91_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_88_8_91_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_stop" ]
+        %pick.2 = local;
+        symbol [ pick %pick.2 93 12 16 ];
+        %tmp.26 = self;
+        symbol [ _rand %tmp.27 93 19 24 ];
+        %tmp.27 = getv function %tmp.26 :_rand;
+        %tmp.28 = 100;
+        %tmp.29 = invoke %tmp.26 %tmp.27(%tmp.28);
+        lputv %pick.2 %tmp.29;
+        symbol [ pick %pick.2 93 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_stop" ]
+        %e.3 = local;
+        symbol [ e %e.3 94 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_stmt:
+        %tmp.30 = lgetv %pick.2;
+        symbol [ pick %tmp.30 95 12 16 ];
+        %tmp.31 = 14;
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_28_95_51_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 95 30 ]
+        symbol [ Br %tmp.34 95 34 36 ];
+        %tmp.34 = getv ? :Br;
+        symbol [ EV_FOOTSTEPS %tmp.35 95 37 49 ];
+        %tmp.35 = getv %tmp.34 :EV_FOOTSTEPS;
+        lputv %e.3 %tmp.35;
+        symbol [ e %e.3 95 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_28_95_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 96 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_stmt:
+        %tmp.36 = lgetv %pick.2;
+        symbol [ pick %tmp.36 96 17 21 ];
+        %tmp.37 = 26;
+        %tmp.38 = lt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_28_96_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 96 30 ]
+        symbol [ Br %tmp.40 96 34 36 ];
+        %tmp.40 = getv ? :Br;
+        symbol [ EV_WHISPER %tmp.41 96 37 47 ];
+        %tmp.41 = getv %tmp.40 :EV_WHISPER;
+        lputv %e.3 %tmp.41;
+        symbol [ e %e.3 96 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_28_96_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 97 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_stmt:
+        %tmp.42 = lgetv %pick.2;
+        symbol [ pick %tmp.42 97 17 21 ];
+        %tmp.43 = 38;
+        %tmp.44 = lt %tmp.42 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_28_97_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 97 30 ]
+        symbol [ Br %tmp.46 97 34 36 ];
+        %tmp.46 = getv ? :Br;
+        symbol [ EV_DISTORT %tmp.47 97 37 47 ];
+        %tmp.47 = getv %tmp.46 :EV_DISTORT;
+        lputv %e.3 %tmp.47;
+        symbol [ e %e.3 97 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_28_97_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 98 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_stmt:
+        %tmp.48 = lgetv %pick.2;
+        symbol [ pick %tmp.48 98 17 21 ];
+        %tmp.49 = 50;
+        %tmp.50 = lt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_28_98_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 98 30 ]
+        symbol [ Br %tmp.52 98 34 36 ];
+        %tmp.52 = getv ? :Br;
+        symbol [ EV_GLIMPSE %tmp.53 98 37 47 ];
+        %tmp.53 = getv %tmp.52 :EV_GLIMPSE;
+        lputv %e.3 %tmp.53;
+        symbol [ e %e.3 98 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_28_98_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 99 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_stmt:
+        %tmp.54 = lgetv %pick.2;
+        symbol [ pick %tmp.54 99 17 21 ];
+        %tmp.55 = 61;
+        %tmp.56 = lt %tmp.54 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_28_99_51_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 99 30 ]
+        symbol [ Br %tmp.58 99 34 36 ];
+        %tmp.58 = getv ? :Br;
+        symbol [ EV_LIGHTSOUT %tmp.59 99 37 49 ];
+        %tmp.59 = getv %tmp.58 :EV_LIGHTSOUT;
+        lputv %e.3 %tmp.59;
+        symbol [ e %e.3 99 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_28_99_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 100 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_stmt:
+        %tmp.60 = lgetv %pick.2;
+        symbol [ pick %tmp.60 100 17 21 ];
+        %tmp.61 = 71;
+        %tmp.62 = lt %tmp.60 %tmp.61;
+        bf %tmp.62 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_28_100_47_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 100 30 ]
+        symbol [ Br %tmp.64 100 34 36 ];
+        %tmp.64 = getv ? :Br;
+        symbol [ EV_SHIFT %tmp.65 100 37 45 ];
+        %tmp.65 = getv %tmp.64 :EV_SHIFT;
+        lputv %e.3 %tmp.65;
+        symbol [ e %e.3 100 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_28_100_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 101 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_stmt:
+        %tmp.66 = lgetv %pick.2;
+        symbol [ pick %tmp.66 101 17 21 ];
+        %tmp.67 = 81;
+        %tmp.68 = lt %tmp.66 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_28_101_49_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 101 30 ]
+        symbol [ Br %tmp.70 101 34 36 ];
+        %tmp.70 = getv ? :Br;
+        symbol [ EV_STRETCH %tmp.71 101 37 47 ];
+        %tmp.71 = getv %tmp.70 :EV_STRETCH;
+        lputv %e.3 %tmp.71;
+        symbol [ e %e.3 101 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_28_101_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 102 13 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_stmt:
+        %tmp.72 = lgetv %pick.2;
+        symbol [ pick %tmp.72 102 17 21 ];
+        %tmp.73 = 92;
+        %tmp.74 = lt %tmp.72 %tmp.73;
+        bf %tmp.74 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_28_102_50_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 102 30 ]
+        symbol [ Br %tmp.76 102 34 36 ];
+        %tmp.76 = getv ? :Br;
+        symbol [ EV_FOLLOWED %tmp.77 102 37 48 ];
+        %tmp.77 = getv %tmp.76 :EV_FOLLOWED;
+        lputv %e.3 %tmp.77;
+        symbol [ e %e.3 102 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_28_102_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_103_28_103_50_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 103 30 ]
+        symbol [ Br %tmp.79 103 34 36 ];
+        %tmp.79 = getv ? :Br;
+        symbol [ EV_FAKEEXIT %tmp.80 103 37 48 ];
+        %tmp.80 = getv %tmp.79 :EV_FAKEEXIT;
+        lputv %e.3 %tmp.80;
+        symbol [ e %e.3 103 30 31 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_103_28_103_50_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_102_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_101_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_100_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_99_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_98_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_97_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_96_13_103_50_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_95_8_103_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 106 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_12_106_70_begin:
+        %tmp.81 = lgetv %level;
+        symbol [ level %tmp.81 106 12 17 ];
+        %tmp.82 = 0;
+        %tmp.83 = eq %tmp.81 %tmp.82;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_26_106_70_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_27_106_59_begin:
+        %tmp.84 = lgetv %e.3;
+        symbol [ e %tmp.84 106 27 28 ];
+        symbol [ Br %tmp.86 106 32 34 ];
+        %tmp.86 = getv ? :Br;
+        symbol [ EV_LIGHTSOUT %tmp.87 106 35 47 ];
+        %tmp.87 = getv %tmp.86 :EV_LIGHTSOUT;
+        %tmp.88 = eq %tmp.84 %tmp.87;
+        bt %tmp.88 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_true;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_51_106_59_false:
+        %tmp.89 = lgetv %e.3;
+        symbol [ e %tmp.89 106 51 52 ];
+        symbol [ Br %tmp.91 106 56 58 ];
+        %tmp.91 = getv ? :Br;
+        symbol [ EV_FAKEEXIT %tmp.92 106 59 70 ];
+        %tmp.92 = getv %tmp.91 :EV_FAKEEXIT;
+        %tmp.93 = eq %tmp.89 %tmp.92;
+        push %tmp.93;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_51_106_59_end:
+        %tmp.94 = phi [%tmp.88 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_27_106_59_begin] [%tmp.93 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_51_106_59_false] [%tmp.94 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_51_106_59_end];
+        push %tmp.94;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_26_106_70_end:
+        %tmp.95 = phi [%tmp.83 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_12_106_70_begin] [%tmp.94 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_26_106_70_true] [%tmp.95 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_26_106_70_end];
+        bf %tmp.95 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_73_108_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 107 12 ]
+        symbol [ Br %tmp.97 107 16 18 ];
+        %tmp.97 = getv ? :Br;
+        symbol [ EV_FOOTSTEPS %tmp.98 107 19 31 ];
+        %tmp.98 = getv %tmp.97 :EV_FOOTSTEPS;
+        lputv %e.3 %tmp.98;
+        symbol [ e %e.3 107 12 13 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_73_108_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_106_8_108_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 110 8 ]
+        %tmp.99 = lgetv %e.3;
+        symbol [ e %tmp.99 110 14 15 ];
+        symbol [ cur ? 110 8 11 ];
+        putv self :cur %tmp.99;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 111 8 ]
+        symbol [ Br %tmp.101 111 15 17 ];
+        %tmp.101 = getv ? :Br;
+        symbol [ evFrames %tmp.102 111 18 26 ];
+        %tmp.102 = getv function %tmp.101 :evFrames;
+        %tmp.103 = lgetv %e.3;
+        symbol [ e %tmp.103 111 27 28 ];
+        %tmp.104 = invoke %tmp.101 %tmp.102(%tmp.103);
+        symbol [ left ? 111 8 12 ];
+        putv self :left %tmp.104;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 112 8 ]
+        symbol [ fired %tmp.105 112 8 13 ];
+        %tmp.105 = getv self :fired;
+        %tmp.106 = 1;
+        %tmp.107 = add %tmp.105 %tmp.106;
+        symbol [ fired ? 112 8 13 ];
+        putv self :fired dup %tmp.107;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 113 8 ]
+        %tmp.108 = self;
+        symbol [ _begin %tmp.109 113 8 14 ];
+        %tmp.109 = getv function %tmp.108 :_begin;
+        %tmp.110 = lgetv %map;
+        symbol [ map %tmp.110 113 15 18 ];
+        %tmp.111 = lgetv %p;
+        symbol [ p %tmp.111 113 20 21 ];
+        %tmp.112 = lgetv %ents;
+        symbol [ ents %tmp.112 113 23 27 ];
+        %tmp.113 = lgetv %level;
+        symbol [ level %tmp.113 113 29 34 ];
+        invoke %tmp.108 %tmp.109(%tmp.110, %tmp.111, %tmp.112, %tmp.113);
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_stop" ]
+        %t.4 = local;
+        symbol [ t %t.4 115 12 13 ];
+        symbol [ Br %tmp.115 115 16 18 ];
+        %tmp.115 = getv ? :Br;
+        symbol [ evText %tmp.116 115 19 25 ];
+        %tmp.116 = getv function %tmp.115 :evText;
+        %tmp.117 = lgetv %e.3;
+        symbol [ e %tmp.117 115 26 27 ];
+        %tmp.118 = invoke %tmp.115 %tmp.116(%tmp.117);
+        lputv %t.4 %tmp.118;
+        symbol [ t %t.4 115 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 116 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_12_116_38_begin:
+        %tmp.119 = lgetv %t.4;
+        symbol [ t %tmp.119 116 12 13 ];
+        %tmp.120 = null;
+        %tmp.121 = ne %tmp.119 %tmp.120;
+        bf %tmp.121 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_25_116_38_true:
+        %tmp.122 = lgetv %t.4;
+        symbol [ t %tmp.122 116 25 26 ];
+        %tmp.123 = as %tmp.122 { (!Null) };
+        symbol [ length %tmp.124 116 27 33 ];
+        %tmp.124 = getv function %tmp.123 :length;
+        %tmp.125 = invoke %tmp.123 %tmp.124();
+        %tmp.126 = 0;
+        %tmp.127 = gt %tmp.125 %tmp.126;
+        push %tmp.127;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_25_116_38_end:
+        %tmp.128 = phi [%tmp.121 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_12_116_38_begin] [%tmp.127 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_25_116_38_true] [%tmp.128 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_25_116_38_end];
+        bf %tmp.128 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_41_119_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 117 12 ]
+        %tmp.129 = lgetv %t.4;
+        symbol [ t %tmp.129 117 18 19 ];
+        %tmp.130 = as %tmp.129 { (!Null) };
+        symbol [ msg ? 117 12 15 ];
+        putv self :msg %tmp.130;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 118 12 ]
+        %tmp.131 = 34;
+        symbol [ msgLeft ? 118 12 19 ];
+        putv self :msgLeft %tmp.131;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_41_119_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_116_8_119_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_84_56_120_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 122; @symbol_functiondef = [_begin,122,20,26]; @symbol_param<0> = [map,122,27,30]; @symbol_param<1> = [p,122,32,33]; @symbol_param<2> = [ents,122,35,39]; @symbol_param<3> = [level,122,41,46]; ]
+    protected
+    function _begin(map, p, ents, level) {
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_122_48_175_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 123 8 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_122_48_175_4_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_122_48_175_4_stop" ]
+        %maxE.1 = local;
+        symbol [ maxE %maxE.1 123 12 16 ];
+        %tmp.1 = 4;
+        lputv %maxE.1 %tmp.1;
+        symbol [ maxE %maxE.1 123 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_stmt:
+        symbol [ cur %tmp.3 124 12 15 ];
+        %tmp.3 = getv ? :cur;
+        symbol [ Br %tmp.5 124 19 21 ];
+        %tmp.5 = getv ? :Br;
+        symbol [ EV_LIGHTSOUT %tmp.6 124 22 34 ];
+        %tmp.6 = getv %tmp.5 :EV_LIGHTSOUT;
+        %tmp.7 = eq %tmp.3 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_36_131_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 125 12 ]
+        %tmp.8 = true;
+        symbol [ darkOn ? 125 12 18 ];
+        putv self :darkOn %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 126 12 ]
+        %tmp.9 = 70;
+        symbol [ glitch ? 126 12 18 ];
+        putv self :glitch %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 127 12 ]
+        %tmp.10 = 3;
+        symbol [ shake ? 127 12 17 ];
+        putv self :shake %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 128 12 ]
+        %tmp.11 = 2;
+        symbol [ tone ? 128 12 16 ];
+        putv self :tone %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 129 12 ]
+        %tmp.12 = lgetv %ents;
+        symbol [ ents %tmp.12 129 12 16 ];
+        symbol [ trySpawn %tmp.13 129 17 25 ];
+        %tmp.13 = getv function %tmp.12 :trySpawn;
+        symbol [ Br %tmp.15 129 26 28 ];
+        %tmp.15 = getv ? :Br;
+        symbol [ E_SHADOW %tmp.16 129 29 37 ];
+        %tmp.16 = getv %tmp.15 :E_SHADOW;
+        %tmp.17 = lgetv %map;
+        symbol [ map %tmp.17 129 39 42 ];
+        %tmp.18 = lgetv %p;
+        symbol [ p %tmp.18 129 44 45 ];
+        %tmp.19 = lgetv %level;
+        symbol [ level %tmp.19 129 47 52 ];
+        %tmp.20 = lgetv %maxE.1;
+        symbol [ maxE %tmp.20 129 54 58 ];
+        invoke %tmp.12 %tmp.13(%tmp.16, %tmp.17, %tmp.18, %tmp.19, %tmp.20);
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_36_131_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 131 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_stmt:
+        symbol [ cur %tmp.22 131 19 22 ];
+        %tmp.22 = getv ? :cur;
+        symbol [ Br %tmp.24 131 26 28 ];
+        %tmp.24 = getv ? :Br;
+        symbol [ EV_FOOTSTEPS %tmp.25 131 29 41 ];
+        %tmp.25 = getv %tmp.24 :EV_FOOTSTEPS;
+        %tmp.26 = eq %tmp.22 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_43_134_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 132 12 ]
+        %tmp.27 = 1;
+        symbol [ tone ? 132 12 16 ];
+        putv self :tone %tmp.27;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_43_134_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 134 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_stmt:
+        symbol [ cur %tmp.29 134 19 22 ];
+        %tmp.29 = getv ? :cur;
+        symbol [ Br %tmp.31 134 26 28 ];
+        %tmp.31 = getv ? :Br;
+        symbol [ EV_WHISPER %tmp.32 134 29 39 ];
+        %tmp.32 = getv %tmp.31 :EV_WHISPER;
+        %tmp.33 = eq %tmp.29 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_41_138_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 135 12 ]
+        %tmp.34 = 30;
+        symbol [ glitch ? 135 12 18 ];
+        putv self :glitch %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 136 12 ]
+        %tmp.35 = 1;
+        symbol [ tone ? 136 12 16 ];
+        putv self :tone %tmp.35;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_41_138_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 138 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_stmt:
+        symbol [ cur %tmp.37 138 19 22 ];
+        %tmp.37 = getv ? :cur;
+        symbol [ Br %tmp.39 138 26 28 ];
+        %tmp.39 = getv ? :Br;
+        symbol [ EV_DISTORT %tmp.40 138 29 39 ];
+        %tmp.40 = getv %tmp.39 :EV_DISTORT;
+        %tmp.41 = eq %tmp.37 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_41_141_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 139 12 ]
+        %tmp.42 = 80;
+        symbol [ glitch ? 139 12 18 ];
+        putv self :glitch %tmp.42;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_41_141_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 141 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_stmt:
+        symbol [ cur %tmp.44 141 19 22 ];
+        %tmp.44 = getv ? :cur;
+        symbol [ Br %tmp.46 141 26 28 ];
+        %tmp.46 = getv ? :Br;
+        symbol [ EV_SHIFT %tmp.47 141 29 37 ];
+        %tmp.47 = getv %tmp.46 :EV_SHIFT;
+        %tmp.48 = eq %tmp.44 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_39_146_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 142 12 ]
+        symbol [ MapGen %tmp.50 142 19 25 ];
+        %tmp.50 = getv ? :MapGen;
+        symbol [ shiftWalls %tmp.51 142 26 36 ];
+        %tmp.51 = getv function %tmp.50 :shiftWalls;
+        %tmp.52 = lgetv %map;
+        symbol [ map %tmp.52 142 37 40 ];
+        %tmp.53 = lgetv %p;
+        symbol [ p %tmp.53 142 42 43 ];
+        symbol [ cellX %tmp.54 142 44 49 ];
+        %tmp.54 = getv function %tmp.53 :cellX;
+        %tmp.55 = invoke %tmp.53 %tmp.54();
+        %tmp.56 = lgetv %p;
+        symbol [ p %tmp.56 142 53 54 ];
+        symbol [ cellY %tmp.57 142 55 60 ];
+        %tmp.57 = getv function %tmp.56 :cellY;
+        %tmp.58 = invoke %tmp.56 %tmp.57();
+        symbol [ seed %tmp.60 142 64 68 ];
+        %tmp.60 = getv ? :seed;
+        %tmp.61 = invoke %tmp.50 %tmp.51(%tmp.52, %tmp.55, %tmp.58, %tmp.60);
+        symbol [ seed ? 142 12 16 ];
+        putv self :seed %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 143 12 ]
+        %tmp.62 = 4;
+        symbol [ shake ? 143 12 17 ];
+        putv self :shake %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 144 12 ]
+        %tmp.63 = 2;
+        symbol [ tone ? 144 12 16 ];
+        putv self :tone %tmp.63;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_39_146_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 146 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_stmt:
+        symbol [ cur %tmp.65 146 19 22 ];
+        %tmp.65 = getv ? :cur;
+        symbol [ Br %tmp.67 146 26 28 ];
+        %tmp.67 = getv ? :Br;
+        symbol [ EV_STRETCH %tmp.68 146 29 39 ];
+        %tmp.68 = getv %tmp.67 :EV_STRETCH;
+        %tmp.69 = eq %tmp.65 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_41_149_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 147 12 ]
+        %tmp.70 = 45;
+        symbol [ stretch ? 147 12 19 ];
+        putv self :stretch %tmp.70;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_41_149_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 149 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_stmt:
+        symbol [ cur %tmp.72 149 19 22 ];
+        %tmp.72 = getv ? :cur;
+        symbol [ Br %tmp.74 149 26 28 ];
+        %tmp.74 = getv ? :Br;
+        symbol [ EV_GLIMPSE %tmp.75 149 29 39 ];
+        %tmp.75 = getv %tmp.74 :EV_GLIMPSE;
+        %tmp.76 = eq %tmp.72 %tmp.75;
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_41_153_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 150 12 ]
+        %tmp.77 = lgetv %ents;
+        symbol [ ents %tmp.77 150 12 16 ];
+        symbol [ trySpawn %tmp.78 150 17 25 ];
+        %tmp.78 = getv function %tmp.77 :trySpawn;
+        symbol [ Br %tmp.80 150 26 28 ];
+        %tmp.80 = getv ? :Br;
+        symbol [ E_STALKER %tmp.81 150 29 38 ];
+        %tmp.81 = getv %tmp.80 :E_STALKER;
+        %tmp.82 = lgetv %map;
+        symbol [ map %tmp.82 150 40 43 ];
+        %tmp.83 = lgetv %p;
+        symbol [ p %tmp.83 150 45 46 ];
+        %tmp.84 = lgetv %level;
+        symbol [ level %tmp.84 150 48 53 ];
+        %tmp.85 = lgetv %maxE.1;
+        symbol [ maxE %tmp.85 150 55 59 ];
+        invoke %tmp.77 %tmp.78(%tmp.81, %tmp.82, %tmp.83, %tmp.84, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 151 12 ]
+        %tmp.86 = lgetv %ents;
+        symbol [ ents %tmp.86 151 12 16 ];
+        %tmp.87 = 10;
+        symbol [ lastGlimpse ? 151 17 28 ];
+        putv %tmp.86 :lastGlimpse %tmp.87;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_41_153_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 153 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_stmt:
+        symbol [ cur %tmp.89 153 19 22 ];
+        %tmp.89 = getv ? :cur;
+        symbol [ Br %tmp.91 153 26 28 ];
+        %tmp.91 = getv ? :Br;
+        symbol [ EV_FOLLOWED %tmp.92 153 29 40 ];
+        %tmp.92 = getv %tmp.91 :EV_FOLLOWED;
+        %tmp.93 = eq %tmp.89 %tmp.92;
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 154 12 ]
+        %tmp.94 = 1;
+        symbol [ tone ? 154 12 16 ];
+        putv self :tone %tmp.94;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 155 12 ]
+        %tmp.95 = 2;
+        symbol [ shake ? 155 12 17 ];
+        putv self :shake %tmp.95;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 157 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_stop" ]
+        %bx.2 = local;
+        symbol [ bx %bx.2 157 16 18 ];
+        %tmp.96 = lgetv %p;
+        symbol [ p %tmp.96 157 22 23 ];
+        symbol [ x %tmp.97 157 24 25 ];
+        %tmp.97 = getv %tmp.96 :x;
+        %tmp.98 = lgetv %p;
+        symbol [ p %tmp.98 157 28 29 ];
+        symbol [ dirX %tmp.99 157 30 34 ];
+        %tmp.99 = getv %tmp.98 :dirX;
+        %tmp.100 = 3.0;
+        %tmp.101 = mul %tmp.99 %tmp.100;
+        %tmp.102 = sub %tmp.97 %tmp.101;
+        symbol [ toNumber %tmp.103 157 42 50 ];
+        %tmp.103 = getv function %tmp.102 :toNumber;
+        %tmp.104 = invoke %tmp.102 %tmp.103();
+        lputv %bx.2 %tmp.104;
+        symbol [ bx %bx.2 157 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 158 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_stop" ]
+        %by.3 = local;
+        symbol [ by %by.3 158 16 18 ];
+        %tmp.105 = lgetv %p;
+        symbol [ p %tmp.105 158 22 23 ];
+        symbol [ y %tmp.106 158 24 25 ];
+        %tmp.106 = getv %tmp.105 :y;
+        %tmp.107 = lgetv %p;
+        symbol [ p %tmp.107 158 28 29 ];
+        symbol [ dirY %tmp.108 158 30 34 ];
+        %tmp.108 = getv %tmp.107 :dirY;
+        %tmp.109 = 3.0;
+        %tmp.110 = mul %tmp.108 %tmp.109;
+        %tmp.111 = sub %tmp.106 %tmp.110;
+        symbol [ toNumber %tmp.112 158 42 50 ];
+        %tmp.112 = getv function %tmp.111 :toNumber;
+        %tmp.113 = invoke %tmp.111 %tmp.112();
+        lputv %by.3 %tmp.113;
+        symbol [ by %by.3 158 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 159 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_stmt:
+        %tmp.114 = lgetv %map;
+        symbol [ map %tmp.114 159 17 20 ];
+        symbol [ isWall %tmp.115 159 21 27 ];
+        %tmp.115 = getv function %tmp.114 :isWall;
+        %tmp.116 = lgetv %bx.2;
+        symbol [ bx %tmp.116 159 28 30 ];
+        %tmp.117 = lgetv %by.3;
+        symbol [ by %tmp.117 159 32 34 ];
+        %tmp.118 = invoke %tmp.114 %tmp.115(%tmp.116, %tmp.117);
+        %tmp.119 = not %tmp.118;
+        bf %tmp.119 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_else_false;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_37_161_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 160 16 ]
+        %tmp.120 = lgetv %ents;
+        symbol [ ents %tmp.120 160 16 20 ];
+        symbol [ list %tmp.121 160 21 25 ];
+        %tmp.121 = getv %tmp.120 :list;
+        symbol [ add %tmp.122 160 26 29 ];
+        %tmp.122 = getv function %tmp.121 :add;
+        symbol [ BrEntity %tmp.126 160 34 42 ];
+        %tmp.126 = getv ? :BrEntity;
+        symbol [ Br %tmp.128 160 43 45 ];
+        %tmp.128 = getv ? :Br;
+        symbol [ E_STALKER %tmp.129 160 46 55 ];
+        %tmp.129 = getv %tmp.128 :E_STALKER;
+        %tmp.130 = lgetv %bx.2;
+        symbol [ bx %tmp.130 160 57 59 ];
+        %tmp.131 = 0.5;
+        %tmp.132 = add %tmp.130 %tmp.131;
+        %tmp.133 = lgetv %by.3;
+        symbol [ by %tmp.133 160 67 69 ];
+        %tmp.134 = 0.5;
+        %tmp.135 = add %tmp.133 %tmp.134;
+        %tmp.136 = 60;
+        %tmp.123 = newc %tmp.126 (%tmp.129, %tmp.132, %tmp.135, %tmp.136);
+        invoke %tmp.121 %tmp.122(%tmp.123);
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_37_161_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_else_false:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_161_19_163_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 162 16 ]
+        %tmp.137 = lgetv %ents;
+        symbol [ ents %tmp.137 162 16 20 ];
+        symbol [ trySpawn %tmp.138 162 21 29 ];
+        %tmp.138 = getv function %tmp.137 :trySpawn;
+        symbol [ Br %tmp.140 162 30 32 ];
+        %tmp.140 = getv ? :Br;
+        symbol [ E_STALKER %tmp.141 162 33 42 ];
+        %tmp.141 = getv %tmp.140 :E_STALKER;
+        %tmp.142 = lgetv %map;
+        symbol [ map %tmp.142 162 44 47 ];
+        %tmp.143 = lgetv %p;
+        symbol [ p %tmp.143 162 49 50 ];
+        %tmp.144 = lgetv %level;
+        symbol [ level %tmp.144 162 52 57 ];
+        %tmp.145 = lgetv %maxE.1;
+        symbol [ maxE %tmp.145 162 59 63 ];
+        invoke %tmp.137 %tmp.138(%tmp.141, %tmp.142, %tmp.143, %tmp.144, %tmp.145);
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_161_19_163_12_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_159_12_163_12_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_42_165_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 165 15 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_15_174_8_if_stmt:
+        symbol [ cur %tmp.147 165 19 22 ];
+        %tmp.147 = getv ? :cur;
+        symbol [ Br %tmp.149 165 26 28 ];
+        %tmp.149 = getv ? :Br;
+        symbol [ EV_FAKEEXIT %tmp.150 165 29 40 ];
+        %tmp.150 = getv %tmp.149 :EV_FAKEEXIT;
+        %tmp.151 = eq %tmp.147 %tmp.150;
+        bf %tmp.151 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_15_174_8_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_42_174_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 166 12 ]
+        for @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_test @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_incr @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_begin" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 166 21 22 ];
+        %tmp.152 = 0;
+        lputv %i.4 %tmp.152;
+        symbol [ i %i.4 166 21 22 ];
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_test:
+        %tmp.153 = lgetv %i.4;
+        symbol [ i %tmp.153 166 28 29 ];
+        %tmp.154 = lgetv %map;
+        symbol [ map %tmp.154 166 32 35 ];
+        symbol [ sp %tmp.155 166 36 38 ];
+        %tmp.155 = getv %tmp.154 :sp;
+        symbol [ size %tmp.156 166 39 43 ];
+        %tmp.156 = getv function %tmp.155 :size;
+        %tmp.157 = invoke %tmp.155 %tmp.156();
+        %tmp.158 = lt %tmp.153 %tmp.157;
+        bf %tmp.158 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_begin:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_52_172_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 167 16 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_52_172_12_start" "_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_52_172_12_stop" ]
+        %s.5 = local;
+        symbol [ s %s.5 167 20 21 ];
+        %tmp.159 = lgetv %map;
+        symbol [ map %tmp.159 167 24 27 ];
+        symbol [ sp %tmp.160 167 28 30 ];
+        %tmp.160 = getv %tmp.159 :sp;
+        %tmp.161 = lgetv %i.4;
+        symbol [ i %tmp.161 167 31 32 ];
+        %tmp.162 = agetv %tmp.160 %tmp.161;
+        lputv %s.5 %tmp.162;
+        symbol [ s %s.5 167 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 168 16 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_stmt:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_20_168_51_begin:
+        %tmp.163 = lgetv %s.5;
+        symbol [ s %tmp.163 168 20 21 ];
+        %tmp.164 = 2;
+        %tmp.165 = agetv %tmp.163 %tmp.164;
+        symbol [ Br %tmp.167 168 28 30 ];
+        %tmp.167 = getv ? :Br;
+        symbol [ SP_MIMIC %tmp.168 168 31 39 ];
+        %tmp.168 = getv %tmp.167 :SP_MIMIC;
+        %tmp.169 = eq %tmp.165 %tmp.168;
+        bf %tmp.169 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_43_168_51_true:
+        %tmp.170 = lgetv %s.5;
+        symbol [ s %tmp.170 168 43 44 ];
+        %tmp.171 = 3;
+        %tmp.172 = agetv %tmp.170 %tmp.171;
+        %tmp.173 = 0;
+        %tmp.174 = eq %tmp.172 %tmp.173;
+        push %tmp.174;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_43_168_51_end:
+        %tmp.175 = phi [%tmp.169 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_20_168_51_begin] [%tmp.174 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_43_168_51_true] [%tmp.175 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_43_168_51_end];
+        bf %tmp.175 @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_54_171_16_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 169 20 ]
+        %tmp.176 = lgetv %ents;
+        symbol [ ents %tmp.176 169 20 24 ];
+        symbol [ spawnMimicAt %tmp.177 169 25 37 ];
+        %tmp.177 = getv function %tmp.176 :spawnMimicAt;
+        %tmp.178 = lgetv %s.5;
+        symbol [ s %tmp.178 169 38 39 ];
+        %tmp.179 = 0;
+        %tmp.180 = agetv %tmp.178 %tmp.179;
+        %tmp.181 = lgetv %s.5;
+        symbol [ s %tmp.181 169 44 45 ];
+        %tmp.182 = 1;
+        %tmp.183 = agetv %tmp.181 %tmp.182;
+        invoke %tmp.176 %tmp.177(%tmp.180, %tmp.183);
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 170 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_54_171_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_168_16_171_16_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_52_172_12_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 166 ]
+        %tmp.186 = lgetv %i.4;
+        symbol [ i %tmp.186 166 47 48 ];
+        %tmp.187 = add %tmp.186 1;
+        lputv %i.4 %tmp.187;
+        symbol [ i %i.4 166 47 48 ];
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_test;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_166_12_172_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc" 173 12 ]
+        %tmp.188 = 45;
+        symbol [ glitch ? 173 12 18 ];
+        putv self :glitch %tmp.188;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_42_174_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_15_174_8_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_165_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_153_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_149_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_146_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_141_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_138_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_134_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_131_15_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_124_8_174_8_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_EventManager_mc_122_48_175_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/EventManager.mc"; @line = 9; ]
+<init> {
+}

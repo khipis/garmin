@@ -1,0 +1,632 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [ActivityMonitor,16,13,28]; ]
+using Toybox.ActivityMonitor;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 17; @symbol_usingdef<0> = [Toybox,17,6,12]; @symbol_usingdef<1> = [Lang,17,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 19; @symbol_moduledef = [FitnessIntegration,19,7,25]; ]
+module FitnessIntegration {
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 19; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 21; @position = 10; @symbol_constdef = [BASE_ENERGY,21,10,21]; ]
+    const BASE_ENERGY = 3;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 22; @position = 10; @symbol_constdef = [MAX_ENERGY,22,10,20]; ]
+    const MAX_ENERGY = 8;
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 24; @symbol_functiondef = [steps,24,13,18]; @symbol_return<0> = [Lang,24,24,28]; @symbol_return<1> = [Number,24,29,35]; ]
+    function steps() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_24_36_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 25 8 ]
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_beginTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_endTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_beginTry:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_12_32_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 26 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_12_31_12_if_stmt:
+        symbol [ Toybox %tmp.2 26 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 26 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_12_31_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_12_31_12_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_45_31_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 27 16 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_45_31_12_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_45_31_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 27 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 27 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 27 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 27 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 28 16 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_20_28_69_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_20_28_46_begin:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 28 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_36_28_46_true:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 28 36 40 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :steps;
+        symbol [ steps %tmp.15 28 46 51 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_36_28_46_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_20_28_46_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_36_28_46_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_36_28_46_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_55_28_69_true:
+        %tmp.18 = lgetv %info.1;
+        symbol [ info %tmp.18 28 55 59 ];
+        %tmp.19 = as %tmp.18 { (interface { var steps; }) && (!Null) };
+        symbol [ steps %tmp.20 28 60 65 ];
+        %tmp.20 = getv %tmp.19 :steps;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_55_28_69_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_20_28_69_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_55_28_69_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_55_28_69_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_75_30_16_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 29 20 ]
+        %tmp.24 = lgetv %info.1;
+        symbol [ info %tmp.24 29 27 31 ];
+        %tmp.25 = as %tmp.24 { (interface { var steps; }) && (!Null) };
+        symbol [ steps %tmp.26 29 32 37 ];
+        %tmp.26 = getv %tmp.25 :steps;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_75_30_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_28_16_30_16_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_45_31_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_12_31_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_26_12_31_12_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_12_32_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 32 10 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_catch" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_32_10_32_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 32 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 32 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_32_10_32_21_end:
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_32_10_32_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_32_10_32_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_25_8_32_21_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 33 8 ]
+        %tmp.29 = 0;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_24_36_34_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 36; @symbol_functiondef = [activeMinutes,36,13,26]; @symbol_return<0> = [Lang,36,32,36]; @symbol_return<1> = [Number,36,37,43]; ]
+    function activeMinutes() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_36_44_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 37 8 ]
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_endTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 38 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_12_47_12_if_stmt:
+        symbol [ Toybox %tmp.2 38 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 38 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_12_47_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_12_47_12_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_45_47_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 39 16 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_45_47_12_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_45_47_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 39 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 39 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 39 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 39 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 40 16 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_16_46_16_if_stmt:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 40 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_16_46_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_16_46_16_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_34_46_16_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 41 20 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_43_55_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_42_51_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_41_79_begin:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 41 24 28 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :activeMinutesDay;
+        symbol [ activeMinutesDay %tmp.15 41 34 50 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_54_41_79_true:
+        %tmp.17 = lgetv %info.1;
+        symbol [ info %tmp.17 41 54 58 ];
+        %tmp.18 = as %tmp.17 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.19 41 59 75 ];
+        %tmp.19 = getv %tmp.18 :activeMinutesDay;
+        %tmp.20 = null;
+        %tmp.21 = ne %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_54_41_79_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_41_79_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_54_41_79_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_54_41_79_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_42_24_42_51_true:
+        %tmp.23 = lgetv %info.1;
+        symbol [ info %tmp.23 42 24 28 ];
+        %tmp.24 = as %tmp.23 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.25 42 29 45 ];
+        %tmp.25 = getv %tmp.24 :activeMinutesDay;
+        %tmp.27 = const :total;
+        symbol [ total %tmp.27 42 51 56 const ];
+        %tmp.28 = canhazplz %tmp.25 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_42_24_42_51_end:
+        %tmp.29 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_42_51_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_42_24_42_51_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_42_24_42_51_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_24_43_55_true:
+        %tmp.30 = lgetv %info.1;
+        symbol [ info %tmp.30 43 24 28 ];
+        %tmp.31 = as %tmp.30 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.32 43 29 45 ];
+        %tmp.32 = getv %tmp.31 :activeMinutesDay;
+        symbol [ total %tmp.33 43 46 51 ];
+        %tmp.33 = getv %tmp.32 :total;
+        %tmp.34 = null;
+        %tmp.35 = ne %tmp.33 %tmp.34;
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_24_43_55_end:
+        %tmp.36 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_24_43_55_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_24_43_55_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_24_43_55_end];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_61_45_20_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 44 24 ]
+        %tmp.37 = lgetv %info.1;
+        symbol [ info %tmp.37 44 31 35 ];
+        %tmp.38 = as %tmp.37 { (interface { var activeMinutesDay; }) && (!Null) };
+        symbol [ activeMinutesDay %tmp.39 44 36 52 ];
+        %tmp.39 = getv %tmp.38 :activeMinutesDay;
+        symbol [ total %tmp.40 44 53 58 ];
+        %tmp.40 = getv %tmp.39 :total;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_43_61_45_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_41_20_45_20_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_34_46_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_16_46_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_40_16_46_16_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_45_47_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_12_47_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_38_12_47_12_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_catch:
+        %tmp.41 = exception;
+        push %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_catch" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_48_10_48_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 48 17 18 ];
+        %tmp.42 = dup %tmp.41;
+        lputv %e.2 %tmp.42;
+        symbol [ e %e.2 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally;
+        throw %tmp.41;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_37_8_48_21_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 49 8 ]
+        %tmp.43 = 0;
+        ret %tmp.43;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_36_44_50_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 52; @symbol_functiondef = [calories,52,13,21]; @symbol_return<0> = [Lang,52,27,31]; @symbol_return<1> = [Number,52,32,38]; ]
+    function calories() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_52_39_62_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 53 8 ]
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_beginTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_endTry @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_beginTry:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_12_60_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_12_59_12_if_stmt:
+        symbol [ Toybox %tmp.2 54 16 22 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :ActivityMonitor;
+        symbol [ ActivityMonitor %tmp.4 54 28 43 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_12_59_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_12_59_12_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_45_59_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 55 16 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_45_59_12_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_45_59_12_stop" ]
+        %info.1 = local;
+        symbol [ info %info.1 55 20 24 ];
+        symbol [ ActivityMonitor %tmp.6 55 27 42 ];
+        %tmp.6 = getm $.Toybox.ActivityMonitor;
+        symbol [ getInfo %tmp.7 55 43 50 ];
+        %tmp.7 = getv function %tmp.6 :getInfo;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %info.1 %tmp.8;
+        symbol [ info %info.1 55 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 56 16 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_stmt:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_20_56_75_begin:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_20_56_46_begin:
+        %tmp.9 = lgetv %info.1;
+        symbol [ info %tmp.9 56 20 24 ];
+        %tmp.10 = null;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_36_56_46_true:
+        %tmp.12 = lgetv %info.1;
+        symbol [ info %tmp.12 56 36 40 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        %tmp.15 = const :calories;
+        symbol [ calories %tmp.15 56 46 54 const ];
+        %tmp.16 = canhazplz %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_36_56_46_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_20_56_46_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_36_56_46_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_36_56_46_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_58_56_75_true:
+        %tmp.18 = lgetv %info.1;
+        symbol [ info %tmp.18 56 58 62 ];
+        %tmp.19 = as %tmp.18 { (interface { var calories; }) && (!Null) };
+        symbol [ calories %tmp.20 56 63 71 ];
+        %tmp.20 = getv %tmp.19 :calories;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_58_56_75_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_20_56_75_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_58_56_75_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_58_56_75_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_81_58_16_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 57 20 ]
+        %tmp.24 = lgetv %info.1;
+        symbol [ info %tmp.24 57 27 31 ];
+        %tmp.25 = as %tmp.24 { (interface { var calories; }) && (!Null) };
+        symbol [ calories %tmp.26 57 32 40 ];
+        %tmp.26 = getv %tmp.25 :calories;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_81_58_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_56_16_58_16_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_45_59_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_12_59_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_54_12_59_12_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_12_60_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 60 10 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_catch" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_60_10_60_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 60 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 60 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_60_10_60_21_end:
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_60_10_60_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_60_10_60_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_53_8_60_21_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 61 8 ]
+        %tmp.29 = 0;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_52_39_62_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 65; @symbol_functiondef = [trainingPoints,65,13,27]; @symbol_return<0> = [Lang,65,33,37]; @symbol_return<1> = [Number,65,38,44]; ]
+    function trainingPoints() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_65_45_65_69_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 65 47 ]
+        %tmp.1 = self;
+        symbol [ steps %tmp.2 65 54 59 ];
+        %tmp.2 = getv function %tmp.1 :steps;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 100;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_65_45_65_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 69; @symbol_functiondef = [energyBonus,69,13,24]; @symbol_return<0> = [Lang,69,30,34]; @symbol_return<1> = [Number,69,35,41]; ]
+    function energyBonus() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_stop" ]
+        %b.1 = local;
+        symbol [ b %b.1 70 12 13 ];
+        %tmp.1 = self;
+        symbol [ steps %tmp.2 70 16 21 ];
+        %tmp.2 = getv function %tmp.1 :steps;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 4000;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        lputv %b.1 %tmp.5;
+        symbol [ b %b.1 70 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_8_71_28_if_stmt:
+        %tmp.6 = lgetv %b.1;
+        symbol [ b %tmp.6 71 12 13 ];
+        %tmp.7 = 3;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_8_71_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_8_71_28_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_19_71_28_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 71 21 ]
+        %tmp.9 = 3;
+        lputv %b.1 %tmp.9;
+        symbol [ b %b.1 71 21 22 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_19_71_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_8_71_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_71_8_71_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_stop" ]
+        %a.2 = local;
+        symbol [ a %a.2 72 12 13 ];
+        %tmp.10 = self;
+        symbol [ activeMinutes %tmp.11 72 16 29 ];
+        %tmp.11 = getv function %tmp.10 :activeMinutes;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = 20;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        lputv %a.2 %tmp.14;
+        symbol [ a %a.2 72 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 73 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_8_73_28_if_stmt:
+        %tmp.15 = lgetv %a.2;
+        symbol [ a %tmp.15 73 12 13 ];
+        %tmp.16 = 2;
+        %tmp.17 = gt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_8_73_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_8_73_28_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_19_73_28_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 73 21 ]
+        %tmp.18 = 2;
+        lputv %a.2 %tmp.18;
+        symbol [ a %a.2 73 21 22 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_19_73_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_8_73_28_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_73_8_73_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 74 8 ]
+        %tmp.19 = lgetv %b.1;
+        symbol [ b %tmp.19 74 15 16 ];
+        %tmp.20 = lgetv %a.2;
+        symbol [ a %tmp.20 74 19 20 ];
+        %tmp.21 = add %tmp.19 %tmp.20;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_69_42_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 77; @symbol_functiondef = [dailyEnergy,77,13,24]; @symbol_return<0> = [Lang,77,30,34]; @symbol_return<1> = [Number,77,35,41]; ]
+    function dailyEnergy() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_77_42_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_77_42_81_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_77_42_81_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 78 12 13 ];
+        symbol [ BASE_ENERGY %tmp.2 78 16 27 ];
+        %tmp.2 = getv ? :BASE_ENERGY;
+        %tmp.3 = self;
+        symbol [ energyBonus %tmp.4 78 30 41 ];
+        %tmp.4 = getv function %tmp.3 :energyBonus;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = add %tmp.2 %tmp.5;
+        lputv %e.1 %tmp.6;
+        symbol [ e %e.1 78 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_8_79_46_if_stmt:
+        %tmp.7 = lgetv %e.1;
+        symbol [ e %tmp.7 79 12 13 ];
+        symbol [ MAX_ENERGY %tmp.9 79 16 26 ];
+        %tmp.9 = getv ? :MAX_ENERGY;
+        %tmp.10 = gt %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_8_79_46_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_8_79_46_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_28_79_46_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 79 30 ]
+        symbol [ MAX_ENERGY %tmp.12 79 34 44 ];
+        %tmp.12 = getv ? :MAX_ENERGY;
+        lputv %e.1 %tmp.12;
+        symbol [ e %e.1 79 30 31 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_28_79_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_8_79_46_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_79_8_79_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 80 8 ]
+        %tmp.13 = lgetv %e.1;
+        symbol [ e %tmp.13 80 15 16 ];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_77_42_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 84; @symbol_functiondef = [bonusCoins,84,13,23]; @symbol_return<0> = [Lang,84,29,33]; @symbol_return<1> = [Number,84,34,40]; ]
+    function bonusCoins() as Lang.Number {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_84_41_88_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 85 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_84_41_88_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_84_41_88_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 85 12 13 ];
+        %tmp.1 = self;
+        symbol [ calories %tmp.2 85 16 24 ];
+        %tmp.2 = getv function %tmp.1 :calories;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 100;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        lputv %c.1 %tmp.5;
+        symbol [ c %c.1 85 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_8_86_30_if_stmt:
+        %tmp.6 = lgetv %c.1;
+        symbol [ c %tmp.6 86 12 13 ];
+        %tmp.7 = 20;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_8_86_30_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_8_86_30_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_20_86_30_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 86 22 ]
+        %tmp.9 = 20;
+        lputv %c.1 %tmp.9;
+        symbol [ c %c.1 86 22 23 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_20_86_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_8_86_30_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_86_8_86_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 87 8 ]
+        %tmp.10 = lgetv %c.1;
+        symbol [ c %tmp.10 87 15 16 ];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_84_41_88_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 91; @symbol_functiondef = [summary,91,13,20]; @symbol_return<0> = [Lang,91,26,30]; @symbol_return<1> = [String,91,31,37]; ]
+    function summary() as Lang.String {
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_stop" ]
+        %s.1 = local;
+        symbol [ s %s.1 92 12 13 ];
+        %tmp.1 = self;
+        symbol [ steps %tmp.2 92 16 21 ];
+        %tmp.2 = getv function %tmp.1 :steps;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %s.1 %tmp.3;
+        symbol [ s %s.1 92 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_stop" ]
+        %txt.2 = local;
+        symbol [ txt %txt.2 93 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_stmt:
+        %tmp.4 = lgetv %s.1;
+        symbol [ s %tmp.4 94 12 13 ];
+        %tmp.5 = 1000;
+        %tmp.6 = gte %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_23_96_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 95 12 ]
+        %tmp.7 = lgetv %s.1;
+        symbol [ s %tmp.7 95 19 20 ];
+        %tmp.8 = 1000;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        symbol [ toString %tmp.10 95 29 37 ];
+        %tmp.10 = getv function %tmp.9 :toString;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        %tmp.12 = ".";
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = lgetv %s.1;
+        symbol [ s %tmp.14 95 50 51 ];
+        %tmp.15 = 1000;
+        %tmp.16 = mod %tmp.14 %tmp.15;
+        %tmp.17 = 100;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        symbol [ toString %tmp.19 95 67 75 ];
+        %tmp.19 = getv function %tmp.18 :toString;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = add %tmp.13 %tmp.20;
+        %tmp.22 = "k steps";
+        %tmp.23 = add %tmp.21 %tmp.22;
+        lputv %txt.2 %tmp.23;
+        symbol [ txt %txt.2 95 12 15 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_23_96_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_96_15_98_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 97 12 ]
+        %tmp.24 = lgetv %s.1;
+        symbol [ s %tmp.24 97 18 19 ];
+        symbol [ toString %tmp.25 97 20 28 ];
+        %tmp.25 = getv function %tmp.24 :toString;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = " steps";
+        %tmp.28 = add %tmp.26 %tmp.27;
+        lputv %txt.2 %tmp.28;
+        symbol [ txt %txt.2 97 12 15 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_96_15_98_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_94_8_98_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_start" "_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 99 12 13 ];
+        %tmp.29 = self;
+        symbol [ energyBonus %tmp.30 99 16 27 ];
+        %tmp.30 = getv function %tmp.29 :energyBonus;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        lputv %b.3 %tmp.31;
+        symbol [ b %b.3 99 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_8_100_67_if_stmt:
+        %tmp.32 = lgetv %b.3;
+        symbol [ b %tmp.32 100 12 13 ];
+        %tmp.33 = 0;
+        %tmp.34 = gt %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_8_100_67_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_8_100_67_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_19_100_67_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 100 21 ]
+        %tmp.35 = lgetv %txt.2;
+        symbol [ txt %tmp.35 100 27 30 ];
+        %tmp.36 = "  +";
+        %tmp.37 = add %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %b.3;
+        symbol [ b %tmp.38 100 41 42 ];
+        symbol [ toString %tmp.39 100 43 51 ];
+        %tmp.39 = getv function %tmp.38 :toString;
+        %tmp.40 = invoke %tmp.38 %tmp.39();
+        %tmp.41 = add %tmp.37 %tmp.40;
+        %tmp.42 = " energy";
+        %tmp.43 = add %tmp.41 %tmp.42;
+        lputv %txt.2 %tmp.43;
+        symbol [ txt %txt.2 100 21 24 ];
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_19_100_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_8_100_67_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_100_8_100_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc" 101 8 ]
+        %tmp.44 = lgetv %txt.2;
+        symbol [ txt %tmp.44 101 15 18 ];
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_dailysport_source_FitnessIntegration_mc_91_38_102_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/FitnessIntegration.mc"; @line = 16; ]
+<init> {
+}

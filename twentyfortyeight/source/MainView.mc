@@ -18,12 +18,26 @@ class MainView extends WatchUi.View {
     var ctrl;
     hidden var _timer;
     hidden var _started;   // auto-start a run on first frame
+    hidden var _skipStart; // true when a SaveResume blob was applied
 
     function initialize() {
         View.initialize();
         ctrl = new GameController();
         _timer = null;
         _started = false;
+        _skipStart = false;
+    }
+
+    // Apply a SaveResume blob before the first paint (called from Resume).
+    function loadResume(data) as Void {
+        if (data != null && ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return ctrl.exportSave();
     }
 
     // A 1 s tick drives the live stopwatch — it only does work in Time mode
@@ -60,7 +74,7 @@ class MainView extends WatchUi.View {
         // Menu lives in the shared root view — drop straight into a run and
         // never render an in-game menu here.
         if (!_started || ctrl.state == GS_MENU) {
-            ctrl.newGame();
+            if (!_skipStart) { ctrl.newGame(); }
             _started = true;
         }
         if (ctrl.state == GS_PLAY) {

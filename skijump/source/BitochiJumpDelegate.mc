@@ -51,7 +51,8 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        if (_sensorEnabled) { Sensor.enableSensorEvents(null); }
-        return false;
+        // Keep accel alive through the save prompt (Cancel would otherwise
+        // leave the jumper without tilt input).
+        return SaveResume.confirmExit("skijump", _view.method(:exportSave));
     }
 }

@@ -163,6 +163,10 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _crateAlive;
     hidden var _crateN;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed battlefield back to a fresh round.
+    hidden var _skipStart;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -270,6 +274,8 @@ class BitochiBlobsView extends WatchUi.View {
         _crateX = new [3]; _crateType = new [3]; _crateAlive = new [3];
         for (var i = 0; i < 3; i++) { _crateX[i] = 0.0; _crateType[i] = 0; _crateAlive[i] = false; }
         _crateN = 0;
+
+        _skipStart = false;
     }
 
     hidden function isHumanTurn() {
@@ -281,10 +287,97 @@ class BitochiBlobsView extends WatchUi.View {
         _timer.start(method(:onTick), 50, true);
         // The main menu is the shared root view; drop straight into a round.
         // Only auto-start from a fresh launch (GS_MENU) so returning from the
-        // post-game standing card doesn't restart the run.
-        if (gameState == GS_MENU) { startRound(); }
+        // post-game standing card doesn't restart the run. _skipStart guards
+        // a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && gameState == GS_MENU) { startRound(); }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export from a settled checkpoint: GS_AIM / GS_TURN / GS_MOVE
+    // (never mid-flight FLY/BOOM). Captures the whole battlefield snapshot
+    // (terrain heights, blobs, crates, ammo, gold) so a resume can rebuild
+    // the round exactly and simply restart the active blob's turn.
+    function exportSave() {
+        if (gameState != GS_AIM && gameState != GS_TURN && gameState != GS_MOVE) { return null; }
+        var terr = new [TERR_N];
+        for (var i = 0; i < TERR_N; i++) { terr[i] = _terrH[i]; }
+        var bX = new [MAX_BLOBS]; var bY = new [MAX_BLOBS];
+        var bHp = new [MAX_BLOBS]; var bMaxHp = new [MAX_BLOBS]; var bAlive = new [MAX_BLOBS];
+        for (var i = 0; i < MAX_BLOBS; i++) {
+            bX[i] = _bX[i].toNumber(); bY[i] = _bY[i].toNumber();
+            bHp[i] = _bHp[i]; bMaxHp[i] = _bMaxHp[i]; bAlive[i] = _bAlive[i] ? 1 : 0;
+        }
+        var shopOwned = [_shopOwned[0] ? 1 : 0, _shopOwned[1] ? 1 : 0, _shopOwned[2] ? 1 : 0];
+        var crateX = new [3]; var crateType = new [3]; var crateAlive = new [3];
+        for (var i = 0; i < 3; i++) {
+            crateX[i] = _crateX[i].toNumber(); crateType[i] = _crateType[i];
+            crateAlive[i] = _crateAlive[i] ? 1 : 0;
+        }
+        var ammo = new [WPN_COUNT * 2];
+        for (var p = 0; p < 2; p++) {
+            for (var i = 0; i < WPN_COUNT; i++) { ammo[p * WPN_COUNT + i] = _wpnAmmo[p][i]; }
+        }
+        return {
+            "round" => _round, "blobCount" => _blobCount, "activeIdx" => _activeIdx,
+            "twoPlayer" => (_twoPlayer ? 1 : 0), "diff" => _diff, "gold" => _gold,
+            "kills" => _kills, "matchDamage" => _matchDamage, "weapon" => _weapon,
+            "windX10" => (_wind * 10.0).toNumber(),
+            "terr" => terr, "bX" => bX, "bY" => bY, "bHp" => bHp, "bMaxHp" => bMaxHp, "bAlive" => bAlive,
+            "shopOwned" => shopOwned, "crateN" => _crateN,
+            "crateX" => crateX, "crateType" => crateType, "crateAlive" => crateAlive,
+            "ammo" => ammo
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from BlobsHooks).
+    // Always resumes at the start of the active blob's turn (GS_TURN) so we
+    // never have to reconstruct a mid-aim oscillation or hop counter.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _round = data["round"]; _blobCount = data["blobCount"]; _activeIdx = data["activeIdx"];
+            _twoPlayer = (data["twoPlayer"] == 1); _diff = data["diff"]; _gold = data["gold"];
+            _kills = data["kills"]; _matchDamage = data["matchDamage"]; _weapon = data["weapon"];
+            _wind = data["windX10"].toFloat() / 10.0;
+
+            var terr = data["terr"];
+            for (var i = 0; i < TERR_N; i++) { _terrH[i] = terr[i]; }
+            var bX = data["bX"]; var bY = data["bY"]; var bHp = data["bHp"];
+            var bMaxHp = data["bMaxHp"]; var bAlive = data["bAlive"];
+            for (var i = 0; i < MAX_BLOBS; i++) {
+                _bX[i] = bX[i].toFloat(); _bY[i] = bY[i].toFloat();
+                _bHp[i] = bHp[i]; _bMaxHp[i] = bMaxHp[i]; _bAlive[i] = (bAlive[i] == 1);
+            }
+            var shopOwned = data["shopOwned"];
+            _shopOwned = [shopOwned[0] == 1, shopOwned[1] == 1, shopOwned[2] == 1];
+            _crateN = data["crateN"];
+            var crateX = data["crateX"]; var crateType = data["crateType"]; var crateAlive = data["crateAlive"];
+            for (var i = 0; i < 3; i++) {
+                _crateX[i] = crateX[i].toFloat(); _crateType[i] = crateType[i];
+                _crateAlive[i] = (crateAlive[i] == 1);
+            }
+            var ammo = data["ammo"];
+            for (var p = 0; p < 2; p++) {
+                for (var i = 0; i < WPN_COUNT; i++) { _wpnAmmo[p][i] = ammo[p * WPN_COUNT + i]; }
+            }
+
+            _weapon = data["weapon"];
+            _newBest = false; _winnerPlayer = -1;
+            _hitMsg = ""; _hitMsgTick = 0; _dmgFloatT = 0;
+            for (var i = 0; i < MAX_PARTS; i++) { _partLife[i] = 0; }
+            _projAlive = false; _projBurrowing = false;
+            _shakeT = 0; _shakeOx = 0; _shakeOy = 0;
+
+            _camX = _bX[_activeIdx] - _w.toFloat() / 2.0;
+            if (_camX < 0.0) { _camX = 0.0; }
+            if (_camX > _maxCam) { _camX = _maxCam; }
+            _camTarget = _camX;
+
+            beginTurn();
+            _skipStart = true;
+        } catch (e) {}
+    }
 
     function onTick() as Void {
         _tick++;
@@ -328,18 +421,10 @@ class BitochiBlobsView extends WatchUi.View {
             if (isHumanTurn()) {
                 if (_hopCooldown > 0) { _hopCooldown--; }
                 if (_hopCount < 2 && _hopCooldown == 0) {
+                    // Softer tilt threshold — swipe is the easy alternative.
                     var steer = accelX.toFloat() / 280.0;
-                    if (steer > 1.8) {
-                        var nx = _bX[_activeIdx] + 20.0;
-                        if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
-                        _bX[_activeIdx] = nx; updateBlobY(_activeIdx);
-                        _hopCount++; _hopCooldown = 11; doVibe(25, 40);
-                    } else if (steer < -1.8) {
-                        var nx = _bX[_activeIdx] - 20.0;
-                        if (nx < 10.0) { nx = 10.0; }
-                        _bX[_activeIdx] = nx; updateBlobY(_activeIdx);
-                        _hopCount++; _hopCooldown = 11; doVibe(25, 40);
-                    }
+                    if (steer > 1.15) { tryHop(1); }
+                    else if (steer < -1.15) { tryHop(-1); }
                 }
                 if (_hopCount >= 2) {
                     gameState = GS_AIM; _aimPhase = 0; _aimAnglePhase = 0.0;
@@ -972,6 +1057,7 @@ class BitochiBlobsView extends WatchUi.View {
                 } else {
                     // All player blobs eliminated (or everyone dead)
                     gameState = GS_OVER; _resultTick = 0;
+                    try { SaveResume.clear("blobs"); } catch (e) {}
                     doTone(Toybox.Attention.TONE_FAILURE);
                     var s = _round - 1; if (s < 0) { s = 0; }
                     if (s > _bestStreak) { _bestStreak = s; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
@@ -985,6 +1071,7 @@ class BitochiBlobsView extends WatchUi.View {
             // Both players dead but AI still alive → immediate game over
             if (!_bAlive[0] && !_bAlive[1]) {
                 gameState = GS_OVER; _resultTick = 0;
+                try { SaveResume.clear("blobs"); } catch (e) {}
                 doTone(Toybox.Attention.TONE_FAILURE);
                 var s2 = _round - 1; if (s2 < 0) { s2 = 0; }
                 if (s2 > _bestStreak) { _bestStreak = s2; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
@@ -1008,6 +1095,7 @@ class BitochiBlobsView extends WatchUi.View {
             }
             if (!_bAlive[0]) {
                 gameState = GS_OVER; _resultTick = 0;
+                try { SaveResume.clear("blobs"); } catch (e) {}
                 doTone(Toybox.Attention.TONE_FAILURE);
                 var streak = _round - 1; if (streak < 0) { streak = 0; }
                 if (streak > _bestStreak) { _bestStreak = streak; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
@@ -1100,6 +1188,30 @@ class BitochiBlobsView extends WatchUi.View {
         if (Toybox has :Attention) { if (Toybox.Attention has :playTone) {
             Toybox.Attention.playTone(t);
         } }
+    }
+
+    // One short hop during the move phase. dir: -1 left, +1 right.
+    // ~24 world px ≈ a couple of "metres" on the 520-wide map — two hops
+    // max so you reposition without crawling the whole battlefield.
+    function tryHop(dir) {
+        if (gameState != GS_MOVE || !isHumanTurn()) { return false; }
+        if (_hopCount >= 2 || _hopCooldown > 0) { return false; }
+        if (dir == 0) { return false; }
+        var step = (dir > 0) ? 24.0 : -24.0;
+        var nx = _bX[_activeIdx] + step;
+        if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
+        if (nx < 10.0) { nx = 10.0; }
+        // No free movement if already hard against the edge in that direction.
+        if ((nx - _bX[_activeIdx]).abs() < 0.5) { return false; }
+        _bX[_activeIdx] = nx;
+        updateBlobY(_activeIdx);
+        _hopCount++;
+        _hopCooldown = 8;
+        doVibe(25, 40);
+        if (_hopCount >= 2) {
+            gameState = GS_AIM; _aimPhase = 0; _aimAnglePhase = 0.0;
+        }
+        return true;
     }
 
     function openLeaderboard() {
@@ -1572,7 +1684,7 @@ class BitochiBlobsView extends WatchUi.View {
 
     hidden function drawMoveBar(dc) {
         var hopsLeft = 2 - _hopCount;
-        var hopStr = (hopsLeft == 2) ? "HOPS: oo  Tilt" : ((hopsLeft == 1) ? "HOP: o  Tilt" : "No hops");
+        var hopStr = (hopsLeft == 2) ? "HOPS: oo  Swipe/Tilt" : ((hopsLeft == 1) ? "HOP: o  Swipe/Tilt" : "No hops");
         dc.setColor(0x44DDFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 26, Graphics.FONT_XTINY, hopStr, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x448888, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "Tap=aim", Graphics.TEXT_JUSTIFY_CENTER);
     }

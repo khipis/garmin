@@ -1,0 +1,899 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 21; @symbol_usingdef<0> = [Toybox,21,6,12]; @symbol_usingdef<1> = [WatchUi,21,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 22; @symbol_usingdef<0> = [Toybox,22,6,12]; @symbol_usingdef<1> = [System,22,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 24; @symbol_classdef = [BitochiDungeonMasterDelegate,24,6,34]; @symbol_extends<0> = [WatchUi,24,43,50]; @symbol_extends<1> = [BehaviorDelegate,24,51,67]; ]
+class BitochiDungeonMasterDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 24; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 24; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 26; @position = 15; @symbol_vardef = [_view,26,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 27; @position = 15; @symbol_vardef = [_lastGestureMs,27,15,29]; ]
+    protected
+    var _lastGestureMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 28; @position = 15; @symbol_vardef = [_flickMs,28,15,23]; ]
+    protected
+    var _flickMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 29; @position = 15; @symbol_vardef = [_dragX,29,15,21]; ]
+    protected
+    var _dragX;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 30; @position = 15; @symbol_vardef = [_dragY,30,15,21]; ]
+    protected
+    var _dragY;
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 32; @symbol_functiondef = [initialize,32,13,23]; @symbol_param<0> = [view,32,24,28]; ]
+    function initialize(view) as Void {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_32_30_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 33 8 ]
+        symbol [ BehaviorDelegate %tmp.2 33 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 33 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 34 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 34 16 20 ];
+        symbol [ _view ? 34 8 13 ];
+        putv self :_view %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 35 8 ]
+        %tmp.5 = 0;
+        symbol [ _lastGestureMs ? 35 8 22 ];
+        putv self :_lastGestureMs %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 36 8 ]
+        %tmp.6 = 0;
+        symbol [ _flickMs ? 36 8 16 ];
+        putv self :_flickMs %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 37 8 ]
+        %tmp.7 = -1;
+        symbol [ _dragX ? 37 8 14 ];
+        putv self :_dragX %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 38 8 ]
+        %tmp.8 = -1;
+        symbol [ _dragY ? 38 8 14 ];
+        putv self :_dragY %tmp.8;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_32_30_39_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 41; @symbol_functiondef = [_mark,41,20,25]; ]
+    protected
+    function _mark() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_41_28_41_66_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 41 30 ]
+        symbol [ System %tmp.1 41 47 53 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.2 41 54 62 ];
+        %tmp.2 = getv function %tmp.1 :getTimer;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _lastGestureMs ? 41 30 44 ];
+        putv self :_lastGestureMs %tmp.3;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_41_28_41_66_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 43; @symbol_functiondef = [_isPhantomBack,43,20,34]; ]
+    protected
+    function _isPhantomBack() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_43_37_47_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_8_44_49_if_stmt:
+        symbol [ _lastGestureMs %tmp.2 44 12 26 ];
+        %tmp.2 = getv ? :_lastGestureMs;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_8_44_49_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_8_44_49_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_33_44_49_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 44 35 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_33_44_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_8_44_49_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_44_8_44_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_43_37_47_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_43_37_47_4_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 45 12 14 ];
+        symbol [ System %tmp.6 45 17 23 ];
+        %tmp.6 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.7 45 24 32 ];
+        %tmp.7 = getv function %tmp.6 :getTimer;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        symbol [ _lastGestureMs %tmp.10 45 37 51 ];
+        %tmp.10 = getv ? :_lastGestureMs;
+        %tmp.11 = sub %tmp.8 %tmp.10;
+        lputv %dt.1 %tmp.11;
+        symbol [ dt %dt.1 45 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_16_46_32_begin:
+        %tmp.12 = lgetv %dt.1;
+        symbol [ dt %tmp.12 46 16 18 ];
+        %tmp.13 = 0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        %tmp.15 = dup %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_27_46_32_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_27_46_32_true:
+        %tmp.16 = lgetv %dt.1;
+        symbol [ dt %tmp.16 46 27 29 ];
+        %tmp.17 = 800;
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        %tmp.19 = and %tmp.14 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_27_46_32_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_16_46_32_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_27_46_32_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_46_27_46_32_end];
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_43_37_47_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 51; @symbol_functiondef = [_flickHandled,51,20,33]; ]
+    protected
+    function _flickHandled() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_51_36_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_8_52_43_if_stmt:
+        symbol [ _flickMs %tmp.2 52 12 20 ];
+        %tmp.2 = getv ? :_flickMs;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_8_52_43_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_8_52_43_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_27_52_43_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 52 29 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_27_52_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_8_52_43_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_52_8_52_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_51_36_55_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_51_36_55_4_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 53 12 14 ];
+        symbol [ System %tmp.6 53 17 23 ];
+        %tmp.6 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.7 53 24 32 ];
+        %tmp.7 = getv function %tmp.6 :getTimer;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        symbol [ _flickMs %tmp.10 53 37 45 ];
+        %tmp.10 = getv ? :_flickMs;
+        %tmp.11 = sub %tmp.8 %tmp.10;
+        lputv %dt.1 %tmp.11;
+        symbol [ dt %dt.1 53 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_16_54_32_begin:
+        %tmp.12 = lgetv %dt.1;
+        symbol [ dt %tmp.12 54 16 18 ];
+        %tmp.13 = 0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        %tmp.15 = dup %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_27_54_32_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_27_54_32_true:
+        %tmp.16 = lgetv %dt.1;
+        symbol [ dt %tmp.16 54 27 29 ];
+        %tmp.17 = 500;
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        %tmp.19 = and %tmp.14 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_27_54_32_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_16_54_32_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_27_54_32_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_54_27_54_32_end];
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_51_36_55_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 57; @symbol_functiondef = [onSelect,57,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_57_24_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 58 8 ]
+        symbol [ _view %tmp.2 58 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ advance %tmp.3 58 14 21 ];
+        %tmp.3 = getv function %tmp.2 :advance;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 59 8 ]
+        symbol [ WatchUi %tmp.4 59 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 59 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 60 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_57_24_61_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 63; @symbol_functiondef = [onMenu,63,13,19]; ]
+    function onMenu() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_63_22_67_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 64 8 ]
+        symbol [ _view %tmp.2 64 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ toggleInventory %tmp.3 64 14 29 ];
+        %tmp.3 = getv function %tmp.2 :toggleInventory;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 65 8 ]
+        symbol [ WatchUi %tmp.4 65 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 65 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 66 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_63_22_67_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 69; @symbol_functiondef = [onPreviousPage,69,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_69_30_74_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_8_70_44_if_stmt:
+        %tmp.1 = self;
+        symbol [ _flickHandled %tmp.2 70 12 25 ];
+        %tmp.2 = getv function %tmp.1 :_flickHandled;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_8_70_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_8_70_44_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_29_70_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 70 31 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_29_70_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_8_70_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_70_8_70_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 71 8 ]
+        symbol [ _view %tmp.6 71 8 13 ];
+        %tmp.6 = getv ? :_view;
+        symbol [ turn %tmp.7 71 14 18 ];
+        %tmp.7 = getv function %tmp.6 :turn;
+        %tmp.8 = -1;
+        invoke %tmp.6 %tmp.7(%tmp.8);
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 72 8 ]
+        symbol [ WatchUi %tmp.9 72 8 15 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.10 72 16 29 ];
+        %tmp.10 = getv function %tmp.9 :requestUpdate;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 73 8 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_69_30_74_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 76; @symbol_functiondef = [onNextPage,76,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_76_26_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_8_77_44_if_stmt:
+        %tmp.1 = self;
+        symbol [ _flickHandled %tmp.2 77 12 25 ];
+        %tmp.2 = getv function %tmp.1 :_flickHandled;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_8_77_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_8_77_44_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_29_77_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 77 31 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_29_77_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_8_77_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_77_8_77_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 78 8 ]
+        symbol [ _view %tmp.6 78 8 13 ];
+        %tmp.6 = getv ? :_view;
+        symbol [ turn %tmp.7 78 14 18 ];
+        %tmp.7 = getv function %tmp.6 :turn;
+        %tmp.8 = 1;
+        invoke %tmp.6 %tmp.7(%tmp.8);
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 79 8 ]
+        symbol [ WatchUi %tmp.9 79 8 15 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.10 79 16 29 ];
+        %tmp.10 = getv function %tmp.9 :requestUpdate;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 80 8 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_76_26_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 83; @symbol_functiondef = [onTap,83,13,18]; @symbol_param<0> = [evt,83,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_83_24_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 84 8 ]
+        %tmp.1 = self;
+        symbol [ _mark %tmp.2 84 8 13 ];
+        %tmp.2 = getv function %tmp.1 :_mark;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_8_85_44_if_stmt:
+        %tmp.3 = self;
+        symbol [ _flickHandled %tmp.4 85 12 25 ];
+        %tmp.4 = getv function %tmp.3 :_flickHandled;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_8_85_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_8_85_44_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_29_85_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 85 31 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_29_85_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_8_85_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_85_8_85_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 86 8 ]
+        symbol [ _view %tmp.8 86 8 13 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ advance %tmp.9 86 14 21 ];
+        %tmp.9 = getv function %tmp.8 :advance;
+        invoke %tmp.8 %tmp.9();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 87 8 ]
+        symbol [ WatchUi %tmp.10 87 8 15 ];
+        %tmp.10 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.11 87 16 29 ];
+        %tmp.11 = getv function %tmp.10 :requestUpdate;
+        invoke %tmp.10 %tmp.11();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 88 8 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_83_24_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 93; @symbol_functiondef = [onSwipe,93,13,20]; @symbol_param<0> = [evt,93,21,24]; ]
+    function onSwipe(evt) {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_93_26_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 94 8 ]
+        %tmp.1 = self;
+        symbol [ _mark %tmp.2 94 8 13 ];
+        %tmp.2 = getv function %tmp.1 :_mark;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_8_95_44_if_stmt:
+        %tmp.3 = self;
+        symbol [ _flickHandled %tmp.4 95 12 25 ];
+        %tmp.4 = getv function %tmp.3 :_flickHandled;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_8_95_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_8_95_44_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_29_95_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 95 31 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_29_95_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_8_95_44_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_95_8_95_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_93_26_110_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_93_26_110_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 96 12 13 ];
+        %tmp.7 = lgetv %evt;
+        symbol [ evt %tmp.7 96 16 19 ];
+        symbol [ getDirection %tmp.8 96 20 32 ];
+        %tmp.8 = getv function %tmp.7 :getDirection;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        lputv %d.1 %tmp.9;
+        symbol [ d %d.1 96 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_stmt:
+        %tmp.10 = lgetv %d.1;
+        symbol [ d %tmp.10 97 12 13 ];
+        symbol [ WatchUi %tmp.11 97 17 24 ];
+        %tmp.11 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_UP %tmp.12 97 25 33 ];
+        %tmp.12 = getv %tmp.11 :SWIPE_UP;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_35_99_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 98 12 ]
+        symbol [ _view %tmp.15 98 12 17 ];
+        %tmp.15 = getv ? :_view;
+        symbol [ advance %tmp.16 98 18 25 ];
+        %tmp.16 = getv function %tmp.15 :advance;
+        invoke %tmp.15 %tmp.16();
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_35_99_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 99 15 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_stmt:
+        %tmp.17 = lgetv %d.1;
+        symbol [ d %tmp.17 99 19 20 ];
+        symbol [ WatchUi %tmp.18 99 24 31 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.19 99 32 42 ];
+        %tmp.19 = getv %tmp.18 :SWIPE_DOWN;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_44_101_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 100 12 ]
+        symbol [ _view %tmp.22 100 12 17 ];
+        %tmp.22 = getv ? :_view;
+        symbol [ interact %tmp.23 100 18 26 ];
+        %tmp.23 = getv function %tmp.22 :interact;
+        invoke %tmp.22 %tmp.23();
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_44_101_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 101 15 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_stmt:
+        %tmp.24 = lgetv %d.1;
+        symbol [ d %tmp.24 101 19 20 ];
+        symbol [ WatchUi %tmp.25 101 24 31 ];
+        %tmp.25 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_LEFT %tmp.26 101 32 42 ];
+        %tmp.26 = getv %tmp.25 :SWIPE_LEFT;
+        %tmp.27 = eq %tmp.24 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_44_103_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 102 12 ]
+        symbol [ _view %tmp.29 102 12 17 ];
+        %tmp.29 = getv ? :_view;
+        symbol [ turn %tmp.30 102 18 22 ];
+        %tmp.30 = getv function %tmp.29 :turn;
+        %tmp.31 = -1;
+        invoke %tmp.29 %tmp.30(%tmp.31);
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_44_103_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 103 15 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_stmt:
+        %tmp.32 = lgetv %d.1;
+        symbol [ d %tmp.32 103 19 20 ];
+        symbol [ WatchUi %tmp.33 103 24 31 ];
+        %tmp.33 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_RIGHT %tmp.34 103 32 43 ];
+        %tmp.34 = getv %tmp.33 :SWIPE_RIGHT;
+        %tmp.35 = eq %tmp.32 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_45_105_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 104 12 ]
+        symbol [ _view %tmp.37 104 12 17 ];
+        %tmp.37 = getv ? :_view;
+        symbol [ turn %tmp.38 104 18 22 ];
+        %tmp.38 = getv function %tmp.37 :turn;
+        %tmp.39 = 1;
+        invoke %tmp.37 %tmp.38(%tmp.39);
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_45_105_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_105_15_107_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 106 12 ]
+        %tmp.40 = true;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_105_15_107_8_stop:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_103_15_107_8_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_101_15_107_8_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_99_15_107_8_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_97_8_107_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 108 8 ]
+        symbol [ WatchUi %tmp.41 108 8 15 ];
+        %tmp.41 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.42 108 16 29 ];
+        %tmp.42 = getv function %tmp.41 :requestUpdate;
+        invoke %tmp.41 %tmp.42();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 109 8 ]
+        %tmp.43 = true;
+        ret %tmp.43;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_93_26_110_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 114; @symbol_functiondef = [onDrag,114,13,19]; @symbol_param<0> = [evt,114,20,23]; ]
+    function onDrag(evt) {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 115 8 ]
+        %tmp.1 = self;
+        symbol [ _mark %tmp.2 115 8 13 ];
+        %tmp.2 = getv function %tmp.1 :_mark;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 116 12 13 ];
+        %tmp.3 = null;
+        lputv %c.1 %tmp.3;
+        symbol [ c %c.1 116 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 117 8 ]
+        try @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_beginTry @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_endTry @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_catch @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_beginTry:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_12_117_40_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 117 14 ]
+        %tmp.4 = lgetv %evt;
+        symbol [ evt %tmp.4 117 18 21 ];
+        symbol [ getCoordinates %tmp.5 117 22 36 ];
+        %tmp.5 = getv function %tmp.4 :getCoordinates;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %c.1 %tmp.6;
+        symbol [ c %c.1 117 14 15 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_12_117_40_stop:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally;
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_catch:
+        %tmp.7 = exception;
+        push %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 117 42 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_catch" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_42_117_64_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 117 49 50 ];
+        %tmp.8 = dup %tmp.7;
+        lputv %e.2 %tmp.8;
+        symbol [ e %e.2 117 49 50 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_52_117_64_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 117 54 ]
+        %tmp.9 = null;
+        lputv %c.1 %tmp.9;
+        symbol [ c %c.1 117 54 55 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_52_117_64_stop:
+        jsr @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_42_117_64_end:
+        try @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_catch @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_42_117_64_end @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_42_117_64_end @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally;
+        throw %tmp.7;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_117_8_117_64_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_8_118_38_if_stmt:
+        %tmp.10 = lgetv %c.1;
+        symbol [ c %tmp.10 118 12 13 ];
+        %tmp.11 = null;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_8_118_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_8_118_38_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_23_118_38_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 118 25 ]
+        %tmp.13 = true;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_23_118_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_8_118_38_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_118_8_118_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 119 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %t.3 = local;
+        symbol [ t %t.3 119 12 13 ];
+        %tmp.14 = lgetv %evt;
+        symbol [ evt %tmp.14 119 16 19 ];
+        symbol [ getType %tmp.15 119 20 27 ];
+        %tmp.15 = getv function %tmp.14 :getType;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        lputv %t.3 %tmp.16;
+        symbol [ t %t.3 119 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 120 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_8_124_8_if_stmt:
+        %tmp.17 = lgetv %t.3;
+        symbol [ t %tmp.17 120 12 13 ];
+        symbol [ WatchUi %tmp.18 120 17 24 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_START %tmp.19 120 25 40 ];
+        %tmp.19 = getv %tmp.18 :DRAG_TYPE_START;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_8_124_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_8_124_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_42_124_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 121 12 ]
+        %tmp.21 = lgetv %c.1;
+        symbol [ c %tmp.21 121 21 22 ];
+        %tmp.22 = 0;
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        symbol [ _dragX ? 121 12 18 ];
+        putv self :_dragX %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 122 12 ]
+        %tmp.24 = lgetv %c.1;
+        symbol [ c %tmp.24 122 21 22 ];
+        %tmp.25 = 1;
+        %tmp.26 = agetv %tmp.24 %tmp.25;
+        symbol [ _dragY ? 122 12 18 ];
+        putv self :_dragY %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 123 12 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_42_124_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_8_124_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_120_8_124_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 125 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_12_125_52_begin:
+        %tmp.28 = lgetv %t.3;
+        symbol [ t %tmp.28 125 12 13 ];
+        symbol [ WatchUi %tmp.29 125 17 24 ];
+        %tmp.29 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_STOP %tmp.30 125 25 39 ];
+        %tmp.30 = getv %tmp.29 :DRAG_TYPE_STOP;
+        %tmp.31 = ne %tmp.28 %tmp.30;
+        bt %tmp.31 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_true;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_43_125_52_false:
+        symbol [ _dragX %tmp.33 125 43 49 ];
+        %tmp.33 = getv ? :_dragX;
+        %tmp.34 = 0;
+        %tmp.35 = lt %tmp.33 %tmp.34;
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_43_125_52_end:
+        %tmp.36 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_12_125_52_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_43_125_52_false] [%tmp.36 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_43_125_52_end];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_55_125_70_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 125 57 ]
+        %tmp.37 = true;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_55_125_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_125_8_125_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 127 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %dx.4 = local;
+        symbol [ dx %dx.4 127 12 14 ];
+        %tmp.38 = lgetv %c.1;
+        symbol [ c %tmp.38 127 17 18 ];
+        %tmp.39 = 0;
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        symbol [ _dragX %tmp.42 127 24 30 ];
+        %tmp.42 = getv ? :_dragX;
+        %tmp.43 = sub %tmp.40 %tmp.42;
+        lputv %dx.4 %tmp.43;
+        symbol [ dx %dx.4 127 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %dy.5 = local;
+        symbol [ dy %dy.5 128 12 14 ];
+        %tmp.44 = lgetv %c.1;
+        symbol [ c %tmp.44 128 17 18 ];
+        %tmp.45 = 1;
+        %tmp.46 = agetv %tmp.44 %tmp.45;
+        symbol [ _dragY %tmp.48 128 24 30 ];
+        %tmp.48 = getv ? :_dragY;
+        %tmp.49 = sub %tmp.46 %tmp.48;
+        lputv %dy.5 %tmp.49;
+        symbol [ dy %dy.5 128 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 129 8 ]
+        %tmp.50 = -1;
+        symbol [ _dragX ? 129 8 14 ];
+        putv self :_dragX %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 130 8 ]
+        %tmp.51 = -1;
+        symbol [ _dragY ? 130 8 14 ];
+        putv self :_dragY %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 131 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %adx.6 = local;
+        symbol [ adx %adx.6 131 12 15 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_begin:
+        %tmp.52 = lgetv %dx.4;
+        symbol [ dx %tmp.52 131 19 21 ];
+        %tmp.53 = 0;
+        %tmp.54 = lt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_true:
+        %tmp.55 = lgetv %dx.4;
+        symbol [ dx %tmp.55 131 30 32 ];
+        %tmp.56 = sub 0 %tmp.55;
+        push %tmp.56;
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_else_false:
+        %tmp.57 = lgetv %dx.4;
+        symbol [ dx %tmp.57 131 35 37 ];
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_end:
+        %tmp.58 = phi [%tmp.54 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_begin] [%tmp.56 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_true] [%tmp.57 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_else_false] [%tmp.58 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_131_18_131_35_end];
+        lputv %adx.6 %tmp.58;
+        symbol [ adx %adx.6 131 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 132 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %ady.7 = local;
+        symbol [ ady %ady.7 132 12 15 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_begin:
+        %tmp.59 = lgetv %dy.5;
+        symbol [ dy %tmp.59 132 19 21 ];
+        %tmp.60 = 0;
+        %tmp.61 = lt %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_true:
+        %tmp.62 = lgetv %dy.5;
+        symbol [ dy %tmp.62 132 30 32 ];
+        %tmp.63 = sub 0 %tmp.62;
+        push %tmp.63;
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_else_false:
+        %tmp.64 = lgetv %dy.5;
+        symbol [ dy %tmp.64 132 35 37 ];
+        push %tmp.64;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_end:
+        %tmp.65 = phi [%tmp.61 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_begin] [%tmp.63 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_true] [%tmp.64 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_else_false] [%tmp.65 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_132_18_132_35_end];
+        lputv %ady.7 %tmp.65;
+        symbol [ ady %ady.7 132 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 135 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_start" "_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop" ]
+        %minTravel.8 = local;
+        symbol [ minTravel %minTravel.8 135 12 21 ];
+        symbol [ _view %tmp.67 135 24 29 ];
+        %tmp.67 = getv ? :_view;
+        symbol [ width %tmp.68 135 30 35 ];
+        %tmp.68 = getv function %tmp.67 :width;
+        %tmp.69 = invoke %tmp.67 %tmp.68();
+        %tmp.70 = 8;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        lputv %minTravel.8 %tmp.71;
+        symbol [ minTravel %minTravel.8 135 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 136 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_8_136_46_if_stmt:
+        %tmp.72 = lgetv %minTravel.8;
+        symbol [ minTravel %tmp.72 136 12 21 ];
+        %tmp.73 = 16;
+        %tmp.74 = lt %tmp.72 %tmp.73;
+        bf %tmp.74 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_8_136_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_8_136_46_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_28_136_46_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 136 30 ]
+        %tmp.75 = 16;
+        lputv %minTravel.8 %tmp.75;
+        symbol [ minTravel %minTravel.8 136 30 39 ];
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_28_136_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_8_136_46_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_136_8_136_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_stmt:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_12_137_37_begin:
+        %tmp.76 = lgetv %adx.6;
+        symbol [ adx %tmp.76 137 12 15 ];
+        %tmp.77 = lgetv %minTravel.8;
+        symbol [ minTravel %tmp.77 137 18 27 ];
+        %tmp.78 = lt %tmp.76 %tmp.77;
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_31_137_37_true:
+        %tmp.79 = lgetv %ady.7;
+        symbol [ ady %tmp.79 137 31 34 ];
+        %tmp.80 = lgetv %minTravel.8;
+        symbol [ minTravel %tmp.80 137 37 46 ];
+        %tmp.81 = lt %tmp.79 %tmp.80;
+        push %tmp.81;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_31_137_37_end:
+        %tmp.82 = phi [%tmp.78 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_12_137_37_begin] [%tmp.81 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_31_137_37_true] [%tmp.82 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_31_137_37_end];
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_48_137_63_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 137 50 ]
+        %tmp.83 = true;
+        ret %tmp.83;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_48_137_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_137_8_137_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 139 8 ]
+        symbol [ System %tmp.84 139 19 25 ];
+        %tmp.84 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.85 139 26 34 ];
+        %tmp.85 = getv function %tmp.84 :getTimer;
+        %tmp.86 = invoke %tmp.84 %tmp.85();
+        symbol [ _flickMs ? 139 8 16 ];
+        putv self :_flickMs %tmp.86;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 140 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_stmt:
+        %tmp.87 = lgetv %adx.6;
+        symbol [ adx %tmp.87 140 12 15 ];
+        %tmp.88 = lgetv %ady.7;
+        symbol [ ady %tmp.88 140 19 22 ];
+        %tmp.89 = gte %tmp.87 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_24_140_55_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 140 26 ]
+        symbol [ _view %tmp.91 140 26 31 ];
+        %tmp.91 = getv ? :_view;
+        symbol [ turn %tmp.92 140 32 36 ];
+        %tmp.92 = getv function %tmp.91 :turn;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_begin:
+        %tmp.93 = lgetv %dx.4;
+        symbol [ dx %tmp.93 140 37 39 ];
+        %tmp.94 = 0;
+        %tmp.95 = gt %tmp.93 %tmp.94;
+        bf %tmp.95 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_true:
+        %tmp.96 = 1;
+        push %tmp.96;
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_else_false:
+        %tmp.97 = -1;
+        push %tmp.97;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_end:
+        %tmp.98 = phi [%tmp.95 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_begin] [%tmp.96 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_true] [%tmp.97 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_else_false] [%tmp.98 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_37_140_51_end];
+        invoke %tmp.91 %tmp.92(%tmp.98);
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_24_140_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_false:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 141 13 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_stmt:
+        %tmp.99 = lgetv %dy.5;
+        symbol [ dy %tmp.99 141 17 19 ];
+        %tmp.100 = 0;
+        %tmp.101 = lt %tmp.99 %tmp.100;
+        bf %tmp.101 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_else_false;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_25_141_44_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 141 27 ]
+        symbol [ _view %tmp.103 141 27 32 ];
+        %tmp.103 = getv ? :_view;
+        symbol [ advance %tmp.104 141 33 40 ];
+        %tmp.104 = getv function %tmp.103 :advance;
+        invoke %tmp.103 %tmp.104();
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_25_141_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_else_false:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_142_13_142_33_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 142 15 ]
+        symbol [ _view %tmp.106 142 15 20 ];
+        %tmp.106 = getv ? :_view;
+        symbol [ interact %tmp.107 142 21 29 ];
+        %tmp.107 = getv function %tmp.106 :interact;
+        invoke %tmp.106 %tmp.107();
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_142_13_142_33_stop:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_141_13_142_33_if_end:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_140_8_142_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 143 8 ]
+        symbol [ WatchUi %tmp.108 143 8 15 ];
+        %tmp.108 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.109 143 16 29 ];
+        %tmp.109 = getv function %tmp.108 :requestUpdate;
+        invoke %tmp.108 %tmp.109();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 144 8 ]
+        %tmp.110 = true;
+        ret %tmp.110;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_114_25_145_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 147; @symbol_functiondef = [onBack,147,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_147_22_161_4_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 150 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_8_153_8_if_stmt:
+        %tmp.1 = self;
+        symbol [ _isPhantomBack %tmp.2 150 12 26 ];
+        %tmp.2 = getv function %tmp.1 :_isPhantomBack;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_8_153_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_8_153_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_30_153_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 151 12 ]
+        %tmp.4 = 0;
+        symbol [ _lastGestureMs ? 151 12 26 ];
+        putv self :_lastGestureMs %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 152 12 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_30_153_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_8_153_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_150_8_153_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_8_159_8_if_stmt:
+        symbol [ _view %tmp.7 156 12 17 ];
+        %tmp.7 = getv ? :_view;
+        symbol [ closeOverlay %tmp.8 156 18 30 ];
+        %tmp.8 = getv function %tmp.7 :closeOverlay;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_8_159_8_if_true:
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_34_159_8_start:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 157 12 ]
+        symbol [ WatchUi %tmp.10 157 12 19 ];
+        %tmp.10 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.11 157 20 33 ];
+        %tmp.11 = getv function %tmp.10 :requestUpdate;
+        invoke %tmp.10 %tmp.11();
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 158 12 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_34_159_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_156_8_159_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc" 160 8 ]
+        symbol [ SaveResume %tmp.14 160 15 25 ];
+        %tmp.14 = getv ? :SaveResume;
+        symbol [ confirmExit %tmp.15 160 26 37 ];
+        %tmp.15 = getv function %tmp.14 :confirmExit;
+        %tmp.16 = "dungeonmaster";
+        symbol [ _view %tmp.18 160 55 60 ];
+        %tmp.18 = getv ? :_view;
+        symbol [ method %tmp.19 160 61 67 ];
+        %tmp.19 = getv function %tmp.18 :method;
+        %tmp.21 = const :exportSave;
+        symbol [ exportSave %tmp.21 160 69 79 const ];
+        %tmp.22 = invoke %tmp.18 %tmp.19(%tmp.21);
+        %tmp.23 = invoke %tmp.14 %tmp.15(%tmp.16, %tmp.22);
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_dungeonmaster_source_BitochiDungeonMasterDelegate_mc_147_22_161_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dungeonmaster/source/BitochiDungeonMasterDelegate.mc"; @line = 21; ]
+<init> {
+}

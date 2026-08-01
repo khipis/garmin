@@ -12,10 +12,10 @@
 // controller changes state and calls `WatchUi.requestUpdate()`.
 //
 // Board sizing strategy:
-//   The board is a square of side `boardSide = min(w * 0.78, h * 0.65)`,
-//   centred horizontally and pushed down below the score band. We
-//   reserve ~22% of the height for the HUD on top, and a small hint
-//   line at the bottom on touch-capable screens.
+//   The board is a square of side `boardSide = min(w * 0.67, h * 0.56)`
+//   (~10% smaller than the previous 74%/62% fit), centred horizontally
+//   and pushed down below the score band. Reserve ~22% of height for the
+//   HUD on top, and a small hint line at the bottom.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Graphics;
@@ -135,11 +135,18 @@ class UIManager {
         _drawHud(dc, ctrl, w, h);
 
         // ── Board layout ────────────────────────────────────────────
-        var boardSide = w * 74 / 100;     // 78% → 74% (−5%)
-        var maxByH    = h * 62 / 100;     // 65% → 62% (−5%)
+        // ~10% smaller than the previous 74% / 62% fit so tiles clear the
+        // HUD / bottom hint on round bezels.
+        var boardSide = w * 67 / 100;
+        var maxByH    = h * 56 / 100;
         if (boardSide > maxByH) { boardSide = maxByH; }
         var bx = (w - boardSide) / 2;
-        var by = h * 26 / 100;
+        // Vertically centre the board between the HUD band (~24%) and the
+        // bottom hint strip (~12%).
+        var topBand = h * 24 / 100;
+        var botBand = h * 12 / 100;
+        var by = topBand + (h - topBand - botBand - boardSide) / 2;
+        if (by < topBand) { by = topBand; }
         dc.setColor(COL_BOARD_BG, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, boardSide, boardSide, 6);
 

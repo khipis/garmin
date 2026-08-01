@@ -85,6 +85,10 @@ class SolitaireView extends WatchUi.View {
     // Sound + haptics master switch (OPTIONS: sol_fx). 0/unset = ON, 1 = OFF.
     hidden var _fxOn;
 
+    // true once a SaveResume blob has been applied — skips the auto-deal that
+    // would otherwise start a fresh game on first show/update.
+    hidden var _skipStart;
+
     function initialize() {
         View.initialize();
         _tick = 0; _gs = SOL_MENU;
@@ -110,6 +114,7 @@ class SolitaireView extends WatchUi.View {
         _toast = ""; _toastT = 0; _pgUnlockMsg = null; _pgAwarded = false;
         _fxOn = _loadFx();
         _timer = null;
+        _skipStart = false;
     }
 
     function onLayout(dc) {
@@ -125,7 +130,12 @@ class SolitaireView extends WatchUi.View {
         // The main menu is the shared root view; deal straight into a game.
         // Only auto-start from a fresh launch (SOL_MENU) so returning from the
         // post-game leaderboard card doesn't re-deal an in-progress win screen.
-        if (_gs == SOL_MENU) { _deal(); }
+        // A resumed run (_skipStart) already has _gs == SOL_PLAY so this is a
+        // defensive no-op; clear the one-shot flag once consumed so a later
+        // "play again" from the win screen (which goes back through SOL_MENU)
+        // still auto-deals normally.
+        if (_gs == SOL_MENU && !_skipStart) { _deal(); }
+        _skipStart = false;
         // Surface today's login-streak bonus as a one-shot table toast (queued
         // by the App's checkIn on the day's first launch).
         try {
@@ -139,6 +149,104 @@ class SolitaireView extends WatchUi.View {
 
     function onHide() {
         if (_timer != null) { _timer.stop(); _timer = null; }
+    }
+
+    // ─── Mid-run save / resume (shared SaveResume) ───────────────────────────
+
+    // Apply a SaveResume blob before the first paint (called from resumeGame).
+    function loadResume(data) as Void {
+        if (data != null && _applySave(data)) {
+            _skipStart = true;
+        }
+    }
+
+    // Returns a Dictionary of Number/Array<Number> state, or null when there's
+    // nothing worth saving (not mid-deal, or an auto-foundation run is active).
+    function exportSave() {
+        if (_gs != SOL_PLAY || _autoFndQ) { return null; }
+        _cancel();   // never save with a card in hand
+
+        var stk = [];
+        for (var i = 0; i < _stkN; i++) { stk.add(_stk[i]); }
+        var wst = [];
+        for (var i = 0; i < _wstN; i++) { wst.add(_wst[i]); }
+        var fnd = [_fnd[0], _fnd[1], _fnd[2], _fnd[3]];
+        var tN = [_tN[0], _tN[1], _tN[2], _tN[3], _tN[4], _tN[5], _tN[6]];
+        var tU = [_tU[0], _tU[1], _tU[2], _tU[3], _tU[4], _tU[5], _tU[6]];
+        var tab = [];
+        for (var c = 0; c < 7; c++) {
+            for (var i = 0; i < _tN[c]; i++) { tab.add(_tab[c * 20 + i]); }
+        }
+        var elapsed = System.getTimer() - _startMs;
+        if (elapsed < 0) { elapsed = 0; }
+
+        return {
+            "stk"     => stk,
+            "wst"     => wst,
+            "fnd"     => fnd,
+            "tN"      => tN,
+            "tU"      => tU,
+            "tab"     => tab,
+            "moves"   => _moves,
+            "draw"    => _drawCount,
+            "elapsed" => elapsed,
+            "progSub" => _progressSubmitted ? 1 : 0,
+            "pgAwd"   => _pgAwarded ? 1 : 0
+        };
+    }
+
+    hidden function _applySave(data) {
+        try {
+            var stk = data["stk"];
+            var wst = data["wst"];
+            var fnd = data["fnd"];
+            var tN  = data["tN"];
+            var tU  = data["tU"];
+            var tab = data["tab"];
+            if (!(stk instanceof Array) || !(wst instanceof Array) ||
+                !(fnd instanceof Array) || !(tN instanceof Array) ||
+                !(tU instanceof Array) || !(tab instanceof Array)) {
+                return false;
+            }
+            if (fnd.size() < 4 || tN.size() < 7 || tU.size() < 7) { return false; }
+
+            _stkN = stk.size();
+            for (var i = 0; i < _stkN; i++) { _stk[i] = stk[i]; }
+            _wstN = wst.size();
+            for (var i = 0; i < _wstN; i++) { _wst[i] = wst[i]; }
+            for (var i = 0; i < 4; i++) { _fnd[i] = fnd[i]; }
+
+            var idx = 0;
+            for (var c = 0; c < 7; c++) {
+                _tN[c] = tN[c];
+                _tU[c] = tU[c];
+                for (var i = 0; i < _tN[c]; i++) {
+                    _tab[c * 20 + i] = tab[idx]; idx++;
+                }
+            }
+
+            var mv = data["moves"];
+            _moves = (mv instanceof Number) ? mv : 0;
+            var dr = data["draw"];
+            _drawCount = (dr instanceof Number && (dr == 1 || dr == 3)) ? dr : 1;
+            var el = data["elapsed"];
+            var elapsed = (el instanceof Number && el > 0) ? el : 0;
+            _startMs = System.getTimer() - elapsed;
+            _elapsedSecs = 0;
+            var ps = data["progSub"];
+            _progressSubmitted = (ps instanceof Number && ps != 0);
+            var pa = data["pgAwd"];
+            _pgAwarded = (pa instanceof Number && pa != 0);
+            _pgUnlockMsg = null;
+
+            _sel = -1; _sN = 0; _cur = 0;
+            _tapSubIdx = -1;
+            _autoFndQ = false; _winTick = 0; _winParts = null;
+            _fxOn = _loadFx();
+            _gs = SOL_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
     }
 
     hidden function _layOut() {
@@ -294,14 +402,16 @@ class SolitaireView extends WatchUi.View {
         else if (dir == WatchUi.SWIPE_RIGHT) { _cur = (_cur + 1) % 13; }
     }
 
-    // BACK returns to the shared menu (framework pops this pushed view). During
-    // play, BACK first cancels a held card; otherwise it pops out.
+    // BACK: during play, first cancels a held card; otherwise offers to save
+    // progress (SaveResume) before leaving. Outside play (win screens), let
+    // the framework pop normally.
     function doBack() {
         if (_gs == SOL_PLAY) {
             if (_autoFndQ) { return true; }
             if (_sel >= 0) { _cancel(); return true; }
             // Mid-game exit: record how far the player got (cards on foundation).
             submitProgress();
+            return SaveResume.confirmExit("solitaire", method(:exportSave));
         }
         return false;
     }
@@ -686,6 +796,7 @@ class SolitaireView extends WatchUi.View {
             _autoFndQ = false;
             _gs = SOL_WINANIM;
             _winTick = 0;
+            try { SaveResume.clear("solitaire"); } catch (e) {}
             _tone(1); _vibe(100, 260);     // full clear — you win!
             _initWinParts();
 
@@ -801,7 +912,7 @@ class SolitaireView extends WatchUi.View {
         dc.setColor(0x0A2818, 0x0A2818);
         dc.clear();
         // Never render an in-game menu — the shared menu is the root view.
-        if (_gs == SOL_MENU)    { _deal(); }
+        if (_gs == SOL_MENU) { _deal(); }
         if (_gs == SOL_WINANIM) { _drTop(dc); _drTab(dc); _drWinAnim(dc); return; }
         if (_gs == SOL_WON)     { _drWin(dc); return; }
         _drTop(dc);

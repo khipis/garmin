@@ -13,8 +13,17 @@ using Toybox.Lang;
 class ArcheryHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists(LB_GAME_ID); }
+
+    function resumeGame() as Void {
+        var v = new MainView();
+        v.loadResume(SaveResume.load(LB_GAME_ID));
+        WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
+    }
+
     // START → drop straight into a live tournament.
     function startGame() as Void {
+        SaveResume.clear(LB_GAME_ID);
         var v = new MainView();
         WatchUi.pushView(v, new InputHandler(v), WatchUi.SLIDE_LEFT);
     }

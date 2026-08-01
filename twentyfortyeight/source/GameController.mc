@@ -169,6 +169,48 @@ class GameController {
         state = GS_PLAY;
     }
 
+    // Mid-run save / resume (shared SaveResume).
+    function exportSave() {
+        if (state != GS_PLAY && state != GS_WIN) { return null; }
+        if (timeMode) { tickTimer(); }
+        var cells = new [16];
+        for (var i = 0; i < 16; i++) { cells[i] = grid.cells[i]; }
+        return {
+            "cells" => cells,
+            "score" => score,
+            "won"   => hasWonThisRun ? 1 : 0,
+            "tm"    => timeMode ? 1 : 0,
+            "ems"   => elapsedMs
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var cells = data["cells"];
+            if (!(cells instanceof Array) || cells.size() < 16) { return false; }
+            grid.clear();
+            for (var i = 0; i < 16; i++) {
+                var e = cells[i];
+                grid.cells[i] = (e instanceof Number) ? e : 0;
+            }
+            var sc = data["score"];
+            score = (sc instanceof Number) ? sc : 0;
+            var wn = data["won"];
+            hasWonThisRun = (wn instanceof Number && wn != 0);
+            var tm = data["tm"];
+            timeMode = (tm instanceof Number && tm != 0);
+            var em = data["ems"];
+            elapsedMs = (em instanceof Number && em > 0) ? em : 0;
+            lastTimeMs = 0;
+            _startMs = System.getTimer() - elapsedMs;
+            _fxOn = _loadFx();
+            state = GS_PLAY;
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     // Called from the view's timer (Time mode only) to keep the on-screen
     // stopwatch current while playing.
     function tickTimer() {
@@ -239,6 +281,7 @@ class GameController {
                 }
                 var secs = dt / 1000;
                 if (secs < 1) { secs = 1; }
+                try { SaveResume.clear("twentyfortyeight"); } catch (e) {}
                 Leaderboard.submitScore(LB_GAME_ID_TIME, secs, "");
                 Leaderboard.showPostGame(LB_GAME_ID_TIME, "", "2048 TIME");
             }
@@ -248,6 +291,7 @@ class GameController {
 
         if (!grid.hasAnyMove()) {
             state = GS_OVER;
+            try { SaveResume.clear("twentyfortyeight"); } catch (e) {}
             // Game-over sting.
             _tone(2);
             _vibe(100, 200);

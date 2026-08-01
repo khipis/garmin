@@ -9,7 +9,16 @@ using Toybox.Lang;
 class JazzBallHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("jazzball"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiJazzBallView();
+        v.loadResume(SaveResume.load("jazzball"));
+        WatchUi.pushView(v, new BitochiJazzBallDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("jazzball");
         var v = new BitochiJazzBallView();
         WatchUi.pushView(v, new BitochiJazzBallDelegate(v), WatchUi.SLIDE_LEFT);
     }

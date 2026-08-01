@@ -122,6 +122,10 @@ class BitochiBoxingView extends WatchUi.View {
     // hard). Scales opponent damage and speed, and segments the leaderboard.
     hidden var _diff;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed fight back to a fresh GS_MENU run.
+    hidden var _skipStart;
+
     // Meta-progression: one-shot login-streak toast + one-shot cosmetic-unlock
     // banner (shown on the run-end cards). Both cleared after being shown.
     hidden var _dailyMsg;
@@ -183,7 +187,70 @@ class BitochiBoxingView extends WatchUi.View {
 
         _dailyMsg = null; _dailyMsgTick = 0; _pgUnlockMsg = null;
 
+        _skipStart = false;
+
         gameState = GS_MENU;
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export from a settled, idle main-fight frame — never mid
+    // punch animation, dodge, KO, intro or a result screen.
+    function exportSave() {
+        if (gameState != GS_FIGHT || _playerState != PS_IDLE) { return null; }
+        return {
+            "round" => _round, "wins" => _wins, "score" => _score,
+            "pMaxHp" => _playerMaxHp, "pHp" => _playerHp, "stam" => _stamina,
+            "eHp" => _enemyHp, "eMaxHp" => _enemyMaxHp, "eDmg" => _enemyDmg,
+            "eSpd" => _enemySpeed, "eStamMax" => _enemyStaminaMax, "eStam" => _enemyStamina,
+            "eFace" => _enemyFace, "bestRound" => _bestRound, "rematch" => (_rematchUsed ? 1 : 0),
+            "hits" => _totalHits, "perfect" => _perfectHits, "maxCombo" => _maxCombo,
+            "pBruise" => _playerBruise, "pSwL" => _playerSwellL, "pSwR" => _playerSwellR,
+            "eBruise" => _enemyBruise, "eCuts" => _enemyCuts, "eSwL" => _enemySwellL,
+            "eSwR" => _enemySwellR, "eNose" => _enemyNoseBleed, "roundTimer" => _roundTimer
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from BoxingHooks).
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _round = data["round"]; _wins = data["wins"]; _score = data["score"];
+            _playerMaxHp = data["pMaxHp"]; _playerHp = data["pHp"]; _stamina = data["stam"];
+            _enemyHp = data["eHp"]; _enemyMaxHp = data["eMaxHp"]; _enemyDmg = data["eDmg"];
+            _enemySpeed = data["eSpd"]; _enemyStaminaMax = data["eStamMax"]; _enemyStamina = data["eStam"];
+            _enemyFace = data["eFace"]; _bestRound = data["bestRound"]; _rematchUsed = (data["rematch"] == 1);
+            _totalHits = data["hits"]; _perfectHits = data["perfect"]; _maxCombo = data["maxCombo"];
+            _playerBruise = data["pBruise"]; _playerSwellL = data["pSwL"]; _playerSwellR = data["pSwR"];
+            _enemyBruise = data["eBruise"]; _enemyCuts = data["eCuts"]; _enemySwellL = data["eSwL"];
+            _enemySwellR = data["eSwR"]; _enemyNoseBleed = data["eNose"]; _roundTimer = data["roundTimer"];
+
+            var skins = [0xDDAA77, 0xBB8855, 0x8B6842, 0xE8C39E, 0xA0734A, 0xC9956B, 0xD4A574, 0x6B4226];
+            _enemySkin = skins[_enemyFace % 8];
+            var hairs = [0x222222, 0x553311, 0xAA6633, 0xFF4422, 0x888888, 0x111111, 0xDDBB44, 0x221100];
+            _enemyHairCol = hairs[_enemyFace % 8];
+            _enemyHairStyle = _enemyFace % 4;
+
+            _playerState = PS_IDLE; _playerStateTick = 0; _punchCooldown = 0;
+            _comboCount = 0; _comboTimer = 0; _comboMeter = 0; _staminaRegenDelay = 0;
+            _punchLabel = ""; _punchLabelTick = 0;
+
+            _enemyState = ES_IDLE; _enemyStateTick = 0;
+            _enemyAttackTimer = 0; _enemyComboLeft = 0; _enemyPunchType = 0;
+            var baseDelay = (18.0 / _enemySpeed).toNumber();
+            if (baseDelay < 5) { baseDelay = 5; }
+            _enemyNextAttack = baseDelay + Math.rand().abs() % 10;
+
+            _shakeX = 0; _shakeY = 0; _shakeLeft = 0;
+            _flashTick = 0; _hitFlash = 0; _superFlash = 0; _koTick = 0; _introTick = 0;
+            _bloodIdx = 0;
+            for (var i = 0; i < BLOOD_MAX; i++) { _bloodLife[i] = 0; }
+            for (var i = 0; i < 8; i++) { _sweatLife[i] = 0; }
+            for (var i = 0; i < 6; i++) { _starLife[i] = 0; }
+            for (var i = 0; i < 6; i++) { _dmgPopLife[i] = 0; }
+
+            gameState = GS_FIGHT;
+            _skipStart = true;
+        } catch (e) {}
     }
 
     // Leaderboard variant = difficulty, so easy/normal/hard rank separately.
@@ -235,7 +302,8 @@ class BitochiBoxingView extends WatchUi.View {
         // Root view is the shared menu; drop straight into a fresh match.
         // Only auto-start from the initial GS_MENU state (returning from the
         // post-game leaderboard card leaves us in WIN/LOSE/CHAMPION, not MENU).
-        if (gameState == GS_MENU) { startFromMenu(); }
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && gameState == GS_MENU) { startFromMenu(); }
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
@@ -314,6 +382,7 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (gameState == GS_WIN) {
             _rematchUsed = false;
             if (_wins >= 20) {
+                try { SaveResume.clear("boxing"); } catch (e) {}
                 _awardProgress();
                 Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
                 Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");
@@ -474,6 +543,7 @@ class BitochiBoxingView extends WatchUi.View {
                     // once the free rematch has been used — a first loss still
                     // offers a rematch, so the run isn't over yet.
                     if (_rematchUsed) {
+                        try { SaveResume.clear("boxing"); } catch (e) {}
                         _awardProgress();
                         Leaderboard.submitScore(LB_GAME_ID, _score, _lbVariant());
                         Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "BOXING");

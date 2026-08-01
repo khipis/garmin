@@ -9,7 +9,16 @@ using Toybox.Lang;
 class BilliardsHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("billiards"); }
+
+    function resumeGame() as Void {
+        var v = new BilliardView();
+        v.loadResume(SaveResume.load("billiards"));
+        WatchUi.pushView(v, new BilliardDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("billiards");
         var v = new BilliardView();
         WatchUi.pushView(v, new BilliardDelegate(v), WatchUi.SLIDE_LEFT);
     }

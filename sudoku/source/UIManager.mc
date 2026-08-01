@@ -258,7 +258,7 @@ class UIManager {
                             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            var msg = (ctrl.valMode == VAL_STRICT) ? "BACK to submit" : "BACK to exit";
+            var msg = (ctrl.valMode == VAL_STRICT) ? "Fill all to submit" : "BACK to save/exit";
             dc.drawText(cx, hasBest ? midB + fh / 2 + 1 : midB, Graphics.FONT_XTINY,
                         msg, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         } else if (ctrl.state == GS_PAUSED) {

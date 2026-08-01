@@ -45,6 +45,9 @@ class ColonyModel {
     // Idle summary (for WELCOME BACK)
     var gRes; var gSecs; var gPop; var newDay; var gEvent; var gArt;
     var gDefN; var gDefHeld;   // incoming attacks resolved on this return
+    var mailAlert;             // real inbox raids arrived this session (UI flag)
+    hidden var _mailPending;   // waiting on /inbox (phone was up at collect)
+    hidden var _mailElapsed;   // elapsed secs for offline RNG if inbox fails
     var lastClaimBonus;   // streak-milestone line from the last daily claim
 
     // Last raid outcome (transient — for the raid-result overlay only).
@@ -173,6 +176,7 @@ class ColonyModel {
         for (var g = 0; g < Sc.R_N; g++) { gRes[g] = 0; }
         gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
         gDefN = 0; gDefHeld = 0;
+        mailAlert = false; _mailPending = false; _mailElapsed = 0;
         lastClaimBonus = "";
         rWin = false; rFoeName = ""; rPtsDelta = 0; rTip = ""; rCredit = 0; rSci = 0;
     }
@@ -435,6 +439,7 @@ class ColonyModel {
         for (var z = 0; z < Sc.R_N; z++) { gRes[z] = 0; }
         gSecs = 0; gPop = 0; newDay = false; gEvent = Sc.EV_NONE; gArt = -1;
         gDefN = 0; gDefHeld = 0;
+        mailAlert = false; _mailPending = false; _mailElapsed = 0;
 
         var td = today();
         if (td != lastDay) {
@@ -469,9 +474,16 @@ class ColonyModel {
         // in, and a credit-funded supply drop can always restart it.
         _growPopulation(elapsed);
 
+        // Real rival raids arrive via /inbox when the phone is up; offline we
+        // still roll the local defence RNG so a disconnected watch feels alive.
         // Rivals raid AFTER production banks, so the skim comes off a stockpile
         // the player has actually been credited with rather than a stale one.
-        _resolveIncoming(elapsed);
+        if (Leaderboard.isPhoneConnected() && Leaderboard.loadUser() != null) {
+            _mailPending = true;
+            _mailElapsed = elapsed;
+        } else {
+            _resolveIncoming(elapsed);
+        }
 
         _creditSteps();
 
@@ -984,12 +996,16 @@ class ColonyModel {
         if (pick >= 0) {
             var pdef = _rNum(rivals[pick], 1);
             if (pdef < 5) { pdef = 5; }
-            return { :name => _rStr(rivals[pick], 0), :def => pdef };
+            return { :name => _rStr(rivals[pick], 0), :def => pdef, :real => true };
         }
         var pct = Sc.raidBandLo(band) + _rand(Sc.raidBandHi(band) - Sc.raidBandLo(band) + 1);
         var def = atk * pct / 100;
         if (def < 5) { def = 5; }
-        return { :name => _foeName(), :def => def };
+        // Prefer a real colony's name over the flavour list whenever one is cached.
+        if (rivals.size() > 0) {
+            return { :name => _rStr(rivals[_rand(rivals.size())], 0), :def => def, :real => true };
+        }
+        return { :name => Sc.warFoeName(_rand(Sc.WAR_FOE_N)), :def => def, :real => false };
     }
     // Prefer a real colony's name over the flavour list whenever one is cached.
     hidden function _foeName() {
@@ -1046,6 +1062,12 @@ class ColonyModel {
         if (!rankBefore.equals(rankAfter)) {
             _logAdd((win ? "Promoted to " : "Demoted to ") + rankAfter);
         }
+        // Tell the named rival they were raided — async inbox, never blocks play.
+        try {
+            if (foe[:real]) {
+                RaidMail.notify(Sc.GAME_ID, foe[:name], "raid", win);
+            }
+        } catch (e) {}
         save();
         return win ? ("Victory over " + foe[:name] + "!") : ("Repelled by " + foe[:name]);
     }
@@ -1058,11 +1080,67 @@ class ColonyModel {
     function warRecent() { return warLog; }
 
     // ── Incoming attacks ──────────────────────────────────────────────────
-    // Nobody is running a PvP server, so a rival raid is rolled when the
-    // player comes back — the only moment they could ever witness it. This is
-    // what defensePower() is for: turrets and the Defense Grid finally buy
-    // something concrete. Deliberately kept out of warLog and the colony
-    // history: both cap at 8 entries and a week away would flush them.
+    // Real raids arrive via RaidMail (/inbox) when the phone is connected.
+    // Offline (or when the fetch fails) we still roll a local defence RNG so
+    // the war layer stays alive without a network. defensePower() decides
+    // hold vs loss. Deliberately kept out of warLog and the colony history:
+    // both cap at 8 entries and a week away would flush them.
+
+    // PUBLIC — LbRaidInbox callback. `events` is an Array of Dictionaries
+    // {id, from, kind, won, ts}; won=1 means the attacker beat us.
+    function onRaidInbox(ok, events) {
+        if (!ok) {
+            if (_mailPending) {
+                _resolveIncoming(_mailElapsed);
+                _mailPending = false;
+                if (gDefN > 0) { mailAlert = true; }
+                save();
+            }
+            return;
+        }
+        _mailPending = false;
+        var maxId = 0;
+        var n = 0;
+        if (events instanceof Lang.Array) {
+            for (var i = 0; i < events.size(); i++) {
+                var e = events[i];
+                if (!(e instanceof Lang.Dictionary)) { continue; }
+                var from = e["from"];
+                if (!(from instanceof Lang.String) || from.length() == 0) { continue; }
+                var awon = (e["won"] == 1 || e["won"] == true);
+                _applyMailRaid(from, awon);
+                n += 1;
+                var id = e["id"];
+                if (id instanceof Lang.Number && id > maxId) { maxId = id; }
+            }
+        }
+        if (maxId > 0) { RaidMail.saveAck(maxId); }
+        // Empty inbox while online = nobody came calling. Do not invent raids.
+        if (n > 0) { mailAlert = true; save(); }
+    }
+
+    hidden function _applyMailRaid(from, attackerWon) {
+        var td = today();
+        gDefN += 1;
+        if (!attackerWon) {
+            warPts += Sc.DEF_HELD_PTS;
+            gDefHeld += 1;
+            _defLogAdd([td, 1, from, 0, 0, 0]);
+            return;
+        }
+        var ptsLoss = Sc.DEF_LOST_PTS;
+        if (ptsLoss > warPts) { ptsLoss = warPts; }
+        warPts -= ptsLoss;
+        var skim = _pct(res[Sc.R_MIN], Sc.DEF_SKIM_PCT);
+        if (skim > Sc.DEF_SKIM_CAP) { skim = Sc.DEF_SKIM_CAP; }
+        _subRes(Sc.R_MIN, skim);
+        var lostMar = 0;
+        if (marines > Sc.DEF_MARINE_MIN && _rand(100) < Sc.DEF_MARINE_PCT) {
+            marines -= 1; lostMar = 1;
+        }
+        _defLogAdd([td, 0, from, ptsLoss, skim, lostMar]);
+    }
+
     hidden function _resolveIncoming(elapsed) {
         // A colony that has never fought and owns no garrison is not a target.
         if (warWins + warLosses == 0 && marines == 0 && turrets == 0) { return; }

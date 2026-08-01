@@ -271,6 +271,65 @@ class GameController {
     }
     function gotoMenu() { state = SS_MENU; savePrefs(); }
 
+    // ── Mid-mission save / resume ─────────────────────────────
+    // Only exportable while actively aiming/scanning (SS_PLAY) —
+    // avoids serializing a bullet-in-flight or a transient RESULT
+    // overlay. On resume we regenerate the round's targets fresh
+    // via _beginRound(); exact target positions are lost but the
+    // mission's score/round progress is preserved.
+    function exportSave() {
+        if (state != SS_PLAY) { return null; }
+        return {
+            "round"       => round,
+            "totalRounds" => totalRounds,
+            "score"       => score,
+            "headshots"   => headshots,
+            "headStreak"  => headStreak,
+            "diff"        => diff,
+            "sens"        => sens,
+            "scene"       => scene,
+            "spawnSeed"   => _spawnSeed
+        };
+    }
+
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var r  = data["round"];
+            var tr = data["totalRounds"];
+            if (!(r instanceof Number) || r < 0) { return false; }
+            if (!(tr instanceof Number) || tr <= 0) { tr = SS_ROUNDS_DEFAULT; }
+            if (r >= tr) { r = tr - 1; }
+
+            _fxOn        = _loadFx();
+            round        = r;
+            totalRounds  = tr;
+            var sc = data["score"];      score      = (sc   instanceof Number) ? sc   : 0;
+            var hs = data["headshots"];  headshots  = (hs   instanceof Number) ? hs   : 0;
+            var hk = data["headStreak"]; headStreak = (hk   instanceof Number) ? hk   : 0;
+            var d  = data["diff"];       diff       = (d instanceof Number && d >= 0 && d <= 2) ? d : diff;
+            var s  = data["sens"];       sens       = (s instanceof Number && s >= 0 && s <= 2) ? s : sens;
+            var sn = data["scene"];      scene      = (sn instanceof Number) ? sn : SS_SCENE_FIELD;
+            var sd = data["spawnSeed"];  _spawnSeed = (sd instanceof Number) ? sd : _spawnSeed;
+
+            streakMsg = ""; streakBonus = 0;
+            _newDistFlag = false; _newShotFlag = false; _newHeadFlag = false;
+            resultT = 0; recoilT = 0; shakeT = 0; slowmoT = 0; muzzleFlashT = 0;
+
+            gyro.setSensitivity(sens);
+            aim.setSensitivity(sens);
+            targets.setDifficulty(diff);
+            aim.reset();
+            breath.reset();
+            gyro.recalibrate();
+            targets.setSeed(_spawnSeed + 7);
+            wind.setSeed(_spawnSeed + 13);
+            _beginRound();
+            return true;
+        } catch (e) {}
+        return false;
+    }
+
     function sensName() {
         if (sens == SS_SENS_LOW)  { return "Low"; }
         if (sens == SS_SENS_HIGH) { return "High"; }
@@ -328,17 +387,21 @@ class GameController {
         if (score > bestScore)         { bestScore = score; }
         if (headshots > bestHeadshots) { bestHeadshots = headshots; _newHeadFlag = true; }
         savePrefs();
-        // Submit the session's final score to the global leaderboard,
-        // split by difficulty variant.  Long-range headshots already
-        // feed `score` via the per-shot distance bonus.
-        Leaderboard.submitScore(SS_LB_GAME_ID, score, diffName());
+        try { SaveResume.clear(SS_LB_GAME_ID); } catch (e) {}
+        // One serial batch — never fire concurrent makeWebRequest POSTs at
+        // game-over (Garmin allows only one; collisions → "No connection").
+        var entries = [{ :score => score, :variant => diffName(), :meta => null }];
+        if (_newDistFlag) {
+            entries.add({ :score => bestDistance, :variant => "longest-shot", :meta => null });
+        }
+        if (_newShotFlag) {
+            entries.add({ :score => bestShotPts, :variant => "best-shot", :meta => null });
+        }
+        if (_newHeadFlag) {
+            entries.add({ :score => bestHeadshots, :variant => "headshots", :meta => null });
+        }
+        Leaderboard.submitScoreBatch(SS_LB_GAME_ID, entries);
         Leaderboard.showPostGame(SS_LB_GAME_ID, diffName(), "SNIPER");
-        // Spectacular-shot leaderboards — only submitted when THIS
-        // mission actually set a new personal best, so each board
-        // fills up with genuine records instead of repeat noise.
-        if (_newDistFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestDistance, "longest-shot"); }
-        if (_newShotFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestShotPts,  "best-shot"); }
-        if (_newHeadFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestHeadshots, "headshots"); }
         // Mission-complete fanfare — bigger celebration on a new record.
         if (_newDistFlag || _newShotFlag || _newHeadFlag) {
             _tone(3);
@@ -421,6 +484,12 @@ class GameController {
 
         // Breath uses the gaze AFTER aim filter, NOT the raw target,
         // so motion is measured in scope-frame ticks (clean & stable).
+        // After a settled (re)calibration, snap the aim filter to zero so
+        // the scope doesn't lag from the pre-cal "held still" samples.
+        if (gyro.consumeJustCalibrated()) {
+            aim.reset();
+            breath.reset();
+        }
         breath.tick(aim.gazeYaw, aim.gazePitch);
         aim.tick(gyro.tYaw, gyro.tPitch,
                  breath.swayYaw, breath.swayPitch);

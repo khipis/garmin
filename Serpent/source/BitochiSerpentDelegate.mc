@@ -68,9 +68,9 @@ class BitochiSerpentDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    // BACK returns to the shared menu (framework pops this pushed view).
+    // BACK — offer to save progress before returning to the shared menu.
     function onBack() {
         if (_sensorEnabled) { Sensor.enableSensorEvents(null); }
-        return false;
+        return SaveResume.confirmExit("serpent", _view.method(:exportSave));
     }
 }

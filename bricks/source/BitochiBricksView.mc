@@ -90,6 +90,10 @@ class BitochiBricksView extends WatchUi.View {
     hidden var _menuRowX; hidden var _menuRowW; hidden var _menuRowH;
     hidden var _menuPlayY; hidden var _menuLbY;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh BS_MENU start.
+    hidden var _skipStart;
+
     // Scaled layout values — all derived from _w and _h
     hidden var _bOffX;
     hidden var _bW;
@@ -144,6 +148,7 @@ class BitochiBricksView extends WatchUi.View {
         _level = 1; _score = 0; _lives = 3; _resultTick = 0;
         _menuSel = 0;
         _menuRowX = 0; _menuRowW = 0; _menuRowH = 0; _menuPlayY = 0; _menuLbY = 0;
+        _skipStart = false;
 
         // Difficulty from the shared OPTIONS screen (br_diff: 0/1/2). Default
         // NORMAL(1) matches the previous single-difficulty behaviour.
@@ -281,7 +286,8 @@ class BitochiBricksView extends WatchUi.View {
         _timer.start(method(:onTick), 50, true);
         // Root view is the shared menu; drop straight into play. Only auto-start
         // from the initial BS_MENU (returning from the post-game card is BS_OVER).
-        if (_gameState == BS_MENU) {
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && _gameState == BS_MENU) {
             startFromMenu();
             // Surface today's login-streak bonus as a one-shot non-blocking
             // toast (queued by the App's checkIn on the day's first launch).
@@ -301,6 +307,32 @@ class BitochiBricksView extends WatchUi.View {
         _level = 1; _score = 0; _lives = 3;
         _combo = 0; _comboBest = 0; _pgUnlockMsg = null;
         initLevel(); _gameState = BS_PLAY;
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export at BS_WIN — the between-level checkpoint — never
+    // mid-action while the ball/bricks/powerups are still live.
+    function exportSave() {
+        if (_gameState != BS_WIN) { return null; }
+        return {
+            "level" => _level, "score" => _score, "lives" => _lives,
+            "comboBest" => _comboBest
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from
+    // BricksHooks). _level was already incremented at the WIN that produced
+    // this save, so resuming just replays the same tap-through as advancing
+    // past that WIN screen: initLevel() + BS_PLAY.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _level = data["level"]; _score = data["score"];
+            _lives = data["lives"]; _comboBest = data["comboBest"];
+            initLevel();
+            _gameState = BS_PLAY;
+            _skipStart = true;
+        } catch (e) {}
     }
 
     function onTick() as Void {
@@ -443,6 +475,7 @@ class BitochiBricksView extends WatchUi.View {
                 _awardProgress(_score);
                 Leaderboard.submitScore(LB_GAME_ID, _score, _diffVariant());
                 Leaderboard.showPostGame(LB_GAME_ID, _diffVariant(), "BRICKS");
+                try { SaveResume.clear("bricks"); } catch (e) {}
                 _gameState = BS_OVER;
             } else {
                 spawnBall(-1);

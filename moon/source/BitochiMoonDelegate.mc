@@ -99,7 +99,8 @@ class BitochiMoonDelegate extends WatchUi.BehaviorDelegate {
     function onBack() {
         if (_sensorEnabled) {
             Sensor.enableSensorEvents(null);
+            _sensorEnabled = false;
         }
-        return false;
+        return SaveResume.confirmExit("moon", _view.method(:exportSave));
     }
 }

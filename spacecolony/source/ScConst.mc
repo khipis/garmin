@@ -539,7 +539,7 @@ module Sc {
         return RIV_PWR_BASE + p * RIV_PWR_NUM / RIV_PWR_DEN;
     }
 
-    // Incoming attacks. There is no server-side PvP, so rival raids that
+    // Incoming attacks. Real raids arrive via RaidMail (/inbox); offline rolls
     // happened while the player was away are rolled on return — the only
     // moment they can be experienced anyway. Deliberately low-stakes:
     // buildings, population and the garrison beyond a single casualty are

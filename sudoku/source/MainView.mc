@@ -18,6 +18,7 @@ class MainView extends WatchUi.View {
     hidden var _ui;
     hidden var _timer;
     hidden var _started;   // auto-start the puzzle on first frame
+    hidden var _skipStart;
 
     function initialize() {
         View.initialize();
@@ -25,6 +26,18 @@ class MainView extends WatchUi.View {
         _ui    = new UIManager();
         _timer = null;
         _started = false;
+        _skipStart = false;
+    }
+
+    function loadResume(data) as Void {
+        if (data != null && _ctrl.applySave(data)) {
+            _skipStart = true;
+            _started = true;
+        }
+    }
+
+    function exportSave() {
+        return _ctrl.exportSave();
     }
 
     function onLayout(dc) {
@@ -58,7 +71,7 @@ class MainView extends WatchUi.View {
         // Menu lives in the shared root view — drop straight into a puzzle and
         // never render an in-game menu here.
         if (!_started || _ctrl.state == GS_MENU) {
-            _ctrl.startGame();
+            if (!_skipStart) { _ctrl.startGame(); }
             _started = true;
         }
         _ui.drawBoard(dc, _ctrl);
@@ -103,23 +116,19 @@ class MainView extends WatchUi.View {
     }
 
     // BACK semantics depend on state:
-    //   play      → strict: submit board; relaxed: pop to shared menu
+    //   play      → save-progress prompt (SaveResume) via InputHandler
     //   failed    → resume to play (so user can fix)
     //   paused / complete → pop to shared menu
     function navBack() {
-        if (_ctrl.state == GS_PLAY) {
-            if (_ctrl.valMode == VAL_STRICT) {
-                _ctrl.submit();
-                return true;
-            }
-            return false;   // pop back to the shared unified menu
+        if (_ctrl.state == GS_PLAY || _ctrl.state == GS_PAUSED) {
+            return false;   // InputHandler → SaveResume.confirmExit
         }
         if (_ctrl.state == GS_FAILED) {
             // Drop back into play so the player can fix mistakes.
             _ctrl.resumeFromFailed();
             return true;
         }
-        // PAUSED / COMPLETE / anything else → let the framework pop the view.
+        // COMPLETE / anything else → let the framework pop the view.
         return false;
     }
 

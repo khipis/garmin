@@ -13,9 +13,22 @@ using Toybox.Lang;
 class PinballProHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("pinballpro"); }
+
+    // RESUME → same wiring as startGame (delegate back-reference for the
+    // touch-hold safety net), but load the saved match before showing it.
+    function resumeGame() as Void {
+        var v = new MainView();
+        var d = new InputHandler(v);
+        v.setDelegate(d);
+        v.loadResume(SaveResume.load("pinballpro"));
+        WatchUi.pushView(v, d, WatchUi.SLIDE_LEFT);
+    }
+
     // START → drop straight into a match. Pinball's MainView needs a
     // back-reference to its delegate for the touch-hold safety net.
     function startGame() as Void {
+        SaveResume.clear("pinballpro");
         var v = new MainView();
         var d = new InputHandler(v);
         v.setDelegate(d);

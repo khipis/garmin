@@ -9,7 +9,16 @@ using Toybox.Lang;
 class BombHooks extends GameHooks {
     function initialize() { GameHooks.initialize(); }
 
+    function hasResume() as Lang.Boolean { return SaveResume.exists("bomb"); }
+
+    function resumeGame() as Void {
+        var v = new BitochiBombView();
+        v.loadResume(SaveResume.load("bomb"));
+        WatchUi.pushView(v, new BitochiBombDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function startGame() as Void {
+        SaveResume.clear("bomb");
         var v = new BitochiBombView();
         WatchUi.pushView(v, new BitochiBombDelegate(v), WatchUi.SLIDE_LEFT);
     }

@@ -34,6 +34,6 @@ class BitochiCatapultDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        return false;
+        return SaveResume.confirmExit("catapult", _view.method(:exportSave));
     }
 }

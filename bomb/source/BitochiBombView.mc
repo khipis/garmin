@@ -141,6 +141,10 @@ class BitochiBombView extends WatchUi.View {
     hidden var _menuSel;
     hidden var _lbHandled;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh GS_MENU start.
+    hidden var _skipStart;
+
     // Difficulty from the shared OPTIONS screen (bomb_diff: 0/1/2 = easy/normal/
     // hard). Scales the bomb budget per wave — the core resource whose depletion
     // ends the run — so fewer bombs = harder. Segments the leaderboard.
@@ -257,6 +261,7 @@ class BitochiBombView extends WatchUi.View {
         _airstrikeTimer = 0;
         _menuSel = 0;
         _lbHandled = false;
+        _skipStart = false;
 
         _diff = 1;
         var dv = Application.Storage.getValue("bomb_diff");
@@ -275,7 +280,49 @@ class BitochiBombView extends WatchUi.View {
         _timer.start(method(:onTick), 33, true);
         // Root menu is the shared view; drop straight into play. Only auto-start
         // from a fresh launch (returning from the post-game card keeps the state).
-        if (gameState == GS_MENU) { startFromMenu(); }
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && gameState == GS_MENU) { startFromMenu(); }
+    }
+
+    // Mid-run save: between waves, OR mid-play (restarts the same wave on resume).
+    function exportSave() {
+        if (gameState == GS_BETWEEN) {
+            return {
+                "wave" => _wave, "score" => _score,
+                "totalKills" => _totalKills, "totalDamage" => _totalDamage,
+                "between" => 1
+            };
+        }
+        if (gameState == GS_PLAY) {
+            return {
+                "wave" => _wave, "score" => _score,
+                "totalKills" => _totalKills, "totalDamage" => _totalDamage,
+                "between" => 0
+            };
+        }
+        return null;
+    }
+
+    // Apply a SaveResume blob before the first paint (called from BombHooks).
+    // Between-wave saves advance to the next wave; mid-play saves reload the
+    // current wave with the same score / kill totals.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            var wv = data["wave"];
+            var sc = data["score"];
+            var tk = data["totalKills"];
+            var td = data["totalDamage"];
+            _wave = (wv instanceof Number) ? wv : 1;
+            _score = (sc instanceof Number) ? sc : 0;
+            _totalKills = (tk instanceof Number) ? tk : 0;
+            _totalDamage = (td instanceof Number) ? td : 0;
+            var bt = data["between"];
+            if (bt instanceof Number && bt != 0) { _wave++; }
+            if (_wave < 1) { _wave = 1; }
+            startWave();
+            _skipStart = true;
+        } catch (e) {}
     }
 
     // Begin a fresh run from the shared main menu (wave 1, cleared stats).
@@ -586,6 +633,7 @@ class BitochiBombView extends WatchUi.View {
                 if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("bombBest", _bestScore); }
                 gameState = GS_GAMEOVER;
                 _resultTick = 0;
+                try { SaveResume.clear("bomb"); } catch (e) {}
                 if (!_lbHandled) {
                     _lbHandled = true;
                     Leaderboard.submitScore(BOMB_LB_GAME_ID, _score, _lbVariant());

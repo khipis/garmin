@@ -552,6 +552,7 @@ class GameController {
                 _vibe(100, 200);
             }
             state = GS_OVER;
+            try { SaveResume.clear("pongpro"); } catch (e) {}
             return;
         }
         _serve();
@@ -570,6 +571,50 @@ class GameController {
         // Recentre AI paddle a bit and let it pick a fresh random error.
         ai.onServe(paddleH / 2);
         state = GS_SERVE;
+    }
+
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Saved ONLY at GS_SERVE — the ball is parked at centre and no rally is
+    // in flight, so it's the one settled snapshot point in a match.
+    function exportSave() {
+        if (state != GS_SERVE) { return null; }
+        return {
+            "scoreP" => scoreP,
+            "scoreCpu" => scoreCpu,
+            "lastWinner" => lastWinner,
+            "difficulty" => difficulty
+        };
+    }
+
+    // Apply a SaveResume blob once the screen is laid out (called from
+    // MainView after setScreen so playX0/playY0/... are already set).
+    function applySave(data) {
+        if (data == null) { return false; }
+        try {
+            var sp = data["scoreP"];
+            var sc = data["scoreCpu"];
+            if (!(sp instanceof Number) || !(sc instanceof Number)) { return false; }
+            scoreP = sp;
+            scoreCpu = sc;
+            var lw = data["lastWinner"];
+            lastWinner = (lw instanceof Number) ? lw : -1;
+            var d = data["difficulty"];
+            setDifficulty((d instanceof Number) ? d : difficulty);
+
+            _fxOn     = _loadFx();
+            _wallFxCd = 0;
+            growSide = -1; growTimer = 0;
+            shrinkSide = -1; shrinkTimer = 0;
+            lastHitSide = -1;
+            _applyPaddleSizes();
+            puSpawnTimer = _randSpawnGap();
+            gyro.calibrate();
+            _tiltSmoothY = 0.0;
+            _tiltCenter  = ((playY0 + playY1) / 2).toFloat();
+            _serve();
+            return true;
+        } catch (e) {}
+        return false;
     }
 }
 

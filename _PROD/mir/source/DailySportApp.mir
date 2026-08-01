@@ -1,0 +1,164 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Application,1,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Lang,2,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [WatchUi,3,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 5; @symbol_classdef = [BitochiDailySportApp,5,6,26]; @symbol_extends<0> = [Application,5,35,46]; @symbol_extends<1> = [AppBase,5,47,54]; ]
+class BitochiDailySportApp extends Application.AppBase {
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 5; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 5; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 7; @symbol_functiondef = [initialize,7,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_7_26_7_50_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 7 28 ]
+        symbol [ AppBase %tmp.2 7 28 35 ];
+        %tmp.2 = getv ? :AppBase;
+        symbol [ initialize %tmp.3 7 36 46 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_7_26_7_50_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 9; @symbol_functiondef = [onStart,9,13,20]; @symbol_param<0> = [state,9,21,26]; ]
+    function onStart(state) {
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_9_28_21_4_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 10 8 ]
+        symbol [ Leaderboard %tmp.2 10 8 19 ];
+        %tmp.2 = getv ? :Leaderboard;
+        symbol [ logLaunch %tmp.3 10 20 29 ];
+        %tmp.3 = getv function %tmp.2 :logLaunch;
+        symbol [ DS_GAME_ID %tmp.5 10 30 40 ];
+        %tmp.5 = getv ? :DS_GAME_ID;
+        invoke %tmp.2 %tmp.3(%tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 12 8 ]
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_beginTry @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_endTry @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_beginTry:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_12_18_8_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 13 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_12_18_8_start" "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_12_18_8_stop" ]
+        %ci.1 = local;
+        symbol [ ci %ci.1 13 16 18 ];
+        symbol [ Progress %tmp.7 13 21 29 ];
+        %tmp.7 = getv ? :Progress;
+        symbol [ checkIn %tmp.8 13 30 37 ];
+        %tmp.8 = getv function %tmp.7 :checkIn;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        lputv %ci.1 %tmp.9;
+        symbol [ ci %ci.1 13 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 14 12 ]
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_12_17_12_if_stmt:
+        %tmp.10 = lgetv %ci.1;
+        symbol [ ci %tmp.10 14 16 18 ];
+        %tmp.11 = "first";
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_12_17_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_12_17_12_if_true:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_29_17_12_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 15 16 ]
+        symbol [ Application %tmp.13 15 16 27 ];
+        %tmp.13 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.14 15 28 35 ];
+        %tmp.14 = getv %tmp.13 :Storage;
+        symbol [ setValue %tmp.15 15 36 44 ];
+        %tmp.15 = getv function %tmp.14 :setValue;
+        %tmp.16 = "ds_daily_msg";
+        %tmp.17 = "Daily +";
+        %tmp.18 = lgetv %ci.1;
+        symbol [ ci %tmp.18 16 32 34 ];
+        %tmp.19 = "bonus";
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        %tmp.21 = add %tmp.17 %tmp.20;
+        %tmp.22 = "  Streak ";
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %ci.1;
+        symbol [ ci %tmp.24 16 60 62 ];
+        %tmp.25 = "streak";
+        %tmp.26 = agetv %tmp.24 %tmp.25;
+        %tmp.27 = add %tmp.23 %tmp.26;
+        invoke %tmp.14 %tmp.15(%tmp.16, %tmp.27);
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_29_17_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_12_17_12_if_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_14_12_17_12_if_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_12_18_8_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_catch:
+        %tmp.28 = exception;
+        push %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 18 10 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_catch" "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_18_10_18_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 18 17 18 ];
+        %tmp.29 = dup %tmp.28;
+        lputv %e.2 %tmp.29;
+        symbol [ e %e.2 18 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_18_10_18_21_end:
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_catch @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_18_10_18_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_18_10_18_21_end @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally;
+        throw %tmp.28;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_12_8_18_21_end:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 20 8 ]
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_beginTry @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_endTry @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_catch @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_beginTry:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_12_20_54_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 20 14 ]
+        symbol [ ProgressionManager %tmp.31 20 14 32 ];
+        %tmp.31 = getv ? :ProgressionManager;
+        symbol [ claimFitnessBonus %tmp.32 20 33 50 ];
+        %tmp.32 = getv function %tmp.31 :claimFitnessBonus;
+        invoke %tmp.31 %tmp.32();
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_12_20_54_stop:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_catch:
+        %tmp.33 = exception;
+        push %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 20 56 ]
+        [ "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_catch" "_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_56_20_67_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 20 63 64 ];
+        %tmp.34 = dup %tmp.33;
+        lputv %e.3 %tmp.34;
+        symbol [ e %e.3 20 63 64 ];
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_end;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_56_20_67_end:
+        try @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_catch @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_56_20_67_end @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_56_20_67_end @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally;
+        jsr @_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally;
+        throw %tmp.33;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_20_8_20_67_end:
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_9_28_21_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 23; @symbol_functiondef = [onStop,23,13,19]; @symbol_param<0> = [state,23,20,25]; ]
+    function onStop(state) {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 25; @symbol_functiondef = [getInitialView,25,13,27]; ]
+    function getInitialView() {
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_25_30_25_62_start:
+[ "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc" 25 32 ]
+        %tmp.1 = self;
+        symbol [ buildDailySportMenu %tmp.2 25 39 58 ];
+        %tmp.2 = getv function %tmp.1 :buildDailySportMenu;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_dailysport_source_DailySportApp_mc_25_30_25_62_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dailysport/source/DailySportApp.mc"; @line = 1; ]
+<init> {
+}

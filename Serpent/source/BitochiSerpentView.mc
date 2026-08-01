@@ -139,6 +139,10 @@ class BitochiSerpentView extends WatchUi.View {
     // ── Death feedback (flash + screen shake) ─────────────────────────────────
     hidden var _deathT;
 
+    // true once a SaveResume blob has been applied — blocks onShow's
+    // auto-start from wiping the resumed run back to a fresh SS_MENU start.
+    hidden var _skipStart;
+
     function initialize() {
         View.initialize();
         accelX = 0;
@@ -168,6 +172,7 @@ class BitochiSerpentView extends WatchUi.View {
         _gaX = 0; _gaY = 0; _gaLife = 0;
         _eatFxX = 0; _eatFxY = 0; _eatFxLife = 0;
         _deathT = 0;
+        _skipStart = false;
 
         _sX = new [SMAX_SNAKE]; _sY = new [SMAX_SNAKE];
         _fX = new [SMAX_FOOD]; _fY = new [SMAX_FOOD];
@@ -221,7 +226,8 @@ class BitochiSerpentView extends WatchUi.View {
         // The main menu is the shared root view; drop straight into a game.
         // Only auto-start from a fresh launch (SS_MENU) so returning from the
         // post-game leaderboard card doesn't restart the game.
-        if (_gs == SS_MENU) {
+        // _skipStart guards a just-applied SaveResume blob from being wiped.
+        if (!_skipStart && _gs == SS_MENU) {
             startGame();
             // Surface today's login-streak bonus as a one-shot, non-blocking
             // toast over the board (queued by the App's checkIn on the day's
@@ -699,8 +705,59 @@ class BitochiSerpentView extends WatchUi.View {
         doVibe(2);
     }
 
+    // ── Mid-run save / resume (shared SaveResume) ────────────────────────
+    // Only ever export while actively playing (SS_PLAY) — never mid-death or
+    // from the menu/game-over screens. Chaos events / temporary power-ups are
+    // dropped on resume (reset to neutral) to keep the blob simple.
+    function exportSave() {
+        if (_gs != SS_PLAY) { return null; }
+        var sx = new [_sLen]; var sy = new [_sLen];
+        for (var i = 0; i < _sLen; i++) { sx[i] = _sX[i]; sy[i] = _sY[i]; }
+        var fx = new [_fCount]; var fy = new [_fCount];
+        for (var i = 0; i < _fCount; i++) { fx[i] = _fX[i]; fy[i] = _fY[i]; }
+        var pux = new [_puCount]; var puy = new [_puCount]; var put = new [_puCount];
+        for (var i = 0; i < _puCount; i++) { pux[i] = _puX[i]; puy[i] = _puY[i]; put[i] = _puType[i]; }
+        return {
+            "sLen" => _sLen, "sX" => sx, "sY" => sy,
+            "dir" => _dir, "nextDir" => _nextDir,
+            "score" => _score, "level" => _level, "foodEaten" => _foodEaten,
+            "combo" => _combo, "comboTick" => _comboTick, "stepBase" => _stepBase,
+            "fCount" => _fCount, "fX" => fx, "fY" => fy,
+            "puCount" => _puCount, "puX" => pux, "puY" => puy, "puType" => put
+        };
+    }
+
+    // Apply a SaveResume blob before the first paint (called from SerpentHooks).
+    // Restores the snake, food, power-ups and score, dropping straight back
+    // into play. Chaos events / active effects are reset to neutral.
+    function loadResume(data) as Void {
+        if (data == null) { return; }
+        try {
+            _sLen = data["sLen"];
+            var sx = data["sX"]; var sy = data["sY"];
+            for (var i = 0; i < _sLen; i++) { _sX[i] = sx[i]; _sY[i] = sy[i]; }
+            _dir = data["dir"]; _nextDir = data["nextDir"];
+            _score = data["score"]; _level = data["level"]; _foodEaten = data["foodEaten"];
+            _combo = data["combo"]; _comboTick = data["comboTick"]; _stepBase = data["stepBase"];
+            _stepCount = 0;
+            _fCount = data["fCount"];
+            var fx = data["fX"]; var fy = data["fY"];
+            for (var i = 0; i < _fCount; i++) { _fX[i] = fx[i]; _fY[i] = fy[i]; }
+            _puCount = data["puCount"];
+            var pux = data["puX"]; var puy = data["puY"]; var put = data["puType"];
+            for (var i = 0; i < _puCount; i++) { _puX[i] = pux[i]; _puY[i] = puy[i]; _puType[i] = put[i]; }
+            _ghostOn = false; _shieldOn = false; _speedOn = false; _multiLeft = 0;
+            _effectType = 0; _effectSteps = 0;
+            _evType = SEV_NONE; _evSteps = 0; _reverseOn = false; _magnetOn = false;
+            applySkin();
+            _gs = SS_PLAY;
+            _skipStart = true;
+        } catch (e) {}
+    }
+
     hidden function finalizeGameOver() {
         _gs = SS_OVER;
+        try { SaveResume.clear("serpent"); } catch (e) {}
         if (_score > _best) {
             _best = _score;
             try { Application.Storage.setValue("serpent_best", _best); } catch (e) {}

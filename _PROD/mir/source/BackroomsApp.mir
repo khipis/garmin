@@ -1,0 +1,164 @@
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Application,1,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 4; @symbol_classdef = [BackroomsApp,4,6,18]; @symbol_extends<0> = [Application,4,27,38]; @symbol_extends<1> = [AppBase,4,39,46]; ]
+class BackroomsApp extends Application.AppBase {
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 5; @symbol_functiondef = [initialize,5,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_5_26_5_50_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 5 28 ]
+        symbol [ AppBase %tmp.2 5 28 35 ];
+        %tmp.2 = getv ? :AppBase;
+        symbol [ initialize %tmp.3 5 36 46 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_5_26_5_50_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 7; @symbol_functiondef = [onStart,7,13,20]; @symbol_param<0> = [state,7,21,26]; ]
+    function onStart(state) {
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_7_28_19_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 8 8 ]
+        symbol [ Leaderboard %tmp.2 8 8 19 ];
+        %tmp.2 = getv ? :Leaderboard;
+        symbol [ logLaunch %tmp.3 8 20 29 ];
+        %tmp.3 = getv function %tmp.2 :logLaunch;
+        symbol [ Br %tmp.5 8 30 32 ];
+        %tmp.5 = getv ? :Br;
+        symbol [ GAME_ID %tmp.6 8 33 40 ];
+        %tmp.6 = getv %tmp.5 :GAME_ID;
+        invoke %tmp.2 %tmp.3(%tmp.6);
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 10 8 ]
+        try @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_beginTry @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_endTry @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_catch @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_beginTry:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_12_16_8_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 11 12 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_12_16_8_start" "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_12_16_8_stop" ]
+        %ci.1 = local;
+        symbol [ ci %ci.1 11 16 18 ];
+        symbol [ Progress %tmp.8 11 21 29 ];
+        %tmp.8 = getv ? :Progress;
+        symbol [ checkIn %tmp.9 11 30 37 ];
+        %tmp.9 = getv function %tmp.8 :checkIn;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        lputv %ci.1 %tmp.10;
+        symbol [ ci %ci.1 11 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 12 12 ]
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_12_15_12_if_stmt:
+        %tmp.11 = lgetv %ci.1;
+        symbol [ ci %tmp.11 12 16 18 ];
+        %tmp.12 = "first";
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_12_15_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_12_15_12_if_true:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_29_15_12_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 13 16 ]
+        symbol [ Application %tmp.14 13 16 27 ];
+        %tmp.14 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.15 13 28 35 ];
+        %tmp.15 = getv %tmp.14 :Storage;
+        symbol [ setValue %tmp.16 13 36 44 ];
+        %tmp.16 = getv function %tmp.15 :setValue;
+        %tmp.17 = "br_daily_msg";
+        %tmp.18 = "Daily +";
+        %tmp.19 = lgetv %ci.1;
+        symbol [ ci %tmp.19 14 32 34 ];
+        %tmp.20 = "bonus";
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.18 %tmp.21;
+        %tmp.23 = "  Streak ";
+        %tmp.24 = add %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %ci.1;
+        symbol [ ci %tmp.25 14 60 62 ];
+        %tmp.26 = "streak";
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        %tmp.28 = add %tmp.24 %tmp.27;
+        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.28);
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_29_15_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_12_15_12_if_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_12_12_15_12_if_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_12_16_8_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_catch:
+        %tmp.29 = exception;
+        push %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 16 10 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_catch" "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_16_10_16_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 16 17 18 ];
+        %tmp.30 = dup %tmp.29;
+        lputv %e.2 %tmp.30;
+        symbol [ e %e.2 16 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_16_10_16_21_end:
+        try @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_catch @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_16_10_16_21_end @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_16_10_16_21_end @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally;
+        throw %tmp.29;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_10_8_16_21_end:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 18 8 ]
+        try @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_beginTry @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_endTry @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_catch @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_beginTry:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_12_18_39_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 18 14 ]
+        symbol [ BrSave %tmp.32 18 14 20 ];
+        %tmp.32 = getv ? :BrSave;
+        symbol [ submitLifetime %tmp.33 18 21 35 ];
+        %tmp.33 = getv function %tmp.32 :submitLifetime;
+        invoke %tmp.32 %tmp.33();
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_12_18_39_stop:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_catch:
+        %tmp.34 = exception;
+        push %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 18 41 ]
+        [ "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_catch" "_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_41_18_52_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 18 48 49 ];
+        %tmp.35 = dup %tmp.34;
+        lputv %e.3 %tmp.35;
+        symbol [ e %e.3 18 48 49 ];
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_end;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_41_18_52_end:
+        try @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_catch @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_41_18_52_end @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_41_18_52_end @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally;
+        jsr @_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally;
+        throw %tmp.34;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_18_8_18_52_end:
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_7_28_19_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 21; @symbol_functiondef = [onStop,21,13,19]; @symbol_param<0> = [state,21,20,25]; ]
+    function onStop(state) {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 23; @symbol_functiondef = [getInitialView,23,13,27]; ]
+    function getInitialView() {
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_23_30_26_4_start:
+[ "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc" 25 8 ]
+        %tmp.1 = self;
+        symbol [ buildBackroomsMenu %tmp.2 25 15 33 ];
+        %tmp.2 = getv function %tmp.1 :buildBackroomsMenu;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_backrooms_source_BackroomsApp_mc_23_30_26_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/backrooms/source/BackroomsApp.mc"; @line = 1; ]
+<init> {
+}
