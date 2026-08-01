@@ -963,7 +963,7 @@ async function loadStats(force) {
       if (!k) k = lbKey('Enter LB_KEY to recompute the lifetime totals:');
       if (!k) return;
       headers['X-LB-Key'] = k;
-      qs += '&fresh=1';
+      qs += '?fresh=1';
     }
     const r = await fetch(qs, { cache: 'no-store', headers });
     if (r.status === 403) {
