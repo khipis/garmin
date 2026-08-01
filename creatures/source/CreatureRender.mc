@@ -127,30 +127,43 @@ module CreatureArt {
     }
 
     // ── Ears / horns / crest per species ─────────────────────────────────────
+    // `horn` is the only concession to the later stages: crests and horns grow
+    // taller and their bases narrow, which reads as sharper without changing
+    // any species' silhouette. Hatchlings and juveniles keep the soft version.
     function _drawEars(dc, m, cx, cy, sz, dark, col) {
         var sp = m.species;
+        var agg = false;
+        try { agg = _isAgg(m.evo); } catch (e) {}
+        var horn = agg ? (sz * 9 / 10) : (sz / 2);
+        var base = agg ? (sz / 10) : (sz / 6);
         dc.setColor(col, Graphics.COLOR_TRANSPARENT);
         if (sp == Cr.SP_FLAME) {
             // Twin flame crests.
-            dc.fillPolygon([[cx - sz / 2, cy - sz + 2], [cx - sz / 6, cy - sz - sz / 2], [cx, cy - sz + 4]]);
-            dc.fillPolygon([[cx + sz / 2, cy - sz + 2], [cx + sz / 6, cy - sz - sz / 2], [cx, cy - sz + 4]]);
+            dc.fillPolygon([[cx - sz / 2, cy - sz + 2], [cx - base, cy - sz - horn], [cx, cy - sz + 4]]);
+            dc.fillPolygon([[cx + sz / 2, cy - sz + 2], [cx + base, cy - sz - horn], [cx, cy - sz + 4]]);
         } else if (sp == Cr.SP_AQUA) {
-            // Side fins.
-            dc.fillPolygon([[cx - sz, cy], [cx - sz - sz / 2, cy - sz / 3], [cx - sz + sz / 6, cy - sz / 4]]);
-            dc.fillPolygon([[cx + sz, cy], [cx + sz + sz / 2, cy - sz / 3], [cx + sz - sz / 6, cy - sz / 4]]);
+            // Side fins — swept back and up once grown.
+            var rake = agg ? (sz * 2 / 3) : (sz / 3);
+            dc.fillPolygon([[cx - sz, cy], [cx - sz - sz / 2, cy - rake], [cx - sz + sz / 6, cy - sz / 4]]);
+            dc.fillPolygon([[cx + sz, cy], [cx + sz + sz / 2, cy - rake], [cx + sz - sz / 6, cy - sz / 4]]);
         } else if (sp == Cr.SP_VOLT) {
             // Lightning ears.
-            dc.fillPolygon([[cx - sz / 2, cy - sz / 2], [cx - sz / 2 - sz / 4, cy - sz - sz / 3], [cx - sz / 6, cy - sz + 2]]);
-            dc.fillPolygon([[cx + sz / 2, cy - sz / 2], [cx + sz / 2 + sz / 4, cy - sz - sz / 3], [cx + sz / 6, cy - sz + 2]]);
+            dc.fillPolygon([[cx - sz / 2, cy - sz / 2], [cx - sz / 2 - sz / 4, cy - sz - horn * 2 / 3], [cx - base, cy - sz + 2]]);
+            dc.fillPolygon([[cx + sz / 2, cy - sz / 2], [cx + sz / 2 + sz / 4, cy - sz - horn * 2 / 3], [cx + base, cy - sz + 2]]);
         } else if (sp == Cr.SP_FOREST) {
-            // Leafy pointed ears.
-            dc.fillEllipse(cx - sz / 2, cy - sz + 2, sz / 5, sz / 3);
-            dc.fillEllipse(cx + sz / 2, cy - sz + 2, sz / 5, sz / 3);
+            // Leafy ears — they come to a point at the later stages.
+            if (agg) {
+                dc.fillPolygon([[cx - sz * 7 / 10, cy - sz + 4], [cx - sz / 3, cy - sz - horn], [cx - sz / 4, cy - sz + 4]]);
+                dc.fillPolygon([[cx + sz * 7 / 10, cy - sz + 4], [cx + sz / 3, cy - sz - horn], [cx + sz / 4, cy - sz + 4]]);
+            } else {
+                dc.fillEllipse(cx - sz / 2, cy - sz + 2, sz / 5, sz / 3);
+                dc.fillEllipse(cx + sz / 2, cy - sz + 2, sz / 5, sz / 3);
+            }
         } else {
             // Shadow horns.
             dc.setColor(dark, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[cx - sz / 2, cy - sz + 4], [cx - sz / 3, cy - sz - sz / 2], [cx - sz / 6, cy - sz + 6]]);
-            dc.fillPolygon([[cx + sz / 2, cy - sz + 4], [cx + sz / 3, cy - sz - sz / 2], [cx + sz / 6, cy - sz + 6]]);
+            dc.fillPolygon([[cx - sz / 2, cy - sz + 4], [cx - sz / 3, cy - sz - horn], [cx - base, cy - sz + 6]]);
+            dc.fillPolygon([[cx + sz / 2, cy - sz + 4], [cx + sz / 3, cy - sz - horn], [cx + base, cy - sz + 6]]);
         }
     }
 
@@ -159,6 +172,8 @@ module CreatureArt {
         var eyeY = cy - sz / 6;
         var eyeDx = sz / 3;
         var blink = ((phase / 8) % 40) == 0;   // occasional blink
+        var agg = false;
+        try { agg = _isAgg(m.evo); } catch (e) {}
 
         if (blink) {
             dc.setColor(0x101820, Graphics.COLOR_TRANSPARENT);
@@ -169,8 +184,22 @@ module CreatureArt {
             dc.fillCircle(cx - eyeDx, eyeY, sz / 5);
             dc.fillCircle(cx + eyeDx, eyeY, sz / 5);
             dc.setColor(0x101820, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - eyeDx + sz / 12, eyeY, sz / 10);
-            dc.fillCircle(cx + eyeDx + sz / 12, eyeY, sz / 10);
+            if (agg) {
+                // A vertical slit pupil plus an angled brow wedge: the cheapest
+                // pair of shapes that turns the same round eye hard.
+                var pw = sz / 10; if (pw < 1) { pw = 1; }
+                dc.fillRectangle(cx - eyeDx + sz / 12 - pw / 2, eyeY - sz / 5, pw, sz * 2 / 5);
+                dc.fillRectangle(cx + eyeDx + sz / 12 - pw / 2, eyeY - sz / 5, pw, sz * 2 / 5);
+                dc.fillPolygon([[cx - eyeDx - sz / 4, eyeY - sz / 3],
+                                [cx - eyeDx + sz / 4, eyeY - sz / 10],
+                                [cx - eyeDx - sz / 4, eyeY - sz / 10]]);
+                dc.fillPolygon([[cx + eyeDx + sz / 4, eyeY - sz / 3],
+                                [cx + eyeDx - sz / 4, eyeY - sz / 10],
+                                [cx + eyeDx + sz / 4, eyeY - sz / 10]]);
+            } else {
+                dc.fillCircle(cx - eyeDx + sz / 12, eyeY, sz / 10);
+                dc.fillCircle(cx + eyeDx + sz / 12, eyeY, sz / 10);
+            }
         }
 
         // Mouth reflects mood.
@@ -196,11 +225,12 @@ module CreatureArt {
                 dc.drawLine(cx - sz - sz / 2, y, cx - sz / 2, y);
             }
         } else if (m.path == Cr.PATH_WARRIOR) {
-            // Shoulder spikes.
+            // Shoulder spikes — they reach further out once the frame fills in.
             var c = Cr.speciesDark(m.species);
+            var reach = _isAgg(m.evo) ? (sz * 3 / 5) : (sz / 3);
             dc.setColor(c, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[cx - sz, cy - sz / 4], [cx - sz - sz / 3, cy], [cx - sz + sz / 6, cy + sz / 6]]);
-            dc.fillPolygon([[cx + sz, cy - sz / 4], [cx + sz + sz / 3, cy], [cx + sz - sz / 6, cy + sz / 6]]);
+            dc.fillPolygon([[cx - sz, cy - sz / 4], [cx - sz - reach, cy], [cx - sz + sz / 6, cy + sz / 6]]);
+            dc.fillPolygon([[cx + sz, cy - sz / 4], [cx + sz + reach, cy], [cx + sz - sz / 6, cy + sz / 6]]);
         } else if (m.path == Cr.PATH_DREAM) {
             // Floating stars.
             dc.setColor(0xCBB6FF, Graphics.COLOR_TRANSPARENT);
@@ -244,6 +274,67 @@ module CreatureArt {
     // habitat, not a single pet.
     // ═══════════════════════════════════════════════════════════════════════
 
+    // Later evolution stages read as MEANER, not as a different creature: the
+    // early rows stay cute so the growth is legible as a progression. That is
+    // done as a shared overlay on the same tables — outward horn tips on the
+    // crown row and a dark brow immediately above whichever row carries the eyes
+    // — rather than a second sprite set per species, which would double the
+    // sprite memory for a handful of pixels.
+    //
+    // Each (species, stage-band) pair is built once and cached: this feeds every
+    // roaming mob on the home diorama, so it must not rebuild strings per frame.
+    var _MR = null;
+    function _mobRowsFor(sp, agg) {
+        var key = sp * 2 + (agg ? 1 : 0);
+        if (_MR == null) { _MR = {}; }
+        var got = _MR.get(key);
+        if (got != null) { return got; }
+        var rows = _mobRows(sp);
+        if (agg) { rows = _sharpen(rows); }
+        _MR.put(key, rows);
+        return rows;
+    }
+    function _isAgg(evo) { return evo >= Cr.EV_ADULT; }
+
+    // One shared pass over the species sprite instead of a second table per
+    // species: horn tips harden to the dark shade, a brow lands over the eyes,
+    // and the lower body pulls in so the silhouette tapers. Everything is driven
+    // off what the row actually contains — the five sprites put their ears and
+    // eyes on different rows, and Aqua has no ears at all.
+    function _sharpen(rows) {
+        var n = rows.size();
+        var out = new [n];
+        for (var r = 0; r < n; r++) { out[r] = rows[r]; }
+
+        var top = out[0];
+        for (var c = 0; c < top.length(); c++) {
+            if (top.substring(c, c + 1).equals("B")) { top = _setCh(top, c, "D"); }
+        }
+        out[0] = top;
+
+        for (var e = 1; e < n; e++) {
+            if (out[e].find("W") == null) { continue; }
+            var brow = out[e - 1];
+            for (var b = 0; b < out[e].length(); b++) {
+                if (out[e].substring(b, b + 1).equals("W")) { brow = _setCh(brow, b, "D"); }
+            }
+            out[e - 1] = brow;
+            break;
+        }
+
+        if (n >= 3) {
+            var waist = out[n - 2];
+            waist = _setCh(waist, 1, ".");
+            waist = _setCh(waist, waist.length() - 2, ".");
+            out[n - 2] = waist;
+        }
+        return out;
+    }
+    function _setCh(s, i, ch) {
+        if (i < 0 || i >= s.length()) { return s; }
+        return s.substring(0, i) + ch + s.substring(i + 1, s.length());
+    }
+
     // 8-wide cute silhouettes, one per species (distinct crest/fins/ears/horns).
     function _mobRows(sp) {
         if (sp == Cr.SP_FLAME) {
@@ -285,13 +376,27 @@ module CreatureArt {
         Px.spr(dc, rows, seen ? _mobPal(sp) : _ghostPal(), ox, oy, px, flip);
     }
 
+    // An arena opponent: the same sprite path as the hero, so a rival pulled off
+    // the leaderboard shows up as the creature its owner actually raised —
+    // species, stage and all — instead of a generic silhouette.
+    function drawFoe(dc, sp, evo, cx, cy, px, phase, flip) {
+        var rows = _mobRowsFor(sp, _isAgg(evo));
+        var h = rows.size();
+        dc.setColor(0x0A0F16, Graphics.COLOR_TRANSPARENT);
+        dc.fillEllipse(cx, cy, px * 3, px);
+        var bob = (Math.sin(phase * 0.11) * px * 4 / 10).toNumber();
+        Px.spr(dc, rows, _mobPal(sp), cx - 4 * px, cy - h * px + bob, px, flip);
+    }
+
     // The hero: the active creature, big, with idle-animated bob/hop/blink,
     // a tail-wag, a soft ground-glow spotlight, rarity/apex aura + shadow.
     // The APEX stage (full evolution) is deliberately made to look dramatically
     // more spectacular than an early stage — a slow sunburst + gold aura ring —
     // so the player visibly feels how much their creature has grown.
     function drawHero(dc, m, cx, cy, px, phase) {
-        var rows = _mobRows(m.species);
+        var agg = false;
+        try { agg = _isAgg(m.evo); } catch (e) {}
+        var rows = _mobRowsFor(m.species, agg);
         var h = rows.size();
         var seedOff = 0;
         try { seedOff = m.seed % 97; } catch (e) { seedOff = 0; }

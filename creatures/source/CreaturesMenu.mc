@@ -32,7 +32,9 @@ class CreaturesHooks extends GameHooks {
     function drawArt(dc, cx, cy, w, h) as Void {
         if (_preview == null) { return; }
         _tick += 1;
-        var r = h * 22 / 100;
+        // The two-line title leaves a shorter art band than the old single line
+        // did, and the creature was drawing up over the attribution text.
+        var r = h * 17 / 100;
         if (r < 14) { r = 14; }
         try {
             if (_preview.hatched) { CreatureArt.drawCreature(dc, _preview, cx, cy, r, _tick); }
@@ -45,8 +47,12 @@ class CreaturesHooks extends GameHooks {
             if (_preview == null) { return null; }
             var asc = (_preview.asc > 0) ? (" · A" + _preview.asc) : "";
             if (!_preview.hatched) { return "EGG " + _preview.hatchPct() + "%" + asc; }
+            var rk = "";
+            try {
+                if (_preview.arenaPts > 0) { rk = " · " + Cr.rankAbbr(_preview.rank()); }
+            } catch (e2) {}
             return Cr.speciesName(_preview.species) + " · Lv " + _preview.level
-                 + " · " + _preview.ageDayLabel() + asc;
+                 + " · " + _preview.ageDayLabel() + asc + rk;
         } catch (e) { return null; }
     }
 
@@ -107,6 +113,7 @@ class CrBoardMenu extends WatchUi.Menu2 {
         addItem(new WatchUi.MenuItem("Oldest",      "Days alive",   Cr.LB_AGE, null));
         addItem(new WatchUi.MenuItem("Evolution",   "Highest form", Cr.LB_EVO, null));
         addItem(new WatchUi.MenuItem("Top Trainer", "Most active",  Cr.LB_TRAINER, null));
+        addItem(new WatchUi.MenuItem("Arena",       "Arena points", Cr.LB_ARENA, null));
     }
 }
 
@@ -227,8 +234,8 @@ function buildCreaturesMenu() as Lang.Array {
 
     var cfg = new MenuConfig({
         :gameId  => Cr.GAME_ID,
-        :title1  => "BITOCHI",
-        :title2  => "CREATURES",
+        :title1  => "CREATURES",
+        :title2  => "EVOLUTION ARENA",
         :col1    => 0x34D399,
         :col2    => 0x9A6CFF,
         :bg      => Cr.BG,

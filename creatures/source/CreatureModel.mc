@@ -53,8 +53,26 @@ class CreatureModel {
 
     // ── Daily challenge (per-day counters) ────────────────────────────────────
     var dailyDay;     // day index the current challenge belongs to
-    var dFeed; var dTrain; var dExpl;
+    var dFeed; var dTrain; var dExpl; var dArena;
     var dailyClaimed; // Boolean — reward already granted today
+
+    // ── Arena (TRAIN → EVOLVE → EQUIP → BATTLE → RANK UP) ─────────────────────
+    var arenaPts;      // rank ladder points
+    var arenaWins;     // lifetime arena wins (also gates equipment)
+    var arenaLosses;   // lifetime arena losses
+    var arenaStreak;   // current win streak (resets on any loss)
+    var strategy;      // Cr.ST_* battle stance
+    var eqWeapon;      // equipped Cr.EQ_* id, slot 0, or -1
+    var eqArmor;       // equipped Cr.EQ_* id, slot 1, or -1
+    var eqArt;         // equipped Cr.EQ_* id, slot 2, or -1
+    var evoPts;        // evolution points earned from training/battling
+    var warLog;        // Array<String>, most-recent-first, capped at 8
+    var defLog;        // Array of [dayIndex, held01, attackerName], newest first
+    hidden var _lastFight;   // last fight() result Dictionary, for the view
+    hidden var _roster;      // cached rival records, lazily read from Storage
+
+    // ── Last defence summary (for WELCOME BACK) ──────────────────────────────
+    var defHits; var defHeld; var defPts;
 
     // ── Last idle summary (for WELCOME BACK) ─────────────────────────────────
     var gXp; var gFood; var gMut; var gSecs;
@@ -114,6 +132,7 @@ class CreatureModel {
         dFeed     = _getNum("cr_dfeed", 0);
         dTrain    = _getNum("cr_dtrain", 0);
         dExpl     = _getNum("cr_dexpl", 0);
+        dArena    = _getNum("cr_darena", 0);
         dailyClaimed = _getBool("cr_dclaim", false);
         asc       = _getNum("cr_asc", 0);
         perk      = _getNum("cr_perk", 0);
@@ -122,6 +141,22 @@ class CreatureModel {
         bondId    = _getNum("cr_bid", 0);
         bondProg  = _getNum("cr_bprog", 0);
         bondClaimed = _getBool("cr_bclaim", false);
+
+        arenaPts    = _getNum("cr_apts", 0);
+        arenaWins   = _getNum("cr_awins", 0);
+        arenaLosses = _getNum("cr_aloss", 0);
+        arenaStreak = _getNum("cr_astreak", 0);
+        strategy    = _getNum("cr_strat", Cr.ST_BAL);
+        eqWeapon    = _getNum("cr_eq0", -1);
+        eqArmor     = _getNum("cr_eq1", -1);
+        eqArt       = _getNum("cr_eq2", -1);
+        evoPts      = _getNum("cr_ept", 0);
+        warLog      = _get("cr_wlog", null);
+        if (!(warLog instanceof Lang.Array)) { warLog = []; }
+        defLog      = _get("cr_dlog", null);
+        if (!(defLog instanceof Lang.Array)) { defLog = []; }
+        _lastFight  = null;
+        _roster     = null;
 
         traits = new [Cr.TR_N];
         for (var i = 0; i < Cr.TR_N; i++) {
@@ -144,6 +179,7 @@ class CreatureModel {
         if (dFeed < 0) { dFeed = 0; }
         if (dTrain < 0) { dTrain = 0; }
         if (dExpl < 0) { dExpl = 0; }
+        if (dArena < 0) { dArena = 0; }
         if (actions < 0) { actions = 0; }
         if (trains < 0) { trains = 0; }
         if (asc < 0) { asc = 0; }
@@ -159,7 +195,19 @@ class CreatureModel {
         energy = Cr._clamp(energy, 0, Cr.ENERGY_MAX);
         mood   = Cr._clamp(mood, 0, Cr.MOOD_MAX);
         evo    = Cr._clamp(evo, Cr.EV_EGG, Cr.EV_COSMIC);
+
+        if (arenaPts < 0) { arenaPts = 0; }
+        if (arenaWins < 0) { arenaWins = 0; }
+        if (arenaLosses < 0) { arenaLosses = 0; }
+        if (arenaStreak < 0) { arenaStreak = 0; }
+        if (evoPts < 0) { evoPts = 0; }
+        strategy = Cr._clamp(strategy, 0, Cr.ST_N - 1);
+        eqWeapon = Cr._clamp(eqWeapon, -1, Cr.EQ_N - 1);
+        eqArmor  = Cr._clamp(eqArmor, -1, Cr.EQ_N - 1);
+        eqArt    = Cr._clamp(eqArt, -1, Cr.EQ_N - 1);
+
         gXp = 0; gFood = 0; gMut = 0; gSecs = 0; newDay = false; justEvolved = false;
+        defHits = 0; defHeld = 0; defPts = 0;
     }
 
     function save() {
@@ -186,6 +234,7 @@ class CreatureModel {
         _set("cr_dfeed", dFeed);
         _set("cr_dtrain", dTrain);
         _set("cr_dexpl", dExpl);
+        _set("cr_darena", dArena);
         _set("cr_dclaim", dailyClaimed);
         _set("cr_asc", asc);
         _set("cr_perk", perk);
@@ -195,6 +244,18 @@ class CreatureModel {
         _set("cr_bprog", bondProg);
         _set("cr_bclaim", bondClaimed);
         for (var i = 0; i < Cr.TR_N; i++) { _set("cr_t" + i, traits[i]); }
+
+        _set("cr_apts", arenaPts);
+        _set("cr_awins", arenaWins);
+        _set("cr_aloss", arenaLosses);
+        _set("cr_astreak", arenaStreak);
+        _set("cr_strat", strategy);
+        _set("cr_eq0", eqWeapon);
+        _set("cr_eq1", eqArmor);
+        _set("cr_eq2", eqArt);
+        _set("cr_ept", evoPts);
+        _set("cr_wlog", warLog);
+        _set("cr_dlog", defLog);
     }
 
     // ── Full reset (OPTIONS → Reset creature) ────────────────────────────────
@@ -207,7 +268,10 @@ class CreatureModel {
                     "cr_lday", "cr_seen", "cr_act", "cr_train", "cr_dday",
                     "cr_dfeed", "cr_dtrain", "cr_dexpl", "cr_dclaim", "cr_lbday",
                     "cr_asc", "cr_perk", "cr_relic", "cr_bweek", "cr_bid",
-                    "cr_bprog", "cr_bclaim"];
+                    "cr_bprog", "cr_bclaim", "cr_darena",
+                    "cr_apts", "cr_awins", "cr_aloss", "cr_astreak", "cr_strat",
+                    "cr_eq0", "cr_eq1", "cr_eq2", "cr_ept", "cr_wlog",
+                    "cr_dlog", "cr_eqauto", "cr_roster", "cr_rosday"];
         for (var i = 0; i < keys.size(); i++) {
             try { Application.Storage.deleteValue(keys[i]); } catch (e) {}
         }
@@ -359,7 +423,7 @@ class CreatureModel {
         if (streak < 1) { streak = 1; }
         if (dailyDay != td) {
             dailyDay = td;
-            dFeed = 0; dTrain = 0; dExpl = 0; dailyClaimed = false;
+            dFeed = 0; dTrain = 0; dExpl = 0; dArena = 0; dailyClaimed = false;
         }
         _rollBondWeek();
 
@@ -377,7 +441,14 @@ class CreatureModel {
         // XP + food scale with time and level; energy slowly refills.
         gXp   = elapsed * Cr.idleXpPerHour(level) / 3600;
         gFood = elapsed * 3 / 3600;
-        if (newDay) { gXp += Sensors.getStepsToday() / 60; }   // once/day step bonus
+        if (newDay) {
+            gXp += Sensors.getStepsToday() / 60;   // once/day step bonus
+            // Easy evolution-point trickle from movement — keeps EVOLVE
+            // progressing even on days spent mostly idle in-app.
+            var stepPts = Sensors.getStepsToday() / 800;
+            if (stepPts > 6) { stepPts = 6; }
+            evoPts += stepPts;
+        }
         // Path + perk idle multipliers — Dreamer / Deep Dreams / Runner steps.
         if (path == Cr.PATH_DREAM) { gXp = gXp * 135 / 100; }
         if (perk == Cr.PERK_IDLE)  { gXp = gXp * 125 / 100; }
@@ -411,9 +482,88 @@ class CreatureModel {
         if (elapsed > 8 * 3600 && energy < 30) { mood -= 8; }
         mood = Cr._clamp(mood, 0, Cr.MOOD_MAX);
 
+        _rollDefences(elapsed);
+
         lastSec = now;
         checkEvolution();
         save();
+    }
+
+    // ── Being attacked ────────────────────────────────────────────────────────
+    // There is no server-side PvP, so the raids that happened while the player
+    // was away are rolled here, on return — which is the only moment they can
+    // actually experience them. Resolved on the DEFENSIVE side only, and capped
+    // hard: a fortnight away costs no more than a long weekend.
+    hidden function _rollDefences(elapsed) {
+        defHits = 0; defHeld = 0; defPts = 0;
+        if (arenaWins + arenaLosses < 1) { return; }   // never before a first fight
+        var tries = elapsed / (Cr.DEF_HOURS_PER_TRY * 3600);
+        if (tries > Cr.DEF_MAX_PER_RETURN) { tries = Cr.DEF_MAX_PER_RETURN; }
+        if (tries < 1) { return; }
+
+        var td = today();
+        var guard = def();
+        var hp = maxHp();
+        var mySpd = spd();
+        for (var i = 0; i < tries; i++) {
+            if (_rand(100) >= Cr.DEF_CHANCE_PCT) { continue; }
+            var foe = makeAiOpponent(0);
+            if (foe == null) { continue; }
+            var inc = foe.atk - guard / 2; if (inc < 3) { inc = 3; }
+            var volleys = Cr.DEF_ROUNDS;
+            if (mySpd >= foe.spd) { volleys -= 1; }   // a faster defender shrugs one volley off
+            var held = (hp > inc * volleys);
+            defHits += 1;
+            if (held) {
+                defHeld += 1;
+                arenaPts += Cr.DEF_HOLD_PTS;
+                defPts += Cr.DEF_HOLD_PTS;
+            } else {
+                var loss = Cr.DEF_LOSS_PTS;
+                if (loss > arenaPts) { loss = arenaPts; }
+                arenaPts -= loss;
+                defPts -= loss;
+            }
+            _defAdd(td, held, foe.name);
+        }
+    }
+    hidden function _defAdd(day, held, name) {
+        var nl = [[day, held ? 1 : 0, name]];
+        if (defLog != null) { nl.addAll(defLog); }
+        if (nl.size() > Cr.DEF_LOG_MAX) { nl = nl.slice(0, Cr.DEF_LOG_MAX); }
+        defLog = nl;
+    }
+
+    // "2d ago - HELD vs Ashen Roc". The log stores the day INDEX, never a
+    // formatted date, so an entry still reads correctly whenever the player
+    // next comes back to look at it.
+    function defLine(i) {
+        if (defLog == null || i < 0 || i >= defLog.size()) { return null; }
+        var e = defLog[i];
+        if (!(e instanceof Lang.Array) || e.size() < 3) { return null; }
+        var ago = today() - _int(e[0], today());
+        if (ago < 0) { ago = 0; }
+        var when = (ago <= 0) ? "today" : (ago + "d ago");
+        return when + " - " + ((e[1] == 1) ? "HELD" : "LOST") + " vs " + e[2];
+    }
+    // Same entry, short enough for the ARENA strip: a 240 px round face leaves
+    // about seventeen pixel glyphs of chord down there, and losing the tail of a
+    // rival's handle reads better than losing the verdict.
+    function defShort(i) {
+        if (defLog == null || i < 0 || i >= defLog.size()) { return null; }
+        var e = defLog[i];
+        if (!(e instanceof Lang.Array) || e.size() < 3) { return null; }
+        var ago = today() - _int(e[0], today());
+        if (ago < 0) { ago = 0; }
+        return ((ago <= 0) ? "NOW " : (ago + "D ")) + ((e[1] == 1) ? "HELD " : "LOST ") + e[2];
+    }
+
+    // One line for the WELCOME BACK overlay, or null when nobody came calling.
+    function defSummary() {
+        if (defHits <= 0) { return null; }
+        var s = defHits + ((defHits == 1) ? " raid" : " raids") + " while away - " + defHeld + " held";
+        if (defPts != 0) { s += "  " + ((defPts > 0) ? "+" : "") + defPts + " pts"; }
+        return s;
     }
 
     hidden function _applyMutations(n) {
@@ -511,6 +661,7 @@ class CreatureModel {
         var grow = 1;
         if (path == Cr.PATH_WARRIOR && _rand(100) < 35) { grow = 2; }
         traits[ti] = Cr._clamp(traits[ti] + grow, 1, Cr.TRAIT_MAX);
+        evoPts += 2;
         _bump(true);
         _bondBump(1);
         checkEvolution();
@@ -773,14 +924,375 @@ class CreatureModel {
         return s;
     }
 
+    // ═══════════════════════════════════════════════════════════════════════
+    // ARENA — combat stats, equipment, strategy, AI opponents and fights.
+    // HP is purely a per-fight simulation value (never persisted), so a fight
+    // can never "kill" the creature or damage anything outside the Arena.
+    // ═══════════════════════════════════════════════════════════════════════
+
+    hidden function _gearAtk() {
+        var g = 0;
+        if (eqWeapon >= 0) { g += Cr.eqAtkPct(eqWeapon); }
+        if (eqArmor  >= 0) { g += Cr.eqAtkPct(eqArmor); }
+        if (eqArt    >= 0) { g += Cr.eqAtkPct(eqArt); }
+        return g;
+    }
+    hidden function _gearDef() {
+        var g = 0;
+        if (eqWeapon >= 0) { g += Cr.eqDefPct(eqWeapon); }
+        if (eqArmor  >= 0) { g += Cr.eqDefPct(eqArmor); }
+        if (eqArt    >= 0) { g += Cr.eqDefPct(eqArt); }
+        return g;
+    }
+    hidden function _gearSpd() {
+        var g = 0;
+        if (eqWeapon >= 0) { g += Cr.eqSpdPct(eqWeapon); }
+        if (eqArmor  >= 0) { g += Cr.eqSpdPct(eqArmor); }
+        if (eqArt    >= 0) { g += Cr.eqSpdPct(eqArt); }
+        return g;
+    }
+
+    function atk()   { return level * 3 + traits[Cr.TR_STR] * 8 + evo * 5 + _gearAtk(); }
+    function def()   { return level * 2 + traits[Cr.TR_NRG] * 6 + traits[Cr.TR_INT] * 2 + evo * 3 + _gearDef(); }
+    function spd()   { return level + traits[Cr.TR_SPD] * 7 + _gearSpd(); }
+    function maxHp() { return 80 + level * 12 + traits[Cr.TR_STR] * 4 + evo * 10; }
+    function power() { return atk() * 2 + def() * 2 + spd() + maxHp() / 2 + arenaPts / 10; }
+
+    // Equipment i is wearable once its species relic (i % RELIC_N) is found OR
+    // enough arena wins have been banked — whichever comes first.
+    function eqUnlocked(i) {
+        i = Cr._clamp(i, 0, Cr.EQ_N - 1);
+        if (hasRelic(i % Cr.RELIC_N)) { return true; }
+        return arenaWins >= Cr.eqWinReq(i);
+    }
+    // Auto-equip the best unlocked item in every slot.
+    function equipBest() {
+        var bestW = -1; var bestWs = -1;
+        var bestA = -1; var bestAs = -1;
+        var bestT = -1; var bestTs = -1;
+        for (var i = 0; i < Cr.EQ_N; i++) {
+            if (!eqUnlocked(i)) { continue; }
+            var score = Cr.eqAtkPct(i) + Cr.eqDefPct(i) + Cr.eqSpdPct(i);
+            var slot = Cr.eqSlot(i);
+            if (slot == Cr.EQ_SLOT_WEAPON && score > bestWs) { bestWs = score; bestW = i; }
+            else if (slot == Cr.EQ_SLOT_ARMOR && score > bestAs) { bestAs = score; bestA = i; }
+            else if (slot == Cr.EQ_SLOT_ART && score > bestTs) { bestTs = score; bestT = i; }
+        }
+        eqWeapon = bestW; eqArmor = bestA; eqArt = bestT;
+        save();
+    }
+    // Manual equip: put item i in its slot, or take it off if it is already
+    // worn. Slots the player has set are never touched by anything else.
+    function equipItem(i) {
+        i = Cr._clamp(i, 0, Cr.EQ_N - 1);
+        if (!eqUnlocked(i)) { return false; }
+        var slot = Cr.eqSlot(i);
+        if (slot == Cr.EQ_SLOT_WEAPON)     { eqWeapon = (eqWeapon == i) ? -1 : i; }
+        else if (slot == Cr.EQ_SLOT_ARMOR) { eqArmor  = (eqArmor  == i) ? -1 : i; }
+        else                               { eqArt    = (eqArt    == i) ? -1 : i; }
+        save();
+        return true;
+    }
+    // One-time kindness so a first-timer never walks into the Arena bare-handed.
+    // It runs once ever, because after that every slot belongs to the player and
+    // silently re-equipping "the best" would throw their choice away.
+    function equipDefaults() {
+        if (_getNum("cr_eqauto", 0) == 1) { return; }
+        _set("cr_eqauto", 1);
+        equipBest();
+    }
+    function setStrategy(s) {
+        strategy = Cr._clamp(s, 0, Cr.ST_N - 1);
+        save();
+    }
+
+    function rank() { return Cr.rankOf(arenaPts); }
+    function rankLabel() { return Cr.rankName(rank()); }
+    function lastFight() { return _lastFight; }
+
+    // Live hash (nowSec + salt mixed with the DNA seed) so two fights fought a
+    // second apart roll differently, but the SAME instant always resolves the
+    // same way (deterministic, per the design brief).
+    hidden function _fhash(nowS, salt) {
+        // Golden-ratio odd multiplier that still fits a signed 32-bit Number —
+        // Knuth's 2654435761 is above 2^31 and the compiler rejects the literal.
+        var x = (seed ^ (nowS * 1640531527) ^ (salt * 40503)) & 0x7FFFFFFF;
+        x = (x ^ (x >> 13)) & 0x7FFFFFFF;
+        x = (x * 1103515245 + 12345) & 0x7FFFFFFF;
+        x = (x ^ (x >> 16)) & 0x7FFFFFFF;
+        return x;
+    }
+
+    hidden function _foeNames() {
+        return ["Stone Beast", "Wisp Fang", "Iron Kai", "Marsh Fiend", "Ashen Roc",
+                "Crag Howler", "Tide Serpent", "Storm Ram", "Night Adder",
+                "Sky Talon", "Bog Wraith", "Ember Colt"];
+    }
+
+    // ── Live rival roster ─────────────────────────────────────────────────────
+    // Real Arena players, fetched once a calendar day by ArenaRoster and kept as
+    // flat Arrays so the whole roster is a single small Storage value:
+    //   [name, level, species, evo, rarity, path, seed]
+    // Everything here degrades to an empty list, which is exactly what offline
+    // play needs: the procedural foe takes over and nothing else changes.
+    function roster() {
+        if (_roster == null) {
+            var v = _get("cr_roster", null);
+            _roster = (v instanceof Lang.Array) ? v : [];
+        }
+        return _roster;
+    }
+    function rosterStale() { return _getNum("cr_rosday", -1) != today(); }
+    function markRosterTried() { _set("cr_rosday", today()); }
+    function setRoster(list) {
+        if (!(list instanceof Lang.Array)) { return; }
+        var n = list;
+        if (n.size() > Cr.ROSTER_MAX) { n = n.slice(0, Cr.ROSTER_MAX); }
+        _roster = n;
+        _set("cr_roster", n);
+        _set("cr_rosday", today());
+    }
+
+    hidden function _int(v, def) {
+        if (v instanceof Lang.Number) { return v; }
+        return def;
+    }
+
+    // Traits are not published to the board, so a rival's three combat rolls are
+    // derived from the DNA seed it DID publish: the same player always fights
+    // the same way, and rarity stands in for the trait investment the meta blob
+    // cannot carry. The stat shapes mirror atk()/def()/spd()/maxHp() exactly so
+    // a rival is never accidentally on a different curve to the player.
+    hidden function _rivalFoe(rec) {
+        if (!(rec instanceof Lang.Array) || rec.size() < 7) { return null; }
+        var nm = rec[0];
+        if (!(nm instanceof Lang.String) || nm.length() == 0) { return null; }
+
+        var foe = new ArenaFoe();
+        foe.name    = nm;
+        foe.level   = Cr._clamp(_int(rec[1], 1), 1, 999);
+        foe.species = Cr._clamp(_int(rec[2], 0), 0, Cr.SPECIES_N - 1);
+        foe.evo     = Cr._clamp(_int(rec[3], Cr.EV_HATCH), Cr.EV_HATCH, Cr.EV_MAX);
+        foe.rarity  = Cr._clamp(_int(rec[4], 0), 0, Cr.RA_N - 1);
+        foe.path    = Cr._clamp(_int(rec[5], Cr.PATH_NONE), Cr.PATH_NONE, Cr.PATH_ENERGY);
+        foe.seed    = _int(rec[6], 12345) & 0x7FFFFFFF;
+        foe.real    = true;
+
+        var h = (foe.seed ^ (foe.level * 40503)) & 0x7FFFFFFF;
+        h = (h ^ (h >> 13)) & 0x7FFFFFFF;
+        var bump = foe.rarity;
+        var rollA = 4 + (h % 6) + bump;
+        var rollD = 4 + ((h / 7) % 5) + bump;
+        var rollS = 4 + ((h / 13) % 7) + bump;
+        foe.atk = foe.level * 3 + rollA * 8 + foe.evo * 5;
+        foe.def = foe.level * 2 + rollD * 6 + foe.evo * 3;
+        foe.spd = foe.level + rollS * 7;
+        foe.hp  = 80 + foe.level * 12 + rollA * 4 + foe.evo * 10;
+        foe.power = foe.atk * 2 + foe.def * 2 + foe.spd + foe.hp / 2;
+        return foe;
+    }
+
+    // The strongest reason to fight a real player is that it IS a real player,
+    // so a rival wins over a generated foe whenever one sits in the requested
+    // band. Several matches roll live so repeat fights are not all the same face.
+    hidden function _rosterFoe(band) {
+        var list = roster();
+        if (list == null || list.size() == 0) { return null; }
+        var mine = power(); if (mine < 1) { mine = 1; }
+        var lo; var hi;
+        if (band > 0)      { lo = mine * 105 / 100; hi = mine * 220 / 100; }
+        else if (band < 0) { lo = mine *  40 / 100; hi = mine *  95 / 100; }
+        else               { lo = mine *  80 / 100; hi = mine * 120 / 100; }
+
+        var hits = [];
+        for (var i = 0; i < list.size(); i++) {
+            var f = _rivalFoe(list[i]);
+            if (f == null) { continue; }
+            if (f.power < lo || f.power > hi) { continue; }
+            hits.add(f);
+        }
+        if (hits.size() == 0) { return null; }
+        return hits[_fhash(nowSec(), 991 + band * 17) % hits.size()];
+    }
+
+    // band: -1 weaker, 0 even, 1 stronger.
+    function makeAiOpponent(band) {
+        var real = null;
+        try { real = _rosterFoe(band); } catch (e) {}
+        if (real != null) { return real; }
+        return _proceduralFoe(band);
+    }
+
+    hidden function _proceduralFoe(band) {
+        var nowS = nowSec();
+        var h = _fhash(nowS, 777 + band * 31);
+        var names = _foeNames();
+        var foe = new ArenaFoe();
+        foe.name = names[h % names.size()];
+        foe.species = (h / 97) % Cr.SPECIES_N;
+        var lvlSwing = 2 + (h % 4);
+        foe.level = level + band * lvlSwing;
+        if (foe.level < 1) { foe.level = 1; }
+        var rollA = 4 + (h % 6);
+        var rollD = 4 + ((h / 7) % 5);
+        var rollS = 4 + ((h / 13) % 7);
+        var foeEvo = Cr._clamp(evo + band, Cr.EV_HATCH, Cr.EV_MAX);
+        foe.evo    = foeEvo;
+        foe.seed   = h;
+        foe.rarity = Cr._clamp(band + 1, 0, Cr.RA_N - 1);
+        foe.atk = foe.level * 3 + rollA * 8 + foeEvo * 5;
+        foe.def = foe.level * 2 + rollD * 6 + foeEvo * 3;
+        foe.spd = foe.level + rollS * 7;
+        foe.hp  = 80 + foe.level * 12 + rollA * 4 + foeEvo * 10;
+        foe.power = foe.atk * 2 + foe.def * 2 + foe.spd + foe.hp / 2;
+        return foe;
+    }
+
+    hidden function _warAdd(line) {
+        var nl = [line];
+        if (warLog != null) { nl.addAll(warLog); }
+        if (nl.size() > 8) { nl = nl.slice(0, 8); }
+        warLog = nl;
+    }
+
+    // Simulate up to 8 rounds against an AI opponent. Never touches any
+    // persisted HP (there isn't one) so the creature can never be "killed".
+    // Returns a Dictionary the view renders straight into the battle overlay.
+    function fight(band) {
+        band = Cr._clamp(band, -1, 1);
+        var foe = makeAiOpponent(band);
+        var nowS = nowSec();
+
+        var myAtk = atk(); var myDef = def();
+        if (strategy == Cr.ST_AGG) { myAtk = myAtk * 125 / 100; myDef = myDef * 85 / 100; }
+        else if (strategy == Cr.ST_DEF) { myAtk = myAtk * 85 / 100; myDef = myDef * 125 / 100; }
+
+        var myEdge  = (Cr.elementBeats(species) == foe.species);
+        var foeEdge = (Cr.elementBeats(foe.species) == species);
+        if (myEdge)  { myAtk = myAtk * 115 / 100; }
+        if (foeEdge) { foe.atk = foe.atk * 115 / 100; }
+
+        var myMax = maxHp(); var foeMax = foe.hp;
+        var myHp = myMax; var foeHp = foeMax;
+        var iWentFirst = spd() >= foe.spd;
+        var rounds = [];
+        // Parallel to `rounds`, one entry per strike, for the view's replay:
+        //   [who (0 me / 1 foe), damage, my HP after, foe HP after, crit 0/1]
+        var steps = [];
+        var myCrit  = Cr._clamp(8 + traits[Cr.TR_LCK] * 2 + traits[Cr.TR_SPD], 0, Cr.CRIT_CAP_PCT);
+        var foeCritPct = Cr._clamp(8 + foe.spd / 12, 0, Cr.CRIT_CAP_PCT);
+        var won = false;
+        var r = 0;
+        while (r < 8) {
+            r += 1;
+            var critO = (_fhash(nowS, 300 + r) % 100) < myCrit;
+            var critI = (_fhash(nowS, 400 + r) % 100) < foeCritPct;
+            var dmgOut = myAtk - foe.def / 2; if (dmgOut < 3) { dmgOut = 3; }
+            var dmgIn  = foe.atk - myDef / 2;  if (dmgIn < 3) { dmgIn = 3; }
+            if (critO) { dmgOut = dmgOut * Cr.CRIT_MULT_PCT / 100; }
+            if (critI) { dmgIn  = dmgIn  * Cr.CRIT_MULT_PCT / 100; }
+            if (iWentFirst) {
+                foeHp -= dmgOut; if (foeHp < 0) { foeHp = 0; }
+                rounds.add("R" + r + " you hit " + dmgOut + (critO ? " CRIT" : ""));
+                steps.add([0, dmgOut, myHp, foeHp, critO ? 1 : 0]);
+                if (foeHp <= 0) { won = true; break; }
+                myHp -= dmgIn; if (myHp < 0) { myHp = 0; }
+                rounds.add("R" + r + " foe hits " + dmgIn + (critI ? " CRIT" : ""));
+                steps.add([1, dmgIn, myHp, foeHp, critI ? 1 : 0]);
+                if (myHp <= 0) { won = false; break; }
+            } else {
+                myHp -= dmgIn; if (myHp < 0) { myHp = 0; }
+                rounds.add("R" + r + " foe hits " + dmgIn + (critI ? " CRIT" : ""));
+                steps.add([1, dmgIn, myHp, foeHp, critI ? 1 : 0]);
+                if (myHp <= 0) { won = false; break; }
+                foeHp -= dmgOut; if (foeHp < 0) { foeHp = 0; }
+                rounds.add("R" + r + " you hit " + dmgOut + (critO ? " CRIT" : ""));
+                steps.add([0, dmgOut, myHp, foeHp, critO ? 1 : 0]);
+                if (foeHp <= 0) { won = true; break; }
+            }
+        }
+        // Ran the full 8 rounds without a knockout — the healthier side wins.
+        if (myHp > 0 && foeHp > 0) { won = (myHp >= foeHp); }
+
+        var xpGain = 0; var evoGain = 0; var ptsDelta = 0; var tip = "";
+        var basePts = 15 + band * 10; if (basePts < 5) { basePts = 5; }
+        if (won) {
+            ptsDelta = basePts + ((arenaStreak >= 2) ? 5 : 0);
+            arenaPts += ptsDelta;
+            arenaWins += 1;
+            arenaStreak += 1;
+            xpGain = 30 + level * 2 + band * 15; if (xpGain < 5) { xpGain = 5; }
+            evoGain = 4 + band * 2; if (evoGain < 1) { evoGain = 1; }
+            _addXp(xpGain);
+            evoPts += evoGain;
+            _warAdd("W vs " + foe.name);
+        } else {
+            var lossPts = 8 + band * 4; if (lossPts < 0) { lossPts = 0; }
+            ptsDelta = -lossPts;
+            arenaPts += ptsDelta; if (arenaPts < 0) { arenaPts = 0; }
+            arenaLosses += 1;
+            arenaStreak = 0;
+            xpGain = 8;
+            evoGain = 1;
+            _addXp(xpGain);
+            evoPts += evoGain;
+            tip = _lossDiag(steps, myMax, foeMax, iWentFirst, foeEdge, myDef, myAtk, foe);
+            _warAdd("L vs " + foe.name);
+        }
+
+        dArena += 1;
+        _bump(true);
+        checkEvolution();
+        save();
+
+        _lastFight = {
+            "won" => won, "rounds" => rounds, "steps" => steps, "xpGain" => xpGain,
+            "evoGain" => evoGain, "ptsDelta" => ptsDelta, "foeName" => foe.name,
+            "foeLevel" => foe.level, "foeSpecies" => foe.species,
+            "foeEvo" => foe.evo, "foeReal" => foe.real,
+            "foePower" => foe.power, "myPower" => power(),
+            "myMax" => myMax, "foeMax" => foeMax,
+            "tip" => tip, "band" => band
+        };
+        return _lastFight;
+    }
+
+    // One short line explaining a defeat, read off the fight that actually
+    // happened. The generic "train STR" advice only surfaces when the round data
+    // says nothing more interesting — a player who lost to a crit wants to hear
+    // about the crit, not a stat sheet.
+    hidden function _lossDiag(steps, myMax, foeMax, iWentFirst, foeEdge, myDef, myAtk, foe) {
+        var mx = (myMax < 1) ? 1 : myMax;
+        var fx = (foeMax < 1) ? 1 : foeMax;
+        if (steps == null || steps.size() == 0) { return "Outmatched - train, then try FAIR"; }
+
+        if (!iWentFirst && steps[0][1] * 100 / mx >= 20) {
+            return "Speed lost you the opening round";
+        }
+        var inSum = 0; var inN = 0; var outSum = 0; var outN = 0; var foeCrit = false;
+        for (var i = 0; i < steps.size(); i++) {
+            var st = steps[i];
+            if (st[0] == 1) { inSum += st[1]; inN += 1; if (st[4] == 1) { foeCrit = true; } }
+            else { outSum += st[1]; outN += 1; }
+        }
+        if (inN > 0 && (inSum / inN) * 100 / mx >= 18) { return "Defence too low for that hitter"; }
+        if (foeCrit) { return "A critical hit decided it"; }
+        if (outN > 0 && (outSum / outN) * 100 / fx <= 10) { return "Your hits barely dented that armour"; }
+        if (foeEdge) { return "Elemental disadvantage - try a FAIR foe"; }
+        if (myDef < foe.atk / 2) { return "Train NRG/INT for more DEF"; }
+        if (myAtk < foe.def) { return "Train STR for more ATK"; }
+        return "Close one - more HP would have held";
+    }
+
     // ── Daily challenge ───────────────────────────────────────────────────────
-    function dailyId() { return dailyDay % 5; }
+    function dailyId() { return dailyDay % 6; }
     function dailyText() {
         var id = dailyId();
         if (id == 0) { return "Walk 5000 steps"; }
         if (id == 1) { return "Train twice"; }
         if (id == 2) { return "Feed your creature 3x"; }
         if (id == 3) { return "Explore twice"; }
+        if (id == 5) { return "Fight in the Arena"; }
         return "Come back tomorrow";
     }
     function dailyTarget() {
@@ -789,6 +1301,7 @@ class CreatureModel {
         if (id == 1) { return 2; }
         if (id == 2) { return 3; }
         if (id == 3) { return 2; }
+        if (id == 5) { return 1; }
         return 1;
     }
     function dailyProgress() {
@@ -797,6 +1310,7 @@ class CreatureModel {
         if (id == 1) { return dTrain; }
         if (id == 2) { return dFeed; }
         if (id == 3) { return dExpl; }
+        if (id == 5) { return dArena; }
         return streak >= 1 ? 1 : 0;   // "come back" completes just by returning
     }
     function dailyComplete() { return dailyProgress() >= dailyTarget(); }
@@ -937,7 +1451,8 @@ class CreatureModel {
                 { :score => rarityScore(),   :variant => Cr.LB_RARITY,  :meta => meta },
                 { :score => daysAlive() + 1, :variant => Cr.LB_AGE,     :meta => meta },
                 { :score => evo * 1000 + level, :variant => Cr.LB_EVO,  :meta => meta },
-                { :score => actions,         :variant => Cr.LB_TRAINER, :meta => meta }
+                { :score => actions,         :variant => Cr.LB_TRAINER, :meta => meta },
+                { :score => arenaPts,        :variant => Cr.LB_ARENA,   :meta => meta }
             ]);
         } catch (e) {}
     }
@@ -1011,5 +1526,31 @@ class CreatureModel {
             for (var i = 0; i < Cr.TR_N; i++) { traits[i] = 3; }
             ensureEgg();
         } catch (e) {}
+    }
+}
+
+// ── A single arena opponent, built fresh per fight (never persisted) ────────
+// evo/path/rarity/seed exist so the view can draw the opponent's ACTUAL
+// creature rather than a generic blob; `real` marks the ones that came off the
+// leaderboard, so the UI can say so.
+class ArenaFoe {
+    var name;
+    var species;
+    var level;
+    var evo;
+    var path;
+    var rarity;
+    var seed;
+    var real;
+    var atk;
+    var def;
+    var spd;
+    var hp;
+    var power;
+
+    function initialize() {
+        name = "Wild Beast"; species = 0; level = 1;
+        evo = Cr.EV_HATCH; path = Cr.PATH_NONE; rarity = 0; seed = 12345; real = false;
+        atk = 1; def = 1; spd = 1; hp = 1; power = 1;
     }
 }

@@ -24,6 +24,7 @@ module Cr {
     const LB_AGE     = "Age";      // longest-living creature (days alive)
     const LB_EVO     = "Evolution";// highest evolution reached
     const LB_TRAINER = "Trainer";  // most active trainer (lifetime actions)
+    const LB_ARENA   = "Arena";    // arena rank points
 
     // ── Species ──────────────────────────────────────────────────────────────
     const SPECIES_N = 5;
@@ -270,5 +271,150 @@ module Cr {
         if (v < lo) { return lo; }
         if (v > hi) { return hi; }
         return v;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ARENA — battle strategy, rank ladder, equipment and element flavour.
+    // APPEND ONLY, same rule as evolution stages: these ids are persisted.
+    // ═══════════════════════════════════════════════════════════════════════
+
+    // ── Battle strategy ───────────────────────────────────────────────────────
+    const ST_AGG = 0;   // Aggressive: +ATK / -DEF
+    const ST_BAL = 1;   // Balanced: no change
+    const ST_DEF = 2;   // Defensive: +DEF / -ATK
+    const ST_N   = 3;
+
+    function strategyName(i) {
+        var a = ["Aggressive", "Balanced", "Defensive"];
+        return a[_clamp(i, 0, ST_N - 1)];
+    }
+    function strategyHint(i) {
+        var a = ["+25% ATK  -15% DEF", "no change", "+25% DEF  -15% ATK"];
+        return a[_clamp(i, 0, ST_N - 1)];
+    }
+    function strategyAbbr(i) {
+        var a = ["AGG", "BAL", "DEF"];
+        return a[_clamp(i, 0, ST_N - 1)];
+    }
+
+    // ── Arena rank ladder (derived from arenaPts, never decreases the label
+    // mid-fight — only the running point total does) ─────────────────────────
+    const RK_BRONZE  = 0;
+    const RK_SILVER  = 1;
+    const RK_GOLD    = 2;
+    const RK_DIAMOND = 3;
+    const RK_LEGEND  = 4;
+    const RK_N       = 5;
+
+    function rankThreshold(i) {
+        var a = [0, 200, 600, 1500, 4000];
+        return a[_clamp(i, 0, RK_N - 1)];
+    }
+    function rankName(i) {
+        var a = ["Bronze", "Silver", "Gold", "Diamond", "Legend"];
+        return a[_clamp(i, 0, RK_N - 1)];
+    }
+    function rankAbbr(i) {
+        var a = ["BRZ", "SLV", "GLD", "DIA", "LGD"];
+        return a[_clamp(i, 0, RK_N - 1)];
+    }
+    function rankColor(i) {
+        var a = [0xCD7F32, 0xC0C8D0, 0xFFC24A, 0x4CC8FF, 0xFF4C7A];
+        return a[_clamp(i, 0, RK_N - 1)];
+    }
+    // Highest rank whose threshold the given point total has reached.
+    function rankOf(pts) {
+        var r = 0;
+        for (var i = RK_N - 1; i >= 0; i--) {
+            if (pts >= rankThreshold(i)) { r = i; break; }
+        }
+        return r;
+    }
+
+    // ── Equipment (won from the Arena, cosmetic-adjacent combat gear) ────────
+    // Three slots — 0 weapon (ATK), 1 armor (DEF), 2 artifact (SPD-leaning) —
+    // four tiers each. Unlocks either from a matching relic OR an arena win
+    // count (whichever the player reaches first), so both QUEST and ARENA feed
+    // the same reward. Parallel arrays, APPEND ONLY.
+    const EQ_N          = 12;
+    const EQ_SLOT_WEAPON = 0;
+    const EQ_SLOT_ARMOR  = 1;
+    const EQ_SLOT_ART    = 2;
+
+    function eqName(i) {
+        var a = ["Rusty Blade", "Iron Fang", "Storm Edge", "Dragon Fang",
+                 "Cloth Wrap", "Scale Mail", "Root Plate", "Shade Aegis",
+                 "Lucky Charm", "Swift Idol", "Tide Band", "Star Map Ring"];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    function eqSlot(i) {
+        var a = [0, 0, 0, 0,  1, 1, 1, 1,  2, 2, 2, 2];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    function eqAtkPct(i) {
+        var a = [5, 10, 16, 24,  0, 0, 0, 0,  0, 0, 3, 5];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    function eqDefPct(i) {
+        var a = [0, 0, 0, 0,  5, 10, 16, 24,  0, 0, 3, 0];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    function eqSpdPct(i) {
+        var a = [0, 0, 0, 0,  0, 0, 0, 0,  5, 10, 3, 8];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    // Arena wins needed to unlock this item WITHOUT the matching relic.
+    function eqWinReq(i) {
+        var a = [0, 3, 8, 20,  0, 3, 8, 20,  0, 3, 8, 20];
+        return a[_clamp(i, 0, EQ_N - 1)];
+    }
+    function eqSlotName(s) {
+        if (s == EQ_SLOT_WEAPON) { return "WPN"; }
+        if (s == EQ_SLOT_ARMOR)  { return "ARM"; }
+        return "ART";
+    }
+
+    // ── Live rivals (real players read off the Arena leaderboard) ────────────
+    // The roster is the only network traffic the Arena does. It is capped small
+    // because it is re-read from Storage on every fight, and it is refreshed at
+    // most once a calendar day: a stale rival is still a real player, and an
+    // absent one simply falls back to a procedural foe.
+    const ROSTER_MAX      = 8;
+    // Counted in view frames (the 66 ms animation tick) rather than held on a
+    // Timer of their own: the leaderboard pipeline already sits at the device
+    // timer budget and one more allocation crashes the app on launch.
+    const ROSTER_DELAY_TICKS = 150;  // ~10 s — lands after launch ping -> msgs -> daily
+    const ROSTER_WAIT_TICKS  = 8;    // ~0.5 s — busy-channel re-check
+    const ROSTER_WAIT_MAX = 30;      // deferrals before giving up for the session
+
+    // ── Defence: rival challenges resolved on the way back in ────────────────
+    // There is no server-side PvP, so the raids that happened "while you were
+    // away" are rolled at collect time. Deliberately low stakes: the creature is
+    // never hurt, no equipment is ever lost, only ladder points move.
+    const DEF_MAX_PER_RETURN = 3;    // regardless of how long the absence was
+    const DEF_HOURS_PER_TRY  = 6;
+    const DEF_CHANCE_PCT     = 55;
+    const DEF_ROUNDS         = 5;    // volleys an attacker lands before giving up
+    const DEF_HOLD_PTS       = 5;
+    const DEF_LOSS_PTS       = 7;
+    const DEF_LOG_MAX        = 8;
+
+    // ── Critical hits ────────────────────────────────────────────────────────
+    const CRIT_MULT_PCT = 150;
+    const CRIT_CAP_PCT  = 35;
+
+    // ── Elements: short battle-flavour tag + the type-advantage wheel ────────
+    // Fire > Nature > Shadow > Electric > Water > Fire (each beats exactly one
+    // other for a clean +15% damage edge — see elementBeats()).
+    function elementHint(sp) {
+        var a = ["Fire burns Nature", "Water douses Fire",
+                 "Electric shocks Water", "Nature chokes Shadow",
+                 "Shadow drains Electric"];
+        return a[_clamp(sp, 0, SPECIES_N - 1)];
+    }
+    // Species index this species holds an elemental edge over.
+    function elementBeats(sp) {
+        var a = [3, 0, 1, 4, 2];
+        return a[_clamp(sp, 0, SPECIES_N - 1)];
     }
 }

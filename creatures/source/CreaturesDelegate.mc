@@ -54,6 +54,9 @@ class CreaturesDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        // An open detail card owns BACK first, so backing out of the gear
+        // picker returns to the Arena instead of leaving the game.
+        try { if (_v.closeGear()) { return true; } } catch (e) {}
         try { _v.model().save(); } catch (e) {}
         return false;   // let the framework pop back to the menu
     }

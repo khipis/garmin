@@ -184,16 +184,26 @@ class GameMenuView extends WatchUi.View {
                 // shipping status lines that ran under the bezel, so trim here
                 // rather than relying on every caller to guess a safe length.
                 var fy = _h - fhX;
-                var fw = _chord(fy) * 94 / 100;
-                while (ft.length() > 4 && dc.getTextWidthInPixels(ft, Graphics.FONT_XTINY) > fw) {
-                    ft = ft.substring(0, ft.length() - 2);
-                }
-                // Footers are separator-joined, so a trim usually lands mid-join
-                // and leaves a dangling bullet or dash hanging off the end.
-                while (ft.length() > 1) {
-                    var tail = ft.substring(ft.length() - 1, ft.length());
-                    if (!tail.equals(" ") && !tail.equals("\u00b7") && !tail.equals("-")) { break; }
-                    ft = ft.substring(0, ft.length() - 1);
+                var fw = _chord(fy) * 96 / 100;
+                if (dc.getTextWidthInPixels(ft, Graphics.FONT_XTINY) > fw) {
+                    // Drop whole words, never characters: a footer cut mid-word
+                    // reads as a typo, which is worse than a shorter line.
+                    while (ft.length() > 4) {
+                        var cut = -1;
+                        for (var i = ft.length() - 1; i > 0; i--) {
+                            if (ft.substring(i, i + 1).equals(" ")) { cut = i; break; }
+                        }
+                        if (cut < 0) { break; }
+                        ft = ft.substring(0, cut);
+                        if (dc.getTextWidthInPixels(ft, Graphics.FONT_XTINY) <= fw) { break; }
+                    }
+                    // Footers are separator-joined, so the cut usually lands on a
+                    // join and leaves a bullet or dash dangling off the end.
+                    while (ft.length() > 1) {
+                        var tail = ft.substring(ft.length() - 1, ft.length());
+                        if (!tail.equals(" ") && !tail.equals("\u00b7") && !tail.equals("-")) { break; }
+                        ft = ft.substring(0, ft.length() - 1);
+                    }
                 }
                 dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(cx, fy, Graphics.FONT_XTINY, ft, VC);

@@ -20,12 +20,22 @@ using Toybox.Attention;
 using Toybox.Lang;
 using Toybox.System;
 
-const CV_HOME = 0;
-const CV_ACT  = 1;
-const CV_EVO  = 2;
-const CV_DAY  = 3;
-const CV_COL  = 4;
-const CV_PAGES = 5;
+const CV_HOME  = 0;
+const CV_ACT   = 1;
+const CV_EVO   = 2;
+const CV_ARENA = 3;
+const CV_DAY   = 4;
+const CV_COL   = 5;
+const CV_PAGES = 6;
+
+// View ticks per replayed strike, and how many of them the hit flash lasts.
+const CV_STRIKE_TICKS = 7;
+const CV_FLASH_TICKS  = 3;
+
+// ARENA rows: AGG / BAL / DEF / GEAR / FAIR / RISK.
+const CV_ARENA_ROWS = 6;
+// Equipment rows visible at once in the gear card.
+const CV_GEAR_FIT = 4;
 
 class CreaturesView extends WatchUi.View {
     hidden var _m;
@@ -45,13 +55,26 @@ class CreaturesView extends WatchUi.View {
     hidden var _pathCursor;      // 0..3 → Runner..Dynamo
     hidden var _colScroll;
 
+    hidden var _battle;          // overlay: arena battle in progress / result
+    hidden var _battleData;      // last fight() result Dictionary
+    hidden var _battleStep;      // strikes replayed so far
+    hidden var _battleT;         // sub-tick counter for strike pacing
+
+    hidden var _gearOpen;        // overlay: equipment picker
+    hidden var _gearCur;         // 0 = AUTO, then one row per unlocked item
+    hidden var _gearScroll;
+    hidden var _gearIds;         // unlocked equipment ids, rebuilt on open/equip
+
+    hidden var _roster;          // once-a-day rival fetch (fire and forget)
+
     hidden var _demo;            // DEMO fast-track active
     hidden var _demoCtr;         // sub-tick counter for demo pacing
 
     // Tap rects [x,y,w,h] recomputed each draw.
     hidden var _rBtnA; hidden var _rBtnB; hidden var _rBtnC; hidden var _rBtnD;
+    hidden var _rBtnE; hidden var _rBtnF;
     hidden var _rPrev; hidden var _rNext;
-    hidden var _rTabs;           // array of 5 tab-dot hit rects
+    hidden var _rTabs;           // array of tab-dot hit rects
     hidden var _rDemo;           // DEMO toggle pill
 
     function initialize() {
@@ -62,8 +85,12 @@ class CreaturesView extends WatchUi.View {
         _popup = null; _popupT = 0;
         _welcome = false; _hatchFlash = false; _intro = false;
         _actCursor = 0; _questPick = false; _pathPick = false; _pathCursor = 0; _colScroll = 0;
+        _battle = false; _battleData = null; _battleStep = 0; _battleT = 0;
+        _gearOpen = false; _gearCur = 0; _gearScroll = 0; _gearIds = null;
+        _roster = null;
         _demo = false; _demoCtr = 0;
-        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null;
+        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null; _rBtnE = null;
+        _rBtnF = null;
         _rPrev = null; _rNext = null; _rTabs = null; _rDemo = null;
         _loadFx();
         _loadDemo();
@@ -75,9 +102,13 @@ class CreaturesView extends WatchUi.View {
         try { _m.maybeHatch(); } catch (e) {}
         try { _m.collectOffline(); } catch (e) {}
         if (wasEgg && _m.hatched) { _hatchFlash = true; }
-        else if (_m.hatched && (_m.gXp > 0 || _m.gFood > 0 || _m.gMut > 0)) { _welcome = true; }
+        else if (_m.hatched && (_m.gXp > 0 || _m.gFood > 0 || _m.gMut > 0 || _m.defHits > 0)) { _welcome = true; }
         try { if (_m.needsPathPick()) { _pathPick = true; _pathCursor = _m.suggestedPath() - 1; if (_pathCursor < 0) { _pathCursor = 0; } } } catch (e) {}
         try { _m.submitScores(); } catch (e) {}
+        try { _m.equipDefaults(); } catch (e) {}
+        // Rivals are a bonus, never a dependency: this arms a delayed, guarded,
+        // once-a-day GET and nothing downstream waits on it.
+        try { _roster = new ArenaRoster(_m); _roster.arm(); } catch (e) {}
 
         // One-time explainer: Garmin stats are the currency here.
         try {
@@ -120,12 +151,39 @@ class CreaturesView extends WatchUi.View {
     }
     function onHide() {
         if (_timer != null) { _timer.stop(); }
+        try { if (_roster != null) { _roster.stop(); } } catch (e) {}
         try { _m.save(); } catch (e) {}
     }
 
     function _tick() as Void {
         _t = (_t + 1) % 1000000;
         if (_popupT > 0) { _popupT -= 1; if (_popupT == 0) { _popup = null; } }
+        try { if (_roster != null) { _roster.poll(); } } catch (e) {}
+
+        // Battle replay: the fight is already fully resolved, so the timer only
+        // walks a cursor along it. CV_STRIKE_TICKS is short enough that eight
+        // rounds stay watchable rather than becoming a wait.
+        if (_battle && _battleData != null) {
+            _battleT += 1;
+            if (_battleT >= CV_STRIKE_TICKS) {
+                _battleT = 0;
+                var st = _battleSteps();
+                if (_battleStep < st.size()) {
+                    _battleStep += 1;
+                    // Only crits and the verdict buzz: a beep on all sixteen
+                    // strikes is a nuisance on the wrist, and every _vibe call
+                    // allocates a VibeProfile.
+                    var crit = false;
+                    try { crit = (st[_battleStep - 1][4] == 1); } catch (e) {}
+                    if (crit) { _tone(1); _vibe(45, 40); }
+                    if (_battleStep >= st.size()) {
+                        var won = false;
+                        try { won = _battleData["won"]; } catch (e) {}
+                        _tone(won ? 4 : 2); _vibe(won ? 60 : 40, won ? 120 : 80);
+                    }
+                }
+            }
+        }
 
         if (_demo) {
             _demoCtr += 1;
@@ -169,6 +227,7 @@ class CreaturesView extends WatchUi.View {
 
     // ── Navigation ────────────────────────────────────────────────────────────
     function pageMove(d) {
+        if (closeGear()) { return; }
         if (_dismissOverlay()) { return; }
         _page = ((_page + d) % CV_PAGES + CV_PAGES) % CV_PAGES;
         _actCursor = 0; _colScroll = 0;
@@ -176,6 +235,7 @@ class CreaturesView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
     function setPage(p) {
+        if (closeGear()) { return; }
         if (_dismissOverlay()) { return; }
         _page = ((p % CV_PAGES) + CV_PAGES) % CV_PAGES;
         _actCursor = 0; _colScroll = 0;
@@ -184,6 +244,16 @@ class CreaturesView extends WatchUi.View {
     }
 
     hidden function _dismissOverlay() {
+        if (_battle) {
+            var st = _battleSteps();
+            if (_battleStep < st.size()) {
+                _battleStep = st.size();   // SELECT / tap skips straight to the result
+            } else {
+                _battle = false; _battleData = null;
+            }
+            WatchUi.requestUpdate();
+            return true;
+        }
         if (_welcome) { _welcome = false; WatchUi.requestUpdate(); return true; }
         if (_hatchFlash) { _hatchFlash = false; WatchUi.requestUpdate(); return true; }
         if (_intro) {
@@ -193,6 +263,22 @@ class CreaturesView extends WatchUi.View {
             return true;
         }
         return false;
+    }
+    hidden function _battleRounds() { return _battleField("rounds"); }
+    hidden function _battleSteps()  { return _battleField("steps"); }
+    hidden function _battleField(key) {
+        if (_battleData == null) { return []; }
+        var r = null;
+        try { r = _battleData[key]; } catch (e) {}
+        if (!(r instanceof Lang.Array)) { return []; }
+        return r;
+    }
+    hidden function _battleNum(key, def) {
+        if (_battleData == null) { return def; }
+        var v = null;
+        try { v = _battleData[key]; } catch (e) {}
+        if (!(v instanceof Lang.Number)) { return def; }
+        return v;
     }
 
     hidden function _colMaxScroll() {
@@ -211,6 +297,7 @@ class CreaturesView extends WatchUi.View {
             _pathCursor = np; _tone(0); WatchUi.requestUpdate();
             return;
         }
+        if (_gearOpen) { _gearMove(d); return; }
         if (_dismissOverlay()) { return; }
         if (!_m.hatched) { return; }          // egg screen: nothing to scroll
 
@@ -235,12 +322,20 @@ class CreaturesView extends WatchUi.View {
             _colScroll = ns; _tone(0); WatchUi.requestUpdate();
             return;
         }
+        if (_page == CV_ARENA) {
+            var na = _actCursor + d;
+            if (na < 0) { pageMove(-1); return; }
+            if (na > CV_ARENA_ROWS - 1) { pageMove(1); return; }
+            _actCursor = na; _tone(0); WatchUi.requestUpdate();
+            return;
+        }
         pageMove(d);
     }
 
     // Context activation (SELECT / ENTER).
     function activate() {
         if (_pathPick) { doPickPath(); return; }
+        if (_gearOpen) { doGearSelect(); return; }
         if (_dismissOverlay()) { return; }
         if (!_m.hatched) { doBoost(); return; }
         if (_page == CV_HOME) { setPage(CV_ACT); return; }
@@ -249,6 +344,12 @@ class CreaturesView extends WatchUi.View {
             if (_actCursor == 0) { doFeed(); }
             else if (_actCursor == 1) { doTrain(); }
             else { _questPick = true; _actCursor = 0; WatchUi.requestUpdate(); }
+            return;
+        }
+        if (_page == CV_ARENA) {
+            if (_actCursor <= 2) { doSetStrategy(_actCursor); return; }
+            if (_actCursor == 3) { openGear(); return; }
+            doFight(_actCursor == 4 ? 0 : 1);
             return;
         }
         if (_page == CV_DAY) {
@@ -397,6 +498,108 @@ class CreaturesView extends WatchUi.View {
         } catch (ex) {}
     }
 
+    // ── Arena ─────────────────────────────────────────────────────────────────
+    function doSetStrategy(s) {
+        try {
+            _m.setStrategy(s);
+            _popup = Cr.strategyName(s) + " stance";
+            _popupT = 22; _tone(0); _vibe(15, 20);
+            WatchUi.requestUpdate();
+        } catch (e) {}
+    }
+    function doFight(band) {
+        try {
+            var res = _m.fight(band);
+            _battleData = res;
+            _battleStep = 0; _battleT = 0;
+            _battle = true;
+            _tone(0); _vibe(25, 35);
+            WatchUi.requestUpdate();
+        } catch (e) {}
+    }
+
+    // ── Equipment picker ──────────────────────────────────────────────────────
+    // Row 0 is AUTO (the old equipBest behaviour, kept as a one-tap shortcut);
+    // every row after it is an unlocked item that SELECT equips into its slot,
+    // or takes off if it is already worn. The id list is built when the card
+    // opens rather than per draw.
+    function gearOpen() { return _gearOpen; }
+    function openGear() {
+        _buildGearIds();
+        _gearOpen = true; _gearCur = 0; _gearScroll = 0;
+        _tone(0); _vibe(14, 18);
+        WatchUi.requestUpdate();
+    }
+    function closeGear() {
+        if (!_gearOpen) { return false; }
+        _gearOpen = false;
+        _tone(0); _vibe(10, 14);
+        WatchUi.requestUpdate();
+        return true;
+    }
+    hidden function _buildGearIds() {
+        var ids = [];
+        for (var i = 0; i < Cr.EQ_N; i++) {
+            var ok = false;
+            try { ok = _m.eqUnlocked(i); } catch (e) {}
+            if (ok) { ids.add(i); }
+        }
+        _gearIds = ids;
+    }
+    hidden function _gearRows() {
+        return ((_gearIds == null) ? 0 : _gearIds.size()) + 1;
+    }
+    hidden function _gearMove(d) {
+        var n = _gearRows();
+        var nc = _gearCur + d;
+        if (nc < 0) { nc = n - 1; }
+        if (nc >= n) { nc = 0; }
+        _gearCur = nc;
+        if (_gearCur < _gearScroll) { _gearScroll = _gearCur; }
+        if (_gearCur >= _gearScroll + CV_GEAR_FIT) { _gearScroll = _gearCur - CV_GEAR_FIT + 1; }
+        _tone(0); _vibe(8, 12);
+        WatchUi.requestUpdate();
+    }
+    function doGearSelect() {
+        try {
+            if (_gearCur == 0) {
+                _m.equipBest();
+                _popup = "AUTO: best gear equipped"; _popupT = 26;
+                _tone(4); _vibe(30, 40);
+                WatchUi.requestUpdate();
+                return;
+            }
+            var idx = _gearCur - 1;
+            if (_gearIds == null || idx < 0 || idx >= _gearIds.size()) { return; }
+            var id = _gearIds[idx];
+            var worn = _gearWorn(id);
+            if (_m.equipItem(id)) {
+                _popup = (worn ? "Removed " : "Equipped ") + Cr.eqName(id);
+                _popupT = 26; _tone(0); _vibe(25, 30);
+                WatchUi.requestUpdate();
+            }
+        } catch (e) {}
+    }
+    hidden function _gearWorn(id) {
+        return _m.eqWeapon == id || _m.eqArmor == id || _m.eqArt == id;
+    }
+    // The card's four visible rows ride on the shared button rects, laid out by
+    // _drawGear; CV_GEAR_FIT is what keeps the two in step.
+    hidden function _gearRect(g) {
+        if (g == 0) { return _rBtnA; }
+        if (g == 1) { return _rBtnB; }
+        if (g == 2) { return _rBtnC; }
+        return _rBtnD;
+    }
+    // "+16A" / "+10D" / "+8S" — only the bonuses an item actually carries.
+    hidden function _gearBonus(id) {
+        var s = "";
+        var a = Cr.eqAtkPct(id); if (a > 0) { s += "+" + a + "A "; }
+        var d = Cr.eqDefPct(id); if (d > 0) { s += "+" + d + "D "; }
+        var p = Cr.eqSpdPct(id); if (p > 0) { s += "+" + p + "S"; }
+        return s;
+    }
+
     // ── Tap hit-testing (called by delegate) ──────────────────────────────────
     function onTapXY(x, y) {
         if (_pathPick) {
@@ -408,7 +611,19 @@ class CreaturesView extends WatchUi.View {
             if (_inRect(x, y, _rBtnD)) { _pathCursor = 3; doPickPath(); return true; }
             doPickPath(); return true;
         }
-        if (_welcome || _hatchFlash || _intro) { _dismissOverlay(); return true; }
+        if (_gearOpen) {
+            if (_inRect(x, y, _rBtnF)) { closeGear(); return true; }
+            for (var g = 0; g < CV_GEAR_FIT; g++) {
+                var rr = _gearRect(g);
+                if (_inRect(x, y, rr)) {
+                    var row = _gearScroll + g;
+                    if (row < _gearRows()) { _gearCur = row; doGearSelect(); }
+                    return true;
+                }
+            }
+            return true;
+        }
+        if (_battle || _welcome || _hatchFlash || _intro) { _dismissOverlay(); return true; }
 
         // DEMO pill is always live.
         if (_inRect(x, y, _rDemo)) { toggleDemo(); return true; }
@@ -443,6 +658,14 @@ class CreaturesView extends WatchUi.View {
                 WatchUi.requestUpdate(); return true;
             }
         }
+        if (_page == CV_ARENA) {
+            if (_inRect(x, y, _rBtnA)) { _actCursor = 0; doSetStrategy(0); return true; }
+            if (_inRect(x, y, _rBtnB)) { _actCursor = 1; doSetStrategy(1); return true; }
+            if (_inRect(x, y, _rBtnC)) { _actCursor = 2; doSetStrategy(2); return true; }
+            if (_inRect(x, y, _rBtnD)) { _actCursor = 3; openGear(); return true; }
+            if (_inRect(x, y, _rBtnE)) { _actCursor = 4; doFight(0); return true; }
+            if (_inRect(x, y, _rBtnF)) { _actCursor = 5; doFight(1); return true; }
+        }
         if (_page == CV_DAY) {
             if (_inRect(x, y, _rBtnA)) {
                 try {
@@ -472,7 +695,8 @@ class CreaturesView extends WatchUi.View {
     hidden function _draw(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         var cx = _w / 2;
-        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null;
+        _rBtnA = null; _rBtnB = null; _rBtnC = null; _rBtnD = null; _rBtnE = null;
+        _rBtnF = null;
         _rTabs = null; _rPrev = null; _rNext = null;
 
         dc.setColor(Cr.BG, Cr.BG); dc.clear();
@@ -495,6 +719,7 @@ class CreaturesView extends WatchUi.View {
             _drawTabStrip(dc);
             if (_page == CV_ACT) { _drawActions(dc); }
             else if (_page == CV_EVO) { _drawEvolution(dc); }
+            else if (_page == CV_ARENA) { _drawArena(dc); }
             else if (_page == CV_DAY) { _drawDaily(dc); }
             else { _drawCollection(dc); }
             _drawChevrons(dc);
@@ -507,6 +732,39 @@ class CreaturesView extends WatchUi.View {
         if (_hatchFlash) { _drawHatch(dc); }
         if (_intro && _m.hatched && !_welcome && !_hatchFlash) { _drawIntro(dc); }
         if (_pathPick && _m.hatched && !_welcome && !_hatchFlash && !_intro) { _drawPathPick(dc); }
+        if (_battle && _m.hatched && !_welcome && !_hatchFlash && !_intro && !_pathPick) { _drawBattle(dc); }
+        if (_gearOpen && _m.hatched && !_battle && !_welcome && !_hatchFlash && !_intro && !_pathPick) { _drawGear(dc); }
+    }
+
+    // ── Round-screen safety ───────────────────────────────────────────────────
+    // Half the drawable width at row y. Wide elements are measured against this
+    // instead of the full screen width, or they run under the bezel on the
+    // upper and lower chords. Integer sqrt so nothing in layout goes floating.
+    hidden function _chordHalf(y) {
+        if (_w != _h) { return _w / 2; }
+        var r = _w / 2;
+        var dy = y - _h / 2; if (dy < 0) { dy = -dy; }
+        if (dy >= r) { return 0; }
+        return _isqrt(r * r - dy * dy);
+    }
+    hidden function _isqrt(n) {
+        if (n <= 0) { return 0; }
+        var x = n; var y = (x + 1) / 2; var g = 0;
+        while (y < x && g < 40) { x = y; y = (x + n / x) / 2; g += 1; }
+        return x;
+    }
+    // Centred pixel-font text, truncated to whatever the chord allows at that
+    // row. `pad` keeps it clear of the bezel rather than flush against it.
+    hidden function _pxFit(dc, s, cx, y, sc, col, pad) {
+        if (s == null) { return; }
+        var glyph = 5 * sc;
+        var maxw = _chordHalf(y + glyph) * 2 - pad * 2;
+        if (maxw < 4 * sc) { return; }
+        var str = s;
+        while (str.length() > 2 && Px.gtxtW(str, sc) > maxw) {
+            str = str.substring(0, str.length() - 1);
+        }
+        Px.gtxtC(dc, str, cx, y, sc, col);
     }
 
     // ── Small helpers ──────────────────────────────────────────────────────────
@@ -527,17 +785,19 @@ class CreaturesView extends WatchUi.View {
 
     // ── Top tab strip: page name + tappable dots (all pages) ─────────────────
     hidden function _pageName(p) {
-        if (p == CV_HOME) { return "HOME"; }
-        if (p == CV_ACT)  { return "ACTIONS"; }
-        if (p == CV_EVO)  { return "EVOLVE"; }
-        if (p == CV_DAY)  { return "DAILY"; }
+        if (p == CV_HOME)  { return "HOME"; }
+        if (p == CV_ACT)   { return "ACTIONS"; }
+        if (p == CV_EVO)   { return "EVOLVE"; }
+        if (p == CV_ARENA) { return "ARENA"; }
+        if (p == CV_DAY)   { return "DAILY"; }
         return "INDEX";
     }
     hidden function _pageColor(p) {
-        if (p == CV_ACT) { return Cr.ACCENT; }
-        if (p == CV_EVO) { return 0xB46CFF; }
-        if (p == CV_DAY) { return Cr.GOLD; }
-        if (p == CV_COL) { return 0x4CA8FF; }
+        if (p == CV_ACT)   { return Cr.ACCENT; }
+        if (p == CV_EVO)   { return 0xB46CFF; }
+        if (p == CV_ARENA) { return 0xFF5A5A; }
+        if (p == CV_DAY)   { return Cr.GOLD; }
+        if (p == CV_COL)   { return 0x4CA8FF; }
         return Cr.TEXT;
     }
     hidden function _drawTabStrip(dc) {
@@ -818,13 +1078,15 @@ class CreaturesView extends WatchUi.View {
         var bw = _w * 62 / 100; var bx = cx - bw / 2;
         var by = yy + _h * 14 / 100;
         _bar(dc, bx, by, bw, 9, _m.evoProgressPct(), 0xB46CFF);
-        Px.gtxtC(dc, "DNA MUT " + _m.mutations, cx, by + _h * 5 / 100, sc, Cr.MUTED);
+        Px.gtxtC(dc, _m.evoProgressPct() + "% to next  ·  DNA " + _m.mutations,
+                 cx, by + _h * 5 / 100, sc, Cr.MUTED);
+        Px.gtxtC(dc, "EVO PTS " + _m.evoPts, cx, by + _h * 10 / 100, sc, 0xB46CFF);
 
         // Trait bars (extra spacing). The label sits in a reserved left column so
         // it can never touch the bar that starts after it. Bars are scaled to
         // TRAIT_MAX so a maxed trait fills the box exactly instead of overflowing.
-        var ty = by + _h * 12 / 100;
-        var rowH = canAsc ? _h * 7 / 100 : _h * 8 / 100;
+        var ty = by + _h * 13 / 100;
+        var rowH = canAsc ? _h * 64 / 1000 : _h * 82 / 1000;
         var labW = _w * 18 / 100;
         for (var i = 0; i < Cr.TR_N; i++) {
             var ry = ty + i * rowH;
@@ -839,6 +1101,268 @@ class CreaturesView extends WatchUi.View {
             var byr = _h * 82 / 100; var bhr = _h * 11 / 100;
             _rBtnA = [bxr, byr, bwr, bhr];
             _button(dc, _rBtnA, "ASCEND", true);
+        }
+    }
+
+    // ── ARENA — TRAIN → EVOLVE → EQUIP → BATTLE → RANK UP ──────────────────────
+    // Compact "W2 A1 T-": which tier is worn in each slot. Full names live one
+    // tap away in the gear card, so the summary only has to fit on a button.
+    hidden function _eqSummary() {
+        return _eqTag("W", _m.eqWeapon) + " " + _eqTag("A", _m.eqArmor)
+             + " " + _eqTag("T", _m.eqArt);
+    }
+    hidden function _eqTag(letter, id) {
+        if (id < 0) { return letter + "-"; }
+        return letter + ((id % 4) + 1);
+    }
+    hidden function _drawArena(dc) {
+        var cx = _w / 2;
+        var sc = _h / 220; if (sc < 2) { sc = 2; }
+
+        var rk = 0; var pw = 0;
+        try { rk = _m.rank(); } catch (e) {}
+        try { pw = _m.power(); } catch (e) {}
+
+        var yy = _h * 13 / 100;
+        Px.gtxtC(dc, "POWER " + pw, cx, yy, sc, Cr.TEXT);
+        Px.gtxtC(dc, Cr.rankName(rk) + " " + _m.arenaPts + " PTS", cx, yy + _h * 6 / 100, sc, Cr.rankColor(rk));
+        var rec = _m.arenaWins + "W-" + _m.arenaLosses + "L";
+        if (_m.arenaStreak > 1) { rec += "  streak " + _m.arenaStreak; }
+        Px.gtxtC(dc, rec, cx, yy + _h * 11 / 100, sc, Cr.MUTED);
+
+        // GEAR row — opens the equipment picker.
+        var gw = _w * 56 / 100; var gh = _h * 8 / 100;
+        var gy = _h * 29 / 100;
+        _rBtnD = [cx - gw / 2, gy, gw, gh];
+        _button(dc, _rBtnD, "GEAR " + _eqSummary(), _actCursor == 3);
+
+        // Strategy picker — 3 buttons.
+        var sw = _w * 24 / 100; var sh = _h * 8 / 100; var sgap = _w * 3 / 100;
+        var stripY = _h * 39 / 100;
+        var sx0 = cx - (sw * 3 + sgap * 2) / 2;
+        _rBtnA = [sx0, stripY, sw, sh];
+        _rBtnB = [sx0 + sw + sgap, stripY, sw, sh];
+        _rBtnC = [sx0 + (sw + sgap) * 2, stripY, sw, sh];
+        var lblA = Cr.strategyAbbr(0); if (_m.strategy == 0) { lblA = "*" + lblA; }
+        var lblB = Cr.strategyAbbr(1); if (_m.strategy == 1) { lblB = "*" + lblB; }
+        var lblC = Cr.strategyAbbr(2); if (_m.strategy == 2) { lblC = "*" + lblC; }
+        _button(dc, _rBtnA, lblA, _actCursor == 0);
+        _button(dc, _rBtnB, lblB, _actCursor == 1);
+        _button(dc, _rBtnC, lblC, _actCursor == 2);
+        Px.gtxtC(dc, Cr.strategyHint(_m.strategy), cx, stripY + sh + _h * 3 / 100, sc, Cr.MUTED);
+
+        // Opponent bands — FAIR (even) / RISK (stronger, better reward).
+        var bw = _w * 32 / 100; var bh = _h * 9 / 100; var bgap = _w * 4 / 100;
+        var by0 = _h * 55 / 100;
+        _rBtnE = [cx - bw - bgap / 2, by0, bw, bh];
+        _rBtnF = [cx + bgap / 2, by0, bw, bh];
+        _button(dc, _rBtnE, "FAIR", _actCursor == 4);
+        _button(dc, _rBtnF, "RISK", _actCursor == 5);
+        var rivals = 0;
+        try { rivals = _m.roster().size(); } catch (e) {}
+        var bandHint = (rivals > 0) ? (rivals + " live rivals on the board")
+                                    : "FAIR even  RISK stronger +pts";
+        _pxFit(dc, bandHint, cx, by0 + bh + _h * 3 / 100, sc, (rivals > 0) ? Cr.GOLD : Cr.MUTED, 6);
+
+        // War log, then the most recent raid the player defended against. Three
+        // rows fit between the FAIR/RISK strip and the bottom control hint.
+        var logY = by0 + bh + _h * 8 / 100;
+        var rowH = _h * 5 / 100;
+        Px.gtxtC(dc, "WAR LOG", cx, logY, sc, 0xFF5555);
+        var line = logY + rowH;
+        var wl = _m.warLog;
+        if (wl != null) {
+            var shown = 0;
+            for (var i = 0; i < wl.size() && shown < 2; i++) {
+                var col = (wl[i].length() > 0 && wl[i].substring(0, 1).equals("W")) ? Cr.ACCENT : 0xFF5555;
+                _pxFit(dc, wl[i], cx, line, sc, col, 6);
+                line += rowH;
+                shown += 1;
+            }
+        }
+        var def = null;
+        try { def = _m.defShort(0); } catch (e) {}
+        if (def != null) { _pxFit(dc, def, cx, line, sc, 0xAAAAAA, 6); }
+    }
+
+    // ── GEAR card — pick a weapon / armour / artifact per slot ────────────────
+    // Same overlay convention as the sibling idle games: it owns the screen,
+    // UP/DOWN walks every unlocked item without going back to the list, SELECT
+    // acts and leaves the card up, BACK closes it. Row 0 is the old auto-equip.
+    hidden function _drawGear(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x060A0F, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(Cr.CIRCLE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        var sc = _h / 220; if (sc < 2) { sc = 2; }
+        var n = _gearRows();
+
+        Px.gshC(dc, "GEAR", cx, _h * 7 / 100, sc, Cr.TEXT);
+        // The live stat line is the only feedback that matters here: every row
+        // already flags what it is worn, so a separate loadout summary is noise.
+        var stats = "";
+        try { stats = "ATK " + _m.atk() + "  DEF " + _m.def() + "  SPD " + _m.spd(); } catch (e) {}
+        _pxFit(dc, stats, cx, _h * 13 / 100, sc, Cr.GOLD, 6);
+
+        var rw = _w * 74 / 100; var rx = cx - rw / 2;
+        var rh = _h * 10 / 100;
+        var gap = _h * 8 / 1000;
+        var y0 = _h * 19 / 100;
+        for (var g = 0; g < CV_GEAR_FIT; g++) {
+            var row = _gearScroll + g;
+            if (row >= n) { break; }
+            var r = [rx, y0 + g * (rh + gap), rw, rh];
+            if (g == 0) { _rBtnA = r; }
+            else if (g == 1) { _rBtnB = r; }
+            else if (g == 2) { _rBtnC = r; }
+            else { _rBtnD = r; }
+            _gearRow(dc, r, row, sc);
+        }
+
+        var hint = (n > CV_GEAR_FIT) ? "UP/DOWN TO SCROLL" : "SELECT TO EQUIP";
+        _pxFit(dc, hint, cx, _h * 66 / 100, sc, Cr.MUTED, 6);
+        // Item names vary from "Iron Fang" to "Star Map Ring", so the detail line
+        // steps its font down instead of being clipped at a fixed size.
+        var detail = "AUTO equips the best you own";
+        if (_gearCur > 0 && _gearIds != null && _gearCur - 1 < _gearIds.size()) {
+            var id = _gearIds[_gearCur - 1];
+            detail = Cr.eqName(id) + "  " + _gearBonus(id)
+                   + (_gearWorn(id) ? " - worn" : "");
+        }
+        var dy = _h * 71 / 100;
+        _txtFit(dc, cx, dy, Graphics.FONT_TINY, 0x9FB2C4, detail,
+                _chordHalf(dy + _h * 6 / 100) * 2 - 12);
+
+        var cw = _w * 34 / 100;
+        _rBtnF = [cx - cw / 2, _h * 83 / 100, cw, _h * 10 / 100];
+        _button(dc, _rBtnF, "CLOSE", false);
+    }
+
+    hidden function _gearRow(dc, r, row, sc) {
+        if (row == 0) {
+            _button(dc, r, "AUTO", _gearCur == 0);
+            return;
+        }
+        var id = _gearIds[row - 1];
+        var worn = _gearWorn(id);
+        var hot = (_gearCur == row);
+        dc.setColor(hot ? 0x123016 : Cr.PANEL, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+        dc.setColor(worn ? Cr.GOLD : (hot ? Cr.ACCENT : 0x2A3A4A), Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(r[0], r[1], r[2], r[3], 6);
+
+        var pad = r[2] / 20; if (pad < 3) { pad = 3; }
+        var gy = r[1] + r[3] / 2 - 5 * sc;
+        Px.gtxt(dc, Cr.eqSlotName(Cr.eqSlot(id)), r[0] + pad, gy, sc,
+                worn ? Cr.GOLD : Cr.MUTED);
+        Px.gtxt(dc, Cr.eqName(id), r[0] + pad, gy + 6 * sc, sc,
+                hot ? 0xCFF7DA : 0x9FB2C4);
+        var bonus = _gearBonus(id);
+        Px.gtxt(dc, bonus, r[0] + r[2] - pad - Px.gtxtW(bonus, sc), gy + 3 * sc, sc, Cr.ACCENT);
+    }
+
+    // ── Battle replay: fought from the ARENA page ────────────────────────────
+    // fight() hands the whole fight back up front, so the replay is a cursor
+    // walking a fixed array — nothing is simulated per frame and the draw path
+    // allocates nothing beyond the result strings, which only exist once the
+    // replay has finished. Both creatures are the REAL sprites: the player's
+    // hero on the left, and on the right whatever the rival actually raised.
+    hidden function _drawBattle(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x05070C, Graphics.COLOR_TRANSPARENT); dc.clear();
+        if (_w == _h) {
+            dc.setColor(Cr.CIRCLE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+        if (_battleData == null) { return; }
+        var sc = _h / 220; if (sc < 2) { sc = 2; }
+
+        var foeName = "Foe"; var won = false; var real = false;
+        try { foeName = _battleData["foeName"]; } catch (e) {}
+        try { won = _battleData["won"]; } catch (e) {}
+        try { real = (_battleData["foeReal"] == true); } catch (e) {}
+        var foeLevel   = _battleNum("foeLevel", 1);
+        var foeSpecies = _battleNum("foeSpecies", 0);
+        var foeEvo     = _battleNum("foeEvo", Cr.EV_HATCH);
+        var myMax      = _battleNum("myMax", 1);
+        var foeMax     = _battleNum("foeMax", 1);
+        if (myMax < 1) { myMax = 1; }
+        if (foeMax < 1) { foeMax = 1; }
+
+        var steps = _battleSteps();
+        var shown = _battleStep; if (shown > steps.size()) { shown = steps.size(); }
+        var done = (shown >= steps.size());
+
+        // Everything the current frame needs comes off the last revealed strike.
+        var who = -1; var crit = false;
+        var myHp = myMax; var foeHp = foeMax;
+        if (shown > 0) {
+            var st = steps[shown - 1];
+            who = st[0]; myHp = st[2]; foeHp = st[3]; crit = (st[4] == 1);
+        }
+        var flash = (!done && _battleT < CV_FLASH_TICKS && shown > 0);
+
+        _pxFit(dc, "YOU vs " + foeName, cx, _h * 6 / 100, sc, Cr.TEXT, 6);
+        _pxFit(dc, (real ? "RIVAL LV " : "LV ") + foeLevel + "  "
+                 + Cr.speciesElement(foeSpecies),
+               cx, _h * 11 / 100, sc, real ? Cr.GOLD : Cr.MUTED, 6);
+
+        // Combatants. The striker lunges in and the struck side takes a ring
+        // flash — two cheap primitives that read as a hit at any watch size.
+        var hpx = _h * 9 / 100 / 8; if (hpx < 4) { hpx = 4; }
+        var lunge = _w * 3 / 100;
+        var heroX = cx - _w * 24 / 100;
+        var foeX  = cx + _w * 24 / 100;
+        if (flash && who == 0) { heroX += lunge; }
+        if (flash && who == 1) { foeX  -= lunge; }
+        var feetY = _h * 30 / 100;
+        if (flash) {
+            dc.setColor(crit ? 0xFFAA00 : 0xFF5555, Graphics.COLOR_TRANSPARENT);
+            var hitX = (who == 0) ? foeX : heroX;
+            dc.drawCircle(hitX, feetY - hpx * 4, hpx * 5);
+            if (crit) { dc.drawCircle(hitX, feetY - hpx * 4, hpx * 6); }
+        }
+        try { CreatureArt.drawHero(dc, _m, heroX, feetY, hpx, _t); } catch (e) {}
+        try { CreatureArt.drawFoe(dc, foeSpecies, foeEvo, foeX, feetY, hpx, _t, true); } catch (e) {}
+        Px.gtxtC(dc, "VS", cx, _h * 24 / 100, sc, 0xFF5555);
+
+        // HP bars, one under each fighter.
+        var barW = _w * 30 / 100; var barH = _h * 3 / 100; if (barH < 5) { barH = 5; }
+        var barY = _h * 34 / 100;
+        _bar(dc, cx - _w * 24 / 100 - barW / 2, barY, barW, barH, myHp * 100 / myMax, Cr.ACCENT);
+        _bar(dc, cx + _w * 24 / 100 - barW / 2, barY, barW, barH, foeHp * 100 / foeMax, 0xFF5555);
+
+        // The strike line for the step on screen, plus a crit marker.
+        var rn = _battleRounds();
+        if (shown > 0 && shown <= rn.size()) {
+            _pxFit(dc, rn[shown - 1], cx, _h * 41 / 100, sc, crit ? 0xFFAA00 : Cr.TEXT, 6);
+        }
+
+        if (done && steps.size() > 0) {
+            var tip = "";
+            try { tip = _battleData["tip"]; } catch (e) {}
+            var xpGain   = _battleNum("xpGain", 0);
+            var evoGain  = _battleNum("evoGain", 0);
+            var ptsDelta = _battleNum("ptsDelta", 0);
+            var resY = _h * 50 / 100;
+            Px.gtxtC(dc, won ? "VICTORY!" : "DEFEAT", cx, resY, sc, won ? Cr.ACCENT : 0xFF5555);
+            var pStr = (ptsDelta >= 0 ? "+" : "") + ptsDelta;
+            _pxFit(dc, "+" + xpGain + " XP  +" + evoGain + " EVO  " + pStr + " PTS",
+                   cx, resY + _h * 6 / 100, sc, Cr.GOLD, 6);
+            if (tip != null && tip.length() > 0) {
+                // A one-line diagnostic sits better nudged down into the gap; a
+                // two-line one has to start high or it runs into the hint.
+                var tipW = _chordHalf(resY + _h * 20 / 100) * 2 - 12;
+                var tipY = resY + _h * 13 / 100;
+                if (_lineCount(dc, tip, tipW, Graphics.FONT_XTINY) < 2) { tipY += _h * 4 / 100; }
+                _wrapN(dc, cx, tipY, tipW, Graphics.FONT_XTINY,
+                       won ? Cr.MUTED : 0xFFAAAA, tip, 2);
+            }
+            _pxFit(dc, "TAP TO CLOSE", cx, _h * 88 / 100, sc, Cr.MUTED, 6);
+        } else {
+            _pxFit(dc, "TAP TO SKIP", cx, _h * 88 / 100, sc, Cr.MUTED, 6);
         }
     }
 
@@ -1007,14 +1531,27 @@ class CreaturesView extends WatchUi.View {
         _txt(dc, cx, _h * 27 / 100, Graphics.FONT_XTINY, Cr.MUTED,
              "explored while away", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var y = _h * 41 / 100; var step = _h * 11 / 100;
+        var y = _h * 36 / 100; var step = _h * 9 / 100;
         _txt(dc, cx, y, Graphics.FONT_TINY, Cr.TEXT, "+" + _m.gXp + " XP", Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, y + step, Graphics.FONT_TINY, 0xFF8A3A, "+" + _m.gFood + " food", Graphics.TEXT_JUSTIFY_CENTER);
         _txt(dc, cx, y + step * 2, Graphics.FONT_TINY, 0xB46CFF, "+" + _m.gMut + " DNA", Graphics.TEXT_JUSTIFY_CENTER);
+        var nextY = y + step * 3;
         if (_m.newDay) {
-            _txt(dc, cx, y + step * 3, Graphics.FONT_XTINY, Cr.GOLD,
+            _txt(dc, cx, nextY, Graphics.FONT_XTINY, Cr.GOLD,
                  "Streak " + _m.streak + "d",
                  Graphics.TEXT_JUSTIFY_CENTER);
+            nextY += _h * 7 / 100;
+        }
+        // Who came looking for a fight while the player was away. The overlay is
+        // the only place wide enough for the full "2d ago - HELD vs Name" form.
+        var raids = null; var who = null;
+        try { raids = _m.defSummary(); who = _m.defLine(0); } catch (e) {}
+        if (raids != null) {
+            var wrapW = _chordHalf(nextY + _h * 5 / 100) * 2 - 12;
+            nextY = _wrapN(dc, cx, nextY, wrapW, Graphics.FONT_XTINY, 0xFFAA00, raids, 2);
+            if (who != null) {
+                _wrapN(dc, cx, nextY, wrapW, Graphics.FONT_XTINY, 0xAAAAAA, who, 1);
+            }
         }
         _txt(dc, cx, _h * 90 / 100, Graphics.FONT_XTINY, Cr.MUTED,
              "tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
@@ -1070,6 +1607,67 @@ class CreaturesView extends WatchUi.View {
         var fh = dc.getFontHeight(font);
         dc.drawText(cx, y, font, l1, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(cx, y + fh * 85 / 100, font, l2, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+    // How many lines a string needs at this font and width, uncapped.
+    hidden function _lineCount(dc, s, maxw, font) {
+        if (s == null || s.length() == 0) { return 0; }
+        var words = _split(s);
+        var i = 0; var n = 0;
+        while (i < words.size()) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            n++;
+        }
+        return n;
+    }
+    // Multi-line centred wrap that ELLIPSIZES rather than running the remainder
+    // off both chords of a round screen — which is what the two-line _wrapText
+    // does with the longer copy. Returns the y the block ended at, for stacking.
+    hidden function _wrapN(dc, cx, y, maxw, font, col, s, maxLines) {
+        if (s == null) { return y; }
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        var fh = dc.getFontHeight(font) * 85 / 100;
+        var words = _split(s);
+        var i = 0; var line = 0;
+        while (i < words.size() && line < maxLines) {
+            var cur = words[i]; i++;
+            while (i < words.size()) {
+                var cand = cur + " " + words[i];
+                if (dc.getTextWidthInPixels(cand, font) > maxw) { break; }
+                cur = cand; i++;
+            }
+            while (cur.length() > 3 && dc.getTextWidthInPixels(cur, font) > maxw) {
+                cur = cur.substring(0, cur.length() - 1);
+            }
+            if (line == maxLines - 1 && i < words.size()) {
+                while (cur.length() > 3 && dc.getTextWidthInPixels(cur + "..", font) > maxw) {
+                    cur = cur.substring(0, cur.length() - 1);
+                }
+                cur += "..";
+            }
+            dc.drawText(cx, y + line * fh, font, cur, Graphics.TEXT_JUSTIFY_CENTER);
+            line++;
+        }
+        return y + line * fh;
+    }
+    // Centred title that steps down a font size (and finally truncates) rather
+    // than running off the chord of a round screen.
+    hidden function _txtFit(dc, cx, y, font, col, s, maxw) {
+        var fonts = [font, Graphics.FONT_TINY, Graphics.FONT_XTINY];
+        var use = font;
+        for (var i = 0; i < fonts.size(); i++) {
+            use = fonts[i];
+            if (dc.getTextWidthInPixels(s, use) <= maxw) { break; }
+        }
+        var str = s;
+        while (str.length() > 3 && dc.getTextWidthInPixels(str, use) > maxw) {
+            str = str.substring(0, str.length() - 1);
+        }
+        _txt(dc, cx, y, use, col, str, Graphics.TEXT_JUSTIFY_CENTER);
     }
     hidden function _split(s) {
         var out = []; var cur = "";
