@@ -1071,9 +1071,9 @@ function renderStats() {
     </div>`;
   }).join('');
 
-  // Engagement cards — newPlayers7d / dau / avg depth are all by ip_hash.
+  // Engagement cards — newPlayers7d = named usernames first seen ≤7d (not IPs).
   document.getElementById('engagement-cards').innerHTML = `
-    <div class="card"><div class="num">${(t.newPlayers7d||0).toLocaleString()}</div><div class="lbl">New (7d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">devices · first score ≤7d</div></div>
+    <div class="card"><div class="num">${(t.newPlayers7d||0).toLocaleString()}</div><div class="lbl">New (7d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">named players · first score ≤7d</div></div>
     <div class="card"><div class="num">${(t.dau30d||0).toLocaleString()}</div><div class="lbl">DAU avg (30d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">distinct devices / day</div></div>
     <div class="card"><div class="num">${(t.avgScoresPerPlayer||0).toLocaleString()}</div><div class="lbl">Scores / device</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">avg engagement depth</div></div>`;
 
@@ -1326,7 +1326,7 @@ function updateInsightBar() {
       : '') +
     `<b>${retPct}%</b> multi-day (2+) &nbsp;·&nbsp; ` +
     `<b>${loyalPct}%</b> loyal (7+ days) &nbsp;·&nbsp; ` +
-    (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} new this week</span> &nbsp;·&nbsp; ` : '') +
+    (newP  ? `<span class="insight-hi">+${newP.toLocaleString()} new (7d)</span> &nbsp;·&nbsp; ` : '') +
     (dau   ? `<b>${dau.toLocaleString()}</b> DAU avg (30d) &nbsp;·&nbsp; ` : '') +
     (depth ? `<b>${depth.toFixed(1)}×</b> scores/device &nbsp;·&nbsp; ` : '') +
     (opens24 || opens7d

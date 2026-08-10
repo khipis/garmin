@@ -906,16 +906,17 @@ async function computeStats(env: Env): Promise<StatsPayload> {
       totals.cohortD7         = cohort.d7r || 0;
     }
 
-    // New players in the last 7 days (ip_hash whose first score arrived ≤7d ago).
-    // NOTE: scores.timestamp is stored in SECONDS (Math.floor(Date.now()/1000)),
-    // so the cutoff must be in seconds too — otherwise the comparison is always
-    // false and this metric silently reports 0.
+    // New players in the last 7 days = distinct NAMED usernames whose first
+    // score arrived ≤7d ago. Counting ip_hash (old behaviour) inflated this
+    // ~8×: mobile IP churn + auto `anon-<hash>` rows each looked like a brand
+    // new player (~1100 "new" vs ~140 real names). scores.timestamp is SECONDS.
     const now7d = Math.floor(Date.now() / 1000) - 7 * 86400;
     const newP = await env.DB
       .prepare(
         `SELECT COUNT(*) AS cnt FROM (
-           SELECT ip_hash FROM scores
-           GROUP BY ip_hash
+           SELECT user FROM scores
+           WHERE user NOT LIKE 'anon-%'
+           GROUP BY user
            HAVING MIN(timestamp) > ?
          )`
       )
@@ -999,8 +1000,8 @@ async function handleGetStats(req: Request, url: URL, env: Env): Promise<Respons
 
   let payload: StatsPayload;
   try {
-    // stats:2 — includes classic D1/D3/D7 cohort fields (invalidate old payload shape).
-    payload = await cached(env, "stats:2", AGG_TTL_LIFETIME,
+    // stats:4 — newPlayers7d = named usernames (not ip_hash / anon churn).
+    payload = await cached(env, "stats:4", AGG_TTL_LIFETIME,
       () => computeStats(env), fresh);
   } catch (e) {
     console.error("DB stats error:", e);
